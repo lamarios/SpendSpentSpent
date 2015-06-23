@@ -1,0 +1,10 @@
+@* left Template File *@
+@()
+<div class="column animated slideInLeft" ng-controller="HistoryController">
+	<p>
+		<a ng-click="changeType('Monthly')">Monthly</a>
+		<a ng-click="changeType('Yearly')">Yearly</a>
+	</p>
+
+	<category-history data="data " index="key" ng-repeat="(key, data) in history">{{ key }}</category-history>
+</div>

@@ -1,0 +1,235 @@
+body {
+	font-family: 'Roboto', sans-serif;
+	color: #333;
+}
+
+.btn {
+	background: none;
+	background-color: white;
+	border: none;
+	font-family: 'Roboto', sans-serif;
+	font-size: 20px;
+}
+
+.btn-primary {
+	color: #3F51B5;
+}
+
+category-grid {
+	display: inline-block;
+	width: 85px;
+	height: 85px;
+	color: white;
+	margin: 5px;
+	font-size: 50px;
+	padding: 15px;
+	border-radius: 5px;
+	box-sizing: border-box;
+}
+
+category-grid i {
+	width: 100%;
+}
+
+.add-category {
+	display: inline-block;
+	width: 80px;
+	height: 80px;
+	color: #333;
+	margin: 5px;
+	font-size: 50px;
+	padding: 15px;
+	border-radius: 5px;
+	box-sizing: border-box;
+	text-align: center;
+}
+
+.column {
+	width: 300px;
+	height: 99vh;
+	float: left;
+	overflow-y: auto; /* has to be scroll, not auto */
+	/*-webkit-overflow-scrolling: touch; */
+}
+
+.overlay {
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 9;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.dialog{
+	position:fixed;
+}
+
+/*category-dialog*/
+category-dialog {
+	background-color: white;
+	top: 30px;
+	left: 30%;
+	right: 30%;
+	margin: auto;
+	z-index: 10;
+}
+
+category-dialog .category-dialog-color {
+	display: inline-block;
+	width: 40px;
+	height: 40px;
+	border: 1 slolid #888888;
+}
+
+category-dialog .category-icons {
+	background-color: #E91E63;
+	color: white;
+	font-size: 30px;
+	text-align: center;
+	max-height: 300px;
+	overflow-y: scroll; /* has to be scroll, not auto */
+	-webkit-overflow-scrolling: touch;
+}
+
+category-dialog .category-icons .fa {
+	display: inline-block;
+	padding: 10px;
+	marging: 10px;
+}
+
+category-dialog .category-icons .fa.selected {
+	border: 1px solid white;
+}
+
+category-dialog .actions {
+	padding: 10px;
+	text-align: right;
+}
+
+category-dialog .actions .btn {
+	float: right;
+}
+
+
+/* new Expense dialog */
+expense-dialog {
+	background-color: white;
+	top: 30px;
+	left: 30%;
+	right: 30%;
+	margin: auto;
+	z-index: 10;
+}
+
+expense-dialog input[type=text] {
+	display: block;
+	width: 100%;
+	font-size: 30px;
+	border: none;
+	text-align: right;
+	padding: 20px;
+	box-sizing: border-box;
+	background-color: #F0F0F0;
+}
+
+expense-dialog .expense-icon {
+	width: 100%;
+	height: 80px;
+	font-size: 50px;
+	padding-top: 20px;
+	color: white;
+	text-align: center;
+}
+
+expense-dialog .expense-digits {
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: row;
+	-ms-flex-direction: row;
+	flex-direction: row;
+	-webkit-flex-wrap: wrap;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	-webkit-justify-content: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	-webkit-align-content: flex-start;
+	-ms-flex-line-pack: start;
+	align-content: flex-start;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+}
+
+expense-dialog .expense-digits .digit {
+	flex: 1;
+	box-sizing: border-box;
+	text-align: center;
+	font-size: 30px;
+	/*flex */
+	-webkit-order: 0;
+	-ms-flex-order: 0;
+	order: 0;
+	-webkit-flex: 0 0 33.3333%;
+	-ms-flex: 0 0 33.3333%;
+	flex: 0 0 33.3333%;
+	-webkit-align-self: auto;
+	-ms-flex-item-align: auto;
+	align-self: auto;
+}
+
+expense-dialog .options {
+	padding: 10px;
+}
+
+expense-dialog .actions {
+	padding: 10px;
+	text-align: right;
+}
+
+expense-dialog .actions .btn {
+	float: right;
+}
+
+/* History category */
+category-history{
+	height:30px;
+	margin: 8px;
+}
+category-history div {
+	border-radius: 2px;
+	background-color: #CCC;
+	box-sizing: border-box;
+	text-align: right;
+	color:white;
+	font-size: 20px;
+}
+category-history div .percentage {
+	background-color:#2196F3;
+	border-radius: 2px;
+	margin:0;
+	height:30px;
+}
+category-history div .text {
+	float: left;
+	width:100%;
+	margin:0;
+	padding:5px;
+	box-sizing: border-box;
+}
+
+category-history .fa{
+	float:left;
+}
+
+/*CSS Utils */
+.noselect {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
