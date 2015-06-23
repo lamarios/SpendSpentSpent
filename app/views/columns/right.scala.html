@@ -1,5 +1,5 @@
 @()
-<div class="column animated slideInRight"  ng-controller="ExpenseController">
+<div class="column"  ng-controller="ExpenseController">
 	<p>Months: <select ng-change="changeMonth(chosenMonth)" ng-model="chosenMonth">
 		<option ng-selected="{{ month == selectedMonth }}" value="{{ month }}" ng-repeat="month in months" >{{ month }}</option>
 	</select>

@@ -1,6 +1,27 @@
 body {
 	font-family: 'Roboto', sans-serif;
 	color: #333;
+	font-size:20px;
+	width:900px;
+	/*flex*/
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: row;
+	-ms-flex-direction: row;
+	flex-direction: row;
+	-webkit-flex-wrap: nowrap;
+	-ms-flex-wrap: nowrap;
+	flex-wrap: nowrap;
+	-webkit-justify-content: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	-webkit-align-content: flex-start;
+	-ms-flex-line-pack: start;
+	align-content: flex-start;
+	-webkit-align-items: flex-start;
+	-ms-flex-align: start;
+	align-items: flex-start;
 }
 
 .btn {
@@ -15,6 +36,35 @@ body {
 	color: #3F51B5;
 }
 
+.column {
+	height:99vh;
+	overflow-y: auto:
+	/*flex */
+	-webkit-order: 0;
+	-ms-flex-order: 0;
+	order: 0;
+	-webkit-flex: 0 0 33.3333%;
+	-ms-flex: 0 0 33.3333%;
+	flex: 0 0 33.3333%;
+	-webkit-align-self: auto;
+	-ms-flex-item-align: auto;
+	align-self: auto;
+}
+
+.overlay {
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 9;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.dialog {
+	position: fixed;
+}
+
+/*category grid */
 category-grid {
 	display: inline-block;
 	width: 85px;
@@ -44,26 +94,42 @@ category-grid i {
 	text-align: center;
 }
 
-.column {
-	width: 300px;
-	height: 99vh;
-	float: left;
-	overflow-y: auto; /* has to be scroll, not auto */
-	/*-webkit-overflow-scrolling: touch; */
+
+
+/* right panel */
+expense-day ul{
+    list-style-type: none;
 }
 
-.overlay {
-	background-color: rgba(0, 0, 0, 0.5);
-	z-index: 9;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
+expense-day hr{
+    border:none;
+    height:2px;
+    background-color: #2196F3;
 }
 
-.dialog{
-	position:fixed;
+expense-day li, expense-day p{
+	text-align:right;
 }
+
+expense-day li{
+	margin-top:10px;
+}
+expense-day li .fa{
+	font-size:25px;
+	color:white;
+	padding:3px;	
+	border-radius: 5px;
+	width: 30px;
+	height:30px;
+	text-align:center;
+	padding-top:10px;
+}
+expense-day p{
+	padding:5px;
+	margin:0px;
+}
+
+
 
 /*category-dialog*/
 category-dialog {
@@ -111,7 +177,6 @@ category-dialog .actions .btn {
 	float: right;
 }
 
-
 /* new Expense dialog */
 expense-dialog {
 	background-color: white;
@@ -125,12 +190,20 @@ expense-dialog {
 expense-dialog input[type=text] {
 	display: block;
 	width: 100%;
-	font-size: 30px;
 	border: none;
 	text-align: right;
-	padding: 20px;
 	box-sizing: border-box;
 	background-color: #F0F0F0;
+}
+
+expense-dialog .digit-input {
+	font-size: 30px;
+	padding: 20px;
+}
+
+expense-dialog .date {
+	font-size: 15px;
+	padding: 20px;
 }
 
 expense-dialog .expense-icon {
@@ -194,34 +267,42 @@ expense-dialog .actions .btn {
 }
 
 /* History category */
-category-history{
-	height:30px;
+category-history {
+	height: 30px;
 	margin: 8px;
-}
-category-history div {
-	border-radius: 2px;
-	background-color: #CCC;
-	box-sizing: border-box;
-	text-align: right;
-	color:white;
-	font-size: 20px;
-}
-category-history div .percentage {
-	background-color:#2196F3;
-	border-radius: 2px;
-	margin:0;
-	height:30px;
-}
-category-history div .text {
-	float: left;
-	width:100%;
-	margin:0;
-	padding:5px;
-	box-sizing: border-box;
+	overflow: hidden;
 }
 
-category-history .fa{
-	float:left;
+category-history div {
+	border-radius: 2px;
+	background-color: #2196F3;
+	box-sizing: border-box;
+	text-align: right;
+	color: white;
+	font-size: 20px;
+	overflow: hidden;
+	position:relative;
+}
+
+category-history div .percentage {
+	background-color: #0D47A1;
+	border-radius: 2px;
+	margin: 0;
+	height: 30px;
+	z-index: 0;
+}
+
+category-history div .text {
+	position: absolute;
+	width: 100%;
+	margin: 0;
+	padding: 5px;
+	box-sizing: border-box;
+	z-index: 1;
+}
+
+category-history .fa {
+	float: left;
 }
 
 /*CSS Utils */
@@ -232,4 +313,13 @@ category-history .fa{
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+}
+
+/* charts */
+.ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut  {
+  /* Set the colour of this series line */
+  stroke: #0D47A1;
+}
+.ct-series-a .ct-area, .ct-series-a .ct-slice-pie {
+  fill: #2196F3;
 }

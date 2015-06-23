@@ -13,6 +13,7 @@ app.controller('CategoryController', [
 			$scope.chosenIcon = $scope.availableIcons[0];
 			
 			
+
 			
 			$scope.showAddDialog = function() {
 				// Getting available categories
@@ -40,8 +41,12 @@ app.controller('CategoryController', [
 					income = false;
 				}
 				
-				if(date == undefined){
+				var patt = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+
+				
+				if(date == undefined || !patt.test(date)){
 					var date = new Date();
+					
 					date = date.getFullYear() + '-' + (date.getMonth() + 1)
 					+ '-' + date.getDate();
 				}
@@ -79,7 +84,7 @@ app.controller('CategoryController', [
 				if(patt.test(newAmount)){
 					$scope.newExpenseAmount = newAmount;
 				}
-				//$scope.newExpenseAmount+=digit;
+				// $scope.newExpenseAmount+=digit;
 			}
 			
 			$scope.removeNewExpenseDigit = function(){

@@ -1,6 +1,6 @@
 <div ng-model="showGraph" ng-init="showGraph=false" ng-click="showGraph = !showGraph">
 		<p class="text"><span class="fa {{ data.category }}"></span>{{ data.lastValue | number: 2}}</p>
-		<p ng-style="{'width': '{{ data.percentage }}%' }" class="percentage"></p>
+		<p ng-style="{'width': '{{ data.percentage }}%' }" class="percentage animated fadeInLeft"></p>
 </div>
 
 <chartist ng-if="showGraph" class="ct-chart animated fadeIn" chartist-data="data.data" chartist-chart-type="Line" chartist-chart-options="data.options"></chartist>

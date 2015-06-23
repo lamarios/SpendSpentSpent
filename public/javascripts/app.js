@@ -11,7 +11,7 @@ var HTTP_HEADERS = {
 	}
 };
 
-var app = angular.module('ExpTrackerApp', ['angular-chartist']).run(function() {
+var app = angular.module('ExpTrackerApp', ['angular-chartist', '720kb.datepicker']).run(function() {
 	FastClick.attach(document.body);
 });
 

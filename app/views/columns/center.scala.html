@@ -1,7 +1,7 @@
 @()
 
-<div class="column animated slideInDown" ng-controller="CategoryController">
-	
+<div class="column" ng-controller="CategoryController">
+	{{getDefaultDate()}}
 	<category-grid ng-style="{'background-color': '#{{ category.color }}'}" class="animated zoomIn" cat="category" ng-repeat="category in categories" ng-click="showAddCategory($index)"></category-grid>
 	<div ng-if="availableIcons.length != 0" class="add-category animated zoomIn"  ng-click="$parent.showCategoryDialog = true"><i class="fa fa-plus"></i></div>
 	<category-dialog class="animated fadeInDown dialog" ng-if="showCategoryDialog == true"></category-dialog>
