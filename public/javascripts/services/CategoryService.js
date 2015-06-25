@@ -43,9 +43,9 @@ function CategoryService($http) {
 		console.log('Calling /API/Category');
 		$http.get('/API/Category').success(function(data) {
 			console.log(data);
-			angular.forEach(data, function(value, index) {
-				categoryService.list.push(value);
-			});
+			
+			
+			categoryService.list = data;
 
 			if (callback != undefined) {
 				callback(category);

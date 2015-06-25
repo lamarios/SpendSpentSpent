@@ -1,7 +1,9 @@
 app.controller('ExpenseController', [ '$scope', 'ExpTracker',
 		function($scope, ExpTracker) {
 
-			$scope.expenses = ExpTracker.expenses.list;
+			$scope.expenses = function() {
+				return ExpTracker.expenses.list;
+			}
 			$scope.months = ExpTracker.expenses.months;
 			$scope.selectedMonth = ExpTracker.expenses.selectedMonth;
 
@@ -22,8 +24,8 @@ app.controller('ExpenseController', [ '$scope', 'ExpTracker',
 
 				return total;
 			}
-			
-			$scope.changeMonth = function(month){
+
+			$scope.changeMonth = function(month) {
 				ExpTracker.expenses.selectedMonth = month;
 				ExpTracker.expenses.refresh();
 			}

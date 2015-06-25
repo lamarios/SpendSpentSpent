@@ -4,7 +4,6 @@
 CREATE TABLE `category` (
   `id` bigint(11) unsigned NOT NULL AUTO_INCREMENT,
   `icon` varchar(50) NOT NULL DEFAULT '',
-  `color` varchar(6) DEFAULT NULL,
   `category_order` int(3) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=latin1;

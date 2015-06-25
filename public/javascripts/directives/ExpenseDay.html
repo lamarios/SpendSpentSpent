@@ -1,13 +1,8 @@
-<div class="animated fadeIn">
+<div animation-create="fadeIn" animation-destroy="fadeOut">
 	<h3>{{ day.date | date }}</h3>
 	<ul class="day-expense">
 		<li ng-repeat="expense in day.expenses">
-			<div ng-if="expense.income" class="income">
-				 {{ expense.amount | number:2 }} <i ng-style="{'background-color': '#{{ expense.category.color }}'}" class="fa {{ expense.category.icon }}"></i>
-			</div>
-			<div ng-if="!expense.income" class="outcome">
-				 {{ expense.amount | number:2 }} <i ng-style="{'background-color': '#{{ expense.category.color }}'}" class="fa {{ expense.category.icon }}"></i>
-			</div>
+				 {{ expense.amount | number:2 }} <i class="fa {{ expense.category.icon }}"></i>
 		</li>
 	</ul>
 	<hr />

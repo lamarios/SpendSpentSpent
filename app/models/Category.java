@@ -20,8 +20,6 @@ public class Category extends Model {
 	private String icon;
 	@Expose
 	private int categoryOrder;
-	@Expose
-	private String color;
 
 	public long getId() {
 		return id;
@@ -45,14 +43,6 @@ public class Category extends Model {
 
 	public void setCategoryOrder(int order) {
 		this.categoryOrder = order;
-	}
-
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
 	}
 
 }

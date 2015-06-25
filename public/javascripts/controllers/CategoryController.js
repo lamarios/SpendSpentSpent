@@ -4,7 +4,9 @@ app.controller('CategoryController', [
 		'$http',
 		function($scope, ExpTracker, $http) {
 
-			$scope.categories = ExpTracker.categories.list;
+			$scope.categories = function(){
+				return ExpTracker.categories.list;
+			}
 			$scope.availableIcons = ExpTracker.categories.availableIcons;
 			$scope.selectedCategory = '';
 			$scope.newExpenseAmount = '';
@@ -27,11 +29,12 @@ app.controller('CategoryController', [
 				
 				var newCategory = {
 					icon : icon,
-					order : $scope.categories.length,
+					order : $scope.categories().length,
 					color : color.replace('#', '')
 				};
 				ExpTracker.categories.add(newCategory, function(category) {
 					$scope.closeDialogs();
+					ExpTracker.history.refresh();
 				});
 
 			}
@@ -70,8 +73,8 @@ app.controller('CategoryController', [
 				})
 			}
 			
-			$scope.showAddCategory = function(index){
-				$scope.selectedCategory = $scope.categories[index];
+			$scope.showAddExpense = function(index){
+				$scope.selectedCategory = $scope.categories()[index];
 				console.log($scope.selectedCategory);
 			}
 			

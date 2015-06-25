@@ -1,24 +1,7 @@
-<div class="category-icons" ng-style="{'background-color': chosenColor}">
+<div class="category-icons" >
 	<a ng-repeat="icon in availableIcons" ng-click="$parent.chosenIcon = icon">
-		<i ng-if="icon == $parent.chosenIcon"  class="fa {{ icon }} selected" ></i>
-		<i ng-if="icon != $parent.chosenIcon"  class="fa {{ icon }}" ng-style="{'border': '1px solid #{{ chosenColor }}'}"></i>
+		<i class="fa {{ icon }}" ng-class="{'selected': icon == $parent.chosenIcon}" ></i>
 	</a>
-</div>
-<div class="color-selection">
-	<div class="category-dialog-color" style="background-color: #E91E63" ng-click="chosenColor = '#E91E63'"></div>
-	<div class="category-dialog-color" style="background-color: #F44336" ng-click="chosenColor = '#F44336'"></div>
-	<div class="category-dialog-color" style="background-color: #673AB7" ng-click="chosenColor = '#673AB7'"></div>
-	<div class="category-dialog-color" style="background-color: #9C27B0" ng-click="chosenColor = '#9C27B0'"></div>
-	<div class="category-dialog-color" style="background-color: #2196F3" ng-click="chosenColor = '#2196F3'"></div>
-	<div class="category-dialog-color" style="background-color: #3F51B5" ng-click="chosenColor = '#3F51B5'"></div>
-	<div class="category-dialog-color" style="background-color: #009688" ng-click="chosenColor = '#009688'"></div>
-	<div class="category-dialog-color" style="background-color: #FF5722" ng-click="chosenColor = '#FF5722'"></div>
-	<div class="category-dialog-color" style="background-color: #795548" ng-click="chosenColor = '#795548'"></div>
-	<div class="category-dialog-color" style="background-color: #607D8B" ng-click="chosenColor = '#607D8B'"></div>
-	<input ng-if="cat != null" type="hidden" ng-model="chosenColor" />
-	<input ng-if="cat == null" type="hidden" ng-model="chosenColor" />
-	<input ng-if="cat != null" type="hidden" ng-model="chosenIcon"  />
-	<input ng-if="cat == null" type="hidden" ng-model="chosenIcon" />	
 </div>
 <div class="actions">
 	<button class="btn btn-primary" ng-click="addCategory(chosenIcon, chosenColor)">Add Category</button>

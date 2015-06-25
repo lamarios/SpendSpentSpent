@@ -1,4 +1,4 @@
-name := """ExpTracker"""
+name := """SpendSpentSpent"""
 
 version := "1.0-SNAPSHOT"
 

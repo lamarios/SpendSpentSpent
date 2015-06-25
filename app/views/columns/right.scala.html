@@ -1,6 +1,6 @@
 @()
-<div class="column"  ng-controller="ExpenseController">
-	<p>Months: <select ng-change="changeMonth(chosenMonth)" ng-model="chosenMonth">
+<div class="column"  id="right-column" ng-controller="ExpenseController">
+	<select ng-change="changeMonth(chosenMonth)" ng-model="chosenMonth">
 		<option ng-selected="{{ month == selectedMonth }}" value="{{ month }}" ng-repeat="month in months" >{{ month }}</option>
 	</select>
 	
@@ -9,5 +9,5 @@
 	</p>
 	
 	<p>Total: {{ totalOutcome() | number: 2 }}</p>
-	<expense-day day="day" ng-repeat="day in expenses"></expense-day>
+	<expense-day day="day" ng-repeat="day in expenses()"></expense-day>
 </div>

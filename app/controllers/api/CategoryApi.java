@@ -30,7 +30,6 @@ public class CategoryApi extends Controller {
 		}
 		
 		category.setIcon(params.get(FIELD_ICON)[0]);
-		category.setColor(params.get(FIELD_COLOR)[0]);
 		category.setCategoryOrder(Integer.parseInt(params.get(FIELD_ORDER)[0]));
 		category.save();
 
@@ -71,7 +70,6 @@ public class CategoryApi extends Controller {
 		if (category != null) {
 			category.setId(id);
 			category.setIcon(params.get(FIELD_ICON)[0]);
-			category.setColor(params.get(FIELD_COLOR)[0]);
 			category.setCategoryOrder(Integer.parseInt(params.get(FIELD_ORDER)[0]));
 			category.save();
 			return ok(gson.toJson(true)).as("application/json");
