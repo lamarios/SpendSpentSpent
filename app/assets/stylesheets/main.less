@@ -1,4 +1,8 @@
 @import 'colors.less';
+@import './vendor/animate.less';
+@import './vendor/chartist.less';
+@import './vendor/angular-datepicker.min.less';
+@import './vendor/fontawesome/font-awesome.less';
 
 body {
 	font-family: 'Roboto', sans-serif;
@@ -89,7 +93,7 @@ category-grid i {
 	display: inline-block;
 	width: 80px;
 	height: 80px;
-	color: @secondaryColor;
+	color: @primaryColor;
 	margin: 5px;
 	font-size: 50px;
 	padding: 15px;
@@ -110,6 +114,10 @@ category-grid i {
 	font-family: 'Roboto', sans-serif;
 	border-radius: 5px;
 	text-align:center;
+}
+
+#right-column .total span{
+	color: @primaryColor;
 }
 
 expense-day ul{

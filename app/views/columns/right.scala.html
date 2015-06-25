@@ -1,13 +1,13 @@
 @()
 <div class="column"  id="right-column" ng-controller="ExpenseController">
-	<select ng-change="changeMonth(chosenMonth)" ng-model="chosenMonth">
-		<option ng-selected="{{ month == selectedMonth }}" value="{{ month }}" ng-repeat="month in months" >{{ month }}</option>
+	<select animation-create="fadeInDown" ng-change="changeMonth(chosenMonth)" ng-model="chosenMonth">
+		<option ng-selected="{{ month == selectedMonth }}" value="{{ month }}" ng-repeat="month in months()" >{{ month }}</option>
 	</select>
 	
 	
 	
 	</p>
 	
-	<p>Total: {{ totalOutcome() | number: 2 }}</p>
+	<p class="total" animation-create="fadeInDown">Total: <span>{{ totalOutcome() | number: 2 }}</span></p>
 	<expense-day day="day" ng-repeat="day in expenses()"></expense-day>
 </div>

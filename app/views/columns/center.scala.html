@@ -3,7 +3,7 @@
 <div class="column" ng-controller="CategoryController">
 	{{getDefaultDate()}}
 	<category-grid animation-create="zoomIn" cat="category" ng-repeat="category in categories()" ng-click="showAddExpense($index)"></category-grid>
-	<div ng-if="availableIcons.length != 0" class="add-category " animation-create="zoomIn" ng-click="$parent.showCategoryDialog = true"><i class="fa fa-plus"></i></div>
+	<div ng-if="availableIcons().length != 0" class="add-category " animation-create="zoomIn" ng-click="$parent.showCategoryDialog = true"><i class="fa fa-plus"></i></div>
 	<category-dialog class="dialog" animation-create="fadeInDown" ng-if="showCategoryDialog == true"></category-dialog>
 	<expense-dialog  class="dialog" animation-create="fadeInDown" ng-if="selectedCategory != ''" cat="selectedCategory"></expense-dialog>
 	<div class="overlay dialog" animation-create="fadeIn" aniamtion-destroy="fadeOut" ng-if="showCategoryDialog == true || selectedCategory != ''" ng-click="closeDialogs()"></div>

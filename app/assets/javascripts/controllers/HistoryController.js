@@ -9,6 +9,6 @@ app.controller('HistoryController', [ '$scope', 'ExpTracker',
 					ExpTracker.history.type = type;
 					ExpTracker.history.refresh();
 				}
-			}
+			};
 
 		} ]);

@@ -82,6 +82,7 @@
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.ning/async-http-client/jars/async-http-client-1.9.21.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/oauth.signpost/signpost-core/jars/signpost-core-1.2.1.2.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/oauth.signpost/signpost-commonshttp4/jars/signpost-commonshttp4-1.2.1.2.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/filters-helpers_2.11/jars/filters-helpers_2.11-2.4.1.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/mysql/mysql-connector-java/jars/mysql-connector-java-5.1.18.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.github.julman99/gson-fire/jars/gson-fire-0.11.0.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-test_2.11/jars/play-test_2.11-2.4.1.jar"/>

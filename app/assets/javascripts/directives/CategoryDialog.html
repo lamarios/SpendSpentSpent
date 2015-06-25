@@ -1,5 +1,5 @@
 <div class="category-icons" >
-	<a ng-repeat="icon in availableIcons" ng-click="$parent.chosenIcon = icon">
+	<a ng-repeat="icon in availableIcons()" ng-click="$parent.chosenIcon = icon">
 		<i class="fa {{ icon }}" ng-class="{'selected': icon == $parent.chosenIcon}" ></i>
 	</a>
 </div>
