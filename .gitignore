@@ -17,3 +17,5 @@ server.pid
 .cache
 
 conf/user.conf
+
+conf/launch.conf

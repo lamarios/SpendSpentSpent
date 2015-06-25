@@ -8,6 +8,8 @@ PID=$FULLDIR"/RUNNING_PID"
 
 LOG=$FULLDIR"/logs"
 
+APPNAME="spendspentspent"
+
 cd "$DIR"
 
 
@@ -47,11 +49,11 @@ function start {
 
         $DIR/activator clean stage
 
-        chmod +x $FULLDIR/bin/exptracker
+        chmod +x $FULLDIR/bin/$APPNAME
 
         echo "Starting ExpTracker in the background"
         echo "Port: $PORT"
-        nohup $FULLDIR/bin/exptracker -Dhttp.port=$PORT -Dplay.evolutions.db.default.autoApply=true  -DapplyDownEvolutions.default=true -J-Xms$XMS -J-Xmx$XMX &> /dev/null &
+        nohup $FULLDIR/bin/$APPNAME -Dhttp.port=$PORT -Dplay.evolutions.db.default.autoApply=true  -DapplyDownEvolutions.default=true -J-Xms$XMS -J-Xmx$XMX &> /dev/null &
         
         rm -Rf logs
         ln -s $LOG logs
