@@ -37,10 +37,11 @@ body {
 	border: none;
 	font-family: 'Roboto', sans-serif;
 	font-size: 20px;
+	padding: 10px;
 }
 
 .btn-primary {
-	color: #3F51B5;
+	color: @primaryColor;
 }
 
 .column {
@@ -243,31 +244,34 @@ recurring-expense-add select{
 	background-color:@primaryColor;
 	border-radius: 5px;
 }
+
+@gridSize: 75px;
+@gridMargin: 10px;
+@gridFontSize: 30px;
 category-grid {
 	display: inline-block;
-	width: 85px;
-	height: 85px;
+	width: @gridSize;
+	height: @gridSize;
 	color: white;
-	margin: 5px;
-	font-size: 50px;
+	margin: @gridMargin;
+	font-size: @gridFontSize;
 	padding: 15px;
+	padding-top:20px;
 	border-radius: 5px;
 	box-sizing: border-box;
 	background-color: @primaryColor;
-}
-
-category-grid i {
-	width: 100%;
+	text-align: center;
 }
 
 .add-category {
 	display: inline-block;
-	width: 80px;
-	height: 80px;
+	width: @gridSize;
+	height: @gridSize;
 	color: @primaryColor;
-	margin: 5px;
-	font-size: 50px;
+	margin: @gridMargin;
+	font-size: @gridFontSize;
 	padding: 15px;
+	padding-top:20px;
 	border-radius: 5px;
 	box-sizing: border-box;
 	text-align: center;
