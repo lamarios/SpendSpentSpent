@@ -71,7 +71,178 @@ body {
 	position: fixed;
 }
 
+/*center column */
+#center-column .panels{
+	margin: 0;
+	margin-bottom: 20px;
+}
+
+/* recurring expenses */
+recurring-expense .main{
+	background-color:@primaryColor;
+	text-align: center;
+	color:white;
+	padding:3px;
+	border-radius: 2px;
+	margin: 0;
+}
+recurring-expense .details{
+	border-right: 1px solid @primaryColor;
+	border-left: 1px solid @primaryColor;
+	border-bottom: 1px solid @primaryColor;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	
+	font-size: 15px;
+}
+recurring-expense .details p{
+	margin:0;
+	padding:5px;
+	
+}
+
+recurring-expense .details span{
+	color:@primaryColor;
+}
+
+recurring-expense .container{
+	margin-bottom:5px;
+}
+
+recurring-expense .type{
+	float:left;
+	padding-left:5px;
+}
+
+recurring-expense .amount{
+	float:right;
+	padding-right:5px;
+}
+
+.recurring-expense .add-recurring{
+	color:@primaryColor;
+	text-align: center;
+}
+
+
+
+/* recurring expenses add */
+recurring-expense-add{
+	background-color: #fff;
+	top: 30px;
+	left: 30%;
+	right: 30%;
+	margin: auto;
+	z-index: 10;
+}
+recurring-expense-add .categories{
+	background-color: @primaryColor;
+	color: white;
+}
+
+recurring-expense-add .categories span{
+	font-size: 12px;
+	padding:5px;
+}
+
+recurring-expense-add .categories ul{
+	list-style: none;
+	margin:0;
+	padding:0;
+}
+recurring-expense-add .categories ul li{
+	display: inline-block;
+	font-size: 25px;
+	width:40px;
+	height: 40px;
+	border: 1px solid @primaryColor;
+	padding:5px;
+	box-sizing: border-box;
+	margin: 1px;
+	text-align: center;
+}
+
+recurring-expense-add .categories ul li.selected{
+	border: 1px solid white;
+}
+
+
+recurring-expense-add .expense-digits {
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: row;
+	-ms-flex-direction: row;
+	flex-direction: row;
+	-webkit-flex-wrap: wrap;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	-webkit-justify-content: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	-webkit-align-content: flex-start;
+	-ms-flex-line-pack: start;
+	align-content: flex-start;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+}
+
+recurring-expense-add .expense-digits .digit {
+	flex: 1;
+	box-sizing: border-box;
+	text-align: center;
+	font-size: 30px;
+	/*flex */
+	-webkit-order: 0;
+	-ms-flex-order: 0;
+	order: 0;
+	-webkit-flex: 0 0 33.3333%;
+	-ms-flex: 0 0 33.3333%;
+	flex: 0 0 33.3333%;
+	-webkit-align-self: auto;
+	-ms-flex-item-align: auto;
+	align-self: auto;
+}
+
+recurring-expense-add input[type=text] {
+	display: block;
+	width: 100%;
+	border: none;
+	text-align: right;
+	box-sizing: border-box;
+	background-color: #F0F0F0;
+	font-size: 20px;
+	padding: 15px;
+	border-radius: 0;
+}
+
+recurring-expense-add select{
+	display: inline-block;
+	width:30%;
+	border: 1px solid @primaryColor;
+	background-color: white;
+	font-size: 20px;
+	font-weight: 300;
+	font-family: 'Roboto',sans-serif;
+}
+
 /*category grid */
+
+
+#center-column .panels a{
+	display:inline-block;
+	text-align: center;
+	width:50%;
+	padding: 0;
+	margin: 0;
+}
+
+#center-column .panels a.selected{
+	color:white;
+	background-color:@primaryColor;
+	border-radius: 5px;
+}
 category-grid {
 	display: inline-block;
 	width: 85px;
@@ -141,6 +312,12 @@ expense-day li .fa{
 	font-size:25px;
 	color:@primaryColor;
 }
+
+expense-day li .fa-refresh{
+	font-size:12px;
+	color:@secondaryColor;
+}
+
 expense-day p{
 	padding:5px;
 	margin:0px;
@@ -212,16 +389,18 @@ expense-dialog input[type=text] {
 	text-align: right;
 	box-sizing: border-box;
 	background-color: #F0F0F0;
+	border-radius: 0;
+
 }
 
 expense-dialog .digit-input {
-	font-size: 30px;
-	padding: 20px;
+	font-size: 25px;
+	padding: 15px;
 }
 
 expense-dialog .date {
 	font-size: 15px;
-	padding: 20px;
+	padding: 10px;
 }
 
 expense-dialog .expense-icon {
@@ -354,7 +533,7 @@ category-history .fa {
 /* charts */
 .ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut  {
   /* Set the colour of this series line */
-  stroke: #0D47A1;
+  stroke: @primaryColor;
 }
 .ct-series-a .ct-area, .ct-series-a .ct-slice-pie {
   fill: @primaryColor;

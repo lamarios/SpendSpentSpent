@@ -2,7 +2,7 @@
 	<h3>{{ day.date | date }}</h3>
 	<ul class="day-expense">
 		<li ng-repeat="expense in day.expenses">
-				 {{ expense.amount | number:2 }} <i class="fa {{ expense.category.icon }}"></i>
+				<i ng-if="expense.type == 2" class="fa fa-refresh"></i> {{ expense.amount | number:2 }} <i class="fa {{ expense.category.icon }}"></i>
 		</li>
 	</ul>
 	<hr />

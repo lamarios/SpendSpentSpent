@@ -1,10 +1,21 @@
 @()
 
-<div class="column" ng-controller="CategoryController">
-	{{getDefaultDate()}}
-	<category-grid animation-create="zoomIn" cat="category" ng-repeat="category in categories()" ng-click="showAddExpense($index)"></category-grid>
-	<div ng-if="availableIcons().length != 0" class="add-category " animation-create="zoomIn" ng-click="$parent.showCategoryDialog = true"><i class="fa fa-plus"></i></div>
-	<category-dialog class="dialog" animation-create="fadeInDown" ng-if="showCategoryDialog == true"></category-dialog>
-	<expense-dialog  class="dialog" animation-create="fadeInDown" ng-if="selectedCategory != ''" cat="selectedCategory"></expense-dialog>
-	<div class="overlay dialog" animation-create="fadeIn" aniamtion-destroy="fadeOut" ng-if="showCategoryDialog == true || selectedCategory != ''" ng-click="closeDialogs()"></div>
+<div class="column" id="center-column">
+	<p class="panels" ng-model="showNormalExpense" ng-init="showNormalExpense = true">
+		<a ng-click="showNormalExpense = true" ng-class="{'selected': showNormalExpense}">Normal</a><a ng-click="showNormalExpense = false" ng-class="{'selected': !showNormalExpense}">Recurring</a>
+	</p>
+	<div ng-if="!showNormalExpense" ng-controller="ReucurringExpenseController" class="recurring-expense">
+		<recurring-expense expense="expense" ng-repeat="expense in expenses()"></recurring-expense>
+		<p class="add-recurring" ng-click="showDialog = true"><i class="fa fa-plus"></i></p>
+		<recurring-expense-add class="dialog" animation-create="fadeInDown" ng-if="showDialog == true"></recurring-expense-add>
+		<div class="overlay dialog" animation-create="fadeIn" aniamtion-destroy="fadeOut" ng-if="showDialog == true" ng-click="closeDialog()"></div>
+	</div>
+
+	<div ng-if="showNormalExpense" ng-controller="CategoryController">
+		<category-grid animation-create="zoomIn" cat="category" ng-repeat="category in categories()" ng-click="showAddExpense($index)"></category-grid>
+		<div ng-if="availableIcons().length != 0" class="add-category " animation-create="zoomIn" ng-click="$parent.showCategoryDialog = true"><i class="fa fa-plus"></i></div>
+		<category-dialog class="dialog" animation-create="fadeInDown" ng-if="showCategoryDialog == true"></category-dialog>
+		<expense-dialog  class="dialog" animation-create="fadeInDown" ng-if="selectedCategory != ''" cat="selectedCategory"></expense-dialog>
+		<div class="overlay dialog" animation-create="fadeIn" aniamtion-destroy="fadeOut" ng-if="showCategoryDialog == true || selectedCategory != ''" ng-click="closeDialogs()"></div>
+	</div>
 </div>

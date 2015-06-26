@@ -19,7 +19,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 public class HistoryApi extends Controller {
-	private final Gson gson = new GsonBuilder().setDateFormat("yy-MM-dd").excludeFieldsWithoutExposeAnnotation().create();
+	private final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").excludeFieldsWithoutExposeAnnotation().create();
 
 	public Result yearly(int count) {
 		Logger.info("HistoryApi.yearly({})", count);

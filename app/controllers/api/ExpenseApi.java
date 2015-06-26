@@ -23,7 +23,7 @@ import com.google.gson.GsonBuilder;
 
 public class ExpenseApi extends Controller {
 	public static final String FIELD_AMOUNT = "amount", FIELD_CATEGORY = "category", FIELD_DATE = "date", FIELD_INCOME = "income", FIELD_TYPE = "type";
-	private final Gson gson = new GsonBuilder().setDateFormat("yy-MM-dd").excludeFieldsWithoutExposeAnnotation().create();
+	private final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").excludeFieldsWithoutExposeAnnotation().create();
 
 	private final String FILTER_FROM = "from", FILTER_TO = "to", FILTER_LIMIT = "limit", FILTER_OFFSET = "offset", FILTER_ORDERING = "ordering";
 	SimpleDateFormat df = new SimpleDateFormat("yy-MM-dd");

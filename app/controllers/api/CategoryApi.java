@@ -17,7 +17,7 @@ import com.google.gson.GsonBuilder;
 
 public class CategoryApi extends Controller {
 	public static final String FIELD_COLOR = "color", FIELD_ICON = "icon", FIELD_ORDER = "order";
-	private  final Gson gson = new GsonBuilder().setDateFormat("yy-MM-dd").excludeFieldsWithoutExposeAnnotation().create();
+	private  final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").excludeFieldsWithoutExposeAnnotation().create();
 
 
 	public Result create() {
