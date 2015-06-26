@@ -24,7 +24,7 @@ routesGenerator := InjectedRoutesGenerator
 LessKeys.compress in Assets := true
 
 
-pipelineStages := Seq(uglify)
+//pipelineStages := Seq(uglify)
 
 
 
@@ -34,4 +34,4 @@ pipelineStages := Seq(uglify)
 
 excludeFilter in (Assets, JshintKeys.jshint) := new FileFilter{ def accept(f: File) = ".*/vendor/.*".r.pattern.matcher(f.getAbsolutePath).matches }
 
-excludeFilter in uglify := new FileFilter{ def accept(f: File) = ".*min.*".r.pattern.matcher(f.getAbsolutePath).matches }
+//excludeFilter in uglify := new FileFilter{ def accept(f: File) = ".*min.*".r.pattern.matcher(f.getAbsolutePath).matches }

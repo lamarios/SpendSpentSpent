@@ -4,7 +4,7 @@ app.directive('recurringExpense', function() {
 		scope : {
 			expense : '=',
 		},
-		controller : function($scope, $element, $attrs) {
+		controller : function($scope) {
 			$scope.getTypeString = function(type) {
 				switch (type) {
 				case 0:
