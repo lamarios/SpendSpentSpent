@@ -18,9 +18,9 @@ app.directive('recurringExpense', function() {
 				}
 			};
 
-			this.getTypeString = function(type) {
-				return $scope.getTypeString(type);
-			};
+			$scope.showOptions = false;
+			$scope.showDelete = false;
+			
 		},
 		templateUrl : '/assets/javascripts/directives/RecurringExpense.html'
 	};

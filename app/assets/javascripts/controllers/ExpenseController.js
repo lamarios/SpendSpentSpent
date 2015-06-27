@@ -32,4 +32,10 @@ app.controller('ExpenseController', [ '$scope', 'ExpTracker', function($scope, E
 		ExpTracker.expenses.selectedMonth = month;
 		ExpTracker.expenses.refresh();
 	};
+	
+	$scope.delete = function(expense){
+		ExpTracker.expenses.delete(expense, function(){
+			ExpTracker.history.refresh();
+		});
+	};
 } ]);

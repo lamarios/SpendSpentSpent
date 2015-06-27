@@ -4,9 +4,15 @@
 @import './vendor/angular-datepicker.min.less';
 @import './vendor/fontawesome/font-awesome.less';
 
-body {
+@textColor: #333;
+
+body{
+	min-height: 95vh;
+}
+
+#columns {
 	font-family: 'Roboto', sans-serif;
-	color: #333;
+	color: @textColor;
 	font-size:20px;
 	width:900px;
 	margin-left: auto;
@@ -66,10 +72,19 @@ body {
 	left: 0;
 	right: 0;
 	bottom: 0;
+	position:fixed;
 }
+
 
 .dialog {
 	position: fixed;
+	background-color: #fff;
+	top: 30px;
+	left: 30%;
+	right: 30%;
+	margin: auto;
+	z-index: 10;
+	max-height: 99vh;
 }
 
 /*center column */
@@ -120,6 +135,29 @@ recurring-expense .amount{
 	padding-right:5px;
 }
 
+recurring-expense .option-button{
+	padding:10px;
+	float:right;
+	display: block;
+}
+recurring-expense .options{
+	background-color: #EEE;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+recurring-expense .confirmation .cancel{
+	color: @textColor;
+}
+
+recurring-expense .options .delete{
+	color:#EF5350;
+	text-align: center;
+}
+recurring-expense .options .confirmation span{
+	display:inline-block;
+	width:50%;
+	text-align: center;
+}
 .recurring-expense .add-recurring{
 	color:@primaryColor;
 	text-align: center;
@@ -128,14 +166,7 @@ recurring-expense .amount{
 
 
 /* recurring expenses add */
-recurring-expense-add{
-	background-color: #fff;
-	top: 30px;
-	left: 30%;
-	right: 30%;
-	margin: auto;
-	z-index: 10;
-}
+
 recurring-expense-add .categories{
 	background-color: @primaryColor;
 	color: white;
@@ -161,6 +192,11 @@ recurring-expense-add .categories ul li{
 	box-sizing: border-box;
 	margin: 1px;
 	text-align: center;
+}
+
+recurring-expense-add .actions{
+	text-align: right;
+	margin: 0;
 }
 
 recurring-expense-add .categories ul li.selected{
@@ -328,16 +364,38 @@ expense-day p{
 }
 
 
+expense-day .option-button{
+	padding:10px;
+	display: inline-block;
+	font-size: 15px !important;
+	color: lighten(@textColor, 50%) !important;
+}
+expense-day .options{
+	background-color: #EEE;
+	border-radius: 5px;
+	font-size: 15px;
+}
+
+expense-day .options p{
+	text-align: center;
+}
+
+expense-day .confirmation .cancel{
+	color: @textColor;
+}
+
+expense-day .options .delete{
+	color:#EF5350;
+}
+expense-day .options .confirmation span{
+	
+	display:inline-block;
+	width:50%;
+}
+
+
 
 /*category-dialog*/
-category-dialog {
-	background-color: white;
-	top: 30px;
-	left: 30%;
-	right: 30%;
-	margin: auto;
-	z-index: 10;
-}
 
 category-dialog .category-dialog-color {
 	display: inline-block;
@@ -352,8 +410,7 @@ category-dialog .category-icons {
 	font-size: 30px;
 	text-align: center;
 	max-height: 300px;
-	overflow-y: scroll; /* has to be scroll, not auto */
-	-webkit-overflow-scrolling: touch;
+	overflow-y: auto; /* has to be scroll, not auto */
 }
 
 category-dialog .category-icons .fa {
@@ -377,15 +434,6 @@ category-dialog .actions .btn {
 }
 
 /* new Expense dialog */
-expense-dialog {
-	background-color: white;
-	top: 30px;
-	left: 30%;
-	right: 30%;
-	margin: auto;
-	z-index: 10;
-}
-
 expense-dialog input[type=text] {
 	display: block;
 	width: 100%;
@@ -524,6 +572,38 @@ category-history .fa {
 	float: left;
 }
 
+/* footer */
+#footer{
+	position:fixed;
+	bottom:0;
+	left:0;
+	right:0;
+	
+	text-align:center;
+	font-size:10px;
+	border-top:1px solid @secondaryColor;
+	background-color: white;
+	z-index: 8;
+}
+
+#footer .page-marker{
+	display:none;
+	padding-top:10px;
+	font-size: 8px;
+	color:#DDD;
+}
+
+#footer .page-marker i.active{
+	color:#999;
+}
+
+#footer .settings{
+	color:@secondaryColor;
+	font-size: 20px;
+	float:right;
+	padding:3px;
+}
+
 /*CSS Utils */
 .noselect {
 	-webkit-touch-callout: none;
@@ -542,3 +622,6 @@ category-history .fa {
 .ct-series-a .ct-area, .ct-series-a .ct-slice-pie {
   fill: @primaryColor;
 }
+
+@import 'mediumScreen.less';
+@import 'smallScreen.less';

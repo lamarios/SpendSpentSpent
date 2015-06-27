@@ -7,7 +7,7 @@ function ExpenseService($http) {
 
 	// Add expense
 	expenseService.add = function(newExpense, callBack) {
-		console.log('Calling /API/Expense');
+		console.log('POST /API/Expense');
 		$http.post('/API/Expense', newExpense, HTTP_HEADERS).success(function(expense) {
 
 			expenseService.refreshMonths();
@@ -23,7 +23,7 @@ function ExpenseService($http) {
 		// expenseService.list.pop();
 		// }
 
-		console.log('Calling /API/Expense/ByDay?month=' + expenseService.selectedMonth);
+		console.log('GET /API/Expense/ByDay?month=' + expenseService.selectedMonth);
 		$http.get('/API/Expense/ByDay?month=' + expenseService.selectedMonth).success(function(data) {
 			console.log(data);
 			// angular.forEach(data, function(value, index) {
@@ -41,7 +41,7 @@ function ExpenseService($http) {
 
 	expenseService.refreshMonths = function() {
 
-		console.log('Calling /API/Expense/GetMonths');
+		console.log('GET /API/Expense/GetMonths');
 		// getting all the months available
 		$http.get('/API/Expense/GetMonths').success(function(data) {
 			console.log(data);
@@ -58,6 +58,20 @@ function ExpenseService($http) {
 		}).error(function(err) {
 			return err;
 		});
+	};
+	
+	expenseService.delete = function(expense, callback){
+		console.log('DELETE /API/Expense/'+expense.id);
+		
+		$http.delete('/API/Expense/'+expense.id).success(function(data){
+			
+			expenseService.refresh();
+			
+			if(callback !== undefined){
+				callback(data);
+			}
+		});
+		
 	};
 
 	return expenseService;

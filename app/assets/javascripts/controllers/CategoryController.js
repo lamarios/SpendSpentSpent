@@ -2,7 +2,8 @@ app.controller('CategoryController', [
 		'$scope',
 		'ExpTracker',
 		'$http',
-		function($scope, ExpTracker, $http) {
+		'$rootScope',
+		function($scope, ExpTracker, $http, $rootScope) {
 
 			$scope.categories = function() {
 				return ExpTracker.categories.list;
@@ -23,6 +24,9 @@ app.controller('CategoryController', [
 							$scope.addCategory();
 						});
 			};
+			
+			
+			
 
 			$scope.addCategory = function(icon, color) {
 

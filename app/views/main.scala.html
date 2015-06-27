@@ -5,14 +5,20 @@
 <html lang="en">
     <head>
         <title>@title</title>
+        
+        <meta charset="utf-8">
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+        
 		<link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.min.css")">
     </head>
-    <body ng-app="ExpTrackerApp">
+    <body ng-app="ExpTrackerApp" ng-swipe-left="swipeLeft()" ng-swipe-right="swipeRight()">
         @content
+        <script type="text/javascript" src="@routes.Assets.versioned("javascripts/vendor/jquery-2.1.4.min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/vendor/angular.min.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.versioned("javascripts/vendor/fastclick.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("javascripts/vendor/angular-touch.min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/vendor/angular-datepicker.min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/vendor/chartist.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/vendor/angular-chartist.min.js")"></script>

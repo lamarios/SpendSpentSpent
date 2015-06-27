@@ -1,0 +1,38 @@
+@media only screen and (max-width: 900px)  {
+	
+	#columns{
+		width:100%;
+	}
+	
+	.column{
+		/*flex */
+	-webkit-order: 0;
+	-ms-flex-order: 0;
+	order: 0;
+	-webkit-flex: 0 0 50%;
+	-ms-flex: 0 0 50%;
+	flex: 0 0 50%;
+	box-sizing: border-box;
+	-webkit-align-self: stretch;
+    -ms-flex-item-align: stretch;
+    align-self: stretch;
+	}
+	
+	#left-column{
+		display:none;
+	}
+	
+	.dialog {
+		left: 10%;
+		right: 10%;
+	}
+	
+	category-dialog .category-icons {
+		overflow-y: scroll; /* has to be scroll, not auto */
+		-webkit-overflow-scrolling: touch;
+	}
+
+	#footer .page-marker{
+		display: block;
+	}
+}

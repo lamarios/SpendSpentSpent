@@ -4,7 +4,7 @@ function RecurringExpenseService($http){
 	
 	
 	recurringService.refresh = function(callback){
-		console.log('Calling /API/RecurringExpense');
+		console.log('GET /API/RecurringExpense');
 		$http.get('/API/RecurringExpense').success(function(data){
 			recurringService.list = data;
 			console.log(data);
@@ -17,7 +17,7 @@ function RecurringExpenseService($http){
 	
 	// Add expense
 	recurringService.add = function(newExpense, callBack) {
-		console.log('Calling /API/RecurringExpense');
+		console.log('POST /API/RecurringExpense');
 		$http.post('/API/RecurringExpense', newExpense, HTTP_HEADERS).success(function(data) {
 			console.log(data);
 			recurringService.list.push(data);
@@ -27,6 +27,19 @@ function RecurringExpenseService($http){
 		});
 	};
 
+	recurringService.delete = function(recurring, callback){
+		console.log('DELETE /API/RecurringExpense/'+recurring.id);
+		$http.delete('/API/RecurringExpense/'+recurring.id).success(function(data){
+			
+			//recurringService.refresh();
+			var index = recurringService.list.indexOf(recurring);
+			recurringService.list.splice(index, 1);
+			
+			if(callback !== undefined){
+				callback(data);
+			}
+		});
+	};
 	
 	return recurringService;
 }

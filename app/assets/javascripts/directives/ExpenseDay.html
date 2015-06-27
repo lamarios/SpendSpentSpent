@@ -3,6 +3,14 @@
 	<ul class="day-expense">
 		<li ng-repeat="expense in day.expenses">
 				<i ng-if="expense.type == 2" class="fa fa-refresh"></i> {{ expense.amount | number:2 }} <i class="fa {{ expense.category.icon }}"></i>
+				<i class="fa fa-ellipsis-v option-button" ng-class="{'fa-rotate-90': showOptions}" ng-click="showOptions = !showOptions; showDelete = false"></i>
+				<!--  options > -->
+				<div animation-create="fadeInDown" class="options" ng-show="showOptions">
+					<p animation-create="fadeInDown" class="delete"  ng-show="!showDelete" ng-click="showDelete = !showDelete">Delete</p>
+					
+					<p animation-create="fadeInDown" ng-show="showDelete">Are you sure ?</p>
+					<p animation-create="fadeInDown" ng-show="showDelete" class="confirmation"><span ng-click="showDelete = false" class="cancel">Cancel</span><span ng-click="$parent.$parent.delete(expense)" class="delete">OK</span>
+				</div>
 		</li>
 	</ul>
 	<hr />

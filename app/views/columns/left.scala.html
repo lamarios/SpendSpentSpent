@@ -1,6 +1,6 @@
 @* left Template File *@
 @()
-<div class="column" id="left-column" ng-controller="HistoryController">
+<div class="column animated" id="left-column" ng-controller="HistoryController">
 	<p class="types" animation-create="fadeInDown">
 		<a ng-click="changeType('Monthly')" class="history-type" ng-class="{'selected': type() =='Monthly'}">Monthly</a><a ng-click="changeType('Yearly')" class="history-type" ng-class="{'selected': type() =='Yearly'}">Yearly</a>
 	</p>

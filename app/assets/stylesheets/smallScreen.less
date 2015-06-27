@@ -1,0 +1,41 @@
+@media only screen and (max-width: 600px)  {
+	
+	#columns{
+		width:100%;
+	}
+	
+	.dialog {
+		left: 0;
+		right: 0;
+		top:0;
+
+	}
+	
+	.column{
+		/*flex */
+	-webkit-order: 0;
+	-ms-flex-order: 0;
+	order: 0;
+	-webkit-flex: 0 0 100%;
+	-ms-flex: 0 0 100%;
+	flex: 0 0 100%;
+	box-sizing: border-box;
+	-webkit-align-self: stretch;
+    -ms-flex-item-align: stretch;
+    align-self: stretch;
+	}
+	
+	#left-column, #right-column{
+		display:none;
+	}
+	
+	category-dialog .category-icons {
+			overflow-y: scroll; /* has to be scroll, not auto */
+			-webkit-overflow-scrolling: touch;
+	}
+	
+	#footer .page-marker{
+		display:block;
+	}
+	
+}

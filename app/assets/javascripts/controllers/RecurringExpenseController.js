@@ -48,6 +48,10 @@ app.controller('ReucurringExpenseController', [ '$scope', 'ExpTracker', function
 				$scope.newExpenseAmount.length - 1);
 	};
 	
+	$scope.deleteRecurring = function(recurring){
+		ExpTracker.recurring.delete(recurring);
+	};
+	
 	$scope.closeDialog = function(){
 		$scope.showDialog = false;
 	};
