@@ -79,15 +79,13 @@ body{
 
 
 .dialog {
-	position: fixed;
+	width:50%;
+	position: absolute;
 	background-color: #fff;
-	top: 30px;
-	left: 30%;
-	right: 30%;
-	margin: auto;
-	z-index: 10;
-	max-height: 99vh;
-}
+	margin: 30px 25%;
+	max-height:99vh;
+	overflow-y:auto;
+  }
 
 /*center column */
 #center-column .panels{
@@ -398,6 +396,7 @@ expense-day .options .confirmation span{
 
 
 /*category-dialog*/
+
 
 category-dialog .category-dialog-color {
 	display: inline-block;

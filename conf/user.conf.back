@@ -1,0 +1,9 @@
+play.crypto.secret="mrPBloZP1vQmBJV6lw1fCI9mkiD5QaEVOvrLuKtCWbWW8I9emtQi9BwIuYCsfdkV"
+db.default.driver=org.h2.Driver
+db.default.url="jdbc:h2:/Users/gz/Desktop/SSS;MODE=MYSQL"
+# db.default.driver=com.mysql.jdbc.Driver
+# db.default.url="jdbc:mysql://192.168.1.198:3306/exptracker_dev"
+# db.default.username=homedash
+# db.default.password="homedash"
+db.default.logSql=true
+

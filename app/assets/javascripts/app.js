@@ -11,7 +11,7 @@ var HTTP_HEADERS = {
 	}
 };
 
-var app = angular.module('ExpTrackerApp', [ 'angular-chartist', '720kb.datepicker', 'ngTouch' ]).run(function($rootScope) {
+var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run(function($rootScope) {
 
 	if($('#right-column').is(':visible')){
 		$('#footer .page-marker i:nth-child(3)').addClass('active');

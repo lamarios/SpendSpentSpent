@@ -98,28 +98,32 @@ function migrate239to240 {
 function createdbconf {
 	CONF_FILE=$DIR/conf/user.conf
 	
-	echo "Setting up the MySQL database connection"
+	echo "Setting up the database"
 	
-	read -p "Host:" DB
-	read -p "Port [3306]:" DBPORT
-	read -p "Database:" DBDB
+	read -p "Database folder (full path), missing folders will be created[$DIR]\n" DB
+	
 
-	if [ "$DBPORT" = "" ]
+	if [ "$DB" == "" ]
 	then
-    	DBPORT=3306
+    	DB="$DIR"
 	fi
 	
-	read -p "Username:" DBUSER
-	read -s -p "Password:" DBPASS
+	if [[ "$DB" != */ ]]
+	then
+    	DB="$DB/"
+	fi
+
+	mkdir -p $DB
+
+	DB+="SSS"
 
 	randomString32
 
 	touch  $CONF_FILE
 	echo "play.crypto.secret=\"$APP_SECRET\"" >> $CONF_FILE
-	echo "db.default.driver=com.mysql.jdbc.Driver" >> $CONF_FILE
-	echo "db.default.url=\"jdbc:mysql://$DB:$DBPORT/$DBDB\"" >> $CONF_FILE
-	echo "db.default.user=$DBUSER" >> $CONF_FILE
-	echo "db.default.password=\"$DBPASS\"" >> $CONF_FILE
+	echo "db.default.driver=org.h2.Driver" >> $CONF_FILE
+	echo "db.default.url=\"jdbc:h2:$DB;MODE=MYSQL\"" >> $CONF_FILE
+
 	
 	echo "Config written to $CONF_FILE"
 }

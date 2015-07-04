@@ -44,7 +44,7 @@ public class RecurringExpenseProcessor implements Runnable {
 	}
 
 	private List<RecurringExpense> getExpenses() {
-		String sql = "SELECT `id` FROM `recurring_expense` WHERE DATE(`next_occurrence`) <= '" + df.format(new Date()) + "'";
+		String sql = "SELECT `id` FROM `recurring_expense` WHERE `next_occurrence` <= '" + df.format(new Date()) + "'";
 		List<RecurringExpense> recurringExpenses = new ArrayList<RecurringExpense>();
 		// List<RecurringExpense> recurringExpenses =
 		// RecurringExpense.find.where().le("DATE(`next_occurrence`)","'" +

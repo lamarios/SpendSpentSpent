@@ -4,9 +4,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 
 import com.avaje.ebean.Model;
 import com.google.gson.Gson;
@@ -22,6 +25,8 @@ public class RecurringExpense extends Model {
 
 	@Id
 	@Expose
+	@SequenceGenerator(name = "gen", sequenceName = "recurring_sequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gen")
 	private long id;
 
 	@Expose

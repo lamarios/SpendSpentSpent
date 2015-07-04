@@ -19,12 +19,12 @@
 <div class="options">
 	<!--<input type="checkbox" ng-model="newExpenseIncome" ng-true-value="true" ng-false-value="false" id="new-expense-income" /><label for="new-expense-income">Income</label></p>
 	-->
+<select ng-options="year for year in $parent.years" ng-model="$parent.selectedYear"></select>
+<select ng-options="month.number as month.name for month in $parent.months" ng-model="$parent.selectedMonth"></select>
+<select ng-options="day for day in $parent.days($parent.selectedYear, $parent.selectedMonth)" ng-model="$parent.selectedDate"></select>
 	
-	<datepicker date-format="yyyy-MM-dd" ">
-  		<input ng-model="dateSelector" type="text"  class="date" placeholder="Date, default: Today"/>
-	</datepicker>
 </div>
 <div class="actions">
-	<button  class="btn btn-primary" ng-click="$parent.addExpense(cat.id, $parent.newExpenseAmount, newExpenseIncome, dateSelector)">OK</button>
+	<button  class="btn btn-primary" ng-click="$parent.addExpense(cat.id, $parent.newExpenseAmount, newExpenseIncome, $parent.selectedYear, $parent.selectedMonth, $parent.selectedDate)">OK</button>
 	<button  class="btn" ng-click="$parent.closeDialogs()">Cancel</button>
 </div>

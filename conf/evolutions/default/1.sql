@@ -6,7 +6,7 @@ CREATE TABLE `category` (
   `icon` varchar(50) NOT NULL DEFAULT '',
   `category_order` int(3) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) DEFAULT CHARSET=latin1;
+);
  
  
  CREATE TABLE `expense` (
@@ -17,7 +17,7 @@ CREATE TABLE `category` (
   `income` tinyint(1) DEFAULT NULL,
   `type` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-)  DEFAULT CHARSET=latin1;
+) ;
 
 
 CREATE TABLE `recurring_expense` (
@@ -31,9 +31,18 @@ CREATE TABLE `recurring_expense` (
   `amount` decimal(10,2) DEFAULT NULL,
   `income` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) DEFAULT CHARSET=latin1;
+);
+
+
+CREATE SEQUENCE	 IF NOT EXISTS	`category_sequence` START WITH 0;
+CREATE SEQUENCE	 IF NOT EXISTS	`expense_sequence` START WITH 0;
+CREATE SEQUENCE	 IF NOT EXISTS	`recurring_sequence` START WITH 0;
 # --- !Downs
  
 DROP TABLE `category`;
 DROP TABLE `expense`;
 DROP TABLE `recurring_expense`;
+
+DROP SEQUENCE `category_sequence`;
+DROP SEQUENCE `expense_sequence`;
+DROP SEQUENCE `recurring_sequence`;

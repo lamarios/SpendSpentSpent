@@ -3,9 +3,12 @@ package models;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import com.avaje.ebean.Model;
@@ -21,6 +24,8 @@ public class Expense extends Model {
 
 	@Id
 	@Expose
+	@SequenceGenerator(name = "gen", sequenceName = "expense_sequence", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gen")
 	private long id;
 	@Expose
 	private double amount;

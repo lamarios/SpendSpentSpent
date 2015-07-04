@@ -154,7 +154,7 @@ public class ExpenseApi extends Controller {
 		Logger.info("ExpenseApi.getMonths()");
 		List<String> months = new ArrayList<>();
 		
-		String sql = "SELECT DISTINCT DATE_FORMAT(`date`, '%Y-%m') as `month` FROM `expense`  ORDER BY `date` ASC";
+		String sql = "SELECT DISTINCT FORMATDATETIME(`date`, 'Y-MM') as `month` FROM `expense`  ORDER BY `month` ASC";
 		List<SqlRow> rows = Ebean.createSqlQuery(sql).findList();
 		rows.forEach((row) ->{
 			months.add(row.getString("month"));

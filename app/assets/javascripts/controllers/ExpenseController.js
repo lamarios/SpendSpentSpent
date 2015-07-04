@@ -8,7 +8,11 @@ app.controller('ExpenseController', [ '$scope', 'ExpTracker', function($scope, E
 		return ExpTracker.expenses.months;
 	};
 
-	$scope.selectedMonth = ExpTracker.expenses.selectedMonth;
+	$scope.selectedMonth = function(){
+		return ExpTracker.expenses.selectedMonth;
+	};
+	
+	
 
 	$scope.totalIncome = function() {
 		var total = 0;
