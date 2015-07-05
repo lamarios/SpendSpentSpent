@@ -42,8 +42,8 @@ app.factory('ExpTracker', [ '$http', function($http) {
 		var token = localStorage.getItem("token");
 		if (token !== undefined && token !== '' && token !== null && token !== 'undefined') {
 			service.setToken(token);
-		} else {
-			$('login').show();
+		}else{
+			service.refresh();
 		}
 	}
 
