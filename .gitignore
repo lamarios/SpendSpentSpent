@@ -21,3 +21,5 @@ conf/user.conf
 conf/launch.conf
 
 logs
+
+.cache-main

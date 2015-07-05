@@ -34,5 +34,12 @@ GET      /API/History/Yearly/$count<[0-9]+>    controllers.api.HistoryApi.yearly
 GET      /API/History/Monthly/$count<[0-9]+>   controllers.api.HistoryApi.monthly(count: Integer)
 
 
+#Settings API
+GET      /API/Setting                          controllers.api.SettingApi.getAll()
+PUT      /API/Setting/:name                    controllers.api.SettingApi.update(name: String)
+
+#Login
+POST     /Login                                controllers.api.UserSessionAPI.logIn()
+
 # Map static resources from the /public folder to the /assets URL path
 GET      /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)

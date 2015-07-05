@@ -33,6 +33,19 @@ CREATE TABLE `recurring_expense` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `user_session`(
+  `token` varchar(50) DEFAULT NULL,
+  `expiry_date` date DEFAULT NULL,
+  PRIMARY KEY (`token`)
+);
+
+
+CREATE TABLE `setting` (
+  `name` varchar(50) DEFAULT NULL,
+  `value` varchar(250) DEFAULT NULL,
+   PRIMARY KEY (`name`)
+);
+
 
 CREATE SEQUENCE	 IF NOT EXISTS	`category_sequence` START WITH 0;
 CREATE SEQUENCE	 IF NOT EXISTS	`expense_sequence` START WITH 0;
@@ -42,6 +55,8 @@ CREATE SEQUENCE	 IF NOT EXISTS	`recurring_sequence` START WITH 0;
 DROP TABLE `category`;
 DROP TABLE `expense`;
 DROP TABLE `recurring_expense`;
+DROP TABLE `setting`;
+DROP TABLE `user_session`;
 
 DROP SEQUENCE `category_sequence`;
 DROP SEQUENCE `expense_sequence`;

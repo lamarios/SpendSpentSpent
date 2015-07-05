@@ -4,18 +4,19 @@
 @import './vendor/angular-datepicker.min.less';
 @import './vendor/fontawesome/font-awesome.less';
 
-@textColor: #333;
+@textColor: rgb(72, 72, 72);
 
 body{
 	min-height: 95vh;
 	padding-bottom: 50px;
-}
-
-#columns {
 	font-family: 'Roboto', sans-serif;
 	color: @textColor;
 	font-size:20px;
-	width:900px;
+	box-sizing: border-box;
+}
+
+#columns {
+		width:900px;
 	margin-left: auto;
     margin-right: auto;
 	/*flex*/
@@ -573,6 +574,40 @@ category-history .fa {
 	float: left;
 }
 
+/* Settings */
+
+settings, login{
+	width: 100%;
+	position:absolute;
+	top:0;
+	left:0;
+	right: 0;
+	background-color:white;
+	z-index:7;
+	padding:20px;
+	font-size: 15px;
+	box-sizing: border-box;
+}
+
+settings label, login label{
+	display: block;
+}
+settings input[type="text"],settings input[type="password"],login input[type="text"],login input[type="password"]{
+	border: 1px solid @primaryColor;
+	border-radius: 5px;
+	background-color:white;
+	color:@textColor;
+	font-size: 15px;
+	font-weight: 300;
+	padding:5px;
+}
+
+login{
+	display: none;
+	z-index:20;
+	height:99vh;
+}
+
 /* footer */
 #footer{
 	position:fixed;
@@ -602,6 +637,18 @@ category-history .fa {
 	color:@secondaryColor;
 	font-size: 20px;
 	float:right;
+	padding:3px;
+}
+
+#footer .settings .logout{
+	font-size: 15px;
+	margin-right:10px;
+}
+
+#footer #http-activity{
+	color:@secondaryColor;
+	font-size: 20px;
+	float:left;
 	padding:3px;
 }
 

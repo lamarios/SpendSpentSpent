@@ -11,12 +11,13 @@ var HTTP_HEADERS = {
 	}
 };
 
-var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run(function($rootScope) {
+var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch']).run(function($rootScope, $http) {
+	$rootScope.showSettings = false;
 
-	if($('#right-column').is(':visible')){
+	if ($('#right-column').is(':visible')) {
 		$('#footer .page-marker i:nth-child(3)').addClass('active');
 	}
-	
+
 	$rootScope.swipeLeft = function() {
 		var columns = $('.column:visible');
 		switch (columns.length) {
@@ -30,7 +31,16 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run
 
 	};
 
+	$rootScope.logout = function(callback) {
+		if (typeof (Storage) !== "undefined") {
+			localStorage.removeItem("token");
+		}
+		$http.defaults.headers.common.Authorization = '';
+		
+		$('login').show();
+	};
 	
+
 	$rootScope.swipeRight = function() {
 		var columns = $('.column:visible');
 
@@ -46,33 +56,33 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run
 
 	$rootScope.oneColumnSwipe = function(column, direction) {
 		var id = column.attr('id');
-		
+
 		var classToRemove = 'slideInLeft slideInRight';
-		
+
 		var center = $('#center-column');
 		var left = $('#left-column');
 		var right = $('#right-column');
-		
+
 		$('#footer .page-marker i').removeClass('active');
-		
+
 		switch (id) {
 		case 'center-column':
-			//moving away from center column
-			if(direction ==='left'){
+			// moving away from center column
+			if (direction === 'left') {
 				center.hide();
 				right.show();
 				right.addClass('slideInRight');
 				$('#footer .page-marker i:nth-child(3)').addClass('active');
-			}else{
+			} else {
 				center.hide();
 				left.show();
 				left.addClass('slideInLeft');
 				$('#footer .page-marker i:nth-child(1)').addClass('active');
 			}
-			
+
 			break;
 		case 'left-column':
-			if(direction ==='left'){
+			if (direction === 'left') {
 				left.hide();
 				center.removeClass(classToRemove);
 				center.show();
@@ -81,7 +91,7 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run
 			}
 			break;
 		case 'right-column':
-			if(direction ==='right'){
+			if (direction === 'right') {
 				right.hide();
 				center.removeClass(classToRemove);
 				center.show();
@@ -94,15 +104,15 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run
 
 	$rootScope.twoColumnsSwipe = function(columns, direction) {
 		var showingColumn = '';
-		
-		//alert('2 column swipe');
-		
+
+		// alert('2 column swipe');
+
 		var center = $('#center-column');
 		var left = $('#left-column');
 		var right = $('#right-column');
 		var classToRemove = 'slideInLeft slideInRight';
 
-		if(right.is(':visible') && direction === 'right'){
+		if (right.is(':visible') && direction === 'right') {
 			right.hide();
 			left.show();
 			left.removeClass(classToRemove);
@@ -110,7 +120,7 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run
 			$('#footer .page-marker i:nth-child(1)').addClass('active');
 			$('#footer .page-marker i:nth-child(3)').removeClass('active');
 
-		}else if(left.is(':visible') && direction === 'left'){
+		} else if (left.is(':visible') && direction === 'left') {
 			left.hide();
 			right.show();
 			right.removeClass(classToRemove);
@@ -118,7 +128,7 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run
 			$('#footer .page-marker i:nth-child(3)').addClass('active');
 			$('#footer .page-marker i:nth-child(1)').removeClass('active');
 		}
-		
+
 	};
 
 	// FastClick.attach(document.body);
@@ -138,4 +148,43 @@ app.config([ '$httpProvider', function($httpProvider) {
 	// extra
 	$httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache';
 	$httpProvider.defaults.headers.get.Pragma = 'no-cache';
+
+	// showing loading when there's a request
+	$httpProvider.interceptors.push(function($q) {
+		var interceptor = {};
+		interceptor.count = 0;
+
+		interceptor.request = function(config) {
+			if (interceptor.count === 0) {
+				$("#http-activity").fadeIn('fast');
+			}
+			interceptor.count++;
+			
+			return config;
+		};
+
+		interceptor.response = function(response) {
+			interceptor.count--;
+			if (interceptor.count === 0) {
+				$("#http-activity").fadeOut('fast');
+			}
+			
+			return response;
+		};
+		
+		interceptor.responseError = function(rejection) {
+			interceptor.count--;
+			if (interceptor.count === 0) {
+				$("#http-activity").fadeOut('fast');
+			}
+			
+			if (rejection.status === 401) {
+				$('login').show();
+			}
+			return null;
+		};
+
+		return interceptor;
+	});
+
 } ]);

@@ -10,27 +10,27 @@
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.apache.commons/commons-lang3/jars/commons-lang3-3.4.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/bundles/scala-xml_2.11-1.0.1.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-ebean_2.11/jars/play-ebean_2.11-1.0.0.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-java-jdbc_2.11/jars/play-java-jdbc_2.11-2.4.1.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-jdbc_2.11/jars/play-jdbc_2.11-2.4.1.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-jdbc-api_2.11/jars/play-jdbc-api_2.11-2.4.1.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play_2.11/jars/play_2.11-2.4.1.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/build-link/jars/build-link-2.4.1.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-exceptions/jars/play-exceptions-2.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-java-jdbc_2.11/jars/play-java-jdbc_2.11-2.4.2.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-jdbc_2.11/jars/play-jdbc_2.11-2.4.2.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-jdbc-api_2.11/jars/play-jdbc-api_2.11-2.4.2.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play_2.11/jars/play_2.11-2.4.2.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/build-link/jars/build-link-2.4.2.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-exceptions/jars/play-exceptions-2.4.2.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.javassist/javassist/bundles/javassist-3.19.0-GA.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-iteratees_2.11/jars/play-iteratees_2.11-2.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-iteratees_2.11/jars/play-iteratees_2.11-2.4.2.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.scala-stm/scala-stm_2.11/jars/scala-stm_2.11-0.7.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe/config/bundles/config-1.3.0.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-json_2.11/jars/play-json_2.11-2.4.1.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-functional_2.11/jars/play-functional_2.11-2.4.1.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-datacommons_2.11/jars/play-datacommons_2.11-2.4.1.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/joda-time/joda-time/jars/joda-time-2.7.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-json_2.11/jars/play-json_2.11-2.4.2.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-functional_2.11/jars/play-functional_2.11-2.4.2.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-datacommons_2.11/jars/play-datacommons_2.11-2.4.2.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/joda-time/joda-time/jars/joda-time-2.8.1.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.joda/joda-convert/jars/joda-convert-1.7.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.fasterxml.jackson.core/jackson-core/bundles/jackson-core-2.5.4.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.fasterxml.jackson.core/jackson-annotations/bundles/jackson-annotations-2.5.4.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.fasterxml.jackson.core/jackson-databind/bundles/jackson-databind-2.5.4.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.fasterxml.jackson.datatype/jackson-datatype-jdk8/bundles/jackson-datatype-jdk8-2.5.4.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.fasterxml.jackson.datatype/jackson-datatype-jsr310/bundles/jackson-datatype-jsr310-2.5.4.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-netty-utils/jars/play-netty-utils-2.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-netty-utils/jars/play-netty-utils-2.4.2.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.7.12.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.slf4j/jul-to-slf4j/jars/jul-to-slf4j-1.7.12.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.slf4j/jcl-over-slf4j/jars/jcl-over-slf4j-1.7.12.jar"/>
@@ -51,7 +51,7 @@
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.zaxxer/HikariCP/bundles/HikariCP-2.3.7.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.h2database/h2/jars/h2-1.4.187.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/tyrex/tyrex/jars/tyrex-1.0.1.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-java_2.11/jars/play-java_2.11-2.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-java_2.11/jars/play-java_2.11-2.4.2.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.scala-lang.modules/scala-java8-compat_2.11/bundles/scala-java8-compat_2.11-0.3.0.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.yaml/snakeyaml/bundles/snakeyaml-1.15.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.hibernate/hibernate-validator/jars/hibernate-validator-5.0.3.Final.jar"/>
@@ -67,25 +67,25 @@
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/net.jodah/typetools/bundles/typetools-0.4.1.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.google.code.findbugs/jsr305/jars/jsr305-2.0.3.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.apache.tomcat/tomcat-servlet-api/jars/tomcat-servlet-api-8.0.21.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-jdbc-evolutions_2.11/jars/play-jdbc-evolutions_2.11-2.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-jdbc-evolutions_2.11/jars/play-jdbc-evolutions_2.11-2.4.2.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.avaje.ebeanorm/avaje-ebeanorm/jars/avaje-ebeanorm-4.6.2.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/javax.persistence/persistence-api/jars/persistence-api-1.0.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.avaje.ebeanorm/avaje-ebeanorm-agent/jars/avaje-ebeanorm-agent-4.5.3.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-server_2.11/jars/play-server_2.11-2.4.1.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-netty-server_2.11/jars/play-netty-server_2.11-2.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-server_2.11/jars/play-server_2.11-2.4.2.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-netty-server_2.11/jars/play-netty-server_2.11-2.4.2.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/io.netty/netty/bundles/netty-3.10.3.Final.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.netty/netty-http-pipelining/jars/netty-http-pipelining-1.1.4.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-cache_2.11/jars/play-cache_2.11-2.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-cache_2.11/jars/play-cache_2.11-2.4.2.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/net.sf.ehcache/ehcache-core/jars/ehcache-core-2.6.11.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-java-ws_2.11/jars/play-java-ws_2.11-2.4.1.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-ws_2.11/jars/play-ws_2.11-2.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-java-ws_2.11/jars/play-java-ws_2.11-2.4.2.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-ws_2.11/jars/play-ws_2.11-2.4.2.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.ning/async-http-client/jars/async-http-client-1.9.21.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/oauth.signpost/signpost-core/jars/signpost-core-1.2.1.2.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/oauth.signpost/signpost-commonshttp4/jars/signpost-commonshttp4-1.2.1.2.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/filters-helpers_2.11/jars/filters-helpers_2.11-2.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/filters-helpers_2.11/jars/filters-helpers_2.11-2.4.2.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/mysql/mysql-connector-java/jars/mysql-connector-java-5.1.18.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.github.julman99/gson-fire/jars/gson-fire-0.11.0.jar"/>
-  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-test_2.11/jars/play-test_2.11-2.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.typesafe.play/play-test_2.11/jars/play-test_2.11-2.4.2.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/org.hamcrest/hamcrest-core/jars/hamcrest-core-1.3.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/com.novocode/junit-interface/jars/junit-interface-0.11.jar"/>
   <classpathentry kind="lib" path="/Users/gz/.ivy2/cache/junit/junit/jars/junit-4.11.jar"/>

@@ -8,9 +8,16 @@
 @columns.right()
 </div>
 
+
+<settings ng-show="showSettings" animation-create="slideInUp" ng-controller="SettingsController" ></settings>
+
+<login animation-create="slideInUp" ng-controller="LoginController" ></login>
+
 <div id="footer">
+	<i id="http-activity" class="fa fa-spinner fa-spin animated"></i>
 	<span class="settings">
-		<a><i class="fa fa-gear"></i></a>
+	 	<a ng-show="showSettings"class="logout"  animation-create="fadeIn" ng-click="logout()"><i class="fa fa-sign-out"></i> Logout</a>
+		<a ng-click="showSettings = !showSettings"><i class="fa fa-gear"></i></a>
 	</span>
 	<div class="page-marker">
 		<i class="fa fa-circle"></i>
