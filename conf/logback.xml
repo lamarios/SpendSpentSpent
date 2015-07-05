@@ -1,25 +1,44 @@
 <configuration>
-    
-  <conversionRule conversionWord="coloredLevel" converterClass="play.api.Logger$ColoredLevel" />
 
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>%coloredLevel - %logger - %message%n%xException</pattern>
-    </encoder>
-  </appender>
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${application.home}/logs/application.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- Daily rollover with compression -->
+			<fileNamePattern>application-log-%d{yyyy-MM-dd}.gz</fileNamePattern>
+			<!-- keep 30 days worth of history -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} [%level] from %logger in %thread - %message%n%xException</pattern>
+		</encoder>
+	</appender>
 
-  <!--
-    The logger name is typically the Java/Scala package name.
-    This configures the log level to log at for a package and its children packages.
-  -->
-  <logger name="play" level="INFO" />
-  <logger name="application" level="INFO" />
-<!--   <logger name="logger.org.jdbcdslog.StatementLogger" level="DEBUG" />
-  <logger name="logger.org.jdbcdslog.ConnectionLogger" level="DEBUG" />
-  <logger name="logger.org.jdbcdslog.ResultSetLogger" level="DEBUG" /> -->
-	<logger name="org.avaje.ebean.SQL" level="OFF" />
-  <root level="ERROR">
-    <appender-ref ref="STDOUT" />
-  </root>
+	<appender name="ACCESS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${application.home}/logs/access.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover with compression -->
+			<fileNamePattern>access-log-%d{yyyy-MM-dd}.gz</fileNamePattern>
+			<!-- keep 1 week worth of history -->
+			<maxHistory>7</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} %message%n</pattern>
+			<!-- this quadruples logging throughput -->
+			<immediateFlush>false</immediateFlush>
+		</encoder>
+	</appender>
+
+	<!-- additivity=false ensures access log data only goes to the access log -->
+	<logger name="access" level="INFO" additivity="false">
+		<appender-ref ref="ACCESS_FILE" />
+	</logger>
+
+	<logger name="org.avaje.ebean.SQL" level="OFF">
+		<appender-ref ref="FILE" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="FILE" />
+	</root>
 
 </configuration>
