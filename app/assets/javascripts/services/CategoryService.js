@@ -46,6 +46,17 @@ function CategoryService($http) {
 			return err;
 		});
 	};
+	
+	categoryService.delete = function(category, callback){
+		console.log('Calling /API/Category/'+category.id);
+		$http.delete('/API/Category/'+category.id).success(function(data){
+			var index = categoryService.list.indexOf(category);
+			categoryService.list.splice(index, 1);
+			if (callback !== undefined) {
+				callback(data);
+			}
+		});
+	};
 
 	return categoryService;
 }

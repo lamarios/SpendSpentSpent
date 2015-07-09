@@ -16,7 +16,8 @@ CREATE TABLE `category` (
   `date` date DEFAULT NULL,
   `income` tinyint(1) DEFAULT NULL,
   `type` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+ FOREIGN KEY (`category_id`)  REFERENCES public.category(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 
@@ -30,7 +31,8 @@ CREATE TABLE `recurring_expense` (
   `next_occurrence` date DEFAULT NULL,
   `amount` decimal(10,2) DEFAULT NULL,
   `income` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`category_id`)  REFERENCES public.category(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `user_session`(
@@ -52,11 +54,12 @@ CREATE SEQUENCE	 IF NOT EXISTS	`expense_sequence` START WITH 0;
 CREATE SEQUENCE	 IF NOT EXISTS	`recurring_sequence` START WITH 0;
 # --- !Downs
  
-DROP TABLE `category`;
 DROP TABLE `expense`;
 DROP TABLE `recurring_expense`;
 DROP TABLE `setting`;
 DROP TABLE `user_session`;
+
+DROP TABLE `category`;
 
 DROP SEQUENCE `category_sequence`;
 DROP SEQUENCE `expense_sequence`;

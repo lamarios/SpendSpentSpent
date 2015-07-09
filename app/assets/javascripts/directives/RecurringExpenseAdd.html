@@ -1,7 +1,7 @@
 <div class="categories">
 	<ul>
 		<li ng-click="$parent.selected = category.id" ng-class="{'selected': $parent.selected == category.id }" ng-repeat="category in categories()">
-			<i  class="fa {{ category.icon }}"></i>
+			<i  class="cat {{ category.icon }}"></i>
 		</li>
 	</ul>
 	<span>Select one of the icon above</span>

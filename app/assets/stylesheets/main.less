@@ -3,6 +3,7 @@
 @import './vendor/chartist.less';
 @import './vendor/angular-datepicker.min.less';
 @import './vendor/fontawesome/font-awesome.less';
+@import './vendor/categoryicons/style.less';
 
 @textColor: rgb(72, 72, 72);
 
@@ -92,6 +93,20 @@ body{
 #center-column .panels{
 	margin: 0;
 	margin-bottom: 20px;
+}
+
+#center-column .category-setting{
+	color:@secondaryColor;
+	font-size:20px;
+	text-align: left;
+	box-sizing: border-box;
+	padding:10px;
+	
+}
+
+#center-column .category-setting .fa{
+	padding-left:10px;
+	padding-right:10px;
 }
 
 /* recurring expenses */
@@ -298,6 +313,33 @@ category-grid {
 	box-sizing: border-box;
 	background-color: @primaryColor;
 	text-align: center;
+	overflow: hidden;
+	}
+
+category-grid .cat-overlay{
+	position: absolute;
+	left:0;
+	top:0;
+	right:0;
+	bottom: 0;
+	background-color: rgba(0,0,0,0.5);
+	border-radius: 5px;
+	text-align: right;
+	
+}
+
+category-grid.overlaid{
+		
+	@scale: 1.2;
+	-ms-transform: scale(@scale); /* IE 9 */
+    -webkit-transform: scale(@scale); /* Safari */
+    transform: scale(@scale); /* Standard syntax */
+}
+
+category-grid .cat-overlay .fa{
+	color:#DDD;
+	font-size: 20px;
+	padding:5px;
 }
 
 .add-category {
@@ -349,7 +391,7 @@ expense-day li, expense-day p{
 expense-day li{
 	margin-top:10px;
 }
-expense-day li .fa{
+expense-day li .cat{
 	font-size:25px;
 	color:@primaryColor;
 }
@@ -406,23 +448,33 @@ category-dialog .category-dialog-color {
 	border: 1 slolid #888888;
 }
 
+category-dialog .icon-category p{
+	margin: 7px;
+	text-align: left;
+	font-size: 20px;
+}
+
+category-dialog .icon-category div{
+	overflow: hidden;
+}
+
 category-dialog .category-icons {
 	background-color: @primaryColor;
 	color: white;
 	font-size: 30px;
 	text-align: center;
-	max-height: 300px;
+	max-height: 400px;
 	overflow-y: auto; /* has to be scroll, not auto */
 }
 
-category-dialog .category-icons .fa {
+category-dialog .category-icons .cat {
 	display: inline-block;
 	padding: 10px;
 	margin: 10px;
 	border: 1px solid @primaryColor;
 }
 
-category-dialog .category-icons .fa.selected {
+category-dialog .category-icons .cat.selected {
 	border: 1px solid white;
 }
 
@@ -570,7 +622,7 @@ category-history div .text {
 	z-index: 1;
 }
 
-category-history .fa {
+category-history .cat {
 	float: left;
 }
 
@@ -582,6 +634,7 @@ settings, login{
 	top:0;
 	left:0;
 	right: 0;
+	bottom:0;
 	background-color:white;
 	z-index:7;
 	padding:20px;

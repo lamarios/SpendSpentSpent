@@ -106,7 +106,7 @@ public class RecurringExpenseProcessor implements Runnable {
 
 							}
 
-							str.append(df2.format(recurring.getAmount())).append("paid as ").append(type).append("  expense, next occurrence: ").append(recurring.getNextOccurrence());
+							str.append(df2.format(recurring.getAmount())).append(" paid as ").append(type).append("  expense, next occurrence: ").append(recurring.getNextOccurrence());
 							str.append("\n");
 							sendNotification = true;
 						} catch (Exception e) {

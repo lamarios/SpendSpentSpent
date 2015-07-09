@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import models.Category;
 import models.CategoryIcons;
@@ -25,9 +26,19 @@ public class CategoryApi extends Controller {
 		Map<String, String[]> params = request().body().asFormUrlEncoded();
 		Category category = new Category();
 		
-		if(!CategoryIcons.ALL.contains(params.get(FIELD_ICON)[0])){
+		
+		boolean found = false;
+		for(String iconCategory: CategoryIcons.ALL.keySet()){
+			if(CategoryIcons.ALL.get(iconCategory).contains(params.get(FIELD_ICON)[0])){
+				found = true;
+				break;
+			}
+		}
+		
+		if(!found){
 			return internalServerError("Icon doesn't exist");
 		}
+		
 		
 		category.setIcon(params.get(FIELD_ICON)[0]);
 		category.setCategoryOrder(Integer.parseInt(params.get(FIELD_ORDER)[0]));
@@ -48,10 +59,14 @@ public class CategoryApi extends Controller {
 	
 	public Result getAvailable(){
 		Logger.info("CategoryApi.getAvailable()");
-		List<String> icons = new ArrayList<>(CategoryIcons.ALL);
+		//List<String> icons = new ArrayList<>(CategoryIcons.ALL);
+		
+		TreeMap<String, List<String>> icons = new TreeMap<>(CategoryIcons.ALL);
 		
 		for(Category category: Category.find.all()){
-			icons.remove(category.getIcon());
+			for(String iconCategory:icons.keySet()){
+				icons.get(iconCategory).remove(category.getIcon());
+			}
 		}
 		
 		return ok(gson.toJson(icons)).as("application/json");

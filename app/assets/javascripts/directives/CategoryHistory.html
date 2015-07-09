@@ -1,5 +1,5 @@
 <div animation-create="fadeIn" animation-destroy="fadeOut" ng-model="showGraph" ng-init="showGraph=false" ng-click="showGraph = !showGraph">
-		<p class="text"><span class="fa {{ data.category }}"></span>{{ data.lastValue | number: 2}}</p>
+		<p class="text"><i class="cat {{ data.category }}"></i>{{ data.lastValue | number: 2}}</p>
 		<p ng-style="{'width': '{{ data.percentage }}%' }" class="percentage" animation-create="fadeInLeft"></p>
 </div>
 

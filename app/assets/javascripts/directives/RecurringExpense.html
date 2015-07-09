@@ -1,7 +1,7 @@
 <div class="container">
 	<p class="main" animation-create="zoomIn" ng-model="showDetails" ng-init="showDetails = false" ng-click="showDetails = !showDetails">
 		<span class="type">{{ getTypeString(expense.type) }}</span>
-		<i class="fa {{ expense.category.icon }}"></i>
+		<i class="cat {{ expense.category.icon }}"></i>
 		<span class="amount">{{ expense.amount |  number:2 }}</span>
 	</p>
 	<div animation-create="fadeInDown" ng-if="showDetails" class="details">

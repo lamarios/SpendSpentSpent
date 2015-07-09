@@ -20,6 +20,7 @@ public class UserSessionAPI extends Controller{
 	private final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").excludeFieldsWithoutExposeAnnotation().create();
 
 	public Result logIn(){
+	Logger.info("UserSessionAPI.logIn()");
 		Map<String, String[]> params = request().body().asFormUrlEncoded();
 		String username = params.get(FIELD_USERNAME)[0].trim();
 		String password = params.get(FIELD_PASSWORD)[0].trim();

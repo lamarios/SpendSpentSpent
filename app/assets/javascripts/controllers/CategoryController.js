@@ -12,6 +12,10 @@ app.controller('CategoryController', [ '$scope', 'ExpTracker', '$http', '$rootSc
 	$scope.chosenColor = '#E91E63';
 	$scope.chosenIcon = $scope.availableIcons[0];
 
+	$scope.showOverlay = false;
+	
+	
+	
 	$scope.showAddDialog = function() {
 		// Getting available categories
 		$http.get('/API/Category/Available').success(function() {
@@ -169,6 +173,14 @@ app.controller('CategoryController', [ '$scope', 'ExpTracker', '$http', '$rootSc
 		var s = num+"";
 		while (s.length < size) s = "0" + s;
 		return s;
+	};
+	
+	$scope.delete = function(category){
+		if(confirm('Delete category ? This will delete all the related expenses.')){
+			ExpTracker.categories.delete(category, function(){
+				ExpTracker.refresh();
+			});
+		}
 	};
 
 } ]);
