@@ -14,14 +14,15 @@ body{
 	color: @textColor;
 	font-size:20px;
 	box-sizing: border-box;
+	margin:0;
 }
 
 #columns {
-		width:900px;
+	width:900px;
 	margin-left: auto;
     margin-right: auto;
 	/*flex*/
-	display: -ms-flexbox;
+	/*display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
     -webkit-flex-direction: row;
@@ -39,6 +40,7 @@ body{
     -webkit-align-items: flex-start;
     -ms-flex-align: start;
     align-items: flex-start;
+    */
  }
 
 .btn {
@@ -56,8 +58,14 @@ body{
 
 .column {
 	padding:5px;
+	box-sizing: border-box;
+	width:300px;
+	float:left;
+	display:block;
+	min-height: 99vh;
+	padding-bottom: 30px;
 	/*flex */
-	-webkit-order: 0;
+	/*-webkit-order: 0;
 	-ms-flex-order: 0;
 	order: 0;
 	-webkit-flex: 0 0 33.3333%;
@@ -67,6 +75,7 @@ body{
 	-webkit-align-self: stretch;
     -ms-flex-item-align: stretch;
     align-self: stretch;
+    */
 }
 
 .overlay {
@@ -662,7 +671,7 @@ login{
 	
 	text-align:center;
 	font-size:10px;
-	border-top:1px solid @secondaryColor;
+	//border-top:1px solid @secondaryColor;
 	background-color: white;
 	z-index: 8;
 }

@@ -11,95 +11,113 @@ var HTTP_HEADERS = {
 	}
 };
 
-var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch']).run(function($rootScope, $http) {
+var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run(function($rootScope, $http) {
 	$rootScope.showSettings = false;
+	$rootScope.animating = false;
 
 	if ($('#right-column').is(':visible')) {
 		$('#footer .page-marker i:nth-child(3)').addClass('active');
 	}
-
-	$rootScope.swipeLeft = function() {
-		var columns = $('.column:visible');
-		switch (columns.length) {
-		case 1:
-			$rootScope.oneColumnSwipe(columns, 'left');
-			break;
-		case 2:
-			$rootScope.twoColumnsSwipe(columns, 'left');
-			break;
-		}
-
-	};
 
 	$rootScope.logout = function(callback) {
 		if (typeof (Storage) !== "undefined") {
 			localStorage.removeItem("token");
 		}
 		$http.defaults.headers.common.Authorization = '';
-		
+
 		$('login').show();
 	};
-	
+
+	$rootScope.swipeLeft = function() {
+		if (!$rootScope.animating) {
+			$rootScope.animating = true;
+			var columns = $('.column:visible');
+			switch (columns.length) {
+			case 1:
+				$rootScope.oneColumnSwipe(columns, 'left');
+				break;
+			case 2:
+				$rootScope.twoColumnsSwipe(columns, 'left');
+				break;
+			}
+		}
+	};
 
 	$rootScope.swipeRight = function() {
-		var columns = $('.column:visible');
+		if (!$rootScope.animating) {
+			$rootScope.animating = true;
+			var columns = $('.column:visible');
 
-		switch (columns.length) {
-		case 1:
-			$rootScope.oneColumnSwipe(columns, 'right');
-			break;
-		case 2:
-			$rootScope.twoColumnsSwipe(columns, 'right');
-			break;
+			switch (columns.length) {
+			case 1:
+				$rootScope.oneColumnSwipe(columns, 'right');
+				break;
+			case 2:
+				$rootScope.twoColumnsSwipe(columns, 'right');
+				break;
+			}
 		}
 	};
 
 	$rootScope.oneColumnSwipe = function(column, direction) {
 		var id = column.attr('id');
 
-		var classToRemove = 'slideInLeft slideInRight';
+		var classToRemove = 'slideInLeft slideInRight slideOutLeft slideOutRight';
 
 		var center = $('#center-column');
 		var left = $('#left-column');
 		var right = $('#right-column');
 
-		$('#footer .page-marker i').removeClass('active');
+		var removed;
+
+		$('.column').removeClass(classToRemove);
 
 		switch (id) {
 		case 'center-column':
 			// moving away from center column
 			if (direction === 'left') {
-				center.hide();
-				right.show();
-				right.addClass('slideInRight');
+				// center.hide();
+				// right.show();
+				right.addClass('slideInRight active');
+				center.addClass('slideOutLeft');
 				$('#footer .page-marker i:nth-child(3)').addClass('active');
 			} else {
-				center.hide();
-				left.show();
-				left.addClass('slideInLeft');
+				// center.hide();
+				// left.show();
+				left.addClass('slideInLeft active');
+				center.addClass('slideOutRight');
 				$('#footer .page-marker i:nth-child(1)').addClass('active');
 			}
+
+			removed = center;
 
 			break;
 		case 'left-column':
 			if (direction === 'left') {
-				left.hide();
-				center.removeClass(classToRemove);
-				center.show();
-				center.addClass('slideInRight');
+				// center.show();
+				center.addClass('slideInRight active');
+				left.addClass('slideOutLeft');
 				$('#footer .page-marker i:nth-child(2)').addClass('active');
+				removed = left;
 			}
 			break;
 		case 'right-column':
 			if (direction === 'right') {
-				right.hide();
-				center.removeClass(classToRemove);
-				center.show();
+				// center.show();
+				center.addClass('slideInLeft active');
+				right.addClass('slideOutRight');
 				$('#footer .page-marker i:nth-child(2)').addClass('active');
-				center.addClass('slideInLeft');
+				removed = right;
 			}
 			break;
 		}
+
+		setTimeout(function() {
+			$('#footer .page-marker i').removeClass('active');
+			removed.removeClass('active');
+			$rootScope.animating = false;
+		}, 500);
+
 	};
 
 	$rootScope.twoColumnsSwipe = function(columns, direction) {
@@ -112,6 +130,8 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch']).run(
 		var right = $('#right-column');
 		var classToRemove = 'slideInLeft slideInRight';
 
+		//var removed;
+		
 		if (right.is(':visible') && direction === 'right') {
 			right.hide();
 			left.show();
@@ -119,6 +139,7 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch']).run(
 			left.addClass('slideInLeft');
 			$('#footer .page-marker i:nth-child(1)').addClass('active');
 			$('#footer .page-marker i:nth-child(3)').removeClass('active');
+			
 
 		} else if (left.is(':visible') && direction === 'left') {
 			left.hide();
@@ -128,7 +149,11 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch']).run(
 			$('#footer .page-marker i:nth-child(3)').addClass('active');
 			$('#footer .page-marker i:nth-child(1)').removeClass('active');
 		}
-
+		
+		setTimeout(function() {
+			//removed.removeClass('active');
+			$rootScope.animating = false;
+		}, 500);
 	};
 
 	// FastClick.attach(document.body);
@@ -159,7 +184,7 @@ app.config([ '$httpProvider', function($httpProvider) {
 				$("#http-activity").fadeIn('fast');
 			}
 			interceptor.count++;
-			
+
 			return config;
 		};
 
@@ -168,16 +193,16 @@ app.config([ '$httpProvider', function($httpProvider) {
 			if (interceptor.count === 0) {
 				$("#http-activity").fadeOut('fast');
 			}
-			
+
 			return response;
 		};
-		
+
 		interceptor.responseError = function(rejection) {
 			interceptor.count--;
 			if (interceptor.count === 0) {
 				$("#http-activity").fadeOut('fast');
 			}
-			
+
 			if (rejection.status === 401) {
 				$('login').show();
 			}

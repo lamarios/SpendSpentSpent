@@ -9,9 +9,17 @@
 		width:100%;
 	}
 	
+	.column.active{
+		display:block !important;
+	}
+	
 	.column{
+		width:100%;
+		float: none;
+		position: absolute;
+		display:none;
 		/*flex */
-	-webkit-order: 0;
+	/*-webkit-order: 0;
 	-ms-flex-order: 0;
 	order: 0;
 	-webkit-flex: 0 0 100%;
@@ -21,6 +29,7 @@
 	-webkit-align-self: stretch;
     -ms-flex-item-align: stretch;
     align-self: stretch;
+    */
 	}
 	
 	#left-column, #right-column{

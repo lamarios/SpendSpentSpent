@@ -4,9 +4,11 @@
 		width:100%;
 	}
 	
+	
+	
 	.column{
 		/*flex */
-	-webkit-order: 0;
+	/*-webkit-order: 0;
 	-ms-flex-order: 0;
 	order: 0;
 	-webkit-flex: 0 0 50%;
@@ -16,6 +18,18 @@
 	-webkit-align-self: stretch;
     -ms-flex-item-align: stretch;
     align-self: stretch;
+    */
+    width:50%;
+    display:none;
+	}
+	
+	.column.active{
+		display:block !important;
+	}
+	
+	
+	#right-column{
+		display: block;
 	}
 	
 	.dialog{
@@ -24,9 +38,7 @@
 		margin:15px 15%;
 	}
 	
-	#left-column{
-		display:none;
-	}
+	
 		
 	category-dialog .category-icons {
 		overflow-y: scroll; /* has to be scroll, not auto */
