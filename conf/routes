@@ -42,7 +42,7 @@ PUT      /API/Setting/:name                    controllers.api.SettingApi.update
 POST     /Login                                controllers.api.UserSessionAPI.logIn()
 
 #windowsTile
-GET      /Windows/tile                         controllers.devices.Windows.tile()
+GET      /Windows/tile                         controllers.Windows.tile()
 
 # Map static resources from the /public folder to the /assets URL path
 GET      /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)

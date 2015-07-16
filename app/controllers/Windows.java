@@ -1,4 +1,4 @@
-package controllers.devices;
+package controllers;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

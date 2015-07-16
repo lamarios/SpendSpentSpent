@@ -1,5 +1,5 @@
 @(title: String)(content: Html)
-
+@import devices._
 <!DOCTYPE html>
 
 <html lang="en">
@@ -10,8 +10,9 @@
     	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
         
-        @devices.apple()
-        @devices.windows()
+        @apple()
+        
+        @windows()
         
 		<link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
