@@ -6,6 +6,10 @@ app.controller('SettingsController', [ '$scope', 'ExpTracker', '$rootScope', fun
 	$scope.pushalot = false;
 	$scope.pushalotApi = '';
 	$scope.pushbulletApi = '';
+	$scope.pushover = false;
+	$scope.pushoverAppToken = '';
+	$scope.pushoverUserToken = '';
+	$scope.windowsTile = false;
 
 	ExpTracker.settings.refresh(function(settings) {
 		if (settings.authentication !== undefined)
@@ -20,6 +24,14 @@ app.controller('SettingsController', [ '$scope', 'ExpTracker', '$rootScope', fun
 			$scope.pushalot = settings.pushalot.value === "true";
 		if (settings.pushalotApi !== undefined)
 			$scope.pushalotApi = settings.pushalotApi.value;
+		if (settings.pushover !== undefined)
+			$scope.pushover = settings.pushover.value === "true";
+		if (settings.pushoverAppToken !== undefined)
+			$scope.pushoverAppToken = settings.pushoverAppToken.value;
+		if (settings.pushoverUserToken !== undefined)
+			$scope.pushoverUserToken = settings.pushoverUserToken.value;
+		if (settings.windowsTile !== undefined)
+			$scope.windowsTile = settings.windowsTile.value === "true";
 	});
 
 	$scope.saveSettings = function() {
@@ -65,11 +77,35 @@ app.controller('SettingsController', [ '$scope', 'ExpTracker', '$rootScope', fun
 			value : $scope.pushalotApi
 		};
 		ExpTracker.settings.update(setting);
-		
+
+		setting = {
+			name : 'pushover',
+			value : $scope.pushover
+		};
+		ExpTracker.settings.update(setting);
+
+		setting = {
+			name : 'pushoverAppToken',
+			value : $scope.pushoverAppToken
+		};
+		ExpTracker.settings.update(setting);
+
+		setting = {
+			name : 'pushoverUserToken',
+			value : $scope.pushoverUserToken
+		};
+		ExpTracker.settings.update(setting);
+
+		setting = {
+			name : 'windowsTile',
+			value : $scope.windowsTile
+		};
+		ExpTracker.settings.update(setting);
+
 		$scope.closeDialog();
 	};
-	
-	$scope.closeDialog = function(){
+
+	$scope.closeDialog = function() {
 		$rootScope.showSettings = false;
 	};
 

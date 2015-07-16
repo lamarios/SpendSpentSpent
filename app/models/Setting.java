@@ -10,7 +10,7 @@ import com.google.gson.annotations.Expose;
 
 @Entity
 public class Setting extends Model {
-	public static final String PASSWORD = "password", USERNAME = "username", PUSHBULLET="pushbullet", PUSHBULLET_API="pushbulletapi", AUTHENTICATION="authentication", PUSHALOT="pushalot", PUSHALOTAPI="pushalotApi";
+	public static final String PASSWORD = "password", USERNAME = "username", PUSHBULLET="pushbullet", PUSHBULLET_API="pushbulletapi", AUTHENTICATION="authentication", PUSHALOT="pushalot", PUSHALOTAPI="pushalotApi", WINDOWS_TILE = "windowsTile", PUSHOVER="pushover", PUSHOVER_APP_TOKEN="pushoverAppToken", PUSHOVER_USER_TOKEN="pushoverUserToken";
 	@Id
 	@Expose
 	private String name;

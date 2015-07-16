@@ -64,6 +64,7 @@ body{
 	display:block;
 	min-height: 99vh;
 	padding-bottom: 30px;
+	background-color: @backgroundColor;
 	/*flex */
 	/*-webkit-order: 0;
 	-ms-flex-order: 0;
@@ -118,6 +119,10 @@ body{
 	padding-right:10px;
 }
 
+#category-grid{
+	text-align: center;
+}
+
 /* recurring expenses */
 recurring-expense .main{
 	background-color:@primaryColor;
@@ -151,13 +156,16 @@ recurring-expense .container{
 }
 
 recurring-expense .type{
-	float:left;
+	position:absolute;
+	left:0;
 	padding-left:5px;
 }
 
 recurring-expense .amount{
-	float:right;
+	position:absolute;
+	right:0;
 	padding-right:5px;
+	
 }
 
 recurring-expense .option-button{

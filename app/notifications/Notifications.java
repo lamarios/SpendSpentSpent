@@ -6,6 +6,7 @@ import java.util.Map;
 
 import models.Setting;
 import notifications.implementations.PushBullet;
+import notifications.implementations.PushOver;
 import notifications.implementations.Pushalot;
 
 public class Notifications {
@@ -22,7 +23,6 @@ public class Notifications {
 			PushBullet pb = new PushBullet();
 			Map<String, String> settings = new HashMap<String, String>();
 			settings.put(PushBullet.API_KEY, Setting.get(Setting.PUSHBULLET_API));
-			System.out.println(settings.get(PushBullet.API_KEY));
 			if(pb.setSettings(settings)){
 				try {
 					pb.sendNotification(title, body);
@@ -36,7 +36,20 @@ public class Notifications {
 			Pushalot pb = new Pushalot();
 			Map<String, String> settings = new HashMap<String, String>();
 			settings.put(Pushalot.API_KEY, Setting.get(Setting.PUSHALOTAPI));
-			System.out.println(settings.get(Pushalot.API_KEY));
+			if(pb.setSettings(settings)){
+				try {
+					pb.sendNotification(title, body);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		if(test || Setting.get(Setting.PUSHOVER).equalsIgnoreCase("true")){
+			PushOver pb = new PushOver();
+			Map<String, String> settings = new HashMap<String, String>();
+			settings.put(PushOver.APPLICATION_TOKEN, Setting.get(Setting.PUSHOVER_APP_TOKEN));
+			settings.put(PushOver.USER_TOKEN, Setting.get(Setting.PUSHOVER_USER_TOKEN));
 			if(pb.setSettings(settings)){
 				try {
 					pb.sendNotification(title, body);

@@ -14,22 +14,19 @@ import java.util.Map;
 import play.Logger;
 import notifications.Notification;
 
-public class PushBullet implements Notification {
-	public static final String API_KEY = "api-key", DEVICES = "devices";
+public class PushOver implements Notification {
+	public static final String USER_TOKEN = "user", APPLICATION_TOKEN ="token" , DEVICES = "devices";
 	private Map<String, String> settings;
 
 	@Override
 	public void sendNotification(String title, String content) throws IOException {
-		Authenticator.setDefault(new Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(settings.get(API_KEY), "".toCharArray());
-			}
-		});
-
+	
 		String encodedTitle = URLEncoder.encode(title, "UTF-8");
 		String encodedContent = URLEncoder.encode(content, "UTF-8");
+		String encodedAppToken = URLEncoder.encode(settings.get(APPLICATION_TOKEN), "UTF-8");
+		String encodedUserToken = URLEncoder.encode(settings.get(USER_TOKEN), "UTF-8");
 		
-		String url = "https://api.pushbullet.com/v2/pushes";
+		String url = "https://api.pushover.net/1/messages.json";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -38,7 +35,7 @@ public class PushBullet implements Notification {
 		con.setRequestProperty("User-Agent", "Mozilla/5.0");
 		con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 
-		String urlParameters = "type=note&title="+encodedTitle+"&body="+encodedContent;
+		String urlParameters = "title="+encodedTitle+"&message="+encodedContent+"&"+APPLICATION_TOKEN+"="+encodedAppToken+"&"+USER_TOKEN+"="+encodedUserToken;
 
 		// Send post request
 		con.setDoOutput(true);
@@ -68,7 +65,7 @@ public class PushBullet implements Notification {
 	@Override
 	public boolean setSettings(Map<String, String> settings) {
 		this.settings = settings;
-		return settings.containsKey(API_KEY) && !settings.get(API_KEY).trim().equalsIgnoreCase("");
+		return settings.containsKey(APPLICATION_TOKEN) && !settings.get(APPLICATION_TOKEN).trim().equalsIgnoreCase("") && settings.containsKey(USER_TOKEN) && !settings.get(USER_TOKEN).trim().equalsIgnoreCase("");
 	}
 
 }

@@ -13,7 +13,9 @@
 	</div>
 
 	<div ng-if="showNormalExpense" ng-controller="CategoryController">
-		<category-grid animation-create="zoomIn" cat="category" ng-repeat="category in categories()" ng-click="showAddExpense($index)"></category-grid>
+		<div id="category-grid">
+			<category-grid animation-create="zoomIn" cat="category" ng-repeat="category in categories()" ng-click="showAddExpense($index)"></category-grid>
+		</div>
 		<div class="category-setting" >
 			<i animation-create="zoomIn" class="fa fa-plus" ng-class="{'fa-spin': showCategoryDialog}" ng-show="availableIcons().length != 0" ng-click="showCategoryDialog = true"></i>
 			<i animation-create="zoomIn" ng-show="categories().length > 0" class="fa fa-gear" ng-class="{'fa-spin': showOverlay}" ng-click="showOverlay = !showOverlay"></i>

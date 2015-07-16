@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
 
+import play.Logger;
 import notifications.Notification;
 
 public class Pushalot implements Notification {
@@ -47,9 +48,9 @@ public class Pushalot implements Notification {
 		wr.close();
 
 		int responseCode = con.getResponseCode();
-		System.out.println("\nSending 'POST' request to URL : " + url);
-		System.out.println("Post parameters : " + urlParameters);
-		System.out.println("Response Code : " + responseCode);
+		Logger.info("\nSending 'POST' request to URL : " + url);
+		Logger.info("Post parameters : " + urlParameters);
+		Logger.info("Response Code : " + responseCode);
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		String inputLine;
@@ -61,7 +62,7 @@ public class Pushalot implements Notification {
 		in.close();
 
 		// print result
-		System.out.println(response.toString());
+		Logger.info(response.toString());
 	}
 
 	@Override
