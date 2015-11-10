@@ -29,134 +29,21 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run
 	};
 
 	$rootScope.swipeLeft = function() {
-		if (!$rootScope.animating) {
-			$rootScope.animating = true;
-			var columns = $('.column:visible');
-			switch (columns.length) {
-			case 1:
-				$rootScope.oneColumnSwipe(columns, 'left');
-				break;
-			case 2:
-				$rootScope.twoColumnsSwipe(columns, 'left');
-				break;
-			}
-		}
+		var body = $('body');
+		var scrollDistance = body.scrollLeft()+$('.column').width() + $(".column").css("padding-left").replace("px", "")*4;
+		body.animate({scrollLeft:scrollDistance}, '500', 'swing');
+
 	};
 
 	$rootScope.swipeRight = function() {
-		if (!$rootScope.animating) {
-			$rootScope.animating = true;
-			var columns = $('.column:visible');
+		var body = $('body');
 
-			switch (columns.length) {
-			case 1:
-				$rootScope.oneColumnSwipe(columns, 'right');
-				break;
-			case 2:
-				$rootScope.twoColumnsSwipe(columns, 'right');
-				break;
-			}
-		}
-	};
+		var scrollDistance = body.scrollLeft()-($('.column').width() + $(".column").css("padding-left").replace("px", "")*4);
 
-	$rootScope.oneColumnSwipe = function(column, direction) {
-		var id = column.attr('id');
-
-		var classToRemove = 'slideInLeft slideInRight slideOutLeft slideOutRight';
-
-		var center = $('#center-column');
-		var left = $('#left-column');
-		var right = $('#right-column');
-
-		var removed;
-
-		$('.column').removeClass(classToRemove);
-
-		switch (id) {
-		case 'center-column':
-			// moving away from center column
-			if (direction === 'left') {
-				// center.hide();
-				// right.show();
-				right.addClass('slideInRight active');
-				center.addClass('slideOutLeft');
-				$('#footer .page-marker i:nth-child(3)').addClass('active');
-			} else {
-				// center.hide();
-				// left.show();
-				left.addClass('slideInLeft active');
-				center.addClass('slideOutRight');
-				$('#footer .page-marker i:nth-child(1)').addClass('active');
-			}
-
-			removed = center;
-
-			break;
-		case 'left-column':
-			if (direction === 'left') {
-				// center.show();
-				center.addClass('slideInRight active');
-				left.addClass('slideOutLeft');
-				$('#footer .page-marker i:nth-child(2)').addClass('active');
-				removed = left;
-			}
-			break;
-		case 'right-column':
-			if (direction === 'right') {
-				// center.show();
-				center.addClass('slideInLeft active');
-				right.addClass('slideOutRight');
-				$('#footer .page-marker i:nth-child(2)').addClass('active');
-				removed = right;
-			}
-			break;
-		}
-
-		setTimeout(function() {
-			$('#footer .page-marker i').removeClass('active');
-			removed.removeClass('active');
-			$rootScope.animating = false;
-		}, 500);
+		body.animate({scrollLeft:scrollDistance}, '500', 'swing');
 
 	};
 
-	$rootScope.twoColumnsSwipe = function(columns, direction) {
-		var showingColumn = '';
-
-		// alert('2 column swipe');
-
-		var center = $('#center-column');
-		var left = $('#left-column');
-		var right = $('#right-column');
-		var classToRemove = 'slideInLeft slideInRight';
-
-		//var removed;
-		
-		if (right.is(':visible') && direction === 'right') {
-			right.hide();
-			left.show();
-			left.removeClass(classToRemove);
-			left.addClass('slideInLeft');
-			$('#footer .page-marker i:nth-child(1)').addClass('active');
-			$('#footer .page-marker i:nth-child(3)').removeClass('active');
-			
-
-		} else if (left.is(':visible') && direction === 'left') {
-			left.hide();
-			right.show();
-			right.removeClass(classToRemove);
-			right.addClass('slideInRight');
-			$('#footer .page-marker i:nth-child(3)').addClass('active');
-			$('#footer .page-marker i:nth-child(1)').removeClass('active');
-		}
-		
-		setTimeout(function() {
-			//removed.removeClass('active');
-			$rootScope.animating = false;
-		}, 500);
-	};
-
-	// FastClick.attach(document.body);
 });
 
 app.config([ '$httpProvider', function($httpProvider) {

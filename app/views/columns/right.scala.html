@@ -3,10 +3,7 @@
 	<select animation-create="fadeInDown" ng-change="changeMonth(chosenMonth)" ng-model="chosenMonth">
 		<option ng-repeat="month in months()" ng-selected="month == $parent.selectedMonth()">{{ month }}</option>
 	</select>
-	
-	
-	
-	</p>
+
 	
 	<p class="total" animation-create="fadeInDown">Total: <span>{{ totalOutcome() | number: 2 }}</span></p>
 	<expense-day day="day" ng-repeat="day in expenses()"></expense-day>

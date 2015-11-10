@@ -1,6 +1,6 @@
 @()
 
-<div class="column animated active" id="center-column" >
+<div class="column animated" id="center-column" >
 	<p class="panels" ng-model="showNormalExpense" ng-init="showNormalExpense = true"  animation-create="fadeInDown">
 		<a ng-click="showNormalExpense = true" ng-class="{'selected': showNormalExpense}">Normal</a><a ng-click="showNormalExpense = false" ng-class="{'selected': !showNormalExpense}">Recurring</a>
 	</p>

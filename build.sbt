@@ -1,6 +1,6 @@
 name := """SpendSpentSpent"""
 
-version := "1.0.3"
+version := "1.0.4"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava, PlayEbean, SbtWeb)
 
@@ -14,8 +14,8 @@ libraryDependencies ++= Seq(
   filters,
   "mysql" % "mysql-connector-java" % "5.1.18",
   "com.google.code.gson" % "gson" % "2.2.4",
-  "com.github.julman99" % "gson-fire" % "0.11.0"
-)
+  "io.gsonfire" % "gson-fire" % "1.4.0"
+ )
 
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.
