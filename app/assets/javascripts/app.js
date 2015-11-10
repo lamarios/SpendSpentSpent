@@ -15,10 +15,20 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run
 	$rootScope.showSettings = false;
 	$rootScope.animating = false;
 
-	if ($('#right-column').is(':visible')) {
-		$('#footer .page-marker i:nth-child(3)').addClass('active');
-	}
+	$rootScope.columnWidth = function(){
+		return $('.column').width() + $(".column").css("padding-left").replace("px", "")*4;
+	};
+	
+	
+	$(document).ready(function(){
+		if($('#columns').width()/$('body').width() > 3){
+			//alert('schould be scrolling to:'+$rootScope.columnWidth());
+			$('body').scrollLeft($rootScope.columnWidth());
+		}
+	});
 
+
+	
 	$rootScope.logout = function(callback) {
 		if (typeof (Storage) !== "undefined") {
 			localStorage.removeItem("token");
@@ -30,17 +40,15 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run
 
 	$rootScope.swipeLeft = function() {
 		var body = $('body');
-		var scrollDistance = body.scrollLeft()+$('.column').width() + $(".column").css("padding-left").replace("px", "")*4;
-		body.animate({scrollLeft:scrollDistance}, '500', 'swing');
+		body.animate({scrollLeft:$('body').scrollLeft()+$rootScope.columnWidth()}, '500', 'swing');
 
 	};
 
 	$rootScope.swipeRight = function() {
 		var body = $('body');
 
-		var scrollDistance = body.scrollLeft()-($('.column').width() + $(".column").css("padding-left").replace("px", "")*4);
 
-		body.animate({scrollLeft:scrollDistance}, '500', 'swing');
+		body.animate({scrollLeft:body.scrollLeft()-$rootScope.columnWidth()}, '500', 'swing');
 
 	};
 
