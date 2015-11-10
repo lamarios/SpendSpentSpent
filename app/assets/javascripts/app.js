@@ -16,13 +16,12 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run
 	$rootScope.animating = false;
 
 	$rootScope.columnWidth = function(){
-		return $('.column').width() + $(".column").css("padding-left").replace("px", "")*4;
+		return $('.column').width() + $(".column").css("padding-left").replace("px", "")*2;
 	};
 	
 	
 	$(document).ready(function(){
 		if($('#columns').width()/$('body').width() > 3){
-			//alert('schould be scrolling to:'+$rootScope.columnWidth());
 			$('body').scrollLeft($rootScope.columnWidth());
 		}
 	});
