@@ -14,15 +14,14 @@
 <login animation-create="slideInUp" ng-controller="LoginController" ></login>
 
 <div id="footer">
-	<i id="http-activity" class="fa fa-spinner fa-spin animated"></i>
+	<i id="http-activity" class="fa fa-circle-o-notch fa-spin animated"></i>
 	<span class="settings">
 	 	<a ng-show="showSettings"class="logout"  animation-create="fadeIn" ng-click="logout()"><i class="fa fa-sign-out"></i> Logout</a>
 		<a ng-click="showSettings = !showSettings"><i class="fa fa-gear"></i></a>
 	</span>
 	<div class="page-marker">
-		<i class="fa fa-circle"></i>
-		<i class="fa fa-circle active"></i>
-		<i class="fa fa-circle"></i>
+		<i ng-click="swipeRight()" class="fa fa-chevron-left"></i>
+		<i ng-click="swipeLeft()" class="fa fa-chevron-right"></i>
 	</div>
 </div>
 }

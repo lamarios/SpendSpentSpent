@@ -21,7 +21,6 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run
 	
 	
 	$(document).ready(function(){
-		//alert($('#columns').width()/$('body').width());
 		if($('#columns').width()/$('body').width() >= 3){
 				$('body').scrollLeft($rootScope.columnWidth());
 		}
