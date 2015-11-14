@@ -21,8 +21,9 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run
 	
 	
 	$(document).ready(function(){
-		if($('#columns').width()/$('body').width() > 3){
-			$('body').scrollLeft($rootScope.columnWidth());
+		//alert($('#columns').width()/$('body').width());
+		if($('#columns').width()/$('body').width() >= 3){
+				$('body').scrollLeft($rootScope.columnWidth());
 		}
 	});
 
@@ -39,16 +40,23 @@ var app = angular.module('ExpTrackerApp', [ 'angular-chartist', 'ngTouch' ]).run
 
 	$rootScope.swipeLeft = function() {
 		var body = $('body');
-		body.animate({scrollLeft:$('body').scrollLeft()+$rootScope.columnWidth()}, '500', 'swing');
-
+		if(!$rootScope.animating){
+			$rootScope.animating = true;
+			body.animate({scrollLeft:$('body').scrollLeft()+$rootScope.columnWidth()}, '500', 'swing', function(){
+				$rootScope.animating = false;
+			});
+		}
 	};
 
 	$rootScope.swipeRight = function() {
 		var body = $('body');
 
-
-		body.animate({scrollLeft:body.scrollLeft()-$rootScope.columnWidth()}, '500', 'swing');
-
+		if(!$rootScope.animating){
+			$rootScope.animating = true;
+			body.animate({scrollLeft:body.scrollLeft()-$rootScope.columnWidth()}, '500', 'swing', function(){
+				$rootScope.animating = false;
+			});
+		}
 	};
 
 });
