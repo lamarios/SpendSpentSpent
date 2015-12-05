@@ -12,6 +12,7 @@ APPNAME="spendspentspent"
 
 cd "$DIR"
 
+chmod +x activator
 
 function stop {
     if [ -e $PID ]
