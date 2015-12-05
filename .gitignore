@@ -24,9 +24,14 @@ logs
 
 .cache-main
 
-.settings
+.settings/org.eclipse.core.resources.prefs
+
+.settings/org.eclipse.core.resources.prefs
+
+.settings/org.scala-ide.sdt.core.prefs
 
 *.cache-tests
 .cache-tests
 *.classpath
-
+.settings/org.eclipse.core.resources.prefs
+.settings/org.scala-ide.sdt.core.prefs
