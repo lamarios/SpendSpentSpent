@@ -4,46 +4,25 @@
 @import './vendor/angular-datepicker.min.less';
 @import './vendor/fontawesome/font-awesome.less';
 @import './vendor/categoryicons/style.less';
-
 @textColor: rgb(72, 72, 72);
 
+html { -webkit-font-smoothing: antialiased; }
 
-
-body{
+body {
 	min-height: 95vh;
 	padding-bottom: 50px;
-	font-family: 'Roboto', sans-serif;
+	font-family: 'Open Sans', sans-serif;
 	color: @textColor;
-	font-size:20px;
+	font-size: 20px;
 	box-sizing: border-box;
-	margin:0;
+	margin: 0;
 }
 
 #columns {
-	width:900px;
+	width: 900px;
 	margin-left: auto;
-    margin-right: auto;
-	/*flex*/
-	/*display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-direction: row;
-    -ms-flex-direction: row;
-    flex-direction: row;
-    -webkit-flex-wrap: nowrap;
-    -ms-flex-wrap: nowrap;
-    flex-wrap: nowrap;
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -webkit-align-content: stretch;
-    -ms-flex-line-pack: stretch;
-    align-content: stretch;
-    -webkit-align-items: flex-start;
-    -ms-flex-align: start;
-    align-items: flex-start;
-    */
- }
+	margin-right: auto;
+}
 
 .btn {
 	background: none;
@@ -59,26 +38,14 @@ body{
 }
 
 .column {
-	padding:5px;
+	padding: 5px;
 	box-sizing: border-box;
-	width:300px;
-	float:left;
-	display:block;
+	width: 300px;
+	float: left;
+	display: block;
 	min-height: 99vh;
 	padding-bottom: 30px;
 	background-color: @backgroundColor;
-	/*flex */
-	/*-webkit-order: 0;
-	-ms-flex-order: 0;
-	order: 0;
-	-webkit-flex: 0 0 33.3333%;
-	-ms-flex: 0 0 33.3333%;
-	flex: 0 0 33.3333%;
-	box-sizing: border-box;
-	-webkit-align-self: stretch;
-    -ms-flex-item-align: stretch;
-    align-self: stretch;
-    */
 }
 
 .overlay {
@@ -88,156 +55,151 @@ body{
 	left: 0;
 	right: 0;
 	bottom: 0;
-	position:fixed;
+	position: fixed;
 }
 
-
 .dialog {
-	width:50%;
+	width: 50%;
 	position: absolute;
 	background-color: #fff;
 	margin: 30px 25%;
-	max-height:99vh;
-	overflow-y:auto;
-  }
+	max-height: 99vh;
+	overflow-y: auto;
+}
 
-/*center column */
-#center-column .panels{
+#center-column .panels {
 	margin: 0;
 	margin-bottom: 20px;
 }
 
-#center-column .category-setting{
-	color:@secondaryColor;
-	font-size:20px;
+#center-column .category-setting {
+	color: @secondaryColor;
+	font-size: 20px;
 	text-align: left;
 	box-sizing: border-box;
-	padding:10px;
-	
+	padding: 10px;
 }
 
-#center-column .category-setting .fa{
-	padding-left:10px;
-	padding-right:10px;
+#center-column .category-setting .fa {
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
-#category-grid{
+#category-grid {
 	text-align: center;
 }
 
-/* recurring expenses */
-recurring-expense .main{
-	background-color:@primaryColor;
+recurring-expense .main {
+	background-color: @primaryColor;
 	text-align: center;
-	color:white;
-	padding:3px;
+	color: white;
+	padding: 3px;
 	border-radius: 2px;
 	margin: 0;
 }
-recurring-expense .details{
+
+recurring-expense .details {
 	border-right: 1px solid @primaryColor;
 	border-left: 1px solid @primaryColor;
 	border-bottom: 1px solid @primaryColor;
 	border-bottom-right-radius: 5px;
 	border-bottom-left-radius: 5px;
-	
 	font-size: 15px;
 }
-recurring-expense .details p{
-	margin:0;
-	padding:5px;
-	
+
+recurring-expense .details p {
+	margin: 0;
+	padding: 5px;
 }
 
-recurring-expense .details span{
-	color:@primaryColor;
+recurring-expense .details span {
+	color: @primaryColor;
 }
 
-recurring-expense .container{
-	margin-bottom:5px;
+recurring-expense .container {
+	margin-bottom: 5px;
 }
 
-recurring-expense .type{
-	position:absolute;
-	left:0;
-	padding-left:5px;
+recurring-expense .type {
+	position: absolute;
+	left: 0;
+	padding-left: 5px;
 }
 
-recurring-expense .amount{
-	position:absolute;
-	right:0;
-	padding-right:5px;
-	
+recurring-expense .amount {
+	position: absolute;
+	right: 0;
+	padding-right: 5px;
 }
 
-recurring-expense .option-button{
-	padding:10px;
-	float:right;
+recurring-expense .option-button {
+	padding: 10px;
+	float: right;
 	display: block;
 }
-recurring-expense .options{
+
+recurring-expense .options {
 	background-color: #EEE;
 	border-bottom-right-radius: 5px;
 	border-bottom-left-radius: 5px;
 }
-recurring-expense .confirmation .cancel{
+
+recurring-expense .confirmation .cancel {
 	color: @textColor;
 }
 
-recurring-expense .options .delete{
-	color:#EF5350;
-	text-align: center;
-}
-recurring-expense .options .confirmation span{
-	display:inline-block;
-	width:50%;
-	text-align: center;
-}
-.recurring-expense .add-recurring{
-	color:@primaryColor;
+recurring-expense .options .delete {
+	color: #EF5350;
 	text-align: center;
 }
 
+recurring-expense .options .confirmation span {
+	display: inline-block;
+	width: 50%;
+	text-align: center;
+}
 
+.recurring-expense .add-recurring {
+	color: @primaryColor;
+	text-align: center;
+}
 
-/* recurring expenses add */
-
-recurring-expense-add .categories{
+recurring-expense-add .categories {
 	background-color: @primaryColor;
 	color: white;
 }
 
-recurring-expense-add .categories span{
+recurring-expense-add .categories span {
 	font-size: 12px;
-	padding:5px;
+	padding: 5px;
 }
 
-recurring-expense-add .categories ul{
+recurring-expense-add .categories ul {
 	list-style: none;
-	margin:0;
-	padding:0;
+	margin: 0;
+	padding: 0;
 }
-recurring-expense-add .categories ul li{
+
+recurring-expense-add .categories ul li {
 	display: inline-block;
 	font-size: 25px;
-	width:40px;
+	width: 40px;
 	height: 40px;
 	border: 1px solid @primaryColor;
-	padding:5px;
+	padding: 5px;
 	box-sizing: border-box;
 	margin: 1px;
 	text-align: center;
 }
 
-recurring-expense-add .actions{
+recurring-expense-add .actions {
 	text-align: right;
 	margin: 0;
 }
 
-recurring-expense-add .categories ul li.selected{
+recurring-expense-add .categories ul li.selected {
 	border: 1px solid white;
 }
-
 
 recurring-expense-add .expense-digits {
 	display: -ms-flexbox;
@@ -265,7 +227,6 @@ recurring-expense-add .expense-digits .digit {
 	box-sizing: border-box;
 	text-align: center;
 	font-size: 30px;
-	/*flex */
 	-webkit-order: 0;
 	-ms-flex-order: 0;
 	order: 0;
@@ -289,30 +250,27 @@ recurring-expense-add input[type=text] {
 	border-radius: 0;
 }
 
-recurring-expense-add select{
+recurring-expense-add select {
 	display: inline-block;
-	width:30%;
+	width: 30%;
 	border: 1px solid @primaryColor;
 	background-color: white;
 	font-size: 20px;
 	font-weight: 300;
-	font-family: 'Roboto',sans-serif;
+	font-family: 'Roboto', sans-serif;
 }
 
-/*category grid */
-
-
-#center-column .panels a{
-	display:inline-block;
+#center-column .panels a {
+	display: inline-block;
 	text-align: center;
-	width:50%;
+	width: 50%;
 	padding: 0;
 	margin: 0;
 }
 
-#center-column .panels a.selected{
-	color:white;
-	background-color:@primaryColor;
+#center-column .panels a.selected {
+	color: white;
+	background-color: @primaryColor;
 	border-radius: 5px;
 }
 
@@ -327,30 +285,29 @@ category-grid {
 	margin: @gridMargin;
 	font-size: @gridFontSize;
 	padding: 15px;
-	padding-top:20px;
+	padding-top: 20px;
 	border-radius: 5px;
 	box-sizing: border-box;
 	background-color: @primaryColor;
 	text-align: center;
 	overflow: hidden;
-	}
-
-category-grid .cat-overlay{
-	position: absolute;
-	left:0;
-	top:0;
-	right:0;
-	bottom: 0;
-	background-color: rgba(0,0,0,0.5);
-	border-radius: 5px;
-	text-align: right;
-	
 }
 
-category-grid .cat-overlay .fa{
-	color:#DDD;
+category-grid .cat-overlay {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	border-radius: 5px;
+	text-align: right;
+}
+
+category-grid .cat-overlay .fa {
+	color: #DDD;
 	font-size: 20px;
-	padding:5px;
+	padding: 5px;
 }
 
 .add-category {
@@ -361,96 +318,94 @@ category-grid .cat-overlay .fa{
 	margin: @gridMargin;
 	font-size: @gridFontSize;
 	padding: 15px;
-	padding-top:20px;
+	padding-top: 20px;
 	border-radius: 5px;
 	box-sizing: border-box;
 	text-align: center;
 }
 
-
-
-/* right panel */
-#right-column select{
+#right-column select {
 	display: block;
 	border: 1px solid @primaryColor;
-	width:100%;
-	background-color:white;
-	font-size:15px;
+	width: 100%;
+	background-color: white;
+	font-size: 15px;
 	font-family: 'Roboto', sans-serif;
 	border-radius: 5px;
-	text-align:center;
+	text-align: center;
 }
 
-#right-column .total span{
+#right-column .total span {
 	color: @primaryColor;
 }
 
-expense-day ul{
-    list-style-type: none;
+expense-day ul {
+	list-style-type: none;
 }
 
-expense-day hr{
-    border:none;
-    height:2px;
-    background-color: @secondaryColor;
+expense-day hr {
+	border: none;
+	height: 2px;
+	background-color: @secondaryColor;
 }
 
-expense-day li, expense-day p{
-	text-align:right;
+expense-day li , expense-day p {
+	text-align: right;
 }
 
-expense-day li{
-	margin-top:10px;
-}
-expense-day li .cat{
-	font-size:25px;
-	color:@primaryColor;
+expense-day li {
+	margin-top: 10px;
 }
 
-expense-day li .fa-refresh{
-	font-size:12px;
-	color:@secondaryColor;
+expense-day li .cat {
+	font-size: 25px;
+	color: @primaryColor;
 }
 
-expense-day p{
-	padding:5px;
-	margin:0px;
+expense-day li .details {
+	font-size: 12px;
+	color: @secondaryColor;
 }
 
+expense-day p {
+	padding: 5px;
+	margin: 0px;
+}
 
-expense-day .option-button{
-	padding:10px;
+expense-day .option-button {
+	padding: 10px;
 	display: inline-block;
-	font-size: 15px !important;
-	color: lighten(@textColor, 50%) !important;
+	font-size: 15px ! important;
+	color: lighten(@textColor, 50%) ! important;
 }
-expense-day .options{
+
+expense-day .options {
 	background-color: #EEE;
 	border-radius: 5px;
 	font-size: 15px;
 }
 
-expense-day .options p{
+expense-day .options p {
 	text-align: center;
 }
 
-expense-day .confirmation .cancel{
+expense-day .confirmation .cancel {
 	color: @textColor;
 }
 
-expense-day .options .delete{
-	color:#EF5350;
-}
-expense-day .options .confirmation span{
-	
-	display:inline-block;
-	width:50%;
+expense-day .options .delete {
+	color: #EF5350;
 }
 
+expense-day .options .confirmation span {
+	display: inline-block;
+	width: 50%;
+}
 
-
-/*category-dialog*/
-
+expense-day .options .map {
+	height: 300px;
+	background-color:#EEE;
+}
 
 category-dialog .category-dialog-color {
 	display: inline-block;
@@ -459,13 +414,13 @@ category-dialog .category-dialog-color {
 	border: 1 slolid #888888;
 }
 
-category-dialog .icon-category p{
+category-dialog .icon-category p {
 	margin: 7px;
 	text-align: left;
 	font-size: 20px;
 }
 
-category-dialog .icon-category div{
+category-dialog .icon-category div {
 	overflow: hidden;
 }
 
@@ -475,7 +430,7 @@ category-dialog .category-icons {
 	font-size: 30px;
 	text-align: center;
 	max-height: 400px;
-	overflow-y: auto; /* has to be scroll, not auto */
+	overflow-y: auto;
 }
 
 category-dialog .category-icons .cat {
@@ -498,7 +453,6 @@ category-dialog .actions .btn {
 	float: right;
 }
 
-/* new Expense dialog */
 expense-dialog input[type=text] {
 	display: block;
 	width: 100%;
@@ -507,7 +461,6 @@ expense-dialog input[type=text] {
 	box-sizing: border-box;
 	background-color: #F0F0F0;
 	border-radius: 0;
-
 }
 
 expense-dialog .digit-input {
@@ -556,7 +509,6 @@ expense-dialog .expense-digits .digit {
 	box-sizing: border-box;
 	text-align: center;
 	font-size: 30px;
-	/*flex */
 	-webkit-order: 0;
 	-ms-flex-order: 0;
 	order: 0;
@@ -581,21 +533,32 @@ expense-dialog .actions .btn {
 	float: right;
 }
 
-/* History category */
-#left-column .types{
-	margin:0;
+expense-dialog .location {
+	background: none;
+	border: none;
+	color: @textColor;
+	font-size: 20px;
 }
-.history-type{
-	display:inline-block;
+
+expense-dialog .location.active {
+	color: @primaryColor;
+}
+
+#left-column .types {
+	margin: 0;
+}
+
+.history-type {
+	display: inline-block;
 	text-align: center;
-	width:50%;
+	width: 50%;
 	padding: 0;
 	margin: 0;
 }
 
-.history-type.selected{
-	color:white;
-	background-color:@primaryColor;
+.history-type.selected {
+	color: white;
+	background-color: @primaryColor;
 	border-radius: 5px;
 }
 
@@ -613,7 +576,7 @@ category-history div {
 	color: white;
 	font-size: 20px;
 	overflow: hidden;
-	position:relative;
+	position: relative;
 }
 
 category-history div .percentage {
@@ -637,90 +600,83 @@ category-history .cat {
 	float: left;
 }
 
-/* Settings */
-
-settings, login{
+settings , login {
 	width: 100%;
-	position:fixed;
-	top:0;
-	left:0;
+	position: fixed;
+	top: 0;
+	left: 0;
 	right: 0;
-	bottom:0;
-	background-color:white;
-	z-index:7;
-	padding:20px;
+	bottom: 0;
+	background-color: white;
+	z-index: 7;
+	padding: 20px;
 	font-size: 15px;
 	box-sizing: border-box;
 	overflow-y: auto;
 }
 
-settings label, login label{
+settings label , login label {
 	display: block;
 }
-settings input[type="text"],settings input[type="password"],login input[type="text"],login input[type="password"]{
+
+settings input[type="text"] , settings input[type="password"] , login input[type="text"] , login input[type="password"] {
 	border: 1px solid @primaryColor;
 	border-radius: 5px;
-	background-color:white;
-	color:@textColor;
+	background-color: white;
+	color: @textColor;
 	font-size: 15px;
 	font-weight: 300;
-	padding:5px;
+	padding: 5px;
 }
 
-login{
+login {
 	display: none;
-	z-index:20;
-	height:99vh;
+	z-index: 20;
+	height: 99vh;
 }
 
-/* footer */
-#footer{
-	position:fixed;
-	bottom:0;
-	left:0;
-	right:0;
-	
-	text-align:center;
-	font-size:10px;
-	//border-top:1px solid @secondaryColor;
+#footer {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	text-align: center;
+	font-size: 10px;
 	background-color: white;
 	z-index: 8;
 }
 
-#footer .page-marker{
-	display:none;
-
-	
+#footer .page-marker {
+	display: none;
 	font-size: 20px;
-	color:#DDD;
+	color: #DDD;
 }
 
-#footer .page-marker i{
-padding-left:10px;
-	padding-right:10px;
-	color:#999;
+#footer .page-marker i {
+	padding-left: 10px;
+	padding-right: 10px;
+	color: #999;
 }
 
-#footer .settings{
-	color:@secondaryColor;
+#footer .settings {
+	color: @secondaryColor;
 	font-size: 20px;
-	float:right;
-	padding:3px;
+	float: right;
+	padding: 3px;
 }
 
-#footer .settings .logout{
+#footer .settings .logout {
 	font-size: 15px;
-	margin-right:10px;
+	margin-right: 10px;
 }
 
-#footer #http-activity{
-	color:@secondaryColor;
+#footer #http-activity {
+	color: @secondaryColor;
 	font-size: 20px;
-	float:left;
-	padding:3px;
+	float: left;
+	padding: 3px;
 }
 
-/*CSS Utils */
 .noselect {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -730,13 +686,12 @@ padding-left:10px;
 	user-select: none;
 }
 
-/* charts */
-.ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut  {
-  /* Set the colour of this series line */
-  stroke: @primaryColor;
+.ct-series-a .ct-bar , .ct-series-a .ct-line , .ct-series-a .ct-point , .ct-series-a .ct-slice-donut {
+	stroke: @primaryColor;
 }
-.ct-series-a .ct-area, .ct-series-a .ct-slice-pie {
-  fill: @primaryColor;
+
+.ct-series-a .ct-area , .ct-series-a .ct-slice-pie {
+	fill: @primaryColor;
 }
 
 @import 'mediumScreen.less';

@@ -10,6 +10,7 @@ app.controller('SettingsController', [ '$scope', 'ExpTracker', '$rootScope', fun
 	$scope.pushoverAppToken = '';
 	$scope.pushoverUserToken = '';
 	$scope.windowsTile = false;
+	$scope.googlemap = '';
 
 	ExpTracker.settings.refresh(function(settings) {
 		if (settings.authentication !== undefined)
@@ -32,6 +33,8 @@ app.controller('SettingsController', [ '$scope', 'ExpTracker', '$rootScope', fun
 			$scope.pushoverUserToken = settings.pushoverUserToken.value;
 		if (settings.windowsTile !== undefined)
 			$scope.windowsTile = settings.windowsTile.value === "true";
+		if (settings.googlemap !== undefined)
+			$scope.googlemap = settings.googlemap.value;
 	});
 
 	$scope.saveSettings = function() {
@@ -103,6 +106,16 @@ app.controller('SettingsController', [ '$scope', 'ExpTracker', '$rootScope', fun
 		ExpTracker.settings.update(setting);
 
 		$scope.closeDialog();
+		
+		setting = {
+			name : 'googlemap',
+			value : $scope.googlemap
+		};
+		ExpTracker.settings.update(setting);
+
+		$scope.closeDialog();
+				
+			
 	};
 
 	$scope.closeDialog = function() {

@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class ExpenseApi extends Controller {
-	public static final String FIELD_AMOUNT = "amount", FIELD_CATEGORY = "category", FIELD_DATE = "date", FIELD_INCOME = "income", FIELD_TYPE = "type";
+	public static final String FIELD_AMOUNT = "amount", FIELD_CATEGORY = "category", FIELD_DATE = "date", FIELD_INCOME = "income", FIELD_TYPE = "type", FIELD_LATITUDE = "latitude", FIELD_LONGITUDE="longitude";
 	private final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").excludeFieldsWithoutExposeAnnotation().create();
 
 	private final String FILTER_FROM = "from", FILTER_TO = "to", FILTER_LIMIT = "limit", FILTER_OFFSET = "offset", FILTER_ORDERING = "ordering";
@@ -54,6 +54,18 @@ public class ExpenseApi extends Controller {
 			expense.setType(Integer.parseInt(params.get(FIELD_TYPE)[0]));
 		} catch (NullPointerException e) {
 			expense.setType(Expense.TYPE_NORMAL);
+		}
+		
+		try {
+			expense.setLatitude(Double.parseDouble(params.get(FIELD_LATITUDE)[0]));
+		} catch (NullPointerException e) {
+			expense.setLatitude(0);
+		}
+		
+		try {
+			expense.setLongitude(Double.parseDouble(params.get(FIELD_LONGITUDE)[0]));
+		} catch (NullPointerException e) {
+			expense.setLongitude(0);
 		}
 
 		expense.save();

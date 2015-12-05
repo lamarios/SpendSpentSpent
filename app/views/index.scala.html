@@ -1,4 +1,4 @@
-@(message: String)
+@(apiKey: String)
 
 @main("SpendSpentSpent") {
 
@@ -24,4 +24,8 @@
 		<i ng-click="swipeLeft()" class="fa fa-chevron-right"></i>
 	</div>
 </div>
+
+	@if(!apiKey.equalsIgnoreCase("")){
+		 <script async defer src="https://maps.googleapis.com/maps/api/js?key=@{apiKey}"> </script>
+	}
 }

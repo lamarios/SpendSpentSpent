@@ -40,7 +40,12 @@ public class Expense extends Model {
 	private int type = 1;
 	@Expose
 	private boolean income = false;
+	
+	@Expose
+	private double latitude, longitude;
 
+	
+	
 	public long getId() {
 		return id;
 	}
@@ -88,4 +93,21 @@ public class Expense extends Model {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+	
 }

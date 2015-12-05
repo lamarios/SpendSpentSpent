@@ -42,4 +42,37 @@ app.controller('ExpenseController', [ '$scope', 'ExpTracker', function($scope, E
 			ExpTracker.history.refresh();
 		});
 	};
+	
+	
+	$scope.loadMap = function(expense, showOptions){
+
+		if(!showOptions || (expense.latitude === 0 && expense.longitude === 0)){
+			if($scope.maps[expense.id] !== null){
+				$scope.maps[expense.id] = null;
+			}
+			return;
+		}
+		var mapDiv = $('.map[data-id="'+expense.id+'"');
+		
+
+		var map = new google.maps.Map(mapDiv[0], {
+			center: {lat: expense.latitude, lng: expense.longitude},
+			zoom: 16
+		});
+		
+		var marker = new google.maps.Marker({
+			position: {lat: expense.latitude, lng: expense.longitude},
+			map: map
+		});
+		
+		map.setCenter(map.getCenter());
+		
+		setTimeout(function(){
+			google.maps.event.trigger(map, 'resize');
+			map.setCenter(marker.getPosition());				
+		}, 500);
+	};
+	
+	
+	
 } ]);

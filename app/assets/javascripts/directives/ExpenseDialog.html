@@ -22,7 +22,11 @@
 <select ng-options="year for year in $parent.years" ng-model="$parent.selectedYear"></select>
 <select ng-options="month.number as month.name for month in $parent.months" ng-model="$parent.selectedMonth"></select>
 <select ng-options="day for day in $parent.days($parent.selectedYear, $parent.selectedMonth)" ng-model="$parent.selectedDate"></select>
-	
+<button class="location" ng-click="$parent.toggleLocation()" ng-class="{'active': $parent.useLocation && $parent.coords != null}">
+	<i class=" fa fa-location-arrow"></i>
+	<i ng-show="$parent.refreshingLocation" class="fa fa-refresh fa-spin"></i>
+</button>
+
 </div>
 <div class="actions">
 	<button  class="btn btn-primary" ng-click="$parent.addExpense(cat.id, $parent.newExpenseAmount, newExpenseIncome, $parent.selectedYear, $parent.selectedMonth, $parent.selectedDate)">OK</button>

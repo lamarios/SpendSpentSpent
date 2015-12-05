@@ -14,6 +14,14 @@ app.controller('CategoryController', [ '$scope', 'ExpTracker', '$http', '$rootSc
 
 	$scope.showOverlay = false;
 	
+	$scope.useLocation = false;
+	
+	$scope.coords = null;
+	$scope.refreshingLocation = false;
+	
+	if(typeof(Storage) !== "undefined") {
+		$scope.useLocation = (localStorage.getItem("location") == 'true');
+	}
 	
 	
 	$scope.showAddDialog = function() {
@@ -21,6 +29,20 @@ app.controller('CategoryController', [ '$scope', 'ExpTracker', '$http', '$rootSc
 		$http.get('/API/Category/Available').success(function() {
 			$scope.addCategory();
 		});
+	};
+	
+	$scope.toggleLocation = function(){
+		$scope.useLocation = !$scope.useLocation;
+		$scope.coords = null;
+		if(typeof(Storage) !== "undefined") {
+			localStorage.setItem("location", $scope.useLocation);
+		}
+		
+		if($scope.useLocation){
+			$scope.refreshLocation();
+		}else{
+			$scope.coords = null;
+		}
 	};
 
 	$scope.years = [];
@@ -83,6 +105,8 @@ app.controller('CategoryController', [ '$scope', 'ExpTracker', '$http', '$rootSc
 	for (var i = today.getFullYear() - 50; i <= today.getFullYear() + 50; i++) {
 		$scope.years.push(i);
 	}
+	
+	
 
 	$scope.days = function(year, month) {
 		var date = new Date();
@@ -117,7 +141,6 @@ app.controller('CategoryController', [ '$scope', 'ExpTracker', '$http', '$rootSc
 			income = false;
 		}
 
-
 		month = $scope.pad(month+1, 2);
 		date = $scope.pad(date, 2);
 		
@@ -133,7 +156,18 @@ app.controller('CategoryController', [ '$scope', 'ExpTracker', '$http', '$rootSc
 			type : 1,
 			date : selectedDate
 		};
-
+		
+		//Saving location if enabled
+		if($scope.coords !== null){
+			console.log('new expense coordinates');
+			console.log($scope.coords);
+			newExpense.latitude = $scope.coords.latitude;
+			newExpense.longitude = $scope.coords.longitude;
+		}
+		
+		console.log('newExpense');
+		console.log(newExpense);
+		
 		ExpTracker.expenses.add(newExpense, function(expense) {
 			console.log('Expense added:');
 			console.log(expense);
@@ -145,8 +179,30 @@ app.controller('CategoryController', [ '$scope', 'ExpTracker', '$http', '$rootSc
 	$scope.showAddExpense = function(index) {
 		$scope.selectedCategory = $scope.categories()[index];
 		console.log($scope.selectedCategory);
+		$scope.refreshLocation();
 	};
 
+	$scope.refreshLocation = function(){
+
+		if($scope.useLocation && navigator.geolocation){
+			$scope.refreshingLocation = true;
+			navigator.geolocation.getCurrentPosition($scope.updateLocation, function(){//Error
+				$scope.refreshingLocation = false;
+				$scope.coords = null;
+				$scope.$apply();
+			});
+		}
+
+	};
+	
+	$scope.updateLocation = function(position){
+			$scope.coords = position.coords;
+			$scope.refreshingLocation = false;
+			$scope.$apply();
+			console.log('location');
+			console.log($scope.coords);
+	};
+	
 	$scope.addNewExpenseDigit = function(digit) {
 
 		var newAmount = $scope.newExpenseAmount + digit;

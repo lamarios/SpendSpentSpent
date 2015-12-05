@@ -22,8 +22,8 @@ public class SettingApi extends Controller {
 	private final String FIELD_VALUE = "value";
 
 	public Result getAll() {
-	Logger.info("SettingApi.getAll()");
-		return ok(gson.toJson(Setting.find.findMap())).as("application/json");
+		Logger.info("SettingApi.getAll()");
+			return ok(gson.toJson(Setting.find.findMap())).as("application/json");
 	}
 
 	public Result update(String name) {
