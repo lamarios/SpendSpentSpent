@@ -57,7 +57,8 @@ app.controller('ExpenseController', [ '$scope', 'ExpTracker', function($scope, E
 
 		var map = new google.maps.Map(mapDiv[0], {
 			center: {lat: expense.latitude, lng: expense.longitude},
-			zoom: 16
+			zoom: 16,
+			disableDefaultUI: true
 		});
 		
 		var marker = new google.maps.Marker({
