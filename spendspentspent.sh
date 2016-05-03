@@ -54,10 +54,8 @@ function start {
 
         echo "Starting ExpTracker in the background"
         echo "Port: $PORT"
-        nohup $FULLDIR/bin/$APPNAME -Dhttp.port=$PORT -Dplay.evolutions.db.default.autoApply=true  -DapplyDownEvolutions.default=true -J-Xms$XMS -J-Xmx$XMX &> /dev/null &
-        
-        rm -Rf logs
-        ln -s $LOG logs
+        $FULLDIR/bin/$APPNAME -Dhttp.port=$PORT -Dplay.evolutions.db.default.autoApply=true  -DapplyDownEvolutions.default=true -J-Xms$XMS -J-Xmx$XMX
+       
     fi
 }
 
