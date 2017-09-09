@@ -6,9 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="SpendSpentSpent" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="SpendSpentSpent" target="1.8" />
       <module name="spendspentspent" target="1.5" />
     </bytecodeTargetLevel>
   </component>
