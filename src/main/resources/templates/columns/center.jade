@@ -1,0 +1,21 @@
+#center-column.column.animated
+    p.panels(ng-model="showNormalExpense", ng-init="showNormalExpense = true",  animation-create="fadeInDown")
+        a(ng-click="showNormalExpense = true", ng-class="{'selected': showNormalExpense}") Normal
+        a(ng-click="showNormalExpense = false", ng-class="{'selected': !showNormalExpense}") Recurring
+
+    .recurring-expense(ng-if="!showNormalExpense", ng-controller="ReucurringExpenseController", class="")
+        recurring-expense(expense="expense", ng-repeat="expense in expenses()")
+        p.add-recurring( ng-click="showDialog = true")
+            i.fa.fa-plus
+        .overlay(animation-create="fadeIn", aniamtion-destroy="fadeOut", ng-if="showDialog == true")
+            recurring-expense-add(class="dialog", animation-create="fadeInDown", ng-if="showDialog == true")
+
+    div(ng-if="showNormalExpense", ng-controller="CategoryController")
+        #category-grid
+            category-grid(animation-create="zoomIn", cat="category", ng-repeat="category in categories()", ng-click="showAddExpense($index)")
+        .category-setting
+            i(animation-create="zoomIn", class="fa fa-plus", ng-class="{'fa-spin': showCategoryDialog}", ng-show="availableIcons().length != 0", ng-click="showCategoryDialog = true")
+            i(animation-create="zoomIn", ng-show="categories().length > 0", class="fa fa-gear", ng-class="{'fa-spin': showOverlay}", ng-click="showOverlay = !showOverlay")
+        .overlay(animation-create="fadeIn", aniamtion-destroy="fadeOut", ng-if="showCategoryDialog == true || selectedCategory != ''")
+            category-dialog(class="dialog", animation-create="fadeInDown", ng-if="showCategoryDialog == true")
+            expense-dialog(class="dialog", animation-create="fadeInDown", ng-if="selectedCategory != ''", cat="selectedCategory")

@@ -18,7 +18,7 @@ public class DB {
     public static Dao<Expense, Integer> EXPENSE_DAO = null;
     public static Dao<RecurringExpense, Integer> RECURRING_EXPENSE_DAO = null;
     public static Dao<Setting, String> SETTING_DAO = null;
-    public static Dao<UserSession, Integer> USER_SESSION_DAO = null;
+    public static Dao<UserSession, String> USER_SESSION_DAO = null;
 
     private final static String databaseUrl = "jdbc:h2:" + Constants.DB_PATH;
 

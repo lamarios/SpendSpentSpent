@@ -41,15 +41,21 @@ public class SpendSpentSpent {
         System.out.println(DB.EXPENSE_DAO.queryForAll().size());
 
         Spark.port(Constants.HTTP_PORT);
+
+        Spark.staticFiles.location("/public");
+
         Spark.exception(Exception.class, (e, req, res) -> {
-            e.printStackTrace();
             if (e instanceof InvocationTargetException) {
                 InvocationTargetException target = (InvocationTargetException) e;
                 if (target.getTargetException() instanceof HaltException) {
                     HaltException halt = (HaltException) target.getTargetException();
                     res.body(halt.body());
                     res.status(halt.statusCode());
+                }else{
+                    e.printStackTrace();
                 }
+            }else{
+                e.printStackTrace();
             }
         });
 

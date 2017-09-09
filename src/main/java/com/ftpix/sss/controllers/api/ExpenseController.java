@@ -44,7 +44,7 @@ public class ExpenseController {
      * @return the Expense
      * @throws SQLException
      */
-    @SparkGet(value = "/:id", accept = Constants.JSON, transformer = GsonTransformer.class)
+    @SparkGet(value = "/ById/:id", accept = Constants.JSON, transformer = GsonTransformer.class)
     public Expense get(@SparkParam("id") int id) throws SQLException {
         return DB.EXPENSE_DAO.queryForId(id);
     }

@@ -1,0 +1,95 @@
+<div class="categories">
+	<ul>
+		<li ng-click="$parent.selected = category.id" ng-class="{'selected': $parent.selected == category.id }" ng-repeat="category in categories()">
+			<i  class="cat {{ category.icon }}"></i>
+		</li>
+	</ul>
+	<span>Select one of the icon above</span>
+</div>
+<div>
+	<input type="text" ng-model="newExpenseAmount" placeholder="Amount" readonly/>
+	<div class="expense-digits noselect">
+		<div class="digit" ng-click="$parent.addNewExpenseDigit('1')">1</div>
+		<div class="digit" ng-click="$parent.addNewExpenseDigit('2')">2</div>
+		<div class="digit" ng-click="$parent.addNewExpenseDigit('3')">3</div>
+		<div class="digit" ng-click="$parent.addNewExpenseDigit('4')">4</div>
+		<div class="digit" ng-click="$parent.addNewExpenseDigit('5')">5</div>
+		<div class="digit" ng-click="$parent.addNewExpenseDigit('6')">6</div>
+		<div class="digit" ng-click="$parent.addNewExpenseDigit('7')">7</div>
+		<div class="digit" ng-click="$parent.addNewExpenseDigit('8')">8</div>
+		<div class="digit" ng-click="$parent.addNewExpenseDigit('9')">9</div>
+		<div class="digit" ng-click="$parent.addNewExpenseDigit('.')">.</div>
+		<div class="digit" ng-click="$parent.addNewExpenseDigit('0')">0</div>
+		<div class="digit" ng-click="$parent.removeNewExpenseDigit()"><i class="fa fa-arrow-left"></i></div>
+	</div>
+	<p>
+		<label for="recurring-type">Type:</label>
+		<select id="recurring-type" ng-model="type">
+			<option selected value="0">Daily</option>
+			<option value="1">Weekly</option>
+			<option value="2">Monthly</option>
+			<option value="3">Yearly</option>
+		</select>
+		<span ng-if="type == 1">Day:</span>
+		<select ng-model="weekdayParam" ng-change="$parent.changeParam(weekdayParam)" ng-if="type == 1">
+			<option  value="2">Monday</option>
+			<option value="3">Tuesday</option>
+			<option value="4">Wednesday</option>
+			<option value="5">Thursday</option>
+			<option value="6">Friday</option>
+			<option value="7">Saturday</option>
+			<option value="1">Sunday</option>
+		</select>
+		<span ng-if="type == 2">Day:</span>
+		<select ng-model="dayParam" ng-change="$parent.changeParam(dayParam)" ng-if="type == 2">
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+			<option value="13">13</option>
+			<option value="14">14</option>
+			<option value="15">15</option>
+			<option value="16">16</option>
+			<option value="17">17</option>
+			<option value="18">18</option>
+			<option value="19">19</option>
+			<option value="20">20</option>
+			<option value="21">21</option>
+			<option value="22">22</option>
+			<option value="23">23</option>
+			<option value="24">24</option>
+			<option value="25">25</option>
+			<option value="26">26</option>
+			<option value="27">27</option>
+			<option value="28">28</option>
+		</select>
+		
+		<span ng-if="type == 3">Month:</span>
+		<select  ng-model="monthParam" ng-change="$parent.changeParam(monthParam)"  ng-if="type == 3">
+			<option value="0">January</option>
+			<option value="1">February</option>
+			<option value="2">March</option>
+			<option value="3">April</option>
+			<option value="4">May</option>
+			<option value="5">June</option>
+			<option value="6">July</option>
+			<option value="7">August</option>
+			<option value="8">September</option>
+			<option value="9">October</option>
+			<option value="10">November</option>
+			<option value="11">December</option>
+		</select>
+	</p>
+</div>
+<p class="actions">
+	<button class="btn" ng-click="$parent.closeDialog()">Cancel</button>
+	<button class="btn btn-primary" ng-click="$parent.addExpense(selected, $parent.newExpenseAmount, type, $parent.typeParam)">Add</button>
+</p>

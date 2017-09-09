@@ -1,0 +1,29 @@
+extends main
+
+block content
+
+    #columns
+        include columns/left
+        include columns/center
+        include columns/right
+
+
+    settings(ng-show="showSettings", animation-create="slideInUp", ng-controller="SettingsController")
+
+    login(animation-create="slideInUp", ng-controller="LoginController")
+
+    #footer
+        i#http-activity(class="fa fa-circle-o-notch fa-spin animated")
+        span.settings
+            a(ng-show="showSettings", class="logout",  animation-create="fadeIn", ng-click="logout()")
+                i.fa.fa-sign-out
+                | Logout
+
+            a(ng-click="showSettings = !showSettings")
+                i.fa.fa-gear
+        .page-marker
+            i(ng-click="swipeRight()", class="fa fa-chevron-left")
+            i(ng-click="swipeLeft()", class="fa fa-chevron-right")
+
+    if !apiKey.equalsIgnoreCase("")
+        script(async, defer, src="https://maps.googleapis.com/maps/api/js?key=#{apiKey}")

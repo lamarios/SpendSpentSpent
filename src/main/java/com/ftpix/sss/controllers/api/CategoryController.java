@@ -41,7 +41,7 @@ public class CategoryController {
      * @return the category
      * @throws SQLException
      */
-    @SparkGet(value = "/:id", accept = Constants.JSON, transformer = GsonTransformer.class)
+    @SparkGet(value = "/ById/:id", accept = Constants.JSON, transformer = GsonTransformer.class)
     public Category get(@SparkParam("id") int id) throws SQLException {
         return DB.CATEGORY_DAO.queryForId(id);
     }

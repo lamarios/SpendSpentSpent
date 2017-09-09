@@ -14,7 +14,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @SparkController("/API/Setting")
@@ -31,8 +34,8 @@ public class SettingsController {
      * @throws SQLException
      */
     @SparkGet(transformer = GsonTransformer.class)
-    public List<Setting> getAll() throws SQLException {
-        return DB.SETTING_DAO.queryForAll();
+    public Map<String, Setting> getAll() throws SQLException {
+        return DB.SETTING_DAO.queryForAll().stream().collect(Collectors.toMap(Setting::getName, Function.identity()));
     }
 
     /**

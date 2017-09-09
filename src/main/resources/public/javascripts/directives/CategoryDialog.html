@@ -1,0 +1,16 @@
+<div class="category-icons">
+	<div class="icon-category" ng-repeat="(category, icons) in availableIcons()">
+		<p ng-model="showIcons" ng-init="showIcons = false" ng-click="showIcons = !showIcons"><i ng-class="{'fa-rotate-90':showIcons}" class="fa fa-caret-right"></i> {{ category }}</p>
+		<div ng-show="showIcons" animation-create="fadeIn">
+			<a ng-repeat="icon in icons" ng-click="$parent.$parent.chosenIcon = icon">
+				<i class="cat {{ icon }}" ng-class="{'selected': icon == $parent.$parent.chosenIcon}"></i>
+			</a>
+		</div>
+	</div>
+
+</div>
+<div class="actions">
+	<button class="btn btn-primary"
+		ng-click="addCategory(chosenIcon, chosenColor)">Add Category</button>
+	<button class="btn" ng-click="closeDialogs()">Cancel</button>
+</div>

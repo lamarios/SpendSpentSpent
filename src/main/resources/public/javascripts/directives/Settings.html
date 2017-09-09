@@ -1,0 +1,25 @@
+<h2>Settings</h2>
+<p><label for="settings-authentication"><input type="checkbox"  id="settings-authentication" ng-model="authentication" ng-check="authentication"/> Use authentication</label></p>
+<p ng-show="authentication" ><label for="settings-username">Username</label><input id="settings-username" type="text" ng-model="username" placeholder="Username"/></p>
+<p ng-show="authentication" ><label for="settings-password">Password</label><input id="settings-password" type="password" ng-model="password" placeholder="Keep empty to keep current"/></p>
+
+
+
+<p><label for="settings-pushbullet"><input type="checkbox" ng-model="pushbullet" id="settings-pushbullet"/> Use PushBullet notifications</label></p>
+<p ng-show="pushbullet" ><label for="settings-pushbulletApi">PushBullet API key</label><input id="settings-pushbulletApi" type="text" ng-model="pushbulletApi"/></p>
+
+<p><label for="settings-pushalot"><input type="checkbox" ng-model="pushalot" id="settings-pushalot"/> Use Pushalot notifications</label></p>
+<p ng-show="pushalot" ><label for="settings-pushalotApi">Pushalot API key</label><input id="settings-pushalotApi" type="text" ng-model="pushalotApi"/></p>
+
+<p><label for="settings-"pushover""><input type="checkbox" ng-model="pushover" id="settings-"pushover""/> Use Pushover notifications</label></p>
+<p ng-show="pushover" ><label for="settings-pushoverAppToken">Pushover Application token</label><input id="settings-pushoverAppToken" type="text" ng-model="pushoverAppToken"/></p>
+<p ng-show="pushover" ><label for="settings-pushoverUserToken">Pushover User token</label><input id="settings-pushoverUserToken" type="text" ng-model="pushoverUserToken"/></p>
+
+
+
+<p><label for="settings-windowsTile"><input type="checkbox" ng-model="windowsTile" id="settings-windowsTile"/> Allow Windows Tile.<small>It will make today total expense public.</small></label></p>
+
+<p><label for="settings-googlemap">Google map API</label><input id="settings-googlemap" type="text" ng-model="googlemap" placeholder="Google API key"/></p>
+
+
+<p class="actions"><button class="btn" ng-click="closeDialog()">Cancel</button><button class="btn btn-primary" ng-click="saveSettings()">Save</button></p>
