@@ -9,9 +9,12 @@ class CenterColumn extends React.Component {
     }
 
     componentDidMount() {
-        this.categoryService.refresh()
+        this.categoryService.getAll()
             .then(res =>  console.log(res))
             .catch(err => console.log('Hello', err))
+
+        this.categoryService.get(321);
+
     }
 
     render() {
