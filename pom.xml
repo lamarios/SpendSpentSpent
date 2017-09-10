@@ -48,30 +48,30 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.lesscss</groupId>
-                <artifactId>lesscss-maven-plugin</artifactId>
-                <configuration>
-                    <sourceDirectory>${project.build.sourceDirectory}/assets/less</sourceDirectory>
-                    <outputDirectory>${project.build.resources[0].directory}/public/stylesheets
-                    </outputDirectory>
-                    <compress>true</compress>
-                    <includes>
-                        <include>main.less</include>
-                    </includes>
-                    <!--<excludes>-->
-                        <!--<exclude>variables.less</exclude>-->
-                    <!--</excludes>-->
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <phase>compile</phase>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.lesscss</groupId>-->
+                <!--<artifactId>lesscss-maven-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<sourceDirectory>${project.build.sourceDirectory}/assets/less</sourceDirectory>-->
+                    <!--<outputDirectory>${project.build.resources[0].directory}/public/stylesheets-->
+                    <!--</outputDirectory>-->
+                    <!--<compress>true</compress>-->
+                    <!--<includes>-->
+                        <!--<include>main.less</include>-->
+                    <!--</includes>-->
+                    <!--&lt;!&ndash;<excludes>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<exclude>variables.less</exclude>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</excludes>&ndash;&gt;-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>compile</goal>-->
+                        <!--</goals>-->
+                        <!--<phase>compile</phase>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

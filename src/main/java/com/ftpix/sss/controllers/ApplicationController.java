@@ -16,20 +16,22 @@ import java.util.Map;
 public class ApplicationController {
 
 
-    @SparkGet(value="/", templateEngine = JadeTemplateEngine.class)
-    public ModelAndView index() throws SQLException {
-        String apiKey = "";
+//    @SparkGet(value="/", templateEngine = JadeTemplateEngine.class)
+//    public ModelAndView index() throws SQLException {
+//        String apiKey = "";
+//
+//        Setting googleMapApi = DB.SETTING_DAO.queryForId(Setting.GOOGLE_MAP);
+//
+//        if (googleMapApi != null) {
+//            apiKey = googleMapApi.getValue();
+//        }
+//
+//        Map<String, String> map = new HashMap<>();
+//        map.put("apiKey", apiKey);
+//
+//        return new ModelAndView(map, "index-react");
+//
+//    }
 
-        Setting googleMapApi = DB.SETTING_DAO.queryForId(Setting.GOOGLE_MAP);
 
-        if (googleMapApi != null) {
-            apiKey = googleMapApi.getValue();
-        }
-
-        Map<String, String> map = new HashMap<>();
-        map.put("apiKey", apiKey);
-
-        return new ModelAndView(map, "index");
-
-    }
 }

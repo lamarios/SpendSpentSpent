@@ -42,7 +42,7 @@ public class SpendSpentSpent {
 
         Spark.port(Constants.HTTP_PORT);
 
-        Spark.staticFiles.location("/public");
+        Spark.staticFiles.location("/web");
 
         Spark.exception(Exception.class, (e, req, res) -> {
             if (e instanceof InvocationTargetException) {

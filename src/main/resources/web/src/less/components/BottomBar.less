@@ -1,0 +1,33 @@
+.BottomBar {
+  position: fixed;
+  left:0;
+  bottom: 0;
+  right: 0;
+  padding-bottom: 10px;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+
+    li {
+      display: inline-block;
+      font-size: 30px;
+      margin: 0 20px;
+
+      transition: all 0.25s;
+      a {
+        color: @accentColor;
+      }
+      a:hover {
+        color: lighten(@accentColor, 10%);
+      }
+    }
+
+    li:hover {
+
+      transform: scale(1.5);
+    }
+  }
+}
