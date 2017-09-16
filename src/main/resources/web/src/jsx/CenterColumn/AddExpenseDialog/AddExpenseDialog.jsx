@@ -1,12 +1,12 @@
 import React from 'react';
-import Overlay from "../Overlay.jsx";
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import AmountKeyBoard from "./AmountKeyBoard.jsx";
 import ExpenseService from "../../services/ExpenseService.jsx";
-import Loading from "../Loading.jsx";
+import Dialog from "../../Dialog.jsx";
+import LoadingOverlay from "../../LoadingOverlay.jsx";
 
 
 export default class AddExpenseDialog extends React.Component {
@@ -19,12 +19,11 @@ export default class AddExpenseDialog extends React.Component {
             location: null,
             refreshingLocation: false,
             loading: false,
-            useLocation: (typeof localStorage !== undefined ? localStorage.useLocation == 'true' : false)
+            useLocation: (typeof localStorage !== undefined ? localStorage.useLocation === 'true' : false)
         }
 
         this.expenseService = new ExpenseService();
 
-        this.preventClose = this.preventClose.bind(this);
         this.toggleCalendar = this.toggleCalendar.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
         this.addDigit = this.addDigit.bind(this);
@@ -121,12 +120,6 @@ export default class AddExpenseDialog extends React.Component {
         this.setState({amount: this.state.amount.substring(0, this.state.amount.length - 1)});
     }
 
-    /**
-     * Prvents the dialog to close thwn clicking on the actual dialog
-     */
-    preventClose(e) {
-        e.stopPropagation();
-    }
 
     /**
      * Creates the expense in the backend
@@ -163,9 +156,9 @@ export default class AddExpenseDialog extends React.Component {
     }
 
     render() {
-        return <Overlay dissmiss={this.props.dismiss}>
-            <div className={'AddExpenseDialog'} onClick={this.preventClose}>
-                {this.state.loading && <div className={'loading'}><Loading/></div>}
+        return <Dialog dismiss={this.props.dismiss} cancelText={"Cancel"} okText={"Ok"} onOk={this.addExpense}>
+            <div className={'AddExpenseDialog'}>
+                {this.state.loading && <LoadingOverlay/>}
 
                 <div className={'header'}>
                     <i className={'cat ' + this.props.category.icon}/>
@@ -201,11 +194,7 @@ export default class AddExpenseDialog extends React.Component {
                         )
                     }
                 </div>
-                <div className={'actions'}>
-                    <a onClick={this.props.dismiss}>Cancel</a>
-                    <a className={'enabled'} onClick={this.addExpense}>Ok</a>
-                </div>
             </div>
-        </Overlay>
+        </Dialog>
     }
 }

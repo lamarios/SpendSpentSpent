@@ -1,8 +1,9 @@
 import React from 'react';
-import Overlay from '../Overlay.jsx';
 import CategoryService from '../../services/CategoryServices.jsx';
 import SubCategory from './SubCategory.jsx'
-import Loading from "../Loading.jsx";
+import Loading from "../../Loading.jsx";
+import Dialog from "../../Dialog.jsx";
+import LoadingOverlay from "../../LoadingOverlay.jsx";
 
 export default class AddCategoryDialog extends React.Component {
 
@@ -12,11 +13,10 @@ export default class AddCategoryDialog extends React.Component {
         this.state = {
             categories: [],
             selected: '',
-            loading:false ,
+            loading: false,
         }
 
         this.addCategory = this.addCategory.bind(this);
-        this.preventPropagation = this.preventPropagation.bind(this);
         this.select = this.select.bind(this);
     }
 
@@ -61,20 +61,17 @@ export default class AddCategoryDialog extends React.Component {
         this.setState({selected: icon});
     }
 
-    /**
-     * To prevent the click on the dialog to go through to the overlay hence closing it
-     */
-    preventPropagation(e) {
-        e.stopPropagation();
-    }
 
     render() {
         var keys = Object.keys(this.state.categories);
 
-        return <Overlay dismiss={this.props.dismiss}>
-            {Object.getOwnPropertyNames(this.state.categories).length > 0 &&
-            <div className={'AddCategoryDialog'} onClick={this.preventPropagation}>
-                {this.state.loading && <div className={'loading'}><Loading/></div>}
+        return <Dialog dismiss={this.props.dismiss}
+                       cancelText={'Cancel'}
+                       okText={'Add Category'}
+                       onOk={this.addCategory}>
+
+            <div className={'AddCategoryDialog'}>
+                {this.state.loading && <LoadingOverlay/>}
                 <div className={"categories"}>
                     {keys.length > 0 && keys.map(
                         (subCategory) => <SubCategory
@@ -88,13 +85,7 @@ export default class AddCategoryDialog extends React.Component {
                     )}
                     {keys.length === 0 && <Loading/>}
                 </div>
-                <div className={"actions"}>
-                    <a onClick={this.props.dismiss}>Cancel</a>
-                    <a className={'add ' + (this.state.selected.length > 0 ? 'enabled' : '')}
-                       onClick={this.addCategory}>Add Category</a>
-                </div>
             </div>
-            }
-        </Overlay>
+        </Dialog>
     }
 }

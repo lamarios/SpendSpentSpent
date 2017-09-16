@@ -1,7 +1,7 @@
 import React from 'react';
 import {render} from 'react-dom';
 import {BrowserRouter, Route} from 'react-router-dom';
-import CenterColumn from './CenterColumn.jsx';
+import CenterColumn from './CenterColumn/CenterColumn.jsx';
 import RightColumn from './RightColumn.jsx';
 import LeftColumn from './LeftColumn.jsx';
 import Login from './Login.jsx';

@@ -1,15 +1,4 @@
 .AddCategoryDialog {
-  background-color: white;
-  width: 100%;
-  max-width: @dialogwidth;
-  position: relative;
-  z-index: 11;
-  margin: 10px auto;
-  box-shadow: 0 0 240px #000;
-
-  animation-name: category-dialog-bounce-in;
-  animation-duration: 0.15s;
-  border-radius: 5px;
 
   .categories {
     background-color: @accentColor;
@@ -22,20 +11,6 @@
     }
   }
 
-  .actions {
-    text-align: right;
-    padding: 5px 20px;
-    a {
-      display: inline-block;
-      margin: 0 5px;
-      font-size: 20px;
-      cursor: pointer;
-      &.enabled {
-        color: @accentColor;
-      }
-
-    }
-  }
 
   .loading {
     position: absolute;
@@ -53,14 +28,3 @@
 
 }
 
-@keyframes category-dialog-bounce-in {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}

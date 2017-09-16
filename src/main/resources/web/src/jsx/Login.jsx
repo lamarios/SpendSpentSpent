@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginService from '../services/LoginServices.jsx'
+import LoginService from './services/LoginServices.jsx'
 
 export default class Login extends React.Component {
 

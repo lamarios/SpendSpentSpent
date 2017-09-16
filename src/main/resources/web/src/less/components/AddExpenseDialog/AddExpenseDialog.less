@@ -1,18 +1,4 @@
 .AddExpenseDialog {
-  max-width: @dialogwidth;
-  background-color: white;
-
-  border-radius: 5px;
-  margin: 5px auto;
-
-  position: relative;
-  z-index: 11;
-  margin: 10px auto;
-  box-shadow: 0 0 240px #000;
-
-  animation-name: expense-dialog-bounce-in;
-  animation-duration: 0.15s;
-  cursor: default;
 
   .header {
     height: 80px;
@@ -77,56 +63,8 @@
     }
   }
 
-  .actions {
-    text-align: right;
-    padding: 5px 20px;
-    a {
-      display: inline-block;
-      margin: 0 5px;
-      font-size: 20px;
-      cursor: pointer;
-      color: black;
 
-      &.enabled {
-        color: @accentColor;
-      }
 
-    }
-  }
-
-  .loading {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    padding-top: 33%;
-
-    animation-name: expense-loading-fadein;
-    animation-duration: 0.25s;
-  }
 }
 
-@keyframes expense-loading-fadein {
-  from {
-    opacity: 0;
-  }
 
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes expense-dialog-bounce-in {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}

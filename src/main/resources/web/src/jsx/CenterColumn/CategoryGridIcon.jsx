@@ -17,8 +17,9 @@ export default class CategoryGridIcon extends React.Component {
     /**
      * Deletes a category
      */
-    deleteCategory() {
+    deleteCategory(e) {
         this.props.delete(this.props.category.id);
+        e.stopPropagation();
     }
 
 
