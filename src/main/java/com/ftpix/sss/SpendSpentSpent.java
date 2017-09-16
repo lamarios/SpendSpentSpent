@@ -38,11 +38,16 @@ public class SpendSpentSpent {
     }
 
     public static void main(String[] args) throws SQLException {
-        System.out.println(DB.EXPENSE_DAO.queryForAll().size());
 
         Spark.port(Constants.HTTP_PORT);
 
-        Spark.staticFiles.location("/web");
+        if(args.length > 0 && args[0].equalsIgnoreCase("dev")) {
+            System.out.println("DEV MODE");
+            Spark.externalStaticFileLocation("/mnt/services/docker/dev/home/IdeaProjects/SpendSpentSpent/src/main/resources/web/public");
+
+        }else{
+            Spark.staticFiles.location("/web/public");
+        }
 
         Spark.exception(Exception.class, (e, req, res) -> {
             if (e instanceof InvocationTargetException) {

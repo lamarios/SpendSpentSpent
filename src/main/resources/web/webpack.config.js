@@ -1,17 +1,22 @@
 var webpack = require('webpack');
 var path = require('path');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+
 
 var BUILD_DIR = path.resolve(__dirname, 'public');
 var APP_DIR = path.resolve(__dirname, 'src');
 
-var API_URL = 'http://localhost:9002/API';
+
+var API_ROOT = "";
+var API_URL = API_ROOT + '/API';
 
 var constants = {
     CATEGORY: {
         ALL: JSON.stringify(API_URL + '/Category'),
         AVAILABLE: JSON.stringify(API_URL + '/Category/Available'),
         ADD: JSON.stringify(API_URL + '/Category'),
-        GET: JSON.stringify(API_URL + '/Category/{0}')
+        GET: JSON.stringify(API_URL + '/Category/ById/{0}'),
+        DELETE: JSON.stringify(API_URL + '/Category/{0}')
     },
     EXPENSE: {
         ADD: JSON.stringify(API_URL + '/Expense'),
@@ -25,12 +30,12 @@ var constants = {
         ADD: JSON.stringify(API_URL + '/RecurringExpense'),
         DELETE: JSON.stringify(API_URL + '/RecurringExpense/{0}')
     },
-    SESSION:{
-        LOGIN: JSON.stringify(API_URL+'/Login')
+    SESSION: {
+        LOGIN: JSON.stringify(API_ROOT + '/Login')
     },
-    SETTINGS:{
-        UPDATE: JSON.stringify(API_URL+'/Setting/{0}'),
-        ALL: JSON.stringify(API_URL+'/Setting'),
+    SETTINGS: {
+        UPDATE: JSON.stringify(API_URL + '/Setting/{0}'),
+        ALL: JSON.stringify(API_URL + '/Setting'),
     }
 
 }
@@ -44,6 +49,12 @@ var config = {
     plugins: [
         new webpack.DefinePlugin({
             'API': constants
+        }),
+
+        new CopyWebpackPlugin([
+            {from: APP_DIR + '/index.html'}
+        ], {
+            copyUnmodified: true
         })
     ],
     module: {
@@ -56,6 +67,7 @@ var config = {
                 include: APP_DIR,
                 loader: 'babel-loader'
             },
+            {test: /\.css$/, loader: 'style-loader!css-loader',},
             {
                 test: /main.less$/,
                 use: [{

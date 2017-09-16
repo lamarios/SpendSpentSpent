@@ -1,0 +1,132 @@
+.AddExpenseDialog {
+  max-width: @dialogwidth;
+  background-color: white;
+
+  border-radius: 5px;
+  margin: 5px auto;
+
+  position: relative;
+  z-index: 11;
+  margin: 10px auto;
+  box-shadow: 0 0 240px #000;
+
+  animation-name: expense-dialog-bounce-in;
+  animation-duration: 0.15s;
+  cursor: default;
+
+  .header {
+    height: 80px;
+    background-color: @accentColor;
+    color: white;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding-top: 20px;
+
+    i {
+      font-size: 50px;
+    }
+  }
+
+  .amount {
+    input {
+      display: block;
+      width: 100%;
+      border: none;
+      text-align: right;
+      box-sizing: border-box;
+      background-color: #f0f0f0;
+      border-radius: 0;
+      font-size: 25px;
+      padding: 15px;
+    }
+  }
+
+  .options {
+    text-align: left;
+    padding: 5px;
+
+    .fa-location-arrow {
+      padding: 0px 5px;
+      margin-left: 10px;
+      color: black;
+      vertical-align: middle;
+      cursor: pointer;
+
+      &.enabled {
+        color: @accentColor;
+      }
+
+      &.active {
+        text-shadow: 0 0 5px @accentColor;
+      }
+    }
+
+    .date-button {
+      cursor: pointer;
+      border: none;
+      border-radius: 2px;
+      color: white;
+      background-color: @accentColor;
+      font-family: 'Open Sans', sans-serif;
+      padding: 10px;
+      vertical-align: middle;
+    }
+
+    &:after {
+      vertical-align: middle;
+    }
+  }
+
+  .actions {
+    text-align: right;
+    padding: 5px 20px;
+    a {
+      display: inline-block;
+      margin: 0 5px;
+      font-size: 20px;
+      cursor: pointer;
+      color: black;
+
+      &.enabled {
+        color: @accentColor;
+      }
+
+    }
+  }
+
+  .loading {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding-top: 33%;
+
+    animation-name: expense-loading-fadein;
+    animation-duration: 0.25s;
+  }
+}
+
+@keyframes expense-loading-fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes expense-dialog-bounce-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

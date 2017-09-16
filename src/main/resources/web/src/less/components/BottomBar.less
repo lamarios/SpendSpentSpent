@@ -1,33 +1,52 @@
 .BottomBar {
   position: fixed;
-  left:0;
+  left: 0;
   bottom: 0;
   right: 0;
   padding-bottom: 10px;
+  background-color: white;
 
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    text-align: center;
+  animation-name: Bottom-Bar-slideInUp;
+  animation-duration: 0.5s;
 
-    li {
-      display: inline-block;
-      font-size: 30px;
-      margin: 0 20px;
+  text-align: center;
 
-      transition: all 0.25s;
-      a {
-        color: @accentColor;
-      }
-      a:hover {
-        color: lighten(@accentColor, 10%);
-      }
-    }
+  a {
+    display: inline-block;
+    font-size: 30px;
+    margin: 0 20px;
 
-    li:hover {
-
+    transition: all 0.25s;
+    color: @accentColor;
+    &:hover, &.active {
+      color: lighten(@accentColor, 10%);
       transform: scale(1.5);
     }
+
+    &.active{
+      animation-name: Bottom-Bar-iconPop;
+      animation-duration: 0.5s;
+    }
+  }
+}
+
+@keyframes Bottom-Bar-iconPop {
+  30% {
+    transform: scale(2);
+  }
+
+ 100%{
+   transform: scale(1.5);
+ }
+
+}
+
+@keyframes Bottom-Bar-slideInUp {
+  from {
+    transform: translate(0, 100px);
+  }
+
+  to {
+    transform: translate(0);
   }
 }
