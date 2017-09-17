@@ -7,4 +7,8 @@ export default class RecurringExpenseServices {
         return axios.get(API.RECURRING.GET);
     }
 
+    delete(id){
+        return axios.delete(API.RECURRING.DELETE.format(id));
+    }
+
 }

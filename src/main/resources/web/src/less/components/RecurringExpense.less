@@ -1,12 +1,10 @@
 .RecurringExpense {
 
   .bar {
-    background-color: @accentColor;
     display: block;
     margin: 10px;
-    height: 40px;
-    border-radius: 5px;
     cursor: pointer;
+    position: relative;
 
     animation-name: recurring-show-bar;
 
@@ -15,25 +13,138 @@
     //&:hover {
     //  transform: scale(1.1);
     //}
+    .front {
+      height: 40px;
+      border-radius: 5px;
+      background-color: @accentColor;
+      transition: all .25s;
+      backface-visibility: hidden;
+      &.hiding {
+        transform: rotate3d(1, 0, 0, 180deg);
+        height: 74px;
+        opacity: 0;
+      }
 
-    div {
-      display: inline-block;
-      width: 33%;
+      div {
+        display: inline-block;
+        width: 33%;
+        color: white;
+        font-size: 20px;
+        padding: 5px;
+        box-sizing: border-box;
+        &.frequence {
+          text-align: left;
+        }
+
+        &.amount {
+          text-align: right;
+        }
+
+        &.icon {
+          text-align: center;
+          padding-top: 8px;
+        }
+
+      }
+    }
+
+    .back {
+      transition: all .25s;
+      backface-visibility: hidden;
+      background-color: @accentColor;
       color: white;
-      font-size: 20px;
-      padding: 5px;
-      box-sizing: border-box;
-      &.frequence {
-        text-align: left;
+      padding: 10px;
+      border-radius: 5px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+      transform: rotate3d(1, 0, 0, 180deg);
+      opacity: 0;
+
+
+      .fa {
+
+        display: block;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        padding:10px;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
       }
 
-      &.amount {
-        text-align: right;
+      .fa-ellipsis-v {
+        color: white;
       }
 
-      &.icon {
+      p {
         text-align: center;
-        padding-top: 8px;
+        margin-top: 0;
+        margin-bottom: 5px;
+        .date {
+          font-weight: bold;
+        }
+      }
+
+      &.showing {
+        pointer-events: auto;
+        transform: rotate3d(0, 0, 0, 0);
+        opacity:1;
+      }
+
+      .bottom-menu {
+
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        border-radius: 5px;
+        background-color: @grey;
+        padding: 10px;
+        color: black;
+
+        transform:scale(0.75);
+        opacity: 0;
+        pointer-events: none;
+
+        transition:  all 0.15s;
+
+        &.showing{
+          transform: scale(1);
+          pointer-events: auto;
+          opacity: 1;
+        }
+
+        p {
+          text-align: center;
+          margin: 0;
+          font-size: 16px;
+          padding: 0 20px;
+
+          animation-name: recurring-show-bar;
+          animation-duration: 0.15s;
+        }
+        .delete {
+          margin-top: 13px;
+
+        }
+        p.options {
+          position: absolute;
+          bottom: 10px;
+          left: 0;
+          right: 0;
+          span {
+            display: inline-block;
+            width: 50%;
+          }
+          .ok {
+            color: red;
+          }
+        }
       }
 
     }
@@ -41,14 +152,13 @@
   }
 }
 
-
 @keyframes recurring-show-bar {
-  from{
+  from {
     opacity: 0;
     transform: scale(0.5);
   }
 
-  to{
+  to {
     opacity: 1;
     transform: scale(1);
   }

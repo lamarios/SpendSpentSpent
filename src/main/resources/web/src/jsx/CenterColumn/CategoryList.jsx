@@ -2,6 +2,7 @@ import React from 'react';
 import CategoryService from '../services/CategoryServices.jsx';
 import CategoryGridIcon from './CategoryGridIcon.jsx';
 import AddCategoryDialog from './AddCategoryDialog/AddCategoryDialog.jsx';
+import OkDialog from "../OkDialog.jsx";
 
 
 export default class CategoryList extends React.Component {
@@ -13,12 +14,14 @@ export default class CategoryList extends React.Component {
             categories: [],
             overlay: false,
             showAddCategory: false,
+            error:'',
         }
 
         this.showOverlay = this.showOverlay.bind(this);
         this.deleteCategory = this.deleteCategory.bind(this);
         this.toggleAddCategoryDialog = this.toggleAddCategoryDialog.bind(this);
         this.refreshList = this.refreshList.bind(this);
+        this.dismissError = this.dismissError.bind(this);
     }
 
     /**
@@ -44,7 +47,10 @@ export default class CategoryList extends React.Component {
                 this.setState({categories: res.data});
                 console.log(res.data);
             })
-            .catch(err => console.log('Hello', err))
+            .catch(err => {
+                this.setState({error: 'Couldn\'t retrieve category list: '+err})
+                console.log('Hello', err)
+            })
 
     }
 
@@ -68,6 +74,10 @@ export default class CategoryList extends React.Component {
         }
     }
 
+    dismissError(e){
+        this.setState({error:''});
+    }
+
     render() {
         return (
             <div className="CategoryList">
@@ -76,6 +86,12 @@ export default class CategoryList extends React.Component {
                     dismiss={this.toggleAddCategoryDialog}
                     refresh={this.refreshList}
                 />
+                }
+
+                {this.state.error.length > 0 &&
+                    <OkDialog dismiss={this.dismissError}>
+                        {this.state.error}
+                    </OkDialog>
                 }
 
                 <ul>
