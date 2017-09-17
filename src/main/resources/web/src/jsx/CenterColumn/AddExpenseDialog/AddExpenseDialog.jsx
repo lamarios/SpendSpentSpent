@@ -164,7 +164,7 @@ export default class AddExpenseDialog extends React.Component {
                     <i className={'cat ' + this.props.category.icon}/>
                 </div>
                 <div className={'amount'}>
-                    <input onChange={this.amountChange} value={this.state.amount} placeholder={'Amount'}
+                    <input  value={this.state.amount} placeholder={'Amount'}
                            readOnly={"true"}/>
                 </div>
                 <div className={'keypad'}>

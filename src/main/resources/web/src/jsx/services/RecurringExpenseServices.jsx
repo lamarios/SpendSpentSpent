@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import qs from 'querystring';
 
 export default class RecurringExpenseServices {
 
@@ -10,5 +10,11 @@ export default class RecurringExpenseServices {
     delete(id){
         return axios.delete(API.RECURRING.DELETE.format(id));
     }
+
+    add(recurirngExpense){
+        return axios.post(API.RECURRING.ADD, qs.stringify(recurirngExpense));
+    }
+
+
 
 }
