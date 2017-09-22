@@ -1,4 +1,5 @@
 import React from 'react';
+import Amount from "../Amount.jsx";
 
 export default class RecurringExpense extends React.Component {
 
@@ -52,9 +53,9 @@ export default class RecurringExpense extends React.Component {
 
     render() {
         return <div className={'RecurringExpense'} onClick={this.flip}>
-            <div className={'bar'} style={this.props.style}>
-
-                <div className={'front ' + (this.state.flip ? 'hiding' : '')}>
+            <div className={'bar '+(this.state.flip === true ?'flip':'')} style={this.props.style}>
+                {this.state.flip === false &&
+                <div className={'front fade-in '}>
                     <div className={'frequence'}>
                         {this.getFrequence(this.props.expense.type)}
                     </div>
@@ -62,11 +63,12 @@ export default class RecurringExpense extends React.Component {
                         <i className={'cat ' + this.props.expense.category.icon}></i>
                     </div>
                     <div className={'amount'}>
-                        {this.props.expense.amount}
+                        <Amount>{this.props.expense.amount}</Amount>
                     </div>
                 </div>
-
-                <div className={"back " + (this.state.flip ? 'showing' : '')}>
+                }
+                {this.state.flip === true &&
+                <div className={"back fade-in"}>
                     <i className={'fa fa-ellipsis-v'} onClick={this.toggleMenu}/>
                     <p>Last occurrence: <span className="date">{this.props.expense.lastOccurrence}</span></p>
                     <p>Next occurrence: <span className='date'>{this.props.expense.nextOccurrence}</span></p>
@@ -93,6 +95,7 @@ export default class RecurringExpense extends React.Component {
                         }
                     </div>
                 </div>
+                }
             </div>
         </div>
     }

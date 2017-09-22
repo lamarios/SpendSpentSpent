@@ -8,4 +8,17 @@ export default class ExpenseService{
     }
 
 
+    getMonths(){
+        return axios.get(API.EXPENSE.GET_MONTHS);
+    }
+
+
+    getByDay(month){
+        return axios.get(API.EXPENSE.BY_MONTH.format(month));
+    }
+
+    delete(id){
+        return axios.delete(API.EXPENSE.DELETE.format(id));
+    }
+
 }

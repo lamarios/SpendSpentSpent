@@ -2,7 +2,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import {BrowserRouter, Route} from 'react-router-dom';
 import CenterColumn from './CenterColumn/CenterColumn.jsx';
-import RightColumn from './RightColumn.jsx';
+import RightColumn from './RightColumn/RightColumn.jsx';
 import LeftColumn from './LeftColumn.jsx';
 import Login from './Login.jsx';
 import BottomBar from './BottomBar.jsx';
@@ -26,10 +26,9 @@ axios.interceptors.request.use(function (config) {
         if (typeof localStorage !== undefined && localStorage.token) {
             config.headers['Authorization'] = localStorage.token;
         } else {
-            location.href = window.origin+'/login';
+            location.href = window.origin + '/login';
         }
     }
-    console.log('http config', config);
     return config;
 }, function (error) {
     // Do something with request error
@@ -45,7 +44,7 @@ render((
             <Route path="/history" component={RightColumn}/>
             <Route path="/Login" component={Login}/>
 
-            <BottomBar/>
+            {!window.location.pathname.includes('login') && <BottomBar/>}
         </div>
     </BrowserRouter>
 ), document.getElementById('app'));

@@ -47,7 +47,6 @@ export default class AddExpenseDialog extends React.Component {
         if (typeof  localStorage !== undefined) {
             this.setState({useLocation: !this.state.useLocation});
             localStorage.useLocation = !this.state.useLocation;
-            console.log(this.state);
             if (!this.state.useLocation) {
                 this.refreshLocation();
             } else {
@@ -86,7 +85,6 @@ export default class AddExpenseDialog extends React.Component {
                     location: position.coords,
                     refreshingLocation: false
                 });
-                console.log('location', this.state.location);
             }, () => {//Error
                 this.setState({
                     location: null,
@@ -102,7 +100,6 @@ export default class AddExpenseDialog extends React.Component {
      * @param digit
      */
     addDigit(digit) {
-        console.log('Adding digit', digit);
         var newAmount = this.state.amount + digit;
 
         var patt = new RegExp(/^[0-9]+(\.[0-9]{0,2})?$/);
@@ -116,7 +113,6 @@ export default class AddExpenseDialog extends React.Component {
      * Removes a digit from the amount
      */
     removeDigit() {
-        console.log('removing digit');
         this.setState({amount: this.state.amount.substring(0, this.state.amount.length - 1)});
     }
 

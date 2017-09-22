@@ -18,7 +18,7 @@ public class Expense {
     @DatabaseField(columnName = "AMOUNT")
     private double amount;
 
-    @DatabaseField(columnName = "CATEGORY_ID", foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 1, foreignColumnName = "ID")
+    @DatabaseField(columnName = "CATEGORY_ID", foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreignColumnName = "ID")
     private Category category;
 
     @DatabaseField(columnName = "DATE", dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")

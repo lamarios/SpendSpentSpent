@@ -12,9 +12,7 @@ import org.apache.logging.log4j.Logger;
 import spark.Spark;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 
 @SparkController("/API/Category")
 public class CategoryController {
@@ -150,6 +148,12 @@ public class CategoryController {
      */
     @SparkDelete(value = "/:id", transformer = GsonTransformer.class, accept = Constants.JSON)
     public boolean delete(@SparkParam("id") int id) throws SQLException {
+        Map<String, Object> fields = new HashMap<>();
+        fields.put("CATEGORY_ID", id);
+
+        DB.EXPENSE_DAO.delete(DB.EXPENSE_DAO.queryForFieldValues(fields));
+        DB.RECURRING_EXPENSE_DAO.delete(DB.RECURRING_EXPENSE_DAO.queryForFieldValues(fields));
+
         DB.CATEGORY_DAO.deleteById(id);
         return true;
     }

@@ -15,6 +15,7 @@ export default class CategoryList extends React.Component {
             overlay: false,
             showAddCategory: false,
             error:'',
+            apiOver:false,
         }
 
         this.showOverlay = this.showOverlay.bind(this);
@@ -44,11 +45,10 @@ export default class CategoryList extends React.Component {
     refreshList() {
         this.categoryService.getAll()
             .then(res => {
-                this.setState({categories: res.data});
-                console.log(res.data);
+                this.setState({categories: res.data, apiOver:true});
             })
             .catch(err => {
-                this.setState({error: 'Couldn\'t retrieve category list: '+err})
+                this.setState({error: 'Couldn\'t retrieve category list: '+err, apiOver: true});
                 console.log('Hello', err)
             })
 
@@ -58,7 +58,6 @@ export default class CategoryList extends React.Component {
      * Hides or display the category dialog
      */
     toggleAddCategoryDialog() {
-        console.log(this.state.showAddCategory)
         this.setState({showAddCategory: !this.state.showAddCategory});
     }
 
@@ -68,10 +67,8 @@ export default class CategoryList extends React.Component {
      * @param id
      */
     deleteCategory(id) {
-        if (confirm('Are you sure to delete this category and all the related expenses ?')) {
             this.categoryService.delete(id)
                 .then(res => this.refreshList())
-        }
     }
 
     dismissError(e){
@@ -94,6 +91,7 @@ export default class CategoryList extends React.Component {
                     </OkDialog>
                 }
 
+                { this.state.categories.length > 0 &&
                 <ul>
                     {this.state.categories.map(
                         (category) => <CategoryGridIcon
@@ -103,8 +101,12 @@ export default class CategoryList extends React.Component {
                             delete={this.deleteCategory}
                         />
                     )}
-                </ul>
-                <div className="list-settings">
+                </ul>}
+
+
+                {(this.state.apiOver === true && this.state.categories.length === 0)  && <p>Nothing to show, add expense categories by click the <i className={'fa fa-plus'}/> icon  below.</p>}
+
+                <div className="list-settings fade-in">
                     <i className="fa fa-plus" onClick={this.toggleAddCategoryDialog}></i>
                     <i className="fa fa-cog" onClick={this.showOverlay}></i>
                 </div>

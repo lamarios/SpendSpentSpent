@@ -110,7 +110,6 @@ public class ExpenseController {
                         } else {
                             outcome += expense.getAmount();
                         }
-
                         //Weird bug, not showing category and color if not calling this…
                         expense.getCategory().getIcon();
                     }

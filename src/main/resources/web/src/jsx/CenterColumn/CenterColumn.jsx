@@ -42,7 +42,7 @@ export default class CenterColumn extends React.Component {
             {label: 'Recurring', onClick: this.showRecurring}
         ];
         return (
-            <div className="CenterColumn">
+            <div className="CenterColumn column">
                 <Switcher items={items}/>
                 {this.state.displayLeft ?
                     <CategoryList/>

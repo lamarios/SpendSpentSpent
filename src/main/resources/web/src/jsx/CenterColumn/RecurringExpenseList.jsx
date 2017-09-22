@@ -10,7 +10,7 @@ export default class RecurringExpenseList extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {expenses: [], error: '', showAddDialog: false};
+        this.state = {expenses: [], error: '', showAddDialog: false, apiOver: false};
 
         this.recurringExpenseServices = new RecurringExpenseServices();
         this.deleteExpense = this.deleteExpense.bind(this);
@@ -34,10 +34,10 @@ export default class RecurringExpenseList extends React.Component {
     refreshList() {
         this.recurringExpenseServices.getAll()
             .then(res => {
-                this.setState({expenses: res.data});
+                this.setState({expenses: res.data, apiOver:true});
             })
             .catch(err => {
-                    this.setState({error: 'Error while retrieving recurrent expenses: ' + err});
+                    this.setState({error: 'Error while retrieving recurrent expenses: ' + err, apiOver:true});
                     console.error(err);
                 }
             );
@@ -77,10 +77,11 @@ export default class RecurringExpenseList extends React.Component {
             <AddRecurringExpenseDialog dismiss={this.toggleAddDialog}/>
             }
 
+            {(this.state.apiOver === true && this.state.expenses.length === 0) &&<p>Nothing to show, click the <i className={'fa fa-plus'}/> button bellow to add recurring expenses.</p>}
+
             {this.state.expenses.map(
                 (expense) => {
                     var style = {animationDuration: animationLength + 's'};
-                    console.log(style);
                     animationLength += step;
                     return <RecurringExpense
                         key={expense.id}

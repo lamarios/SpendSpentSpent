@@ -1,4 +1,5 @@
 @import 'variable.less';
+@import 'aniamtions.less';
 @import './vendor/fontawesome/font-awesome.less';
 @import './vendor/categoryicons/style.less';
 @import "components/BottomBar.less";
@@ -18,7 +19,17 @@
 @import 'components/RecurringExpenseList.less';
 @import 'components/AddRecurringExpensedialog/AddRecurringExpenseDialog.less';
 @import 'components/ButtonGroup.less';
+@import 'components/RightColumn.less';
+@import 'components/DayExpenses.less';
+@import 'components/ExpenseLocation.less';
+@import 'components/Expense.less';
+@import 'components/Login.less';
 
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: @font
+}
+
+.column{
+  max-width:600px;
+  margin:0 auto 50px auto;
 }

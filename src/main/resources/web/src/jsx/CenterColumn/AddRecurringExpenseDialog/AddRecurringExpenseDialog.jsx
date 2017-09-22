@@ -22,6 +22,7 @@ export default class AddRecurringExpenseDialog extends React.Component {
             typeParam: -1,
             amount: '',
             loading: true,
+            apiOver: false,
         }
 
         this.recurringService = new RecurringExpenseServices();
@@ -35,7 +36,7 @@ export default class AddRecurringExpenseDialog extends React.Component {
 
     componentDidMount() {
         this.categoryService.getAll()
-            .then(res => this.setState({categories: res.data, loading: false}));
+            .then(res => this.setState({categories: res.data, loading: false, apiOver:true}));
     }
 
     /**
@@ -133,6 +134,10 @@ export default class AddRecurringExpenseDialog extends React.Component {
                 {this.state.step === 1 && <div>
                     <div className={'categories'}>
                         <h3>Which category ?</h3>
+
+                        {(this.state.apiOver && this.state.categories.length === 0) && <p>Nothing to show here, close this dialog and add categories first.</p>}
+
+                        {this.state.categories.length > 0 &&
                         <ul>
                             {this.state.categories.map(cat =>
                                 <li key={cat.id}
@@ -143,6 +148,7 @@ export default class AddRecurringExpenseDialog extends React.Component {
                                 </li>
                             )}
                         </ul>
+                        }
                     </div>
                 </div>}
 

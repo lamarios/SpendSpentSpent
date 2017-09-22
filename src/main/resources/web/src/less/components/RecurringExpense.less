@@ -10,6 +10,9 @@
 
     transition: all 0.15s;
 
+    &.flip {
+      transform: rotate3d(1, 0, 0, 180deg);
+    }
     //&:hover {
     //  transform: scale(1.1);
     //}
@@ -18,12 +21,6 @@
       border-radius: 5px;
       background-color: @accentColor;
       transition: all .25s;
-      backface-visibility: hidden;
-      &.hiding {
-        transform: rotate3d(1, 0, 0, 180deg);
-        height: 74px;
-        opacity: 0;
-      }
 
       div {
         display: inline-block;
@@ -50,18 +47,11 @@
 
     .back {
       transition: all .25s;
-      backface-visibility: hidden;
       background-color: @accentColor;
       color: white;
       padding: 10px;
       border-radius: 5px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      pointer-events: none;
       transform: rotate3d(1, 0, 0, 180deg);
-      opacity: 0;
 
 
       .fa {
@@ -89,11 +79,6 @@
         }
       }
 
-      &.showing {
-        pointer-events: auto;
-        transform: rotate3d(0, 0, 0, 0);
-        opacity:1;
-      }
 
       .bottom-menu {
 

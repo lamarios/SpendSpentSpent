@@ -38,9 +38,12 @@ export default class Login extends React.Component {
 
     render() {
         return (
-            <div className="Login">
-                <h1>Login</h1>
+            <div className="Login scale-fade-in">
+                <h1>SpendSpentSpent</h1>
                 <div>
+                    {this.state.error.length > 0 &&
+                    <p className="error">{this.state.error}</p>
+                    }
                     <p>
                         <label htmlFor="#login">Username</label>
                         <input type="text" id="username" onChange={this.usernameChange}/>
@@ -50,9 +53,6 @@ export default class Login extends React.Component {
                         <input type="password" id="password" onChange={this.passwordChange}/>
                     </p>
                     <button onClick={this.login}>Login</button>
-                    {this.state.error.length > 0 &&
-                    <p className="error">{this.state.error}</p>
-                    }
                 </div>
             </div>
         );

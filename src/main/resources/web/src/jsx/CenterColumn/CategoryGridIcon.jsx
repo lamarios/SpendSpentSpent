@@ -53,7 +53,7 @@ export default class CategoryGridIcon extends React.Component {
             }
 
             <i className={'cat ' + this.props.category.icon}></i>
-            <div className={'grid-overlay ' + (this.props.overlay ? 'showing' : '')}
+            <div className={'grid-overlay ' + (this.props.overlay ? 'showing fade-in' : '')}
                  onClick={(e) => e.stopPropagation()}>
                 <i className="fa fa-times" onClick={(e) => {
                     this.setState({showDeleteDialog: true});
