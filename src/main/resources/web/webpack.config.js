@@ -24,7 +24,12 @@ var constants = {
         GET_MONTHS: JSON.stringify(API_URL + '/Expense/GetMonths'),
         DELETE: JSON.stringify(API_URL + '/Expense/{0}'),
     },
-    HISTORY: JSON.stringify(API_URL + "/History/{0}/{1}"),
+    HISTORY: {
+        OVERALL: {
+            MONTH: JSON.stringify(API_URL + "/History/CurrentMonth"),
+            YEAR: JSON.stringify(API_URL + "/History/CurrentYear"),
+        },
+    },
     RECURRING: {
         GET: JSON.stringify(API_URL + '/RecurringExpense'),
         ADD: JSON.stringify(API_URL + '/RecurringExpense'),

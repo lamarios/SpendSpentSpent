@@ -1,4 +1,5 @@
 .RecurringExpense {
+  @flipSpeed: 0.5s;
 
   .bar {
     display: block;
@@ -8,7 +9,7 @@
 
     animation-name: recurring-show-bar;
 
-    transition: all 0.15s;
+    transition: all @flipSpeed;
 
     &.flip {
       transform: rotate3d(1, 0, 0, 180deg);
@@ -53,14 +54,13 @@
       border-radius: 5px;
       transform: rotate3d(1, 0, 0, 180deg);
 
-
       .fa {
 
         display: block;
         position: absolute;
         top: 0px;
         right: 0px;
-        padding:10px;
+        padding: 10px;
         font-size: 20px;
         width: 20px;
         height: 20px;
@@ -79,7 +79,6 @@
         }
       }
 
-
       .bottom-menu {
 
         position: absolute;
@@ -92,13 +91,13 @@
         padding: 10px;
         color: black;
 
-        transform:scale(0.75);
+        transform: scale(0.75);
         opacity: 0;
         pointer-events: none;
 
-        transition:  all 0.15s;
+        transition: all 0.15s;
 
-        &.showing{
+        &.showing {
           transform: scale(1);
           pointer-events: auto;
           opacity: 1;

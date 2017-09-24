@@ -3,7 +3,7 @@ import {render} from 'react-dom';
 import {BrowserRouter, Route} from 'react-router-dom';
 import CenterColumn from './CenterColumn/CenterColumn.jsx';
 import RightColumn from './RightColumn/RightColumn.jsx';
-import LeftColumn from './LeftColumn.jsx';
+import LeftColumn from './LeftColumn/LeftColumn.jsx';
 import Login from './Login.jsx';
 import BottomBar from './BottomBar.jsx';
 import axios from 'axios';

@@ -43,7 +43,7 @@ public class SpendSpentSpent {
 
         if(args.length > 0 && args[0].equalsIgnoreCase("dev")) {
             System.out.println("DEV MODE");
-            Spark.externalStaticFileLocation("/mnt/services/docker/dev/home/IdeaProjects/SpendSpentSpent/src/main/resources/web/public");
+            Spark.externalStaticFileLocation("/home/gz/IdeaProjects/SpendSpentSpent/src/main/resources/web/public");
 
         }else{
             Spark.staticFiles.location("/web/public");

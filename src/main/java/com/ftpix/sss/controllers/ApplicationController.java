@@ -58,7 +58,7 @@ public class ApplicationController {
     public String serveIndex(Response res) throws IOException {
         ClassLoader loader = getClass().getClassLoader();
         File f = new File(loader.getResource("web/public/index.html").getFile());
-res.header("Content-Type", "text/html");
+        res.header("Content-Type", "text/html");
         return Files.readAllLines(f.toPath()).stream().collect(Collectors.joining(""));
     }
 
@@ -67,10 +67,12 @@ res.header("Content-Type", "text/html");
 //        res.redirect("/", 301);
         return serveIndex(res);
     }
+
     @SparkGet("/login")
     public String servceLogin(Response res) throws IOException {
         return serveIndex(res);
     }
+
     @SparkGet("/graphs")
     public String serveGraphs(Response res) throws IOException {
         return serveIndex(res);

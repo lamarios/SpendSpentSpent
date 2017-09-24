@@ -1,0 +1,44 @@
+.ExpenseBar {
+  background-color: @accentColor;
+  position: relative;
+  border-radius: @borderRadius;
+  height: 30px;
+  color: white;
+  margin: 10px 0;
+
+  .percentage {
+    background-color: darken(@accentColor, 10%);
+    height: 100%;
+    border-radius: @borderRadius;
+
+    animation-name: percentage-show;
+    animation-duration: 1s;
+    transform-origin: left top;
+
+
+    transition: width 1s;
+  }
+
+  .cat {
+    position: absolute;
+    top: 7px;
+    left: 5px;
+  }
+
+  .amount {
+    position: absolute;
+    top: 4px;
+    right: 5px;
+    margin: 0;
+  }
+}
+
+@keyframes percentage-show {
+  from {
+    transform: scale(0, 1);
+  }
+
+  to {
+    transform: scale(1, 1);
+  }
+}
