@@ -2,6 +2,7 @@ package com.ftpix.sss.controllers.api;
 
 import com.ftpix.sparknnotation.annotations.SparkController;
 import com.ftpix.sparknnotation.annotations.SparkGet;
+import com.ftpix.sparknnotation.annotations.SparkParam;
 import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.CategoryOverall;
@@ -79,7 +80,7 @@ public class HistoryController {
 //    }
 
     @SparkGet(value = "/CurrentYear", transformer = GsonTransformer.class)
-    public List< CategoryOverall> yearly() throws SQLException {
+    public List<CategoryOverall> yearly() throws SQLException {
 
         List<CategoryOverall> result = new ArrayList<>();
 
@@ -96,15 +97,10 @@ public class HistoryController {
 
             String yearStr = String.valueOf(date.getYear());
 
-            Map<String, Object> params = new HashMap<>();
-            params.put("income", 0);
-            params.put("category_id", category.getId());
-//                List<Expense> expenses = Expense.find.where().eq("income", 0).eq("category_id", category.getId()).like("date", year+"%").findList();
 
             final LocalDate finalDate = date;
-            double total = DB.EXPENSE_DAO.queryForFieldValues(params)
+            double total = getCategoryExpensesForYear(category.getId(), date)
                     .stream()
-                    .filter(e -> LocalDateTime.ofInstant(e.getDate().toInstant(), ZoneId.systemDefault()).getYear() == finalDate.getYear())
                     .mapToDouble(Expense::getAmount)
                     .sum();
 
@@ -119,7 +115,6 @@ public class HistoryController {
 
         overall.setTotal(overall.getAmount());
         result.add(overall);
-
 
 
         return result.stream()
@@ -203,18 +198,8 @@ public class HistoryController {
             LocalDate date = LocalDate.now();
 
 
-            Map<String, Object> params = new HashMap<>();
-            params.put("income", 0);
-            params.put("category_id", category.getId());
-//                List<Expense> expenses = Expense.find.where().eq("income", 0).eq("category_id", category.getId()).like("date", year+"%").findList();
-
-            final LocalDate finalDate = date;
-            double total = DB.EXPENSE_DAO.queryForFieldValues(params)
+            double total = getCategoryExpensesForMonth(category.getId(), date)
                     .stream()
-                    .filter(e -> {
-                        LocalDateTime tmpDate = LocalDateTime.ofInstant(e.getDate().toInstant(), ZoneId.systemDefault());
-                        return tmpDate.getYear() == finalDate.getYear() && tmpDate.getMonthValue() == finalDate.getMonthValue();
-                    })
                     .mapToDouble(Expense::getAmount)
                     .sum();
 
@@ -231,13 +216,115 @@ public class HistoryController {
         result.add(overall);
 
 
-
         return result.stream()
                 .map(c -> {
                     c.setTotal(overall.getTotal());
                     return c;
                 })
                 .sorted((c1, c2) -> Double.compare(c2.getAmount(), c1.getAmount()))
+                .collect(Collectors.toList());
+    }
+
+
+    /**
+     * Get the sum of expenses by year for the past :count years for :Category
+     * @param categoryId the category to get expenses from
+     * @param count the number of year from now to :count month in the past
+     * @return
+     * @throws SQLException
+     */
+    @ SparkGet(value = "/Yearly/:category/:count", transformer = GsonTransformer.class)
+    public List<Map<String, Object>> getYearlyHistory(@SparkParam("category") int categoryId, @SparkParam("count") int count) throws SQLException {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        LocalDate date = LocalDate.now();
+
+        for (int i = 0; i < count; i++) {
+            Map<String, Object> expensesForMonth = new HashMap<>();
+
+            expensesForMonth.put("date", date.getYear());
+            expensesForMonth.put("amount", getCategoryExpensesForYear(categoryId, date).stream().mapToDouble(Expense::getAmount).sum());
+
+            date = date.minusYears(1);
+            result.add(expensesForMonth);
+        }
+
+
+        return result;
+    }
+
+    /**
+     * Gets the sum of expenses by month for the past :count month for :category
+     * @param categoryId the id of the category to get expenses from
+     * @param count the number of month from now to the :count months in the past
+     * @return
+     * @throws SQLException
+     */
+    @SparkGet(value = "/Monthly/:category/:count", transformer = GsonTransformer.class)
+    public List<Map<String, Object>> getMonthlyHistory(@SparkParam("category") int categoryId, @SparkParam("count") int count) throws SQLException {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        LocalDate date = LocalDate.now();
+
+        for (int i = 0; i < count; i++) {
+            Map<String, Object> expensesForMonth = new HashMap<>();
+
+            expensesForMonth.put("date", date.getYear() + "-" + date.getMonthValue());
+            expensesForMonth.put("amount", getCategoryExpensesForMonth(categoryId, date).stream().mapToDouble(Expense::getAmount).sum());
+
+            date = date.minusMonths(1);
+            result.add(expensesForMonth);
+        }
+
+
+        return result;
+    }
+
+    /**
+     * Returns the expenses for a specific year
+     * @param category thhe category to query against
+     * @param date the date where the eay and month will be extracted
+     * @return a list of expenses
+     * @throws SQLException
+     */
+    private List<Expense> getCategoryExpensesForYear(long category, LocalDate date) throws SQLException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("income", 0);
+        if(category>=0) {
+            params.put("category_id", category);
+        }
+
+
+        return DB.EXPENSE_DAO.queryForFieldValues(params)
+                .stream()
+                .filter(e -> {
+                    LocalDateTime tmpDate = LocalDateTime.ofInstant(e.getDate().toInstant(), ZoneId.systemDefault());
+                    return tmpDate.getYear() == date.getYear();
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns the expenses for a specific month
+     * @param category thhe category to query against
+     * @param date the date where the eay and month will be extracted
+     * @return a list of expenses
+     * @throws SQLException
+     */
+    private List<Expense> getCategoryExpensesForMonth(long category, LocalDate date) throws SQLException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("income", 0);
+        if(category >= 0) {
+            params.put("category_id", category);
+        }
+
+
+        return DB.EXPENSE_DAO.queryForFieldValues(params)
+                .stream()
+                .filter(e -> {
+                    LocalDateTime tmpDate = LocalDateTime.ofInstant(e.getDate().toInstant(), ZoneId.systemDefault());
+                    return tmpDate.getYear() == date.getYear() && tmpDate.getMonthValue() == date.getMonthValue();
+                })
                 .collect(Collectors.toList());
     }
 

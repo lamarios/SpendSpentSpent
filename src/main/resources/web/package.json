@@ -8,9 +8,9 @@
     "google-map-react": "^0.24.0",
     "moment": "^2.18.1",
     "querystring": "^0.2.0",
-    "react": "^15.6.1",
+    "react": "^16.0.0",
     "react-datepicker": "^0.54.0",
-    "react-dom": "^15.6.1",
+    "react-dom": "^16.0.0",
     "react-number-format": "^2.0.4",
     "react-router-dom": "^4.2.2"
   },
