@@ -11,4 +11,11 @@ export default class HistoryService {
         return axios.get(API.HISTORY.OVERALL.MONTH);
     }
 
+    getMonthlyGraphData(categoryId, count){
+        return axios.get(API.HISTORY.MONTHLY.format(categoryId, count));
+    }
+
+    getYearlyGraphData(categoryId, count) {
+        return axios.get(API.HISTORY.YEARLY.format(categoryId, count));
+    }
 }

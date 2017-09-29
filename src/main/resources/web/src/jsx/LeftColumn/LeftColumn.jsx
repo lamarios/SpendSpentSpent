@@ -44,7 +44,7 @@ class LeftColumn extends React.Component {
 
             {this.state.data.map((expense, index) => {
 
-                return <ExpenseBar expense={expense}  key={index}/>
+                return <ExpenseBar expense={expense}  showMonthly={this.state.showMonthly} key={expense.category.id+''+expense.total+this.state.showMonthly}/>
             })}
 
         </div>

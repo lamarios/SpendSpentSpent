@@ -7,7 +7,8 @@ import LeftColumn from './LeftColumn/LeftColumn.jsx';
 import Login from './Login.jsx';
 import BottomBar from './BottomBar.jsx';
 import axios from 'axios';
-
+import initReactFastclick from 'react-fastclick';
+initReactFastclick();
 String.prototype.format = function () {
     var s = this,
         i = arguments.length;

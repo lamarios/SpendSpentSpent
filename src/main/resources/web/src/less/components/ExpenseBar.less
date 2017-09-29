@@ -1,35 +1,37 @@
 .ExpenseBar {
-  background-color: @accentColor;
-  position: relative;
-  border-radius: @borderRadius;
-  height: 30px;
-  color: white;
-  margin: 10px 0;
-
-  .percentage {
-    background-color: darken(@accentColor, 10%);
-    height: 100%;
+  .bar {
+    background-color: @accentColor;
+    position: relative;
     border-radius: @borderRadius;
+    height: 30px;
+    color: white;
+    margin: 10px 0;
+    cursor: pointer;
 
-    animation-name: percentage-show;
-    animation-duration: 1s;
-    transform-origin: left top;
+    .percentage {
+      background-color: darken(@accentColor, 10%);
+      height: 100%;
+      border-radius: @borderRadius;
 
+      animation-name: percentage-show;
+      animation-duration: 1s;
+      transform-origin: left top;
 
-    transition: width 1s;
-  }
+      transition: width 1s;
+    }
 
-  .cat {
-    position: absolute;
-    top: 7px;
-    left: 5px;
-  }
+    .cat {
+      position: absolute;
+      top: 7px;
+      left: 5px;
+    }
 
-  .amount {
-    position: absolute;
-    top: 4px;
-    right: 5px;
-    margin: 0;
+    .amount {
+      position: absolute;
+      top: 4px;
+      right: 5px;
+      margin: 0;
+    }
   }
 }
 

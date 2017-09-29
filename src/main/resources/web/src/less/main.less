@@ -1,6 +1,7 @@
 @import 'variable.less';
 @import 'aniamtions.less';
 @import './vendor/fontawesome/font-awesome.less';
+@import './vendor/chartist.less';
 @import './vendor/categoryicons/style.less';
 @import "components/BottomBar.less";
 @import "components/CenterColumn.less";
@@ -25,11 +26,17 @@
 @import 'components/Expense.less';
 @import 'components/Login.less';
 @import 'components/ExpenseBar.less';
+@import 'components/ExpenseChart.less';
+
 body {
   font-family: @font
 }
 
-.column{
-  max-width:600px;
-  margin:0 auto 50px auto;
+html, body {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.column {
+  max-width: 600px;
+  margin: 0 auto 50px auto;
 }

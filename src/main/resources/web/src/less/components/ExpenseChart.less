@@ -1,0 +1,34 @@
+.ExpenseChart {
+  .ct-point, .ct-line {
+    stroke: @accentColor !important;
+  }
+
+  .ct-area {
+    fill: @accentColor;
+    fill-opacity: 0.3;
+  }
+
+
+  .ct-label.ct-horizontal{
+    //transform: rotate(90deg);
+  }
+
+  transition: all .5s;
+
+  .chart-controls{
+    text-align: center;
+    button{
+      background-color: white;
+      border: none;
+      outline: none;
+
+      color:@accentColor;
+      font-family: @font;
+      margin: 0 20px;
+      &:hover{
+        outline: none;
+      }
+    }
+  }
+
+}

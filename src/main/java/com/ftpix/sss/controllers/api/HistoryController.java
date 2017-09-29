@@ -87,12 +87,15 @@ public class HistoryController {
         List<Category> categories = DB.CATEGORY_DAO.queryForAll();
 
         CategoryOverall overall = new CategoryOverall();
-        overall.setCategory("all");
+        Category categoryAll = new Category();
+        categoryAll.setId(-1);
+        categoryAll.setIcon("all");
+        overall.setCategory(categoryAll);
 
 
         for (Category category : categories) {
             CategoryOverall tmp = new CategoryOverall();
-            tmp.setCategory(category.getIcon());
+            tmp.setCategory(category);
             LocalDate date = LocalDate.now();
 
             String yearStr = String.valueOf(date.getYear());
@@ -189,12 +192,15 @@ public class HistoryController {
         List<Category> categories = DB.CATEGORY_DAO.queryForAll();
 
         CategoryOverall overall = new CategoryOverall();
-        overall.setCategory("all");
+        Category categoryAll = new Category();
+        categoryAll.setId(-1);
+        categoryAll.setIcon("all");
+        overall.setCategory(categoryAll);
 
 
         for (Category category : categories) {
             CategoryOverall tmp = new CategoryOverall();
-            tmp.setCategory(category.getIcon());
+            tmp.setCategory(category);
             LocalDate date = LocalDate.now();
 
 
