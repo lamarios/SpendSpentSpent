@@ -131,6 +131,7 @@ export default class AddExpenseDialog extends React.Component {
                 category: this.props.category.id,
                 income: false,
                 type: 1,
+                date: this.state.date.format('YYYY-MM-DD'),
             }
 
             if (this.state.useLocation && this.state.location !== null) {
