@@ -1,6 +1,7 @@
 package com.ftpix.sss;
 
 import com.ftpix.sparknnotation.Sparknotation;
+import com.ftpix.sss.controllers.BackgroundJob;
 import com.ftpix.sss.db.DB;
 import com.google.gson.*;
 import spark.HaltException;
@@ -65,5 +66,7 @@ public class SpendSpentSpent {
         });
 
         Sparknotation.init(GSON::fromJson);
+
+        new BackgroundJob();
     }
 }

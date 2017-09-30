@@ -21,11 +21,6 @@ export default class ExpenseChart extends React.Component {
         this.refreshChart();
     }
 
-    componentDidUpdate() {
-        // this.refreshChart();
-    }
-
-
     refreshChart() {
         let promise;
 

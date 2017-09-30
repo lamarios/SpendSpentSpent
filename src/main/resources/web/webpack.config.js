@@ -41,7 +41,7 @@ var constants = {
         LOGIN: JSON.stringify(API_ROOT + '/Login')
     },
     SETTINGS: {
-        UPDATE: JSON.stringify(API_URL + '/Setting/{0}'),
+        UPDATE: JSON.stringify(API_URL + '/Setting'),
         ALL: JSON.stringify(API_URL + '/Setting'),
     }
 

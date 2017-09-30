@@ -21,17 +21,19 @@ class LeftColumn extends React.Component {
 
 
     showMonthly() {
-        this.setState({showMonthly: true});
+        this.setState({showMonthly: true, data:[]}, () => {
+            this.historyService.getMonthly()
+                .then(res => this.setState({data: res.data}));
+        });
 
-        this.historyService.getMonthly()
-            .then(res => this.setState({data: res.data}));
     }
 
     showYearly() {
-        this.setState({showMonthly: false});
+        this.setState({showMonthly: false, data:[]}, () => {
+            this.historyService.getYearly()
+                .then(res => this.setState({data: res.data}));
+        });
 
-        this.historyService.getYearly()
-            .then(res => this.setState({data: res.data}));
     }
 
     render() {
@@ -44,7 +46,8 @@ class LeftColumn extends React.Component {
 
             {this.state.data.map((expense, index) => {
 
-                return <ExpenseBar expense={expense}  showMonthly={this.state.showMonthly} key={expense.category.id+''+expense.total+this.state.showMonthly}/>
+                return <ExpenseBar expense={expense} showMonthly={this.state.showMonthly}
+                                   key={expense.category.id + '' + expense.total + this.state.showMonthly}/>
             })}
 
         </div>

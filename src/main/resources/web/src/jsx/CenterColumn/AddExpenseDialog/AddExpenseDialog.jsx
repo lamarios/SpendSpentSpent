@@ -45,13 +45,14 @@ export default class AddExpenseDialog extends React.Component {
      */
     toggleLocation() {
         if (typeof  localStorage !== undefined) {
-            this.setState({useLocation: !this.state.useLocation});
-            localStorage.useLocation = !this.state.useLocation;
-            if (!this.state.useLocation) {
-                this.refreshLocation();
-            } else {
-                this.setState({location: null});
-            }
+            this.setState({useLocation: !this.state.useLocation}, () => {
+                localStorage.useLocation = this.state.useLocation;
+                if (this.state.useLocation) {
+                    this.refreshLocation();
+                } else {
+                    this.setState({location: null});
+                }
+            });
         }
     }
 
@@ -79,16 +80,17 @@ export default class AddExpenseDialog extends React.Component {
     refreshLocation() {
 
         if (navigator.geolocation) {
-            this.setState({refreshingLocation: true});
-            navigator.geolocation.getCurrentPosition((position) => {
-                this.setState({
-                    location: position.coords,
-                    refreshingLocation: false
-                });
-            }, () => {//Error
-                this.setState({
-                    location: null,
-                    refreshingLocation: false
+            this.setState({refreshingLocation: true}, () => {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    this.setState({
+                        location: position.coords,
+                        refreshingLocation: false
+                    });
+                }, () => {//Error
+                    this.setState({
+                        location: null,
+                        refreshingLocation: false
+                    });
                 });
             });
         }
@@ -160,7 +162,7 @@ export default class AddExpenseDialog extends React.Component {
                     <i className={'cat ' + this.props.category.icon}/>
                 </div>
                 <div className={'amount'}>
-                    <input  value={this.state.amount} placeholder={'Amount'}
+                    <input value={this.state.amount} placeholder={'Amount'}
                            readOnly={"true"}/>
                 </div>
                 <div className={'keypad'}>

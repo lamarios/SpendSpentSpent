@@ -1,7 +1,7 @@
 .BottomBar {
   position: fixed;
   left: 0;
-  bottom: 0;
+  bottom: -47px;
   right: 0;
   padding: 10px;
   background-color: white;
@@ -11,21 +11,68 @@
 
   text-align: center;
 
-  a {
-    display: inline-block;
-    font-size: 30px;
-    margin: 0 20px;
+  transition: all 0.25s;
+
+  .expand-button {
+    display: block;
+    position: absolute;
+    top: 13px;
+    right: 20px;
+    color: #999;
+    font-size: 25px;
+    width: 25px;
+    height: 25px;
 
     transition: all 0.25s;
-    color: @accentColor;
-    &:hover, &.active {
-      color: lighten(@accentColor, 10%);
-      transform: scale(1.5);
-    }
+    cursor: pointer;
 
-    &.active{
-      animation-name: Bottom-Bar-iconPop;
-      animation-duration: 0.5s;
+    &.expanded {
+      transform: rotate(90deg);
+    }
+  }
+
+  &.expanded {
+    bottom: 0;
+    box-shadow: 0px 0px 50px 1px rgba(0,0,0,0.75);
+
+  }
+
+  .main-links {
+    a {
+      display: inline-block;
+      font-size: 30px;
+      margin: 0 20px;
+
+      transition: all 0.25s;
+      color: @accentColor;
+      &:hover, &.active {
+        color: lighten(@accentColor, 10%);
+        transform: scale(1.5);
+      }
+
+      &.active {
+        animation-name: Bottom-Bar-iconPop;
+        animation-duration: 0.5s;
+      }
+    }
+  }
+
+  .sub-links {
+    margin-top: 20px;
+    a {
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20px;
+      margin: 0 20px;
+
+      color: #333;
+
+      transition: all .25s;
+
+      &:hover{
+        color:@accentColor;
+      }
     }
   }
 }
@@ -35,9 +82,9 @@
     transform: scale(2);
   }
 
- 100%{
-   transform: scale(1.5);
- }
+  100% {
+    transform: scale(1.5);
+  }
 
 }
 

@@ -38,7 +38,7 @@ public class RecurringExpenseController {
      */
     @SparkPost(transformer = GsonTransformer.class)
     public RecurringExpense create(
-            @SparkQueryParam(FIELD_CATEGORY) int categoryId,
+            @SparkQueryParam(FIELD_CATEGORY) long categoryId,
             @SparkQueryParam(FIELD_AMOUNT) double amount,
             @SparkQueryParam(FIELD_INCOME) boolean income,
             @SparkQueryParam(FIELD_NAME) String name,
@@ -100,7 +100,7 @@ public class RecurringExpenseController {
      * @throws SQLException
      */
     @SparkGet(value = "/:id", accept = Constants.JSON, transformer = GsonTransformer.class)
-    public RecurringExpense getId(@SparkParam("id") int id) throws SQLException {
+    public RecurringExpense getId(@SparkParam("id") long id) throws SQLException {
         return DB.RECURRING_EXPENSE_DAO.queryForId(id);
     }
 
@@ -113,70 +113,11 @@ public class RecurringExpenseController {
      * @throws SQLException
      */
     @SparkDelete(value = "/:id", transformer = GsonTransformer.class, accept = Constants.JSON)
-    public boolean delete(@SparkParam("id") int id) throws SQLException {
+    public boolean delete(@SparkParam("id") long id) throws SQLException {
         DB.RECURRING_EXPENSE_DAO.deleteById(id);
         return true;
     }
 
-
-    /**
-     * Update a recurring expense
-     *
-     * @param id         the id of the expense to update
-     * @param categoryId the new category
-     * @param amount     the new amount
-     * @param income     the new income
-     * @param name       the new name
-     * @param type       the new type (daily, weekly, monthly, yearly)
-     * @param when       when (1st of the month, or 1 month of the year, 2nd day of the week etc... depends on type parameter)
-     * @return
-     * @throws SQLException
-     */
-    @SparkPut(value = "/:id", transformer = GsonTransformer.class)
-    public RecurringExpense update(
-            @SparkParam("id") int id,
-            @SparkQueryParam(FIELD_CATEGORY) int categoryId,
-            @SparkQueryParam(FIELD_AMOUNT) double amount,
-            @SparkQueryParam(FIELD_INCOME) boolean income,
-            @SparkQueryParam(FIELD_NAME) String name,
-            @SparkQueryParam(FIELD_TYPE) int type,
-            @SparkQueryParam(FIELD_WHEN) int when
-    ) throws SQLException {
-        RecurringExpense expense = DB.RECURRING_EXPENSE_DAO.queryForId(id);
-        try {
-            expense.setAmount(amount);
-        } catch (NullPointerException e) {
-        }
-
-        Category category = DB.CATEGORY_DAO.queryForId(categoryId);
-        if (category != null) {
-            expense.setCategory(category);
-        }
-
-        try {
-            expense.setIncome(income);
-        } catch (NullPointerException e) {
-        }
-
-        try {
-            expense.setType(type);
-        } catch (NullPointerException e) {
-        }
-
-        try {
-            expense.setTypeParam(when);
-        } catch (NullPointerException e) {
-        }
-
-        try {
-            expense.setName(name);
-        } catch (NullPointerException e) {
-        }
-
-        DB.RECURRING_EXPENSE_DAO.update(expense);
-
-        return expense;
-    }
 
     /**
      * Calculate the next instance of a recurring expense

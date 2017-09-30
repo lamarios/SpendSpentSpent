@@ -41,22 +41,24 @@ export default class RightColumn extends React.Component {
                         months: res.data,
                         apiMonthOver: true,
                         selectedMonth: selectedMonth,
+                    },
+                    () => {
+                        this.refreshExpenses();
                     }
                 );
-
-                this.refreshExpenses(selectedMonth);
             });
     }
 
     /**
      * Refresh the list of expenses for the selected month
      */
-    refreshExpenses(month) {
-        if (month !== '') {
-            this.expenseService.getByDay(month)
+    refreshExpenses() {
+        if (this.state.selectedMonth !== '') {
+            this.expenseService.getByDay(this.state.selectedMonth)
                 .then(expenses => {
-                    this.setState({expenses: expenses.data, apiExpenseOver:true});
-                    this.getMonthTotal(expenses.data);
+                    this.setState({expenses: expenses.data, apiExpenseOver: true}, () =>{
+                        this.getMonthTotal(expenses.data);
+                    });
                 });
         }
     }
@@ -64,10 +66,10 @@ export default class RightColumn extends React.Component {
     /**
      * Calculate the selected month total expenses
      */
-    getMonthTotal(expenses) {
+    getMonthTotal() {
         let total = 0;
-        Object.keys(expenses).map(day => {
-            total += expenses[day].outcome;
+        Object.keys(this.state.expenses).map(day => {
+            total += this.state.expenses[day].outcome;
         });
 
         this.setState({total: total});
@@ -77,13 +79,14 @@ export default class RightColumn extends React.Component {
      * Handles month change from the select drop down
      */
     handleMonthChange(e) {
-        this.setState({selectedMonth: e.target.value, expenses: {}});
-        this.refreshExpenses(e.target.value);
+        this.setState({selectedMonth: e.target.value, expenses: {}}, () =>{
+            this.refreshExpenses();
+        });
     }
 
     deleteExpense(id) {
         this.expenseService.delete(id)
-            .then(res => this.refreshExpenses(this.state.selectedMonth));
+            .then(res => this.refreshExpenses());
     }
 
 

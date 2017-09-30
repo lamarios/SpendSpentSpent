@@ -73,6 +73,11 @@ public class ApplicationController {
         return serveIndex(res);
     }
 
+    @SparkGet("/settings")
+    public String serveSettings(Response res) throws IOException {
+        return serveIndex(res);
+    }
+
     @SparkGet("/graphs")
     public String serveGraphs(Response res) throws IOException {
         return serveIndex(res);

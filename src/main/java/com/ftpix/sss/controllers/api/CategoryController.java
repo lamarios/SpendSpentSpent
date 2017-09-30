@@ -40,7 +40,7 @@ public class CategoryController {
      * @throws SQLException
      */
     @SparkGet(value = "/ById/:id", accept = Constants.JSON, transformer = GsonTransformer.class)
-    public Category get(@SparkParam("id") int id) throws SQLException {
+    public Category get(@SparkParam("id") long id) throws SQLException {
         return DB.CATEGORY_DAO.queryForId(id);
     }
 
@@ -53,22 +53,21 @@ public class CategoryController {
      */
     @SparkGet(value = "/Available", accept = Constants.JSON, transformer = GsonTransformer.class)
     public TreeMap<String, List<String>> getAvailable() throws SQLException {
-        TreeMap<String, List<String>> icons = new TreeMap<>(CategoryIcons.ALL);
+        TreeMap<String, List<String>> icons = new TreeMap<>();
 
-
-        for (Category category : DB.CATEGORY_DAO.queryForAll()) {
-            for (String iconCategory : icons.keySet()) {
-                icons.get(iconCategory).remove(category.getIcon());
-            }
-        }
-
+        List<Category> categories = DB.CATEGORY_DAO.queryForAll();
+        CategoryIcons.ALL.forEach((key, values) -> {
+            icons.put(key, new ArrayList<>());
+            icons.get(key).addAll(values);
+            icons.get(key).removeIf(v -> categories.stream().filter(c -> c.getIcon().equalsIgnoreCase(v)).count() > 0);
+        });
 
         return icons;
     }
 
 
     /**
-     * Creates a single cateogory
+     * Creates a single category
      *
      * @param icon  the icon of the new category
      * @param order the order of display of the new category
@@ -110,7 +109,7 @@ public class CategoryController {
      * @throws SQLException
      */
     @SparkPut(value = "/:id", transformer = GsonTransformer.class)
-    public boolean update(@SparkParam("id") int id, @SparkQueryParam("icon") String icon, @SparkQueryParam("order") int order) throws SQLException {
+    public boolean update(@SparkParam("id") long id, @SparkQueryParam("icon") String icon, @SparkQueryParam("order") int order) throws SQLException {
         Optional<Category> categoryOptional = Optional.ofNullable(get(id));
 
 
@@ -147,7 +146,7 @@ public class CategoryController {
      * @throws SQLException
      */
     @SparkDelete(value = "/:id", transformer = GsonTransformer.class, accept = Constants.JSON)
-    public boolean delete(@SparkParam("id") int id) throws SQLException {
+    public boolean delete(@SparkParam("id") long id) throws SQLException {
         Map<String, Object> fields = new HashMap<>();
         fields.put("CATEGORY_ID", id);
 

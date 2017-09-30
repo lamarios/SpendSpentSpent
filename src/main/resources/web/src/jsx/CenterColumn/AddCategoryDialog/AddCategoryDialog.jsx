@@ -36,21 +36,22 @@ export default class AddCategoryDialog extends React.Component {
      * Do the backend call to add the category
      */
     addCategory() {
-        this.setState({loading: true});
-        if (this.state.selected.length > 0) {
-            console.log('Adding category', this.state.selected);
-            this.categoryService.add(this.state.selected)
-                .then(res => {
-                    this.props.refresh();
-                    this.props.dismiss();
-                })
-                .catch(err => {
-                    alert('Error while adding category ' + err);
-                    console.error(err);
-                    this.setState({loading: false});
-                });
+        this.setState({loading: true}, () => {
+            if (this.state.selected.length > 0) {
+                console.log('Adding category', this.state.selected);
+                this.categoryService.add(this.state.selected)
+                    .then(res => {
+                        this.props.refresh();
+                        this.props.dismiss();
+                    })
+                    .catch(err => {
+                        alert('Error while adding category ' + err);
+                        console.error(err);
+                        this.setState({loading: false});
+                    });
 
-        }
+            }
+        });
     }
 
     /**

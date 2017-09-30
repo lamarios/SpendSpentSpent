@@ -45,7 +45,7 @@ public class ExpenseController {
      * @throws SQLException
      */
     @SparkGet(value = "/ById/:id", accept = Constants.JSON, transformer = GsonTransformer.class)
-    public Expense get(@SparkParam("id") int id) throws SQLException {
+    public Expense get(@SparkParam("id") long id) throws SQLException {
         return DB.EXPENSE_DAO.queryForId(id);
     }
 
@@ -105,11 +105,7 @@ public class ExpenseController {
                 if (!expenses.isEmpty()) {
                     double outcome = 0, income = 0;
                     for (Expense expense : expenses) {
-                        if (expense.isIncome()) {
-                            income += expense.getAmount();
-                        } else {
-                            outcome += expense.getAmount();
-                        }
+                        outcome += expense.getAmount();
                         //Weird bug, not showing category and color if not calling this…
                         expense.getCategory().getIcon();
                     }
@@ -164,7 +160,7 @@ public class ExpenseController {
     @SparkPost(transformer = GsonTransformer.class)
     public Expense create(
             @SparkQueryParam(FIELD_AMOUNT) double amount,
-            @SparkQueryParam(FIELD_CATEGORY) int categoryId,
+            @SparkQueryParam(FIELD_CATEGORY) long categoryId,
             @SparkQueryParam(FIELD_DATE) String dateString,
             @SparkQueryParam(FIELD_INCOME) boolean income,
             @SparkQueryParam(FIELD_TYPE) int type,
@@ -214,79 +210,6 @@ public class ExpenseController {
     }
 
     /**
-     * Update an Expense
-     *
-     * @param id         the id of the epxense to update
-     * @param amount     the new amount
-     * @param categoryId the new category id
-     * @param dateString the new date
-     * @param income     the new income
-     * @param type       the new type
-     * @param latitude   the new latitude
-     * @param longitude  the new longitude
-     * @return the expense
-     * @throws SQLException
-     */
-    @SparkPut(value = "/:id", transformer = GsonTransformer.class)
-    public Expense update(
-            @SparkParam("id") int id,
-            @SparkQueryParam(FIELD_AMOUNT) double amount,
-            @SparkQueryParam(FIELD_CATEGORY) int categoryId,
-            @SparkQueryParam(FIELD_DATE) String dateString,
-            @SparkQueryParam(FIELD_INCOME) boolean income,
-            @SparkQueryParam(FIELD_TYPE) int type,
-            @SparkQueryParam(FIELD_LATITUDE) double latitude,
-            @SparkQueryParam(FIELD_LONGITUDE) double longitude
-    ) throws SQLException {
-        Expense expense = get(id);
-
-        if (expense == null) {
-            Spark.halt(503, "Expense doesn't exist");
-        }
-
-        expense.setAmount(amount);
-
-        Category category = DB.CATEGORY_DAO.queryForId(categoryId);
-        if (category == null) {
-            Spark.halt(503, "Category missing");
-        } else {
-            expense.setCategory(category);
-        }
-        try {
-            expense.setDate(df.parse(dateString));
-        } catch (NullPointerException | ParseException e) {
-            expense.setDate(new Date());
-        }
-        try {
-            expense.setIncome(income);
-        } catch (NullPointerException e) {
-            expense.setIncome(false);
-        }
-        try {
-            expense.setType(type);
-        } catch (NullPointerException e) {
-            expense.setType(Expense.TYPE_NORMAL);
-        }
-
-        try {
-            expense.setLatitude(latitude);
-        } catch (NullPointerException e) {
-            expense.setLatitude(0);
-        }
-
-        try {
-            expense.setLongitude(longitude);
-        } catch (NullPointerException e) {
-            expense.setLongitude(0);
-        }
-
-        DB.EXPENSE_DAO.update(expense);
-
-        return expense;
-    }
-
-
-    /**
      * Deletes an expense by its ID
      *
      * @param id the id of the expense to delete
@@ -294,7 +217,7 @@ public class ExpenseController {
      * @throws SQLException
      */
     @SparkDelete(value = "/:id", accept = Constants.JSON, transformer = GsonTransformer.class)
-    public boolean delete(@SparkParam("id") int id) throws SQLException {
+    public boolean delete(@SparkParam("id") long id) throws SQLException {
         DB.EXPENSE_DAO.deleteById(id);
         return true;
     }

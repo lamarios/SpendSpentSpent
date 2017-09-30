@@ -14,9 +14,9 @@ import java.sql.SQLException;
 
 public class DB {
 
-    public static Dao<Category, Integer> CATEGORY_DAO = null;
-    public static Dao<Expense, Integer> EXPENSE_DAO = null;
-    public static Dao<RecurringExpense, Integer> RECURRING_EXPENSE_DAO = null;
+    public static Dao<Category, Long> CATEGORY_DAO = null;
+    public static Dao<Expense, Long> EXPENSE_DAO = null;
+    public static Dao<RecurringExpense, Long> RECURRING_EXPENSE_DAO = null;
     public static Dao<Setting, String> SETTING_DAO = null;
     public static Dao<UserSession, String> USER_SESSION_DAO = null;
 
