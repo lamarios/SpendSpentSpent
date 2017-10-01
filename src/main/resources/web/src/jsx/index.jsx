@@ -8,10 +8,8 @@ import Login from './Login.jsx';
 import Settings from './Settings.jsx';
 import BottomBar from './BottomBar.jsx';
 import axios from 'axios';
-import initReactFastclick from 'react-fastclick';
 
 
-initReactFastclick();
 String.prototype.format = function () {
     var s = this,
         i = arguments.length;

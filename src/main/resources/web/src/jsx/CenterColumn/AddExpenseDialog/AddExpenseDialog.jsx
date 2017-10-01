@@ -184,13 +184,14 @@ export default class AddExpenseDialog extends React.Component {
                        onClick={this.toggleLocation}
                     />
                     {
-                        this.state.isCalendarOpen && (
+                        this.state.isCalendarOpen && <div onClick={e => e.stopPropagation()}>
                             <DatePicker
                                 selected={this.state.date}
                                 onChange={this.handleDateChange}
                                 withPortal
                                 inline/>
-                        )
+                        </div>
+
                     }
                 </div>
             </div>

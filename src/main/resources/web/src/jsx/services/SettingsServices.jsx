@@ -13,5 +13,9 @@ export default class SettingsService {
     getAll() {
         return axios.get(API.SETTINGS.ALL);
     }
+
+    get(name){
+        return axios.get(API.SETTINGS.GET.format(name));
+    }
 }
 

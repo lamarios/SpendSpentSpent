@@ -1,9 +1,6 @@
 package com.ftpix.sss.controllers.api;
 
-import com.ftpix.sparknnotation.annotations.SparkBody;
-import com.ftpix.sparknnotation.annotations.SparkController;
-import com.ftpix.sparknnotation.annotations.SparkGet;
-import com.ftpix.sparknnotation.annotations.SparkPut;
+import com.ftpix.sparknnotation.annotations.*;
 import com.ftpix.sss.Constants;
 import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Setting;
@@ -83,6 +80,15 @@ public class SettingsController {
         return true;
     }
 
+    /**
+     * Gets a setting value by its name
+     * @param name
+     * @return
+     */
+    @SparkGet(value = "/:name", transformer = GsonTransformer.class)
+    public String getByName(@SparkParam(":name") String name){
+        return SettingsController.get(name);
+    }
 
     /**
      * String hash for passowrds
