@@ -53,33 +53,34 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
             <!--<plugin>-->
-                <!--<groupId>org.lesscss</groupId>-->
-                <!--<artifactId>lesscss-maven-plugin</artifactId>-->
-                <!--<configuration>-->
-                    <!--<sourceDirectory>${project.build.sourceDirectory}/assets/less</sourceDirectory>-->
-                    <!--<outputDirectory>${project.build.resources[0].directory}/public/stylesheets-->
-                    <!--</outputDirectory>-->
-                    <!--<compress>true</compress>-->
-                    <!--<includes>-->
-                        <!--<include>main.less</include>-->
-                    <!--</includes>-->
-                    <!--&lt;!&ndash;<excludes>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<exclude>variables.less</exclude>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</excludes>&ndash;&gt;-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--<goal>compile</goal>-->
-                        <!--</goals>-->
-                        <!--<phase>compile</phase>-->
-                    <!--</execution>-->
-                <!--</executions>-->
+            <!--<groupId>org.lesscss</groupId>-->
+            <!--<artifactId>lesscss-maven-plugin</artifactId>-->
+            <!--<configuration>-->
+            <!--<sourceDirectory>${project.build.sourceDirectory}/assets/less</sourceDirectory>-->
+            <!--<outputDirectory>${project.build.resources[0].directory}/public/stylesheets-->
+            <!--</outputDirectory>-->
+            <!--<compress>true</compress>-->
+            <!--<includes>-->
+            <!--<include>main.less</include>-->
+            <!--</includes>-->
+            <!--&lt;!&ndash;<excludes>&ndash;&gt;-->
+            <!--&lt;!&ndash;<exclude>variables.less</exclude>&ndash;&gt;-->
+            <!--&lt;!&ndash;</excludes>&ndash;&gt;-->
+            <!--</configuration>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<goals>-->
+            <!--<goal>compile</goal>-->
+            <!--</goals>-->
+            <!--<phase>compile</phase>-->
+            <!--</execution>-->
+            <!--</executions>-->
             <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -90,6 +91,82 @@
                     <target>1.9</target>
                 </configuration>
             </plugin>
+
+            <!-- Build FE with NPM -->
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <configuration>
+                    <workingDirectory>${basedir}/src/main/web</workingDirectory>
+                </configuration>
+                <executions>
+                    <!-- Required: The following will ensure `npm install` is called
+                         before anything else during the 'Default Lifecycle' -->
+                    <execution>
+                        <id>npm install (initialize)</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm run build (compile)</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>build</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- BUILD FAT JAR -->
+            <!-- Maven Assembly Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <!-- get all project dependencies -->
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <!-- MainClass in mainfest make a executable jar -->
+                    <archive>
+                        <manifest>
+                            <mainClass>com.ftpix.sss.SpendSpentSpent</mainClass>
+                        </manifest>
+                    </archive>
+                    <finalName>SpendSpentSpent</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!-- bind to the packaging phase -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
         </plugins>
     </build>
 
