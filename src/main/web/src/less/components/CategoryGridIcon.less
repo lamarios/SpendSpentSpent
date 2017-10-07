@@ -1,0 +1,75 @@
+.CategoryGridIcon {
+  display: inline-block;
+  position: relative;
+  background-color: @accentColor;
+
+  width: 75px;
+  height: 75px;
+
+  margin: 10px;
+  color: white;
+
+  border-radius: 5px;
+  font-size: 30px;
+  padding: 20px 15px 15px 15px;
+  box-sizing: border-box;
+  text-align: center;
+  overflow: hidden;
+
+  -webkit-transition: all 0.15s;
+  -moz-transition: all 0.15s;
+  -ms-transition: all 0.15s;
+  -o-transition: all 0.15s;
+  transition: all 0.15s;
+  cursor: pointer;
+
+  transform-origin: center center;
+  animation-name: GridIcon-bounceIn;
+  //animation-duration: 0.5s;
+  //animation-fill-mode: forwards; /*when the spec is finished*/
+
+  opacity: 1;
+
+  //&:hover{
+  //  transform: scale(1.2);
+  //}
+
+  i.cat {
+    display: block;
+  }
+
+  .grid-overlay {
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    color: white;
+    font-size:30px;
+    text-align: right;
+    padding:10px;
+    background-color: rgba(0, 0, 0, 0.5);
+
+    //transition: opacity 0.25s;
+animation-fill-mode: forwards;
+    pointer-events: none;
+
+    &.showing {
+      //opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}
+
+@keyframes GridIcon-bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

@@ -12,7 +12,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.ftpix:sparknotation:1.4" level="project" />
+    <orderEntry type="library" name="Maven: com.ftpix:sparknotation:1.5" level="project" />
     <orderEntry type="library" name="Maven: com.sparkjava:spark-core:2.6.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.13" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-server:9.4.4.v20170414" level="project" />

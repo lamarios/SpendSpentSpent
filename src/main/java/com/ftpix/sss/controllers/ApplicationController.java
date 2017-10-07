@@ -2,12 +2,12 @@ package com.ftpix.sss.controllers;
 
 
 import com.ftpix.sparknnotation.annotations.*;
+import spark.ModelAndView;
 import spark.Response;
+import spark.template.jade.JadeTemplateEngine;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.stream.Collectors;
+import java.util.HashMap;
 
 @SparkController
 public class ApplicationController {
@@ -50,36 +50,33 @@ public class ApplicationController {
         response.header("Access-Control-Request-Method", "GET, PUT, POST, DELETE, HEAD");
         response.header("Access-Control-Allow-Headers", "Authorization");
         // Note: this may or may not be necessary in your particular application
-        response.type("application/json");
     }
 
 
-    @SparkGet("/")
-    public String serveIndex(Response res) throws IOException {
-        ClassLoader loader = getClass().getClassLoader();
-        File f = new File(loader.getResource("web/public/index.html").getFile());
-        res.header("Content-Type", "text/html");
-        return Files.readAllLines(f.toPath()).stream().collect(Collectors.joining(""));
+    @SparkGet(value = "/", templateEngine = JadeTemplateEngine.class)
+    public ModelAndView serveIndex(Response res) throws IOException {
+
+        return new ModelAndView(new HashMap<>(),"index");
     }
 
-    @SparkGet("/history")
-    public String serveHistory(Response res) throws IOException {
+    @SparkGet(value = "/history", templateEngine = JadeTemplateEngine.class)
+    public ModelAndView serveHistory(Response res) throws IOException {
 //        res.redirect("/", 301);
         return serveIndex(res);
     }
 
-    @SparkGet("/login")
-    public String servceLogin(Response res) throws IOException {
+    @SparkGet(value = "/login-screen", templateEngine = JadeTemplateEngine.class)
+    public ModelAndView servceLogin(Response res) throws IOException {
         return serveIndex(res);
     }
 
-    @SparkGet("/settings")
-    public String serveSettings(Response res) throws IOException {
+    @SparkGet(value = "/settings", templateEngine = JadeTemplateEngine.class)
+    public ModelAndView serveSettings(Response res) throws IOException {
         return serveIndex(res);
     }
 
-    @SparkGet("/graphs")
-    public String serveGraphs(Response res) throws IOException {
+    @SparkGet(value = "/graphs", templateEngine = JadeTemplateEngine.class)
+    public ModelAndView serveGraphs(Response res) throws IOException {
         return serveIndex(res);
     }
 

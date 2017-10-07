@@ -1,29 +1,11 @@
-extends main
-
-block content
-
-    #columns
-        include columns/left
-        include columns/center
-        include columns/right
-
-
-    settings(ng-show="showSettings", animation-create="slideInUp", ng-controller="SettingsController")
-
-    login(animation-create="slideInUp", ng-controller="LoginController")
-
-    #footer
-        i#http-activity(class="fa fa-circle-o-notch fa-spin animated")
-        span.settings
-            a(ng-show="showSettings", class="logout",  animation-create="fadeIn", ng-click="logout()")
-                i.fa.fa-sign-out
-                | Logout
-
-            a(ng-click="showSettings = !showSettings")
-                i.fa.fa-gear
-        .page-marker
-            i(ng-click="swipeRight()", class="fa fa-chevron-left")
-            i(ng-click="swipeLeft()", class="fa fa-chevron-right")
-
-    if !apiKey.equalsIgnoreCase("")
-        script(async, defer, src="https://maps.googleapis.com/maps/api/js?key=#{apiKey}")
+html
+    head
+        meta(charset="utf-8")
+        title SpendSpentSpent
+        meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no")
+        meta(name="apple-mobile-web-app-status-bar-style", content="white")
+        meta(name="apple-mobile-web-app-capable", content="yes")
+        link(href="https://fonts.googleapis.com/css?family=Open+Sans", rel="stylesheet")
+    body
+        #app
+        script(src="bundle.js", type="text/javascript")

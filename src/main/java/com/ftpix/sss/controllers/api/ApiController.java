@@ -45,6 +45,8 @@ public class ApiController {
      */
     @SparkBefore("/API/*")
     public void chechAuth(Request req, Response res, @SparkHeader(TOKEN) String token) throws SQLException {
+        res.type("application/json");
+
         if (req.requestMethod() != "OPTIONS") {
             if (SettingsController.get(Setting.AUTHENTICATION).equalsIgnoreCase("true")) {
                 if (token != null) {
