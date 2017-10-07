@@ -20,7 +20,7 @@
         <dependency>
             <groupId>com.ftpix</groupId>
             <artifactId>sparknotation</artifactId>
-            <version>1.3</version>
+            <version>1.4</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.j256.ormlite/ormlite-jdbc -->
         <dependency>
@@ -131,8 +131,44 @@
                             </arguments>
                         </configuration>
                     </execution>
+                    <!-- BUILD DOCKER IMAGE -->
+                    <execution>
+                        <id>Docker build</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>install</phase>
+                        <configuration>
+                            <workingDirectory>${basedir}/target/docker</workingDirectory>
+                            <executable>docker</executable>
+                            <arguments>
+                                <argument>build</argument>
+                                <argument>-t</argument>
+                                <argument>gonzague/spendspentspent</argument>
+                                <argument>.</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Docker push</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>install</phase>
+                        <configuration>
+                            <workingDirectory>${basedir}/target/docker</workingDirectory>
+                            <executable>docker</executable>
+                            <arguments>
+                                <argument>push</argument>
+                                <argument>gonzague/spendspentspent</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
+
+
+
 
             <!-- BUILD FAT JAR -->
             <!-- Maven Assembly Plugin -->
@@ -140,32 +176,62 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.1.0</version>
-                <configuration>
-                    <!-- get all project dependencies -->
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <!-- MainClass in mainfest make a executable jar -->
-                    <archive>
-                        <manifest>
-                            <mainClass>com.ftpix.sss.SpendSpentSpent</mainClass>
-                        </manifest>
-                    </archive>
-                    <finalName>SpendSpentSpent</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
+                <!-- The configuration of the plugin -->
+
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
-                        <!-- bind to the packaging phase -->
+                        <id>jar-with-dependencies</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <finalName>SpendSpentSpent</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <manifest>
+                                    <addClasspath>true</addClasspath>
+                                    <mainClass>com.ftpix.sss.SpendSpentSpent</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
 
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/docker</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>docker/</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/target</directory>
+                                    <includes>
+                                        <include>SpendSpentSpent.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
         </plugins>
     </build>

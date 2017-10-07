@@ -7,6 +7,7 @@ import com.google.gson.*;
 import spark.HaltException;
 import spark.Spark;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
@@ -38,7 +39,7 @@ public class SpendSpentSpent {
         GSON = builder.create();
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, IOException {
 
         Spark.port(Constants.HTTP_PORT);
 
