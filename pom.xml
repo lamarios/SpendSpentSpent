@@ -8,6 +8,10 @@
     <artifactId>spendspentspent</artifactId>
     <version>2.0-SNAPSHOT</version>
 
+    <properties>
+        <docker.image.name>gonzague/spendspentspent</docker.image.name>
+    </properties>
+
     <repositories>
         <repository>
             <id>sparknotation</id>
@@ -20,7 +24,7 @@
         <dependency>
             <groupId>com.ftpix</groupId>
             <artifactId>sparknotation</artifactId>
-            <version>1.5</version>
+            <version>1.6</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.j256.ormlite/ormlite-jdbc -->
         <dependency>
@@ -144,23 +148,8 @@
                             <arguments>
                                 <argument>build</argument>
                                 <argument>-t</argument>
-                                <argument>gonzague/spendspentspent</argument>
+                                <argument>${docker.image.name}</argument>
                                 <argument>.</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>Docker push</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>install</phase>
-                        <configuration>
-                            <workingDirectory>${basedir}/target/docker</workingDirectory>
-                            <executable>docker</executable>
-                            <arguments>
-                                <argument>push</argument>
-                                <argument>gonzague/spendspentspent</argument>
                             </arguments>
                         </configuration>
                     </execution>
