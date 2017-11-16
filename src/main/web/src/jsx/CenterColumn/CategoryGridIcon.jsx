@@ -34,9 +34,9 @@ export default class CategoryGridIcon extends React.Component {
     }
 
     render() {
-        var style = {
-            animationDuration: ((Math.random()) + 0.5) + 's'
-        }
+        let style = {
+            animationDuration:((Math.random()) *(0.5 - 0.20)+ 0.20) + 's'
+        };
 
 
         return <li className={'CategoryGridIcon '} style={style} onClick={this.toggleAddExpenseDialog}>
@@ -52,7 +52,7 @@ export default class CategoryGridIcon extends React.Component {
             </OkCancelDialog>
             }
 
-            <i className={'cat ' + this.props.category.icon}></i>
+            <i className={'cat ' + this.props.category.icon} />
             <div className={'grid-overlay ' + (this.props.overlay ? 'showing fade-in' : '')}
                  onClick={(e) => e.stopPropagation()}>
                 <i className="fa fa-times" onClick={(e) => {
