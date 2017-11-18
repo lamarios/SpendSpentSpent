@@ -1,0 +1,73 @@
+.Expense {
+  @flipDuration: 0.5s;
+  .card {
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    //width: 300px;
+    margin: 10px auto;
+    position: relative;
+    transition: all @flipDuration;
+    cursor: pointer;
+
+    .modifiers {
+      position: absolute;
+      right: 10px;
+      top: 8px;
+      display: inline-block;
+    }
+
+    .cat {
+      position: absolute;
+      left: 10px;
+      top: 8px;
+      display: inline-block;
+    }
+    .front {
+      padding: 5px;
+    }
+
+    .front, .back {
+      background-color: @accentColor;
+      border-radius: @borderRadius;
+      animation-duration: @flipDuration !important;
+    }
+
+    .back {
+      backface-visibility: visible;
+      transform: rotate3d(1, 0, 0, 180deg);
+
+      .ExpenseLocation {
+        margin-bottom: 5px;
+      }
+
+      .actions {
+        margin: 0;
+        padding:5px;
+        a {
+          display: inline-block;
+          width: 50%;
+          text-align: center;
+          border-radius: @borderRadius;
+          transition: all 0.25s;
+          &:hover {
+            //background-color: @grey;
+          }
+
+          &.delete {
+            color: red;
+          }
+        }
+      }
+    }
+
+    &:hover {
+      //transform: scale(1.2);
+    }
+
+    &.flip {
+      transform: rotate3d(1, 0, 0, 180deg);
+    }
+  }
+
+}

@@ -1,0 +1,62 @@
+.Settings {
+  .setting-input {
+    margin: 10px 0;
+
+    label {
+      display: block;
+    }
+
+    input {
+      display: block;
+    }
+
+  }
+
+  .tabs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid @accentColor;
+
+    li {
+      display: inline-block;
+      padding: 5px 20px;
+      cursor: pointer;
+
+      transition: all .25s;
+      width: 32%;
+      box-sizing: border-box;
+      text-align: center;
+
+      &:hover {
+        color: darken(@accentColor, 10%);
+      }
+
+      &.active {
+        color: @accentColor;
+      }
+    }
+  }
+
+  .tab-content {
+    padding: 20px;
+  }
+
+  button {
+    background-color: @accentColor;
+    padding:10px  20px;
+    font: @font;
+    border-radius: @borderRadius;
+    border: none;
+    margin: 10px 0;
+    color:white;
+  }
+}
+
+@media screen and (max-width: @mobileBreakPoint) {
+  .Settings {
+    .tabs {
+      font-size: 10px;
+    }
+  }
+}

@@ -1,0 +1,6 @@
+.column.animated#left-column(ng-controller="HistoryController")
+    p.types( animation-create="fadeInDown")
+        a(ng-click="changeType('Monthly')", class="history-type", ng-class="{'selected': type() =='Monthly'}") Monthly
+        a(ng-click="changeType('Yearly')", class="history-type", ng-class="{'selected': type() =='Yearly'}") Yearly
+
+    category-history(data="data", index="key", ng-repeat="(key, data) in history") {{ key }}

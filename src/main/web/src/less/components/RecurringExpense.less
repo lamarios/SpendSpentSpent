@@ -1,0 +1,149 @@
+.RecurringExpense {
+  @flipSpeed: 0.5s;
+
+  .bar {
+    display: block;
+    margin: 10px;
+    cursor: pointer;
+    position: relative;
+
+    animation-name: recurring-show-bar;
+
+    transition: all @flipSpeed;
+
+    &.flip {
+      transform: rotate3d(1, 0, 0, 180deg);
+    }
+    //&:hover {
+    //  transform: scale(1.1);
+    //}
+    .front {
+      height: 40px;
+      border-radius: 5px;
+      background-color: @accentColor;
+      transition: all .25s;
+
+      div {
+        display: inline-block;
+        width: 33%;
+        color: white;
+        font-size: 20px;
+        padding: 5px;
+        box-sizing: border-box;
+        &.frequence {
+          text-align: left;
+        }
+
+        &.amount {
+          text-align: right;
+        }
+
+        &.icon {
+          text-align: center;
+          padding-top: 8px;
+        }
+
+      }
+    }
+
+    .back {
+      transition: all .25s;
+      background-color: @accentColor;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      transform: rotate3d(1, 0, 0, 180deg);
+
+      .fa {
+
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 10px;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+
+      .fa-ellipsis-v {
+        color: white;
+      }
+
+      p {
+        text-align: center;
+        margin-top: 0;
+        margin-bottom: 5px;
+        .date {
+          font-weight: bold;
+        }
+      }
+
+      .bottom-menu {
+
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        border-radius: 5px;
+        background-color: @grey;
+        padding: 10px;
+        color: black;
+
+        transform: scale(0.75);
+        opacity: 0;
+        pointer-events: none;
+
+        transition: all 0.15s;
+
+        &.showing {
+          transform: scale(1);
+          pointer-events: auto;
+          opacity: 1;
+        }
+
+        p {
+          text-align: center;
+          margin: 0;
+          font-size: 16px;
+          padding: 0 20px;
+
+          animation-name: recurring-show-bar;
+          animation-duration: 0.15s;
+        }
+        .delete {
+          margin-top: 13px;
+
+        }
+        p.options {
+          position: absolute;
+          bottom: 10px;
+          left: 0;
+          right: 0;
+          span {
+            display: inline-block;
+            width: 50%;
+          }
+          .ok {
+            color: red;
+          }
+        }
+      }
+
+    }
+
+  }
+}
+
+@keyframes recurring-show-bar {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
