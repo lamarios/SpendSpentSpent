@@ -6,15 +6,15 @@ import java.util.ResourceBundle;
 public class Constants {
 
     public final static String DB_PATH, SALT;
-    private final static int HTTP_PORT;
+    public final static int HTTP_PORT;
     public static final String JSON = "application/json";
 
 
-    private static final String CFG_DB_URL = "db.url";
+    public static final String CFG_DB_URL = "db.url";
 
-    private static final String CFG_SALT = "salt";
+    public static final String CFG_SALT = "salt";
 
-    private static final String CFG_PORT = "http.port";
+    public static final String CFG_PORT = "http.port";
 
     static {
 

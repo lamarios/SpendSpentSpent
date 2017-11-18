@@ -174,7 +174,6 @@ public class CategoryController {
                 .flatMap(k -> CategoryIcons.ALL.get(k).stream())
                 .filter(s -> StringUtils.containsIgnoreCase(s, name))
                 .filter(s-> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s)))
-                .peek(System.out::println)
                 .collect(Collectors.toList());
     }
 }
