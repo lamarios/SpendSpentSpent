@@ -1,7 +1,6 @@
 package com.ftpix.sss.controllers.api;
 
 import com.ftpix.sss.PrepareDB;
-import com.ftpix.sss.controllers.api.CategoryController;
 import com.ftpix.sss.models.Category;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -81,5 +80,32 @@ public class CategoryControllerTest {
 
     }
 
+
+    @Test
+    public void testCategorySearch() throws SQLException {
+        List<String> search = controller.searchAvailableIcon("sou");
+
+        assertEquals("There should be 7 categories", 7, search.size());
+
+
+        //if i add one of the categories to my collections, then it should only be left 6 from the results
+        controller.create(search.get(0), 0);
+
+        search = controller.searchAvailableIcon("sou");
+        assertEquals("There should be 6 categories", 6, search.size());
+
+
+        //The same thing should work with different case
+        search = controller.searchAvailableIcon("hOme");
+
+        assertEquals("There should be 7 categories", 2, search.size());
+
+
+        //if i add one of the categories to my collections, then it should only be left 6 from the results
+        controller.create(search.get(0), 0);
+
+        search = controller.searchAvailableIcon("hOme");
+        assertEquals("There should be 6 categories", 1, search.size());
+    }
 
 }

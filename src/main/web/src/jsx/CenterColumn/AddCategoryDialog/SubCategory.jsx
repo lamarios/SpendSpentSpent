@@ -6,8 +6,8 @@ export default class SubCategory extends React.Component {
         super(props);
 
         this.state = {
-            expand: false
-        }
+            expand:  !!props.expand
+        };
 
         this.toggleExpand = this.toggleExpand.bind(this);
     }
@@ -26,9 +26,9 @@ export default class SubCategory extends React.Component {
             <p onClick={this.toggleExpand}>
                 {
                     this.state.expand ?
-                        <i className={'fa fa-caret-down'}></i>
+                        <i className={'fa fa-caret-down'} />
                         :
-                        <i className={'fa fa-caret-right'}></i>
+                        <i className={'fa fa-caret-right'}/>
                 }
                 &nbsp;
                 &nbsp;

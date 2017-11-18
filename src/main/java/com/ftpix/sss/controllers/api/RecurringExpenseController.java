@@ -83,12 +83,11 @@ public class RecurringExpenseController {
      */
     @SparkGet(accept = Constants.JSON, transformer = GsonTransformer.class)
     public List<RecurringExpense> get() throws SQLException {
-        List<RecurringExpense> expenses = DB.RECURRING_EXPENSE_DAO.queryForAll();
+        return DB.RECURRING_EXPENSE_DAO.queryForAll();
 //        expenses.forEach((expense) -> {
 //            expense.getCategory().getIcon();
 //        });
 
-        return expenses;
     }
 
 

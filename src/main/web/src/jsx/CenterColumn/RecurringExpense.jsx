@@ -6,7 +6,7 @@ export default class RecurringExpense extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {flip: false, confirm: false, menu: false}
+        this.state = {flip: false, confirm: false, menu: false};
 
         this.getFrequence = this.getFrequence.bind(this);
         this.flip = this.flip.bind(this);
@@ -37,7 +37,7 @@ export default class RecurringExpense extends React.Component {
     getFrequence(type) {
         switch (type) {
             case 0:
-                return 'Daily'
+                return 'Daily';
             case 1:
                 return 'Weekly';
             case 2:

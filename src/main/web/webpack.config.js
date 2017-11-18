@@ -16,7 +16,8 @@ var constants = {
         AVAILABLE: JSON.stringify(API_URL + '/Category/Available'),
         ADD: JSON.stringify(API_URL + '/Category'),
         GET: JSON.stringify(API_URL + '/Category/ById/{0}'),
-        DELETE: JSON.stringify(API_URL + '/Category/{0}')
+        DELETE: JSON.stringify(API_URL + '/Category/{0}'),
+        SEARCH: JSON.stringify(API_URL + '/Category/search-icon'),
     },
     EXPENSE: {
         ADD: JSON.stringify(API_URL + '/Expense'),
@@ -29,8 +30,8 @@ var constants = {
             MONTH: JSON.stringify(API_URL + "/History/CurrentMonth"),
             YEAR: JSON.stringify(API_URL + "/History/CurrentYear"),
         },
-        YEARLY: JSON.stringify(API_URL+"/History/Yearly/{0}/{1}"),
-        MONTHLY: JSON.stringify(API_URL+"/History/Monthly/{0}/{1}"),
+        YEARLY: JSON.stringify(API_URL + "/History/Yearly/{0}/{1}"),
+        MONTHLY: JSON.stringify(API_URL + "/History/Monthly/{0}/{1}"),
     },
     RECURRING: {
         GET: JSON.stringify(API_URL + '/RecurringExpense'),
@@ -43,10 +44,10 @@ var constants = {
     SETTINGS: {
         UPDATE: JSON.stringify(API_URL + '/Setting'),
         ALL: JSON.stringify(API_URL + '/Setting'),
-        GET: JSON.stringify(API_URL+'/Setting/{0}'),
+        GET: JSON.stringify(API_URL + '/Setting/{0}'),
     }
 
-}
+};
 
 var config = {
     entry: [APP_DIR + '/jsx/index.jsx', APP_DIR + '/less/main.less'],
@@ -68,7 +69,13 @@ var config = {
     module: {
         rules: [
             {
-                test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000'
+                test: /\.(woff|woff2|eot|ttf|svg)$/,
+                loader: 'url-loader?limit=100000'
+            },
+            {
+                test: /\.(jpg|png|svg)$/,
+                loader: 'file-loader?name=images/[name].[ext]',
+                include: APP_DIR + '/images',
             },
             {
                 test: /\.jsx?/,

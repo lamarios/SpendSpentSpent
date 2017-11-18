@@ -8,7 +8,7 @@ export default class TypeSelector extends React.Component {
         this.state = {
             type: 0,
             typeParam: 0,
-        }
+        };
 
         this.onTypeChange = this.onTypeChange.bind(this);
     }

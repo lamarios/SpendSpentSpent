@@ -1,6 +1,5 @@
 package com.ftpix.sss.controllers;
 
-import com.ftpix.sparknnotation.Sparknotation;
 import com.ftpix.sss.controllers.api.RecurringExpenseController;
 import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Expense;
@@ -17,13 +16,14 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
 public class BackgroundJob implements Runnable {
 
     private final Logger logger = LogManager.getLogger();
     private ExecutorService exec = Executors.newSingleThreadExecutor();
     private boolean refresh = true;
     private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-    DecimalFormat df2 = new DecimalFormat("#,###,###,##0.00");
+    private DecimalFormat df2 = new DecimalFormat("#,###,###,##0.00");
 
     public BackgroundJob() {
         logger.info("Starting Background Tasks");
@@ -72,7 +72,7 @@ public class BackgroundJob implements Runnable {
                             DB.EXPENSE_DAO.create(expense);
 
                             recurring.setLastOccurrence(recurring.getNextOccurrence());
-                            recurring.setNextOccurrence(Sparknotation.getController(RecurringExpenseController.class).calculateNextDate(recurring));
+                            recurring.setNextOccurrence(RecurringExpenseController.calculateNextDate(recurring));
 
                             DB.RECURRING_EXPENSE_DAO.update(recurring);
                             logger.info("Expense added, next occurence:[{}]", recurring.getNextOccurrence());

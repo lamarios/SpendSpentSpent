@@ -60,16 +60,16 @@ export default class Settings extends React.Component {
         }
 
 
-        var password = {
+        let password = {
             name: 'password',
             value: this.state.newPassword,
         };
 
 
-        var toSave = [this.state.settings.authentication];
+        let toSave = [this.state.settings.authentication];
 
         if (this.state.settings.authentication.value === 'true') {
-            toSave.push(this.state.settings.username)
+            toSave.push(this.state.settings.username);
             toSave.push(password);
         }
 
@@ -109,7 +109,7 @@ export default class Settings extends React.Component {
     }
 
     authenticationChanged(e) {
-        var setting = {
+         let setting = {
             name: 'authentication',
             value: e.target.checked.toString(),
         };
@@ -122,7 +122,7 @@ export default class Settings extends React.Component {
 
 
     googlemapChanged(e) {
-        var setting = {
+        let setting = {
             name: 'googlemap',
             value: e.target.value,
         };
@@ -136,7 +136,7 @@ export default class Settings extends React.Component {
     }
 
     pushoverUserTokenChanged(e) {
-        var setting = {
+         let setting = {
             name: 'pushoverUserToken',
             value: e.target.value,
         };
@@ -149,7 +149,7 @@ export default class Settings extends React.Component {
     }
 
     pushoverAppTokenChanged(e) {
-        var setting = {
+        let setting = {
             name: 'pushoverAppToken',
             value: e.target.value,
         };
@@ -162,7 +162,7 @@ export default class Settings extends React.Component {
     }
 
     pushoverChanged(e) {
-        var setting = {
+        let setting = {
             name: 'pushover',
             value: e.target.checked.toString(),
         };
@@ -175,7 +175,7 @@ export default class Settings extends React.Component {
     }
 
     pushalotApiChanged(e) {
-        var setting = {
+        let setting = {
             name: 'pushalotApi',
             value: e.target.value,
         };
@@ -188,7 +188,7 @@ export default class Settings extends React.Component {
     }
 
     pushalotChanged(e) {
-        var setting = {
+        let setting = {
             name: 'pushalot',
             value: e.target.checked.toString(),
         };
@@ -201,7 +201,7 @@ export default class Settings extends React.Component {
     }
 
     pushbulletApiChanged(e) {
-        var setting = {
+        let setting = {
             name: 'pushbulletApi',
             value: e.target.value,
         };
@@ -214,7 +214,7 @@ export default class Settings extends React.Component {
     }
 
     pushbulletChanged(e) {
-        var setting = {
+        let setting = {
             name: 'pushbullet',
             value: e.target.checked.toString(),
         };
@@ -232,7 +232,7 @@ export default class Settings extends React.Component {
     }
 
     usernameChanged(e) {
-        var setting = {
+        let setting = {
             name: 'username',
             value: e.target.value,
         };

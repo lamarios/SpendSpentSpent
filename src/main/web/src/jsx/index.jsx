@@ -9,9 +9,11 @@ import Settings from './Settings.jsx';
 import BottomBar from './BottomBar.jsx';
 import axios from 'axios';
 
+//shitty trick to get webpack to actually copy the images
+let images =   require.context("../images/", true, /^\.\/.*\.png/);
 
 String.prototype.format = function () {
-    var s = this,
+    let s = this,
         i = arguments.length;
 
     while (i--) {

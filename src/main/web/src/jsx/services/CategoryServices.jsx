@@ -6,7 +6,7 @@ export default class CategoryService{
         return axios.get(API.CATEGORY.ALL);
     }
 
-    delete(id){
+    deleteCategory(id){
         return axios.delete(API.CATEGORY.DELETE.format(id));
     }
 
@@ -20,5 +20,11 @@ export default class CategoryService{
 
     getAvailable(){
         return axios.get(API.CATEGORY.AVAILABLE);
+    }
+
+    search(name){
+        return axios.post(API.CATEGORY.SEARCH, querystring.stringify({
+            name: name
+        }));
     }
 }

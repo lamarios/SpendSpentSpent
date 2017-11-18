@@ -23,7 +23,7 @@ export default class AddRecurringExpenseDialog extends React.Component {
             amount: '',
             loading: true,
             apiOver: false,
-        }
+        };
 
         this.recurringService = new RecurringExpenseServices();
         this.categoryService = new CategoryServices();
@@ -52,9 +52,9 @@ export default class AddRecurringExpenseDialog extends React.Component {
                 type: this.state.type,
                 typeParam: this.state.type === 0 ? 0 : this.state.typeParam,
                 name: '',
-            }
+            };
 
-            var valid = recurringExpense.amount.length > 0
+            let valid = recurringExpense.amount.length > 0
                 && recurringExpense.category > -1
                 && recurringExpense.type > -1
                 && recurringExpense.typeParam > -1;
@@ -107,9 +107,9 @@ export default class AddRecurringExpenseDialog extends React.Component {
      */
     addDigit(digit) {
         console.log('Adding digit', digit);
-        var newAmount = this.state.amount + digit;
+        let newAmount = this.state.amount + digit;
 
-        var patt = new RegExp(/^[0-9]+(\.[0-9]{0,2})?$/);
+        let patt = new RegExp(/^[0-9]+(\.[0-9]{0,2})?$/);
 
         if (patt.test(newAmount)) {
             this.setState({amount: newAmount})

@@ -64,8 +64,8 @@ export default class RecurringExpenseList extends React.Component {
 
 
     render() {
-        var animationLength = 0.5;
-        var step = 0.5 / (this.state.expenses.length - 1);
+        let animationLength = 0.5;
+        let step = 0.5 / (this.state.expenses.length - 1);
         return <div className={'RecurringExpenseList'}>
             {this.state.error.length > 0 &&
             <OkDialog dismiss={this.dismissError}>
@@ -81,7 +81,7 @@ export default class RecurringExpenseList extends React.Component {
 
             {this.state.expenses.map(
                 (expense) => {
-                    var style = {animationDuration: animationLength + 's'};
+                    let style = {animationDuration: animationLength + 's'};
                     animationLength += step;
                     return <RecurringExpense
                         key={expense.id}

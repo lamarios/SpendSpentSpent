@@ -37,7 +37,7 @@ export default class ExpenseChart extends React.Component {
             resData.forEach(d => {
                 labels.unshift(d.date);
                 values.unshift(d.amount);
-            })
+            });
 
             this.setState({
                 data: {
@@ -63,7 +63,7 @@ export default class ExpenseChart extends React.Component {
 
 
     render() {
-        var options = {
+        let options = {
             width: '100%',
             height: '200px',
             low: 0,

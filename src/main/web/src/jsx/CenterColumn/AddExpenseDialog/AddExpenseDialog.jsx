@@ -20,7 +20,7 @@ export default class AddExpenseDialog extends React.Component {
             refreshingLocation: false,
             loading: false,
             useLocation: (typeof localStorage !== undefined ? localStorage.useLocation === 'true' : false)
-        }
+        };
 
         this.expenseService = new ExpenseService();
 
@@ -61,7 +61,7 @@ export default class AddExpenseDialog extends React.Component {
      * @param e
      */
     toggleCalendar(e) {
-        e && e.preventDefault()
+        e && e.preventDefault();
         this.setState({isCalendarOpen: !this.state.isCalendarOpen})
     }
 
@@ -70,7 +70,7 @@ export default class AddExpenseDialog extends React.Component {
      * @param date
      */
     handleDateChange(date) {
-        this.setState({date: date})
+        this.setState({date: date});
         this.toggleCalendar()
     }
 
@@ -102,9 +102,9 @@ export default class AddExpenseDialog extends React.Component {
      * @param digit
      */
     addDigit(digit) {
-        var newAmount = this.state.amount + digit;
+        let newAmount = this.state.amount + digit;
 
-        var patt = new RegExp(/^[0-9]+(\.[0-9]{0,2})?$/);
+        let patt = new RegExp(/^[0-9]+(\.[0-9]{0,2})?$/);
 
         if (patt.test(newAmount)) {
             this.setState({amount: newAmount})
@@ -126,13 +126,13 @@ export default class AddExpenseDialog extends React.Component {
         if (this.state.amount.length > 0) {
             this.setState({loading: true});
 
-            var expense = {
+            let expense = {
                 amount: this.state.amount,
                 category: this.props.category.id,
                 income: false,
                 type: 1,
                 date: this.state.date.format('YYYY-MM-DD'),
-            }
+            };
 
             if (this.state.useLocation && this.state.location !== null) {
                 expense.latitude = this.state.location.latitude;

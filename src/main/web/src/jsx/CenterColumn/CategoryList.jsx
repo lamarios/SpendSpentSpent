@@ -16,7 +16,7 @@ export default class CategoryList extends React.Component {
             showAddCategory: false,
             error:'',
             apiOver:false,
-        }
+        };
 
         this.showOverlay = this.showOverlay.bind(this);
         this.deleteCategory = this.deleteCategory.bind(this);
@@ -67,7 +67,7 @@ export default class CategoryList extends React.Component {
      * @param id
      */
     deleteCategory(id) {
-            this.categoryService.delete(id)
+            this.categoryService.deleteCategory(id)
                 .then(res => this.refreshList())
     }
 

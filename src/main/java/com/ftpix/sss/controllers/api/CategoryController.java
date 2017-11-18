@@ -7,12 +7,14 @@ import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.CategoryIcons;
 import com.ftpix.sss.transformer.GsonTransformer;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import spark.Spark;
 
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @SparkController("/API/Category")
 public class CategoryController {
@@ -155,6 +157,25 @@ public class CategoryController {
 
         DB.CATEGORY_DAO.deleteById(id);
         return true;
+    }
+
+    /**
+     * Search within the available categories.
+     * @param name the string to search for
+     * @return a list of icon names
+     * @throws SQLException
+     */
+    @SparkPost(value = "/search-icon", transformer = GsonTransformer.class, accept = Constants.JSON)
+    public List<String> searchAvailableIcon(@SparkQueryParam("name") String name) throws SQLException {
+
+        List<Category> categories = DB.CATEGORY_DAO.queryForAll();
+
+        return CategoryIcons.ALL.keySet().stream()
+                .flatMap(k -> CategoryIcons.ALL.get(k).stream())
+                .filter(s -> StringUtils.containsIgnoreCase(s, name))
+                .filter(s-> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s)))
+                .peek(System.out::println)
+                .collect(Collectors.toList());
     }
 }
 

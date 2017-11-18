@@ -6,7 +6,7 @@ export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.loginService = new LoginService();
-        this.state = {username: '', password: '', error: ''}
+        this.state = {username: '', password: '', error: ''};
 
         this.usernameChange = this.usernameChange.bind(this);
         this.passwordChange = this.passwordChange.bind(this);

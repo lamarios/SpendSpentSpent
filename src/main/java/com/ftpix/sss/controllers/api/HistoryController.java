@@ -98,10 +98,8 @@ public class HistoryController {
             tmp.setCategory(category);
             LocalDate date = LocalDate.now();
 
-            String yearStr = String.valueOf(date.getYear());
 
 
-            final LocalDate finalDate = date;
             double total = getCategoryExpensesForYear(category.getId(), date)
                     .stream()
                     .mapToDouble(Expense::getAmount)

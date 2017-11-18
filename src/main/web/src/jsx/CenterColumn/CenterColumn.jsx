@@ -10,7 +10,7 @@ export default class CenterColumn extends React.Component {
 
         this.state = {
             displayLeft: true
-        }
+        };
 
 
         this.showNormal = this.showNormal.bind(this);

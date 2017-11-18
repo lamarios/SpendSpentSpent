@@ -5,7 +5,7 @@ export default class Switcher extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {selected: this.props.items[0].label}
+        this.state = {selected: this.props.items[0].label};
 
         this.switchItem = this.switchItem.bind(this);
     }
@@ -16,9 +16,9 @@ export default class Switcher extends React.Component {
     }
 
     render() {
-        var style = {
+        let style = {
             width: (100 / this.props.items.length) + '%'
-        }
+        };
         return <div className={'Switcher slide-in-top'}>
             {this.props.items.map((item) => {
                 return <div key={item.label} style={style}

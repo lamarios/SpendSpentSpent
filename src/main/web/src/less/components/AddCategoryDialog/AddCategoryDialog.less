@@ -9,8 +9,35 @@
     .loading-indicator {
       padding-top: 50px;
     }
-  }
 
+    .search {
+
+      input {
+        width: 100%;
+        background-color: darken(@accentColor, 10%);
+        border: none;
+        box-sizing: border-box;
+        height: 60px;
+        color: white;
+        padding: 0 50px;
+        font-size: 20px;
+        position: relative;
+        display: block;
+        border-top-left-radius: @borderRadius;
+        border-top-right-radius: @borderRadius;
+      }
+
+      &:after {
+        content: "\f002";
+        position: absolute;
+        top: 14px;
+        left: 14px;
+
+        color: darken(@accentColor, 20%);
+        font: normal normal normal 30px/1 FontAwesome;
+      }
+    }
+  }
 
   .loading {
     position: absolute;
@@ -28,3 +55,8 @@
 
 }
 
+@media screen and (max-width: @mobileBreakPoint) {
+  .AddCategoryDialog .search input {
+    border-radius: 0;
+  }
+}
