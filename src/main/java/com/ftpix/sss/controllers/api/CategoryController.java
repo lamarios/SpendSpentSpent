@@ -161,20 +161,27 @@ public class CategoryController {
 
     /**
      * Search within the available categories.
+     *
      * @param name the string to search for
      * @return a list of icon names
      * @throws SQLException
      */
     @SparkPost(value = "/search-icon", transformer = GsonTransformer.class, accept = Constants.JSON)
-    public List<String> searchAvailableIcon(@SparkQueryParam("name") String name) throws SQLException {
+    public Map<String, Object> searchAvailableIcon(@SparkQueryParam("name") String name) throws SQLException {
 
         List<Category> categories = DB.CATEGORY_DAO.queryForAll();
 
-        return CategoryIcons.ALL.keySet().stream()
+        Map<String, Object> result = new HashMap<>();
+        result.put("query", name);
+        result.put("results", CategoryIcons.ALL.keySet().stream()
                 .flatMap(k -> CategoryIcons.ALL.get(k).stream())
                 .filter(s -> StringUtils.containsIgnoreCase(s, name))
-                .filter(s-> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s)))
-                .collect(Collectors.toList());
+                .filter(s -> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s)))
+                .collect(Collectors.toList()));
+
+        System.out.println(result);
+
+        return result;
     }
 }
 

@@ -41,13 +41,22 @@ public class SpendSpentSpent {
 
     public static void main(String[] args) throws SQLException, IOException {
 
+        boolean devMode = args.length > 0 && args[0].equalsIgnoreCase("dev");
+
+
+        new SpendSpentSpent(devMode);
+
+        new BackgroundJob();
+    }
+
+    public SpendSpentSpent(boolean dev) throws IOException {
         Spark.port(Constants.HTTP_PORT);
 
-        if(args.length > 0 && args[0].equalsIgnoreCase("dev")) {
+        if (dev) {
             System.out.println("DEV MODE");
             Spark.externalStaticFileLocation("/home/gz/IdeaProjects/SpendSpentSpent/src/main/resources/web/public");
 
-        }else{
+        } else {
             Spark.staticFiles.location("/web/public");
         }
 
@@ -58,16 +67,16 @@ public class SpendSpentSpent {
                     HaltException halt = (HaltException) target.getTargetException();
                     res.body(halt.body());
                     res.status(halt.statusCode());
-                }else{
+                } else {
                     e.printStackTrace();
                 }
-            }else{
+            } else {
                 e.printStackTrace();
             }
         });
 
         Sparknotation.init(GSON::fromJson);
 
-        new BackgroundJob();
+
     }
 }

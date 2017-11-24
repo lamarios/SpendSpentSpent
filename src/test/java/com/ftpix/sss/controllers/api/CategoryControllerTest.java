@@ -8,6 +8,7 @@ import spark.HaltException;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
@@ -83,29 +84,31 @@ public class CategoryControllerTest {
 
     @Test
     public void testCategorySearch() throws SQLException {
-        List<String> search = controller.searchAvailableIcon("sou");
+        Map<String, Object> search = controller.searchAvailableIcon("sou");
 
-        assertEquals("There should be 7 categories", 7, search.size());
-
+        List<String> results = (List<String>) search.get("results");
+        assertEquals("There should be 7 categories", 7, results.size());
 
         //if i add one of the categories to my collections, then it should only be left 6 from the results
-        controller.create(search.get(0), 0);
-
+        controller.create(results.get(0), 0);
         search = controller.searchAvailableIcon("sou");
-        assertEquals("There should be 6 categories", 6, search.size());
+        results = (List<String>) search.get("results");
+        assertEquals("There should be 6 categories", 6, results.size());
 
 
         //The same thing should work with different case
         search = controller.searchAvailableIcon("hOme");
+        results = (List<String>) search.get("results");
+        assertEquals("There should be 7 categories", 2, results.size());
 
-        assertEquals("There should be 7 categories", 2, search.size());
-
-
+        results = (List<String>) search.get("results");
         //if i add one of the categories to my collections, then it should only be left 6 from the results
-        controller.create(search.get(0), 0);
+        controller.create(results.get(0), 0);
 
         search = controller.searchAvailableIcon("hOme");
-        assertEquals("There should be 6 categories", 1, search.size());
+
+        results = (List<String>) search.get("results");
+        assertEquals("There should be 6 categories", 1, results.size());
     }
 
 }

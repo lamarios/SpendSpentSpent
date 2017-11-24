@@ -31,10 +31,12 @@ export default class AddCategoryDialog extends React.Component {
             this.setState({searchTerms: value, loading: true}, () => {
                 this.categoryService.search(value)
                     .then(res => {
-                        this.setState({searchResults: res.data, loading: false});
+                        if (res.data.query === value) {
+                            this.setState({searchResults: res.data.results, loading: false});
+                        }
                     });
-            }, 200);
-        });
+            });
+        }, 200);
     }
 
     /**
