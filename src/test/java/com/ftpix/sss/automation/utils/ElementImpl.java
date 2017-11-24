@@ -1,7 +1,6 @@
 package com.ftpix.sss.automation.utils;
 
 import com.ftpix.sss.automation.framework.interfaces.SssPage;
-import jdk.jshell.spi.ExecutionControl;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.internal.Coordinates;
 
@@ -104,7 +103,7 @@ public class ElementImpl implements Element {
 
     @Override
     public Coordinates getCoordinates() {
-        return null;
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override

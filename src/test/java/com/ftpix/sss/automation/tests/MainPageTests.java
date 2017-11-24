@@ -4,10 +4,8 @@ import com.ftpix.sss.Constants;
 import com.ftpix.sss.SpendSpentSpent;
 import com.ftpix.sss.automation.framework.mainpage.AddCategoryDialog;
 import com.ftpix.sss.automation.framework.mainpage.MainPage;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.runners.MethodSorters;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -22,7 +20,9 @@ import java.util.Set;
 import static com.ftpix.sss.automation.tests.SetUpAutomation.*;
 import static org.junit.Assert.*;
 
-public class AutomationTests {
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class MainPageTests {
 
 
     @BeforeClass
@@ -36,7 +36,7 @@ public class AutomationTests {
     }
 
     @Test
-    public void testAddCategories() throws IOException, InterruptedException {
+    public void t1AddCategories() throws IOException, InterruptedException {
 
         DRIVER.get(BASE_URL);
 
