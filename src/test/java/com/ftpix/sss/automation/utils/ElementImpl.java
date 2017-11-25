@@ -8,11 +8,9 @@ import java.util.List;
 
 public class ElementImpl implements Element {
     private final WebElement element;
-    private final SssPage parent;
 
-    public ElementImpl(final WebElement element, final SssPage parent) {
+    public ElementImpl(final WebElement element) {
         this.element = element;
-        this.parent = parent;
     }
 
 
@@ -109,13 +107,5 @@ public class ElementImpl implements Element {
     @Override
     public WebElement getWrappedElement() {
         return element;
-    }
-
-    public SssPage getParent() {
-        return parent;
-    }
-
-    public WebElement getParentElement() {
-        return parent.getSelf();
     }
 }

@@ -1,11 +1,13 @@
-package com.ftpix.sss.automation.framework.mainpage;
+package com.ftpix.sss.automation.framework.mainpage.gridview;
 
 import com.ftpix.sss.automation.framework.interfaces.SssPage;
+import com.ftpix.sss.automation.tests.SetUpAutomation;
 import com.ftpix.sss.automation.utils.ElementImpl;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.internal.WrapsDriver;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
@@ -16,21 +18,27 @@ public class AddCategoryDialog extends ElementImpl {
     public static final By SEARCH_INPUT = By.cssSelector(SELECTOR + ".search input");
     public static final By SEARCH_RESULTS = By.cssSelector(SELECTOR + ".SubCategory .category-icons i");
 
-    public AddCategoryDialog(WebElement element, SssPage parent) {
-        super(element, parent);
+    public AddCategoryDialog(WebElement element) {
+        super(element);
     }
 
 
     public WebElement getSearchInput() {
-        return getParentElement().findElement(SEARCH_INPUT);
+        return findElement(SEARCH_INPUT);
     }
 
     public List<WebElement> getSearchResults() {
-        return getParentElement().findElements(SEARCH_RESULTS);
+        return findElements(SEARCH_RESULTS);
     }
 
+    /**
+     * Gets the button to add a category once it's selected
+     * @return
+     */
     public WebElement getAddCategoryButton() {
-        return getParentElement().findElement(ADD_CATEGORY_BUTTTON);
+        //TODO: find better way than that to go back to parent
+        return SetUpAutomation.DRIVER.findElement(ADD_CATEGORY_BUTTTON);
+//        return findElement(ADD_CATEGORY_BUTTTON);
     }
 
 }

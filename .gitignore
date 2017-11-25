@@ -31,7 +31,7 @@ hs_err_pid*
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
-.idea/**/dataSources.ids
+.idea/**/dataSources.idshttps://start.ubuntu-mate.org/
 .idea/**/dataSources.xml
 .idea/**/dataSources.local.xml
 .idea/**/sqlDataSources.xml
