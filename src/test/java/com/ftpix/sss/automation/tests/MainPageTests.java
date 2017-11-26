@@ -16,6 +16,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static com.ftpix.sss.automation.tests.SetUpAutomation.*;
 import static org.junit.Assert.*;
@@ -24,6 +25,9 @@ import static org.junit.Assert.*;
 public class MainPageTests {
 
     private static final String CLASS = "class";
+    public static final String CURRENT_MONTH_EXPENSE_VALUE = "123456789.83";
+    public static final String PREVIOUS_MONTH_EXPENSE_VALUE = "83";
+    public static Optional<String> FIRST_CATEGORY = Optional.empty(), SECOND_CATEGORY = Optional.empty();
     private final MainPage mainPage = PageFactory.initElements(DRIVER, MainPage.class);
 
 
@@ -80,6 +84,9 @@ public class MainPageTests {
         assertNotEquals("The two categories should be different", firstSelected, secondSelected);
         assertTrue("First category on the grid should be the correct one", firstSelected.contains(gridIcons.get(0).getIcon().getAttribute(CLASS)));
         assertTrue("First category on the grid should be the correct one", secondSelected.contains(gridIcons.get(1).getIcon().getAttribute(CLASS)));
+
+        FIRST_CATEGORY = Optional.ofNullable(gridIcons.get(0).getIcon().getAttribute(CLASS));
+        SECOND_CATEGORY = Optional.ofNullable(gridIcons.get(1).getIcon().getAttribute(CLASS));
     }
 
 
@@ -117,7 +124,7 @@ public class MainPageTests {
         //the third digit should be ignored as only 2 digits post . should be allowed
         expenseDialog.getDigit7().click();
 
-        expectedValue = "123456789.83";
+        expectedValue = CURRENT_MONTH_EXPENSE_VALUE;
         assertEquals("We should have the proper value after clicking all the buttons", expectedValue, expenseDialog.getAmountInput().getAttribute("value"));
 
         expenseDialog.getOkButton().click();
@@ -130,7 +137,7 @@ public class MainPageTests {
         expenseDialog = mainPage.getAddExpenseDialog();
         expenseDialog.getDigit8().click();
         expenseDialog.getDigit3().click();
-        expectedValue = "83";
+        expectedValue = PREVIOUS_MONTH_EXPENSE_VALUE;
 
 
         WebElement dateButton = expenseDialog.getDateButton();

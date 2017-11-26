@@ -18,10 +18,9 @@ public class AutomationTests {
     }
 
     @AfterClass
-    public static void destroy(){
+    public static void destroy() {
         stopTests();
     }
-
 
 
     @Test
@@ -32,6 +31,10 @@ public class AutomationTests {
         mainPageTests.t2TestExpenseDialog();
         mainPageTests.t3RecurringExpensesTest();
 
+
+        RightColumnTests rightColumnTests = new RightColumnTests();
+        rightColumnTests.t1DropDownTest();
+        rightColumnTests.t2ExpensesTest();
 
         Thread.sleep(3000);
     }
