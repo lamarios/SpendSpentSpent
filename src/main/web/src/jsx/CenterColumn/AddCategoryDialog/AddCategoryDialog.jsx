@@ -99,23 +99,18 @@ export default class AddCategoryDialog extends React.Component {
                         <input placeholder={'search'} onKeyUp={this.searchCategory}/>
                     </div>
                     {this.state.searchTerms.length > 0 && <SubCategory
-                        name={'Results'}
-                        selected={this.state.selected}
                         icons={this.state.searchResults}
-                        expand={true}
                         onSelect={this.select}
+                        selected={this.state.selected}
                     />}
 
-                    {keys.length > 0 && this.state.searchTerms.length === 0 && keys.map(
-                        (subCategory) => <SubCategory
-                            key={subCategory}
-                            name={subCategory}
-                            selected={this.state.selected}
-                            icons={this.state.categories[subCategory]}
-                            onSelect={this.select}
-
-                        />
-                    )}
+                    {keys.length > 0 && this.state.searchTerms.length === 0 &&
+                    <SubCategory
+                        icons={this.state.categories}
+                        onSelect={this.select}
+                        selected={this.state.selected}
+                    />
+                    }
                 </div>
             </div>
         </Dialog>

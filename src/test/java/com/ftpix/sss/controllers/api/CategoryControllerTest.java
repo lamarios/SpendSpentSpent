@@ -37,19 +37,19 @@ public class CategoryControllerTest {
         long available = countAvailableCategories();
 
 
-        Category cat = controller.create("icon-forest", 0);
+        Category cat = controller.create("icon-browser", 0);
 
         int newCount = controller.getAll().size();
         long newAvailable = countAvailableCategories();
 
-        assertEquals("icon-forest", cat.getIcon());
+        assertEquals("icon-browser", cat.getIcon());
         assertEquals(count + 1, newCount);
         assertEquals(available - 1, newAvailable);
 
-        controller.update(cat.getId(), "icon-destination", 0);
+        controller.update(cat.getId(), "icon-cityscape", 0);
         cat = controller.get(cat.getId());
 
-        assertEquals("icon-destination", cat.getIcon());
+        assertEquals("icon-cityscape", cat.getIcon());
 
 
         controller.delete(cat.getId());
@@ -61,9 +61,8 @@ public class CategoryControllerTest {
     }
 
     private long countAvailableCategories() throws SQLException {
-        TreeMap<String, List<String>> available = controller.getAvailable();
-        return available.values().stream().flatMap(l -> l.stream())
-                .count();
+        List<String> available = controller.getAvailable();
+        return available.size();
     }
 
 
@@ -84,31 +83,31 @@ public class CategoryControllerTest {
 
     @Test
     public void testCategorySearch() throws SQLException {
-        Map<String, Object> search = controller.searchAvailableIcon("sou");
+        Map<String, Object> search = controller.searchAvailableIcon("mail");
 
         List<String> results = (List<String>) search.get("results");
-        assertEquals("There should be 7 categories", 7, results.size());
+        assertEquals("There should be 7 categories", 31, results.size());
 
         //if i add one of the categories to my collections, then it should only be left 6 from the results
         controller.create(results.get(0), 0);
-        search = controller.searchAvailableIcon("sou");
+        search = controller.searchAvailableIcon("mail");
         results = (List<String>) search.get("results");
-        assertEquals("There should be 6 categories", 6, results.size());
+        assertEquals("There should be 6 categories", 30, results.size());
 
 
         //The same thing should work with different case
-        search = controller.searchAvailableIcon("hOme");
+        search = controller.searchAvailableIcon("fiLe");
         results = (List<String>) search.get("results");
-        assertEquals("There should be 7 categories", 2, results.size());
+        assertEquals("There should be 7 categories", 21, results.size());
 
         results = (List<String>) search.get("results");
         //if i add one of the categories to my collections, then it should only be left 6 from the results
         controller.create(results.get(0), 0);
 
-        search = controller.searchAvailableIcon("hOme");
+        search = controller.searchAvailableIcon("fIle");
 
         results = (List<String>) search.get("results");
-        assertEquals("There should be 6 categories", 1, results.size());
+        assertEquals("There should be 6 categories", 20, results.size());
     }
 
 }

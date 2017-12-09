@@ -54,17 +54,13 @@ public class CategoryController {
      * @throws SQLException
      */
     @SparkGet(value = "/Available", accept = Constants.JSON, transformer = GsonTransformer.class)
-    public TreeMap<String, List<String>> getAvailable() throws SQLException {
-        TreeMap<String, List<String>> icons = new TreeMap<>();
+    public List<String> getAvailable() throws SQLException {
 
         List<Category> categories = DB.CATEGORY_DAO.queryForAll();
-        CategoryIcons.ALL.forEach((key, values) -> {
-            icons.put(key, new ArrayList<>());
-            icons.get(key).addAll(values);
-            icons.get(key).removeIf(v -> categories.stream().filter(c -> c.getIcon().equalsIgnoreCase(v)).count() > 0);
-        });
+        return CategoryIcons.ALL.stream()
+                .filter(s -> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s)))
+                .collect(Collectors.toList());
 
-        return icons;
     }
 
 
@@ -81,13 +77,7 @@ public class CategoryController {
         Category category = new Category();
 
 
-        boolean found = false;
-        for (String iconCategory : CategoryIcons.ALL.keySet()) {
-            if (CategoryIcons.ALL.get(iconCategory).contains(icon)) {
-                found = true;
-                break;
-            }
-        }
+        boolean found = CategoryIcons.ALL.contains(icon);
 
         if (!found) {
             Spark.halt(503, "Icon doesn't exist");
@@ -116,13 +106,7 @@ public class CategoryController {
 
 
         if (categoryOptional.isPresent()) {
-            boolean found = false;
-            for (String iconCategory : CategoryIcons.ALL.keySet()) {
-                if (CategoryIcons.ALL.get(iconCategory).contains(icon)) {
-                    found = true;
-                    break;
-                }
-            }
+            boolean found = CategoryIcons.ALL.contains(icon);
 
             if (!found) {
                 Spark.halt(503, "Icon doesn't exist");
@@ -171,13 +155,16 @@ public class CategoryController {
 
         List<Category> categories = DB.CATEGORY_DAO.queryForAll();
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("query", name);
-        result.put("results", CategoryIcons.ALL.keySet().stream()
-                .flatMap(k -> CategoryIcons.ALL.get(k).stream())
+
+        List<String> iconResults = CategoryIcons.ALL.stream()
                 .filter(s -> StringUtils.containsIgnoreCase(s, name))
                 .filter(s -> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s)))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("query", name);
+        result.put("results", iconResults);
 
         System.out.println(result);
 
