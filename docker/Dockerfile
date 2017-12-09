@@ -2,7 +2,9 @@ FROM openjdk:9-jre-slim
 
 RUN mkdir /app && mkdir /config
 
-ADD SpendSpentSpent.jar /app/SpendSpentSpent.jar
+ARG SSS_VERSION
+
+ADD SpendSpentSpent-$SSS_VERSION.jar /app/SpendSpentSpent.jar
 
 ADD run.sh /run.sh
 

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ftpix</groupId>
-    <artifactId>spendspentspent</artifactId>
+    <artifactId>SpendSpentSpent</artifactId>
     <version>2.0-RC1</version>
 
     <properties>
@@ -176,6 +176,8 @@
                                 <argument>build</argument>
                                 <argument>-t</argument>
                                 <argument>${docker.image.name}</argument>
+                                <argument>--build-arg</argument>
+                                <argument>SSS_VERSION=${project.version}</argument>
                                 <argument>.</argument>
                             </arguments>
                         </configuration>
@@ -202,7 +204,7 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
-                            <finalName>SpendSpentSpent</finalName>
+                            <finalName>SpendSpentSpent-${project.version}</finalName>
                             <appendAssemblyId>false</appendAssemblyId>
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -240,7 +242,7 @@
                                 <resource>
                                     <directory>${basedir}/target</directory>
                                     <includes>
-                                        <include>SpendSpentSpent.jar</include>
+                                        <include>SpendSpentSpent-${project.version}.jar</include>
                                     </includes>
                                 </resource>
                             </resources>
@@ -254,14 +256,14 @@
             <plugin>
                 <groupId>de.jutzig</groupId>
                 <artifactId>github-release-plugin</artifactId>
-                <version>1.1.1</version>
+                <version>1.2.0</version>
                 <configuration>
                     <description>
                         Implementation of github release inside maven.
                     </description>
                     <releaseName>${version}</releaseName>
                     <tag>${version}</tag>
-                    <serverId>github</serverId>
+                    <serverId>github-release</serverId>
                     <!-- If your project has additional artifacts, such as ones produced by
                          the maven-assembly-plugin, you can define the following
                          (requires version 1.1.1 of the plugin or higher): -->
@@ -269,10 +271,12 @@
                         <fileSet>
                             <directory>${project.build.directory}</directory>
                             <excludes>
-                                <exclude>web-${version}.jar</exclude>
+                                <exclude>
+                                    spendspentspent-${project.version}.jar
+                                </exclude>
                             </excludes>
                             <includes>
-                                <include>web*-assembly.zip</include>
+                                <include>SpendSpentSpent.jar</include>
                             </includes>
                         </fileSet>
                     </fileSets>
