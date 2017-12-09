@@ -2,6 +2,9 @@
 
 SpendSpentSpent (SSS) is an easy to use self hosted expense tracker. The goal of this application is to make creating new expense as easy and quick as possible. The application features are  split into 3 pages
 
+
+[Demo instance](https://sss.ftpix.com)
+
 ## Spend (center page)
 
 - Add expense categories
