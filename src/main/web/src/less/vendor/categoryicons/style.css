@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'categories';
-  src:url('https://d3c98yq0qia8th.cloudfront.net/categories.eot?-uwcnhs');
-  src:url('https://d3c98yq0qia8th.cloudfront.net/categories.eot?#iefix-uwcnhs') format('embedded-opentype'),
-  url('https://d3c98yq0qia8th.cloudfront.net/categories.ttf?-uwcnhs') format('truetype'),
-  url('https://d3c98yq0qia8th.cloudfront.net/categories.woff?-uwcnhs') format('woff'),
-  url('https://d3c98yq0qia8th.cloudfront.net/categories.svg?-uwcnhs#categories') format('svg');
+  src:url('./categories.eot?-uwcnhs');
+  src:url('./categories.eot?#iefix-uwcnhs') format('embedded-opentype'),
+  url('./categories.ttf?-uwcnhs') format('truetype'),
+  url('./categories.woff?-uwcnhs') format('woff'),
+  url('./categories.svg?-uwcnhs#categories') format('svg');
   font-weight: normal;
   font-style: normal;
 }

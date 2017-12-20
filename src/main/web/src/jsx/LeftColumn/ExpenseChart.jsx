@@ -58,25 +58,28 @@ export default class ExpenseChart extends React.Component {
     }
 
     increaseCount() {
-        this.setState({count: this.state.count + 1}, ()=> this.refreshChart());
+        this.setState({count: this.state.count + 1}, () => this.refreshChart());
     }
 
 
     render() {
         let options = {
             width: '100%',
-            height: '200px',
+            height: '260px',
             low: 0,
             showArea: true,
             lineSmooth: Chartist.Interpolation.none(),
+            axisX: {
+                offset: 80
+            }
         };
         return <div className={'ExpenseChart fade-in'}>
             <ChartistGraph className={'ct-chart'} data={this.state.data} type={'Line'} options={options}/>
             <div className={'chart-controls'}>
-                <button onClick={this.decreaseCount}><i className={'fa fa-minus'}/> </button>
+                <button onClick={this.decreaseCount}><i className={'fa fa-minus'}/></button>
                 {this.state.count}
-                {this.props.showMonthly?' Months': ' Years'}
-                <button onClick={this.increaseCount}><i className={'fa fa-plus'} /></button>
+                {this.props.showMonthly ? ' Months' : ' Years'}
+                <button onClick={this.increaseCount}><i className={'fa fa-plus'}/></button>
             </div>
         </div>;
     }
