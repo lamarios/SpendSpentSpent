@@ -2,6 +2,7 @@ package com.ftpix.sss;
 
 import com.ftpix.sparknnotation.Sparknotation;
 import com.ftpix.sss.controllers.BackgroundJob;
+import com.ftpix.sss.controllers.api.UpdateController;
 import com.ftpix.sss.db.DB;
 import com.google.gson.*;
 import spark.HaltException;
@@ -15,6 +16,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.stream.Stream;
 
 public class SpendSpentSpent {
 
@@ -40,19 +42,26 @@ public class SpendSpentSpent {
     }
 
     public static void main(String[] args) throws SQLException, IOException {
+        System.out.println("Args:"+args.length);
 
-        boolean devMode = args.length > 0 && args[0].equalsIgnoreCase("dev");
+        Stream.of(args).forEach(System.out::println);
 
+        if(args.length > 4 && args[0].equalsIgnoreCase("update")){
+            new UpdateController().deployUpdate(args);
+        }else {
 
-        new SpendSpentSpent(devMode);
+            Constants.DEV_MODE = args.length > 0 && args[0].equalsIgnoreCase("dev");
 
-        new BackgroundJob();
+            new SpendSpentSpent();
+
+            new BackgroundJob();
+        }
     }
 
-    public SpendSpentSpent(boolean dev) throws IOException {
+    public SpendSpentSpent() throws IOException {
         Spark.port(Constants.HTTP_PORT);
 
-        if (dev) {
+        if (Constants.DEV_MODE) {
             System.out.println("DEV MODE");
             Spark.externalStaticFileLocation("/home/gz/IdeaProjects/SpendSpentSpent/src/main/resources/web/public");
 

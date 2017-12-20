@@ -45,6 +45,9 @@ var constants = {
         UPDATE: JSON.stringify(API_URL + '/Setting'),
         ALL: JSON.stringify(API_URL + '/Setting'),
         GET: JSON.stringify(API_URL + '/Setting/{0}'),
+    },
+    UPDATER:{
+        INFO: JSON.stringify(API_URL+"/Updater"),
     }
 
 };

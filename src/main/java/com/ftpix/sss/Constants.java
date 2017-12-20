@@ -15,6 +15,8 @@ public class Constants {
     public static final String CFG_SALT = "salt";
 
     public static final String CFG_PORT = "http.port";
+    public static boolean DEV_MODE = false;
+
 
     static {
 

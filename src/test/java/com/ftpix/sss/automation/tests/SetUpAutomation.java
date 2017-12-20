@@ -18,7 +18,7 @@ public class SetUpAutomation {
 
     public static synchronized void setUpApp() throws IOException {
         if (count == 0) {
-            new SpendSpentSpent(false);
+            new SpendSpentSpent();
         }
         count++;
     }

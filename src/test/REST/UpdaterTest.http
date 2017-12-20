@@ -1,0 +1,4 @@
+### Test do update
+GET http://localhost:21456/API/Updater/do-update
+
+###

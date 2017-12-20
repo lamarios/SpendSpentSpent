@@ -8,6 +8,7 @@ import Login from './Login.jsx';
 import Settings from './Settings.jsx';
 import BottomBar from './BottomBar.jsx';
 import axios from 'axios';
+import UpdaterService from './services/UpdaterService.jsx';
 
 //shitty trick to get webpack to actually copy the images
 let images =   require.context("../images/", true, /^\.\/.*\.png/);
@@ -48,6 +49,9 @@ axios.interceptors.response.use(function (response) {
     }
     return Promise.reject(error);
 });
+
+let updaterService = new UpdaterService();
+updaterService.info().then((info) => console.log(info));
 
 render((
     <BrowserRouter>
