@@ -46,7 +46,7 @@ public class SpendSpentSpent {
 
         Stream.of(args).forEach(System.out::println);
 
-        if(args.length > 4 && args[0].equalsIgnoreCase("update")){
+        if(args.length == 6 && args[0].equalsIgnoreCase("update")){
             new UpdateController().deployUpdate(args);
         }else {
 

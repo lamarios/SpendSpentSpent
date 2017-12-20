@@ -6,10 +6,11 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>2-B2</version>
+    <version>2-B3</version>
 
     <properties>
         <docker.image.name>gonzague/spendspentspent</docker.image.name>
+        <docker.skip>false</docker.skip>
     </properties>
 
     <repositories>
@@ -188,6 +189,7 @@
                         </goals>
                         <phase>install</phase>
                         <configuration>
+                            <skip>${docker.skip}</skip>
                             <workingDirectory>${basedir}/target/docker</workingDirectory>
                             <executable>docker</executable>
                             <arguments>

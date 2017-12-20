@@ -67,11 +67,14 @@ public class UpdateController {
 
     @SparkGet("/do-update")
     public boolean doUpdate() throws IOException {
-        List<GHAsset> releases = getLatestRelease()
-                .map(ThrowingFunction.unchecked(GHRelease::getAssets))
-                .orElse(Collections.emptyList());
-
         try {
+            logger.info("Getting last release");
+            List<GHAsset> releases = getLatestRelease()
+                    .map(ThrowingFunction.unchecked(GHRelease::getAssets))
+                    .orElse(Collections.emptyList());
+
+            logger.info("found {} releases", releases.size());
+
             releases.stream()
                     .filter(a -> a.getName().matches(SPEND_SPENT_SPENT_JAR))
                     .findFirst()
@@ -92,12 +95,12 @@ public class UpdateController {
 
                         runUpgradeScript(scriptPath, tempFile);
                     }));
+
+            return true;
         } catch (WrappedException e) {
             logger.error("Couldn't do update", e);
+            return false;
         }
-
-        return true;
-
     }
 
 
@@ -121,6 +124,7 @@ public class UpdateController {
                         ProcessBuilder processBuilder = new ProcessBuilder();
                         processBuilder.command("java", "-jar", pathToOldJar.toString(), "update", pathToOldJar.toString(), pathToNewJar, builder.toString());
 
+                        logger.info("Running command: {}", processBuilder.command().stream().collect(Collectors.joining(" ")));
 
                         Process process = processBuilder.start();
                         StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
@@ -130,8 +134,8 @@ public class UpdateController {
 
 
                         logger.info("Going dark before update  script /pray");
-//                        System.exit(0);
-                        int exitCode = process.waitFor();
+                        System.exit(0);
+//                        int exitCode = process.waitFor();
                     })
             );
         } catch (WrappedException e) {
@@ -147,15 +151,15 @@ public class UpdateController {
     public void deployUpdate(String... params) throws IOException {
         Path oldJar = Paths.get(params[1]);
         Path newJar = Paths.get(params[2]);
-        Path installParentFolder = newJar.getParent();
+        Path installParentFolder = oldJar.getParent();
         Path updatedJar = installParentFolder.resolve("SpendSpentSpent.jar");
-        String javaOpts = params[3];
+        String javaOpts = params[3] + " " + params[4] + " " + params[5];
 
         System.out.println("Updating Spend Spent Spent");
 
         if (Files.exists(oldJar) && Files.exists(newJar)) {
             Files.move(oldJar, installParentFolder.resolve("SpendSpentSpent.jar.bak"));
-            Files.move(newJar, installParentFolder.resolve(newJar.getFileName()));
+            Files.move(newJar, installParentFolder.resolve("SpendSpentSpent.jar"));
 
             List<String> command = new ArrayList<>();
             command.add("java");
