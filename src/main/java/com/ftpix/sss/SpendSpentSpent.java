@@ -5,6 +5,8 @@ import com.ftpix.sss.controllers.BackgroundJob;
 import com.ftpix.sss.controllers.api.UpdateController;
 import com.ftpix.sss.db.DB;
 import com.google.gson.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import spark.HaltException;
 import spark.Spark;
 
@@ -19,7 +21,7 @@ import java.util.Date;
 import java.util.stream.Stream;
 
 public class SpendSpentSpent {
-
+public static Logger logger = LogManager.getLogger();
     public final static Gson GSON;
 
     static {
@@ -42,11 +44,11 @@ public class SpendSpentSpent {
     }
 
     public static void main(String[] args) throws SQLException, IOException {
-        System.out.println("Args:"+args.length);
+        logger.info("Args:"+args.length);
 
-        Stream.of(args).forEach(System.out::println);
+        Stream.of(args).forEach(logger::info);
 
-        if(args.length == 6 && args[0].equalsIgnoreCase("update")){
+        if(args.length == 4 && args[0].equalsIgnoreCase("update")){
             new UpdateController().deployUpdate(args);
         }else {
 
@@ -62,7 +64,7 @@ public class SpendSpentSpent {
         Spark.port(Constants.HTTP_PORT);
 
         if (Constants.DEV_MODE) {
-            System.out.println("DEV MODE");
+            logger.info("DEV MODE");
             Spark.externalStaticFileLocation("/home/gz/IdeaProjects/SpendSpentSpent/src/main/resources/web/public");
 
         } else {

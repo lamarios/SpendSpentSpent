@@ -40,6 +40,7 @@ public class UpdateController {
     private final static String BETA = "B", RELEASE_CANDIDATE = "RC";
     private static final String SPEND_SPENT_SPENT_JAR = "SpendSpentSpent-?(\\d*)(-(RC|B)\\d+)?\\.jar";
     private static final String SPEND_SPENT_SPENT_JAR_IN_FILE_SYSTEM = "(.*)" + SPEND_SPENT_SPENT_JAR + "$";
+    private static final String JAVA_OPTS_SEPARATER = "___";
 
     /**
      * Let the user know if he/she is using the latest version of SSS based on github releases
@@ -79,9 +80,10 @@ public class UpdateController {
                     .filter(a -> a.getName().matches(SPEND_SPENT_SPENT_JAR))
                     .findFirst()
                     .ifPresent(ThrowingConsumer.unchecked(r -> {
+                        URL website = new URL(r.getBrowserDownloadUrl());
                         String tempFile = Files.createTempFile("SSS-", "").toAbsolutePath().toString() + ".jar";
                         logger.info("Downloading release {} from {} to file {}", r.getName(), r.getBrowserDownloadUrl(), tempFile);
-                        URL website = new URL(r.getBrowserDownloadUrl());
+//            URL website = new URL("file:///home/gz/IdeaProjects/SpendSpentSpent/target/SpendSpentSpent-2-B5.jar");
 
                         try (
                                 ReadableByteChannel rbc = Channels.newChannel(website.openStream());
@@ -91,9 +93,8 @@ public class UpdateController {
 
                         }
 
-                        String scriptPath = writeUpdateScriptToDisk();
 
-                        runUpgradeScript(scriptPath, tempFile);
+                        runUpgradeScript(tempFile);
                     }));
 
             return true;
@@ -107,7 +108,7 @@ public class UpdateController {
     /**
      * Will run the upgrade script
      */
-    private void runUpgradeScript(String pathToScript, String pathToNewJar) throws IOException {
+    private void runUpgradeScript(String pathToNewJar) throws IOException {
         try {
             Files.list(Paths.get("." + (Constants.DEV_MODE ? "/target" : "")))
                     .peek(System.out::println)
@@ -116,22 +117,18 @@ public class UpdateController {
                     .findFirst().ifPresent(ThrowingConsumer.unchecked(pathToOldJar -> {
 
                         StringBuilder builder = new StringBuilder();
-                        builder.append("-D").append(Constants.CFG_DB_URL).append("=").append(Constants.DB_PATH).append(" ");
-                        builder.append("-D").append(Constants.CFG_PORT).append("=").append(Constants.HTTP_PORT).append(" ");
-                        builder.append("-D").append(Constants.CFG_SALT).append("=").append(Constants.SALT).append(" ");
+                        builder.append("-D").append(Constants.CFG_DB_URL).append("=").append(Constants.DB_PATH).append(JAVA_OPTS_SEPARATER);
+                        builder.append("-D").append(Constants.CFG_PORT).append("=").append(Constants.HTTP_PORT).append(JAVA_OPTS_SEPARATER);
+                        builder.append("-D").append(Constants.CFG_SALT).append("=").append(Constants.SALT).append(JAVA_OPTS_SEPARATER);
 
 
                         ProcessBuilder processBuilder = new ProcessBuilder();
                         processBuilder.command("java", "-jar", pathToOldJar.toString(), "update", pathToOldJar.toString(), pathToNewJar, builder.toString());
+                        processBuilder.directory(pathToOldJar.getParent().toFile());
 
                         logger.info("Running command: {}", processBuilder.command().stream().collect(Collectors.joining(" ")));
 
                         Process process = processBuilder.start();
-                        StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
-                        StreamGobbler streamGobbler2 = new StreamGobbler(process.getErrorStream(), System.out::println);
-                        Executors.newSingleThreadExecutor().submit(streamGobbler);
-                        Executors.newSingleThreadExecutor().submit(streamGobbler2);
-
 
                         logger.info("Going dark before update  script /pray");
                         System.exit(0);
@@ -153,9 +150,9 @@ public class UpdateController {
         Path newJar = Paths.get(params[2]);
         Path installParentFolder = oldJar.getParent();
         Path updatedJar = installParentFolder.resolve("SpendSpentSpent.jar");
-        String javaOpts = params[3] + " " + params[4] + " " + params[5];
+        String javaOpts = params[3];
 
-        System.out.println("Updating Spend Spent Spent");
+        logger.info("Updating Spend Spent Spent oldjar:[{}], newJar :[{}], installParentFolder:[{}], updatedJar:[{}]", oldJar, newJar, installParentFolder, updatedJar);
 
         if (Files.exists(oldJar) && Files.exists(newJar)) {
             Files.move(oldJar, installParentFolder.resolve("SpendSpentSpent.jar.bak"));
@@ -163,20 +160,20 @@ public class UpdateController {
 
             List<String> command = new ArrayList<>();
             command.add("java");
-            command.addAll(Arrays.asList(javaOpts.split(" ")));
+            command.addAll(Arrays.asList(javaOpts.split(JAVA_OPTS_SEPARATER)));
             command.add("-jar");
             command.add(updatedJar.toString());
 
 
-            System.out.println("Executing command:");
-            System.out.println(command.stream().collect(Collectors.joining(" ")));
+            logger.info("Executing command:");
+            logger.info(command.stream().collect(Collectors.joining(" ")));
             ProcessBuilder pb = new ProcessBuilder(command.toArray(new String[command.size()]));
             pb.directory(installParentFolder.toFile());
             pb.start();
             System.exit(0);
 
         } else {
-            System.out.println("New and old jar don't exist");
+            logger.info("New and old jar don't exist");
             System.exit(1);
         }
 
