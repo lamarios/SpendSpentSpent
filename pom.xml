@@ -279,7 +279,8 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        Implementation of github release inside maven.
+                        Use CDN for fonts (licensing issue)
+                        make charts labels vertical
                     </description>
                     <releaseName>${version}</releaseName>
                     <tag>${version}</tag>
