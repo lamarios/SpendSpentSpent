@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>2-B7</version>
+    <version>2-B8</version>
 
     <properties>
         <docker.image.name>gonzague/spendspentspent</docker.image.name>
@@ -279,8 +279,7 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        Use CDN for fonts (licensing issue)
-                        make charts labels vertical
+                        Fix infinite login screen loops because of the Updater endpoint
                     </description>
                     <releaseName>${version}</releaseName>
                     <tag>${version}</tag>

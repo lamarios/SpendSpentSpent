@@ -50,8 +50,9 @@ axios.interceptors.response.use(function (response) {
     return Promise.reject(error);
 });
 
-let updaterService = new UpdaterService();
-updaterService.info().then((info) => console.log(info));
+//Will cause infinite log in loops
+// let updaterService = new UpdaterService();
+// updaterService.info().then((info) => console.log(info));
 
 render((
     <BrowserRouter>
