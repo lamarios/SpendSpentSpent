@@ -52,7 +52,7 @@ public class RightColumnTests {
     /**
      * Testing if the expenses tally
      */
-    public void t2ExpensesTest() {
+    public void t2ExpensesTest() throws InterruptedException {
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         numberFormat.setMinimumFractionDigits(2);
 
@@ -109,20 +109,33 @@ public class RightColumnTests {
         expense2.click();
         WAIT.until(ExpectedConditions.visibilityOf(expense2.getBack()));
         ExpenseBack back = expense2.getBack();
+        WAIT.until(ExpectedConditions.elementToBeClickable(back.getClose()));
         back.getClose().click();
 
         expense2.click();
         WAIT.until(ExpectedConditions.visibilityOf(expense2.getBack()));
         back = expense2.getBack();
+        WAIT.until(ExpectedConditions.visibilityOf(back.getDelete()));
         back.getDelete().click();
 
         WAIT.until(ExpectedConditions.visibilityOf(back.getDeleteDialog()));
         OkCancelDialog deleteDialog = back.getDeleteDialog();
+        WAIT.until(ExpectedConditions.elementToBeClickable(deleteDialog.getCancelButton()));
+        //Not sure why but this will fail randomly without the 1s sleep
+        Thread.sleep(1000);
         deleteDialog.getCancelButton().click();
         WAIT.until(ExpectedConditions.stalenessOf(deleteDialog));
 
         back.getDelete().click();
-        WAIT.until(ExpectedConditions.visibilityOf(back.getDeleteDialog()));
+//        WAIT.until(ExpectedConditions.visibilityOf(back.getDeleteDialog()));
+        WAIT.until(ExpectedConditions.elementToBeClickable(back.getDeleteDialog().getOkButton()));
+        //Not sure why but this will fail randomly without the 1s sleep
+        Thread.sleep(1000);
+        back.getDeleteDialog().getOkButton().click();
+        WAIT.until(driver -> rightColumn.getDayExpenses().size() == 0);
+        assertEquals("We shouldn't have any expense left as we just deleted the only one", 0,rightColumn.getDayExpenses().size());
+
+
 
 
     }

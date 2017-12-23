@@ -4,16 +4,20 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 import static com.ftpix.sss.automation.tests.SetUpAutomation.setUpApp;
 import static com.ftpix.sss.automation.tests.SetUpAutomation.stopTests;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
 
-public class AutomationTests {
+public class AutomationTest {
 
 
     @BeforeClass
     public static void setup() throws IOException {
+
         setUpApp();
     }
 
@@ -25,6 +29,7 @@ public class AutomationTests {
 
     @Test
     public void runTestsInOrder() throws IOException, InterruptedException {
+        System.out.println("RUNNING AUTOMATION !");
         MainPageTests mainPageTests = new MainPageTests();
 
         mainPageTests.t1AddCategories();
