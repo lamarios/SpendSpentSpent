@@ -2,6 +2,7 @@ package com.ftpix.sss.automation.tests;
 
 import com.ftpix.sss.Constants;
 import com.ftpix.sss.SpendSpentSpent;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -46,6 +47,8 @@ public class SetUpAutomation {
                 );
 
                 DRIVER = new PhantomJSDriver(capabilities);
+                DRIVER.manage().window().setSize(new Dimension(1280, 1024));
+                System.out.println("WINDOW SIZE:"+DRIVER.manage().window().getSize());
                 WAIT = new WebDriverWait(DRIVER, 3, 250);
             }else{
                 DRIVER = new ChromeDriver();

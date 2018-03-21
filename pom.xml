@@ -290,8 +290,8 @@
                     <description>
                         replace JS bundle with production
                     </description>
-                    <releaseName>${version}</releaseName>
-                    <tag>${version}</tag>
+                    <releaseName>${project.version}</releaseName>
+                    <tag>${project.version}</tag>
                     <serverId>github-release</serverId>
                     <!-- If your project has additional artifacts, such as ones produced by
                          the maven-assembly-plugin, you can define the following
