@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>2-B10</version>
+    <version>2-B11</version>
 
     <properties>
         <docker.image.name>gonzague/spendspentspent</docker.image.name>
@@ -111,6 +111,7 @@
             <groupId>com.github.detro</groupId>
             <artifactId>ghostdriver</artifactId>
             <version>2.1.0</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
@@ -324,22 +325,22 @@
                 </configuration>
             </plugin>
 
-            <!-- PhntomJS installation -->
-            <plugin>
-                <groupId>com.github.klieber</groupId>
-                <artifactId>phantomjs-maven-plugin</artifactId>
-                <version>0.7</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>install</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <version>1.9.7</version>
-                </configuration>
-            </plugin>
+            <!--&lt;!&ndash; PhntomJS installation &ndash;&gt;-->
+            <!--<plugin>-->
+                <!--<groupId>com.github.klieber</groupId>-->
+                <!--<artifactId>phantomjs-maven-plugin</artifactId>-->
+                <!--<version>0.7</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>install</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<version>1.9.7</version>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
 
         </plugins>
     </build>
