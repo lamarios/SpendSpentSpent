@@ -97,3 +97,5 @@ src/main/resources/web/public/
 /src/main/web/src/less/vendor/categoryicons/fonts/categories.woff
 /src/main/web/src/less/vendor/categoryicons/fonts/categories.svg
 /src/main/web/src/less/vendor/categoryicons/fonts/categories.ttf
+
+web-drivers

@@ -34,7 +34,7 @@
         <dependency>
             <groupId>com.ftpix</groupId>
             <artifactId>sparknotation</artifactId>
-            <version>1.7</version>
+            <version>1.8</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.j256.ormlite/ormlite-jdbc -->
         <dependency>
@@ -118,6 +118,24 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>com.lazerycode.selenium</groupId>
+                <artifactId>driver-binary-downloader-maven-plugin</artifactId>
+                <version>1.0.17</version>
+                <configuration>
+                    <!-- root directory that downloaded driver binaries will be stored in -->
+                    <rootStandaloneServerDirectory>./web-drivers</rootStandaloneServerDirectory>
+                    <!-- Where you want to store downloaded zip files -->
+                    <downloadedZipFileDirectory>./web-drivers</downloadedZipFileDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>selenium</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!--<plugin>-->
             <!--<groupId>org.lesscss</groupId>-->
             <!--<artifactId>lesscss-maven-plugin</artifactId>-->
