@@ -39,16 +39,17 @@ public class MainPageTests {
      */
     public void t1AddCategories() throws IOException, InterruptedException {
 
+        Thread.sleep(10000);
         DRIVER.get(BASE_URL);
-
 
         WAIT.until(ExpectedConditions.visibilityOf(mainPage.getAddCategory()));
         mainPage.getAddCategory().click();
 
+        Thread.sleep(1000);
         WAIT.until(ExpectedConditions.visibilityOf(mainPage.getAddCategoryDialog()));
         AddCategoryDialog dialog = mainPage.getAddCategoryDialog();
 
-
+        WAIT.until(webDriver -> dialog.getSearchInput().isDisplayed());
         dialog.getSearchInput().sendKeys("sou");
 
         WAIT.until(webDriver -> dialog.getSearchResults().size() == 7);
@@ -148,7 +149,7 @@ public class MainPageTests {
         datePicker.getNavigatePrevious().click();
 
         LocalDate date = LocalDate.now();
-        String expectedDate = datePicker.getDayInCenter().getText() + "/" + (date.getMonthValue() - 1) + "/" + date.getYear();
+        String expectedDate =  datePicker.getDayInCenter().getText() + "/" + String.format("%02d", (date.getMonthValue() - 1)) + "/" + date.getYear();
         datePicker.getDayInCenter().click();
 
         assertEquals("The date button should show the expected date", expectedDate, dateButton.getText());

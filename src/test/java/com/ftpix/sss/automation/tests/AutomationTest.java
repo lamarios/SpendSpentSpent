@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static com.ftpix.sss.automation.tests.SetUpAutomation.setUpApp;
 import static com.ftpix.sss.automation.tests.SetUpAutomation.stopTests;
@@ -23,7 +24,11 @@ public class AutomationTest {
 
     @AfterClass
     public static void destroy() {
-        stopTests();
+        try {
+            stopTests();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -41,6 +46,5 @@ public class AutomationTest {
         rightColumnTests.t1DropDownTest();
         rightColumnTests.t2ExpensesTest();
 
-        Thread.sleep(3000);
     }
 }

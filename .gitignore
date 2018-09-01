@@ -91,7 +91,6 @@ src/main/resources/public-old/
 src/main/resources/templates/index-react.jade
 src/main/resources/web/public/
 /spendspentspent.iml
-/src/main/web/package-lock.json
 /SpendSpentSpent.iml
 /src/main/web/src/less/vendor/categoryicons/fonts/categories.eot
 /src/main/web/src/less/vendor/categoryicons/fonts/categories.woff
@@ -99,3 +98,4 @@ src/main/resources/web/public/
 /src/main/web/src/less/vendor/categoryicons/fonts/categories.ttf
 
 web-drivers
+/src/main/web/.cache/

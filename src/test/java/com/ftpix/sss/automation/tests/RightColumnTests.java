@@ -113,7 +113,9 @@ public class RightColumnTests {
         back.getClose().click();
 
         expense2.click();
+        Thread.sleep(1000);
         WAIT.until(ExpectedConditions.visibilityOf(expense2.getBack()));
+        Thread.sleep(1000);
         back = expense2.getBack();
         WAIT.until(ExpectedConditions.visibilityOf(back.getDelete()));
         back.getDelete().click();

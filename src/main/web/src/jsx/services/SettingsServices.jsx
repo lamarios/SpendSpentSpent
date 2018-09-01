@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {API} from './Endpoints.jsx';
 
 export default class SettingsService {
 

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {API} from './Endpoints.jsx';
 import querystring from 'querystring';
 
 export default class LoginService {

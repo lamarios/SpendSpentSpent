@@ -2,16 +2,22 @@ package com.ftpix.sss.automation.tests;
 
 import com.ftpix.sss.Constants;
 import com.ftpix.sss.SpendSpentSpent;
+import com.ftpix.sss.db.DB;
+import com.ftpix.sss.models.*;
+import com.j256.ormlite.table.TableUtils;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertNotNull;
@@ -26,34 +32,11 @@ public class SetUpAutomation {
 
     public static synchronized void setUpApp() throws IOException {
         if (count == 0) {
-            //if no chrome driver, we use phantomJS
-            if (System.getProperty("webdriver.chrome.driver", "").equalsIgnoreCase("")) {
 
-                String PHANTOMJS_BINARY = System.getProperty("phantomjs.binary");
-                System.out.println("PHANTOM JS:"+PHANTOMJS_BINARY);
+            WebDriverManager.chromedriver().setup();
 
-                assertNotNull(PHANTOMJS_BINARY);
-                assertTrue(new File(PHANTOMJS_BINARY).exists());
-
-
-                final DesiredCapabilities capabilities = new DesiredCapabilities();
-
-                // Configure our WebDriver to support JavaScript and be able to find the PhantomJS binary
-                capabilities.setJavascriptEnabled(true);
-                capabilities.setCapability("takesScreenshot", false);
-                capabilities.setCapability(
-                        PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
-                        PHANTOMJS_BINARY
-                );
-
-                DRIVER = new PhantomJSDriver(capabilities);
-                DRIVER.manage().window().setSize(new Dimension(1280, 1024));
-                System.out.println("WINDOW SIZE:"+DRIVER.manage().window().getSize());
-                WAIT = new WebDriverWait(DRIVER, 3, 250);
-            }else{
-                DRIVER = new ChromeDriver();
-                WAIT = new WebDriverWait(DRIVER, 3, 250);
-            }
+            DRIVER = new ChromeDriver();
+            WAIT = new WebDriverWait(DRIVER, 3, 250);
 
             new SpendSpentSpent();
         }
@@ -61,10 +44,18 @@ public class SetUpAutomation {
     }
 
 
-    public static synchronized void stopTests() {
+    public static synchronized void stopTests() throws SQLException {
+
         count--;
         if (count == 0) {
             DRIVER.close();
+
+            TableUtils.clearTable(DB.CATEGORY_DAO.getConnectionSource(), Category.class);
+            TableUtils.clearTable(DB.CATEGORY_DAO.getConnectionSource(), Expense.class);
+            TableUtils.clearTable(DB.CATEGORY_DAO.getConnectionSource(), RecurringExpense.class);
+            TableUtils.clearTable(DB.CATEGORY_DAO.getConnectionSource(), Setting.class);
+            TableUtils.clearTable(DB.CATEGORY_DAO.getConnectionSource(), UserSession.class);
+
         }
     }
 }

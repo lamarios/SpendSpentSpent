@@ -10,9 +10,6 @@ import BottomBar from './BottomBar.jsx';
 import axios from 'axios';
 import UpdaterService from './services/UpdaterService.jsx';
 
-//shitty trick to get webpack to actually copy the images
-let images =   require.context("../images/", true, /^\.\/.*\.png/);
-
 String.prototype.format = function () {
     let s = this,
         i = arguments.length;
