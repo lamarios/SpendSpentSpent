@@ -2,12 +2,11 @@ package com.ftpix.sss.controllers;
 
 
 import com.ftpix.sparknnotation.annotations.*;
-import spark.ModelAndView;
 import spark.Response;
 import spark.template.jade.JadeTemplateEngine;
+import spark.utils.IOUtils;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 @SparkController
 public class ApplicationController {
@@ -54,30 +53,28 @@ public class ApplicationController {
 
 
     @SparkGet(value = "/", templateEngine = JadeTemplateEngine.class)
-    public ModelAndView serveIndex(Response res) throws IOException {
-
-        return new ModelAndView(new HashMap<>(),"index");
+    public String serveIndex() throws IOException {
+        return IOUtils.toString(getClass().getClassLoader().getResourceAsStream("web/public/index.html"));
     }
 
     @SparkGet(value = "/history", templateEngine = JadeTemplateEngine.class)
-    public ModelAndView serveHistory(Response res) throws IOException {
-//        res.redirect("/", 301);
-        return serveIndex(res);
+    public String serveHistory() throws IOException {
+        return serveIndex();
     }
 
     @SparkGet(value = "/login-screen", templateEngine = JadeTemplateEngine.class)
-    public ModelAndView servceLogin(Response res) throws IOException {
-        return serveIndex(res);
+    public String servceLogin() throws IOException {
+        return serveIndex();
     }
 
     @SparkGet(value = "/settings", templateEngine = JadeTemplateEngine.class)
-    public ModelAndView serveSettings(Response res) throws IOException {
-        return serveIndex(res);
+    public String serveSettings() throws IOException {
+        return serveIndex();
     }
 
     @SparkGet(value = "/graphs", templateEngine = JadeTemplateEngine.class)
-    public ModelAndView serveGraphs(Response res) throws IOException {
-        return serveIndex(res);
+    public String serveGraphs() throws IOException {
+        return serveIndex();
     }
 
 
