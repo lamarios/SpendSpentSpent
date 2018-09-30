@@ -68,6 +68,7 @@ export default class ExpenseChart extends React.Component {
             height: '260px',
             low: 0,
             showArea: true,
+            fullWidth: true,
             lineSmooth: Chartist.Interpolation.none(),
             axisX: {
                 offset: 80
