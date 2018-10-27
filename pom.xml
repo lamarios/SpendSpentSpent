@@ -28,11 +28,11 @@
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.ftpix/sparknotation -->
-<dependency>
-    <groupId>com.ftpix</groupId>
-    <artifactId>sparknotation</artifactId>
-    <version>1.10</version>
-</dependency>
+        <dependency>
+            <groupId>com.ftpix</groupId>
+            <artifactId>sparknotation</artifactId>
+            <version>1.12</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.j256.ormlite/ormlite-jdbc -->
         <dependency>
@@ -341,19 +341,19 @@
 
             <!--&lt;!&ndash; PhntomJS installation &ndash;&gt;-->
             <!--<plugin>-->
-                <!--<groupId>com.github.klieber</groupId>-->
-                <!--<artifactId>phantomjs-maven-plugin</artifactId>-->
-                <!--<version>0.7</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--<goal>install</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--<configuration>-->
-                    <!--<version>1.9.7</version>-->
-                <!--</configuration>-->
+            <!--<groupId>com.github.klieber</groupId>-->
+            <!--<artifactId>phantomjs-maven-plugin</artifactId>-->
+            <!--<version>0.7</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<goals>-->
+            <!--<goal>install</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--<configuration>-->
+            <!--<version>1.9.7</version>-->
+            <!--</configuration>-->
             <!--</plugin>-->
 
         </plugins>
