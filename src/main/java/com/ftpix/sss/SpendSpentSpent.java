@@ -2,8 +2,6 @@ package com.ftpix.sss;
 
 import com.ftpix.sparknnotation.Sparknotation;
 import com.ftpix.sss.controllers.BackgroundJob;
-import com.ftpix.sss.controllers.api.UpdateController;
-import com.ftpix.sss.db.DB;
 import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,10 +16,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.stream.Stream;
 
 public class SpendSpentSpent {
-public static Logger logger = LogManager.getLogger();
+    public static Logger logger = LogManager.getLogger();
     public final static Gson GSON;
 
     static {
@@ -44,20 +41,12 @@ public static Logger logger = LogManager.getLogger();
     }
 
     public static void main(String[] args) throws SQLException, IOException {
-        logger.info("Args:"+args.length);
 
-        Stream.of(args).forEach(logger::info);
+        Constants.DEV_MODE = args.length > 0 && args[0].equalsIgnoreCase("dev");
 
-        if(args.length == 4 && args[0].equalsIgnoreCase("update")){
-            new UpdateController().deployUpdate(args);
-        }else {
+        new SpendSpentSpent();
 
-            Constants.DEV_MODE = args.length > 0 && args[0].equalsIgnoreCase("dev");
-
-            new SpendSpentSpent();
-
-            new BackgroundJob();
-        }
+        new BackgroundJob();
     }
 
     public SpendSpentSpent() throws IOException {

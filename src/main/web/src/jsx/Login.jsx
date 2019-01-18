@@ -47,7 +47,8 @@ export default class Login extends React.Component {
                         }
                         <p>
                             <label htmlFor="#login">Username</label>
-                            <input type="text" id="username" onChange={this.usernameChange}/>
+                            <input type="text" id="username" onChange={this.usernameChange} autoComplete="off"
+                                   autoCorrect="off" autoCapitalize="off" spellCheck="false"/>
                         </p>
                         <p>
                             <label htmlFor="#password">password</label>

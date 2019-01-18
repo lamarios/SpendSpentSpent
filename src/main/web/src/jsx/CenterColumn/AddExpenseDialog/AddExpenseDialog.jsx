@@ -1,6 +1,5 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
-import moment from 'moment';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import AmountKeyBoard from "./AmountKeyBoard.jsx";
@@ -14,7 +13,7 @@ export default class AddExpenseDialog extends React.Component {
         super(props);
         this.state = {
             isCalendarOpen: false,
-            date: moment(),
+            date: Date.now(),
             amount: '',
             location: null,
             refreshingLocation: false,
@@ -31,6 +30,7 @@ export default class AddExpenseDialog extends React.Component {
         this.refreshLocation = this.refreshLocation.bind(this);
         this.toggleLocation = this.toggleLocation.bind(this);
         this.addExpense = this.addExpense.bind(this);
+        this.formatDate = this.formatDate.bind(this);
     }
 
 
@@ -118,7 +118,22 @@ export default class AddExpenseDialog extends React.Component {
         this.setState({amount: this.state.amount.substring(0, this.state.amount.length - 1)});
     }
 
+    /**
+     * Format a javascript Date object t oyyyy-mm-dd
+     * @param date
+     * @return {string}
+     */
+    formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
 
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
     /**
      * Creates the expense in the backend
      */
@@ -126,12 +141,13 @@ export default class AddExpenseDialog extends React.Component {
         if (this.state.amount.length > 0) {
             this.setState({loading: true});
 
+
             let expense = {
                 amount: this.state.amount,
                 category: this.props.category.id,
                 income: false,
                 type: 1,
-                date: this.state.date.format('YYYY-MM-DD'),
+                date: this.formatDate(this.state.date),
             };
 
             if (this.state.useLocation && this.state.location !== null) {
@@ -164,7 +180,7 @@ export default class AddExpenseDialog extends React.Component {
                 </div>
                 <div className={'amount'}>
                     <input value={this.state.amount} placeholder={'Amount'}
-                           readOnly={"true"}/>
+                           readOnly={true}/>
                 </div>
                 <div className={'keypad'}>
                     <AmountKeyBoard onDigitClick={this.addDigit} onEraseDigitClick={this.removeDigit}/>
@@ -173,7 +189,7 @@ export default class AddExpenseDialog extends React.Component {
                     <button
                         className="date-button"
                         onClick={this.toggleCalendar}>
-                        {this.state.date.format("DD/MM/YYYY")}
+                        {this.formatDate(this.state.date)}
                     </button>
                     <i className={"fa fa-location-arrow "
                     + (this.state.useLocation ? 'enabled' : '')

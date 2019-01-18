@@ -15,6 +15,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -149,10 +150,11 @@ public class MainPageTests {
         datePicker.getNavigatePrevious().click();
 
         LocalDate date = LocalDate.now();
-        String expectedDate =  datePicker.getDayInCenter().getText() + "/" + String.format("%02d", (date.getMonthValue() - 1)) + "/" + date.getYear();
+        LocalDate expected = date.minusMonths(1);
+        expected = expected.withDayOfMonth(Integer.parseInt(datePicker.getDayInCenter().getText()));
         datePicker.getDayInCenter().click();
 
-        assertEquals("The date button should show the expected date", expectedDate, dateButton.getText());
+        assertEquals("The date button should show the expected date", expected.format(DateTimeFormatter.ISO_LOCAL_DATE), dateButton.getText());
 
 
         expenseDialog.getOkButton().click();

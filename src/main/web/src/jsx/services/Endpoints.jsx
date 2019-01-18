@@ -37,8 +37,8 @@ export const API = {
         ALL: API_URL + '/Setting',
         GET: API_URL + '/Setting/{0}',
     },
-    UPDATER:{
-        INFO: API_URL+"/Updater",
+    MISC: {
+        VERSION: API_URL+'/Misc/version'
     }
 
 };

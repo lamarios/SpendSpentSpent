@@ -136,11 +136,14 @@ public class ExpenseController {
     @SparkGet(value = "/GetMonths", accept = Constants.JSON, transformer = GsonTransformer.class)
     public List<String> getMonths() throws SQLException {
 
-        String sql = "SELECT DISTINCT FORMATDATETIME(`date`, 'Y-MM') as `month` FROM `expense`  ORDER BY `month` ASC";
-        return DB.EXPENSE_DAO.queryRaw(sql).getResults()
+        String sql = "SELECT `date` FROM `expense`  ORDER BY `date` ASC";
+        List<String> months = DB.EXPENSE_DAO.queryRaw(sql).getResults()
                 .stream()
                 .map(r -> r[0])
+                .map(s -> s.substring(0, 7))
+                .distinct()
                 .collect(Collectors.toList());
+        return months;
     }
 
 

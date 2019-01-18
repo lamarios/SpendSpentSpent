@@ -8,6 +8,7 @@ import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Setting;
 import com.ftpix.sss.models.UserSession;
 import com.ftpix.sss.transformer.GsonTransformer;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import spark.Spark;
@@ -16,8 +17,10 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @SparkController
 public class UserSessionController {
@@ -26,6 +29,7 @@ public class UserSessionController {
 
     /**
      * Logs in a user
+     *
      * @param username his username
      * @param password his password
      * @return the user session with the token
@@ -44,6 +48,11 @@ public class UserSessionController {
                 session.setExpiryDate(Date.from(in3Month.atZone(ZoneId.systemDefault()).toInstant()));
 
                 DB.USER_SESSION_DAO.create(session);
+
+                //cleaning old expired sessions
+                DeleteBuilder<UserSession, String> delete = DB.USER_SESSION_DAO.deleteBuilder();
+                delete.where().lt("EXPIRY_DATE", new java.util.Date());
+                delete.delete();
 
                 logger.info("New Session token[{}] expiryDay [{}]", session.getToken(), session.getExpiryDate());
                 return session;

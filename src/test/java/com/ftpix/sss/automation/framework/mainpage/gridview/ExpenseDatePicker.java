@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 
 public class ExpenseDatePicker extends ElementImpl{
 
-    private static final By MIDDLE_OF_MONTH = By.cssSelector(".react-datepicker__week:nth-of-type(3) .react-datepicker__day--wed");
+    private static final By MIDDLE_OF_MONTH = By.cssSelector(".react-datepicker__week:nth-of-type(3) .react-datepicker__day:nth-of-type(4)");
     private static final By NAVIGATE_PREVIOUS_MONTH = By.cssSelector(".react-datepicker__navigation--previous");
 
     public ExpenseDatePicker(WebElement element) {

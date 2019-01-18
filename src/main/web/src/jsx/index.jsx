@@ -8,7 +8,6 @@ import Login from './Login.jsx';
 import Settings from './Settings.jsx';
 import BottomBar from './BottomBar.jsx';
 import axios from 'axios';
-import UpdaterService from './services/UpdaterService.jsx';
 
 String.prototype.format = function () {
     let s = this,

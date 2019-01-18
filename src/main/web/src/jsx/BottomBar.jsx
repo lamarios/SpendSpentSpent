@@ -1,16 +1,23 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
+import MiscService from './services/MiscService';
 
 export default class BottomBar extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {expanded: false};
+        this.state = {expanded: false, versions: {local: '', latest: ''}};
 
-
+        this.miscService = new MiscService();
         this.hideSubLinks = this.hideSubLinks.bind(this);
         this.logout = this.logout.bind(this);
     }
 
+    componentDidMount() {
+        this.miscService.getVersion()
+            .then(res => {
+                this.setState({versions: res.data})
+            });
+    }
 
     hideSubLinks() {
         this.setState({expanded: false});
@@ -18,7 +25,7 @@ export default class BottomBar extends React.Component {
 
     logout() {
         if (typeof window.localStorage !== undefined) {
-           window.localStorage.removeItem('token');
+            window.localStorage.removeItem('token');
         }
 
         location.href = window.origin;
@@ -46,6 +53,11 @@ export default class BottomBar extends React.Component {
                         <i className="fa fa-cog" aria-hidden="true"/>&nbsp; Settings
                     </NavLink>
                     <a onClick={this.logout}><i className={'fa fa-sign-out'}/> Logout</a>
+                </div>
+                <div className={'info'}>
+                    SpendSpentSpent v{this.state.versions.local}
+                    &nbsp;-&nbsp;
+                    <a href="https://github.com/lamarios/SpendSpentSpent">Github</a> (v{this.state.versions.latest})
                 </div>
             </div>
         );
