@@ -304,7 +304,10 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        replace JS bundle with production
+                        Add version information in the bottom bar
+                        Update all JS dependencies to latest version and related fixes
+                        Fix the long lasting issue where the right column might show DEcember of current year even if no expenses where set there
+                        Clear expired authentication sessions when someone logs in
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>
