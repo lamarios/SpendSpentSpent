@@ -9,8 +9,10 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.h2.table.Table;
 
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 public class DB {
 
@@ -19,10 +21,12 @@ public class DB {
     public static Dao<RecurringExpense, Long> RECURRING_EXPENSE_DAO = null;
     public static Dao<Setting, String> SETTING_DAO = null;
     public static Dao<UserSession, String> USER_SESSION_DAO = null;
+    public static Dao<SchemaVersion, Integer> SCHEMA_DAO = null;
 
     private final static String databaseUrl = "jdbc:h2:" + Constants.DB_PATH;
 
     private static Logger logger = LogManager.getLogger();
+
 
     static {
         try {
@@ -51,10 +55,46 @@ public class DB {
             logger.info("Creating Module DAO and tables if it doesn't exist");
             USER_SESSION_DAO = DaoManager.createDao(connectionSource, UserSession.class);
             TableUtils.createTableIfNotExists(connectionSource, UserSession.class);
+
+            logger.info("Creating Module DAO and tables if it doesn't exist");
+            SCHEMA_DAO = DaoManager.createDao(connectionSource, SchemaVersion.class);
+            TableUtils.createTableIfNotExists(connectionSource, SchemaVersion.class);
+
+            Integer current = SCHEMA_DAO.queryBuilder()
+                    .orderBy("CURRENT", false)
+                    .query()
+                    .stream()
+                    .findFirst()
+                    .map(SchemaVersion::getCurrent)
+                    .orElse(0);
+
+
+            //setting last version in schema table
+            updateSchema(current);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             logger.info("Error while setting up ORM", e);
             System.exit(0);
         }
+    }
+
+
+    /**
+     * Perform sql migration
+     *
+     * @param schemaVersion
+     */
+    private static void updateSchema(Integer schemaVersion) throws SQLException {
+        ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl, "", "");
+        int newVersion = schemaVersion;
+
+        if (schemaVersion < 4) {
+            SCHEMA_DAO.executeRaw("ALTER TABLE expense ADD COLUMN IF NOT EXISTS NOTE TEXT");
+            newVersion = 4;
+        }
+
+        TableUtils.clearTable(connectionSource, SchemaVersion.class);
+        SCHEMA_DAO.create(new SchemaVersion(newVersion));
+
     }
 }

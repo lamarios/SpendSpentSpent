@@ -26,14 +26,20 @@ export default class Expense extends React.Component {
                         {(this.props.expense.latitude !== 0 || this.props.expense.longitude !== 0) &&
                         <i className={'fa fa-location-arrow'}/>}
                         {this.props.expense.type === 2 &&
-                        <i className={'fa fa-refresh'}/>
-                        }
+                        <i className={'fa fa-refresh'}/>}
+                        {this.props.expense.note !== undefined  && this.props.expense.note.length > 0 &&
+                            <i className={'fa fa-pencil-square-o'}/>}
                     </div>
                 </div>
                 }
                 {this.state.flipped === true &&
                 <div className={'back fade-in'}>
-
+                    {this.props.expense.note !== undefined && this.props.expense.note.length > 0 &&
+                    <div className={"note"}>
+                        <i className={"fa fa-pencil-square-o"}/>
+                        <span>{this.props.expense.note}</span>
+                    </div>
+                    }
                     {(this.props.expense.latitude !== 0 || this.props.expense.longitude !== 0) &&
                     <ExpenseLocation icon={this.props.expense.category.icon} longitude={this.props.expense.longitude}
                                      latitude={this.props.expense.latitude}/>}

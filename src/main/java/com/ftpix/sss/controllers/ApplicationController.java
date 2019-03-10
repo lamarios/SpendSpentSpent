@@ -52,27 +52,27 @@ public class ApplicationController {
     }
 
 
-    @SparkGet(value = "/", templateEngine = JadeTemplateEngine.class)
+    @SparkGet(value = "/")
     public String serveIndex() throws IOException {
         return IOUtils.toString(getClass().getClassLoader().getResourceAsStream("web/public/index.html"));
     }
 
-    @SparkGet(value = "/history", templateEngine = JadeTemplateEngine.class)
+    @SparkGet(value = "/history")
     public String serveHistory() throws IOException {
         return serveIndex();
     }
 
-    @SparkGet(value = "/login-screen", templateEngine = JadeTemplateEngine.class)
+    @SparkGet(value = "/login-screen")
     public String servceLogin() throws IOException {
         return serveIndex();
     }
 
-    @SparkGet(value = "/settings", templateEngine = JadeTemplateEngine.class)
+    @SparkGet(value = "/settings")
     public String serveSettings() throws IOException {
         return serveIndex();
     }
 
-    @SparkGet(value = "/graphs", templateEngine = JadeTemplateEngine.class)
+    @SparkGet(value = "/graphs")
     public String serveGraphs() throws IOException {
         return serveIndex();
     }

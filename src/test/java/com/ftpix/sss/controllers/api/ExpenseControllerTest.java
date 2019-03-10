@@ -25,7 +25,7 @@ public class ExpenseControllerTest {
     @Test(expected = HaltException.class)
     public void createNullCategoryExpense() throws SQLException {
 
-        controller.create(12d, 32131, "2012-10-10", false, Expense.TYPE_NORMAL, 0, 0);
+        controller.create(12d, 32131, "2012-10-10", false, Expense.TYPE_NORMAL, 0, 0, "");
 
 
     }
@@ -33,7 +33,7 @@ public class ExpenseControllerTest {
     @Test
     public void testAddDeleteExpense() throws SQLException {
 
-        Expense newExpense = controller.create(10d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0);
+        Expense newExpense = controller.create(10d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
 
         Expense fromController = controller.getAll().stream().reduce((first, second) -> second).get();
 
@@ -50,11 +50,11 @@ public class ExpenseControllerTest {
 
     @Test
     public void testCategoryByDay() throws SQLException, ParseException {
-        controller.create(10d, 1, "2012-12-02", false, Expense.TYPE_NORMAL, 0, 0);
-        controller.create(20d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0);
-        controller.create(30d, 1, "2012-12-23", false, Expense.TYPE_NORMAL, 0, 0);
-        controller.create(40d, 1, "2012-10-24", false, Expense.TYPE_NORMAL, 0, 0);
-        controller.create(50d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0);
+        controller.create(10d, 1, "2012-12-02", false, Expense.TYPE_NORMAL, 0, 0, "");
+        controller.create(20d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
+        controller.create(30d, 1, "2012-12-23", false, Expense.TYPE_NORMAL, 0, 0, "");
+        controller.create(40d, 1, "2012-10-24", false, Expense.TYPE_NORMAL, 0, 0, "");
+        controller.create(50d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
 
 
         assertEquals(2, controller.getMonths().size());

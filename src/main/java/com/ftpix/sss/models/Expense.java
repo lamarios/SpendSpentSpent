@@ -36,6 +36,9 @@ public class Expense {
     @DatabaseField(columnName = "LONGITUDE")
     private double longitude;
 
+    @DatabaseField(columnName = "NOTE", dataType = DataType.LONG_STRING)
+    private String note;
+
 
     public long getId() {
         return id;
@@ -101,4 +104,12 @@ public class Expense {
         this.longitude = longitude;
     }
 
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 }

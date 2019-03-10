@@ -11,6 +11,8 @@ import spark.Spark;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -54,7 +56,8 @@ public class SpendSpentSpent {
 
         if (Constants.DEV_MODE) {
             logger.info("DEV MODE");
-            Spark.externalStaticFileLocation("/home/gz/IdeaProjects/SpendSpentSpent/src/main/resources/web/public");
+            Path resources = Paths.get(".").toAbsolutePath().resolve("src/main/resources/web/public");
+            Spark.externalStaticFileLocation(resources.toString().replace("./", ""));
 
         } else {
             Spark.staticFiles.location("/web/public");

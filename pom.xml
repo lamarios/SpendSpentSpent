@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>3</version>
+    <version>4</version>
 
     <properties>
         <docker.image.name>gonzague/spendspentspent</docker.image.name>
@@ -361,7 +361,6 @@
             <!--<version>1.9.7</version>-->
             <!--</configuration>-->
             <!--</plugin>-->
-
         </plugins>
     </build>
 

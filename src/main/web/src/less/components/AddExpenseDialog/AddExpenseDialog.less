@@ -14,9 +14,11 @@
   }
 
   .amount {
+    display: flex;
+    background-color: @grey;
+    align-items: center;
     input {
-      display: block;
-      width: 100%;
+      flex-grow: 1;
       border: none;
       text-align: right;
       box-sizing: border-box;
@@ -24,42 +26,69 @@
       border-radius: 0;
       font-size: 25px;
       padding: 15px;
+      width: 1px; //not sure why this fixes the layout
     }
   }
 
   .options {
     text-align: left;
     padding: 5px;
+    display: flex;
+    align-items: center;
 
-    .fa-location-arrow {
-      padding: 0 5px;
-      margin-left: 10px;
-      color: black;
-      vertical-align: middle;
-      cursor: pointer;
-      transition: all 0.25s;
-      &.enabled {
+    .option {
+      margin-right:15px;
+      display: inline-block;
+      vertical-align: center;
+
+      .enabled{
         color: @accentColor;
       }
 
-      &.active {
-        text-shadow: 0 0 5px @accentColor;
+      i {
+        padding: 5px;
+        cursor: pointer;
       }
-    }
+      .fa-location-arrow {
+        transition: all 0.25s;
 
-    .date-button {
-      cursor: pointer;
-      border: none;
-      border-radius: 2px;
-      color: white;
-      background-color: @accentColor;
-      font-family: 'Open Sans', sans-serif;
-      padding: 10px;
-      vertical-align: middle;
+
+        &.active {
+          text-shadow: 0 0 5px @accentColor;
+        }
+      }
+
+
+      .date-button {
+        cursor: pointer;
+        border: none;
+        border-radius: 2px;
+        color: white;
+        background-color: @accentColor;
+        font-family: 'Open Sans', sans-serif;
+        padding: 10px;
+        vertical-align: middle;
+      }
     }
 
     &:after {
       vertical-align: middle;
+    }
+  }
+
+
+  .notes {
+
+    textarea {
+      resize: vertical;
+      display: block;
+      width: 100%;
+      border: none;
+      box-sizing: border-box;
+      background-color: @grey;
+      border-radius: 0;
+      font-size: 17px;
+      padding: 15px;
     }
   }
 

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class ExpenseController {
     private static final String FILTER_MONTH = "month";
     private static final String FIELD_AMOUNT = "amount", FIELD_CATEGORY = "category", FIELD_DATE = "date", FIELD_INCOME = "income", FIELD_TYPE = "type", FIELD_LATITUDE = "latitude", FIELD_LONGITUDE = "longitude";
+    private static final String FIELD_NOTE = "note";
 
     private final Logger logger = LogManager.getLogger();
     private final String FILTER_FROM = "from", FILTER_TO = "to", FILTER_LIMIT = "limit", FILTER_OFFSET = "offset", FILTER_ORDERING = "ordering";
@@ -168,7 +169,8 @@ public class ExpenseController {
             @SparkQueryParam(FIELD_INCOME) boolean income,
             @SparkQueryParam(FIELD_TYPE) int type,
             @SparkQueryParam(FIELD_LATITUDE) double latitude,
-            @SparkQueryParam(FIELD_LONGITUDE) double longitude
+            @SparkQueryParam(FIELD_LONGITUDE) double longitude,
+            @SparkQueryParam(FIELD_NOTE) String note
     ) throws SQLException {
         Expense expense = new Expense();
         expense.setAmount(amount);
@@ -203,6 +205,12 @@ public class ExpenseController {
 
         try {
             expense.setLongitude(longitude);
+        } catch (NullPointerException e) {
+            expense.setLongitude(0);
+        }
+
+        try {
+            expense.setNote(note);
         } catch (NullPointerException e) {
             expense.setLongitude(0);
         }
