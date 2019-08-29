@@ -93,6 +93,12 @@ public class DB {
             newVersion = 4;
         }
 
+
+        if(schemaVersion < 5){
+            SCHEMA_DAO.executeRaw("ALTER TABLE expense ADD COLUMN IF NOT EXISTS TIME VARCHAR(5)");
+            newVersion = 5;
+        }
+
         TableUtils.clearTable(connectionSource, SchemaVersion.class);
         SCHEMA_DAO.create(new SchemaVersion(newVersion));
 

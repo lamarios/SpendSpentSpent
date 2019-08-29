@@ -182,7 +182,14 @@ public class ExpenseController {
             expense.setCategory(category);
         }
         try {
-            expense.setDate(df.parse(dateString));
+            Date expenseDate = df.parse(dateString);
+            Date now = new Date();
+            expense.setDate(expenseDate);
+
+            // if the expense is today, we set the time as now
+            if (expenseDate.getMonth() == now.getMonth() && expenseDate.getYear() == now.getYear() && expenseDate.getDate() == now.getDate()) {
+                expense.setTime(String.format("%02d", now.getHours()) + ":" + String.format("%02d", now.getMinutes()));
+            }
         } catch (NullPointerException | ParseException e) {
             expense.setDate(new Date());
         }

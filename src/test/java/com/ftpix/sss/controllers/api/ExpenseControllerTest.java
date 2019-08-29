@@ -7,7 +7,10 @@ import org.junit.Test;
 import spark.HaltException;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +18,8 @@ import static org.junit.Assert.*;
 
 public class ExpenseControllerTest {
     private ExpenseController controller = new ExpenseController();
+
+    private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @BeforeClass
     public static void prepareDB() throws SQLException {
@@ -45,6 +50,21 @@ public class ExpenseControllerTest {
         fromController = controller.get(newExpense.getId());
 
         assertNull(fromController);
+    }
+
+
+    @Test
+    public void testAddWithTime() throws SQLException{
+        Date today = new Date();
+
+        Expense newExpense = controller.create(10d, 1, df.format(today), false, Expense.TYPE_NORMAL, 0, 0, "");
+        Expense newExpense2 = controller.create(10d, 1, "2012-03-21", false, Expense.TYPE_NORMAL, 0, 0, "");
+
+        String properTime = String.format("%02d", today.getHours())+":"+String.format("%02d", today.getMinutes());
+
+        assertEquals(properTime, newExpense.getTime());
+        assertNull(newExpense2.getTime());
+        assertNull(newExpense2.getTime());
     }
 
 
