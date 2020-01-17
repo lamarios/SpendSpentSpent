@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>5</version>
+    <version>6</version>
 
     <properties>
         <docker.image.name>gonzague/spendspentspent</docker.image.name>
@@ -305,7 +305,7 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        add time to expenses added for "today"
+                        get rid of google map in favour of open street maps
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>
