@@ -1,4 +1,4 @@
-FROM openjdk:13
+FROM openjdk:13-jdk-slim
 
 RUN mkdir /app && mkdir /config
 
