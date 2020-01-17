@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="SpendSpentSpent" target="12" />
+      <module name="SpendSpentSpent" target="13" />
       <module name="spendspentspent" target="1.5" />
     </bytecodeTargetLevel>
   </component>

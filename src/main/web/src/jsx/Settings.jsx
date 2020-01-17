@@ -2,6 +2,7 @@ import React from 'react';
 import SettingsService from './services/SettingsServices.jsx';
 import OkDialog from "./OkDialog.jsx";
 import Notification from './Notification.jsx';
+
 export default class Settings extends React.Component {
     constructor(props) {
         super(props);
@@ -18,7 +19,6 @@ export default class Settings extends React.Component {
             notificationMessage: '',
         };
 
-
         this.authenticationChanged = this.authenticationChanged.bind(this);
         this.usernameChanged = this.usernameChanged.bind(this);
         this.passwordChanged = this.passwordChanged.bind(this);
@@ -29,21 +29,17 @@ export default class Settings extends React.Component {
         this.pushoverChanged = this.pushoverChanged.bind(this);
         this.pushoverAppTokenChanged = this.pushoverAppTokenChanged.bind(this);
         this.pushoverUserTokenChanged = this.pushoverUserTokenChanged.bind(this);
-        this.googlemapChanged = this.googlemapChanged.bind(this);
 
         this.getSettings = this.getSettings.bind(this);
         this.saveAuthentication = this.saveAuthentication.bind(this);
         this.saveNotifications = this.saveNotifications.bind(this);
-        this.saveGoogleMap = this.saveGoogleMap.bind(this);
         this.showNotification = this.showNotification.bind(this);
     }
-
 
     getSettings() {
         this.settingsService.getAll()
             .then(res => this.setState({settings: res.data}));
     }
-
 
     saveAuthentication() {
         if (this.state.settings.authentication.value === 'true'
@@ -59,12 +55,10 @@ export default class Settings extends React.Component {
             return;
         }
 
-
         let password = {
             name: 'password',
             value: this.state.newPassword,
         };
-
 
         let toSave = [this.state.settings.authentication];
 
@@ -79,7 +73,6 @@ export default class Settings extends React.Component {
 
     showNotification(message) {
         clearTimeout(this.state.notificationTimeout);
-
 
         this.setState({
             notificationTimeout: setTimeout(() => this.setState({showNotification: false}), 3000),
@@ -101,15 +94,8 @@ export default class Settings extends React.Component {
         ).then(res => this.showNotification('Notification settings saved !'));
     }
 
-    saveGoogleMap() {
-        this.settingsService.putSettingsList([
-                this.state.settings.googlemap,
-            ]
-        ).then(res => this.showNotification('Google Map settings saved !'));
-    }
-
     authenticationChanged(e) {
-         let setting = {
+        let setting = {
             name: 'authentication',
             value: e.target.checked.toString(),
         };
@@ -120,23 +106,8 @@ export default class Settings extends React.Component {
         this.setState({settings: settings});
     }
 
-
-    googlemapChanged(e) {
-        let setting = {
-            name: 'googlemap',
-            value: e.target.value,
-        };
-
-        let settings = this.state.settings;
-        settings.googlemap = setting;
-
-        this.setState({settings: settings});
-
-
-    }
-
     pushoverUserTokenChanged(e) {
-         let setting = {
+        let setting = {
             name: 'pushoverUserToken',
             value: e.target.value,
         };
@@ -243,11 +214,9 @@ export default class Settings extends React.Component {
         this.setState({settings: settings});
     }
 
-
     componentDidMount() {
         this.getSettings();
     }
-
 
     render() {
         let settings = this.state.settings;
@@ -256,13 +225,11 @@ export default class Settings extends React.Component {
         let pushalot = settings.pushalot !== undefined && settings.pushalot.value === 'true';
         let pushover = settings.pushover !== undefined && settings.pushover.value === 'true';
 
-
         let username = settings.username !== undefined ? settings.username.value : '';
         let pushalotApi = settings.pushalotApi !== undefined ? settings.pushalotApi.value : '';
         let pushbulletApi = settings.pushbulletApi !== undefined ? settings.pushbulletApi.value : '';
         let pushoverAppToken = settings.pushoverAppToken !== undefined ? settings.pushoverAppToken.value : '';
         let pushoverUserToken = settings.pushoverUserToken !== undefined ? settings.pushoverUserToken.value : '';
-        let googlemap = settings.googlemap !== undefined ? settings.googlemap.value : '';
 
         return <div className={'Settings scale-fade-in'}>
             <h1> Settings </h1>
@@ -272,9 +239,6 @@ export default class Settings extends React.Component {
                 </li>
                 <li onClick={() => this.setState({tab: 'notifications'})}
                     className={this.state.tab === 'notifications' ? 'active' : ''}>Notifications
-                </li>
-                <li onClick={() => this.setState({tab: 'google'})}
-                    className={this.state.tab === 'google' ? 'active' : ''}>Google Map
                 </li>
             </ul>
 
@@ -327,15 +291,6 @@ export default class Settings extends React.Component {
                     <input value={pushoverUserToken} onChange={this.pushoverUserTokenChanged}/>
                 </div>
                 <button onClick={this.saveNotifications}>Save</button>
-            </div>
-            }
-
-            {this.state.tab === 'google' && <div className={'tab-content scale-fade-in'}>
-                <div className={'setting-input'}>
-                    <label>Google Mapi API key </label>
-                    <input value={googlemap} onChange={this.googlemapChanged}/>
-                </div>
-                <button onClick={this.saveGoogleMap}>Save</button>
             </div>
             }
 

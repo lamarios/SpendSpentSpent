@@ -42,7 +42,6 @@ export default class AddExpenseDialog extends React.Component {
         this.convertValue = this.convertValue.bind(this);
     }
 
-
     componentDidMount() {
         if (this.state.useLocation) {
             this.refreshLocation();
@@ -87,15 +86,16 @@ export default class AddExpenseDialog extends React.Component {
      * Refreshes the location if necessary
      */
     refreshLocation() {
-
         if (navigator.geolocation) {
             this.setState({refreshingLocation: true}, () => {
                 navigator.geolocation.getCurrentPosition((position) => {
+                    console.log('yolo');
                     this.setState({
                         location: position.coords,
                         refreshingLocation: false
                     });
-                }, () => {//Error
+                }, (error) => {//Error
+                    console.log('error', error);
                     this.setState({
                         location: null,
                         refreshingLocation: false
@@ -143,7 +143,7 @@ export default class AddExpenseDialog extends React.Component {
         if (convert) {
             let originAmount = this.state.currencyOriginalAmount.substring(0, this.state.currencyOriginalAmount.length - 1);
             let newAmount = this.convertValue(originAmount);
-            if(newAmount == 0){
+            if (newAmount == 0) {
                 newAmount = '';
             }
             this.setState({amount: newAmount, currencyOriginalAmount: originAmount})
@@ -175,7 +175,6 @@ export default class AddExpenseDialog extends React.Component {
     addExpense() {
         if (this.state.amount.length > 0) {
             this.setState({loading: true});
-
 
             let expense = {
                 amount: this.state.amount,
@@ -209,9 +208,9 @@ export default class AddExpenseDialog extends React.Component {
     currencyChanged(from, to, rate) {
         this.setState({fromCurrency: from, toCurrency: to, currencyRate: rate}, () => {
             //if we already have value, we need to redo the convertion
-           if(this.state.currencyOriginalAmount.length > 0) {
-               this.addDigit('');
-           }
+            if (this.state.currencyOriginalAmount.length > 0) {
+                this.addDigit('');
+            }
         });
     }
 
@@ -277,7 +276,8 @@ export default class AddExpenseDialog extends React.Component {
                                })}
                             />
                             {this.state.fromCurrency !== undefined && this.state.toCurrency !== undefined
-                            && <span>&nbsp;{this.state.fromCurrency} <i className={'fa fa-long-arrow-right'} /> {this.state.toCurrency}
+                            && <span>&nbsp;{this.state.fromCurrency} <i
+                                className={'fa fa-long-arrow-right'}/> {this.state.toCurrency}
                                 <i className={'fa fa-times'}
                                    onClick={() => this.setState({
                                        fromCurrency: undefined,
