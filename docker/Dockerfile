@@ -1,4 +1,4 @@
-FROM openjdk:12
+FROM openjdk:13
 
 RUN mkdir /app && mkdir /config
 
