@@ -1,4 +1,4 @@
-FROM openjdk:14-jdk-slim
+FROM openjdk:13-jdk-slim
 
 RUN mkdir /app && mkdir /config
 
