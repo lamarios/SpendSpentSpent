@@ -25,7 +25,6 @@ export default class CategoryGridIcon extends React.Component {
         this.setState({showDeleteDialog: false});
     }
 
-
     /**
      * Toggles the expense dialog
      */
@@ -35,11 +34,11 @@ export default class CategoryGridIcon extends React.Component {
 
     render() {
         let style = {
-            animationDuration:((Math.random()) *(0.5 - 0.20)+ 0.20) + 's'
+            animationDuration: ((Math.random()) * (0.5 - 0.20) + 0.20) + 's'
         };
 
-
-        return <li className={'CategoryGridIcon '} style={style} onClick={this.toggleAddExpenseDialog}>
+        return <li className={'CategoryGridIcon ' + (this.props.overlay ? ' editting' : '')} style={style}
+                   onClick={this.toggleAddExpenseDialog}>
 
             {this.state.showDialog &&
             <AddExpenseDialog dismiss={this.toggleAddExpenseDialog} category={this.props.category}/>
@@ -52,13 +51,17 @@ export default class CategoryGridIcon extends React.Component {
             </OkCancelDialog>
             }
 
-            <i className={'cat ' + this.props.category.icon} />
+            <i className={'cat ' + this.props.category.icon}/>
             <div className={'grid-overlay ' + (this.props.overlay ? 'showing fade-in' : '')}
                  onClick={(e) => e.stopPropagation()}>
-                <i className="fa fa-times" onClick={(e) => {
+                <div className="delete-button" onClick={(e) => {
                     this.setState({showDeleteDialog: true});
                     e.stopPropagation();
-                }}/>
+                }}>
+                    <i className="fa fa-times"/>
+                </div>
+                <i className={'cat ' + this.props.category.icon}/>
+                <i  className='fa fa-arrows' />
             </div>
         </li>
     }

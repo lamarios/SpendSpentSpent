@@ -1,5 +1,4 @@
-
-const API_URL =  '/API';
+const API_URL = process.env.NODE_ENV === 'dev' ? 'http://'+window.location.hostname+':21456/API' : '/API';
 
 export const API = {
     CATEGORY: {
@@ -7,6 +6,7 @@ export const API = {
         AVAILABLE: API_URL + '/Category/Available',
         ADD: API_URL + '/Category',
         GET: API_URL + '/Category/ById/{0}',
+        UPDATE_ALL: API_URL + '/Category',
         DELETE: API_URL + '/Category/{0}',
         SEARCH: API_URL + '/Category/search-icon',
     },
@@ -38,7 +38,7 @@ export const API = {
         GET: API_URL + '/Setting/{0}',
     },
     MISC: {
-        VERSION: API_URL+'/Misc/version'
+        VERSION: API_URL + '/Misc/version'
     }
 
 };

@@ -37,7 +37,7 @@ public class CategoryControllerTest {
         long available = countAvailableCategories();
 
 
-        Category cat = controller.create("icon-forest", 0);
+        Category cat = controller.create("icon-forest");
 
         int newCount = controller.getAll().size();
         long newAvailable = countAvailableCategories();
@@ -68,7 +68,7 @@ public class CategoryControllerTest {
 
     @Test(expected = HaltException.class)
     public void createNonExistentCategory() throws SQLException {
-        controller.create("icon-that-does-not-exist", 0);
+        controller.create("icon-that-does-not-exist");
     }
 
     @Test(expected = HaltException.class)
@@ -89,7 +89,7 @@ public class CategoryControllerTest {
         assertEquals("There should be 7 categories", 7, results.size());
 
         //if i add one of the categories to my collections, then it should only be left 6 from the results
-        controller.create(results.get(0), 0);
+        controller.create(results.get(0));
         search = controller.searchAvailableIcon("sou");
         results = (List<String>) search.get("results");
         assertEquals("There should be 6 categories", 6, results.size());
@@ -102,7 +102,7 @@ public class CategoryControllerTest {
 
         results = (List<String>) search.get("results");
         //if i add one of the categories to my collections, then it should only be left 6 from the results
-        controller.create(results.get(0), 0);
+        controller.create(results.get(0));
 
         search = controller.searchAvailableIcon("fIle");
 

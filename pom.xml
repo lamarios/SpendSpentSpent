@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>6</version>
+    <version>7</version>
 
     <properties>
         <docker.image.name>gonzague/spendspentspent</docker.image.name>
@@ -170,66 +170,6 @@
 
             <!-- Build FE with NPM -->
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <configuration>
-                    <workingDirectory>${basedir}/src/main/web</workingDirectory>
-                </configuration>
-                <executions>
-                    <!-- Required: The following will ensure `npm install` is called
-                         before anything else during the 'Default Lifecycle' -->
-                    <execution>
-                        <id>npm install (initialize)</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>initialize</phase>
-                        <configuration>
-                            <executable>npm</executable>
-                            <arguments>
-                                <argument>install</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm run build (compile)</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>compile</phase>
-                        <configuration>
-                            <executable>npm</executable>
-                            <arguments>
-                                <argument>run</argument>
-                                <argument>build</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <!-- BUILD DOCKER IMAGE -->
-                    <execution>
-                        <id>Docker build</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>install</phase>
-                        <configuration>
-                            <skip>${docker.skip}</skip>
-                            <workingDirectory>${basedir}/target/docker</workingDirectory>
-                            <executable>docker</executable>
-                            <arguments>
-                                <argument>build</argument>
-                                <argument>-t</argument>
-                                <argument>${docker.image.name}</argument>
-                                <argument>--build-arg</argument>
-                                <argument>SSS_VERSION=${project.version}</argument>
-                                <argument>.</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
 
 
             <!-- BUILD FAT JAR -->
@@ -305,7 +245,9 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        get rid of google map in favour of open street maps
+                        Allow to reorder categories
+                        Fix new category dialog size
+                        Fix graphs not working anymore
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>

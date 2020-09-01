@@ -2,14 +2,14 @@ import React from 'react';
 import HistoryService from "../services/HistoryService.jsx";
 import Chartist from 'chartist';
 import ChartistGraph from 'react-chartist';
+import {v4 as uuidv4} from 'uuid';
 
 export default class ExpenseChart extends React.Component {
 
     constructor(props) {
         super(props);
 
-
-        this.state = {data: {}, count: 5};
+        this.state = {data: {}, count: 5, reqId: ''};
         this.historyService = new HistoryService();
 
         this.refreshChart = this.refreshChart.bind(this);
@@ -23,7 +23,8 @@ export default class ExpenseChart extends React.Component {
 
     refreshChart() {
         let promise;
-
+        const reqId = uuidv4();
+        this.setState({reqId: reqId})
         if (this.props.showMonthly === true) {
             promise = this.historyService.getMonthlyGraphData(this.props.category.id, this.state.count);
         } else {
@@ -31,22 +32,22 @@ export default class ExpenseChart extends React.Component {
         }
 
         promise.then(res => {
-            let resData = res.data;
-            let labels = [];
-            let values = [];
-            resData.forEach(d => {
-                labels.unshift(d.date);
-                values.unshift(d.amount);
-            });
+            if (reqId === this.state.reqId) {
+                let resData = res.data;
+                let labels = [];
+                let values = [];
+                resData.forEach(d => {
+                    labels.unshift(d.date);
+                    values.unshift(d.amount);
+                });
 
-            this.setState({
-                data: {
-                    labels: labels,
-                    series: [values],
-                }
-            });
-
-
+                this.setState({
+                    data: {
+                        labels: labels,
+                        series: [values],
+                    }
+                });
+            }
         });
 
     }
@@ -61,7 +62,6 @@ export default class ExpenseChart extends React.Component {
         this.setState({count: this.state.count + 1}, () => this.refreshChart());
     }
 
-
     render() {
         let options = {
             width: '100%',
@@ -74,6 +74,7 @@ export default class ExpenseChart extends React.Component {
                 offset: 80
             }
         };
+
         return <div className={'ExpenseChart fade-in'}>
             <ChartistGraph className={'ct-chart'} data={this.state.data} type={'Line'} options={options}/>
             <div className={'chart-controls'}>

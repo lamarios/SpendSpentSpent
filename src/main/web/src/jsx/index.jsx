@@ -40,7 +40,7 @@ axios.interceptors.response.use(function (response) {
 
     console.log(error.request);
     console.log(error.response);
-    if(error.request.responseURL.indexOf('/Login') === -1 && error.response.status === 401){
+    if (error.request.responseURL.indexOf('/Login') === -1 && error.response.status === 401) {
         location.href = window.origin + '/login-screen';
     }
     return Promise.reject(error);
