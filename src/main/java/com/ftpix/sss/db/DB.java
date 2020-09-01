@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.h2.table.Table;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class DB {
@@ -88,6 +89,7 @@ public class DB {
         ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl, "", "");
         int newVersion = schemaVersion;
 
+
         if (schemaVersion < 4) {
             SCHEMA_DAO.executeRaw("ALTER TABLE expense ADD COLUMN IF NOT EXISTS NOTE TEXT");
             newVersion = 4;
@@ -97,6 +99,17 @@ public class DB {
         if(schemaVersion < 5){
             SCHEMA_DAO.executeRaw("ALTER TABLE expense ADD COLUMN IF NOT EXISTS TIME VARCHAR(5)");
             newVersion = 5;
+        }
+
+        if(schemaVersion < 6){
+            newVersion = 6;
+            List<Category> categories = DB.CATEGORY_DAO.queryForAll();
+
+            for(int i = 0; i < categories.size() ; i++){
+                Category cat = categories.get(i);
+                cat.setCategoryOrder(i);
+                CATEGORY_DAO.update(cat);
+            }
         }
 
         TableUtils.clearTable(connectionSource, SchemaVersion.class);

@@ -1,5 +1,7 @@
 .CategoryGridIcon {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   background-color: @accentColor;
 
@@ -11,7 +13,7 @@
 
   border-radius: 5px;
   font-size: 30px;
-  padding: 20px 15px 15px 15px;
+  //padding: 20px 15px 15px 15px;
   box-sizing: border-box;
   text-align: center;
   overflow: hidden;
@@ -25,17 +27,18 @@
 
   transform-origin: center center;
   animation-name: GridIcon-bounceIn;
-  //animation-duration: 0.5s;
-  //animation-fill-mode: forwards; /*when the spec is finished*/
 
   opacity: 1;
 
-  //&:hover{
-  //  transform: scale(1.2);
-  //}
+
+  &.editting {
+    color: @accentColor;
+    font-size: 5px;
+  }
 
   i.cat {
     display: block;
+    transition: all 0.5s;
   }
 
   .grid-overlay {
@@ -46,19 +49,65 @@
     top: 0;
     bottom: 0;
     color: white;
-    font-size:30px;
     text-align: right;
-    padding:10px;
+    padding: 10px;
     background-color: rgba(0, 0, 0, 0.5);
+    font-size: 30px;
 
     //transition: opacity 0.25s;
-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
     pointer-events: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .cat{
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      font-size:20px;
+    }
 
     &.showing {
       //opacity: 1;
       pointer-events: auto;
     }
+
+    .delete-button {
+      display: flex;
+      align-items: flex-start;
+      justify-content: end;
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 10;
+      @size: 25px;
+      width: @size;
+      height: @size;
+      border-bottom-left-radius: @size;
+      font-size: 15px;
+      background-color: #eee;
+      color: #666;
+
+      transition: all 0.25s ease-in-out;
+
+      &:hover {
+        @size: 50px;
+        width: @size;
+        height: @size;
+        border-bottom-left-radius: @size;
+        font-size: 30px;
+        background-color: red;
+        color: #fff;
+      }
+
+      i {
+        margin-right: 5px;
+        margin-top: 3px;
+      }
+    }
+
   }
 }
 

@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>6</version>
+    <version>7</version>
 
     <properties>
         <docker.image.name>gonzague/spendspentspent</docker.image.name>
@@ -163,8 +163,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.1</version>
                 <configuration>
-                    <source>13</source>
-                    <target>13</target>
+                    <source>14</source>
+                    <target>14</target>
                 </configuration>
             </plugin>
 
@@ -305,7 +305,9 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        get rid of google map in favour of open street maps
+                        Allow to reorder categories
+                        Fix new category dialog size
+                        Fix graphs not working anymore
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>

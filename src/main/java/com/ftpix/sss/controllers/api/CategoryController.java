@@ -6,7 +6,11 @@ import com.ftpix.sss.Constants;
 import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.CategoryIcons;
+import com.ftpix.sss.transformer.GsonBodyTransformer;
+import com.ftpix.sss.transformer.GsonCategoryListBodyTransformer;
 import com.ftpix.sss.transformer.GsonTransformer;
+import com.j256.ormlite.dao.GenericRawResults;
+import com.j256.ormlite.stmt.QueryBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +34,7 @@ public class CategoryController {
      */
     @SparkGet(accept = Constants.JSON, transformer = GsonTransformer.class)
     public List<Category> getAll() throws SQLException {
-        return DB.CATEGORY_DAO.queryForAll();
+        return DB.CATEGORY_DAO.queryBuilder().orderBy("category_order", true).query();
     }
 
 
@@ -67,13 +71,12 @@ public class CategoryController {
     /**
      * Creates a single category
      *
-     * @param icon  the icon of the new category
-     * @param order the order of display of the new category
+     * @param icon the icon of the new category
      * @return
      * @throws SQLException
      */
     @SparkPost(transformer = GsonTransformer.class)
-    public Category create(@SparkQueryParam("icon") String icon, @SparkQueryParam("order") int order) throws SQLException {
+    public Category create(@SparkQueryParam("icon") String icon) throws SQLException {
         Category category = new Category();
 
 
@@ -84,11 +87,26 @@ public class CategoryController {
         }
 
 
+        long order = DB.CATEGORY_DAO.queryRawValue("SELECT MAX(category_order) FROM CATEGORY");
+
         category.setIcon(icon);
-        category.setCategoryOrder(order);
+        category.setCategoryOrder((int) (order + 1));
         DB.CATEGORY_DAO.create(category);
 
         return category;
+    }
+
+    @SparkPut(transformer = GsonTransformer.class)
+    public List<Category> updateAll(@SparkBody(GsonCategoryListBodyTransformer.class) List<Category> categories) throws SQLException {
+        categories.forEach(c -> {
+            try {
+                DB.CATEGORY_DAO.update(c);
+            } catch (SQLException throwables) {
+                throw new RuntimeException(throwables);
+            }
+        });
+
+        return getAll();
     }
 
     /**
