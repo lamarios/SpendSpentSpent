@@ -119,8 +119,6 @@ export default class AddExpenseDialog extends React.Component {
         let patt = new RegExp(/^[0-9]+(\.[0-9]{0,2})?$/);
         let convert = this.state.fromCurrency !== undefined && this.state.toCurrency !== undefined;
 
-        console.log(convert);
-
         if (convert) {
             let originAmount = this.state.currencyOriginalAmount + digit;
             let newAmount = this.convertValue(originAmount);
@@ -185,12 +183,16 @@ export default class AddExpenseDialog extends React.Component {
                 note: this.state.note,
             };
 
+            // adding currency conversion to note
+            if (this.state.fromCurrency && this.state.fromCurrency !== '') {
+                expense.note += ' (' + this.state.fromCurrency + ' ' + this.state.currencyOriginalAmount + ' -> ' + this.state.toCurrency + ')';
+            }
+
             if (this.state.useLocation && this.state.location !== null) {
                 expense.latitude = this.state.location.latitude;
                 expense.longitude = this.state.location.longitude;
             }
 
-            console.log('New expense', expense);
             this.expenseService.add(expense)
                 .then(res => {
                     this.props.dismiss();

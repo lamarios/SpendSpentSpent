@@ -1,6 +1,6 @@
 import React from 'react';
 import Amount from "../Amount.jsx";
-import ExpenseChart from  './ExpenseChart.jsx';
+import ExpenseChart from './ExpenseChart.jsx';
 
 export default class ExpenseBar extends React.Component {
 
@@ -23,14 +23,17 @@ export default class ExpenseBar extends React.Component {
         let style = {width: percentage + "%"};
         return <div className={'ExpenseBar scale-fade-in'}>
             <div className={'bar'} onClick={this.toggleChart}>
-                <div className={'percentage'} style={style}></div>
-                <i className={'cat ' + this.props.expense.category.icon}/>
-                <p className={'amount'}>
-                    <Amount>{this.props.expense.amount}</Amount>
-                </p>
+                <div class={'text'}>
+                    <i className={'cat ' + this.props.expense.category.icon}/>
+                    <p className={'amount'}>
+                        <Amount>{this.props.expense.amount}</Amount>
+                    </p>
+                </div>
+                {percentage > 5 && <div className={'percentage'} style={style}></div>}
             </div>
 
-            { this.state.showChart === true && <ExpenseChart category={this.props.expense.category} showMonthly={this.props.showMonthly} />}
+            {this.state.showChart === true &&
+            <ExpenseChart category={this.props.expense.category} showMonthly={this.props.showMonthly}/>}
         </div>
     }
 }

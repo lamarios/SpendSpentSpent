@@ -3,7 +3,6 @@ import Amount from "../Amount.jsx";
 import ExpenseLocation from "./ExpenseLocation.jsx";
 import OkCancelDialog from "../OkCancelDialog.jsx";
 
-
 export default class Expense extends React.Component {
     constructor(props) {
         super(props);
@@ -13,7 +12,6 @@ export default class Expense extends React.Component {
         };
     }
 
-
     render() {
         return <div className={'Expense'}>
             <div className={'card ' + (this.state.flipped === true ? 'flip' : '')}
@@ -21,14 +19,16 @@ export default class Expense extends React.Component {
                 {this.state.flipped === false &&
                 <div className={'front fade-in'}>
                     <i className={'cat ' + this.props.expense.category.icon}/>
-                    <Amount>{this.props.expense.amount}</Amount>
+                    <span className={'amount'}>
+                         <Amount>{this.props.expense.amount}</Amount>
+                    </span>
                     <div className={'modifiers'}>
                         {(this.props.expense.latitude !== 0 || this.props.expense.longitude !== 0) &&
                         <i className={'fa fa-location-arrow'}/>}
                         {this.props.expense.type === 2 &&
                         <i className={'fa fa-refresh'}/>}
-                        {this.props.expense.note !== undefined  && this.props.expense.note.length > 0 &&
-                            <i className={'fa fa-pencil-square-o'}/>}
+                        {this.props.expense.note !== undefined && this.props.expense.note.length > 0 &&
+                        <i className={'fa fa-pencil-square-o'}/>}
                     </div>
                 </div>
                 }
