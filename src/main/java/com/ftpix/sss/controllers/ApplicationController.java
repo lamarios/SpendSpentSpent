@@ -2,11 +2,13 @@ package com.ftpix.sss.controllers;
 
 
 import com.ftpix.sparknnotation.annotations.*;
+import org.apache.commons.io.IOUtils;
 import spark.Response;
-import spark.template.jade.JadeTemplateEngine;
-import spark.utils.IOUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 @SparkController
 public class ApplicationController {
@@ -52,30 +54,39 @@ public class ApplicationController {
     }
 
 
+/*
     @SparkGet(value = "/")
-    public String serveIndex() throws IOException {
-        return IOUtils.toString(getClass().getClassLoader().getResourceAsStream("web/public/index.html"));
+    public String serveIndex(Response res) throws IOException {
+        try (InputStream index = getClass().getClassLoader().getResourceAsStream("web/public/index.html");
+             InputStreamReader reader = new InputStreamReader(index, StandardCharsets.UTF_8)
+        ) {
+            res.raw().addHeader("Content-Type", "text/html");
+            IOUtils.copy(reader, res.raw().getOutputStream(), StandardCharsets.UTF_8);
+        }
+
+        return "";
     }
 
     @SparkGet(value = "/history")
-    public String serveHistory() throws IOException {
-        return serveIndex();
+    public String serveHistory(Response res) throws IOException {
+        return serveIndex(res);
     }
 
     @SparkGet(value = "/login-screen")
-    public String servceLogin() throws IOException {
-        return serveIndex();
+    public String servceLogin(Response res) throws IOException {
+        return serveIndex(res);
     }
 
     @SparkGet(value = "/settings")
-    public String serveSettings() throws IOException {
-        return serveIndex();
+    public String serveSettings(Response res) throws IOException {
+        return serveIndex(res);
     }
 
     @SparkGet(value = "/graphs")
-    public String serveGraphs() throws IOException {
-        return serveIndex();
+    public String serveGraphs(Response res) throws IOException {
+        return serveIndex(res);
     }
+*/
 
 
 }

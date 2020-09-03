@@ -20,17 +20,33 @@
       transition: width 1s;
     }
 
-    .cat {
+    .text {
       position: absolute;
-      top: 7px;
-      left: 5px;
-    }
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-content: center;
+      padding: 0 10px;
+      z-index: 5;
 
-    .amount {
-      position: absolute;
-      top: 4px;
-      right: 5px;
-      margin: 0;
+      .cat {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+
+        &:before {
+          display: block;
+          margin-top: 4px;
+        }
+      }
+
+      .amount {
+        flex-grow: 2;
+        text-align: right;
+        margin: 0;
+      }
     }
   }
 }

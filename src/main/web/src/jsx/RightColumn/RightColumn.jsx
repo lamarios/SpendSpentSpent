@@ -56,7 +56,7 @@ export default class RightColumn extends React.Component {
         if (this.state.selectedMonth !== '') {
             this.expenseService.getByDay(this.state.selectedMonth)
                 .then(expenses => {
-                    this.setState({expenses: expenses.data, apiExpenseOver: true}, () =>{
+                    this.setState({expenses: expenses.data, apiExpenseOver: true}, () => {
                         this.getMonthTotal(expenses.data);
                     });
                 });
@@ -79,7 +79,7 @@ export default class RightColumn extends React.Component {
      * Handles month change from the select drop down
      */
     handleMonthChange(e) {
-        this.setState({selectedMonth: e.target.value, expenses: {}}, () =>{
+        this.setState({selectedMonth: e.target.value, expenses: {}}, () => {
             this.refreshExpenses();
         });
     }
@@ -88,7 +88,6 @@ export default class RightColumn extends React.Component {
         this.expenseService.delete(id)
             .then(res => this.refreshExpenses());
     }
-
 
     render() {
 
@@ -108,8 +107,7 @@ export default class RightColumn extends React.Component {
             }
 
             {this.state.months.length > 0 &&
-            <p className={'total fade-in'}>Total:&nbsp;
-                <span className={'amount'}>
+            <p className={'total fade-in'}>Total: <span className={'amount'}>
                     <Amount>{this.state.total}</Amount>
                 </span>
             </p>

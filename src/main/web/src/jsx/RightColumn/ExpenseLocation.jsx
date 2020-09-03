@@ -1,9 +1,6 @@
 import React from 'react';
 import Map from 'pigeon-maps'
 import Marker from 'pigeon-marker'
-import LoadingOverlay from "../LoadingOverlay.jsx";
-
-const MapIcon = ({icon}) => <i className={'cat ' + icon}/>;
 
 export default class ExpenseLocation extends React.Component {
     constructor(props) {

@@ -11,25 +11,28 @@
     cursor: pointer;
 
     .modifiers {
-      position: absolute;
-      right: 10px;
-      top: 8px;
-      display: inline-block;
+      display: flex;
+      align-content: center;
+      justify-content: center;
+      padding-top: 4px;
 
       i {
-        display: inline-block;
+        display: block;
         margin-left:15px;
       }
     }
 
-    .cat {
-      position: absolute;
-      left: 10px;
-      top: 8px;
-      display: inline-block;
+    .cat:before {
+      display: block;
+      padding-top: 4px;
     }
     .front {
-      padding: 5px;
+      padding: 5px 15px;
+      display: flex;
+      align-content: center;
+       .amount{
+         flex-grow: 2;
+       }
     }
 
     .front, .back {

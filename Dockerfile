@@ -14,7 +14,7 @@ RUN mvn clean install
 
 
 
-FROM openjdk:14-jdk-slim
+FROM openjdk:14
 
 RUN mkdir /app && mkdir /config
 
