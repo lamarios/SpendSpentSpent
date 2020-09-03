@@ -54,7 +54,6 @@ public class ApplicationController {
     }
 
 
-/*
     @SparkGet(value = "/")
     public String serveIndex(Response res) throws IOException {
         try (InputStream index = getClass().getClassLoader().getResourceAsStream("web/public/index.html");
@@ -86,7 +85,5 @@ public class ApplicationController {
     public String serveGraphs(Response res) throws IOException {
         return serveIndex(res);
     }
-*/
-
 
 }

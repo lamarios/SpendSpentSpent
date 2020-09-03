@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 const CURRENCIES = [
     "AUD",
     "BGN",
@@ -49,14 +48,11 @@ export default class CurrencySelector extends React.Component {
             fetching: false
         }
 
-
         this.fromChanged = this.fromChanged.bind(this);
         this.toChanged = this.toChanged.bind(this);
         this.getRate = this.getRate.bind(this);
 
-
     }
-
 
     componentDidMount() {
         if (this.state.from.length > 0 && this.state.to.length > 0) {
@@ -71,7 +67,6 @@ export default class CurrencySelector extends React.Component {
             self.getRate();
         });
     }
-
 
     toChanged(event) {
         let self = this;
@@ -93,7 +88,6 @@ export default class CurrencySelector extends React.Component {
                 });
         });
     }
-
 
     render() {
         return (<div className={"CurrencySelector"}>

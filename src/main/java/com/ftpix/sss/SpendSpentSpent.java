@@ -79,11 +79,6 @@ public class SpendSpentSpent {
             }
         });
 
-        Spark.redirect.any("/history", "/", Redirect.Status.MOVED_PERMANENTLY);
-        Spark.redirect.any("/login-screen", "/", Redirect.Status.MOVED_PERMANENTLY);
-        Spark.redirect.any("/settings", "/", Redirect.Status.MOVED_PERMANENTLY);
-        Spark.redirect.any("/graphs", "/", Redirect.Status.MOVED_PERMANENTLY);
-
         Sparknotation.init(GSON::fromJson);
 
 
