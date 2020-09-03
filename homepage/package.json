@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "parcel index.html --out-dir ../docs",
-    "build": "parcel build  index.html --out-dir ../docs"
+    "build": "parcel build  index.html --out-dir ../docs --public-url ./"
   },
   "author": "",
   "license": "ISC"
