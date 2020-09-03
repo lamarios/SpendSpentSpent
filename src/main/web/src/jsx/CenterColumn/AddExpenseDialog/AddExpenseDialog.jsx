@@ -278,7 +278,7 @@ export default class AddExpenseDialog extends React.Component {
                                })}
                             />
                             {this.state.fromCurrency !== undefined && this.state.toCurrency !== undefined
-                            && <span>&nbsp;{this.state.fromCurrency} <i
+                            && <span>{' '}{this.state.fromCurrency} <i
                                 className={'fa fa-long-arrow-right'}/> {this.state.toCurrency}
                                 <i className={'fa fa-times'}
                                    onClick={() => this.setState({

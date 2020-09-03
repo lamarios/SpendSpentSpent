@@ -31,7 +31,6 @@ export default class BottomBar extends React.Component {
         location.href = window.origin;
     }
 
-
     render() {
         return (
             <div className={"BottomBar " + (this.state.expanded ? 'expanded' : '')}>
@@ -50,14 +49,13 @@ export default class BottomBar extends React.Component {
                 </div>
                 <div className={'sub-links'}>
                     <NavLink to="/settings" onClick={this.hideSubLinks}>
-                        <i className="fa fa-cog" aria-hidden="true"/>&nbsp; Settings
+                        <i className="fa fa-cog" aria-hidden="true"/> Settings
                     </NavLink>
                     <a onClick={this.logout}><i className={'fa fa-sign-out'}/> Logout</a>
                 </div>
                 <div className={'info'}>
-                    SpendSpentSpent v{this.state.versions.local}
-                    &nbsp;-&nbsp;
-                    <a href="https://github.com/lamarios/SpendSpentSpent">Github</a> (v{this.state.versions.latest})
+                    SpendSpentSpent v{this.state.versions.local} - <a
+                    href="https://github.com/lamarios/SpendSpentSpent">Github</a> (v{this.state.versions.latest})
                 </div>
             </div>
         );
