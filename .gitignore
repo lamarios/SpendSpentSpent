@@ -99,3 +99,4 @@ src/main/resources/web/public/
 
 web-drivers
 /src/main/web/.cache/
+/homepage/.cache/
