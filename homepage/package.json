@@ -1,0 +1,22 @@
+{
+  "name": "sss-home",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "dependencies": {},
+  "devDependencies": {
+    "autoprefixer-loader": "^3.2.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.1.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "less": "^3.12.2",
+    "parcel-bundler": "^1.12.4"
+  },
+  "scripts": {
+    "dev": "parcel index.html --out-dir ../docs",
+    "build": "parcel build  index.html --out-dir ../docs"
+  },
+  "author": "",
+  "license": "ISC"
+}
