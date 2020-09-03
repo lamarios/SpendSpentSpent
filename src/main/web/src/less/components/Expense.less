@@ -1,5 +1,6 @@
 .Expense {
   @flipDuration: 0.5s;
+
   .card {
     text-align: center;
     color: white;
@@ -13,26 +14,32 @@
     .modifiers {
       display: flex;
       align-content: center;
-      justify-content: center;
+      justify-content: end;
       padding-top: 4px;
 
       i {
         display: block;
-        margin-left:15px;
+        margin-left: 15px;
       }
     }
 
-    .cat:before {
-      display: block;
-      padding-top: 4px;
+    .cat {
+      text-align: left;
+
+      &:before {
+        display: block;
+        padding-top: 4px;
+      }
     }
+
     .front {
       padding: 5px 15px;
-      display: flex;
-      align-content: center;
-       .amount{
-         flex-grow: 2;
-       }
+      display: grid;
+      grid-template-columns: 33% 33% 33%;
+
+      .amount {
+        flex-grow: 2;
+      }
     }
 
     .front, .back {
@@ -51,13 +58,15 @@
 
       .actions {
         margin: 0;
-        padding:5px;
+        padding: 5px;
+
         a {
           display: inline-block;
           width: 50%;
           text-align: center;
           border-radius: @borderRadius;
           transition: all 0.25s;
+
           &:hover {
             //background-color: @grey;
           }
@@ -72,6 +81,7 @@
       .note {
         display: flex;
         padding: 10px;
+
         i {
           margin: 0 10px;
           padding-top: 5px;
