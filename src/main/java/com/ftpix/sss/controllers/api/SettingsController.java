@@ -61,8 +61,6 @@ public class SettingsController {
                         try {
                             if (!setting.getValue().equalsIgnoreCase("")) {
                                 setting.setValue(hashString(setting.getValue()));
-                                logger.info("Clearing all sessions");
-                                DB.USER_SESSION_DAO.delete(DB.USER_SESSION_DAO.queryForAll());
                             }
                         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
                             logger.error("failed to save password", e);
