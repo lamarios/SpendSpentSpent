@@ -38,7 +38,7 @@ export default class Settings extends React.Component {
 
     getSettings() {
         this.settingsService.getAll()
-            .then(res => this.setState({settings: res.data}));
+            .then(res => this.setState({settings: res}));
     }
 
     saveAuthentication() {

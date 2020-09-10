@@ -1,61 +1,59 @@
 package com.ftpix.sss.controllers.api;
 
 
-import com.ftpix.sparknnotation.annotations.SparkController;
-import com.ftpix.sparknnotation.annotations.SparkPost;
-import com.ftpix.sparknnotation.annotations.SparkQueryParam;
-import com.ftpix.sss.db.DB;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.ftpix.sparknnotation.annotations.*;
+import com.ftpix.sss.Constants;
 import com.ftpix.sss.models.Setting;
-import com.ftpix.sss.models.UserSession;
+import com.ftpix.sss.transformer.GsonBodyTransformer;
 import com.ftpix.sss.transformer.GsonTransformer;
-import com.j256.ormlite.stmt.DeleteBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import spark.Request;
+import spark.Response;
 import spark.Spark;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 
 @SparkController
 public class UserSessionController {
-    private final static String FIELD_USERNAME = "username", FIELD_PASSWORD = "password";
-    private final static Logger logger = LogManager.getLogger();
+    private final static String JWT_ISSUER = "SpendSpentSpent";
+
+    @SparkBefore("/Login")
+    public void loginHeader(@SparkHeader("origin") String origin, Request req, Response res) {
+
+        if (!req.requestMethod().equalsIgnoreCase("OPTIONS")) {
+            res.header("Access-Control-Allow-Origin", origin);
+            res.type("application/json");
+        }
+    }
 
     /**
      * Logs in a user
      *
-     * @param username his username
-     * @param password his password
      * @return the user session with the token
      * @throws SQLException
      */
     @SparkPost(value = "/Login", transformer = GsonTransformer.class)
-    public UserSession logIn(@SparkQueryParam(FIELD_USERNAME) String username, @SparkQueryParam(FIELD_PASSWORD) String password) throws SQLException {
+    public String logIn(@SparkBody(GsonBodyTransformer.class) UserCredentials creds) throws SQLException {
 
         try {
-            if (username.equalsIgnoreCase(SettingsController.get(Setting.USERNAME)) && SettingsController.hashString(password).equalsIgnoreCase(SettingsController.get(Setting.PASSWORD))) {
+            if (creds.username.equalsIgnoreCase(SettingsController.get(Setting.USERNAME)) && SettingsController.hashString(creds.password).equalsIgnoreCase(SettingsController.get(Setting.PASSWORD))) {
                 LocalDateTime in3Month = LocalDateTime.now().plusMonths(3);
-                String token = SettingsController.hashString(username + password + in3Month.toString());
 
-                UserSession session = new UserSession();
-                session.setToken(token);
-                session.setExpiryDate(Date.from(in3Month.atZone(ZoneId.systemDefault()).toInstant()));
+                Algorithm algorithm = Algorithm.HMAC256(Constants.SALT);
 
-                DB.USER_SESSION_DAO.create(session);
+                return JWT.create()
+                        .withIssuer(JWT_ISSUER)
+                        .withExpiresAt(Date.from(in3Month.atZone(ZoneId.systemDefault()).toInstant()))
+                        .sign(algorithm);
 
-                //cleaning old expired sessions
-                DeleteBuilder<UserSession, String> delete = DB.USER_SESSION_DAO.deleteBuilder();
-                delete.where().lt("EXPIRY_DATE", new java.util.Date());
-                delete.delete();
-
-                logger.info("New Session token[{}] expiryDay [{}]", session.getToken(), session.getExpiryDate());
-                return session;
             } else {
                 Spark.halt(401, "Wrong login or password");
             }
@@ -65,4 +63,19 @@ public class UserSessionController {
 
         return null;
     }
+
+    public void verifyToken(String token) {
+        Algorithm algorithm = Algorithm.HMAC256(Constants.SALT);
+        JWTVerifier verifier = JWT.require(algorithm)
+                .withIssuer(JWT_ISSUER)
+                .build(); //Reusable verifier instance
+        DecodedJWT jwt = verifier.verify(token);
+
+    }
+
+
+    public static class UserCredentials {
+        public String username, password;
+    }
+
 }

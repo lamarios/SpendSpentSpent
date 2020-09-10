@@ -15,7 +15,7 @@ export default class BottomBar extends React.Component {
     componentDidMount() {
         this.miscService.getVersion()
             .then(res => {
-                this.setState({versions: res.data})
+                this.setState({versions: res})
             });
     }
 

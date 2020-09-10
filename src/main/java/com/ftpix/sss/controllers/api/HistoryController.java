@@ -99,7 +99,6 @@ public class HistoryController {
             LocalDate date = LocalDate.now();
 
 
-
             double total = getCategoryExpensesForYear(category.getId(), date)
                     .stream()
                     .mapToDouble(Expense::getAmount)
@@ -232,12 +231,13 @@ public class HistoryController {
 
     /**
      * Get the sum of expenses by year for the past :count years for :Category
+     *
      * @param categoryId the category to get expenses from
-     * @param count the number of year from now to :count month in the past
+     * @param count      the number of year from now to :count month in the past
      * @return
      * @throws SQLException
      */
-    @ SparkGet(value = "/Yearly/:category/:count", transformer = GsonTransformer.class)
+    @SparkGet(value = "/Yearly/:category/:count", transformer = GsonTransformer.class)
     public List<Map<String, Object>> getYearlyHistory(@SparkParam("category") int categoryId, @SparkParam("count") int count) throws SQLException {
         List<Map<String, Object>> result = new ArrayList<>();
 
@@ -259,8 +259,9 @@ public class HistoryController {
 
     /**
      * Gets the sum of expenses by month for the past :count month for :category
+     *
      * @param categoryId the id of the category to get expenses from
-     * @param count the number of month from now to the :count months in the past
+     * @param count      the number of month from now to the :count months in the past
      * @return
      * @throws SQLException
      */
@@ -286,15 +287,16 @@ public class HistoryController {
 
     /**
      * Returns the expenses for a specific year
+     *
      * @param category thhe category to query against
-     * @param date the date where the eay and month will be extracted
+     * @param date     the date where the eay and month will be extracted
      * @return a list of expenses
      * @throws SQLException
      */
     private List<Expense> getCategoryExpensesForYear(long category, LocalDate date) throws SQLException {
         Map<String, Object> params = new HashMap<>();
         params.put("income", 0);
-        if(category>=0) {
+        if (category >= 0) {
             params.put("category_id", category);
         }
 
@@ -310,15 +312,16 @@ public class HistoryController {
 
     /**
      * Returns the expenses for a specific month
+     *
      * @param category thhe category to query against
-     * @param date the date where the eay and month will be extracted
+     * @param date     the date where the eay and month will be extracted
      * @return a list of expenses
      * @throws SQLException
      */
     private List<Expense> getCategoryExpensesForMonth(long category, LocalDate date) throws SQLException {
         Map<String, Object> params = new HashMap<>();
         params.put("income", 0);
-        if(category >= 0) {
+        if (category >= 0) {
             params.put("category_id", category);
         }
 

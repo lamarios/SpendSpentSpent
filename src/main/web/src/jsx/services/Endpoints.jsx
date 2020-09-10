@@ -1,4 +1,5 @@
-const API_URL = process.env.NODE_ENV === 'dev' ? 'http://'+window.location.hostname+':21456/API' : '/API';
+const API_ROOT = process.env.NODE_ENV === 'dev' ? 'http://' + window.location.hostname + ':21456' : '';
+const API_URL = API_ROOT + '/API';
 
 export const API = {
     CATEGORY: {
@@ -30,7 +31,7 @@ export const API = {
         DELETE: API_URL + '/RecurringExpense/{0}'
     },
     SESSION: {
-        LOGIN: '/Login'
+        LOGIN: API_ROOT + '/Login'
     },
     SETTINGS: {
         UPDATE: API_URL + '/Setting',

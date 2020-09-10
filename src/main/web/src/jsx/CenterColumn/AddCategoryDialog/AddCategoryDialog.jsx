@@ -31,8 +31,8 @@ export default class AddCategoryDialog extends React.Component {
             this.setState({searchTerms: value, loading: true}, () => {
                 this.categoryService.search(value)
                     .then(res => {
-                        if (res.data.query === value) {
-                            this.setState({searchResults: res.data.results, loading: false});
+                        if (res.query === value) {
+                            this.setState({searchResults: res.results, loading: false});
                         }
                     });
             });
@@ -46,7 +46,7 @@ export default class AddCategoryDialog extends React.Component {
         this.setState({loading: true}, () => {
             this.categoryService.getAvailable()
                 .then(res => {
-                    this.setState({categories: res.data, loading: false});
+                    this.setState({categories: res, loading: false});
                     console.log(Object.getOwnPropertyNames(this.state.categories), this.state.categories);
                 })
                 .catch(err => alert('unable to get cattegories' + err));

@@ -42,19 +42,25 @@ public class UserSessionControllerTest {
 
         settingsController.update(settings);
 
-        assertNotNull(userSessionController.logIn("lamarios", "yo"));
+        final UserSessionController.UserCredentials userCredentials = new UserSessionController.UserCredentials();
+        userCredentials.password = "yo";
+        userCredentials.username = "lamarios";
+        assertNotNull(userSessionController.logIn(userCredentials));
 
-        try{
-            userSessionController.logIn("wrong user","yo");
+        try {
+            userCredentials.username = "wrong user";
+            userSessionController.logIn(userCredentials);
             fail();
-        }catch (HaltException e){
+        } catch (HaltException e) {
 
         }
 
-        try{
-            userSessionController.logIn("lamarios","wrong password");
+        try {
+            userCredentials.username = "lamarios";
+            userCredentials.password = "Wrong password";
+            userSessionController.logIn(userCredentials);
             fail();
-        }catch (HaltException e){
+        } catch (HaltException e) {
 
         }
 

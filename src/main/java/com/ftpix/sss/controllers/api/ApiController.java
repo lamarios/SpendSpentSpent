@@ -1,11 +1,12 @@
 package com.ftpix.sss.controllers.api;
 
 
-import com.ftpix.sparknnotation.annotations.SparkAfter;
-import com.ftpix.sparknnotation.annotations.SparkBefore;
-import com.ftpix.sparknnotation.annotations.SparkController;
-import com.ftpix.sparknnotation.annotations.SparkHeader;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.ftpix.sparknnotation.Sparknotation;
+import com.ftpix.sparknnotation.annotations.*;
 import com.ftpix.sss.Constants;
+import com.ftpix.sss.controllers.ApplicationController;
 import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Setting;
 import com.ftpix.sss.models.UserSession;
@@ -21,18 +22,15 @@ import java.time.ZoneId;
 
 @SparkController
 public class ApiController {
-    private final Logger logger = LogManager.getLogger();
     private final static String TOKEN = "Authorization";
+    private final Logger logger = LogManager.getLogger();
 
 
     @SparkAfter("/API/*")
     public void after(Request req, Response res) {
-        res.header("Content-type", Constants.JSON);
-    }
-
-    @SparkBefore("/*")
-    public void before(Request req, Response res) {
-        logger.info("{} - {}", req.requestMethod(), req.url());
+        if (!req.requestMethod().equalsIgnoreCase("OPTIONS")) {
+            res.header("Content-type", Constants.JSON);
+        }
     }
 
 
@@ -44,26 +42,27 @@ public class ApiController {
      * @throws SQLException
      */
     @SparkBefore("/API/*")
-    public void chechAuth(Request req, Response res, @SparkHeader(TOKEN) String token) throws SQLException {
-        res.type("application/json");
+    public void chechAuth(Request req, Response res, @SparkHeader(TOKEN) String token, @SparkHeader("Origin") String origin) throws SQLException {
 
-        if (req.requestMethod() != "OPTIONS") {
-            if (SettingsController.get(Setting.AUTHENTICATION).equalsIgnoreCase("true")) {
+
+        if (!req.requestMethod().equalsIgnoreCase("OPTIONS")) {
+            res.header("Access-Control-Allow-Origin", origin);
+            res.type("application/json");
+
+            final String requireAuth = SettingsController.get(Setting.AUTHENTICATION);
+            if (requireAuth.equalsIgnoreCase("true")) {
                 if (token != null) {
-                    UserSession session = DB.USER_SESSION_DAO.queryForId(token);
-                    if (session != null) {
-                        LocalDateTime tokenExpiry = LocalDateTime.ofInstant(session.getExpiryDate().toInstant(), ZoneId.systemDefault());
-                        if (LocalDateTime.now().isAfter(tokenExpiry)) {
-                            Spark.halt(401, "API token expired, please log in again");
-                        }
-                    } else {
-                        Spark.halt(401, "API key not matching");
+                    try {
+                        final UserSessionController controller = Sparknotation.getController(UserSessionController.class);
+                        controller.verifyToken(token);
+                    } catch (Exception e) {
+                        Spark.halt(401, "TOken verification failed");
                     }
                 } else {
-                    Spark.halt(401, "No API Key");
+                    Spark.halt(401, "No JWT token");
                 }
             }
-        }else{
+        } else {
             logger.info("OPTION Request, skipping auth");
         }
     }

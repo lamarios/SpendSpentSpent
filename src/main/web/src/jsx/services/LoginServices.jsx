@@ -1,14 +1,13 @@
-import axios from 'axios';
 import {API} from './Endpoints.jsx';
-import querystring from 'querystring';
+import Http from './Http';
 
 export default class LoginService {
 
     login(username, password) {
-        return axios.post(API.SESSION.LOGIN, querystring.stringify({
+        return Http.post(API.SESSION.LOGIN, {
             username: username,
             password: password,
-        }));
+        });
     }
 
 }

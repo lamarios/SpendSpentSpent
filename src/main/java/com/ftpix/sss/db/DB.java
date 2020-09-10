@@ -9,23 +9,19 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.h2.table.Table;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class DB {
 
+    private final static String databaseUrl = "jdbc:h2:" + Constants.DB_PATH;
     public static Dao<Category, Long> CATEGORY_DAO = null;
     public static Dao<Expense, Long> EXPENSE_DAO = null;
     public static Dao<RecurringExpense, Long> RECURRING_EXPENSE_DAO = null;
     public static Dao<Setting, String> SETTING_DAO = null;
     public static Dao<UserSession, String> USER_SESSION_DAO = null;
     public static Dao<SchemaVersion, Integer> SCHEMA_DAO = null;
-
-    private final static String databaseUrl = "jdbc:h2:" + Constants.DB_PATH;
-
     private static Logger logger = LogManager.getLogger();
 
 
@@ -53,9 +49,7 @@ public class DB {
             SETTING_DAO = DaoManager.createDao(connectionSource, Setting.class);
             TableUtils.createTableIfNotExists(connectionSource, Setting.class);
 
-            logger.info("Creating Module DAO and tables if it doesn't exist");
             USER_SESSION_DAO = DaoManager.createDao(connectionSource, UserSession.class);
-            TableUtils.createTableIfNotExists(connectionSource, UserSession.class);
 
             logger.info("Creating Module DAO and tables if it doesn't exist");
             SCHEMA_DAO = DaoManager.createDao(connectionSource, SchemaVersion.class);
@@ -96,20 +90,25 @@ public class DB {
         }
 
 
-        if(schemaVersion < 5){
+        if (schemaVersion < 5) {
             SCHEMA_DAO.executeRaw("ALTER TABLE expense ADD COLUMN IF NOT EXISTS TIME VARCHAR(5)");
             newVersion = 5;
         }
 
-        if(schemaVersion < 6){
+        if (schemaVersion < 6) {
             newVersion = 6;
             List<Category> categories = DB.CATEGORY_DAO.queryForAll();
 
-            for(int i = 0; i < categories.size() ; i++){
+            for (int i = 0; i < categories.size(); i++) {
                 Category cat = categories.get(i);
                 cat.setCategoryOrder(i);
                 CATEGORY_DAO.update(cat);
             }
+        }
+
+        if (schemaVersion < 7) {
+            newVersion = 7;
+            TableUtils.dropTable(USER_SESSION_DAO, true);
         }
 
         TableUtils.clearTable(connectionSource, SchemaVersion.class);

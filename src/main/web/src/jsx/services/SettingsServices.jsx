@@ -1,22 +1,22 @@
-import axios from 'axios';
 import {API} from './Endpoints.jsx';
+import Http from './Http';
 
 export default class SettingsService {
 
     putSettings(setting) {
-        return axios.put(API.SETTINGS.UPDATE, [setting]);
+        return Http.put(API.SETTINGS.UPDATE, [setting]);
     }
 
-    putSettingsList(settings){
-        return axios.put(API.SETTINGS.UPDATE, settings);
+    putSettingsList(settings) {
+        return Http.put(API.SETTINGS.UPDATE, settings);
     }
 
     getAll() {
-        return axios.get(API.SETTINGS.ALL);
+        return Http.get(API.SETTINGS.ALL);
     }
 
-    get(name){
-        return axios.get(API.SETTINGS.GET.format(name));
+    get(name) {
+        return Http.get(API.SETTINGS.GET.format(name));
     }
 }
 

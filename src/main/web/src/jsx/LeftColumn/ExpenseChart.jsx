@@ -33,7 +33,7 @@ export default class ExpenseChart extends React.Component {
 
         promise.then(res => {
             if (reqId === this.state.reqId) {
-                let resData = res.data;
+                let resData = res;
                 let labels = [];
                 let values = [];
                 resData.forEach(d => {

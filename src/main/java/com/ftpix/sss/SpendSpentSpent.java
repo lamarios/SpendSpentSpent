@@ -40,7 +40,8 @@ public class SpendSpentSpent {
             }
         });
 
-        GSON = builder.create();
+        GSON = builder
+                .create();
     }
 
     public static void main(String[] args) throws SQLException, IOException {

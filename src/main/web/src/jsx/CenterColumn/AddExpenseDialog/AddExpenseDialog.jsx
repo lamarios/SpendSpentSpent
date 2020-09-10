@@ -89,7 +89,6 @@ export default class AddExpenseDialog extends React.Component {
         if (navigator.geolocation) {
             this.setState({refreshingLocation: true}, () => {
                 navigator.geolocation.getCurrentPosition((position) => {
-                    console.log('yolo');
                     this.setState({
                         location: position.coords,
                         refreshingLocation: false
@@ -176,7 +175,9 @@ export default class AddExpenseDialog extends React.Component {
 
             let expense = {
                 amount: this.state.amount,
-                category: this.props.category.id,
+                category: {
+                    id: this.props.category.id
+                },
                 income: false,
                 type: 1,
                 date: this.formatDate(this.state.date),

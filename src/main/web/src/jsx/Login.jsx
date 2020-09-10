@@ -27,8 +27,12 @@ export default class Login extends React.Component {
         this.loginService.login(this.state.username, this.state.password)
             .then(function (res) {
                 console.log('login res', res);
-                localStorage.token = res.data.token;
-                location.href = window.origin;
+                if(typeof res === 'string') {
+                    localStorage.token = res;
+                    location.href = window.origin;
+                }else{
+                    this.setState({error: 'Invalid username or password'});
+                }
             }.bind(this))
             .catch(function (error) {
                 this.setState({error: 'Invalid username or password'});

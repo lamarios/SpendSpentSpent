@@ -30,28 +30,6 @@
     <orderEntry type="library" name="Maven: com.ftpix:sparknotation:1.13" level="project" />
     <orderEntry type="library" name="Maven: com.sparkjava:spark-core:2.9.2" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-server:9.4.30.v20200611" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-http:9.4.30.v20200611" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-util:9.4.30.v20200611" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-io:9.4.30.v20200611" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-webapp:9.4.30.v20200611" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-xml:9.4.30.v20200611" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-servlet:9.4.30.v20200611" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-security:9.4.30.v20200611" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-server:9.4.30.v20200611" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-common:9.4.30.v20200611" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-client:9.4.30.v20200611" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-client:9.4.30.v20200611" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-servlet:9.4.30.v20200611" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-api:9.4.30.v20200611" level="project" />
-    <orderEntry type="library" name="Maven: com.j256.ormlite:ormlite-jdbc:5.1" level="project" />
-    <orderEntry type="library" name="Maven: com.j256.ormlite:ormlite-core:5.1" level="project" />
-    <orderEntry type="library" name="Maven: com.h2database:h2:1.4.199" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.6" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.11" level="project" />
-    <orderEntry type="library" name="Maven: commons-io:commons-io:2.7" level="project" />
-    <orderEntry type="library" name="Maven: com.ftpix:sparknotation:1.13" level="project" />
-    <orderEntry type="library" name="Maven: com.sparkjava:spark-core:2.9.2" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-server:9.4.30.v20200611" level="project" />
     <orderEntry type="library" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-http:9.4.30.v20200611" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-util:9.4.30.v20200611" level="project" />
@@ -111,5 +89,9 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.rauschig:jarchivelib:0.8.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.commons:commons-compress:1.14" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jsoup:jsoup:1.11.3" level="project" />
+    <orderEntry type="library" name="Maven: com.auth0:java-jwt:3.10.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.10.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.10.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml.jackson.core:jackson-core:2.10.3" level="project" />
   </component>
 </module>

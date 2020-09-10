@@ -1,6 +1,7 @@
 package com.ftpix.sss.controllers.api;
 
 import com.ftpix.sss.PrepareDB;
+import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.RecurringExpense;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,13 +23,28 @@ public class RecurringExpenseControllerTest {
         PrepareDB.prepareDB();
     }
 
+    private RecurringExpense create(long category, double amount, boolean income, String name, int type, int when) throws SQLException {
+        RecurringExpense exp = new RecurringExpense();
+        Category cat = new Category();
+        cat.setId(category);
+        exp.setCategory(cat);
+
+
+        exp.setAmount(amount);
+        exp.setIncome(income);
+        exp.setName(name);
+        exp.setType(type);
+        exp.setTypeParam(when);
+
+        return controller.create(exp);
+    }
 
     @Test
     public void createDeleteRecurringExpense() throws SQLException {
 
         int count = controller.get().size();
 
-        RecurringExpense expense = controller.create(1, 10d, false, "spotify", RecurringExpense.TYPE_DAILY, 0);
+        RecurringExpense expense = create(1, 10d, false, "spotify", RecurringExpense.TYPE_DAILY, 0);
 
         int newCount = controller.get().size();
 
@@ -46,11 +62,11 @@ public class RecurringExpenseControllerTest {
 
     @Test(expected = HaltException.class)
     public void testAddingWronCategory() throws SQLException {
-        controller.create(3213121, 10d, false, "spotify", RecurringExpense.TYPE_DAILY, 0);
+        create(3213121, 10d, false, "spotify", RecurringExpense.TYPE_DAILY, 0);
     }
 
     @Test
-    public void testNewDateCalculation(){
+    public void testNewDateCalculation() {
 
         //Daily expense
         RecurringExpense expense = new RecurringExpense();
@@ -100,7 +116,7 @@ public class RecurringExpenseControllerTest {
         newDate.setTime(RecurringExpenseController.calculateNextDate(expense));
 
 
-        assertEquals(lastPaymentDate.get(Calendar.YEAR) +1, newDate.get(Calendar.YEAR));
+        assertEquals(lastPaymentDate.get(Calendar.YEAR) + 1, newDate.get(Calendar.YEAR));
         assertEquals(lastPaymentDate.get(Calendar.MONTH), newDate.get(Calendar.MONTH));
         assertEquals(lastPaymentDate.get(Calendar.DAY_OF_MONTH), newDate.get(Calendar.DAY_OF_MONTH));
 

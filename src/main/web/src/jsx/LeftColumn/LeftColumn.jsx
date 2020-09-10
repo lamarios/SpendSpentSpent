@@ -23,7 +23,7 @@ class LeftColumn extends React.Component {
     showMonthly() {
         this.setState({showMonthly: true, data:[]}, () => {
             this.historyService.getMonthly()
-                .then(res => this.setState({data: res.data}));
+                .then(res => this.setState({data: res}));
         });
 
     }
@@ -31,7 +31,7 @@ class LeftColumn extends React.Component {
     showYearly() {
         this.setState({showMonthly: false, data:[]}, () => {
             this.historyService.getYearly()
-                .then(res => this.setState({data: res.data}));
+                .then(res => this.setState({data: res}));
         });
 
     }

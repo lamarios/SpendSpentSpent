@@ -7,7 +7,6 @@ import LeftColumn from './LeftColumn/LeftColumn.jsx';
 import Login from './Login.jsx';
 import Settings from './Settings.jsx';
 import BottomBar from './BottomBar.jsx';
-import axios from 'axios';
 
 String.prototype.format = function () {
     let s = this,
@@ -19,36 +18,6 @@ String.prototype.format = function () {
     return s;
 };
 
-//Defining the interceptors
-console.log('creating interceptor');
-axios.interceptors.request.use(function (config) {
-
-    if (config.url.indexOf('/Login') === -1) {
-        if (typeof window.localStorage !== undefined && window.localStorage.token) {
-            config.headers['Authorization'] = localStorage.token;
-        }
-    }
-    return config;
-}, function (error) {
-    return Promise.reject(error);
-});
-
-// Add a response interceptor
-axios.interceptors.response.use(function (response) {
-    return response;
-}, function (error) {
-
-    console.log(error.request);
-    console.log(error.response);
-    if (error.request.responseURL.indexOf('/Login') === -1 && error.response.status === 401) {
-        location.href = window.origin + '/login-screen';
-    }
-    return Promise.reject(error);
-});
-
-//Will cause infinite log in loops
-// let updaterService = new UpdaterService();
-// updaterService.info().then((info) => console.log(info));
 
 render((
     <BrowserRouter>

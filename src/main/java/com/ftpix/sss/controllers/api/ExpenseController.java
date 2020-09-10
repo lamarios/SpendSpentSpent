@@ -5,6 +5,7 @@ import com.ftpix.sss.Constants;
 import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.Expense;
+import com.ftpix.sss.transformer.GsonBodyTransformer;
 import com.ftpix.sss.transformer.GsonTransformer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -151,75 +152,34 @@ public class ExpenseController {
     /**
      * create an Expense
      *
-     * @param amount     the  amount
-     * @param categoryId the  category id
-     * @param dateString the  date
-     * @param income     the  income
-     * @param type       the  type
-     * @param latitude   the  latitude
-     * @param longitude  the  longitude
      * @return the expense
      * @throws SQLException
      */
     @SparkPost(transformer = GsonTransformer.class)
-    public Expense create(
-            @SparkQueryParam(FIELD_AMOUNT) double amount,
-            @SparkQueryParam(FIELD_CATEGORY) long categoryId,
-            @SparkQueryParam(FIELD_DATE) String dateString,
-            @SparkQueryParam(FIELD_INCOME) boolean income,
-            @SparkQueryParam(FIELD_TYPE) int type,
-            @SparkQueryParam(FIELD_LATITUDE) double latitude,
-            @SparkQueryParam(FIELD_LONGITUDE) double longitude,
-            @SparkQueryParam(FIELD_NOTE) String note
-    ) throws SQLException {
-        Expense expense = new Expense();
-        expense.setAmount(amount);
+    public Expense create(@SparkBody(GsonBodyTransformer.class) Expense expense) throws SQLException {
 
-        Category category = DB.CATEGORY_DAO.queryForId(categoryId);
+        Category category = DB.CATEGORY_DAO.queryForId(expense.getCategory().getId());
         if (category == null) {
             Spark.halt(503, "Category missing");
         } else {
             expense.setCategory(category);
         }
-        try {
-            Date expenseDate = df.parse(dateString);
-            Date now = new Date();
-            expense.setDate(expenseDate);
 
-            // if the expense is today, we set the time as now
-            if (expenseDate.getMonth() == now.getMonth() && expenseDate.getYear() == now.getYear() && expenseDate.getDate() == now.getDate()) {
-                expense.setTime(String.format("%02d", now.getHours()) + ":" + String.format("%02d", now.getMinutes()));
-            }
-        } catch (NullPointerException | ParseException e) {
-            expense.setDate(new Date());
+        Date now = new Date();
+
+        if (expense.getDate() == null) {
+            expense.setDate(now);
         }
-        try {
-            expense.setIncome(income);
-        } catch (NullPointerException e) {
-            expense.setIncome(false);
+        Date expenseDate = expense.getDate();
+
+        // if the expense is today, we set the time as now
+        if (expenseDate.getMonth() == now.getMonth() && expenseDate.getYear() == now.getYear() && expenseDate.getDate() == now.getDate()) {
+            expense.setTime(String.format("%02d", now.getHours()) + ":" + String.format("%02d", now.getMinutes()));
         }
-        try {
-            expense.setType(type);
-        } catch (NullPointerException e) {
+
+
+        if (expense.getType() == 0) {
             expense.setType(Expense.TYPE_NORMAL);
-        }
-
-        try {
-            expense.setLatitude(latitude);
-        } catch (NullPointerException e) {
-            expense.setLatitude(0);
-        }
-
-        try {
-            expense.setLongitude(longitude);
-        } catch (NullPointerException e) {
-            expense.setLongitude(0);
-        }
-
-        try {
-            expense.setNote(note);
-        } catch (NullPointerException e) {
-            expense.setLongitude(0);
         }
 
         DB.EXPENSE_DAO.create(expense);

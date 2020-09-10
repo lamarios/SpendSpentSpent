@@ -23,7 +23,7 @@ export default class ExpenseBar extends React.Component {
         let style = {width: percentage + "%"};
         return <div className={'ExpenseBar scale-fade-in'}>
             <div className={'bar'} onClick={this.toggleChart}>
-                <div class={'text'}>
+                <div className={'text'}>
                     <i className={'cat ' + this.props.expense.category.icon}/>
                     <p className={'amount'}>
                         <Amount>{this.props.expense.amount}</Amount>

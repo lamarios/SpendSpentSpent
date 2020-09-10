@@ -1,21 +1,18 @@
-import axios from 'axios';
 import {API} from './Endpoints.jsx';
-import qs from 'querystring';
+import Http from './Http';
 
 export default class RecurringExpenseServices {
 
     getAll() {
-        return axios.get(API.RECURRING.GET);
+        return Http.get(API.RECURRING.GET);
     }
 
-    delete(id){
-        return axios.delete(API.RECURRING.DELETE.format(id));
+    delete(id) {
+        return Http.delete(API.RECURRING.DELETE.format(id));
     }
 
-    add(recurirngExpense){
-        return axios.post(API.RECURRING.ADD, qs.stringify(recurirngExpense));
+    add(recurirngExpense) {
+        return Http.post(API.RECURRING.ADD, recurirngExpense);
     }
-
-
 
 }

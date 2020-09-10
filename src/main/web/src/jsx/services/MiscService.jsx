@@ -1,10 +1,9 @@
-import axios from 'axios';
 import {API} from './Endpoints.jsx';
-import qs from 'querystring';
+import Http from './Http'
 
 export default class MiscService {
 
     getVersion(){
-        return axios.get(API.MISC.VERSION);
+        return Http.get(API.MISC.VERSION);
     }
 }

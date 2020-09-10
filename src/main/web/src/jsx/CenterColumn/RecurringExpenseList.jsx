@@ -34,7 +34,7 @@ export default class RecurringExpenseList extends React.Component {
     refreshList() {
         this.recurringExpenseServices.getAll()
             .then(res => {
-                this.setState({expenses: res.data, apiOver:true});
+                this.setState({expenses: res, apiOver:true});
             })
             .catch(err => {
                     this.setState({error: 'Error while retrieving recurrent expenses: ' + err, apiOver:true});

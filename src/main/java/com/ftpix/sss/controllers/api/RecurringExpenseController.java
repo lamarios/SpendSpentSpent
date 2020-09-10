@@ -5,6 +5,7 @@ import com.ftpix.sss.Constants;
 import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.RecurringExpense;
+import com.ftpix.sss.transformer.GsonBodyTransformer;
 import com.ftpix.sss.transformer.GsonTransformer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,34 +39,16 @@ public class RecurringExpenseController {
      */
     @SparkPost(transformer = GsonTransformer.class)
     public RecurringExpense create(
-            @SparkQueryParam(FIELD_CATEGORY) long categoryId,
-            @SparkQueryParam(FIELD_AMOUNT) double amount,
-            @SparkQueryParam(FIELD_INCOME) boolean income,
-            @SparkQueryParam(FIELD_NAME) String name,
-            @SparkQueryParam(FIELD_TYPE) int type,
-            @SparkQueryParam(FIELD_WHEN) int when
+            @SparkBody(GsonBodyTransformer.class) RecurringExpense expense
     ) throws SQLException {
         logger.info("RecurringExpenseApi.create()");
-        RecurringExpense expense = new RecurringExpense();
 
-        Category category = DB.CATEGORY_DAO.queryForId(categoryId);
+        Category category = DB.CATEGORY_DAO.queryForId(expense.getCategory().getId());
         if (category == null) {
             Spark.halt(503, "Category doesn't exist");
         } else {
             expense.setCategory(category);
         }
-
-        expense.setAmount(amount);
-
-        try {
-            expense.setIncome(income);
-        } catch (NullPointerException e) {
-            expense.setIncome(false);
-        }
-
-        expense.setName(name);
-        expense.setType(type);
-        expense.setTypeParam(when);
 
         expense.setNextOccurrence(calculateNextDate(expense));
 

@@ -36,9 +36,9 @@ export default class RightColumn extends React.Component {
     refreshMonths() {
         this.expenseService.getMonths()
             .then(res => {
-                let selectedMonth = res.data.length > 0 ? res.data[res.data.length - 1] : '';
+                let selectedMonth = res.length > 0 ? res[res.length - 1] : '';
                 this.setState({
-                        months: res.data,
+                        months: res,
                         apiMonthOver: true,
                         selectedMonth: selectedMonth,
                     },
@@ -56,8 +56,8 @@ export default class RightColumn extends React.Component {
         if (this.state.selectedMonth !== '') {
             this.expenseService.getByDay(this.state.selectedMonth)
                 .then(expenses => {
-                    this.setState({expenses: expenses.data, apiExpenseOver: true}, () => {
-                        this.getMonthTotal(expenses.data);
+                    this.setState({expenses: expenses, apiExpenseOver: true}, () => {
+                        this.getMonthTotal(expenses);
                     });
                 });
         }

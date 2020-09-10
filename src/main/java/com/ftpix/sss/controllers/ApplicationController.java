@@ -3,6 +3,9 @@ package com.ftpix.sss.controllers;
 
 import com.ftpix.sparknnotation.annotations.*;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import spark.Request;
 import spark.Response;
 
 import java.io.IOException;
@@ -12,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 @SparkController
 public class ApplicationController {
+    private final Logger logger = LogManager.getLogger();
 
 
 //    @SparkGet(value="/", templateEngine = JadeTemplateEngine.class)
@@ -32,7 +36,17 @@ public class ApplicationController {
 //    }
 
     @SparkOptions("/*")
-    public String corsOptions(@SparkHeader("Access-Control-Request-Headers") String accessControlRequestHeaders, @SparkHeader("Access-Control-Request-Method") String accessControlRequestMethod, Response response) {
+    public String corsOptions(Response response, @SparkHeader("Origin") String origin) {
+        response.header("Access-Control-Allow-Origin", origin);
+        return "";
+    }
+
+
+    @SparkBefore("/*")
+    public void corsBefore(Request req, Response response, @SparkHeader("Access-Control-Request-Headers") String accessControlRequestHeaders, @SparkHeader("Origin") String origin, @SparkHeader("Access-Control-Request-Method") String accessControlRequestMethod) {
+        logger.info("{} - {}", req.requestMethod(), req.url());
+
+
         if (accessControlRequestHeaders != null) {
             response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
         }
@@ -41,16 +55,7 @@ public class ApplicationController {
             response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
         }
 
-        return "OK";
-    }
-
-
-    @SparkBefore("/*")
-    public void corsBefore(Response response) {
-        response.header("Access-Control-Allow-Origin", "*");
-        response.header("Access-Control-Request-Method", "GET, PUT, POST, DELETE, HEAD");
-        response.header("Access-Control-Allow-Headers", "Authorization");
-        // Note: this may or may not be necessary in your particular application
+        response.header("Access-Control-Allow-Credentials", "true");
     }
 
 

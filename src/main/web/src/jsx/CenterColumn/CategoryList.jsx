@@ -49,11 +49,12 @@ export default class CategoryList extends React.Component {
     refreshList() {
         this.categoryService.getAll()
             .then(res => {
-                this.setState({categories: res.data, apiOver: true});
+                console.log('res', res);
+                this.setState({categories: res, apiOver: true});
             })
             .catch(err => {
                 this.setState({error: 'Couldn\'t retrieve category list: ' + err, apiOver: true});
-                console.log('Hello', err)
+                console.log('Error', err)
             })
 
     }

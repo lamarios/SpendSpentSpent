@@ -68,19 +68,24 @@ public class CategoryController {
     }
 
 
+    public Category create(String icon) throws SQLException {
+        Category cat = new Category();
+        cat.setIcon(icon);
+        return create(cat);
+    }
+
     /**
      * Creates a single category
      *
-     * @param icon the icon of the new category
+     * @param category The category to create
      * @return
      * @throws SQLException
      */
     @SparkPost(transformer = GsonTransformer.class)
-    public Category create(@SparkQueryParam("icon") String icon) throws SQLException {
-        Category category = new Category();
+    public Category create(@SparkBody(GsonBodyTransformer.class) Category category) throws SQLException {
 
 
-        boolean found = CategoryIcons.ALL.contains(icon);
+        boolean found = CategoryIcons.ALL.contains(category.getIcon());
 
         if (!found) {
             Spark.halt(503, "Icon doesn't exist");
@@ -89,7 +94,6 @@ public class CategoryController {
 
         long order = DB.CATEGORY_DAO.queryRawValue("SELECT MAX(category_order) FROM CATEGORY");
 
-        category.setIcon(icon);
         category.setCategoryOrder((int) (order + 1));
         DB.CATEGORY_DAO.create(category);
 
@@ -109,22 +113,29 @@ public class CategoryController {
         return getAll();
     }
 
+
+    public boolean update(long id, String icon, int order) throws SQLException {
+        Category cat = new Category();
+        cat.setIcon(icon);
+        cat.setCategoryOrder(order);
+        return update(id, cat);
+    }
+
     /**
      * Updates a category
      *
-     * @param id    the id of the category
-     * @param icon  the new icon for the updated category
-     * @param order the new order of the category
+     * @param id      the id of the category
+     * @param catdiff the category with the changes to make
      * @return true of false if the update went smoothly
      * @throws SQLException
      */
     @SparkPut(value = "/:id", transformer = GsonTransformer.class)
-    public boolean update(@SparkParam("id") long id, @SparkQueryParam("icon") String icon, @SparkQueryParam("order") int order) throws SQLException {
+    public boolean update(@SparkParam("id") long id, @SparkBody(GsonBodyTransformer.class) Category catdiff) throws SQLException {
         Optional<Category> categoryOptional = Optional.ofNullable(get(id));
 
 
         if (categoryOptional.isPresent()) {
-            boolean found = CategoryIcons.ALL.contains(icon);
+            boolean found = CategoryIcons.ALL.contains(catdiff.getIcon());
 
             if (!found) {
                 Spark.halt(503, "Icon doesn't exist");
@@ -132,8 +143,8 @@ public class CategoryController {
 
             Category category = categoryOptional.get();
             category.setId(id);
-            category.setIcon(icon);
-            category.setCategoryOrder(order);
+            category.setIcon(catdiff.getIcon());
+            category.setCategoryOrder(catdiff.getCategoryOrder());
             DB.CATEGORY_DAO.update(category);
             return true;
         } else {
@@ -169,7 +180,7 @@ public class CategoryController {
      * @throws SQLException
      */
     @SparkPost(value = "/search-icon", transformer = GsonTransformer.class, accept = Constants.JSON)
-    public Map<String, Object> searchAvailableIcon(@SparkQueryParam("name") String name) throws SQLException {
+    public Map<String, Object> searchAvailableIcon(@SparkBody(GsonBodyTransformer.class) String name) throws SQLException {
 
         List<Category> categories = DB.CATEGORY_DAO.queryForAll();
 

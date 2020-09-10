@@ -1,25 +1,22 @@
-import axios from 'axios';
-import querystring from 'querystring';
-
+import Http from './Http';
 import {API} from './Endpoints.jsx';
-export default class ExpenseService{
 
-    add(expense){
-        return axios.post(API.EXPENSE.ADD, querystring.stringify(expense));
+export default class ExpenseService {
+
+    add(expense) {
+        return Http.post(API.EXPENSE.ADD, expense);
     }
 
-
-    getMonths(){
-        return axios.get(API.EXPENSE.GET_MONTHS);
+    getMonths() {
+        return Http.get(API.EXPENSE.GET_MONTHS);
     }
 
-
-    getByDay(month){
-        return axios.get(API.EXPENSE.BY_MONTH.format(month));
+    getByDay(month) {
+        return Http.get(API.EXPENSE.BY_MONTH.format(month));
     }
 
-    delete(id){
-        return axios.delete(API.EXPENSE.DELETE.format(id));
+    delete(id) {
+        return Http.delete(API.EXPENSE.DELETE.format(id));
     }
 
 }

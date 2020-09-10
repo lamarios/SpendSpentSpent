@@ -6,7 +6,6 @@ import AmountKeyBoard from "../AddExpenseDialog/AmountKeyBoard.jsx";
 import RecurringExpenseServices from "../../services/RecurringExpenseServices.jsx";
 import LoadingOverlay from "../../LoadingOverlay.jsx";
 
-
 export default class AddRecurringExpenseDialog extends React.Component {
 
     constructor(props) {
@@ -33,10 +32,9 @@ export default class AddRecurringExpenseDialog extends React.Component {
         this.removeDigit = this.removeDigit.bind(this);
     }
 
-
     componentDidMount() {
         this.categoryService.getAll()
-            .then(res => this.setState({categories: res.data, loading: false, apiOver:true}));
+            .then(res => this.setState({categories: res, loading: false, apiOver: true}));
     }
 
     /**
@@ -47,7 +45,7 @@ export default class AddRecurringExpenseDialog extends React.Component {
         if (this.state.step === 3) {
             let recurringExpense = {
                 amount: this.state.amount,
-                category: this.state.category,
+                category: {id: this.state.category},
                 income: false,
                 type: this.state.type,
                 typeParam: this.state.type === 0 ? 0 : this.state.typeParam,
@@ -55,7 +53,7 @@ export default class AddRecurringExpenseDialog extends React.Component {
             };
 
             let valid = recurringExpense.amount.length > 0
-                && recurringExpense.category > -1
+                && recurringExpense.category.id > -1
                 && recurringExpense.type > -1
                 && recurringExpense.typeParam > -1;
 
@@ -124,7 +122,6 @@ export default class AddRecurringExpenseDialog extends React.Component {
         this.setState({amount: this.state.amount.substring(0, this.state.amount.length - 1)});
     }
 
-
     render() {
         return <Dialog cancelText={this.state.previousText} okText={this.state.nextText} dismiss={this.previousStep}
                        onOk={this.nextStep}>
@@ -135,7 +132,8 @@ export default class AddRecurringExpenseDialog extends React.Component {
                     <div className={'categories'}>
                         <h3>Which category ?</h3>
 
-                        {(this.state.apiOver && this.state.categories.length === 0) && <p>Nothing to show here, close this dialog and add categories first.</p>}
+                        {(this.state.apiOver && this.state.categories.length === 0) &&
+                        <p>Nothing to show here, close this dialog and add categories first.</p>}
 
                         {this.state.categories.length > 0 &&
                         <ul>
