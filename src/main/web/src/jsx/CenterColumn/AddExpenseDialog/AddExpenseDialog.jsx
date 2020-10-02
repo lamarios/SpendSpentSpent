@@ -1,7 +1,9 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
 
-import 'react-datepicker/dist/react-datepicker.css';
+// copied to vendor less folder as it somehow stopped working
+// import 'react-datepicker/dist/react-datepicker.css';
+
 import AmountKeyBoard from "./AmountKeyBoard.jsx";
 import ExpenseService from "../../services/ExpenseService.jsx";
 import Dialog from "../../Dialog.jsx";

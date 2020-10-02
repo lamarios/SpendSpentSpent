@@ -3,7 +3,28 @@ import CategoryService from '../services/CategoryServices.jsx';
 import CategoryGridIcon from './CategoryGridIcon.jsx';
 import AddCategoryDialog from './AddCategoryDialog/AddCategoryDialog.jsx';
 import OkDialog from "../OkDialog.jsx";
-import ReactDragListView from 'react-drag-listview';
+import {SortableContainer, SortableElement} from "react-sortable-hoc";
+
+const SortableItem = SortableElement(({value}) => {
+    return <CategoryGridIcon
+        key={value.id}
+        category={value}
+        overlay={value.overlay}
+        delete={value.deleteCategory}
+    />
+})
+
+const SortableList = SortableContainer(({items}) => {
+    return (
+        <ul>
+            {items.map((value, index) => {
+                return (
+                    <SortableItem key={`item-${value.id}`} index={index} value={value}/>
+                )
+            })}
+        </ul>
+    );
+});
 
 export default class CategoryList extends React.Component {
 
@@ -87,31 +108,31 @@ export default class CategoryList extends React.Component {
 
     }
 
-    onDragEnd(e) {
+    onDragEnd(result) {
+        const fromIndex = result.oldIndex;
+        const toIndex = result.newIndex;
+
+        const categories = [...this.state.categories];
+        const item = categories.splice(fromIndex, 1)[0];
+        categories.splice(toIndex, 0, item);
+
+        for (let i = 0; i < categories.length; i++) {
+            categories[i].categoryOrder = i;
+        }
+        this.setState({categories}, () => {
+            this.categoryService.updateMany(categories).then(res => {
+                console.log(res);
+            })
+        });
     }
 
     render() {
-        const that = this;
-        const dragProps = {
-            onDragEnd(fromIndex, toIndex) {
-                const categories = [...that.state.categories];
-                const item = categories.splice(fromIndex, 1)[0];
-                categories.splice(toIndex, 0, item);
+        const categories = this.state.categories.map(c => {
+            c.overlay = this.state.overlay;
+            c.deleteCategory = this.deleteCategory
 
-                for (let i = 0; i < categories.length; i++) {
-                    categories[i].categoryOrder = i;
-                }
-                console.log(categories);
-                that.setState({categories}, () => {
-                    that.categoryService.updateMany(categories).then(res => {
-                        console.log(res);
-                    })
-                });
-            },
-            nodeSelector: 'li',
-            handleSelector: 'i.fa-arrows',
-            lineClassName: 'dragLine'
-        };
+            return c;
+        });
 
         return (
             <div className="CategoryList">
@@ -130,18 +151,8 @@ export default class CategoryList extends React.Component {
 
 
                 {this.state.categories.length > 0 &&
-                <ReactDragListView {...dragProps}>
-                    <ul>
-                        {this.state.categories.map(
-                            (category) => <CategoryGridIcon
-                                key={category.id}
-                                category={category}
-                                overlay={this.state.overlay}
-                                delete={this.deleteCategory}
-                            />
-                        )}
-                    </ul>
-                </ReactDragListView>}
+                <SortableList items={categories} onSortEnd={this.onDragEnd} axis="xy" useDragHandle/>
+                }
 
                 {(this.state.apiOver === true && this.state.categories.length === 0) &&
                 <p>Nothing to show, add expense categories by click the <i className={'fa fa-plus'}/> icon below.</p>}

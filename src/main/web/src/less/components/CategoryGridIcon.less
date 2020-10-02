@@ -69,6 +69,10 @@
       font-size:20px;
     }
 
+    .drag-icon{
+      color: #aaa;
+    }
+
     &.showing {
       //opacity: 1;
       pointer-events: auto;
@@ -76,8 +80,9 @@
 
     .delete-button {
       display: flex;
-      align-items: flex-start;
-      justify-content: end;
+      flex-direction: row-reverse;
+      //align-items: center;
+      //justify-content: end;
       position: absolute;
       top: 0;
       right: 0;
