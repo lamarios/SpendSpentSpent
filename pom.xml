@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>8</version>
+    <version>9</version>
 
     <properties>
         <docker.image.name>gonzague/spendspentspent</docker.image.name>
@@ -250,9 +250,9 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        Allow to reorder categories
-                        Fix new category dialog size
-                        Fix graphs not working anymore
+                        Make category reorder work on mobile
+                        Fix delete category icon positioning
+                        Change drag and drop handle color
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>

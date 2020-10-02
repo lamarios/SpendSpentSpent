@@ -3,7 +3,7 @@ import AddExpenseDialog from "./AddExpenseDialog/AddExpenseDialog.jsx";
 import OkCancelDialog from "../OkCancelDialog.jsx";
 import {SortableHandle} from "react-sortable-hoc";
 
-const DragHandle = SortableHandle(() => <i className='fa fa-arrows'/>);
+const DragHandle = SortableHandle(() => <i className='drag-icon fa fa-arrows'/>);
 export default class CategoryGridIcon extends React.Component {
 
     constructor(props) {
@@ -36,7 +36,7 @@ export default class CategoryGridIcon extends React.Component {
 
     render() {
         let style = {
-            animationDuration: ((Math.random()) * (0.5 - 0.20) + 0.20) + 's'
+            animationDuration: ((Math.random()) * (0.5 - 0.20) + 0.20) + 's',
         };
 
         return <li className={'CategoryGridIcon ' + (this.props.overlay ? ' editting' : '')} style={style}
@@ -63,7 +63,7 @@ export default class CategoryGridIcon extends React.Component {
                     <i className="fa fa-times"/>
                 </div>
                 <i className={'cat ' + this.props.category.icon}/>
-                <DragHandle />
+                <DragHandle/>
             </div>
         </li>
     }
