@@ -9,8 +9,6 @@
     <version>9</version>
 
     <properties>
-        <docker.image.name>gonzague/spendspentspent</docker.image.name>
-        <docker.skip>true</docker.skip>
         <automation.skip>true</automation.skip>
     </properties>
 
@@ -212,35 +210,6 @@
             </plugin>
 
 
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.2</version>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <!-- here the phase you need -->
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/target/docker</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>docker/</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                                <resource>
-                                    <directory>${basedir}/target</directory>
-                                    <includes>
-                                        <include>SpendSpentSpent-${project.version}.jar</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
 
 
             <!-- release to github -->
