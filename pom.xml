@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>9</version>
+    <version>10</version>
 
     <properties>
         <automation.skip>true</automation.skip>
@@ -219,9 +219,7 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        Make category reorder work on mobile
-                        Fix delete category icon positioning
-                        Change drag and drop handle color
+                        Add basic PWA support
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>
