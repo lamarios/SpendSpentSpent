@@ -31,7 +31,8 @@ export const API = {
         DELETE: API_URL + '/RecurringExpense/{0}'
     },
     SESSION: {
-        LOGIN: API_ROOT + '/Login'
+        LOGIN: API_ROOT + '/Login',
+        SIGNUP: API_ROOT + '/SignUp',
     },
     SETTINGS: {
         UPDATE: API_URL + '/Setting',
@@ -39,7 +40,11 @@ export const API = {
         GET: API_URL + '/Setting/{0}',
     },
     MISC: {
-        VERSION: API_URL + '/Misc/version'
+        VERSION: API_URL + '/Misc/version',
+        GET_CONFIG: API_ROOT+"/config",
+    },
+    USER:{
+        EDIT_PROFILE: API_URL+"/User",
     }
 
 };

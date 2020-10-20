@@ -1,6 +1,8 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 import MiscService from './services/MiscService';
+import {loginService} from "./services/LoginServices";
+import UserIcon from "./UserIcon";
 
 export default class BottomBar extends React.Component {
     constructor(props) {
@@ -34,8 +36,11 @@ export default class BottomBar extends React.Component {
     render() {
         return (
             <div className={"BottomBar " + (this.state.expanded ? 'expanded' : '')}>
-                <i onClick={() => this.setState({expanded: !this.state.expanded})}
-                   className={'expand-button fa fa-chevron-down ' + (this.state.expanded ? 'expanded' : '')}/>
+                <div className={'expand-button'} onClick={() => this.setState({expanded: !this.state.expanded})}>
+                    <UserIcon user={this.props.user}></UserIcon>
+                </div>
+                {/*<i onClick={() => this.setState({expanded: !this.state.expanded})}*/}
+                {/*   className={'expand-button fa fa-chevron-down ' + (this.state.expanded ? 'expanded' : '')}/>*/}
                 <div className={'main-links'}>
                     <NavLink to="/graphs" onClick={this.hideSubLinks}>
                         <i className="fa fa-bar-chart" aria-hidden="true"/>
@@ -48,9 +53,12 @@ export default class BottomBar extends React.Component {
                     </NavLink>
                 </div>
                 <div className={'sub-links'}>
-                    <NavLink to="/settings" onClick={this.hideSubLinks}>
+                    {this.props.user && <NavLink to="/edit-profile" onClick={this.hideSubLinks}>
+                        <i className="fa fa-user" aria-hidden="true"/> Edit profile
+                    </NavLink>}
+                    {this.props.user && this.props.user.isAdmin && <NavLink to="/settings" onClick={this.hideSubLinks}>
                         <i className="fa fa-cog" aria-hidden="true"/> Settings
-                    </NavLink>
+                    </NavLink>}
                     <a onClick={this.logout}><i className={'fa fa-sign-out'}/> Logout</a>
                 </div>
                 <div className={'info'}>

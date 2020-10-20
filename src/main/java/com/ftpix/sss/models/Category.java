@@ -1,10 +1,12 @@
 package com.ftpix.sss.models;
 
+import com.ftpix.sss.utils.JsonIgnore;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "CATEGORY")
-public class Category {
+public class Category extends BaseDaoEnabled {
 
 
     @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)
@@ -15,6 +17,11 @@ public class Category {
 
     @DatabaseField(columnName = "CATEGORY_ORDER")
     private int categoryOrder;
+
+
+    @DatabaseField(columnName = "USER_ID", foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreignColumnName = "ID")
+    @JsonIgnore
+    private User user;
 
     public long getId() {
         return id;
@@ -40,4 +47,11 @@ public class Category {
         this.categoryOrder = order;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

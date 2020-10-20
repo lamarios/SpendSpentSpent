@@ -5,6 +5,7 @@ import com.ftpix.sss.Constants;
 import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.RecurringExpense;
+import com.ftpix.sss.models.User;
 import com.ftpix.sss.transformer.GsonBodyTransformer;
 import com.ftpix.sss.transformer.GsonTransformer;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +18,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import static com.ftpix.sss.controllers.api.ApiController.TOKEN;
+import static com.ftpix.sss.controllers.api.UserSessionController.UNAUTHORIZED_SUPPLIER;
+import static com.ftpix.sss.controllers.api.UserSessionController.getCurrentUser;
+
 @SparkController("/API/RecurringExpense")
 public class RecurringExpenseController {
     private final static String FIELD_AMOUNT = "amount", FIELD_CATEGORY = "category", FIELD_ID = "id", FIELD_INCOME = "income", FIELD_LAST_OCCURRENCE = "lastOccurrence", FIELD_NAME = "name",
@@ -24,85 +29,9 @@ public class RecurringExpenseController {
 
     private final static Logger logger = LogManager.getLogger();
 
-
-    /**
-     * Creates a recurring expense
-     *
-     * @param categoryId the category
-     * @param amount     the amount
-     * @param income     the income
-     * @param name       the name
-     * @param type       the type (daily, weekly, monthly, yearly)
-     * @param when       when (1st of the month, or 1 month of the year, 2nd day of the week etc... depends on type parameter)
-     * @return
-     * @throws SQLException
-     */
-    @SparkPost(transformer = GsonTransformer.class)
-    public RecurringExpense create(
-            @SparkBody(GsonBodyTransformer.class) RecurringExpense expense
-    ) throws SQLException {
-        logger.info("RecurringExpenseApi.create()");
-
-        Category category = DB.CATEGORY_DAO.queryForId(expense.getCategory().getId());
-        if (category == null) {
-            Spark.halt(503, "Category doesn't exist");
-        } else {
-            expense.setCategory(category);
-        }
-
-        expense.setNextOccurrence(calculateNextDate(expense));
-
-        DB.RECURRING_EXPENSE_DAO.create(expense);
-
-        return expense;
-    }
-
-
-    /**
-     * GEts all the expenses
-     *
-     * @return
-     * @throws SQLException
-     */
-    @SparkGet(accept = Constants.JSON, transformer = GsonTransformer.class)
-    public List<RecurringExpense> get() throws SQLException {
-        return DB.RECURRING_EXPENSE_DAO.queryForAll();
-//        expenses.forEach((expense) -> {
-//            expense.getCategory().getIcon();
-//        });
-
-    }
-
-
-    /**
-     * Gets a single recurring expense
-     *
-     * @param id the id of the expense to get
-     * @return the expense
-     * @throws SQLException
-     */
-    @SparkGet(value = "/:id", accept = Constants.JSON, transformer = GsonTransformer.class)
-    public RecurringExpense getId(@SparkParam("id") long id) throws SQLException {
-        return DB.RECURRING_EXPENSE_DAO.queryForId(id);
-    }
-
-
-    /**
-     * Delete a single recurring expense
-     *
-     * @param id
-     * @return
-     * @throws SQLException
-     */
-    @SparkDelete(value = "/:id", transformer = GsonTransformer.class, accept = Constants.JSON)
-    public boolean delete(@SparkParam("id") long id) throws SQLException {
-        DB.RECURRING_EXPENSE_DAO.deleteById(id);
-        return true;
-    }
-
-
     /**
      * Calculate the next instance of a recurring expense
+     *
      * @param expense the expense we want to check.
      * @return when is the new payment due.
      */
@@ -181,6 +110,91 @@ public class RecurringExpenseController {
             return last.getTime();
         }
 
+    }
+
+    /**
+     * Creates a recurring expense
+     *
+     * @param categoryId the category
+     * @param amount     the amount
+     * @param income     the income
+     * @param name       the name
+     * @param type       the type (daily, weekly, monthly, yearly)
+     * @param when       when (1st of the month, or 1 month of the year, 2nd day of the week etc... depends on type parameter)
+     * @return
+     * @throws SQLException
+     */
+    @SparkPost(transformer = GsonTransformer.class)
+    public RecurringExpense create(
+            @SparkBody(GsonBodyTransformer.class) RecurringExpense expense
+    ) throws SQLException {
+        logger.info("RecurringExpenseApi.create()");
+
+        Category category = DB.CATEGORY_DAO.queryForId(expense.getCategory().getId());
+        if (category == null) {
+            Spark.halt(503, "Category doesn't exist");
+        } else {
+            expense.setCategory(category);
+        }
+
+        expense.setNextOccurrence(calculateNextDate(expense));
+
+        DB.RECURRING_EXPENSE_DAO.create(expense);
+
+        return expense;
+    }
+
+    /**
+     * GEts all the expenses
+     *
+     * @return
+     * @throws SQLException
+     */
+    @SparkGet(accept = Constants.JSON, transformer = GsonTransformer.class)
+    public List<RecurringExpense> get() throws SQLException {
+        return DB.RECURRING_EXPENSE_DAO.queryForAll();
+//        expenses.forEach((expense) -> {
+//            expense.getCategory().getIcon();
+//        });
+
+    }
+
+    /**
+     * Gets a single recurring expense
+     *
+     * @param id the id of the expense to get
+     * @return the expense
+     * @throws SQLException
+     */
+    @SparkGet(value = "/:id", accept = Constants.JSON, transformer = GsonTransformer.class)
+    public RecurringExpense getId(@SparkParam("id") long id, @SparkHeader(TOKEN) String token) throws Exception {
+        final User user = getCurrentUser(token).orElseThrow(UNAUTHORIZED_SUPPLIER);
+        final RecurringExpense recurringExpense = DB.RECURRING_EXPENSE_DAO.queryForId(id);
+        if (recurringExpense.getCategory().getUser().getId().equals(user.getId())) {
+            return recurringExpense;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Delete a single recurring expense
+     *
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+    @SparkDelete(value = "/:id", transformer = GsonTransformer.class, accept = Constants.JSON)
+    public boolean delete(@SparkParam("id") long id, @SparkHeader(TOKEN) String token) throws Exception {
+        final User user = getCurrentUser(token).orElseThrow(UNAUTHORIZED_SUPPLIER);
+        final RecurringExpense recurringExpenses = getId(id, token);
+
+        if (recurringExpenses != null) {
+            DB.RECURRING_EXPENSE_DAO.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

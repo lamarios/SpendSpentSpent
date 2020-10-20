@@ -22,7 +22,7 @@ import java.time.ZoneId;
 
 @SparkController
 public class ApiController {
-    private final static String TOKEN = "Authorization";
+    public final static String TOKEN = "Authorization";
     private final Logger logger = LogManager.getLogger();
 
 

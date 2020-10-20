@@ -1,13 +1,18 @@
 package com.ftpix.sss.controllers.api;
 
+import com.ftpix.sparknnotation.Sparknotation;
 import com.ftpix.sparknnotation.annotations.SparkController;
 import com.ftpix.sparknnotation.annotations.SparkGet;
+import com.ftpix.sparknnotation.annotations.SparkHeader;
 import com.ftpix.sparknnotation.annotations.SparkParam;
 import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.CategoryOverall;
 import com.ftpix.sss.models.Expense;
+import com.ftpix.sss.models.User;
 import com.ftpix.sss.transformer.GsonTransformer;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,6 +22,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.ftpix.sss.controllers.api.ApiController.TOKEN;
+import static com.ftpix.sss.controllers.api.UserSessionController.UNAUTHORIZED_SUPPLIER;
+import static com.ftpix.sss.controllers.api.UserSessionController.getCurrentUser;
 
 
 @SparkController("/API/History")
@@ -80,16 +89,19 @@ public class HistoryController {
 //    }
 
     @SparkGet(value = "/CurrentYear", transformer = GsonTransformer.class)
-    public List<CategoryOverall> yearly() throws SQLException {
+    public List<CategoryOverall> yearly(@SparkHeader(TOKEN) String token) throws Exception {
+
+        final User user = getCurrentUser(token).orElseThrow(UNAUTHORIZED_SUPPLIER);
 
         List<CategoryOverall> result = new ArrayList<>();
 
-        List<Category> categories = DB.CATEGORY_DAO.queryForAll();
+        List<Category> categories = Sparknotation.getController(CategoryController.class).getAll(token);
 
         CategoryOverall overall = new CategoryOverall();
         Category categoryAll = new Category();
         categoryAll.setId(-1);
         categoryAll.setIcon("all");
+        categoryAll.setUser(user);
         overall.setCategory(categoryAll);
 
 
@@ -99,7 +111,7 @@ public class HistoryController {
             LocalDate date = LocalDate.now();
 
 
-            double total = getCategoryExpensesForYear(category.getId(), date)
+            double total = getCategoryExpensesForYear(category.getId(), date, token)
                     .stream()
                     .mapToDouble(Expense::getAmount)
                     .sum();
@@ -183,15 +195,18 @@ public class HistoryController {
 //    }
 
     @SparkGet(value = "/CurrentMonth", transformer = GsonTransformer.class)
-    public List<CategoryOverall> monthly() throws SQLException {
+    public List<CategoryOverall> monthly(@SparkHeader(TOKEN) String token) throws Exception {
+        final User user = getCurrentUser(token).orElseThrow(UNAUTHORIZED_SUPPLIER);
+
         List<CategoryOverall> result = new ArrayList<>();
 
-        List<Category> categories = DB.CATEGORY_DAO.queryForAll();
+        List<Category> categories = Sparknotation.getController(CategoryController.class).getAll(token);
 
         CategoryOverall overall = new CategoryOverall();
         Category categoryAll = new Category();
         categoryAll.setId(-1);
         categoryAll.setIcon("all");
+        categoryAll.setUser(user);
         overall.setCategory(categoryAll);
 
 
@@ -201,7 +216,7 @@ public class HistoryController {
             LocalDate date = LocalDate.now();
 
 
-            double total = getCategoryExpensesForMonth(category.getId(), date)
+            double total = getCategoryExpensesForMonth(category.getId(), date, token)
                     .stream()
                     .mapToDouble(Expense::getAmount)
                     .sum();
@@ -238,7 +253,8 @@ public class HistoryController {
      * @throws SQLException
      */
     @SparkGet(value = "/Yearly/:category/:count", transformer = GsonTransformer.class)
-    public List<Map<String, Object>> getYearlyHistory(@SparkParam("category") int categoryId, @SparkParam("count") int count) throws SQLException {
+    public List<Map<String, Object>> getYearlyHistory(@SparkParam("category") int categoryId, @SparkParam("count") int count, @SparkHeader(TOKEN) String token) throws Exception {
+        final User user = getCurrentUser(token).orElseThrow(UNAUTHORIZED_SUPPLIER);
         List<Map<String, Object>> result = new ArrayList<>();
 
         LocalDate date = LocalDate.now();
@@ -247,7 +263,7 @@ public class HistoryController {
             Map<String, Object> expensesForMonth = new HashMap<>();
 
             expensesForMonth.put("date", date.getYear());
-            expensesForMonth.put("amount", getCategoryExpensesForYear(categoryId, date).stream().mapToDouble(Expense::getAmount).sum());
+            expensesForMonth.put("amount", getCategoryExpensesForYear(categoryId, date, token).stream().mapToDouble(Expense::getAmount).sum());
 
             date = date.minusYears(1);
             result.add(expensesForMonth);
@@ -266,7 +282,8 @@ public class HistoryController {
      * @throws SQLException
      */
     @SparkGet(value = "/Monthly/:category/:count", transformer = GsonTransformer.class)
-    public List<Map<String, Object>> getMonthlyHistory(@SparkParam("category") int categoryId, @SparkParam("count") int count) throws SQLException {
+    public List<Map<String, Object>> getMonthlyHistory(@SparkParam("category") int categoryId, @SparkParam("count") int count, @SparkHeader(TOKEN) String token) throws Exception {
+        final User user = getCurrentUser(token).orElseThrow(UNAUTHORIZED_SUPPLIER);
         List<Map<String, Object>> result = new ArrayList<>();
 
         LocalDate date = LocalDate.now();
@@ -275,7 +292,7 @@ public class HistoryController {
             Map<String, Object> expensesForMonth = new HashMap<>();
 
             expensesForMonth.put("date", date.getYear() + "-" + date.getMonthValue());
-            expensesForMonth.put("amount", getCategoryExpensesForMonth(categoryId, date).stream().mapToDouble(Expense::getAmount).sum());
+            expensesForMonth.put("amount", getCategoryExpensesForMonth(categoryId, date, token).stream().mapToDouble(Expense::getAmount).sum());
 
             date = date.minusMonths(1);
             result.add(expensesForMonth);
@@ -293,15 +310,23 @@ public class HistoryController {
      * @return a list of expenses
      * @throws SQLException
      */
-    private List<Expense> getCategoryExpensesForYear(long category, LocalDate date) throws SQLException {
-        Map<String, Object> params = new HashMap<>();
-        params.put("income", 0);
-        if (category >= 0) {
-            params.put("category_id", category);
+    private List<Expense> getCategoryExpensesForYear(long category, LocalDate date, String token) throws Exception {
+        final List<Long> userCategoriesId = Sparknotation.getController(CategoryController.class).getUserCategoriesId(token);
+        if (userCategoriesId.isEmpty()) {
+            return Collections.emptyList();
         }
 
+        Where<Expense, Long> categoryFilter = DB.EXPENSE_DAO.queryBuilder().where()
+                .in("category_id", userCategoriesId);
 
-        return DB.EXPENSE_DAO.queryForFieldValues(params)
+        if (category >= 0) {
+            categoryFilter = categoryFilter.and().eq("category_id", category);
+        }
+
+        final QueryBuilder<Expense, Long> queryBuilder = DB.EXPENSE_DAO.queryBuilder();
+        queryBuilder.setWhere(categoryFilter);
+
+        return queryBuilder.query()
                 .stream()
                 .filter(e -> {
                     LocalDateTime tmpDate = LocalDateTime.ofInstant(e.getDate().toInstant(), ZoneId.systemDefault());
@@ -318,15 +343,23 @@ public class HistoryController {
      * @return a list of expenses
      * @throws SQLException
      */
-    private List<Expense> getCategoryExpensesForMonth(long category, LocalDate date) throws SQLException {
-        Map<String, Object> params = new HashMap<>();
-        params.put("income", 0);
-        if (category >= 0) {
-            params.put("category_id", category);
+    private List<Expense> getCategoryExpensesForMonth(long category, LocalDate date, String token) throws Exception {
+        final List<Long> userCategoriesId = Sparknotation.getController(CategoryController.class).getUserCategoriesId(token);
+        if (userCategoriesId.isEmpty()) {
+            return Collections.emptyList();
         }
 
+        Where<Expense, Long> categoryFilter = DB.EXPENSE_DAO.queryBuilder().where()
+                .in("category_id", userCategoriesId);
 
-        return DB.EXPENSE_DAO.queryForFieldValues(params)
+        if (category >= 0) {
+            categoryFilter = categoryFilter.and().eq("category_id", category);
+        }
+
+        final QueryBuilder<Expense, Long> queryBuilder = DB.EXPENSE_DAO.queryBuilder();
+        queryBuilder.setWhere(categoryFilter);
+
+        return queryBuilder.query()
                 .stream()
                 .filter(e -> {
                     LocalDateTime tmpDate = LocalDateTime.ofInstant(e.getDate().toInstant(), ZoneId.systemDefault());

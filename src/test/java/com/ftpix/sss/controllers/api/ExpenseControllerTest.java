@@ -5,8 +5,8 @@ import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.Expense;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import spark.HaltException;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -15,20 +15,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static com.ftpix.sss.PrepareDB.TOKEN;
 import static org.junit.Assert.*;
 
+
 public class ExpenseControllerTest {
+    private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private ExpenseController controller = new ExpenseController();
 
-    private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
     @BeforeClass
-    public static void prepareDB() throws SQLException {
+    public static void prepareDB() throws SQLException, IOException {
         PrepareDB.prepareDB();
     }
 
 
-    private Expense create(double amount, long catId, String date, boolean income, int expenseType, long lat, long longitude, String note) throws SQLException {
+    private Expense create(double amount, long catId, String date, boolean income, int expenseType, long lat, long longitude, String note) throws Exception {
 
         Expense exp = new Expense();
         exp.setAmount(amount);
@@ -48,42 +49,43 @@ public class ExpenseControllerTest {
         exp.setLongitude(longitude);
         exp.setNote(note);
 
-        return controller.create(exp);
+        return controller.create(exp, TOKEN);
     }
 
-    @Test(expected = HaltException.class)
-    public void createNullCategoryExpense() throws SQLException {
+    @Test(expected = Exception.class)
+    public void createNullCategoryExpense() throws Exception {
 
         Expense exp = create(12d, 32131, "2012-10-10", false, Expense.TYPE_NORMAL, 0, 0, "");
 
     }
 
-    @Test
-    public void testAddDeleteExpense() throws SQLException {
+    @Test()
+    public void testAddDeleteExpense() throws Exception {
 
         Expense newExpense = create(10d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
 
-        Expense fromController = controller.getAll().stream().reduce((first, second) -> second).get();
+        Expense fromController = controller.getAll(TOKEN).stream().reduce((first, second) -> second).get();
 
         assertEquals(newExpense.getId(), fromController.getId());
 
 
-        controller.delete(newExpense.getId());
+        controller.delete(newExpense.getId(), TOKEN);
 
-        fromController = controller.get(newExpense.getId());
+        fromController = controller.get(newExpense.getId(), TOKEN);
 
         assertNull(fromController);
+
     }
 
 
     @Test
-    public void testAddWithTime() throws SQLException{
+    public void testAddWithTime() throws Exception {
         Date today = new Date();
 
         Expense newExpense = create(10d, 1, df.format(today), false, Expense.TYPE_NORMAL, 0, 0, "");
-        Expense newExpense2 =create(10d, 1, "2012-03-21", false, Expense.TYPE_NORMAL, 0, 0, "");
+        Expense newExpense2 = create(10d, 1, "2012-03-21", false, Expense.TYPE_NORMAL, 0, 0, "");
 
-        String properTime = String.format("%02d", today.getHours())+":"+String.format("%02d", today.getMinutes());
+        String properTime = String.format("%02d", today.getHours()) + ":" + String.format("%02d", today.getMinutes());
 
         assertEquals(properTime, newExpense.getTime());
         assertNull(newExpense2.getTime());
@@ -92,7 +94,7 @@ public class ExpenseControllerTest {
 
 
     @Test
-    public void testCategoryByDay() throws SQLException, ParseException {
+    public void testCategoryByDay() throws Exception {
         create(10d, 1, "2012-12-02", false, Expense.TYPE_NORMAL, 0, 0, "");
         create(20d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
         create(30d, 1, "2012-12-23", false, Expense.TYPE_NORMAL, 0, 0, "");
@@ -100,11 +102,11 @@ public class ExpenseControllerTest {
         create(50d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
 
 
-        assertEquals(2, controller.getMonths().size());
-        assertTrue(controller.getMonths().contains("2012-10"));
-        assertTrue(controller.getMonths().contains("2012-12"));
+        assertEquals(2, controller.getMonths(TOKEN).size());
+        assertTrue(controller.getMonths(TOKEN).contains("2012-10"));
+        assertTrue(controller.getMonths(TOKEN).contains("2012-12"));
 
-        Map<String, Map<String, Object>> byDay = controller.getByDay(null, null, "2012-12");
+        Map<String, Map<String, Object>> byDay = controller.getByDay(null, null, "2012-12", TOKEN);
         //we only have 3 distinct days of expenses
         assertEquals(3, byDay.size());
         assertEquals(2, ((List) byDay.get("2012-12-24").get("expenses")).size());

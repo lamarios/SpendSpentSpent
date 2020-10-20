@@ -1,53 +1,22 @@
 .Login {
-  max-width: 500px;
-  background-color: @accentColor;
-  border-radius: @borderRadius;
-  margin: auto;
-  padding: 30px;
-  color: white;
-  h1 {
-    margin: 0;
+
+  .signup-link {
+    margin-top: 15px;
     text-align: center;
-  }
 
-  label {
-    display: block;
-    font-size: 20px;
-    margin-bottom: 5px;
-  }
-
-  input {
-    display: block;
-    font-family: @font;
-    border-radius: @borderRadius;
-    background-color: white;
-    border: none;
-    width: 100%;
-    padding: 5px 20px;
-    height: 40px;
-    &:focus {
-      outline: none;
+    a {
+      color: white;
+      font-weight: bold;
     }
   }
 
-  button {
-    display: block;
+  .announcement {
+    max-width: 500px;
     width: 100%;
-    background-color: darken(@accentColor, 10%);
-    color: white;
-    border: none;
+    padding: 30px;
+    background-color: #fff1c9;
     border-radius: @borderRadius;
-    height: 40px;
-    font-family: @font;
-    cursor: pointer;
-    transition: all 0.25s;
-    &:hover{
-      background-color: darken(@accentColor, 20%);
-    }
-  }
-
-  .error{
-    text-align: center;
-    color: red;
+    margin: 15px auto;
+    white-space: pre-line;
   }
 }

@@ -6,6 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import spark.HaltException;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ public class UserSessionControllerTest {
 
 
     @BeforeClass
-    public static void prepareDB() throws SQLException {
+    public static void prepareDB() throws SQLException, IOException {
         PrepareDB.prepareDB();
     }
 
@@ -44,11 +45,11 @@ public class UserSessionControllerTest {
 
         final UserSessionController.UserCredentials userCredentials = new UserSessionController.UserCredentials();
         userCredentials.password = "yo";
-        userCredentials.username = "lamarios";
+        userCredentials.email = "lamarios";
         assertNotNull(userSessionController.logIn(userCredentials));
 
         try {
-            userCredentials.username = "wrong user";
+            userCredentials.email = "wrong user";
             userSessionController.logIn(userCredentials);
             fail();
         } catch (HaltException e) {
@@ -56,7 +57,7 @@ public class UserSessionControllerTest {
         }
 
         try {
-            userCredentials.username = "lamarios";
+            userCredentials.email = "lamarios";
             userCredentials.password = "Wrong password";
             userSessionController.logIn(userCredentials);
             fail();

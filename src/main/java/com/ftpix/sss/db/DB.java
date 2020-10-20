@@ -6,12 +6,14 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableInfo;
 import com.j256.ormlite.table.TableUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 public class DB {
 
@@ -22,6 +24,7 @@ public class DB {
     public static Dao<Setting, String> SETTING_DAO = null;
     public static Dao<UserSession, String> USER_SESSION_DAO = null;
     public static Dao<SchemaVersion, Integer> SCHEMA_DAO = null;
+    public static Dao<User, UUID> USER_DAO = null;
     private static Logger logger = LogManager.getLogger();
 
 
@@ -54,6 +57,11 @@ public class DB {
             logger.info("Creating Module DAO and tables if it doesn't exist");
             SCHEMA_DAO = DaoManager.createDao(connectionSource, SchemaVersion.class);
             TableUtils.createTableIfNotExists(connectionSource, SchemaVersion.class);
+
+
+            logger.info("Creating user table if it doesn't exist");
+            USER_DAO = DaoManager.createDao(connectionSource, User.class);
+            TableUtils.createTableIfNotExists(connectionSource, User.class);
 
             Integer current = SCHEMA_DAO.queryBuilder()
                     .orderBy("CURRENT", false)
@@ -110,6 +118,12 @@ public class DB {
             newVersion = 7;
             TableUtils.dropTable(USER_SESSION_DAO, true);
         }
+
+        if(schemaVersion < 8){
+            newVersion = 8;
+            CATEGORY_DAO.executeRaw("ALTER TABLE category ADD COLUMN IF NOT EXISTS USER_ID VARCHAR(36)");
+        }
+
 
         TableUtils.clearTable(connectionSource, SchemaVersion.class);
         SCHEMA_DAO.create(new SchemaVersion(newVersion));

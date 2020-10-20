@@ -1,5 +1,6 @@
 package com.ftpix.sss.models;
 
+import com.ftpix.sss.utils.JsonIgnore;
 import com.google.gson.annotations.Expose;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -20,6 +21,7 @@ public class Expense {
 
     @DatabaseField(columnName = "CATEGORY_ID", foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreignColumnName = "ID")
     private Category category;
+
 
     @DatabaseField(columnName = "DATE", dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
     private Date date;

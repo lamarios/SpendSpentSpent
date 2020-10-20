@@ -8,6 +8,11 @@ public class Constants {
     public final static String DB_PATH, SALT;
     public final static int HTTP_PORT;
     public static final String JSON = "application/json";
+    public static final boolean ALLOW_SIGNUP = Optional.ofNullable(System.getenv("ALLOW_SIGNUP"))
+            .map(s -> s.equalsIgnoreCase("1"))
+            .orElse(false);
+
+    public static final Optional<String> ANNOUNCEMENT_MESSAGE = Optional.ofNullable(System.getenv("ANNOUNCEMENT_MESSAGE"));
 
 
     public static final String CFG_DB_URL = "db.url";
@@ -15,8 +20,9 @@ public class Constants {
     public static final String CFG_SALT = "salt";
 
     public static final String CFG_PORT = "http.port";
+    public static final String CFG_HAS_SUBSCRIPTION = "HAS_SUBSCRIPTION";
+    public static final boolean HAS_SUBSCRIPTIONS;
     public static boolean DEV_MODE = false;
-
 
     static {
 
@@ -26,6 +32,10 @@ public class Constants {
         Optional<String> dbPathSysProp = Optional.ofNullable(System.getProperty(CFG_DB_URL));
         Optional<String> saltSysProp = Optional.ofNullable(System.getProperty(CFG_SALT));
         Optional<Integer> portSysProp = Optional.ofNullable(System.getProperty(CFG_PORT)).map(Integer::valueOf);
+        Optional<Boolean> hasSubscriptions = Optional.ofNullable(System.getenv(CFG_HAS_SUBSCRIPTION))
+                .map(Boolean::valueOf);
+
+        HAS_SUBSCRIPTIONS = hasSubscriptions.orElse(false);
 
 
         if (dbPathSysProp.isPresent() && saltSysProp.isPresent() && portSysProp.isPresent()) {

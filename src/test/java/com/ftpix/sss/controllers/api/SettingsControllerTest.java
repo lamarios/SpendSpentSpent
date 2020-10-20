@@ -5,6 +5,7 @@ import com.ftpix.sss.models.Setting;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -16,7 +17,7 @@ public class SettingsControllerTest {
     private SettingsController controller = new SettingsController();
 
     @BeforeClass
-    public static void prepareDB() throws SQLException {
+    public static void prepareDB() throws SQLException, IOException {
         PrepareDB.prepareDB();
     }
 

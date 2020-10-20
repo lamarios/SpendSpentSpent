@@ -2,11 +2,11 @@ package com.ftpix.sss;
 
 import com.ftpix.sparknnotation.Sparknotation;
 import com.ftpix.sss.controllers.BackgroundJob;
+import com.ftpix.sss.utils.JsonIgnoreStrategy;
 import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import spark.HaltException;
-import spark.Redirect;
 import spark.Spark;
 
 import java.io.IOException;
@@ -21,8 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SpendSpentSpent {
-    public static Logger logger = LogManager.getLogger();
     public final static Gson GSON;
+    public static Logger logger = LogManager.getLogger();
 
     static {
         GsonBuilder builder = new GsonBuilder();
@@ -41,16 +41,8 @@ public class SpendSpentSpent {
         });
 
         GSON = builder
+                .setExclusionStrategies(new JsonIgnoreStrategy())
                 .create();
-    }
-
-    public static void main(String[] args) throws SQLException, IOException {
-
-        Constants.DEV_MODE = args.length > 0 && args[0].equalsIgnoreCase("dev");
-
-        new SpendSpentSpent();
-
-        new BackgroundJob();
     }
 
     public SpendSpentSpent() throws IOException {
@@ -83,5 +75,14 @@ public class SpendSpentSpent {
         Sparknotation.init(GSON::fromJson);
 
 
+    }
+
+    public static void main(String[] args) throws SQLException, IOException {
+
+        Constants.DEV_MODE = args.length > 0 && args[0].equalsIgnoreCase("dev");
+
+        new SpendSpentSpent();
+
+        new BackgroundJob();
     }
 }

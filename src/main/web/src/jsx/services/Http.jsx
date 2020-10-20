@@ -18,16 +18,8 @@ class Http {
         return this.makeRequest('PUT', url, body);
     }
 
-    checkError(response) {
-        if (response.status >= 200 && response.status <= 299) {
-            return response.json();
-        } else {
-            throw Error(response.status);
-        }
-    }
-
     makeConfig(url, method, body) {
-
+        console.log('request', method, url);
         const config = {
             method: method,
         };
@@ -53,12 +45,24 @@ class Http {
         return fetch(url, config).then(this.checkError).catch(e => this.catch401(url, e));
     }
 
+    async checkError(response) {
+        console.log('Response:', response);
+        if (response.status >= 200 && response.status <= 299) {
+            return response.json();
+        } else {
+            const errorText = await response.text();
+            throw Error(JSON.stringify({status: response.status, text: errorText}));
+        }
+    }
+
     catch401(url, error) {
-        if (url.indexOf('/Login') === -1 && error.message === '401') {
+        console.log('Http:', error.message);
+        const errorObject = JSON.parse(error.message);
+        if (url.indexOf('/Login') === -1 && errorObject.status === 401) {
             location.href = window.origin + '/login-screen';
             return;
         }
-        return error;
+        throw error;
     }
 
     addJsonHeaders(config) {
@@ -73,7 +77,7 @@ class Http {
 
     addAuthenticateRequest(url, config) {
 
-        if (url.indexOf("/Login") !== -1) {
+        if (url.indexOf("/Login") !== -1 && url.indexOf("/config") !== -1 && url.indexOf("/SignUp") !== -1) {
             if (typeof window.localStorage !== undefined && window.localStorage.token) {
                 return {
                     headers: {

@@ -6,19 +6,25 @@ import com.ftpix.sss.Constants;
 import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.CategoryIcons;
+import com.ftpix.sss.models.User;
 import com.ftpix.sss.transformer.GsonBodyTransformer;
 import com.ftpix.sss.transformer.GsonCategoryListBodyTransformer;
 import com.ftpix.sss.transformer.GsonTransformer;
-import com.j256.ormlite.dao.GenericRawResults;
-import com.j256.ormlite.stmt.QueryBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import spark.Spark;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.ftpix.sss.controllers.api.ApiController.TOKEN;
+import static com.ftpix.sss.controllers.api.UserSessionController.UNAUTHORIZED_SUPPLIER;
+import static com.ftpix.sss.controllers.api.UserSessionController.getCurrentUser;
 
 @SparkController("/API/Category")
 public class CategoryController {
@@ -33,8 +39,19 @@ public class CategoryController {
      * @throws SQLException
      */
     @SparkGet(accept = Constants.JSON, transformer = GsonTransformer.class)
-    public List<Category> getAll() throws SQLException {
-        return DB.CATEGORY_DAO.queryBuilder().orderBy("category_order", true).query();
+    public List<Category> getAll(@SparkHeader(TOKEN) String token) throws Exception {
+        return getCurrentUser(token)
+                .map(u -> {
+                    try {
+                        return DB.CATEGORY_DAO.queryBuilder()
+                                .orderBy("category_order", true)
+                                .where().eq("user_id", u.getId())
+                                .query();
+                    } catch (SQLException throwables) {
+                        return null;
+                    }
+                })
+                .orElseThrow(UNAUTHORIZED_SUPPLIER);
     }
 
 
@@ -46,8 +63,23 @@ public class CategoryController {
      * @throws SQLException
      */
     @SparkGet(value = "/ById/:id", accept = Constants.JSON, transformer = GsonTransformer.class)
-    public Category get(@SparkParam("id") long id) throws SQLException {
-        return DB.CATEGORY_DAO.queryForId(id);
+    public Category get(@SparkParam("id") long id, @SparkHeader(TOKEN) String token) throws Exception {
+        return getCurrentUser(token)
+                .map(u -> {
+                    try {
+                        final Category category = DB.CATEGORY_DAO.queryForId(id);
+                        if (category.getUser().getId().equals(u.getId())) {
+                            return category;
+                        } else {
+                            return null;
+                        }
+                    } catch (SQLException throwables) {
+                        logger.error("Couldn't get category", throwables);
+                        return null;
+                    }
+                })
+                .orElseThrow(UNAUTHORIZED_SUPPLIER);
+
     }
 
 
@@ -58,21 +90,15 @@ public class CategoryController {
      * @throws SQLException
      */
     @SparkGet(value = "/Available", accept = Constants.JSON, transformer = GsonTransformer.class)
-    public List<String> getAvailable() throws SQLException {
+    public List<String> getAvailable(@SparkHeader(TOKEN) String token) throws Exception {
 
-        List<Category> categories = DB.CATEGORY_DAO.queryForAll();
+        List<Category> categories = getAll(token);
         return CategoryIcons.ALL.stream()
                 .filter(s -> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s)))
                 .collect(Collectors.toList());
 
     }
 
-
-    public Category create(String icon) throws SQLException {
-        Category cat = new Category();
-        cat.setIcon(icon);
-        return create(cat);
-    }
 
     /**
      * Creates a single category
@@ -82,43 +108,78 @@ public class CategoryController {
      * @throws SQLException
      */
     @SparkPost(transformer = GsonTransformer.class)
-    public Category create(@SparkBody(GsonBodyTransformer.class) Category category) throws SQLException {
+    public Category create(@SparkBody(GsonBodyTransformer.class) Category category, @SparkHeader(TOKEN) String token) throws Exception {
+        return getCurrentUser(token)
+                .map(u -> {
+                    try {
+                        boolean found = CategoryIcons.ALL.contains(category.getIcon());
+
+                        if (!found) {
+                            Spark.halt(503, "Icon doesn't exist");
+                        }
 
 
-        boolean found = CategoryIcons.ALL.contains(category.getIcon());
+//                        long order = DB.CATEGORY_DAO.queryRawValue("SELECT MAX(category_order) FROM CATEGORY WHERE user_id = '" + u.getId().toString() + "'");
 
-        if (!found) {
-            Spark.halt(503, "Icon doesn't exist");
-        }
+                        final long order = Optional.ofNullable(DB.CATEGORY_DAO.queryBuilder()
+                                .selectColumns("category_order")
+                                .limit(1L)
+                                .orderBy("category_order", false)
+                                .where()
+                                .eq("user_id", u.getId())
+                                .queryForFirst())
+                                .map(Category::getCategoryOrder)
+                                .orElse(0);
+//                        long testOrder = Arrays.stream(cat
 
+                        category.setCategoryOrder((int) (order + 1));
+                        category.setUser(u);
 
-        long order = DB.CATEGORY_DAO.queryRawValue("SELECT MAX(category_order) FROM CATEGORY");
+                        DB.CATEGORY_DAO.create(category);
 
-        category.setCategoryOrder((int) (order + 1));
-        DB.CATEGORY_DAO.create(category);
+                        return category;
+                    } catch (Exception e) {
+                        logger.error("Couldn't create category", e);
+                        throw new RuntimeException(e);
+                    }
+                })
+                .orElseThrow(UNAUTHORIZED_SUPPLIER);
 
-        return category;
     }
 
     @SparkPut(transformer = GsonTransformer.class)
-    public List<Category> updateAll(@SparkBody(GsonCategoryListBodyTransformer.class) List<Category> categories) throws SQLException {
-        categories.forEach(c -> {
-            try {
-                DB.CATEGORY_DAO.update(c);
-            } catch (SQLException throwables) {
-                throw new RuntimeException(throwables);
-            }
-        });
+    public List<Category> updateAll(@SparkBody(GsonCategoryListBodyTransformer.class) List<Category> categories, @SparkHeader(TOKEN) String token) throws Exception {
+        return getCurrentUser(token)
+                .map(u -> {
+                    categories.stream()
+                            .map(c -> {
+                                try {
+                                    final Category category = DB.CATEGORY_DAO.queryForId(c.getId());
+                                    category.setCategoryOrder(c.getCategoryOrder());
+                                    return category;
+                                } catch (SQLException throwables) {
+                                    throw new RuntimeException(throwables);
+                                }
+                            })
+                            .forEach(c -> {
+                                try {
+                                    if (c.getUser().getId().equals(u.getId())) {
+                                        DB.CATEGORY_DAO.update(c);
+                                    } else {
+                                        throw new RuntimeException("Not allowed to update this category");
+                                    }
+                                } catch (SQLException throwables) {
+                                    throw new RuntimeException(throwables);
+                                }
+                            });
 
-        return getAll();
-    }
-
-
-    public boolean update(long id, String icon, int order) throws SQLException {
-        Category cat = new Category();
-        cat.setIcon(icon);
-        cat.setCategoryOrder(order);
-        return update(id, cat);
+                    try {
+                        return getAll(token);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .orElseThrow(UNAUTHORIZED_SUPPLIER);
     }
 
     /**
@@ -130,26 +191,38 @@ public class CategoryController {
      * @throws SQLException
      */
     @SparkPut(value = "/:id", transformer = GsonTransformer.class)
-    public boolean update(@SparkParam("id") long id, @SparkBody(GsonBodyTransformer.class) Category catdiff) throws SQLException {
-        Optional<Category> categoryOptional = Optional.ofNullable(get(id));
+    public boolean update(@SparkParam("id") long id, @SparkBody(GsonBodyTransformer.class) Category catdiff, @SparkHeader(TOKEN) String token) throws Exception {
+        return getCurrentUser(token)
+                .map(u -> {
+                    try {
+                        Optional<Category> categoryOptional = Optional.ofNullable(get(id, token));
 
 
-        if (categoryOptional.isPresent()) {
-            boolean found = CategoryIcons.ALL.contains(catdiff.getIcon());
+                        if (categoryOptional.isPresent()) {
+                            boolean found = CategoryIcons.ALL.contains(catdiff.getIcon());
 
-            if (!found) {
-                Spark.halt(503, "Icon doesn't exist");
-            }
+                            if (!found) {
+                                Spark.halt(503, "Icon doesn't exist");
+                            }
 
-            Category category = categoryOptional.get();
-            category.setId(id);
-            category.setIcon(catdiff.getIcon());
-            category.setCategoryOrder(catdiff.getCategoryOrder());
-            DB.CATEGORY_DAO.update(category);
-            return true;
-        } else {
-            return false;
-        }
+                            Category category = categoryOptional.get();
+                            if (category.getUser().getId().equals(u.getId())) {
+                                category.setId(id);
+                                category.setIcon(catdiff.getIcon());
+                                category.setCategoryOrder(catdiff.getCategoryOrder());
+                                DB.CATEGORY_DAO.update(category);
+                                return true;
+                            } else {
+                                throw new RuntimeException("Not allowed to edit this category");
+                            }
+                        } else {
+                            return false;
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .orElseThrow(UNAUTHORIZED_SUPPLIER);
     }
 
 
@@ -161,15 +234,29 @@ public class CategoryController {
      * @throws SQLException
      */
     @SparkDelete(value = "/:id", transformer = GsonTransformer.class, accept = Constants.JSON)
-    public boolean delete(@SparkParam("id") long id) throws SQLException {
-        Map<String, Object> fields = new HashMap<>();
-        fields.put("CATEGORY_ID", id);
+    public boolean delete(@SparkParam("id") long id, @SparkHeader(TOKEN) String token) throws Exception {
+        return getCurrentUser(token)
+                .map(u -> {
+                    try {
+                        Map<String, Object> fields = new HashMap<>();
+                        fields.put("CATEGORY_ID", id);
 
-        DB.EXPENSE_DAO.delete(DB.EXPENSE_DAO.queryForFieldValues(fields));
-        DB.RECURRING_EXPENSE_DAO.delete(DB.RECURRING_EXPENSE_DAO.queryForFieldValues(fields));
+                        final Category category = get(id, token);
+                        if (category.getUser().getId().equals(u.getId())) {
 
-        DB.CATEGORY_DAO.deleteById(id);
-        return true;
+                            DB.EXPENSE_DAO.delete(DB.EXPENSE_DAO.queryForFieldValues(fields));
+                            DB.RECURRING_EXPENSE_DAO.delete(DB.RECURRING_EXPENSE_DAO.queryForFieldValues(fields));
+
+                            DB.CATEGORY_DAO.deleteById(id);
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .orElseThrow(UNAUTHORIZED_SUPPLIER);
     }
 
     /**
@@ -198,6 +285,33 @@ public class CategoryController {
         System.out.println(result);
 
         return result;
+    }
+
+    public Category create(String icon, User user, String token) throws Exception {
+        Category c = new Category();
+        c.setIcon(icon);
+        c.setUser(user);
+
+        return create(c, token);
+    }
+
+    public boolean update(long id, String icon, int order, String token) throws Exception {
+        Category cat = new Category();
+        cat.setIcon(icon);
+        cat.setCategoryOrder(order);
+        return update(id, cat, token);
+    }
+
+    /**
+     * category filter for expense queries
+     *
+     * @param token
+     * @return
+     */
+    public List<Long> getUserCategoriesId(String token) throws Exception {
+        return getAll(token).stream()
+                .map(Category::getId)
+                .collect(Collectors.toList());
     }
 }
 

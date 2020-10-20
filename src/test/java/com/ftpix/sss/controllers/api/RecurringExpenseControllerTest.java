@@ -7,6 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import spark.HaltException;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,7 +20,7 @@ public class RecurringExpenseControllerTest {
     private RecurringExpenseController controller = new RecurringExpenseController();
 
     @BeforeClass
-    public static void prefareDB() throws SQLException {
+    public static void prefareDB() throws SQLException, IOException {
         PrepareDB.prepareDB();
     }
 
@@ -40,7 +41,7 @@ public class RecurringExpenseControllerTest {
     }
 
     @Test
-    public void createDeleteRecurringExpense() throws SQLException {
+    public void createDeleteRecurringExpense() throws Exception {
 
         int count = controller.get().size();
 
@@ -51,9 +52,9 @@ public class RecurringExpenseControllerTest {
         assertEquals(count + 1, newCount);
 
 
-        assertNotNull(controller.getId(expense.getId()));
+        assertNotNull(controller.getId(expense.getId(), PrepareDB.TOKEN));
 
-        controller.delete(expense.getId());
+        controller.delete(expense.getId(), PrepareDB.TOKEN);
         newCount = controller.get().size();
 
         assertEquals(count, newCount);
