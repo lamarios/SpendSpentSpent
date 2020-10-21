@@ -48,21 +48,25 @@ public class ExpenseController {
         return getCurrentUser(token)
                 .map(u -> {
                     try {
-                        final List<Long> userCategoriesId = Sparknotation.getController(CategoryController.class).getUserCategoriesId(token);
-                        if (!userCategoriesId.isEmpty()) {
-                            return DB.EXPENSE_DAO.queryBuilder()
-                                    .where()
-                                    .in(CATEGORY_ID, userCategoriesId)
-                                    .query();
-                        } else {
-                            return new ArrayList<Expense>(0);
-                        }
+                        return getAll(u);
                     } catch (Exception e) {
                         logger.error("Couldn't get categories", e);
                         throw new RuntimeException(e);
                     }
                 })
                 .orElseThrow(UNAUTHORIZED_SUPPLIER);
+    }
+
+    public List<Expense> getAll(User user) throws Exception {
+        final List<Long> userCategoriesId = Sparknotation.getController(CategoryController.class).getUserCategoriesId(user);
+        if (!userCategoriesId.isEmpty()) {
+            return DB.EXPENSE_DAO.queryBuilder()
+                    .where()
+                    .in(CATEGORY_ID, userCategoriesId)
+                    .query();
+        } else {
+            return new ArrayList<Expense>(0);
+        }
     }
 
     /**

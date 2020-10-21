@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @DatabaseTable(tableName = "USER")
 public class User extends BaseDaoEnabled {
-    public final static long NEVER = Long.MAX_VALUE;
+    public final static long NEVER = Long.MAX_VALUE-1;
 
     @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)
     private UUID id = UUID.randomUUID();
@@ -27,6 +27,7 @@ public class User extends BaseDaoEnabled {
     @DatabaseField(canBeNull = false)
     private String lastName;
 
+    @DatabaseField
     private long subscriptionExpiryDate;
 
     @DatabaseField

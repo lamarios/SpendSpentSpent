@@ -22,14 +22,17 @@ import spark.Spark;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 @SparkController
 public class UserSessionController {
+    public final static String EMAIL_REGEX = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
     private final static Logger logger = LogManager.getLogger();
     public final static Supplier<? extends Exception> UNAUTHORIZED_SUPPLIER = () -> {
         logger.error("Access not allowed");
@@ -41,7 +44,6 @@ public class UserSessionController {
     private final static JWTVerifier JWT_VERIFIER = JWT.require(JWT_ALGORITHM)
             .withIssuer(JWT_ISSUER)
             .build(); //Reusable verifier instance
-    private final static String EMAIL_REGEX = "/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g";
 
     public static Optional<User> getCurrentUser(String token) {
         final DecodedJWT decodedJWT = verifyToken(token);
@@ -131,67 +133,10 @@ public class UserSessionController {
         if (!Constants.ALLOW_SIGNUP) {
             Spark.halt(400, "Signups not allowed");
         }
-        final SettingsController settingsController = Sparknotation.getController(SettingsController.class);
 
+        User newUser = Sparknotation.getController(UserController.class).createUser(user);
 
-        if (user.getFirstName() == null || user.getFirstName().length() == 0
-                || user.getLastName() == null || user.getLastName().length() == 0
-                || user.getEmail() == null || user.getEmail().length() == 0
-                || user.getPassword() == null || user.getPassword().length() == 0
-        ) {
-            Spark.halt(400, "All fields must be filled.");
-        }
-
-        if (!user.getPassword().matches(EMAIL_REGEX)) {
-            Spark.halt(400, "Invalid email");
-        }
-
-        final long count = DB.USER_DAO.countOf();
-        final List<User> users = DB.USER_DAO.queryForAll();
-        if (count == 0) {
-            user.setAdmin(true);
-        }
-
-
-        if (Constants.HAS_SUBSCRIPTIONS && !user.isAdmin()) {
-            // give one month subscription to new users
-            final LocalDateTime expiry = LocalDateTime.now().plusMonths(1);
-            user.setSubscriptionExpiryDate(Timestamp.valueOf(expiry).getTime());
-        } else {
-            user.setSubscriptionExpiryDate(User.NEVER);
-        }
-
-        user.setPassword(settingsController.hashUserCredentials(user.getEmail(), user.getPassword()));
-
-        // checking if user already exists
-        final long emailCheck = DB.USER_DAO.queryBuilder()
-                .where()
-                .eq("email", user.getEmail())
-                .countOf();
-
-        if (emailCheck > 0) {
-            Spark.halt(400, "Email already in use");
-            return "Email already in use";
-        }
-
-        user.setDao(DB.USER_DAO);
-        user.create();
-
-        // Migration code
-        // migrating all existing categories to new user as it's the first one
-        if (count == 0) {
-            DB.CATEGORY_DAO.queryForAll().forEach(c -> {
-                try {
-                    c.setUser(user);
-                    c.update();
-                } catch (SQLException e) {
-                    logger.error("Couldn't migrate categories", e);
-                    throw new RuntimeException(e);
-                }
-            });
-        }
-
-        return createTokenForUser(user);
+        return createTokenForUser(newUser);
     }
 
     public static class UserCredentials {

@@ -43,15 +43,20 @@ public class CategoryController {
         return getCurrentUser(token)
                 .map(u -> {
                     try {
-                        return DB.CATEGORY_DAO.queryBuilder()
-                                .orderBy("category_order", true)
-                                .where().eq("user_id", u.getId())
-                                .query();
+                        return getAll(u);
                     } catch (SQLException throwables) {
                         return null;
                     }
                 })
                 .orElseThrow(UNAUTHORIZED_SUPPLIER);
+    }
+
+    public List<Category> getAll(User user) throws SQLException {
+
+        return DB.CATEGORY_DAO.queryBuilder()
+                .orderBy("category_order", true)
+                .where().eq("user_id", user.getId())
+                .query();
     }
 
 
@@ -310,6 +315,12 @@ public class CategoryController {
      */
     public List<Long> getUserCategoriesId(String token) throws Exception {
         return getAll(token).stream()
+                .map(Category::getId)
+                .collect(Collectors.toList());
+    }
+
+    public List<Long> getUserCategoriesId(User user) throws Exception{
+        return getAll(user).stream()
                 .map(Category::getId)
                 .collect(Collectors.toList());
     }

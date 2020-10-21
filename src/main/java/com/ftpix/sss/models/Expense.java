@@ -4,12 +4,13 @@ import com.ftpix.sss.utils.JsonIgnore;
 import com.google.gson.annotations.Expose;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
 
 @DatabaseTable(tableName = "EXPENSE")
-public class Expense {
+public class Expense extends BaseDaoEnabled {
 
     public static final int TYPE_NORMAL = 1, TYPE_RECURRENT = 2;
 

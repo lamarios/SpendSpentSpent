@@ -10,9 +10,9 @@ import spark.HaltException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static com.ftpix.sss.PrepareDB.USER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -43,11 +43,11 @@ public class RecurringExpenseControllerTest {
     @Test
     public void createDeleteRecurringExpense() throws Exception {
 
-        int count = controller.get().size();
+        int count = controller.get(USER).size();
 
         RecurringExpense expense = create(1, 10d, false, "spotify", RecurringExpense.TYPE_DAILY, 0);
 
-        int newCount = controller.get().size();
+        int newCount = controller.get(USER).size();
 
         assertEquals(count + 1, newCount);
 
@@ -55,7 +55,7 @@ public class RecurringExpenseControllerTest {
         assertNotNull(controller.getId(expense.getId(), PrepareDB.TOKEN));
 
         controller.delete(expense.getId(), PrepareDB.TOKEN);
-        newCount = controller.get().size();
+        newCount = controller.get(USER).size();
 
         assertEquals(count, newCount);
     }

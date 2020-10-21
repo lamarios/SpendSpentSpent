@@ -1,5 +1,6 @@
 package com.ftpix.sss.controllers.api;
 
+import com.ftpix.sparknnotation.Sparknotation;
 import com.ftpix.sparknnotation.annotations.*;
 import com.ftpix.sss.Constants;
 import com.ftpix.sss.db.DB;
@@ -13,10 +14,7 @@ import org.apache.logging.log4j.Logger;
 import spark.Spark;
 
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 import static com.ftpix.sss.controllers.api.ApiController.TOKEN;
 import static com.ftpix.sss.controllers.api.UserSessionController.UNAUTHORIZED_SUPPLIER;
@@ -115,12 +113,6 @@ public class RecurringExpenseController {
     /**
      * Creates a recurring expense
      *
-     * @param categoryId the category
-     * @param amount     the amount
-     * @param income     the income
-     * @param name       the name
-     * @param type       the type (daily, weekly, monthly, yearly)
-     * @param when       when (1st of the month, or 1 month of the year, 2nd day of the week etc... depends on type parameter)
      * @return
      * @throws SQLException
      */
@@ -151,12 +143,23 @@ public class RecurringExpenseController {
      * @throws SQLException
      */
     @SparkGet(accept = Constants.JSON, transformer = GsonTransformer.class)
-    public List<RecurringExpense> get() throws SQLException {
-        return DB.RECURRING_EXPENSE_DAO.queryForAll();
-//        expenses.forEach((expense) -> {
-//            expense.getCategory().getIcon();
-//        });
+    public List<RecurringExpense> get(@SparkHeader(TOKEN) String token) throws Exception {
+        final User user = getCurrentUser(token).orElseThrow(UNAUTHORIZED_SUPPLIER);
 
+        return get(user);
+
+    }
+
+    public List<RecurringExpense> get(User user) throws Exception {
+        final List<Long> userCategoriesId = Sparknotation.getController(CategoryController.class).getUserCategoriesId(user);
+        if (!userCategoriesId.isEmpty()) {
+            return DB.RECURRING_EXPENSE_DAO.queryBuilder()
+                    .where()
+                    .in("category_id", userCategoriesId)
+                    .query();
+        } else {
+            return new ArrayList<RecurringExpense>(0);
+        }
     }
 
     /**

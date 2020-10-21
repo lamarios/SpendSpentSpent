@@ -44,12 +44,46 @@
 
   button {
     background-color: @accentColor;
-    padding:10px  20px;
+    padding: 10px 20px;
     font: @font;
     border-radius: @borderRadius;
     border: none;
     margin: 10px 0;
-    color:white;
+    color: white;
+    cursor: pointer;
+  }
+
+
+  @border: 1px solid #DDD;
+
+  table {
+    border: @border;
+    margin: 10px auto;
+    width: 100%;
+
+    th, td {
+      border-bottom: @border;
+      border-right: @border;
+      padding: 5px;
+
+      &:last-of-type {
+        border-right: none;
+      }
+    }
+
+    tr:last-of-type td {
+      border-bottom: none;
+    }
+
+
+    .action {
+      text-align: center;
+
+      .fa, input[type="checkbox"] {
+        cursor: pointer;
+      }
+    }
+
   }
 }
 

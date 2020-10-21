@@ -2,7 +2,9 @@ package com.ftpix.sss;
 
 import com.ftpix.sparknnotation.Sparknotation;
 import com.ftpix.sss.controllers.BackgroundJob;
+import com.ftpix.sss.models.User;
 import com.ftpix.sss.utils.JsonIgnoreStrategy;
+import com.ftpix.sss.utils.UserSerializer;
 import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,6 +41,8 @@ public class SpendSpentSpent {
                 }
             }
         });
+
+        builder.registerTypeAdapter(User.class, new UserSerializer());
 
         GSON = builder
                 .setExclusionStrategies(new JsonIgnoreStrategy())

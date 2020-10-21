@@ -45,6 +45,11 @@ export const API = {
     },
     USER:{
         EDIT_PROFILE: API_URL+"/User",
+        GET: API_URL+"/User",
+        SET_ADMIN: API_URL+"/User/{0}/setAdmin/{1}",
+        UPDATE_PASSWORD: API_URL+"/User/{0}/setPassword",
+        ADD_USER: API_URL+"/User",
+        DELETE_USER: API_URL+"/User/{0}",
     }
 
 };
