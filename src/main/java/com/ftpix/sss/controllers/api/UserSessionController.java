@@ -62,7 +62,11 @@ public class UserSessionController {
     }
 
     public static DecodedJWT verifyToken(String token) {
-        return JWT_VERIFIER.verify(token);
+        final DecodedJWT verify = JWT_VERIFIER.verify(token);
+        if (verify.getClaim("user") == null) {
+            throw new RuntimeException("Invalid token");
+        }
+        return verify;
     }
 
     @SparkBefore("/Login")

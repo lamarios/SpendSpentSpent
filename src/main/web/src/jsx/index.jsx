@@ -1,15 +1,5 @@
-import React,{createContext, useState}  from 'react';
+import React from 'react';
 import {render} from 'react-dom';
-import {BrowserRouter, Route} from 'react-router-dom';
-import CenterColumn from './CenterColumn/CenterColumn.jsx';
-import RightColumn from './RightColumn/RightColumn.jsx';
-import LeftColumn from './LeftColumn/LeftColumn.jsx';
-import Login from './Login.jsx';
-import Settings from './Settings.jsx';
-import BottomBar from './BottomBar.jsx';
-import SignUp from "./SignUp";
-import EditProfile from "./EditProfile";
-import {loginService} from "./services/LoginServices";
 import App from "./App";
 
 String.prototype.format = function () {
@@ -21,6 +11,5 @@ String.prototype.format = function () {
     }
     return s;
 };
-
 
 render(<App></App>, document.getElementById('app'));

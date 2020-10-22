@@ -49,19 +49,15 @@ public class ApiController {
             res.header("Access-Control-Allow-Origin", origin);
             res.type("application/json");
 
-            final String requireAuth = SettingsController.get(Setting.AUTHENTICATION);
-            if (requireAuth.equalsIgnoreCase("true")) {
                 if (token != null) {
                     try {
-                        final UserSessionController controller = Sparknotation.getController(UserSessionController.class);
-                        controller.verifyToken(token);
+                        UserSessionController.verifyToken(token);
                     } catch (Exception e) {
-                        Spark.halt(401, "TOken verification failed");
+                        Spark.halt(401, "Token verification failed");
                     }
                 } else {
                     Spark.halt(401, "No JWT token");
                 }
-            }
         } else {
             logger.info("OPTION Request, skipping auth");
         }

@@ -47,6 +47,8 @@ public class ApplicationController {
             sb.append("There are no users on this instance, the first user to sign up will be set as an admin. If the signup link doesn't show up above, add the environment variable ALLOW_SIGNUP=1.\n\nIf you had existing expenses from a previous version it will be all migrated to the first user to sign up.");
         }
 
+        results.put("hasSubscription", Constants.HAS_SUBSCRIPTIONS);
+
         results.put("announcement", sb.toString());
 
         results.put("allowSignup", Constants.ALLOW_SIGNUP);

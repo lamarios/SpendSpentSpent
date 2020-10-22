@@ -6,6 +6,7 @@ import OkCancelDialog from "./OkCancelDialog";
 import OkDialog from "./OkDialog";
 import Notification from "./Notification";
 import moment from 'moment';
+import {miscService} from "./services/MiscService";
 
 const LONG_MAX = 9223372036854776000;
 
@@ -21,13 +22,18 @@ const Settings = (props) => {
     const [newPassword, setNewPassword] = useState('');
     const [newUser, setNewUser] = useState(null);
     const [newUserError, setNewUserError] = useState(null);
+    const [hasSubscription, setHasSubscription] = useState(false);
 
     const refreshUsers = () => {
         userService.getUsers()
             .then(u => setUsers(u));
     }
 
-    useEffect(refreshUsers, [])
+    useEffect(() => {
+        refreshUsers()
+        miscService.getConfig()
+            .then(r => setHasSubscription(r.hasSubscription));
+    }, [])
 
     const showNotificationPopUp = (message) => {
         clearTimeout(notificationTimeout);
@@ -130,9 +136,11 @@ const Settings = (props) => {
             <li onClick={() => setTab('users')}
                 className={tab === 'users' ? 'active' : ''}>Users
             </li>
+            {/*
             <li onClick={() => setTab('settings')}
                 className={tab === 'settings' ? 'active' : ''}>Other settings
             </li>
+*/}
         </ul>
 
         {tab === 'users' && <div className={'tab-content scale-fade-in'}>
@@ -142,7 +150,7 @@ const Settings = (props) => {
                     <th>ID</th>
                     <th>Email</th>
                     <th>Name</th>
-                    <th>Account expiry</th>
+                    {hasSubscription && <th>Account expiry</th>}
                     <th>Admin</th>
                     <th>Change password</th>
                     <th>Delete user</th>
@@ -153,7 +161,8 @@ const Settings = (props) => {
                     <td>{u.id}</td>
                     <td>{u.email}</td>
                     <td>{u.firstName + " " + u.lastName}</td>
-                    <td>{u.subscriptionExpiryDate === LONG_MAX || u.subscriptionExpiryDate === 0 ? 'Never':moment(u.subscriptionExpiryDate).format('MMMM Do YYYY')}</td>
+                    {hasSubscription &&
+                    <td>{u.subscriptionExpiryDate === LONG_MAX || u.subscriptionExpiryDate === 0 ? 'Never' : moment(u.subscriptionExpiryDate).format('MMMM Do YYYY')}</td>}
                     <td className="action"><input type="checkbox" checked={u.isAdmin}
                                                   disabled={u.id === loginService.getCurrentUser().id}
                                                   onChange={() => toggleAdmin(u)}/></td>

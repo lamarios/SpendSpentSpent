@@ -2,6 +2,7 @@
   <configuration default="false" name="SpendSpentSpent - dev" type="Application" factoryName="Application">
     <envs>
       <env name="ALLOW_SIGNUP" value="0" />
+      <env name="ANNOUNCEMENT_MESSAGE" value="&quot;HELLO&quot;" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="com.ftpix.sss.SpendSpentSpent" />
     <module name="SpendSpentSpent" />

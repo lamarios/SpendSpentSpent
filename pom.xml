@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>10</version>
+    <version>11</version>
 
     <properties>
         <automation.skip>true</automation.skip>
@@ -218,7 +218,9 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        Add basic PWA support
+                        Multi user support
+
+                        Note for migrating users: If you have existing data, you'll have to sign up for an account (set ALLOW_SIGNUP=1 environment variable) all the expenses will be migrated to the first account.
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>
