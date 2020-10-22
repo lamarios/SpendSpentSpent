@@ -7,6 +7,7 @@ import org.junit.Test;
 import spark.HaltException;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class CategoryControllerTest {
     private CategoryController controller = new CategoryController();
 
     @BeforeClass
-    public static void prepare() throws SQLException, IOException {
+    public static void prepare() throws SQLException, IOException, NoSuchAlgorithmException {
         PrepareDB.prepareDB();
     }
 
