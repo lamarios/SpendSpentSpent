@@ -1,4 +1,4 @@
-const API_ROOT = process.env.NODE_ENV === 'dev' ? 'http://' + window.location.hostname + ':21456' : '';
+const API_ROOT = process.env.NODE_ENV === 'dev' ? 'http://' + window.location.hostname + ':8080' : '';
 const API_URL = API_ROOT + '/API';
 
 export const API = {

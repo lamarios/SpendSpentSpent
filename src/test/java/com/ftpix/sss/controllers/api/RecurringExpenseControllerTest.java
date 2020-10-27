@@ -1,22 +1,7 @@
 package com.ftpix.sss.controllers.api;
 
-import com.ftpix.sss.PrepareDB;
-import com.ftpix.sss.models.Category;
-import com.ftpix.sss.models.RecurringExpense;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import spark.HaltException;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import static com.ftpix.sss.PrepareDB.USER;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 public class RecurringExpenseControllerTest {
+/*
     private RecurringExpenseController controller = new RecurringExpenseController();
 
     @BeforeClass
@@ -125,4 +110,5 @@ public class RecurringExpenseControllerTest {
     }
 
 
+*/
 }

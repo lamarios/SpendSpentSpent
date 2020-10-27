@@ -30,7 +30,7 @@ class Http {
         if (url.indexOf("/Login") === -1) {
             if (typeof window.localStorage !== undefined && window.localStorage.token) {
                 config.headers = {
-                    'Authorization': localStorage.token
+                    'Authorization': "Bearer "+localStorage.token
                 }
             }
         }
@@ -50,7 +50,7 @@ class Http {
         if (response.status >= 200 && response.status <= 299) {
             return response.json();
         } else {
-            const errorText = await response.text();
+            const errorText = await response.json();
             throw Error(JSON.stringify({status: response.status, text: errorText}));
         }
     }

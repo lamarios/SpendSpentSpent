@@ -25,7 +25,22 @@
         <developerConnection>scm:git:git@github.com:lamarios/SpendSpentSpent.git</developerConnection>
     </scm>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.4.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>5.4.1</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/com.ftpix/sparknotation -->
         <dependency>
             <groupId>com.ftpix</groupId>
@@ -64,7 +79,11 @@
             <version>2.7</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
         <!-- Handling annoying exceptions in streams
         https://github.com/pivovarit/ThrowingFunction
         -->
@@ -126,6 +145,23 @@
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
             <version>3.10.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.simplejavamail</groupId>
+            <artifactId>simple-java-mail</artifactId>
+            <version>6.4.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
@@ -209,8 +245,6 @@
             </plugin>
 
 
-
-
             <!-- release to github -->
             <plugin>
                 <groupId>de.jutzig</groupId>
@@ -220,7 +254,8 @@
                     <description>
                         Multi user support
 
-                        Note for migrating users: If you have existing data, you'll have to sign up for an account (set ALLOW_SIGNUP=1 environment variable) all the expenses will be migrated to the first account.
+                        Note for migrating users: If you have existing data, you'll have to sign up for an account (set
+                        ALLOW_SIGNUP=1 environment variable) all the expenses will be migrated to the first account.
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>

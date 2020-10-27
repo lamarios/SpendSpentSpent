@@ -1,114 +1,31 @@
 package com.ftpix.sss.controllers.api;
 
-import com.ftpix.sparknnotation.Sparknotation;
-import com.ftpix.sparknnotation.annotations.*;
-import com.ftpix.sss.Constants;
-import com.ftpix.sss.db.DB;
-import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
-import com.ftpix.sss.transformer.GsonBodyTransformer;
-import com.ftpix.sss.transformer.GsonTransformer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import spark.Spark;
+import com.ftpix.sss.services.RecurringExpenseService;
+import com.ftpix.sss.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.List;
 
-import static com.ftpix.sss.controllers.api.ApiController.TOKEN;
-import static com.ftpix.sss.controllers.api.UserSessionController.UNAUTHORIZED_SUPPLIER;
-import static com.ftpix.sss.controllers.api.UserSessionController.getCurrentUser;
-
-@SparkController("/API/RecurringExpense")
+@RestController
+@RequestMapping("/API/RecurringExpense")
 public class RecurringExpenseController {
     private final static String FIELD_AMOUNT = "amount", FIELD_CATEGORY = "category", FIELD_ID = "id", FIELD_INCOME = "income", FIELD_LAST_OCCURRENCE = "lastOccurrence", FIELD_NAME = "name",
             FIELD_NEXT_OCCURRENCE = "nextOccurrence", FIELD_TYPE = "type", FIELD_WHEN = "typeParam";
 
-    private final static Logger logger = LogManager.getLogger();
 
-    /**
-     * Calculate the next instance of a recurring expense
-     *
-     * @param expense the expense we want to check.
-     * @return when is the new payment due.
-     */
-    public static Date calculateNextDate(RecurringExpense expense) {
-        int calendarField;
-        Calendar cal = new GregorianCalendar();
-        Calendar today = new GregorianCalendar();
-        switch (expense.getType()) {
-            case RecurringExpense.TYPE_DAILY:
-                logger.info("Daily");
-                calendarField = Calendar.DAY_OF_MONTH;
-                break;
-            case RecurringExpense.TYPE_MONTHLY:
-                logger.info("Monthly");
-                calendarField = Calendar.MONTH;
-                cal.set(Calendar.DAY_OF_MONTH, expense.getTypeParam());
-                break;
-            case RecurringExpense.TYPE_WEEKLY:
-                logger.info("Weekly");
-                calendarField = Calendar.WEEK_OF_YEAR;
-                cal.set(Calendar.DAY_OF_WEEK, expense.getTypeParam());
-                break;
-            case RecurringExpense.TYPE_YEARLY:
-            default:
-                logger.info("Yearly");
-                calendarField = Calendar.YEAR;
-                cal.set(Calendar.MONTH, expense.getTypeParam());
-        }
+    private final RecurringExpenseService recurringExpenseService;
+    private final UserService userService;
 
-        logger.info("Calculated date[{}]", cal.getTime());
-
-        // We don't have a date
-        if (expense.getLastOccurrence() == null) {
-
-            logger.info("No date, must be new recurring expense: let's check if the set date is already past");
-            logger.info("Comparing today[{}] and the set up date[{}]", today.getTime(), cal.getTime());
-
-            if (today.after(cal)) {
-                cal.add(calendarField, 1);
-                logger.info("The calculated date is expired, adding the extra time, new date[{}]", cal.getTime());
-
-                // Handling special cases
-                switch (expense.getType()) {
-                    case RecurringExpense.TYPE_YEARLY:
-                        cal.set(Calendar.DAY_OF_MONTH, 1);
-                        break;
-                }
-
-            } else {
-                // Handling special cases
-                switch (expense.getType()) {
-                    case RecurringExpense.TYPE_YEARLY:
-                        if (today.get(Calendar.MONTH) < cal.get(Calendar.MONTH)) {
-                            cal.set(Calendar.DAY_OF_MONTH, 1);
-                        }
-                        break;
-                }
-
-            }
-
-            return cal.getTime();
-
-        } else {
-            logger.info("We already have a preceding payment, just handling the special cases");
-            GregorianCalendar last = new GregorianCalendar();
-            last.setTime(expense.getLastOccurrence());
-            last.add(calendarField, 1);
-
-            // Handling special cases
-            switch (expense.getType()) {
-                case RecurringExpense.TYPE_YEARLY:
-                    cal.set(Calendar.DAY_OF_MONTH, 1);
-                    break;
-            }
-
-            return last.getTime();
-        }
-
+    @Autowired
+    public RecurringExpenseController(RecurringExpenseService recurringExpenseService, UserService userService) {
+        this.recurringExpenseService = recurringExpenseService;
+        this.userService = userService;
     }
+
 
     /**
      * Creates a recurring expense
@@ -116,24 +33,10 @@ public class RecurringExpenseController {
      * @return
      * @throws SQLException
      */
-    @SparkPost(transformer = GsonTransformer.class)
-    public RecurringExpense create(
-            @SparkBody(GsonBodyTransformer.class) RecurringExpense expense
-    ) throws SQLException {
-        logger.info("RecurringExpenseApi.create()");
-
-        Category category = DB.CATEGORY_DAO.queryForId(expense.getCategory().getId());
-        if (category == null) {
-            Spark.halt(503, "Category doesn't exist");
-        } else {
-            expense.setCategory(category);
-        }
-
-        expense.setNextOccurrence(calculateNextDate(expense));
-
-        DB.RECURRING_EXPENSE_DAO.create(expense);
-
-        return expense;
+    @PostMapping
+    public RecurringExpense create(@RequestBody RecurringExpense expense) throws Exception {
+        final User currentUser = userService.getCurrentUser();
+        return recurringExpenseService.create(expense, currentUser);
     }
 
     /**
@@ -142,25 +45,13 @@ public class RecurringExpenseController {
      * @return
      * @throws SQLException
      */
-    @SparkGet(accept = Constants.JSON, transformer = GsonTransformer.class)
-    public List<RecurringExpense> get(@SparkHeader(TOKEN) String token) throws Exception {
-        final User user = getCurrentUser(token).orElseThrow(UNAUTHORIZED_SUPPLIER);
-
-        return get(user);
+    @GetMapping
+    public List<RecurringExpense> get() throws Exception {
+        final User user = userService.getCurrentUser();
+        return recurringExpenseService.get(user);
 
     }
 
-    public List<RecurringExpense> get(User user) throws Exception {
-        final List<Long> userCategoriesId = Sparknotation.getController(CategoryController.class).getUserCategoriesId(user);
-        if (!userCategoriesId.isEmpty()) {
-            return DB.RECURRING_EXPENSE_DAO.queryBuilder()
-                    .where()
-                    .in("category_id", userCategoriesId)
-                    .query();
-        } else {
-            return new ArrayList<RecurringExpense>(0);
-        }
-    }
 
     /**
      * Gets a single recurring expense
@@ -169,15 +60,10 @@ public class RecurringExpenseController {
      * @return the expense
      * @throws SQLException
      */
-    @SparkGet(value = "/:id", accept = Constants.JSON, transformer = GsonTransformer.class)
-    public RecurringExpense getId(@SparkParam("id") long id, @SparkHeader(TOKEN) String token) throws Exception {
-        final User user = getCurrentUser(token).orElseThrow(UNAUTHORIZED_SUPPLIER);
-        final RecurringExpense recurringExpense = DB.RECURRING_EXPENSE_DAO.queryForId(id);
-        if (recurringExpense.getCategory().getUser().getId().equals(user.getId())) {
-            return recurringExpense;
-        } else {
-            return null;
-        }
+    @GetMapping(value = "/{id}")
+    public RecurringExpense getId(@PathVariable("id") long id) throws Exception {
+        final User user = userService.getCurrentUser();
+        return recurringExpenseService.getId(id, user);
     }
 
     /**
@@ -187,17 +73,10 @@ public class RecurringExpenseController {
      * @return
      * @throws SQLException
      */
-    @SparkDelete(value = "/:id", transformer = GsonTransformer.class, accept = Constants.JSON)
-    public boolean delete(@SparkParam("id") long id, @SparkHeader(TOKEN) String token) throws Exception {
-        final User user = getCurrentUser(token).orElseThrow(UNAUTHORIZED_SUPPLIER);
-        final RecurringExpense recurringExpenses = getId(id, token);
-
-        if (recurringExpenses != null) {
-            DB.RECURRING_EXPENSE_DAO.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
+    @DeleteMapping(value = "/{id}")
+    public boolean delete(@PathVariable("id") long id) throws Exception {
+        final User user = userService.getCurrentUser();
+        return recurringExpenseService.delete(id, user);
     }
 
 }

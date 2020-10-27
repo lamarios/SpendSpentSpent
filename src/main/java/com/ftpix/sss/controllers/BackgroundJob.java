@@ -1,12 +1,13 @@
 package com.ftpix.sss.controllers;
 
-import com.ftpix.sss.controllers.api.RecurringExpenseController;
 import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.RecurringExpense;
-import com.ftpix.sss.notifications.Notifications;
+import com.ftpix.sss.services.RecurringExpenseService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -17,15 +18,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
+@Service
 public class BackgroundJob implements Runnable {
 
     private final Logger logger = LogManager.getLogger();
+    private final RecurringExpenseService recurringExpenseService;
     private ExecutorService exec = Executors.newSingleThreadExecutor();
-    private boolean refresh = true;
+    private boolean refresh = false;
     private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private DecimalFormat df2 = new DecimalFormat("#,###,###,##0.00");
 
-    public BackgroundJob() {
+    @Autowired
+    public BackgroundJob(RecurringExpenseService recurringExpenseService) {
+        this.recurringExpenseService = recurringExpenseService;
         logger.info("Starting Background Tasks");
         exec.execute(this);
     }
@@ -55,7 +60,6 @@ public class BackgroundJob implements Runnable {
     public void run() {
         while (refresh) {
             StringBuilder str = new StringBuilder();
-            boolean sendNotification = false;
             try {
                 List<RecurringExpense> recurringExpenses = getExpenses();
                 while (recurringExpenses.size() > 0) {
@@ -72,7 +76,7 @@ public class BackgroundJob implements Runnable {
                             DB.EXPENSE_DAO.create(expense);
 
                             recurring.setLastOccurrence(recurring.getNextOccurrence());
-                            recurring.setNextOccurrence(RecurringExpenseController.calculateNextDate(recurring));
+                            recurring.setNextOccurrence(recurringExpenseService.calculateNextDate(recurring));
 
                             DB.RECURRING_EXPENSE_DAO.update(recurring);
                             logger.info("Expense added, next occurence:[{}]", recurring.getNextOccurrence());
@@ -96,7 +100,6 @@ public class BackgroundJob implements Runnable {
 
                             str.append(df2.format(recurring.getAmount())).append(" paid as ").append(type).append("  expense, next occurrence: ").append(recurring.getNextOccurrence());
                             str.append("\n");
-                            sendNotification = true;
                         } catch (Exception e) {
                             logger.info("Error processing the occurrences", e);
                         }
@@ -105,8 +108,6 @@ public class BackgroundJob implements Runnable {
                     recurringExpenses = getExpenses();
                 }
 
-                if (sendNotification)
-                    Notifications.send("Recurring expense summary", str.toString());
 
                 try {
                     Thread.sleep(10000 * 3600);

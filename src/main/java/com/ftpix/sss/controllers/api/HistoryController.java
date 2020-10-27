@@ -1,246 +1,46 @@
 package com.ftpix.sss.controllers.api;
 
-import com.ftpix.sparknnotation.Sparknotation;
-import com.ftpix.sparknnotation.annotations.SparkController;
-import com.ftpix.sparknnotation.annotations.SparkGet;
 import com.ftpix.sparknnotation.annotations.SparkHeader;
-import com.ftpix.sparknnotation.annotations.SparkParam;
-import com.ftpix.sss.db.DB;
-import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.CategoryOverall;
-import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
-import com.ftpix.sss.transformer.GsonTransformer;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.Where;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.ftpix.sss.services.HistoryService;
+import com.ftpix.sss.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.ftpix.sss.controllers.api.ApiController.TOKEN;
-import static com.ftpix.sss.controllers.api.UserSessionController.UNAUTHORIZED_SUPPLIER;
-import static com.ftpix.sss.controllers.api.UserSessionController.getCurrentUser;
+import java.util.List;
+import java.util.Map;
 
 
-@SparkController("/API/History")
+@RestController
+@RequestMapping("/API/History")
 public class HistoryController {
+    private final UserService userService;
 
-    private final Logger logger = LogManager.getLogger();
-
-//    @SparkGet(value = "/Yearly/:count", transformer = GsonTransformer.class)
-//    public Map<String, TreeMap<String, Double>> yearly(@SparkParam("count") int count) throws SQLException {
-//        logger.info("HistoryApi.yearly({})", count);
-//
-//        Map<String, TreeMap<String, Double>> result = new HashMap<>();
-//
-//        List<Category> categories = DB.CATEGORY_DAO.queryForAll();
-//
-//        TreeMap<String, Double> overall = new TreeMap<>();
-//
-//
-//        for (Category category : categories) {
-//            TreeMap<String, Double> tmp = new TreeMap<>();
-//
-//            LocalDate date = LocalDate.now();
-//            for (int i = count; i > 0; i--) {
-//
-//                String yearStr = String.valueOf(date.getYear());
-//
-//                Map<String, Object> params = new HashMap<>();
-//                params.put("income", 0);
-//                params.put("category_id", category.getId());
-////                List<Expense> expenses = Expense.find.where().eq("income", 0).eq("category_id", category.getId()).like("date", year+"%").findList();
-//
-//                final LocalDate finalDate = date;
-//                double total = DB.EXPENSE_DAO.queryForFieldValues(params)
-//                        .stream()
-//                        .filter(e -> LocalDateTime.ofInstant(e.getDate().toInstant(), ZoneId.systemDefault()).getYear() == finalDate.getYear())
-//                        .mapToDouble(Expense::getAmount)
-//                        .sum();
-//
-//                tmp.put(yearStr, total);
-//
-//                //adding to overall count
-//                if (!overall.containsKey(yearStr)) {
-//                    overall.put(yearStr, 0d);
-//                }
-//                overall.put(yearStr, overall.get(yearStr) + total);
-//
-////                cal.add(Calendar.YEAR, -1);
-//                date = date.minusYears(1);
-//            }
-//
-//            result.put(category.getIcon(), tmp);
-//        }
-//
-//        result.put("all", overall);
-//
-//
-//        ValueComparator comparator = new ValueComparator(result);
-//        Map<String, TreeMap<String, Double>> sortedMap = new TreeMap<>(comparator);
-//        sortedMap.putAll(result);
-//        return sortedMap;
-//    }
-
-    @SparkGet(value = "/CurrentYear", transformer = GsonTransformer.class)
-    public List<CategoryOverall> yearly(@SparkHeader(TOKEN) String token) throws Exception {
-
-        final User user = getCurrentUser(token).orElseThrow(UNAUTHORIZED_SUPPLIER);
-
-        List<CategoryOverall> result = new ArrayList<>();
-
-        List<Category> categories = Sparknotation.getController(CategoryController.class).getAll(token);
-
-        CategoryOverall overall = new CategoryOverall();
-        Category categoryAll = new Category();
-        categoryAll.setId(-1);
-        categoryAll.setIcon("all");
-        categoryAll.setUser(user);
-        overall.setCategory(categoryAll);
+    private final HistoryService historyService;
 
 
-        for (Category category : categories) {
-            CategoryOverall tmp = new CategoryOverall();
-            tmp.setCategory(category);
-            LocalDate date = LocalDate.now();
-
-
-            double total = getCategoryExpensesForYear(category.getId(), date, token)
-                    .stream()
-                    .mapToDouble(Expense::getAmount)
-                    .sum();
-
-            tmp.setAmount(total);
-
-            //adding to overall count
-            overall.setAmount(overall.getAmount() + total);
-
-
-            result.add(tmp);
-        }
-
-        overall.setTotal(overall.getAmount());
-        result.add(overall);
-
-
-        return result.stream()
-                .map(c -> {
-                    c.setTotal(overall.getTotal());
-                    return c;
-                })
-                .sorted((c1, c2) -> Double.compare(c2.getAmount(), c1.getAmount()))
-                .collect(Collectors.toList());
+    @Autowired
+    public HistoryController(UserService userService, HistoryService historyService) {
+        this.userService = userService;
+        this.historyService = historyService;
     }
 
-//    @SparkGet(value = "/Monthly/:count", transformer = GsonTransformer.class)
-//    public Map<String, TreeMap<String, Double>> monthly(@SparkParam("count") int count) throws SQLException {
-//        logger.info("HistoryApi.monthly({})", count);
-//
-//        Map<String, TreeMap<String, Double>> result = new HashMap<>();
-//
-//        List<Category> categories = DB.CATEGORY_DAO.queryForAll();
-//
-//        TreeMap<String, Double> overall = new TreeMap<>();
-//
-//
-//        for (Category category : categories) {
-//            TreeMap<String, Double> tmp = new TreeMap<>();
-//            LocalDate runningDate = LocalDate.now();
-//            for (int i = count; i > 0; i--) {
-//                String date = runningDate.getYear() + "-" + String.format("%02d", runningDate.getMonthValue());
-//
-//
-//                Map<String, Object> params = new HashMap<>();
-//                params.put("income", 0);
-//                params.put("category_id", category.getId());
-//
-////                List<Expense> expenses = Expense.find.where().eq("income", 0).eq("category_id", category.getId()).like("date", date + "%").findList();
-//                final LocalDate finalDate = runningDate;
-//                double total;
-//                total = DB.EXPENSE_DAO.queryForFieldValues(params)
-//                        .stream()
-//                        .filter(e -> {
-//                            LocalDateTime tmpDate = LocalDateTime.ofInstant(e.getDate().toInstant(), ZoneId.systemDefault());
-//                            return tmpDate.getYear() == finalDate.getYear() && tmpDate.getMonthValue() == finalDate.getMonthValue();
-//                        })
-//                        .mapToDouble(Expense::getAmount)
-//                        .sum();
-//                tmp.put(date, total);
-//
-//                //adding to overall count
-//                if (!overall.containsKey(date)) {
-//                    overall.put(date, 0d);
-//                }
-//                overall.put(date, overall.get(date) + total);
-//
-//                runningDate = runningDate.minusMonths(1);
-//            }
-//
-//            result.put(category.getIcon(), tmp);
-//        }
-//
-//        result.put("all", overall);
-//
-//
-//        ValueComparator comparator = new ValueComparator(result);
-//        Map<String, TreeMap<String, Double>> sortedMap = new TreeMap<>(comparator);
-//        sortedMap.putAll(result);
-//        return sortedMap;
-//    }
-
-    @SparkGet(value = "/CurrentMonth", transformer = GsonTransformer.class)
-    public List<CategoryOverall> monthly(@SparkHeader(TOKEN) String token) throws Exception {
-        final User user = getCurrentUser(token).orElseThrow(UNAUTHORIZED_SUPPLIER);
-
-        List<CategoryOverall> result = new ArrayList<>();
-
-        List<Category> categories = Sparknotation.getController(CategoryController.class).getAll(token);
-
-        CategoryOverall overall = new CategoryOverall();
-        Category categoryAll = new Category();
-        categoryAll.setId(-1);
-        categoryAll.setIcon("all");
-        categoryAll.setUser(user);
-        overall.setCategory(categoryAll);
+    @GetMapping("/CurrentYear")
+    public List<CategoryOverall> yearly() throws Exception {
+        final User user = userService.getCurrentUser();
+        return historyService.yearly(user);
+    }
 
 
-        for (Category category : categories) {
-            CategoryOverall tmp = new CategoryOverall();
-            tmp.setCategory(category);
-            LocalDate date = LocalDate.now();
-
-
-            double total = getCategoryExpensesForMonth(category.getId(), date, token)
-                    .stream()
-                    .mapToDouble(Expense::getAmount)
-                    .sum();
-
-            tmp.setAmount(total);
-
-            //adding to overall count
-            overall.setAmount(overall.getAmount() + total);
-
-
-            result.add(tmp);
-        }
-
-        overall.setTotal(overall.getAmount());
-        result.add(overall);
-
-
-        return result.stream()
-                .map(c -> {
-                    c.setTotal(overall.getTotal());
-                    return c;
-                })
-                .sorted((c1, c2) -> Double.compare(c2.getAmount(), c1.getAmount()))
-                .collect(Collectors.toList());
+    @GetMapping("/CurrentMonth")
+    public List<CategoryOverall> monthly() throws Exception {
+        final User user = userService.getCurrentUser();
+        return historyService.monthly(user);
     }
 
 
@@ -252,25 +52,10 @@ public class HistoryController {
      * @return
      * @throws SQLException
      */
-    @SparkGet(value = "/Yearly/:category/:count", transformer = GsonTransformer.class)
-    public List<Map<String, Object>> getYearlyHistory(@SparkParam("category") int categoryId, @SparkParam("count") int count, @SparkHeader(TOKEN) String token) throws Exception {
-        final User user = getCurrentUser(token).orElseThrow(UNAUTHORIZED_SUPPLIER);
-        List<Map<String, Object>> result = new ArrayList<>();
-
-        LocalDate date = LocalDate.now();
-
-        for (int i = 0; i < count; i++) {
-            Map<String, Object> expensesForMonth = new HashMap<>();
-
-            expensesForMonth.put("date", date.getYear());
-            expensesForMonth.put("amount", getCategoryExpensesForYear(categoryId, date, token).stream().mapToDouble(Expense::getAmount).sum());
-
-            date = date.minusYears(1);
-            result.add(expensesForMonth);
-        }
-
-
-        return result;
+    @GetMapping(value = "/Yearly/{category}/{count}")
+    public List<Map<String, Object>> getYearlyHistory(@PathVariable("category") long categoryId, @PathVariable("count") int count) throws Exception {
+        final User user = userService.getCurrentUser();
+        return historyService.getYearlyHistory(categoryId, count, user);
     }
 
     /**
@@ -281,105 +66,9 @@ public class HistoryController {
      * @return
      * @throws SQLException
      */
-    @SparkGet(value = "/Monthly/:category/:count", transformer = GsonTransformer.class)
-    public List<Map<String, Object>> getMonthlyHistory(@SparkParam("category") int categoryId, @SparkParam("count") int count, @SparkHeader(TOKEN) String token) throws Exception {
-        final User user = getCurrentUser(token).orElseThrow(UNAUTHORIZED_SUPPLIER);
-        List<Map<String, Object>> result = new ArrayList<>();
-
-        LocalDate date = LocalDate.now();
-
-        for (int i = 0; i < count; i++) {
-            Map<String, Object> expensesForMonth = new HashMap<>();
-
-            expensesForMonth.put("date", date.getYear() + "-" + date.getMonthValue());
-            expensesForMonth.put("amount", getCategoryExpensesForMonth(categoryId, date, token).stream().mapToDouble(Expense::getAmount).sum());
-
-            date = date.minusMonths(1);
-            result.add(expensesForMonth);
-        }
-
-
-        return result;
-    }
-
-    /**
-     * Returns the expenses for a specific year
-     *
-     * @param category thhe category to query against
-     * @param date     the date where the eay and month will be extracted
-     * @return a list of expenses
-     * @throws SQLException
-     */
-    private List<Expense> getCategoryExpensesForYear(long category, LocalDate date, String token) throws Exception {
-        final List<Long> userCategoriesId = Sparknotation.getController(CategoryController.class).getUserCategoriesId(token);
-        if (userCategoriesId.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        Where<Expense, Long> categoryFilter = DB.EXPENSE_DAO.queryBuilder().where()
-                .in("category_id", userCategoriesId);
-
-        if (category >= 0) {
-            categoryFilter = categoryFilter.and().eq("category_id", category);
-        }
-
-        final QueryBuilder<Expense, Long> queryBuilder = DB.EXPENSE_DAO.queryBuilder();
-        queryBuilder.setWhere(categoryFilter);
-
-        return queryBuilder.query()
-                .stream()
-                .filter(e -> {
-                    LocalDateTime tmpDate = LocalDateTime.ofInstant(e.getDate().toInstant(), ZoneId.systemDefault());
-                    return tmpDate.getYear() == date.getYear();
-                })
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Returns the expenses for a specific month
-     *
-     * @param category thhe category to query against
-     * @param date     the date where the eay and month will be extracted
-     * @return a list of expenses
-     * @throws SQLException
-     */
-    private List<Expense> getCategoryExpensesForMonth(long category, LocalDate date, String token) throws Exception {
-        final List<Long> userCategoriesId = Sparknotation.getController(CategoryController.class).getUserCategoriesId(token);
-        if (userCategoriesId.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        Where<Expense, Long> categoryFilter = DB.EXPENSE_DAO.queryBuilder().where()
-                .in("category_id", userCategoriesId);
-
-        if (category >= 0) {
-            categoryFilter = categoryFilter.and().eq("category_id", category);
-        }
-
-        final QueryBuilder<Expense, Long> queryBuilder = DB.EXPENSE_DAO.queryBuilder();
-        queryBuilder.setWhere(categoryFilter);
-
-        return queryBuilder.query()
-                .stream()
-                .filter(e -> {
-                    LocalDateTime tmpDate = LocalDateTime.ofInstant(e.getDate().toInstant(), ZoneId.systemDefault());
-                    return tmpDate.getYear() == date.getYear() && tmpDate.getMonthValue() == date.getMonthValue();
-                })
-                .collect(Collectors.toList());
-    }
-
-
-    class ValueComparator implements Comparator<String> {
-
-        Map<String, CategoryOverall> base;
-
-        public ValueComparator(Map<String, CategoryOverall> base) {
-            this.base = base;
-        }
-
-        // Note: this comparator imposes orderings that are inconsistent with equals.
-        public int compare(String a, String b) {
-            return Double.compare(base.get(a).getAmount(), base.get(b).getAmount());
-        }
+    @GetMapping("/Monthly/{category}/{count}")
+    public List<Map<String, Object>> getMonthlyHistory(@PathVariable("category") long categoryId, @PathVariable("count") int count) throws Exception {
+        final User user = userService.getCurrentUser();
+        return historyService.getMonthlyHistory(categoryId, count, user);
     }
 }

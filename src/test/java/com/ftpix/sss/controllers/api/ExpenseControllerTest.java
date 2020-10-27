@@ -1,25 +1,7 @@
 package com.ftpix.sss.controllers.api;
 
-import com.ftpix.sss.PrepareDB;
-import com.ftpix.sss.models.Category;
-import com.ftpix.sss.models.Expense;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import static com.ftpix.sss.PrepareDB.TOKEN;
-import static org.junit.Assert.*;
-
-
 public class ExpenseControllerTest {
+/*
     private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private ExpenseController controller = new ExpenseController();
 
@@ -116,4 +98,5 @@ public class ExpenseControllerTest {
         double totalAmount = (double) byDay.get("2012-12-24").get("outcome");
         assertEquals(70d, totalAmount, 0);
     }
+*/
 }

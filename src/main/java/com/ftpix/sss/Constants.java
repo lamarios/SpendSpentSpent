@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 public class Constants {
 
     public final static String DB_PATH, SALT;
-    public final static int HTTP_PORT;
     public static final String JSON = "application/json";
     public static final boolean ALLOW_SIGNUP = Optional.ofNullable(System.getenv("ALLOW_SIGNUP"))
             .map(s -> s.equalsIgnoreCase("1"))
@@ -44,22 +43,23 @@ public class Constants {
             httpPort = portSysProp.get();
 
         } else {
-
-            ResourceBundle rs = ResourceBundle.getBundle("config");
-
+            ResourceBundle rs;
+            try {
+                //old config style
+                rs = ResourceBundle.getBundle("config");
+            } catch (Exception e) {
+                rs = ResourceBundle.getBundle("application");
+            }
             dbUrl = rs.getString(CFG_DB_URL);
             salt = rs.getString(CFG_SALT);
-            httpPort = Integer.parseInt(rs.getString(CFG_PORT));
         }
 
         DB_PATH = dbUrl;
         SALT = salt;
-        HTTP_PORT = httpPort;
 
 
         System.out.println("SpendSpentSpent config ====================");
         System.out.println("DB URL = " + DB_PATH);
-        System.out.println("HTTP PORT = " + HTTP_PORT);
         System.out.println("SALT = " + SALT);
     }
 }

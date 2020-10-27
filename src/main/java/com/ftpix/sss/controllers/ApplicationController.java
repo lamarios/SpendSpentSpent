@@ -1,37 +1,35 @@
 package com.ftpix.sss.controllers;
 
 
-import com.ftpix.sparknnotation.annotations.*;
 import com.ftpix.sss.Constants;
 import com.ftpix.sss.db.DB;
-import com.ftpix.sss.transformer.GsonTransformer;
-import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import spark.Request;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import spark.Response;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-@SparkController
+@Controller
 public class ApplicationController {
-    private final Logger logger = LogManager.getLogger();
+    protected final Log logger = LogFactory.getLog(this.getClass());
 
     /**
      * Returns few values that will be use by the login screen so it knows what to display
      *
      * @return
      */
-    @SparkGet(value = "/config", transformer = GsonTransformer.class)
-    public Map<String, Object> getConfig(Response res) throws SQLException {
+    @GetMapping(value = "/config", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    public Map<String, Object> getConfig() throws SQLException {
 
-        res.header("Content-type", Constants.JSON);
         Map<String, Object> results = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
@@ -52,69 +50,41 @@ public class ApplicationController {
         results.put("announcement", sb.toString());
 
         results.put("allowSignup", Constants.ALLOW_SIGNUP);
-
         return results;
     }
 
-    @SparkGet(value = "/signup-screen")
+    @RequestMapping("/signup-screen")
     public String serveSignUp(Response res) throws IOException {
         return serveIndex(res);
     }
 
-    @SparkOptions("/*")
-    public String corsOptions(Response response, @SparkHeader("Origin") String origin) {
-        response.header("Access-Control-Allow-Origin", origin);
-        return "";
-    }
 
-    @SparkBefore("/*")
-    public void corsBefore(Request req, Response response, @SparkHeader("Access-Control-Request-Headers") String accessControlRequestHeaders, @SparkHeader("Origin") String origin, @SparkHeader("Access-Control-Request-Method") String accessControlRequestMethod) {
-        logger.info("{} - {}", req.requestMethod(), req.url());
-
-
-        if (accessControlRequestHeaders != null) {
-            response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
-        }
-
-        if (accessControlRequestMethod != null) {
-            response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
-        }
-
-        response.header("Access-Control-Allow-Credentials", "true");
-    }
-
-    @SparkGet(value = "/")
+    @RequestMapping(value = "/")
     public String serveIndex(Response res) throws IOException {
-        try (InputStream index = getClass().getClassLoader().getResourceAsStream("web/public/index.html");
-             InputStreamReader reader = new InputStreamReader(index, StandardCharsets.UTF_8)
-        ) {
-            res.raw().addHeader("Content-Type", "text/html");
-            IOUtils.copy(reader, res.raw().getOutputStream(), StandardCharsets.UTF_8);
-        }
-
-        return "";
+        return "index.html";
     }
 
-    @SparkGet(value = "/history")
+    @RequestMapping(value = "/history")
     public String serveHistory(Response res) throws IOException {
         return serveIndex(res);
     }
 
-    @SparkGet(value = "/login-screen")
+    @RequestMapping(value = "/login-screen")
     public String servceLogin(Response res) throws IOException {
         return serveIndex(res);
     }
 
-    @SparkGet(value = "/settings")
+    @RequestMapping(value = "/settings")
     public String serveSettings(Response res) throws IOException {
         return serveIndex(res);
     }
 
-    @SparkGet(value = "/graphs")
+    @RequestMapping(value = "/graphs")
     public String serveGraphs(Response res) throws IOException {
         return serveIndex(res);
     }
-    @SparkGet(value = "/edit-profile")
+
+    @RequestMapping(value = "/edit-profile")
     public String editProfile(Response res) throws IOException {
         return serveIndex(res);
     }

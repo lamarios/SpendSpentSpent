@@ -2,7 +2,6 @@
   "name": "sss",
   "version": "1.0.0",
   "description": "",
-  "main": "webpack.config.js",
   "dependencies": {
     "chartist": "^0.11.4",
     "moment": "^2.29.0",
@@ -30,9 +29,9 @@
     "parcel-bundler": "^1.12.4"
   },
   "scripts": {
-    "prebuild": "rm -rf ../resources/web/public",
-    "dev": "parcel src/index.html --out-dir ../resources/web/public",
-    "build": "parcel build  src/index.html --out-dir ../resources/web/public"
+    "prebuild": "rm -rf ../resources/public",
+    "dev": "parcel src/index.html --out-dir ../resources/public",
+    "build": "parcel build  src/index.html --out-dir ../resources/public"
   },
   "author": "",
   "license": "ISC"

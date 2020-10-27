@@ -1,19 +1,8 @@
 package com.ftpix.sss;
 
-import com.ftpix.sparknnotation.Sparknotation;
-import com.ftpix.sss.controllers.api.SettingsController;
-import com.ftpix.sss.controllers.api.UserSessionController;
-import com.ftpix.sss.db.DB;
-import com.ftpix.sss.models.Category;
-import com.ftpix.sss.models.User;
-
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
-import java.util.List;
-
 public class PrepareDB {
 
+/*
     public static User USER;
     public static String TOKEN;
     private static boolean dbReady = false;
@@ -24,7 +13,7 @@ public class PrepareDB {
             count++;
             if (!dbReady) {
 
-                final UserSessionController userSessionController = new UserSessionController();
+                final UserSessionController userSessionController = new UserSessionController(userController, settingsController);
                 final SettingsController settingsController = new SettingsController();
                 User user = new User();
                 user.setFirstName("Tester");
@@ -68,4 +57,5 @@ public class PrepareDB {
     private void stopSpark() {
 
     }
+*/
 }

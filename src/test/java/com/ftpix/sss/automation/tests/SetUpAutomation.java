@@ -1,31 +1,19 @@
 package com.ftpix.sss.automation.tests;
 
-import com.ftpix.sss.Constants;
-import com.ftpix.sss.SpendSpentSpent;
+import com.ftpix.sss.App;
 import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.*;
 import com.j256.ormlite.table.TableUtils;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class SetUpAutomation {
-    public static final String BASE_URL = "http://localhost:" + Constants.HTTP_PORT;
+    public static final String BASE_URL = "http://localhost:8080";
     public static WebDriver DRIVER;
     public static WebDriverWait WAIT;
 
@@ -39,7 +27,7 @@ public class SetUpAutomation {
             DRIVER = new FirefoxDriver();
             WAIT = new WebDriverWait(DRIVER, 3, 250);
 
-            new SpendSpentSpent();
+            new App();
         }
         count++;
     }

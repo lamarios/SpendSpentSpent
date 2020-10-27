@@ -1,23 +1,9 @@
 package com.ftpix.sss.controllers.api;
 
-import com.ftpix.sss.PrepareDB;
-import com.ftpix.sss.models.Category;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import spark.HaltException;
-
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-
-import static com.ftpix.sss.PrepareDB.TOKEN;
-import static com.ftpix.sss.PrepareDB.USER;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 public class CategoryControllerTest {
+/*
     private CategoryController controller = new CategoryController();
 
     @BeforeClass
@@ -26,11 +12,13 @@ public class CategoryControllerTest {
     }
 
 
-    /**
-     * Creating, Updating and deleting a category
-     *
-     * @throws SQLException
-     */
+    */
+/**
+ * Creating, Updating and deleting a category
+ *
+ * @throws SQLException
+ *//*
+
     @Test
     public void testCreateUpdateDeleteCategory() throws Exception {
 
@@ -113,4 +101,5 @@ public class CategoryControllerTest {
         assertEquals("There should be 6 categories", 4, results.size());
     }
 
+*/
 }

@@ -1,13 +1,12 @@
 package com.ftpix.sss.controllers.api;
 
 
-import com.ftpix.sparknnotation.annotations.SparkController;
-import com.ftpix.sparknnotation.annotations.SparkGet;
-import com.ftpix.sss.Constants;
-import com.ftpix.sss.transformer.GsonTransformer;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONObject;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,23 +16,21 @@ import java.util.ResourceBundle;
 /**
  * All things that don't really have a category
  */
-@SparkController("/API/Misc")
+@RestController
+@RequestMapping("/API/Misc")
 public class MiscController {
     private String localVersion;
-
 
     public MiscController() {
         ResourceBundle rs = ResourceBundle.getBundle("version");
         localVersion = rs.getString("version");
     }
 
-
-    @SparkGet(value = "/version", accept = Constants.JSON, transformer = GsonTransformer.class)
+    @GetMapping("/version")
     public Map<String, String> getLocalAndLatestVersion() throws IOException, UnirestException {
         Map<String, String> versions = new HashMap<>();
 
         versions.put("local", localVersion);
-
 
 
         versions.put("latest", getLatestVersion());
@@ -44,6 +41,7 @@ public class MiscController {
 
     /**
      * GEts the latest version from github
+     *
      * @return
      * @throws UnirestException
      */
@@ -53,9 +51,9 @@ public class MiscController {
         String response = Unirest.get(url).asString().getBody();
 
         JSONObject json = new JSONObject(response);
-        if(json.has("name")){
+        if (json.has("name")) {
             return json.getString("name");
-        }else{
+        } else {
             return "";
         }
 
