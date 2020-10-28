@@ -25,6 +25,7 @@ SpendSpentSpent (SSS) is an easy to use self hosted expense tracker. The goal of
 | Name | Default | Required | Commnents |
 | --- | --- | --- | --- |
 |SALT| (none) | **Yes** | Required for password hashing | 
+| DB_PATH | ./SSS | No (Hardcoded in docker container, can't be changed) | Location of the DB file |
 | ALLOW_SIGNUP | 0 | No | 1 = allow signups, 0 = Do not allow signups |
 | ANNOUNCEMENT_MESSAGE | (none) | No | Show a message on the login screen, ex: ANNOUNCEMENT_MESSAGE="Welcome to my SpendSpentSpent instance". See demo instance to see what it looks like |
 
