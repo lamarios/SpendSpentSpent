@@ -7,7 +7,7 @@ RUN npm install && npm run build
 
 FROM maven:3.6-jdk-14 as maven
 ADD ./ /app
-COPY --from=frontend /app/src/main/resources/web/ /app/src/main/resources/web/
+COPY --from=frontend /app/src/main/resources/public/ /app/src/main/resources/public/
 RUN ls /app/src/main/resources
 WORKDIR  /app
 RUN mvn clean install
