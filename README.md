@@ -64,7 +64,7 @@ With docker compose:
 You will need to have *Java 9* to be installed on your machine to be able to run SSS
 
 ```
-    java -Dsalt=somerandomstring -Dhttp.port=9001 -Ddb.url=/path/to/save/file  -jar /app/SpendSpentSpent.jar
+ SALT=somerandomestring DB_PATH=/path/to/save/file  java -Dserver.port=9001 -jar /app/SpendSpentSpent.jar
 ```
 
 
