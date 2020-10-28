@@ -22,7 +22,7 @@ SpendSpentSpent (SSS) is an easy to use self hosted expense tracker. The goal of
 
 # Run
 ## Environment variables
-| Name | Default | Required | Commnents |
+| Name | Default | Required | Comments |
 | --- | --- | --- | --- |
 |SALT| (none) | **Yes** | Required for password hashing | 
 | DB_PATH | ./SSS | No (Hardcoded in docker container, can't be changed) | Location of the DB file |

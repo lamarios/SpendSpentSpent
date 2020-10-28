@@ -10,7 +10,7 @@ ADD ./ /app
 COPY --from=frontend /app/src/main/resources/public/ /app/src/main/resources/public/
 RUN ls /app/src/main/resources
 WORKDIR  /app
-#salt is only for the unit tests
+#salt and db path is only for the unit tests
 RUN SALT=abcde DB_PATH=mem:test mvn clean install
 
 
