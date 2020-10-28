@@ -1,6 +1,2 @@
 #!/usr/bin/env bash
-if [ -z ${SALT+x} ]; then
-    echo "Missing SALT environment variable"
-else
-    java -Xmx256M -Dfile.encoding=UTF-8 -Dsalt=$SALT -Dserver.port=9001 -Ddb.url=/config/SSS -jar /app/SpendSpentSpent.jar
-fi
+DB_URL=/config/SSS   java -Xmx256M -Dfile.encoding=UTF-8 -Dserver.port=9001 -jar /app/SpendSpentSpent.jar
