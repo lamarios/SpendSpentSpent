@@ -11,7 +11,7 @@ COPY --from=frontend /app/src/main/resources/public/ /app/src/main/resources/pub
 RUN ls /app/src/main/resources
 WORKDIR  /app
 #salt is only for the unit tests
-RUN SALT=abcde mvn clean install
+RUN SALT=abcde DB_PATH=mem:test mvn clean install
 
 
 
