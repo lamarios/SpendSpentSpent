@@ -21,7 +21,7 @@ public class Constants {
     static {
 
         System.out.println("SpendSpentSpent config ====================");
-        System.out.println("DB URL = " + DB_PATH);
+        System.out.println("DB PATH= " + DB_PATH);
         System.out.println("SALT = " + SALT);
         System.out.println("ALLOW_SIGNUP = " + ALLOW_SIGNUP);
     }
