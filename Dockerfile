@@ -10,7 +10,8 @@ ADD ./ /app
 COPY --from=frontend /app/src/main/resources/public/ /app/src/main/resources/public/
 RUN ls /app/src/main/resources
 WORKDIR  /app
-RUN mvn clean install
+#salt is only for the unit tests
+RUN SALT=abcde mvn clean install
 
 
 
