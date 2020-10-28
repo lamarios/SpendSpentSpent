@@ -4,8 +4,8 @@ import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.CategoryIcons;
 import com.ftpix.sss.models.User;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import spark.Spark;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -33,6 +33,13 @@ public class CategoryService {
         }
     }
 
+    public List<String> getAvailable(User user) throws SQLException {
+        List<Category> categories = getAll(user);
+        return CategoryIcons.ALL.stream()
+                .filter(s -> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s)))
+                .collect(Collectors.toList());
+    }
+
     public long getNewCategoryOrder(User user) throws SQLException {
         return Optional.ofNullable(DB.CATEGORY_DAO.queryBuilder()
                 .selectColumns("category_order")
@@ -45,11 +52,11 @@ public class CategoryService {
                 .orElse(0);
     }
 
-    public Category create(Category category, User user) throws SQLException {
+    public Category create(Category category, User user) throws Exception {
         boolean found = CategoryIcons.ALL.contains(category.getIcon());
 
         if (!found) {
-            Spark.halt(503, "Icon doesn't exist");
+            throw new Exception("Icon doesn't exist");
         }
 
         long order = getNewCategoryOrder(user);
@@ -117,7 +124,7 @@ public class CategoryService {
     }
 
     public Category update(long id, String icon, int order, User user) throws Exception {
-        Category cat = new Category();
+        Category cat = get(id, user);
         cat.setIcon(icon);
         cat.setCategoryOrder(order);
         return update(cat, user);
@@ -127,5 +134,49 @@ public class CategoryService {
         return getAll(user).stream()
                 .map(Category::getId)
                 .collect(Collectors.toList());
+    }
+
+    public Map<String, Object> searchAvailableIcon(String name, User user) throws SQLException {
+        List<Category> categories = getAll(user);
+
+
+        List<String> iconResults = CategoryIcons.ALL.stream()
+                .filter(s -> StringUtils.containsIgnoreCase(s, name))
+                .filter(s -> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s)))
+                .collect(Collectors.toList());
+
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("query", name);
+        result.put("results", iconResults);
+
+        return result;
+    }
+
+
+    public boolean mergeCategory(long id, Category catdiff, User currentUser) throws Exception {
+        Optional<Category> categoryOptional = Optional.ofNullable(get(id, currentUser));
+
+
+        if (categoryOptional.isPresent()) {
+            boolean found = CategoryIcons.ALL.contains(catdiff.getIcon());
+
+            if (!found) {
+                throw new Exception("Icon doesn't exist");
+            }
+
+            Category category = categoryOptional.get();
+            if (category.getUser().getId().equals(currentUser.getId())) {
+                category.setId(id);
+                category.setIcon(catdiff.getIcon());
+                category.setCategoryOrder(catdiff.getCategoryOrder());
+                update(category, currentUser);
+                return true;
+            } else {
+                throw new RuntimeException("Not allowed to edit this category");
+            }
+        } else {
+            return false;
+        }
     }
 }

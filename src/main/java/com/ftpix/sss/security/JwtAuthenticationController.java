@@ -4,7 +4,6 @@ import com.ftpix.sss.controllers.api.UserSessionController;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +27,7 @@ public class JwtAuthenticationController {
 
 
     @RequestMapping(value = "/Login", method = RequestMethod.POST)
-    public ResponseEntity<?> generateAuthenticationToken(@RequestBody UserSessionController.UserCredentials creds)
+    public String generateAuthenticationToken(@RequestBody UserSessionController.UserCredentials creds)
             throws Exception {
 
         authenticate(creds.email, creds.password);
@@ -38,7 +37,7 @@ public class JwtAuthenticationController {
 
         final String token = jwtTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(token);
+        return token;
     }
 
     private void authenticate(String email, String password) throws Exception {

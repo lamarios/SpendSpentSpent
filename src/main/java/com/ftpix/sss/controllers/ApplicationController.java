@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import spark.Response;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -54,39 +53,39 @@ public class ApplicationController {
     }
 
     @RequestMapping("/signup-screen")
-    public String serveSignUp(Response res) throws IOException {
-        return serveIndex(res);
+    public String serveSignUp() throws IOException {
+        return serveIndex();
     }
 
 
     @RequestMapping(value = "/")
-    public String serveIndex(Response res) throws IOException {
+    public String serveIndex() throws IOException {
         return "index.html";
     }
 
     @RequestMapping(value = "/history")
-    public String serveHistory(Response res) throws IOException {
-        return serveIndex(res);
+    public String serveHistory() throws IOException {
+        return serveIndex();
     }
 
     @RequestMapping(value = "/login-screen")
-    public String servceLogin(Response res) throws IOException {
-        return serveIndex(res);
+    public String servceLogin() throws IOException {
+        return serveIndex();
     }
 
     @RequestMapping(value = "/settings")
-    public String serveSettings(Response res) throws IOException {
-        return serveIndex(res);
+    public String serveSettings() throws IOException {
+        return serveIndex();
     }
 
     @RequestMapping(value = "/graphs")
-    public String serveGraphs(Response res) throws IOException {
-        return serveIndex(res);
+    public String serveGraphs() throws IOException {
+        return serveIndex();
     }
 
     @RequestMapping(value = "/edit-profile")
-    public String editProfile(Response res) throws IOException {
-        return serveIndex(res);
+    public String editProfile() throws IOException {
+        return serveIndex();
     }
 
 }

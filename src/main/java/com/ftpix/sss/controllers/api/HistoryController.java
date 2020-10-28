@@ -1,6 +1,5 @@
 package com.ftpix.sss.controllers.api;
 
-import com.ftpix.sparknnotation.annotations.SparkHeader;
 import com.ftpix.sss.models.CategoryOverall;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.HistoryService;

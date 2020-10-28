@@ -41,11 +41,10 @@
             <artifactId>spring-security-core</artifactId>
             <version>5.4.1</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.ftpix/sparknotation -->
         <dependency>
-            <groupId>com.ftpix</groupId>
-            <artifactId>sparknotation</artifactId>
-            <version>1.13</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.j256.ormlite/ormlite-jdbc -->
@@ -142,20 +141,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-            <version>3.10.3</version>
-        </dependency>
-        <dependency>
             <groupId>org.simplejavamail</groupId>
             <artifactId>simple-java-mail</artifactId>
             <version>6.4.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

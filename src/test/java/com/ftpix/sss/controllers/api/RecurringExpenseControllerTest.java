@@ -1,15 +1,36 @@
 package com.ftpix.sss.controllers.api;
 
+import com.ftpix.sss.App;
+import com.ftpix.sss.TestConfig;
+import com.ftpix.sss.models.Category;
+import com.ftpix.sss.models.RecurringExpense;
+import com.ftpix.sss.models.User;
+import com.ftpix.sss.services.RecurringExpenseService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+@SpringBootTest(classes = App.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@Import(TestConfig.class)
 public class RecurringExpenseControllerTest {
-/*
-    private RecurringExpenseController controller = new RecurringExpenseController();
 
-    @BeforeClass
-    public static void prefareDB() throws SQLException, IOException {
-        PrepareDB.prepareDB();
-    }
+    @Autowired
+    private RecurringExpenseService recurringExpenseService;
 
-    private RecurringExpense create(long category, double amount, boolean income, String name, int type, int when) throws SQLException {
+    @Autowired
+    private User currentUser;
+
+    private RecurringExpense create(long category, double amount, boolean income, String name, int type, int when) throws Exception {
         RecurringExpense exp = new RecurringExpense();
         Category cat = new Category();
         cat.setId(category);
@@ -22,38 +43,37 @@ public class RecurringExpenseControllerTest {
         exp.setType(type);
         exp.setTypeParam(when);
 
-        return controller.create(exp);
+        return recurringExpenseService.create(exp, currentUser);
     }
 
     @Test
     public void createDeleteRecurringExpense() throws Exception {
 
-        int count = controller.get(USER).size();
+        int count = recurringExpenseService.get(currentUser).size();
 
         RecurringExpense expense = create(1, 10d, false, "spotify", RecurringExpense.TYPE_DAILY, 0);
 
-        int newCount = controller.get(USER).size();
+        int newCount = recurringExpenseService.get(currentUser).size();
 
         assertEquals(count + 1, newCount);
 
 
-        assertNotNull(controller.getId(expense.getId(), PrepareDB.TOKEN));
+        assertNotNull(recurringExpenseService.getId(expense.getId(), currentUser));
 
-        controller.delete(expense.getId(), PrepareDB.TOKEN);
-        newCount = controller.get(USER).size();
+        recurringExpenseService.delete(expense.getId(), currentUser);
+        newCount = recurringExpenseService.get(currentUser).size();
 
         assertEquals(count, newCount);
     }
 
 
-    @Test(expected = HaltException.class)
-    public void testAddingWronCategory() throws SQLException {
+    @Test(expected = Exception.class)
+    public void testAddingWronCategory() throws Exception {
         create(3213121, 10d, false, "spotify", RecurringExpense.TYPE_DAILY, 0);
     }
 
     @Test
     public void testNewDateCalculation() {
-
         //Daily expense
         RecurringExpense expense = new RecurringExpense();
         expense.setType(RecurringExpense.TYPE_DAILY);
@@ -61,7 +81,7 @@ public class RecurringExpenseControllerTest {
         GregorianCalendar today = new GregorianCalendar();
 
         GregorianCalendar newDate = new GregorianCalendar();
-        newDate.setTime(RecurringExpenseController.calculateNextDate(expense));
+        newDate.setTime(recurringExpenseService.calculateNextDate(expense));
 
         System.out.println(today);
         System.out.println(newDate);
@@ -69,7 +89,6 @@ public class RecurringExpenseControllerTest {
         assertEquals(today.get(Calendar.YEAR), newDate.get(Calendar.YEAR));
         assertEquals(today.get(Calendar.MONTH), newDate.get(Calendar.MONTH));
         assertEquals(today.get(Calendar.DAY_OF_MONTH), newDate.get(Calendar.DAY_OF_MONTH));
-
 
         //Check monthly of non passed date yet
         GregorianCalendar lastPaymentDate = new GregorianCalendar();
@@ -81,13 +100,11 @@ public class RecurringExpenseControllerTest {
         expense.setTypeParam(1);
         expense.setLastOccurrence(lastPaymentDate.getTime());
 
-        newDate.setTime(RecurringExpenseController.calculateNextDate(expense));
-
+        newDate.setTime(recurringExpenseService.calculateNextDate(expense));
 
         assertEquals(lastPaymentDate.get(Calendar.YEAR), newDate.get(Calendar.YEAR));
         assertEquals(lastPaymentDate.get(Calendar.MONTH) + 1, newDate.get(Calendar.MONTH));
         assertEquals(lastPaymentDate.get(Calendar.DAY_OF_MONTH), newDate.get(Calendar.DAY_OF_MONTH));
-
 
         //Check yearly of non passed date yet
         lastPaymentDate = new GregorianCalendar();
@@ -99,16 +116,12 @@ public class RecurringExpenseControllerTest {
         expense.setTypeParam(3);
         expense.setLastOccurrence(lastPaymentDate.getTime());
 
-        newDate.setTime(RecurringExpenseController.calculateNextDate(expense));
-
+        newDate.setTime(recurringExpenseService.calculateNextDate(expense));
 
         assertEquals(lastPaymentDate.get(Calendar.YEAR) + 1, newDate.get(Calendar.YEAR));
         assertEquals(lastPaymentDate.get(Calendar.MONTH), newDate.get(Calendar.MONTH));
         assertEquals(lastPaymentDate.get(Calendar.DAY_OF_MONTH), newDate.get(Calendar.DAY_OF_MONTH));
-
-
     }
 
 
-*/
 }

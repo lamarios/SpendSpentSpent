@@ -1,14 +1,40 @@
 package com.ftpix.sss.controllers.api;
 
-public class ExpenseControllerTest {
-/*
-    private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-    private ExpenseController controller = new ExpenseController();
+import com.ftpix.sss.App;
+import com.ftpix.sss.TestConfig;
+import com.ftpix.sss.models.Category;
+import com.ftpix.sss.models.Expense;
+import com.ftpix.sss.models.User;
+import com.ftpix.sss.services.ExpenseService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-    @BeforeClass
-    public static void prepareDB() throws SQLException, IOException {
-        PrepareDB.prepareDB();
-    }
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.*;
+
+@SpringBootTest(classes = App.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@Import(TestConfig.class)
+public class ExpenseControllerTest {
+
+    private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+
+    @Autowired
+    private ExpenseService expenseService;
+
+    @Autowired
+    private User currentUser;
 
 
     private Expense create(double amount, long catId, String date, boolean income, int expenseType, long lat, long longitude, String note) throws Exception {
@@ -31,7 +57,7 @@ public class ExpenseControllerTest {
         exp.setLongitude(longitude);
         exp.setNote(note);
 
-        return controller.create(exp, TOKEN);
+        return expenseService.create(exp, currentUser);
     }
 
     @Test(expected = Exception.class)
@@ -46,14 +72,14 @@ public class ExpenseControllerTest {
 
         Expense newExpense = create(10d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
 
-        Expense fromController = controller.getAll(TOKEN).stream().reduce((first, second) -> second).get();
+        Expense fromController = expenseService.getAll(currentUser).stream().reduce((first, second) -> second).get();
 
         assertEquals(newExpense.getId(), fromController.getId());
 
 
-        controller.delete(newExpense.getId(), TOKEN);
+        expenseService.delete(newExpense.getId(), currentUser);
 
-        fromController = controller.get(newExpense.getId(), TOKEN);
+        fromController = expenseService.get(newExpense.getId(), currentUser);
 
         assertNull(fromController);
 
@@ -84,11 +110,11 @@ public class ExpenseControllerTest {
         create(50d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
 
 
-        assertEquals(2, controller.getMonths(TOKEN).size());
-        assertTrue(controller.getMonths(TOKEN).contains("2012-10"));
-        assertTrue(controller.getMonths(TOKEN).contains("2012-12"));
+        assertEquals(2, expenseService.getMonths(currentUser).size());
+        assertTrue(expenseService.getMonths(currentUser).contains("2012-10"));
+        assertTrue(expenseService.getMonths(currentUser).contains("2012-12"));
 
-        Map<String, Map<String, Object>> byDay = controller.getByDay(null, null, "2012-12", TOKEN);
+        Map<String, Map<String, Object>> byDay = expenseService.getByDay(null, null, "2012-12", currentUser);
         //we only have 3 distinct days of expenses
         assertEquals(3, byDay.size());
         assertEquals(2, ((List) byDay.get("2012-12-24").get("expenses")).size());
@@ -98,5 +124,4 @@ public class ExpenseControllerTest {
         double totalAmount = (double) byDay.get("2012-12-24").get("outcome");
         assertEquals(70d, totalAmount, 0);
     }
-*/
 }

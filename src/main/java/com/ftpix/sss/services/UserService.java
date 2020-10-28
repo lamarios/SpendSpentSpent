@@ -185,4 +185,53 @@ public class UserService {
                 })
                 .orElse(false);
     }
+
+    public boolean setUserPassword(String userId, String newPassword) throws SQLException {
+        return Optional.ofNullable(getById(UUID.fromString(userId)))
+                .map(u -> {
+                    try {
+                        u.setPassword(hashUserCredentials(u.getEmail(), newPassword));
+                        u.update();
+                        return true;
+                    } catch (NoSuchAlgorithmException | SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).orElse(false);
+    }
+
+    public boolean setUserAdmin(String userId, boolean isAdmin, User requester) throws Exception {
+        if (requester.getId().toString().equals(userId) && !isAdmin) {
+            throw new Exception("You can't remove admin rights to yourself");
+        }
+
+        return Optional.ofNullable(getById(UUID.fromString(userId)))
+                .map(u -> {
+                    u.setAdmin(isAdmin);
+                    try {
+                        u.update();
+                        return true;
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).orElse(false);
+    }
+
+    public User updateUserProfile(User user, User newUserData) throws Exception {
+        if (newUserData.getFirstName() == null || newUserData.getFirstName().length() == 0 || newUserData.getLastName() == null || newUserData.getLastName().length() == 0) {
+            throw new Exception("first name and lat name can't be empty");
+        }
+
+        user.setFirstName(newUserData.getFirstName());
+        user.setLastName(newUserData.getLastName());
+
+        if (newUserData.getPassword() != null && newUserData.getPassword().length() > 0) {
+            user.setPassword(hashUserCredentials(user.getEmail(), newUserData.getPassword()));
+        }
+
+        user.update();
+
+
+        return user;
+
+    }
 }

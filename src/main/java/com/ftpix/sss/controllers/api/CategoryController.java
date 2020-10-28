@@ -2,22 +2,17 @@ package com.ftpix.sss.controllers.api;
 
 
 import com.ftpix.sss.models.Category;
-import com.ftpix.sss.models.CategoryIcons;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.CategoryService;
 import com.ftpix.sss.services.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import spark.Spark;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -72,12 +67,7 @@ public class CategoryController {
      */
     @GetMapping(value = "/Available")
     public List<String> getAvailable() throws Exception {
-
-        List<Category> categories = getAll();
-        return CategoryIcons.ALL.stream()
-                .filter(s -> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s)))
-                .collect(Collectors.toList());
-
+        return categoryService.getAvailable(userService.getCurrentUser());
     }
 
     /**
@@ -112,33 +102,7 @@ public class CategoryController {
     @PutMapping("/{id}")
     public boolean update(@PathVariable("id") long id, @RequestBody Category catdiff) throws Exception {
         final User currentUser = userService.getCurrentUser();
-        try {
-            Optional<Category> categoryOptional = Optional.ofNullable(get(id));
-
-
-            if (categoryOptional.isPresent()) {
-                boolean found = CategoryIcons.ALL.contains(catdiff.getIcon());
-
-                if (!found) {
-                    Spark.halt(503, "Icon doesn't exist");
-                }
-
-                Category category = categoryOptional.get();
-                if (category.getUser().getId().equals(currentUser.getId())) {
-                    category.setId(id);
-                    category.setIcon(catdiff.getIcon());
-                    category.setCategoryOrder(catdiff.getCategoryOrder());
-                    categoryService.update(category, currentUser);
-                    return true;
-                } else {
-                    throw new RuntimeException("Not allowed to edit this category");
-                }
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return categoryService.mergeCategory(id, catdiff, currentUser);
     }
 
 
@@ -165,20 +129,7 @@ public class CategoryController {
     @PostMapping("/search-icon")
     public Map<String, Object> searchAvailableIcon(@RequestBody String name) throws SQLException {
         final User currentUser = userService.getCurrentUser();
-        List<Category> categories = categoryService.getAll(currentUser);
-
-
-        List<String> iconResults = CategoryIcons.ALL.stream()
-                .filter(s -> StringUtils.containsIgnoreCase(s, name))
-                .filter(s -> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s)))
-                .collect(Collectors.toList());
-
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("query", name);
-        result.put("results", iconResults);
-
-        return result;
+        return categoryService.searchAvailableIcon(name, currentUser);
     }
 
     public List<Long> getUserCategoriesId() throws Exception {

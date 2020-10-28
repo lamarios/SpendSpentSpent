@@ -1,7 +1,5 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sparknnotation.Sparknotation;
-import com.ftpix.sss.controllers.api.CategoryController;
 import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.Expense;
@@ -11,7 +9,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import spark.Spark;
 
 import java.sql.SQLException;
 import java.text.ParseException;
