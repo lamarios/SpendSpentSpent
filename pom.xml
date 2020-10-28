@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>11</version>
+    <version>12</version>
 
     <properties>
         <automation.skip>true</automation.skip>
@@ -195,6 +195,18 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>build-info</id>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Build FE with NPM -->
 
 
@@ -240,10 +252,7 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        Multi user support
-
-                        Note for migrating users: If you have existing data, you'll have to sign up for an account (set
-                        ALLOW_SIGNUP=1 environment variable) all the expenses will be migrated to the first account.
+                        Migrate backend code to Spring Boot for better long term maintenance
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>

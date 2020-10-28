@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.*;
 
 @Service
@@ -152,5 +153,15 @@ public class RecurringExpenseService {
         } else {
             return false;
         }
+    }
+
+
+    public List<RecurringExpense> getToProcess() throws SQLException {
+//        String sql = "SELECT `id` FROM `recurring_expense` WHERE `next_occurrence` <= '" + df.format(new Date()) + "'";
+
+        List<RecurringExpense> recurringExpenses = DB.RECURRING_EXPENSE_DAO.queryBuilder().where().le("next_occurrence", new Date()).query();
+
+        logger.info("[{}] recurring expense to process", recurringExpenses.size());
+        return recurringExpenses;
     }
 }

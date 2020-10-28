@@ -4,6 +4,8 @@ package com.ftpix.sss.controllers.api;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * All things that don't really have a category
@@ -19,18 +20,20 @@ import java.util.ResourceBundle;
 @RestController
 @RequestMapping("/API/Misc")
 public class MiscController {
-    private String localVersion;
 
-    public MiscController() {
-        ResourceBundle rs = ResourceBundle.getBundle("version");
-        localVersion = rs.getString("version");
+    @Autowired
+    private final BuildProperties buildProperties;
+
+    public MiscController(BuildProperties buildProperties) {
+        this.buildProperties = buildProperties;
     }
+
 
     @GetMapping("/version")
     public Map<String, String> getLocalAndLatestVersion() throws IOException, UnirestException {
         Map<String, String> versions = new HashMap<>();
 
-        versions.put("local", localVersion);
+        versions.put("local", buildProperties.getVersion());
 
 
         versions.put("latest", getLatestVersion());
