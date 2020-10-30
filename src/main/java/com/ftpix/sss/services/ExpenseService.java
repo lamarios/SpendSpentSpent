@@ -1,9 +1,9 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,15 +24,18 @@ public class ExpenseService {
     protected final Log logger = LogFactory.getLog(this.getClass());
     private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
+    private final Dao<Expense, Long> expenseDao;
+
     @Autowired
-    public ExpenseService(CategoryService categoryService) {
+    public ExpenseService(CategoryService categoryService, Dao<Expense, Long> expenseDao) {
         this.categoryService = categoryService;
+        this.expenseDao = expenseDao;
     }
 
     public List<Expense> getAll(User user) throws Exception {
         final List<Long> userCategoriesId = categoryService.getUserCategoriesId(user);
         if (!userCategoriesId.isEmpty()) {
-            return DB.EXPENSE_DAO.queryBuilder()
+            return expenseDao.queryBuilder()
                     .where()
                     .in(CATEGORY_ID, userCategoriesId)
                     .query();
@@ -44,7 +47,7 @@ public class ExpenseService {
     public Expense get(long id, User user) throws Exception {
         final List<Long> userCategoriesId = categoryService.getUserCategoriesId(user);
         if (!userCategoriesId.isEmpty()) {
-            return DB.EXPENSE_DAO.queryBuilder()
+            return expenseDao.queryBuilder()
                     .where()
                     .in(CATEGORY_ID, userCategoriesId)
                     .and()
@@ -62,7 +65,7 @@ public class ExpenseService {
         final List<Long> userCategoriesId = categoryService.getUserCategoriesId(user);
 
         if (!userCategoriesId.isEmpty()) {
-            QueryBuilder<Expense, Long> builder = DB.EXPENSE_DAO.queryBuilder().distinct().selectColumns(DATE);
+            QueryBuilder<Expense, Long> builder = expenseDao.queryBuilder().distinct().selectColumns(DATE);
 
             if (from != null && to != null) {
 //            sql += " WHERE `date` >= '" + query.get(FILTER_FROM)[0] + "' AND `date`<= '" + query.get(FILTER_TO)[0] + "'";
@@ -96,7 +99,7 @@ public class ExpenseService {
 
 
             Map<String, Map<String, Object>> result = new LinkedHashMap<>();
-//        List<String[]> sqlResults = DB.EXPENSE_DAO.queryRaw(sql).getResults();
+//        List<String[]> sqlResults = expenseDao.queryRaw(sql).getResults();
 
             List<String[]> sqlResults = builder.queryRaw().getResults();
             sqlResults.forEach((row) -> {
@@ -106,7 +109,7 @@ public class ExpenseService {
 
                     Map<String, Object> fields = new HashMap<>();
                     fields.put(DATE, df.parse(date));
-                    final List<Expense> expenses = DB.EXPENSE_DAO.queryBuilder()
+                    final List<Expense> expenses = expenseDao.queryBuilder()
                             .where()
                             .in(CATEGORY_ID, userCategoriesId)
                             .and()
@@ -166,7 +169,7 @@ public class ExpenseService {
             expense.setType(Expense.TYPE_NORMAL);
         }
 
-        DB.EXPENSE_DAO.create(expense);
+        expenseDao.create(expense);
 
         return expense;
     }
@@ -174,7 +177,7 @@ public class ExpenseService {
     public boolean delete(long id, User user) throws Exception {
         final Expense expense = get(id, user);
         if (expense.getCategory().getUser().getId().equals(user.getId())) {
-            DB.EXPENSE_DAO.deleteById(id);
+            expenseDao.deleteById(id);
             return true;
         } else {
             return false;
@@ -186,7 +189,7 @@ public class ExpenseService {
         final List<Long> userCategoriesId = categoryService.getUserCategoriesId(user);
 //        String sql = "SELECT `date` FROM `expense`  ORDER BY `date` ASC";
 
-        return DB.EXPENSE_DAO.queryBuilder()
+        return expenseDao.queryBuilder()
                 .distinct()
                 .selectColumns(DATE)
                 .orderBy(DATE, true)

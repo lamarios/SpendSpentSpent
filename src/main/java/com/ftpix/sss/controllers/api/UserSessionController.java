@@ -2,9 +2,12 @@ package com.ftpix.sss.controllers.api;
 
 
 import com.ftpix.sss.Constants;
+import com.ftpix.sss.models.ResetPasswordNew;
+import com.ftpix.sss.models.ResetPasswordRequest;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.security.JwtTokenUtil;
 import com.ftpix.sss.security.JwtUserDetailsService;
+import com.ftpix.sss.services.ResetPasswordService;
 import com.ftpix.sss.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,13 +26,30 @@ public class UserSessionController {
     private final JwtTokenUtil jwtTokenUtil;
     private final JwtUserDetailsService jwtUserDetailsService;
 
+    private final ResetPasswordService resetPasswordService;
+
     @Autowired
-    public UserSessionController(UserService userService, JwtTokenUtil jwtTokenUtil, JwtUserDetailsService jwtUserDetailsService) {
+    public UserSessionController(UserService userService, JwtTokenUtil jwtTokenUtil, JwtUserDetailsService jwtUserDetailsService, ResetPasswordService resetPasswordService) {
         this.userService = userService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.jwtUserDetailsService = jwtUserDetailsService;
+        this.resetPasswordService = resetPasswordService;
     }
 
+    @PostMapping("/ResetPasswordRequest")
+    public boolean resetPasswordRequest(@RequestBody ResetPasswordRequest request) {
+        try {
+            resetPasswordService.createResetPasswordRequest(request);
+        } catch (Exception e) {
+            logger.error("Rest password failed", e);
+        }
+        return true;
+    }
+
+    @PostMapping("/ResetPassword")
+    public boolean resetPassword(@RequestBody ResetPasswordNew resetPasswordNew) throws Exception {
+        return resetPasswordService.resetPassword(resetPasswordNew);
+    }
 
     @PostMapping(value = "/SignUp")
     public String signUp(@RequestBody User user) throws Exception {

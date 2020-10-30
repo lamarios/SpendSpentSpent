@@ -1,9 +1,9 @@
 package com.ftpix.sss.controllers;
 
-import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.services.RecurringExpenseService;
+import com.j256.ormlite.dao.Dao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +19,18 @@ public class BackgroundJob {
 
     private final Logger logger = LogManager.getLogger();
     private final RecurringExpenseService recurringExpenseService;
+    private final Dao<Expense, Long> expenseDao;
+    private final Dao<RecurringExpense, Long> recurringExpenseDao;
 
     @Autowired
-    public BackgroundJob(RecurringExpenseService recurringExpenseService) {
+    public BackgroundJob(RecurringExpenseService recurringExpenseService, Dao<Expense, Long> expenseDao, Dao<RecurringExpense, Long> recurringExpenseDao) {
         this.recurringExpenseService = recurringExpenseService;
+        this.expenseDao = expenseDao;
+        this.recurringExpenseDao = recurringExpenseDao;
     }
 
 
-        @Scheduled(fixedRate = 100 * 60 * 1000)
+    @Scheduled(fixedRate = 100 * 60 * 1000)
 //    @Scheduled(fixedRate = 10 * 1000)
     public void run() throws SQLException {
         logger.info("Recurring expense process");
@@ -41,12 +45,12 @@ public class BackgroundJob {
                 expense.setCategory(recurring.getCategory());
                 expense.setDate(recurring.getNextOccurrence());
                 expense.setIncome(false);
-                DB.EXPENSE_DAO.create(expense);
+                expenseDao.create(expense);
 
                 recurring.setLastOccurrence(recurring.getNextOccurrence());
                 recurring.setNextOccurrence(recurringExpenseService.calculateNextDate(recurring));
 
-                DB.RECURRING_EXPENSE_DAO.update(recurring);
+                recurringExpenseDao.update(recurring);
                 logger.info("Expense added, next occurence:[{}]", recurring.getNextOccurrence());
 
                 String type = "";

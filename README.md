@@ -29,6 +29,18 @@ SpendSpentSpent (SSS) is an easy to use self hosted expense tracker. The goal of
 | ALLOW_SIGNUP | 0 | No | 1 = allow signups, 0 = Do not allow signups |
 | ANNOUNCEMENT_MESSAGE | (none) | No | Show a message on the login screen, ex: ANNOUNCEMENT_MESSAGE="Welcome to my SpendSpentSpent instance". See demo instance to see what it looks like |
 
+SMTP environment variables are necessary if you want to enable the forgot password function and recurring expense notification emails.
+
+| Name | Default | Required (based on if you want SMTP services enabled) | Comments |
+| --- | --- | --- | --- |
+| SMTP_HOST | (none) | Yes | |
+| SMTP_PORT | 0 | Yes | |
+| SMTP_USERNAME | (none) | No | |
+| SMTP_PASSWORD | (none) | No | |
+| SMTP_FROM | (none) | Yes | Who will be the sender of the email | 
+| SMTP_TRANSPORT_STRATEGY | SMTP | Yes | Possible values: SMTP, SMTPS, SMTP_TLS |
+
+
 ## Docker
 
 This is the easiest way to run SSS 

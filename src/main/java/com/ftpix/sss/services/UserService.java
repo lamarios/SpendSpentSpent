@@ -2,11 +2,13 @@ package com.ftpix.sss.services;
 
 
 import com.ftpix.sss.Constants;
-import com.ftpix.sss.db.DB;
+import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
+import com.j256.ormlite.dao.Dao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -28,12 +30,18 @@ public class UserService {
     private final ExpenseService recurringExpenseService;
     private final ExpenseService expenseService;
     private final ExpenseService categoryService;
+    private final Dao<Category, Long> categoryDao;
+    private final Dao<User, UUID> userDao;
+    @Value("${SALT}")
+    private String SALT;
 
     @Autowired
-    public UserService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService) {
+    public UserService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, Dao<Category, Long> categoryDao, Dao<User, UUID> userDao) {
         this.recurringExpenseService = recurringExpenseService;
         this.expenseService = expenseService;
         this.categoryService = categoryService;
+        this.categoryDao = categoryDao;
+        this.userDao = userDao;
     }
 
     /**
@@ -46,7 +54,7 @@ public class UserService {
     public String hashString(String str) throws NoSuchAlgorithmException {
         MessageDigest md5;
         md5 = MessageDigest.getInstance("MD5");
-        str += Constants.SALT;
+        str += SALT;
 
         md5.update(str.getBytes());
 
@@ -64,7 +72,7 @@ public class UserService {
     }
 
     public User getByEmail(String email) throws SQLException {
-        return DB.USER_DAO.queryBuilder().where().eq("email", email).queryForFirst();
+        return userDao.queryBuilder().where().eq("email", email).queryForFirst();
     }
 
     public User getCurrentUser() throws SQLException {
@@ -76,11 +84,11 @@ public class UserService {
     }
 
     public List<User> getAll() throws SQLException {
-        return DB.USER_DAO.queryForAll();
+        return userDao.queryForAll();
     }
 
     public User getById(UUID id) throws SQLException {
-        return DB.USER_DAO.queryForId(id);
+        return userDao.queryForId(id);
     }
 
     public User createUser(User user) throws Exception {
@@ -92,7 +100,7 @@ public class UserService {
             throw new Exception("All fields must be filled.");
         }
 
-        final long count = DB.USER_DAO.countOf();
+        final long count = userDao.countOf();
 
         if (count == 0) {
             user.setAdmin(true);
@@ -111,7 +119,7 @@ public class UserService {
         }
 
         // checking if user already exists
-        final long emailCheck = DB.USER_DAO.queryBuilder()
+        final long emailCheck = userDao.queryBuilder()
                 .where()
                 .eq("email", user.getEmail())
                 .countOf();
@@ -121,12 +129,12 @@ public class UserService {
         }
 
         user.setPassword(hashUserCredentials(user.getEmail(), user.getPassword()));
-        DB.USER_DAO.create(user);
+        userDao.create(user);
 
         // Migration code
         // migrating all existing categories to new user as it's the first one
         if (count == 0) {
-            DB.CATEGORY_DAO.queryForAll().forEach(c -> {
+            categoryDao.queryForAll().forEach(c -> {
                 try {
                     c.setUser(user);
                     c.update();

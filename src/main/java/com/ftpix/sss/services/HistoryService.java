@@ -1,10 +1,10 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.CategoryOverall;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +21,12 @@ import java.util.stream.Collectors;
 public class HistoryService {
     private final CategoryService categoryService;
 
+    private final Dao<Expense, Long> expenseDao;
+
     @Autowired
-    public HistoryService(CategoryService categoryService) {
+    public HistoryService(CategoryService categoryService, Dao<Expense, Long> expenseDao) {
         this.categoryService = categoryService;
+        this.expenseDao = expenseDao;
     }
 
     public List<CategoryOverall> yearly(User user) throws Exception {
@@ -133,14 +136,14 @@ public class HistoryService {
             return Collections.emptyList();
         }
 
-        Where<Expense, Long> categoryFilter = DB.EXPENSE_DAO.queryBuilder().where()
+        Where<Expense, Long> categoryFilter = expenseDao.queryBuilder().where()
                 .in("category_id", userCategoriesId);
 
         if (category >= 0) {
             categoryFilter = categoryFilter.and().eq("category_id", category);
         }
 
-        final QueryBuilder<Expense, Long> queryBuilder = DB.EXPENSE_DAO.queryBuilder();
+        final QueryBuilder<Expense, Long> queryBuilder = expenseDao.queryBuilder();
         queryBuilder.setWhere(categoryFilter);
 
         return queryBuilder.query()
@@ -166,14 +169,14 @@ public class HistoryService {
             return Collections.emptyList();
         }
 
-        Where<Expense, Long> categoryFilter = DB.EXPENSE_DAO.queryBuilder().where()
+        Where<Expense, Long> categoryFilter = expenseDao.queryBuilder().where()
                 .in("category_id", userCategoriesId);
 
         if (category >= 0) {
             categoryFilter = categoryFilter.and().eq("category_id", category);
         }
 
-        final QueryBuilder<Expense, Long> queryBuilder = DB.EXPENSE_DAO.queryBuilder();
+        final QueryBuilder<Expense, Long> queryBuilder = expenseDao.queryBuilder();
         queryBuilder.setWhere(categoryFilter);
 
         return queryBuilder.query()

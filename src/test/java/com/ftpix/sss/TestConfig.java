@@ -1,22 +1,26 @@
 package com.ftpix.sss;
 
-import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.UserService;
+import com.j256.ormlite.dao.Dao;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 
 @TestConfiguration
+@PropertySource("classpath:application.properties")
 public class TestConfig {
 
+
     @Bean
-    public User currentUser(UserService userService) throws NoSuchAlgorithmException, SQLException {
+    public User currentUser(UserService userService, Dao<User, UUID> userDao, Dao<Category, Long> categoryDao) throws NoSuchAlgorithmException, SQLException {
 
         User user = new User();
         user.setFirstName("Tester");
@@ -25,7 +29,7 @@ public class TestConfig {
         user.setAdmin(true);
         user.setPassword(userService.hashUserCredentials(user.getEmail(), "pass"));
         user.setSubscriptionExpiryDate(Long.MAX_VALUE);
-        DB.USER_DAO.create(user);
+        userDao.create(user);
 
 
         Category anchor = new Category();
@@ -43,7 +47,7 @@ public class TestConfig {
         gas.setIcon("icon-gas");
         gas.setUser(user);
 
-        DB.CATEGORY_DAO.create(List.of(anchor, violin, gas));
+        categoryDao.create(List.of(anchor, violin, gas));
 
         return user;
     }

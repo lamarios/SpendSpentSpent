@@ -2,6 +2,7 @@ package com.ftpix.sss.security;
 
 import com.ftpix.sss.controllers.api.UserSessionController;
 import com.ftpix.sss.models.User;
+import com.ftpix.sss.services.EmailService;
 import com.ftpix.sss.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,6 +37,7 @@ public class JwtAuthenticationController {
                 .loadUserByUsername(creds.email);
 
         final String token = jwtTokenUtil.generateToken(userDetails);
+
 
         return token;
     }

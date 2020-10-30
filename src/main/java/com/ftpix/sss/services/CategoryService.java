@@ -1,10 +1,9 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.db.DB;
-import com.ftpix.sss.models.Category;
-import com.ftpix.sss.models.CategoryIcons;
-import com.ftpix.sss.models.User;
+import com.ftpix.sss.models.*;
+import com.j256.ormlite.dao.Dao;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -17,15 +16,28 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryService {
 
+    private final Dao<Category, Long> categoryDao;
+    private final Dao<Expense, Long> expenseDao;
+    private final Dao<RecurringExpense, Long> recurringExpenseDao;
+
+
+    @Autowired
+    public CategoryService(Dao<Category, Long> categoryDao, Dao<Expense, Long> expenseDao, Dao<RecurringExpense, Long> recurringExpenseDao) {
+        this.categoryDao = categoryDao;
+        this.expenseDao = expenseDao;
+        this.recurringExpenseDao = recurringExpenseDao;
+    }
+
+
     public List<Category> getAll(User user) throws SQLException {
-        return DB.CATEGORY_DAO.queryBuilder()
+        return categoryDao.queryBuilder()
                 .orderBy("category_order", true)
                 .where().eq("user_id", user.getId())
                 .query();
     }
 
     public Category get(long id, User user) throws SQLException {
-        final Category category = DB.CATEGORY_DAO.queryForId(id);
+        final Category category = categoryDao.queryForId(id);
         if (category.getUser().getId().equals(user.getId())) {
             return category;
         } else {
@@ -41,7 +53,7 @@ public class CategoryService {
     }
 
     public long getNewCategoryOrder(User user) throws SQLException {
-        return Optional.ofNullable(DB.CATEGORY_DAO.queryBuilder()
+        return Optional.ofNullable(categoryDao.queryBuilder()
                 .selectColumns("category_order")
                 .limit(1L)
                 .orderBy("category_order", false)
@@ -62,14 +74,14 @@ public class CategoryService {
         long order = getNewCategoryOrder(user);
         category.setCategoryOrder((int) (order + 1));
         category.setUser(user);
-        DB.CATEGORY_DAO.create(category);
+        categoryDao.create(category);
 
         return category;
     }
 
     public Category update(Category category, User user) throws Exception {
         if (category.getUser().getId().equals(user.getId())) {
-            DB.CATEGORY_DAO.update(category);
+            categoryDao.update(category);
             return category;
         } else {
             throw new Exception("Not allowed to edit category");
@@ -83,10 +95,10 @@ public class CategoryService {
         final Category category = get(id, user);
         if (category.getUser().getId().equals(user.getId())) {
 
-            DB.EXPENSE_DAO.delete(DB.EXPENSE_DAO.queryForFieldValues(fields));
-            DB.RECURRING_EXPENSE_DAO.delete(DB.RECURRING_EXPENSE_DAO.queryForFieldValues(fields));
+            expenseDao.delete(expenseDao.queryForFieldValues(fields));
+            recurringExpenseDao.delete(recurringExpenseDao.queryForFieldValues(fields));
 
-            DB.CATEGORY_DAO.deleteById(id);
+            categoryDao.deleteById(id);
             return true;
         } else {
             return false;

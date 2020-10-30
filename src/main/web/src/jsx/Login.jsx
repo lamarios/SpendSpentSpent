@@ -9,7 +9,7 @@ export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.loginService = new LoginService();
-        this.state = {email: '', password: '', error: '', allowSignup: false, announcement: ''};
+        this.state = {email: '', password: '', error: '', allowSignup: false, announcement: '', canReset: false};
 
         this.emailChange = this.emailChange.bind(this);
         this.passwordChange = this.passwordChange.bind(this);
@@ -20,7 +20,11 @@ export default class Login extends React.Component {
         miscService.getConfig()
             .then(res => {
                 console.log('config:', res);
-                this.setState({allowSignup: res.allowSignup, announcement: res.announcement});
+                this.setState({
+                    allowSignup: res.allowSignup,
+                    announcement: res.announcement,
+                    canReset: res.canResetPassword
+                });
             })
     }
 
@@ -74,6 +78,9 @@ export default class Login extends React.Component {
                             or <NavLink to="/signup-screen">
                             Sign up
                         </NavLink>
+                        </div>}
+                        {this.state.canReset && <div className="reset-link">
+                            <NavLink to="/reset-password">Forgot password ?</NavLink>
                         </div>}
                     </div>
                 </FormContainer>

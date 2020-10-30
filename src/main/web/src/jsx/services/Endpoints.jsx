@@ -33,6 +33,8 @@ export const API = {
     SESSION: {
         LOGIN: API_ROOT + '/Login',
         SIGNUP: API_ROOT + '/SignUp',
+        RESET_PASSWORD_REQUEST: API_ROOT + "/ResetPasswordRequest",
+        RESET_PASSWORD: API_ROOT + "/ResetPassword",
     },
     SETTINGS: {
         UPDATE: API_URL + '/Setting',
@@ -41,15 +43,15 @@ export const API = {
     },
     MISC: {
         VERSION: API_URL + '/Misc/version',
-        GET_CONFIG: API_ROOT+"/config",
+        GET_CONFIG: API_ROOT + "/config",
     },
-    USER:{
-        EDIT_PROFILE: API_URL+"/User",
-        GET: API_URL+"/User",
-        SET_ADMIN: API_URL+"/User/{0}/setAdmin/{1}",
-        UPDATE_PASSWORD: API_URL+"/User/{0}/setPassword",
-        ADD_USER: API_URL+"/User",
-        DELETE_USER: API_URL+"/User/{0}",
+    USER: {
+        EDIT_PROFILE: API_URL + "/User",
+        GET: API_URL + "/User",
+        SET_ADMIN: API_URL + "/User/{0}/setAdmin/{1}",
+        UPDATE_PASSWORD: API_URL + "/User/{0}/setPassword",
+        ADD_USER: API_URL + "/User",
+        DELETE_USER: API_URL + "/User/{0}",
     }
 
 };

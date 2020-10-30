@@ -2,9 +2,12 @@ package com.ftpix.sss.controllers;
 
 
 import com.ftpix.sss.Constants;
-import com.ftpix.sss.db.DB;
+import com.ftpix.sss.models.User;
+import com.ftpix.sss.services.EmailService;
+import com.j256.ormlite.dao.Dao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +18,20 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 public class ApplicationController {
     protected final Log logger = LogFactory.getLog(this.getClass());
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private Dao<User, UUID> userDao;
+
+
+
 
     /**
      * Returns few values that will be use by the login screen so it knows what to display
@@ -35,7 +48,7 @@ public class ApplicationController {
         Constants.ANNOUNCEMENT_MESSAGE.ifPresent(sb::append);
 
 
-        long userCount = DB.USER_DAO.countOf();
+        long userCount = userDao.countOf();
 
         if (userCount == 0) {
             if (sb.length() > 0) {
@@ -49,6 +62,9 @@ public class ApplicationController {
         results.put("announcement", sb.toString());
 
         results.put("allowSignup", Constants.ALLOW_SIGNUP);
+
+        results.put("canResetPassword", emailService.isEnabled());
+
         return results;
     }
 
@@ -59,8 +75,13 @@ public class ApplicationController {
 
 
     @RequestMapping(value = "/")
-    public String serveIndex() throws IOException {
+    public String serveIndex() {
         return "index.html";
+    }
+
+    @RequestMapping("/reset-password")
+    public String resetPassword() {
+        return serveIndex();
     }
 
     @RequestMapping(value = "/history")

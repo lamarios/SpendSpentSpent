@@ -9,9 +9,9 @@ import Settings from "./Settings";
 import EditProfile from "./EditProfile";
 import BottomBar from "./BottomBar";
 import {loginService} from "./services/LoginServices";
+import ResetPassword from "./ResetPassword";
 
 export const UserDispatch = React.createContext(null);
-
 
 const App = (props) => {
     const [currentUser, dispatch] = useState(loginService.getCurrentUser());
@@ -24,11 +24,13 @@ const App = (props) => {
                 <Route path="/history" component={RightColumn}/>
                 <Route path="/login-screen" component={Login}/>
                 <Route path="/signup-screen" component={SignUp}/>
+                <Route path="/reset-password" component={ResetPassword}/>
                 <Route path="/settings" component={Settings}/>
                 <Route path="/edit-profile" component={EditProfile}/>
 
                 {!window.location.pathname.includes('login') &&
                 !window.location.pathname.includes('signup') &&
+                !window.location.pathname.includes('reset-password') &&
                 <BottomBar user={currentUser}/>}
             </UserDispatch.Provider>
         </div>

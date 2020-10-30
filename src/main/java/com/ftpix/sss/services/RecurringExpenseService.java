@@ -1,9 +1,9 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.db.DB;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
+import com.j256.ormlite.dao.Dao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,12 @@ public class RecurringExpenseService {
     private final static Logger logger = LogManager.getLogger();
     private final CategoryService categoryService;
 
+    private final Dao<RecurringExpense, Long> recurringExpenseDao;
+
     @Autowired
-    public RecurringExpenseService(CategoryService categoryService) {
+    public RecurringExpenseService(CategoryService categoryService, Dao<RecurringExpense, Long> recurringExpenseDao) {
         this.categoryService = categoryService;
+        this.recurringExpenseDao = recurringExpenseDao;
     }
 
     /**
@@ -116,7 +119,7 @@ public class RecurringExpenseService {
 
         expense.setNextOccurrence(calculateNextDate(expense));
 
-        DB.RECURRING_EXPENSE_DAO.create(expense);
+        recurringExpenseDao.create(expense);
 
         return expense;
     }
@@ -124,7 +127,7 @@ public class RecurringExpenseService {
     public List<RecurringExpense> get(User user) throws Exception {
         final List<Long> userCategoriesId = categoryService.getUserCategoriesId(user);
         if (!userCategoriesId.isEmpty()) {
-            return DB.RECURRING_EXPENSE_DAO.queryBuilder()
+            return recurringExpenseDao.queryBuilder()
                     .where()
                     .in("category_id", userCategoriesId)
                     .query();
@@ -135,7 +138,7 @@ public class RecurringExpenseService {
 
 
     public RecurringExpense getId(long id, User user) throws Exception {
-        final RecurringExpense recurringExpense = DB.RECURRING_EXPENSE_DAO.queryForId(id);
+        final RecurringExpense recurringExpense = recurringExpenseDao.queryForId(id);
         if (recurringExpense.getCategory().getUser().getId().equals(user.getId())) {
             return recurringExpense;
         } else {
@@ -148,7 +151,7 @@ public class RecurringExpenseService {
         final RecurringExpense recurringExpenses = getId(id, user);
 
         if (recurringExpenses != null) {
-            DB.RECURRING_EXPENSE_DAO.deleteById(id);
+            recurringExpenseDao.deleteById(id);
             return true;
         } else {
             return false;
@@ -159,7 +162,7 @@ public class RecurringExpenseService {
     public List<RecurringExpense> getToProcess() throws SQLException {
 //        String sql = "SELECT `id` FROM `recurring_expense` WHERE `next_occurrence` <= '" + df.format(new Date()) + "'";
 
-        List<RecurringExpense> recurringExpenses = DB.RECURRING_EXPENSE_DAO.queryBuilder().where().le("next_occurrence", new Date()).query();
+        List<RecurringExpense> recurringExpenses = recurringExpenseDao.queryBuilder().where().le("next_occurrence", new Date()).query();
 
         logger.info("[{}] recurring expense to process", recurringExpenses.size());
         return recurringExpenses;

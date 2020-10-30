@@ -152,8 +152,13 @@
     <orderEntry type="library" name="Maven: com.sun.activation:jakarta.activation:1.2.2" level="project" />
     <orderEntry type="library" name="Maven: com.github.bbottema:emailaddress-rfc2822:2.2.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.github.bbottema:jetbrains-runtime-annotations:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: org.simplejavamail:batch-module:6.4.4" level="project" />
+    <orderEntry type="library" name="Maven: org.simplejavamail:smtp-connection-pool:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.bbottema:clustered-object-pool:1.0.12" level="project" />
+    <orderEntry type="library" name="Maven: com.github.bbottema:generic-object-pool:1.0.5" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-security:2.3.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-config:5.3.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-web:5.3.4.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.freemarker:freemarker:2.3.30" level="project" />
   </component>
 </module>
