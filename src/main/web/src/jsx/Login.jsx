@@ -64,7 +64,7 @@ export default class Login extends React.Component {
                             <p className="error">{this.state.error}</p>
                             }
                             <p>
-                                <label htmlFor="login">Email</label>
+                                <label htmlFor="email">Email</label>
                                 <input type="text" id="email" onChange={this.emailChange} autoComplete="off"
                                        autoCorrect="off" autoCapitalize="off" spellCheck="false"/>
                             </p>
