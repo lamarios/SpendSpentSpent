@@ -1,6 +1,5 @@
 package com.ftpix.sss.security;
 
-import com.ftpix.sss.Constants;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.UserService;
 import io.jsonwebtoken.Claims;

@@ -30,7 +30,7 @@ class Http {
         if (url.indexOf("/Login") === -1) {
             if (typeof window.localStorage !== undefined && window.localStorage.token) {
                 config.headers = {
-                    'Authorization': "Bearer "+localStorage.token
+                    'Authorization': "Bearer " + localStorage.token
                 }
             }
         }

@@ -3,7 +3,6 @@ package com.ftpix.sss.controllers.api;
 
 import com.ftpix.sss.Constants;
 import com.ftpix.sss.models.ResetPasswordNew;
-import com.ftpix.sss.models.ResetPasswordRequest;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.security.JwtTokenUtil;
 import com.ftpix.sss.security.JwtUserDetailsService;
@@ -37,9 +36,9 @@ public class UserSessionController {
     }
 
     @PostMapping("/ResetPasswordRequest")
-    public boolean resetPasswordRequest(@RequestBody ResetPasswordRequest request) {
+    public boolean resetPasswordRequest(@RequestBody String email) {
         try {
-            resetPasswordService.createResetPasswordRequest(request);
+            resetPasswordService.createResetPasswordRequest(email);
         } catch (Exception e) {
             logger.error("Rest password failed", e);
         }

@@ -13,11 +13,9 @@ export default class TypeSelector extends React.Component {
         this.onTypeChange = this.onTypeChange.bind(this);
     }
 
-
     onTypeChange(type) {
         this.props.onTypeChange(type);
     }
-
 
     onTypeParamChange(param) {
         this.props.onTypeParamChange(param);
@@ -47,7 +45,6 @@ export default class TypeSelector extends React.Component {
         for (let i = 1; i <= 28; i++) {
             days.push({label: i, value: i});
         }
-
 
         let month = [
             {label: 'January', value: 0},

@@ -167,4 +167,19 @@ public class RecurringExpenseService {
         logger.info("[{}] recurring expense to process", recurringExpenses.size());
         return recurringExpenses;
     }
+
+    public List<RecurringExpense> getToProcessForUser(User user) throws Exception {
+        final List<Long> userCategoriesId = categoryService.getUserCategoriesId(user);
+        if (!userCategoriesId.isEmpty()) {
+            return recurringExpenseDao.queryBuilder()
+                    .where()
+                    .in("category_id", userCategoriesId)
+                    .and()
+                    .le("next_occurrence", new Date())
+                    .query();
+        } else {
+            return new ArrayList<RecurringExpense>(0);
+        }
+
+    }
 }

@@ -5,7 +5,7 @@ package com.ftpix.sss.models;
  * Provides with the current version of the project and if it is possible to update via autoupdate
  */
 public class UpdateInfo {
-    private  String currentVersion, latestVersion, message;
+    private String currentVersion, latestVersion, message;
     private boolean canAutoUpdate = false;
 
 

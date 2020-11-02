@@ -33,6 +33,7 @@ SMTP environment variables are necessary if you want to enable the forgot passwo
 
 | Name | Default | Required (based on if you want SMTP services enabled) | Comments |
 | --- | --- | --- | --- |
+| ROOT_URL | http://localhost:8080 | No | The base URL used in the links in email sent to users |
 | SMTP_HOST | (none) | Yes | |
 | SMTP_PORT | 0 | Yes | |
 | SMTP_USERNAME | (none) | No | |

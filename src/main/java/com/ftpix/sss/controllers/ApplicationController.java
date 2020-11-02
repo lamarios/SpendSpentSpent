@@ -31,8 +31,6 @@ public class ApplicationController {
     private Dao<User, UUID> userDao;
 
 
-
-
     /**
      * Returns few values that will be use by the login screen so it knows what to display
      *

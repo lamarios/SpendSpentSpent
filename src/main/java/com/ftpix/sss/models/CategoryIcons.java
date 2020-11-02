@@ -1,6 +1,7 @@
 package com.ftpix.sss.models;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CategoryIcons {

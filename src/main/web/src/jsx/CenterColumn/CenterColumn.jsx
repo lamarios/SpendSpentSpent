@@ -12,14 +12,12 @@ export default class CenterColumn extends React.Component {
             displayLeft: true
         };
 
-
         this.showNormal = this.showNormal.bind(this);
         this.showRecurring = this.showRecurring.bind(this);
     }
 
     componentDidMount() {
     }
-
 
     /**
      * Show normal expenses

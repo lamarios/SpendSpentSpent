@@ -10,7 +10,7 @@ export default class Dialog extends React.Component {
         this.dismiss = this.dismiss.bind(this);
     }
 
-    dismiss(e){
+    dismiss(e) {
         e.stopPropagation();
         this.props.dismiss(e);
     }

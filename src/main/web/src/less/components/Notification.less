@@ -1,6 +1,6 @@
-.Notification{
-  color:white;
-  font-size:20px;
+.Notification {
+  color: white;
+  font-size: 20px;
   position: fixed;
   top: 20px;
   right: 20px;
@@ -8,53 +8,53 @@
   max-width: 300px;
   border-radius: @borderRadius;
 
-  padding:20px;
+  padding: 20px;
 
   animation-name: notification-slide-in;
   animation-duration: .25s;
 
-  &.success{
+  &.success {
     background-color: @success;
   }
 
-  &.error{
+  &.error {
     background-color: @error;
   }
 }
 
 
 @media screen and (max-width: @mobileBreakPoint) {
-  .Notification{
+  .Notification {
     text-align: center;
-    left:0;
-    top:0;
-    right:0;
+    left: 0;
+    top: 0;
+    right: 0;
     max-width: 100%;
-    width:100%;
+    width: 100%;
     border-radius: 0;
     animation-name: notification-slide-top;
   }
 }
 
 @keyframes notification-slide-top {
-  from{
+  from {
     transform: translateY(-150px);
     opacity: 0;
   }
 
-  to{
+  to {
     transform: translateY(0);
     opacity: 1;
   }
 }
 
 @keyframes notification-slide-in {
-  from{
+  from {
     transform: translateX(300px);
     opacity: 0;
   }
 
-  to{
+  to {
     transform: translateX(0);
     opacity: 1;
   }

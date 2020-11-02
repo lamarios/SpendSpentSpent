@@ -1,6 +1,5 @@
 package com.ftpix.sss.models;
 
-import com.ftpix.sss.utils.JsonIgnore;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
@@ -9,7 +8,7 @@ import java.util.UUID;
 
 @DatabaseTable(tableName = "USER")
 public class User extends BaseDaoEnabled {
-    public final static long NEVER = Long.MAX_VALUE-1;
+    public final static long NEVER = Long.MAX_VALUE - 1;
 
     @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)
     private UUID id = UUID.randomUUID();

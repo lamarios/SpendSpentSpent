@@ -18,9 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
@@ -32,16 +30,18 @@ public class UserService {
     private final ExpenseService categoryService;
     private final Dao<Category, Long> categoryDao;
     private final Dao<User, UUID> userDao;
+    private final EmailService emailService;
     @Value("${SALT}")
     private String SALT;
 
     @Autowired
-    public UserService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, Dao<Category, Long> categoryDao, Dao<User, UUID> userDao) {
+    public UserService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, Dao<Category, Long> categoryDao, Dao<User, UUID> userDao, EmailService emailService) {
         this.recurringExpenseService = recurringExpenseService;
         this.expenseService = expenseService;
         this.categoryService = categoryService;
         this.categoryDao = categoryDao;
         this.userDao = userDao;
+        this.emailService = emailService;
     }
 
     /**
@@ -130,6 +130,12 @@ public class UserService {
 
         user.setPassword(hashUserCredentials(user.getEmail(), user.getPassword()));
         userDao.create(user);
+
+
+        Map<String, Object> templateData = new HashMap<>();
+        templateData.put("firstName", user.getFirstName());
+
+        emailService.sendTemplate(user.getEmail(), "Welcome to SpendSpentSpent !", "email/user-registered.ftl", templateData);
 
         // Migration code
         // migrating all existing categories to new user as it's the first one

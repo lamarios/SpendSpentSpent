@@ -116,7 +116,7 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore-nio:4.4.13" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpmime:4.5.12" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20160212" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.13.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:2.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.seleniumhq.selenium:selenium-java:3.7.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.seleniumhq.selenium:selenium-api:3.141.59" level="project" />

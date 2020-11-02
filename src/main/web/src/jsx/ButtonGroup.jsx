@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 export default class ButtonGroup extends React.Component {
 
     constructor(props) {
@@ -9,19 +8,17 @@ export default class ButtonGroup extends React.Component {
         this.state = {selected: ''}
     }
 
-
     onSelect(item) {
         this.setState({selected: item.value});
         this.props.onSelect(item);
     }
-
 
     render() {
         return <ul className={'ButtonGroup'}>
             {this.props.list.map(
                 item => <li key={item.value}
                             className={(this.state.selected === item.value ? 'selected' : '')}
-                            onClick={()=> this.onSelect(item)}
+                            onClick={() => this.onSelect(item)}
                 >
                     {item.label}
                 </li>

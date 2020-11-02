@@ -1,14 +1,10 @@
 import React from 'react';
 
-
 export default class SubCategory extends React.Component {
     constructor(props) {
         super(props);
 
     }
-
-
-
 
     render() {
         return <div className={'SubCategory'}>

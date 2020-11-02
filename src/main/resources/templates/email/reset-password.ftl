@@ -8,5 +8,5 @@
 </p>
 <p>If you did not request for this, you can ignore this email.</p>
 
-<@struct.footer />
+<@struct.footer  footerUrl=footerUrl/>
 

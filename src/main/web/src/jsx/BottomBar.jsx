@@ -1,7 +1,6 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 import MiscService from './services/MiscService';
-import {loginService} from "./services/LoginServices";
 import UserIcon from "./UserIcon";
 
 export default class BottomBar extends React.Component {

@@ -59,7 +59,6 @@ const EditProfile = (props) => {
 
     }
 
-
     return <div className="EditProfile scale-fade-in">
         <FormContainer>
             <form onSubmit={submitForm}>

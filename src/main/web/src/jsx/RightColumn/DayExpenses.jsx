@@ -6,7 +6,7 @@ import Amount from "../Amount.jsx";
 export default class DayExpenses extends React.Component {
     constructor(props) {
         super(props);
-        this.state= {date: moment()};
+        this.state = {date: moment()};
     }
 
     componentDidMount() {
@@ -17,9 +17,11 @@ export default class DayExpenses extends React.Component {
         return <div className={'DayExpense'}>
             <p className={'date'}>{this.state.date.format('MMMM Do YYYY')}</p>
             <div className={'expenses'}>
-                {this.props.day.expenses.map(expense => <Expense onDelete={this.props.onDelete} key={expense.id} expense={expense}/>)}
+                {this.props.day.expenses.map(expense => <Expense onDelete={this.props.onDelete} key={expense.id}
+                                                                 expense={expense}/>)}
             </div>
-            <p className={'total'}>Total: <span className={'amount'}><Amount>{this.props.day.outcome}</Amount></span></p>
+            <p className={'total'}>Total: <span className={'amount'}><Amount>{this.props.day.outcome}</Amount></span>
+            </p>
         </div>
     }
 }

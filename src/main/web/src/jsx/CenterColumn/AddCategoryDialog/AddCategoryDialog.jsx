@@ -5,7 +5,6 @@ import Dialog from "../../Dialog.jsx";
 
 export default class AddCategoryDialog extends React.Component {
 
-
     constructor(props) {
         super(props);
         this.categoryService = new CategoryService();
@@ -21,7 +20,6 @@ export default class AddCategoryDialog extends React.Component {
         this.select = this.select.bind(this);
         this.searchCategory = this.searchCategory.bind(this);
     }
-
 
     searchCategory(event) {
         clearTimeout(this.searchTimeout);
@@ -83,7 +81,6 @@ export default class AddCategoryDialog extends React.Component {
     select(icon) {
         this.setState({selected: icon});
     }
-
 
     render() {
         let keys = Object.keys(this.state.categories);

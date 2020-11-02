@@ -20,10 +20,7 @@ const ResetPassword = (props) => {
 
     const sendRequest = async (e) => {
         e.preventDefault();
-        await miscService.resetPasswordRequest({
-            email: email,
-            host: location.href
-        })
+        await miscService.resetPasswordRequest(email);
 
         setRequestSent(true);
         return false;

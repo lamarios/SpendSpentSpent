@@ -31,10 +31,9 @@
   }
 
 
-
   &.expanded {
     bottom: 0;
-    box-shadow: 0 0 50px 1px rgba(0,0,0,0.75);
+    box-shadow: 0 0 50px 1px rgba(0, 0, 0, 0.75);
 
   }
 
@@ -46,6 +45,7 @@
 
       transition: all 0.25s;
       color: @accentColor;
+
       &:hover, &.active {
         color: lighten(@accentColor, 10%);
         transform: scale(1.5);
@@ -60,6 +60,7 @@
 
   .sub-links {
     margin-top: 20px;
+
     a {
       cursor: pointer;
       text-decoration: none;
@@ -71,15 +72,15 @@
 
       transition: all .25s;
 
-      &:hover{
-        color:@accentColor;
+      &:hover {
+        color: @accentColor;
       }
     }
   }
 
 
-  .info{
-    margin-top:15px;
+  .info {
+    margin-top: 15px;
     font-size: 11px;
   }
 }

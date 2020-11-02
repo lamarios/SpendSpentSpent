@@ -11,8 +11,8 @@ export default class MiscService {
         return Http.get(API.MISC.GET_CONFIG);
     }
 
-    resetPasswordRequest(request) {
-        return Http.post(API.SESSION.RESET_PASSWORD_REQUEST, request);
+    resetPasswordRequest(email) {
+        return Http.post(API.SESSION.RESET_PASSWORD_REQUEST, email);
     }
 
     resetPassword(request) {

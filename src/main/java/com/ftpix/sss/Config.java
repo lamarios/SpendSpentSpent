@@ -35,6 +35,13 @@ public class Config {
     @Value("${SMTP_TRANSPORT_STRATEGY:SMTP}")
     private TransportStrategy transportStrategy;
 
+    @Value("${ROOT_URL:http://localhost:8080}")
+    private String rootUrl;
+
+    @Bean
+    public String rootUrl() {
+        return rootUrl;
+    }
 
     @Bean
     public Mailer mailer() {

@@ -2,18 +2,15 @@ package com.ftpix.sss.services;
 
 import com.ftpix.sss.models.ResetPassword;
 import com.ftpix.sss.models.ResetPasswordNew;
-import com.ftpix.sss.models.ResetPasswordRequest;
 import com.ftpix.sss.models.User;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.StringWriter;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -27,15 +24,17 @@ public class ResetPasswordService {
     private final static Logger logger = LogManager.getLogger();
     private final Dao<ResetPassword, UUID> resetPasswordDao;
     private final UserService userService;
-    private final Configuration templateEngine;
     private final EmailService emailService;
 
+
+    private final String rootUrl;
+
     @Autowired
-    public ResetPasswordService(Dao<ResetPassword, UUID> resetPasswordDao, UserService userService, Configuration templateEngine, EmailService emailService) {
+    public ResetPasswordService(Dao<ResetPassword, UUID> resetPasswordDao, UserService userService, EmailService emailService, String rootUrl) {
         this.resetPasswordDao = resetPasswordDao;
         this.userService = userService;
-        this.templateEngine = templateEngine;
         this.emailService = emailService;
+        this.rootUrl = rootUrl;
     }
 
     private void clearExpiredRequests() throws SQLException {
@@ -46,8 +45,8 @@ public class ResetPasswordService {
         logger.info("Deleted {} expired password requests", count);
     }
 
-    public boolean createResetPasswordRequest(ResetPasswordRequest request) throws SQLException {
-        Optional.ofNullable(userService.getByEmail(request.getEmail()))
+    public boolean createResetPasswordRequest(String email) throws SQLException {
+        Optional.ofNullable(userService.getByEmail(email))
                 .ifPresent(u -> {
                     try {
                         ResetPassword resetPassword = new ResetPassword();
@@ -59,16 +58,11 @@ public class ResetPasswordService {
 
                         Map<String, Object> templateData = new HashMap<>();
 
-                        String resetPasswordUrl = request.getHost() + "?reset-id=" + resetPassword.getId().toString();
+                        String resetPasswordUrl = rootUrl + "/reset-password?reset-id=" + resetPassword.getId().toString();
                         templateData.put("url", resetPasswordUrl);
                         templateData.put("firstName", u.getFirstName());
 
-                        try (StringWriter templateStr = new StringWriter()) {
-                            final Template template = templateEngine.getTemplate("email/reset-password.ftl");
-                            template.process(templateData, templateStr);
-
-                            emailService.send(u.getEmail(), "[SpendSpentSpent] Reset password request", templateStr.toString());
-                        }
+                        emailService.sendTemplate(u.getEmail(), "[SpendSpentSpent] Reset password request", "email/reset-password.ftl", templateData);
                         // sending email
                     } catch (Exception e) {
                         throw new RuntimeException(e);

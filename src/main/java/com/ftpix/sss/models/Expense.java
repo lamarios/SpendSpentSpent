@@ -1,7 +1,5 @@
 package com.ftpix.sss.models;
 
-import com.ftpix.sss.utils.JsonIgnore;
-import com.google.gson.annotations.Expose;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
@@ -42,7 +40,7 @@ public class Expense extends BaseDaoEnabled {
     @DatabaseField(columnName = "NOTE", dataType = DataType.LONG_STRING)
     private String note;
 
-    @DatabaseField(columnName = "TIME", dataType = DataType.STRING,width = 5)
+    @DatabaseField(columnName = "TIME", dataType = DataType.STRING, width = 5)
     private String time;
 
 
