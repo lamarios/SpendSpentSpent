@@ -47,6 +47,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.junit.vintage/junit-vintage-engine -->
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>5.7.0</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.j256.ormlite/ormlite-jdbc -->
         <dependency>
             <groupId>com.j256.ormlite</groupId>
@@ -226,7 +234,9 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        Add capability to  set up SMTP to send out email to users for registration, reset password and recurring notification. Set up the email related environment variables to get it working (cf. README)
+                        Add capability to set up SMTP to send out email to users for registration, reset password and
+                        recurring notification. Set up the email related environment variables to get it working (cf.
+                        README)
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>

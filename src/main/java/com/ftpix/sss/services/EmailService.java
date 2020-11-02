@@ -24,7 +24,7 @@ public class EmailService {
     private final Configuration templateEngine;
     private final Optional<Mailer> mailer;
     private final String rootUrl;
-    @Value("${SMTP_FROM}")
+    @Value("${SMTP_FROM:}")
     private String smtpFrom;
 
     @Autowired
@@ -47,18 +47,20 @@ public class EmailService {
      */
     public void sendHtml(String to, String subject, String message) {
         try {
-            mailer.ifPresent(m -> {
-                logger.info("Sending email [{}]", subject);
-                Email email = EmailBuilder.startingBlank()
-                        .to(to)
-                        .from(smtpFrom)
-                        .withSubject(subject)
-                        .withHTMLText(message)
-//                        .withPlainText(message)
-                        .buildEmail();
 
-                m.sendMail(email);
-            });
+            mailer.filter(m -> smtpFrom.trim().length() > 0)
+                    .ifPresent(m -> {
+                        logger.info("Sending email [{}]", subject);
+                        Email email = EmailBuilder.startingBlank()
+                                .to(to)
+                                .from(smtpFrom)
+                                .withSubject(subject)
+                                .withHTMLText(message)
+//                        .withPlainText(message)
+                                .buildEmail();
+
+                        m.sendMail(email);
+                    });
         } catch (Exception e) {
             logger.error("Error while sending email", e);
         }
