@@ -5,6 +5,8 @@ import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.CategoryService;
 import com.ftpix.sss.services.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/API/Category")
+@Api(tags = {"Categories"})
 public class CategoryController {
 
     protected final Log logger = LogFactory.getLog(this.getClass());

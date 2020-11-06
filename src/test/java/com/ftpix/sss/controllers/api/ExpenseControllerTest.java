@@ -3,6 +3,7 @@ package com.ftpix.sss.controllers.api;
 import com.ftpix.sss.App;
 import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.models.Category;
+import com.ftpix.sss.models.DailyExpense;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.ExpenseService;
@@ -114,14 +115,14 @@ public class ExpenseControllerTest {
         assertTrue(expenseService.getMonths(currentUser).contains("2012-10"));
         assertTrue(expenseService.getMonths(currentUser).contains("2012-12"));
 
-        Map<String, Map<String, Object>> byDay = expenseService.getByDay(null, null, "2012-12", currentUser);
+        Map<String, DailyExpense> byDay = expenseService.getByDay("2012-12", currentUser);
         //we only have 3 distinct days of expenses
         assertEquals(3, byDay.size());
-        assertEquals(2, ((List) byDay.get("2012-12-24").get("expenses")).size());
-        assertEquals(1, ((List) byDay.get("2012-12-02").get("expenses")).size());
-        assertEquals(1, ((List) byDay.get("2012-12-23").get("expenses")).size());
+        assertEquals(2, ((List) byDay.get("2012-12-24").getExpenses()).size());
+        assertEquals(1, ((List) byDay.get("2012-12-02").getExpenses()).size());
+        assertEquals(1, ((List) byDay.get("2012-12-23").getExpenses()).size());
 
-        double totalAmount = (double) byDay.get("2012-12-24").get("outcome");
+        double totalAmount = (double) byDay.get("2012-12-24").getTotal();
         assertEquals(70d, totalAmount, 0);
     }
 }

@@ -4,6 +4,7 @@ import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.RecurringExpenseService;
 import com.ftpix.sss.services.UserService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/API/RecurringExpense")
+@Api(tags = {"Recurring expenses"})
 public class RecurringExpenseController {
     private final static String FIELD_AMOUNT = "amount", FIELD_CATEGORY = "category", FIELD_ID = "id", FIELD_INCOME = "income", FIELD_LAST_OCCURRENCE = "lastOccurrence", FIELD_NAME = "name",
             FIELD_NEXT_OCCURRENCE = "nextOccurrence", FIELD_TYPE = "type", FIELD_WHEN = "typeParam";

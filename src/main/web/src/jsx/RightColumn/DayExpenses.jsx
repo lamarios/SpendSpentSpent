@@ -20,7 +20,7 @@ export default class DayExpenses extends React.Component {
                 {this.props.day.expenses.map(expense => <Expense onDelete={this.props.onDelete} key={expense.id}
                                                                  expense={expense}/>)}
             </div>
-            <p className={'total'}>Total: <span className={'amount'}><Amount>{this.props.day.outcome}</Amount></span>
+            <p className={'total'}>Total: <span className={'amount'}><Amount>{this.props.day.total}</Amount></span>
             </p>
         </div>
     }

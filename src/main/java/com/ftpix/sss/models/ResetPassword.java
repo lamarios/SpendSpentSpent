@@ -2,13 +2,12 @@ package com.ftpix.sss.models;
 
 
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.UUID;
 
 @DatabaseTable(tableName = "RESET_PASSWORD")
-public class ResetPassword extends BaseDaoEnabled {
+public class ResetPassword {
 
     @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)
     private UUID id = UUID.randomUUID();

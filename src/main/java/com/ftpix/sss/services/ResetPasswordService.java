@@ -8,7 +8,6 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -90,7 +89,7 @@ public class ResetPasswordService {
         user.setPassword(resetPasswordNew.getNewPassword());
         userService.updateUserProfile(user, user);
 
-        resetPassword.delete();
+        resetPasswordDao.delete(resetPassword);
         clearExpiredRequests();
         return true;
     }

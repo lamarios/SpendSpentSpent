@@ -143,7 +143,7 @@ public class UserService {
             categoryDao.queryForAll().forEach(c -> {
                 try {
                     c.setUser(user);
-                    c.update();
+                    categoryDao.update(c);
                 } catch (SQLException e) {
                     logger.error("Couldn't migrate categories", e);
                     throw new RuntimeException(e);
@@ -191,7 +191,7 @@ public class UserService {
                                     }
                                 });
 
-                        user.delete();
+                        userDao.delete(user);
                         return true;
                     } catch (Exception e) {
                         throw new RuntimeException(e);
@@ -205,7 +205,7 @@ public class UserService {
                 .map(u -> {
                     try {
                         u.setPassword(hashUserCredentials(u.getEmail(), newPassword));
-                        u.update();
+                        userDao.update(u);
                         return true;
                     } catch (NoSuchAlgorithmException | SQLException e) {
                         throw new RuntimeException(e);
@@ -222,7 +222,7 @@ public class UserService {
                 .map(u -> {
                     u.setAdmin(isAdmin);
                     try {
-                        u.update();
+                        userDao.update(u);
                         return true;
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
@@ -242,7 +242,7 @@ public class UserService {
             user.setPassword(hashUserCredentials(user.getEmail(), newUserData.getPassword()));
         }
 
-        user.update();
+        userDao.update(user);
 
 
         return user;

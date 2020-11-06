@@ -2,13 +2,12 @@ package com.ftpix.sss.models;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
 
 @DatabaseTable(tableName = "EXPENSE")
-public class Expense extends BaseDaoEnabled {
+public class Expense {
 
     public static final int TYPE_NORMAL = 1, TYPE_RECURRENT = 2;
 

@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>13</version>
+    <version>14</version>
 
     <properties>
         <automation.skip>true</automation.skip>
@@ -47,6 +47,16 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>3.0.0</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.junit.vintage/junit-vintage-engine -->
         <dependency>
             <groupId>org.junit.vintage</groupId>
@@ -234,9 +244,7 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        Add capability to set up SMTP to send out email to users for registration, reset password and
-                        recurring notification. Set up the email related environment variables to get it working (cf.
-                        README)
+                        Add swagger UI documentation
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>

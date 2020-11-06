@@ -11,7 +11,7 @@ import java.util.function.Consumer;
  */
 public class StreamGobbler implements Runnable {
     private final InputStream _inputStream;
-    private Consumer<String> consumer;
+    private final Consumer<String> consumer;
 
     public StreamGobbler(InputStream is, Consumer<String> consumer) {
         _inputStream = is;
@@ -21,7 +21,7 @@ public class StreamGobbler implements Runnable {
     public void run() {
         try (
                 InputStreamReader isr = new InputStreamReader(_inputStream);
-                BufferedReader br = new BufferedReader(isr);
+                BufferedReader br = new BufferedReader(isr)
         ) {
             String line;
             while ((line = br.readLine()) != null) {

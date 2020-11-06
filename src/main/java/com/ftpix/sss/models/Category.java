@@ -2,11 +2,10 @@ package com.ftpix.sss.models;
 
 import com.ftpix.sss.utils.JsonIgnore;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "CATEGORY")
-public class Category extends BaseDaoEnabled {
+public class Category {
 
 
     @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)

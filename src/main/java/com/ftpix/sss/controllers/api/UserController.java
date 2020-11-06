@@ -4,6 +4,7 @@ import com.ftpix.sss.models.User;
 import com.ftpix.sss.security.JwtTokenUtil;
 import com.ftpix.sss.security.JwtUserDetailsService;
 import com.ftpix.sss.services.UserService;
+import io.swagger.annotations.Api;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/API/User")
+@Api(tags = {"Users"})
 public class UserController {
     private final static Logger logger = LogManager.getLogger();
 

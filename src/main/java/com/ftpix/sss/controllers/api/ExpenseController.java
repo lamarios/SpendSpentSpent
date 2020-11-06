@@ -1,9 +1,13 @@
 package com.ftpix.sss.controllers.api;
 
+import com.ftpix.sss.models.DailyExpense;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.ExpenseService;
 import com.ftpix.sss.services.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/API/Expense")
+@Api(tags = {"Expenses"})
 public class ExpenseController {
     public static final String DATE = "date";
     protected final Log logger = LogFactory.getLog(this.getClass());
@@ -57,17 +62,16 @@ public class ExpenseController {
     /**
      * Gets the expenses in dending on dates given as parameter
      *
-     * @param from  yyy-mm-dd
-     * @param to    yyyy-mm-dd
      * @param month yyyy-mm if only requesting for a specific month
      * @return
      * @throws SQLException
      * @throws ParseException
      */
     @GetMapping(value = "/ByDay")
-    public Map<String, Map<String, Object>> getByDay(@RequestParam(required = false) String from, @RequestParam(required = false) String to, @RequestParam(required = false) String month) throws Exception {
+    @ApiOperation("Gets the expenses of a given month day by day")
+    public Map<String, DailyExpense> getByDay(@ApiParam("Given month, format yyyy-mm ex: 2020-03") @RequestParam String month) throws Exception {
         final User currentUser = userService.getCurrentUser();
-        return expenseService.getByDay(from, to, month, currentUser);
+        return expenseService.getByDay(month, currentUser);
     }
 
 

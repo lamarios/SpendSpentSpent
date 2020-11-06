@@ -3,6 +3,7 @@ package com.ftpix.sss.controllers.api;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import io.swagger.annotations.Api;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
@@ -19,6 +20,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/API/Misc")
+@Api(tags = {"Misc"})
 public class MiscController {
 
     @Autowired

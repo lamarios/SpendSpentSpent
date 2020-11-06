@@ -1,6 +1,7 @@
 package com.ftpix.sss.services;
 
 import com.ftpix.sss.models.Category;
+import com.ftpix.sss.models.DailyExpense;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
 import com.j256.ormlite.dao.Dao;
@@ -58,7 +59,7 @@ public class ExpenseService {
         }
     }
 
-    public Map<String, Map<String, Object>> getByDay(String from, String to, String month, User user) throws Exception {
+    public Map<String, DailyExpense> getByDay(String month, User user) throws Exception {
         String sql = "SELECT DISTINCT `date` FROM `expense`";
 
         // this should already throw exception if the user is not allowed
@@ -67,20 +68,7 @@ public class ExpenseService {
         if (!userCategoriesId.isEmpty()) {
             QueryBuilder<Expense, Long> builder = expenseDao.queryBuilder().distinct().selectColumns(DATE);
 
-            if (from != null && to != null) {
-//            sql += " WHERE `date` >= '" + query.get(FILTER_FROM)[0] + "' AND `date`<= '" + query.get(FILTER_TO)[0] + "'";
-                sql += " WHERE `date` >= '" + from + "' AND `date`<= '" + to + "'";
-                builder.setWhere(builder.where().ge(DATE, df.parse(from)).and().le(DATE, df.parse(to)));
-//            builder.setWhere(builder.where().ge(DATE, df.parse(from)).and().le(DATE, df.parse(to)));
-            } else if (from != null) {
-//            sql += " WHERE `date` >= '" + query.get(FILTER_FROM)[0] + "'";
-                sql += " WHERE `date` >= '" + from + "'";
-                builder.setWhere(builder.where().ge(DATE, df.parse(from)));
-            } else if (to != null) {
-//            sql += " WHERE `date`<= '" + query.get(FILTER_TO)[0] + "'";
-                sql += " WHERE `date`<= '" + to + "'";
-                builder.setWhere(builder.where().le(DATE, df.parse(to)));
-            } else if (month != null) {
+            if (month != null) {
 //            sql += " WHERE `date` LIKE '" + query.get("month")[0] + "%'";
                 sql += " WHERE `date` LIKE '" + month + "%'";
                 final Date fromDate = df.parse(month + "-01");
@@ -98,7 +86,7 @@ public class ExpenseService {
 //        List<SqlRow> rows = Ebean.createSqlQuery(sql).findList();
 
 
-            Map<String, Map<String, Object>> result = new LinkedHashMap<>();
+            Map<String, DailyExpense> result = new LinkedHashMap<>();
 //        List<String[]> sqlResults = expenseDao.queryRaw(sql).getResults();
 
             List<String[]> sqlResults = builder.queryRaw().getResults();
@@ -117,20 +105,19 @@ public class ExpenseService {
                             .query();
 
                     if (!expenses.isEmpty()) {
-                        double outcome = 0, income = 0;
+                        double outcome = 0;
                         for (Expense expense : expenses) {
                             outcome += expense.getAmount();
                             //Weird bug, not showing category and color if not calling this…
                             expense.getCategory().getIcon();
                         }
 
-                        Map<String, Object> tmp = new HashMap<>();
-                        tmp.put("outcome", outcome);
-                        tmp.put("income", income);
-                        tmp.put("expenses", expenses);
-                        tmp.put(DATE, date);
+                        final DailyExpense dailyExpense = new DailyExpense();
+                        dailyExpense.setTotal(outcome);
+                        dailyExpense.setExpenses(expenses);
+                        dailyExpense.setDate(date);
 
-                        result.put(date, tmp);
+                        result.put(date, dailyExpense);
                     }
                 } catch (SQLException | ParseException e) {
                     logger.error("Couldn't get the expenses for date {}", e);

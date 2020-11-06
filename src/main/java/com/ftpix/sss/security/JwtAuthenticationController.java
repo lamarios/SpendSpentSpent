@@ -3,6 +3,9 @@ package com.ftpix.sss.security;
 import com.ftpix.sss.controllers.api.UserSessionController;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Objects;
 
 @RestController
+@Api(tags = { "Login" })
 public class JwtAuthenticationController {
 
     @Autowired
@@ -27,6 +31,7 @@ public class JwtAuthenticationController {
 
 
     @RequestMapping(value = "/Login", method = RequestMethod.POST)
+    @ApiOperation(value = "Logs into the system, will return a JWT token to pass to other requests as a bearer token via the Authorization header")
     public String generateAuthenticationToken(@RequestBody UserSessionController.UserCredentials creds)
             throws Exception {
 

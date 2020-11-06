@@ -2,13 +2,12 @@ package com.ftpix.sss.models;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
 
 @DatabaseTable(tableName = "RECURRING_EXPENSE")
-public class RecurringExpense extends BaseDaoEnabled {
+public class RecurringExpense {
 
     public static final int TYPE_DAILY = 0, TYPE_WEEKLY = 1, TYPE_MONTHLY = 2, TYPE_YEARLY = 3;
 
