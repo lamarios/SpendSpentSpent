@@ -159,7 +159,7 @@ public class Config {
                 "Easy to use expense tracker",
                 buildProperties.getVersion(),
                 "",
-                new Contact("Paul fauchon", "https://github.com/lamarios/SpendSpentSpent", "EMAIL"),
+                new Contact("Paul fauchon", "https://lamarios.github.io/SpendSpentSpent/", "EMAIL"),
                 "GNU Affero General Public License v3.0",
                 "https://raw.githubusercontent.com/lamarios/SpendSpentSpent/master/LICENSE",
                 Collections.emptyList()
