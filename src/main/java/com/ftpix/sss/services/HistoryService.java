@@ -14,14 +14,17 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class HistoryService {
     private final CategoryService categoryService;
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final Dao<Expense, Long> expenseDao;
+
 
     @Autowired
     public HistoryService(CategoryService categoryService, Dao<Expense, Long> expenseDao) {
@@ -143,6 +146,14 @@ public class HistoryService {
             categoryFilter = categoryFilter.and().eq("category_id", category);
         }
 
+        LocalDate start = date.withDayOfYear(1);
+        LocalDate end = date.plusYears(1).withDayOfYear(1);
+        Date startDate = Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date endDate = Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        categoryFilter = categoryFilter.and().ge("date", startDate);
+        categoryFilter = categoryFilter.and().lt("date", endDate);
+
         final QueryBuilder<Expense, Long> queryBuilder = expenseDao.queryBuilder();
         queryBuilder.setWhere(categoryFilter);
 
@@ -175,6 +186,14 @@ public class HistoryService {
         if (category >= 0) {
             categoryFilter = categoryFilter.and().eq("category_id", category);
         }
+
+        LocalDate start = date.withDayOfMonth(1);
+        LocalDate end = date.withDayOfMonth(date.lengthOfMonth()).plusDays(1);
+        Date startDate = Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date endDate = Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        categoryFilter = categoryFilter.and().ge("date", startDate);
+        categoryFilter = categoryFilter.and().lt("date", endDate);
 
         final QueryBuilder<Expense, Long> queryBuilder = expenseDao.queryBuilder();
         queryBuilder.setWhere(categoryFilter);
@@ -214,15 +233,15 @@ public class HistoryService {
         LocalDate date = LocalDate.now();
 
         for (int i = 0; i < count; i++) {
+            int finalI = i;
             Map<String, Object> expensesForMonth = new HashMap<>();
+            final LocalDate localDate = date.minusMonths(finalI);
+            expensesForMonth.put("date", localDate.format(DateTimeFormatter.ofPattern("yyyy-MM")));
+            final List<Expense> expenses = getCategoryExpensesForMonth(categoryId, localDate, user);
+            expensesForMonth.put("amount", expenses.stream().mapToDouble(Expense::getAmount).sum());
 
-            expensesForMonth.put("date", date.getYear() + "-" + date.getMonthValue());
-            expensesForMonth.put("amount", getCategoryExpensesForMonth(categoryId, date, user).stream().mapToDouble(Expense::getAmount).sum());
-
-            date = date.minusMonths(1);
             result.add(expensesForMonth);
         }
-
 
         return result;
     }

@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>14</version>
+    <version>15</version>
 
     <properties>
         <automation.skip>true</automation.skip>
@@ -244,7 +244,8 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        Add swagger UI documentation
+                        Optimize monthly and yearly graphs.
+                        Fix month total in right column
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>

@@ -69,7 +69,7 @@ export default class RightColumn extends React.Component {
     getMonthTotal() {
         let total = 0;
         Object.keys(this.state.expenses).map(day => {
-            total += this.state.expenses[day].outcome;
+            total += this.state.expenses[day].total;
         });
 
         this.setState({total: total});
