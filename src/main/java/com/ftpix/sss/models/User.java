@@ -33,7 +33,7 @@ public class User {
     @DatabaseField
     private boolean isAdmin = false;
 
-    @DatabaseField(columnName = "TIMECREATED")
+//    @DatabaseField(columnName = "TIMECREATED")
     private long timeCreated = System.currentTimeMillis();
 
 

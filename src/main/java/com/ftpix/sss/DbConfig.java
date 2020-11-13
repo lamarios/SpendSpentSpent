@@ -153,8 +153,11 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
                 try (final CloseableDSLContext jooq = DSL.using(jdbcUrl, dbUsername, dbPassword)) {
                     jooq.alterTable("EXPENSE").addColumn("TIMESTAMP", SQLDataType.BIGINT.default_(0L).nullable(false)).execute();
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    throw e;
+                    // issues with original migration
+                    if(!e.getMessage().contains("Duplicate column name")){
+                        e.printStackTrace();
+                        throw e;
+                    }
                 }
 
                 // migrating existing expenses by adding a timestamp
