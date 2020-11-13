@@ -45,6 +45,7 @@ public class Expense {
     @DatabaseField(columnName = "TIMESTAMP")
     private long timestamp = System.currentTimeMillis();
 
+
     public long getId() {
         return id;
     }
@@ -132,4 +133,5 @@ public class Expense {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
+
 }

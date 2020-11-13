@@ -22,6 +22,8 @@ public class Category {
     @JsonIgnore
     private User user;
 
+    private double percentageOfMonthly = 0;
+
     public long getId() {
         return id;
     }
@@ -52,5 +54,13 @@ public class Category {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public double getPercentageOfMonthly() {
+        return percentageOfMonthly;
+    }
+
+    public void setPercentageOfMonthly(double percentageOfMonthly) {
+        this.percentageOfMonthly = percentageOfMonthly;
     }
 }

@@ -197,6 +197,7 @@ export default class AddExpenseDialog extends React.Component {
 
             this.expenseService.add(expense)
                 .then(res => {
+                    this.props.refresh();
                     this.props.dismiss();
 
                 })

@@ -74,7 +74,7 @@ public class HistoryService {
                     c.setTotal(overall.getTotal());
                     return c;
                 })
-                .sorted(Comparator.comparing(CategoryOverall::getAmount).thenComparingLong(o -> o.getCategory().getId()))
+                .sorted(Comparator.comparing(CategoryOverall::getAmount).reversed().thenComparingLong(o -> o.getCategory().getId()))
                 .collect(Collectors.toList());
     }
 
@@ -121,7 +121,7 @@ public class HistoryService {
                     c.setTotal(overall.getTotal());
                     return c;
                 })
-                .sorted(Comparator.comparing(CategoryOverall::getAmount).thenComparingLong(o -> o.getCategory().getId()))
+                .sorted(Comparator.comparing(CategoryOverall::getAmount).reversed().thenComparingLong(o -> o.getCategory().getId()))
                 .collect(Collectors.toList());
     }
 

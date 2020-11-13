@@ -37,7 +37,7 @@ export default class CategoryGridIcon extends React.Component {
         this.setState({showDialog: !this.state.showDialog})
     }
 
-    dismissCategoryChange(){
+    dismissCategoryChange() {
         this.setState({showChangeCategoryDialog: false});
     }
 
@@ -45,12 +45,14 @@ export default class CategoryGridIcon extends React.Component {
         let style = {
             animationDuration: ((Math.random()) * (0.5 - 0.20) + 0.20) + 's',
         };
+        let percentageStyle = {
+            backgroundColor: "rgb(3,57,102," + this.props.category.percentageOfMonthly + ")"
+        }
 
         return <li className={'CategoryGridIcon ' + (this.props.overlay ? ' editting' : '')} style={style}
                    onClick={this.toggleAddExpenseDialog}>
-
             {this.state.showDialog &&
-            <AddExpenseDialog dismiss={this.toggleAddExpenseDialog} category={this.props.category}/>
+            <AddExpenseDialog refresh={this.props.refresh} dismiss={this.toggleAddExpenseDialog} category={this.props.category}/>
             }
 
             {this.state.showDeleteDialog &&
@@ -59,22 +61,25 @@ export default class CategoryGridIcon extends React.Component {
                 Are you sure to delete this category and all the related expenses ?
             </OkCancelDialog>
             }
-
-            <i className={'cat ' + this.props.category.icon}/>
-            <div className={'grid-overlay ' + (this.props.overlay ? 'showing fade-in' : '')}
-                 onClick={(e) => e.stopPropagation()}>
-                <div className="delete-button" onClick={(e) => {
-                    this.setState({showDeleteDialog: true});
-                    e.stopPropagation();
-                }}>
-                    <i className="fa fa-times"/>
+            <div className="shading" style={percentageStyle}>
+                <i className={'cat ' + this.props.category.icon}/>
+                <div className={'grid-overlay ' + (this.props.overlay ? 'showing fade-in' : '')}
+                     onClick={(e) => e.stopPropagation()}>
+                    <div className="delete-button" onClick={(e) => {
+                        this.setState({showDeleteDialog: true});
+                        e.stopPropagation();
+                    }}>
+                        <i className="fa fa-times"/>
+                    </div>
+                    <i onClick={() => this.setState({showChangeCategoryDialog: true})} title="Change category icon"
+                       className={'cat ' + this.props.category.icon}/>
+                    <DragHandle/>
                 </div>
-                <i onClick={() => this.setState({showChangeCategoryDialog: true})} title="Change category icon" className={'cat ' + this.props.category.icon}/>
-                <DragHandle/>
             </div>
 
-            {this.state.showChangeCategoryDialog && <AddCategoryDialog refresh={this.props.refresh} updateCategory={this.props.category.id}
-            dismiss={this.dismissCategoryChange}/>}
+            {this.state.showChangeCategoryDialog &&
+            <AddCategoryDialog refresh={this.props.refresh} updateCategory={this.props.category.id}
+                               dismiss={this.dismissCategoryChange}/>}
         </li>
     }
 }

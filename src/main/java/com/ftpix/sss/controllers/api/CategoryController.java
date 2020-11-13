@@ -4,6 +4,7 @@ package com.ftpix.sss.controllers.api;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.CategoryService;
+import com.ftpix.sss.services.HistoryService;
 import com.ftpix.sss.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,10 +32,13 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
+    private final HistoryService historyService;
+
     @Autowired
-    public CategoryController(UserService userService, CategoryService categoryService) {
+    public CategoryController(UserService userService, CategoryService categoryService, HistoryService historyService) {
         this.userService = userService;
         this.categoryService = categoryService;
+        this.historyService = historyService;
     }
 
     /**
@@ -45,7 +50,19 @@ public class CategoryController {
     @GetMapping
     public List<Category> getAll() throws Exception {
         final User currentUser = userService.getCurrentUser();
-        return categoryService.getAll(currentUser);
+
+
+
+        return historyService.monthly(currentUser)
+                .stream()
+                .skip(1) // first is always the overall category
+                .map(c -> {
+                    double percentage = c.getAmount() / c.getTotal();
+                    c.getCategory().setPercentageOfMonthly(percentage);
+                    return c.getCategory();
+                })
+                .sorted(Comparator.comparingInt(Category::getCategoryOrder))
+                .collect(Collectors.toList());
     }
 
     /**
