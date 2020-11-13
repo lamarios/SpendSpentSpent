@@ -38,7 +38,7 @@ public class CategoryService {
 
     public Category get(long id, User user) throws SQLException {
         final Category category = categoryDao.queryForId(id);
-        if (category.getUser().getId().equals(user.getId())) {
+        if (category != null && category.getUser().getId().equals(user.getId())) {
             return category;
         } else {
             return null;

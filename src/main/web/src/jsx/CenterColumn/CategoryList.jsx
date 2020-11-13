@@ -11,6 +11,7 @@ const SortableItem = SortableElement(({value}) => {
         category={value}
         overlay={value.overlay}
         delete={value.deleteCategory}
+        refresh={value.refreshList}
     />
 })
 
@@ -129,8 +130,8 @@ export default class CategoryList extends React.Component {
     render() {
         const categories = this.state.categories.map(c => {
             c.overlay = this.state.overlay;
-            c.deleteCategory = this.deleteCategory
-
+            c.deleteCategory = this.deleteCategory;
+            c.refreshList = this.refreshList;
             return c;
         });
 

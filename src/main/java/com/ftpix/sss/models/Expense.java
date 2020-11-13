@@ -42,6 +42,8 @@ public class Expense {
     @DatabaseField(columnName = "TIME", dataType = DataType.STRING, width = 5)
     private String time;
 
+    @DatabaseField(columnName = "TIMESTAMP")
+    private long timestamp = System.currentTimeMillis();
 
     public long getId() {
         return id;
@@ -121,5 +123,13 @@ public class Expense {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }

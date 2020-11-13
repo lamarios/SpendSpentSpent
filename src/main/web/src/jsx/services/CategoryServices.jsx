@@ -28,4 +28,8 @@ export default class CategoryService {
     search(name) {
         return Http.post(API.CATEGORY.SEARCH, name);
     }
+
+    mergeCategory(id, cat) {
+        return Http.put(API.CATEGORY.MERGE_CATEGORY.format(id), cat);
+    }
 }

@@ -7,9 +7,10 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import org.jooq.AlterTableAddStep;
 import org.jooq.CloseableDSLContext;
-import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -17,12 +18,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Configuration
 public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
-    private final static int DB_VERSION = 8;
+    private final static int DB_VERSION = 10;
     @Value("${DB_PATH:./SSS}")
     private String dbPath;
     @Value("${DB_USER:}")
@@ -92,6 +96,7 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
         final ConnectionSource connectionSource = applicationReadyEvent.getApplicationContext().getBean(ConnectionSource.class);
         Dao<SchemaVersion, Long> schemaDao = (Dao<SchemaVersion, Long>) applicationReadyEvent.getApplicationContext().getBean("schemaDao");
         Dao<Category, Long> categoryDao = (Dao<Category, Long>) applicationReadyEvent.getApplicationContext().getBean("categoryDao");
+        Dao<Expense, Long> expenseDao = (Dao<Expense, Long>) applicationReadyEvent.getApplicationContext().getBean("expenseDao");
 
         final String jdbcUrl = (String) applicationReadyEvent.getApplicationContext().getBean("jdbcUrl");
 
@@ -141,12 +146,56 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
                 schemaDao.executeRaw("ALTER TABLE category ADD COLUMN IF NOT EXISTS USER_ID VARCHAR(36)");
             }
 
-            // since we ow support more than one DB types, future migration should happen using jooq
-            // final DSLContext jooq = DSL.using(jdbcUrl, dbUsername, dbPassword);
+
+            if (schemaVersion < 9) {
+                newVersion = 9;
+                // since we now support more than one DB types, future migration should happen using jooq
+                try (final CloseableDSLContext jooq = DSL.using(jdbcUrl, dbUsername, dbPassword)) {
+                    jooq.alterTable("EXPENSE").addColumn("TIMESTAMP", SQLDataType.BIGINT.default_(0L).nullable(false)).execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw e;
+                }
+
+                // migrating existing expenses by adding a timestamp
+                expenseDao.queryForAll().forEach(e -> {
+                    try {
+                        final Date date = e.getDate();
+
+                        if (e.getTime() != null && e.getTime().length() > 0) {
+                            final List<Integer> time = Stream.of(e.getTime().split(":"))
+                                    .map(Integer::parseInt)
+                                    .collect(Collectors.toList());
+
+                            date.setHours(time.get(0));
+                            date.setMinutes(time.get(1));
+                        }
+
+                        e.setTimestamp(date.getTime());
+                        expenseDao.update(e);
+                    } catch (Exception err) {
+                        err.printStackTrace();
+                        throw new RuntimeException(err);
+                    }
+                });
+
+            }
+
+            if (schemaVersion < 10) {
+                newVersion = 10;
+                try (final CloseableDSLContext jooq = DSL.using(jdbcUrl, dbUsername, dbPassword)) {
+                    final AlterTableAddStep alterTableAddStep = jooq.alterTable("USER").addColumn("TIMECREATED", SQLDataType.BIGINT.nullable(false).default_(0L));
+                    System.out.println(alterTableAddStep.getSQL());
+                    alterTableAddStep.execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw e;
+                }
+            }
 
             TableUtils.clearTable(connectionSource, SchemaVersion.class);
             schemaDao.create(new SchemaVersion(newVersion));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Couldn't migrate schema");
         }

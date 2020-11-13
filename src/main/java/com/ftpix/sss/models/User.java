@@ -33,6 +33,9 @@ public class User {
     @DatabaseField
     private boolean isAdmin = false;
 
+    @DatabaseField(columnName = "TIMECREATED")
+    private long timeCreated = System.currentTimeMillis();
+
 
     public String getEmail() {
         return email;
@@ -96,5 +99,13 @@ public class User {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public long getTimeCreated() {
+        return timeCreated;
+    }
+
+    public void setTimeCreated(long timeCreated) {
+        this.timeCreated = timeCreated;
     }
 }

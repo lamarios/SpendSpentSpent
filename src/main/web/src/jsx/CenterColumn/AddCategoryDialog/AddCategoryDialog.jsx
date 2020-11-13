@@ -56,22 +56,37 @@ export default class AddCategoryDialog extends React.Component {
      * Do the backend call to add the category
      */
     addCategory() {
-        this.setState({loading: true}, () => {
-            if (this.state.selected.length > 0) {
-                console.log('Adding category', this.state.selected);
-                this.categoryService.add(this.state.selected)
+        if (this.props.updateCategory) {
+            this.setState({loading: true}, () => {
+                this.categoryService.mergeCategory(this.props.updateCategory, {icon: this.state.selected})
                     .then(() => {
                         this.props.refresh();
                         this.props.dismiss();
                     })
                     .catch(err => {
-                        alert('Error while adding category ' + err);
+                        alert('Error while updating category ' + err);
                         console.error(err);
                         this.setState({loading: false});
                     });
+            });
+        } else {
+            this.setState({loading: true}, () => {
+                if (this.state.selected.length > 0) {
+                    console.log('Adding category', this.state.selected);
+                    this.categoryService.add(this.state.selected)
+                        .then(() => {
+                            this.props.refresh();
+                            this.props.dismiss();
+                        })
+                        .catch(err => {
+                            alert('Error while adding category ' + err);
+                            console.error(err);
+                            this.setState({loading: false});
+                        });
 
-            }
-        });
+                }
+            });
+        }
     }
 
     /**
@@ -87,7 +102,7 @@ export default class AddCategoryDialog extends React.Component {
 
         return <Dialog dismiss={this.props.dismiss}
                        cancelText={'Cancel'}
-                       okText={'Add Category'}
+                       okText={this.props.updateCategory ? 'Update Icon' : 'Add Category'}
                        onOk={this.addCategory}>
 
             <div className={'AddCategoryDialog'}>

@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>16</version>
+    <version>17</version>
 
     <properties>
         <automation.skip>true</automation.skip>
@@ -256,8 +256,8 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        add mysql support (see README.md)
-                        fix issues with authentication when provided token is wrong
+                        add possibility to update category icon
+                        add timestamp to expense and users
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>

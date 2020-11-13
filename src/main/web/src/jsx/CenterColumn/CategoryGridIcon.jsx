@@ -2,6 +2,7 @@ import React from 'react';
 import AddExpenseDialog from "./AddExpenseDialog/AddExpenseDialog.jsx";
 import OkCancelDialog from "../OkCancelDialog.jsx";
 import {SortableHandle} from "react-sortable-hoc";
+import AddCategoryDialog from "./AddCategoryDialog/AddCategoryDialog";
 
 const DragHandle = SortableHandle(() => <i className='drag-icon fa fa-arrows'/>);
 export default class CategoryGridIcon extends React.Component {
@@ -12,10 +13,12 @@ export default class CategoryGridIcon extends React.Component {
         this.state = {
             showDialog: false,
             showDeleteDialog: false,
+            showChangeCategoryDialog: false,
         };
 
         this.deleteCategory = this.deleteCategory.bind(this);
         this.toggleAddExpenseDialog = this.toggleAddExpenseDialog.bind(this);
+        this.dismissCategoryChange = this.dismissCategoryChange.bind(this);
     }
 
     /**
@@ -32,6 +35,10 @@ export default class CategoryGridIcon extends React.Component {
      */
     toggleAddExpenseDialog() {
         this.setState({showDialog: !this.state.showDialog})
+    }
+
+    dismissCategoryChange(){
+        this.setState({showChangeCategoryDialog: false});
     }
 
     render() {
@@ -62,9 +69,12 @@ export default class CategoryGridIcon extends React.Component {
                 }}>
                     <i className="fa fa-times"/>
                 </div>
-                <i className={'cat ' + this.props.category.icon}/>
+                <i onClick={() => this.setState({showChangeCategoryDialog: true})} title="Change category icon" className={'cat ' + this.props.category.icon}/>
                 <DragHandle/>
             </div>
+
+            {this.state.showChangeCategoryDialog && <AddCategoryDialog refresh={this.props.refresh} updateCategory={this.props.category.id}
+            dismiss={this.dismissCategoryChange}/>}
         </li>
     }
 }
