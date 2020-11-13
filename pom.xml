@@ -256,8 +256,7 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        add possibility to update category icon
-                        add timestamp to expense and users
+                        add shading to category icons to indicate the highest spending categories of the month
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>
