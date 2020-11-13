@@ -17,14 +17,22 @@ export default class LoginService {
     getCurrentUser() {
         if (localStorage && localStorage.getItem("token")) {
             const token = localStorage.getItem("token");
-            var base64Url = token.split('.')[1];
-            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
+            let tokenSplit = token.split('.');
+            if (tokenSplit.length >= 2) {
+                var base64Url = tokenSplit[1];
+                var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
 
-            const payload = JSON.parse(jsonPayload);
-            return payload.user
+                const payload = JSON.parse(jsonPayload);
+                return payload.user
+            } else {
+                // that's a wrong token, redirecting to login page:
+                localStorage.removeItem("token");
+                location.href = window.origin + '/login-screen';
+                return null;
+            }
         } else {
             return null;
         }

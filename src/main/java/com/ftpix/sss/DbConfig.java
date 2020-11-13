@@ -7,6 +7,9 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import org.jooq.CloseableDSLContext;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -19,13 +22,26 @@ import java.util.UUID;
 
 @Configuration
 public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
+    private final static int DB_VERSION = 8;
     @Value("${DB_PATH:./SSS}")
     private String dbPath;
+    @Value("${DB_USER:}")
+    private String dbUsername;
+    @Value("${DB_PASSWORD:}")
+    private String dbPassword;
 
     @Bean
-    public ConnectionSource connectionSource() throws SQLException {
-        String databaseUrl = "jdbc:h2:" + dbPath;
-        return new JdbcConnectionSource(databaseUrl, "", "");
+    public ConnectionSource connectionSource(String jdbcUrl) throws SQLException {
+        return new JdbcConnectionSource(jdbcUrl, dbUsername, dbPassword);
+    }
+
+    @Bean
+    public String jdbcUrl() {
+        if (!dbPath.startsWith("jdbc:")) {
+            return "jdbc:h2:" + dbPath;
+        } else {
+            return dbPath;
+        }
     }
 
     @Bean
@@ -77,6 +93,8 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
         Dao<SchemaVersion, Long> schemaDao = (Dao<SchemaVersion, Long>) applicationReadyEvent.getApplicationContext().getBean("schemaDao");
         Dao<Category, Long> categoryDao = (Dao<Category, Long>) applicationReadyEvent.getApplicationContext().getBean("categoryDao");
 
+        final String jdbcUrl = (String) applicationReadyEvent.getApplicationContext().getBean("jdbcUrl");
+
         Integer schemaVersion = null;
         try {
             schemaVersion = schemaDao.queryBuilder()
@@ -85,7 +103,7 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
                     .stream()
                     .findFirst()
                     .map(SchemaVersion::getCurrent)
-                    .orElse(0);
+                    .orElse(DB_VERSION);
 
 
             int newVersion = schemaVersion;
@@ -123,10 +141,13 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
                 schemaDao.executeRaw("ALTER TABLE category ADD COLUMN IF NOT EXISTS USER_ID VARCHAR(36)");
             }
 
+            // since we ow support more than one DB types, future migration should happen using jooq
+            // final DSLContext jooq = DSL.using(jdbcUrl, dbUsername, dbPassword);
 
             TableUtils.clearTable(connectionSource, SchemaVersion.class);
             schemaDao.create(new SchemaVersion(newVersion));
-        } catch (SQLException throwables) {
+        } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException("Couldn't migrate schema");
         }
     }
