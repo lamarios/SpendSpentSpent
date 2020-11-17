@@ -1,0 +1,28 @@
+.Pagination {
+  display: flex;
+font-size: 13px;
+  .pages {
+    flex-grow: 2;
+
+    .page {
+      display: inline-block;
+      padding: 2px 5px;
+      margin-right: 5px;
+      border: 1px solid #eee;
+      border-radius: 5px;
+      cursor: pointer;
+
+      &.current {
+        background-color: @accentColor;
+        border-color: @accentColor;
+        color: white;
+      }
+    }
+  }
+
+  .count {
+    text-align: right;
+    flex-grow: 1;
+  }
+
+}

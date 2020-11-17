@@ -7,8 +7,10 @@ class UserService {
         return Http.post(API.USER.EDIT_PROFILE, user);
     }
 
-    getUsers() {
-        return Http.get(API.USER.GET);
+    getUsers(search, page, pageSize) {
+        const queryString = "?search=" + encodeURIComponent(search) + "&page=" + page + "&pageSize=" + pageSize;
+
+        return Http.get(API.USER.GET+queryString);
     }
 
     setAdmin(userId, isAdmin) {

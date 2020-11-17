@@ -1,18 +1,18 @@
 package com.ftpix.sss.controllers.api;
 
+import com.ftpix.sss.models.PaginatedResults;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.security.JwtTokenUtil;
 import com.ftpix.sss.security.JwtUserDetailsService;
 import com.ftpix.sss.services.UserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/API/User")
@@ -46,8 +46,8 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<User> getUsers() throws Exception {
-        return userService.getAll();
+    public PaginatedResults<User> getUsers(@ApiParam("Page starts from 0") @RequestParam(defaultValue = "0") long page, @RequestParam(defaultValue = "20") long pageSize, @RequestParam(defaultValue = "") String search) throws Exception {
+        return userService.getAll(search, page, pageSize);
     }
 
     @GetMapping(value = "/{userId}/setAdmin/{isAdmin}")

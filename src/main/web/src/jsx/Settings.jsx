@@ -7,6 +7,7 @@ import OkDialog from "./OkDialog";
 import Notification from "./Notification";
 import moment from 'moment';
 import {miscService} from "./services/MiscService";
+import Pagination from "./components/Pagination";
 
 const LONG_MAX = 9223372036854776000;
 
@@ -17,23 +18,35 @@ const Settings = (props) => {
     const [notificationTimeout, setNotificationTimeout] = useState(null);
     const [showNotification, setShowNotification] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState('');
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState();
     const [editPasswordOf, setEditPasswordOf] = useState(null);
     const [newPassword, setNewPassword] = useState('');
     const [newUser, setNewUser] = useState(null);
     const [newUserError, setNewUserError] = useState(null);
     const [hasSubscription, setHasSubscription] = useState(false);
+    const [userPage, setUserPage] = useState(0);
+    const [userPageSize, setUserPageSize] = useState(20);
+    const [userSearch, setUserSearch] = useState("");
+    const [searchDebounce, setSearchDebounce] = useState();
 
     const refreshUsers = () => {
-        userService.getUsers()
+        console.log("searching users");
+        userService.getUsers(userSearch, userPage, userPageSize)
             .then(u => setUsers(u));
     }
 
     useEffect(() => {
-        refreshUsers()
         miscService.getConfig()
             .then(r => setHasSubscription(r.hasSubscription));
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        if (searchDebounce) {
+            clearTimeout(searchDebounce);
+        }
+        let timeout = setTimeout(refreshUsers, 300);
+        setSearchDebounce(timeout);
+    }, [userSearch, userPage]);
 
     const showNotificationPopUp = (message) => {
         clearTimeout(notificationTimeout);
@@ -130,6 +143,11 @@ const Settings = (props) => {
         }
     }
 
+    const searchUsers = (e) => {
+        setUserPage(0);
+        setUserSearch(e.target.value);
+    }
+
     return <div className={'Settings scale-fade-in'}>
         <h1> Settings </h1>
         <ul className={'tabs'}>
@@ -144,6 +162,7 @@ const Settings = (props) => {
         </ul>
 
         {tab === 'users' && <div className={'tab-content scale-fade-in'}>
+            <input type="text" placeholder="Search" value={userSearch} onChange={searchUsers}/>
             <table>
                 <thead>
                 <tr>
@@ -157,7 +176,7 @@ const Settings = (props) => {
                 </tr>
                 </thead>
                 <tbody>
-                {users.map(u => <tr key={u.id}>
+                {users && users.data && users.data.map(u => <tr key={u.id}>
                     <td>{u.id}</td>
                     <td>{u.email}</td>
                     <td>{u.firstName + " " + u.lastName}</td>
@@ -170,8 +189,14 @@ const Settings = (props) => {
                     <td className="action">{u.id !== loginService.getCurrentUser().id &&
                     <i className="fa fa-times" onClick={e => deleteUser(u)}/>}</td>
                 </tr>)}
+                {!users || !users.data || users.data.length === 0 &&
+                <tr>
+                    <td colSpan={hasSubscription ? 7 : 6}>No users matching criteria</td>
+                </tr>}
                 </tbody>
             </table>
+            {users && users.pagination &&
+            <Pagination pagination={users.pagination} setPage={(i) => setUserPage(i)}></Pagination>}
             <div>
                 <button onClick={e => setNewUser({})}>
                     <i className="fa fa-plus"/> Add new user

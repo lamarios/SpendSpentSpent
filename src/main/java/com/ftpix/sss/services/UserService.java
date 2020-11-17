@@ -3,8 +3,11 @@ package com.ftpix.sss.services;
 
 import com.ftpix.sss.Constants;
 import com.ftpix.sss.models.Category;
+import com.ftpix.sss.models.PaginatedResults;
 import com.ftpix.sss.models.User;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,10 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -31,17 +37,19 @@ public class UserService {
     private final Dao<Category, Long> categoryDao;
     private final Dao<User, UUID> userDao;
     private final EmailService emailService;
+    private final PaginationService paginationService;
     @Value("${SALT}")
     private String SALT;
 
     @Autowired
-    public UserService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, Dao<Category, Long> categoryDao, Dao<User, UUID> userDao, EmailService emailService) {
+    public UserService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, Dao<Category, Long> categoryDao, Dao<User, UUID> userDao, EmailService emailService, PaginationService paginationService) {
         this.recurringExpenseService = recurringExpenseService;
         this.expenseService = expenseService;
         this.categoryService = categoryService;
         this.categoryDao = categoryDao;
         this.userDao = userDao;
         this.emailService = emailService;
+        this.paginationService = paginationService;
     }
 
     /**
@@ -83,8 +91,33 @@ public class UserService {
         return getByEmail(user.getUsername());
     }
 
-    public List<User> getAll() throws SQLException {
-        return userDao.queryForAll();
+    public PaginatedResults<User> getAll(String search, long page, long pageSize) throws SQLException {
+
+        final QueryBuilder<User, UUID> builder = userDao.queryBuilder();
+
+        if (search.trim().length() > 0) {
+            Where<User, UUID> where = builder.where();
+            where = where.like("email", "%" + search + "%")
+                    .or().like("firstName", "%" + search + "%")
+                    .or().like("lastName", "%" + search + "%");
+
+            final String[] split = search.split("\\s");
+            if (split.length > 0) {
+                for (String s : split) {
+                    where = where.or().like("firstName", "%" + s + "%")
+                            .or().like("lastName", "%" + s + "%");
+                }
+
+            }
+            builder.setWhere(where);
+        }
+
+
+        return paginationService.getPaginatedResults(builder, page, pageSize);
+    }
+
+    public PaginatedResults<User> getAll() throws SQLException {
+        return getAll("", 0, Integer.MAX_VALUE);
     }
 
     public User getById(UUID id) throws SQLException {

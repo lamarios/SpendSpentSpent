@@ -41,7 +41,7 @@ public class BackgroundJob {
     @Scheduled(fixedRate = 100 * 60 * 1000)
 //    @Scheduled(fixedRate = 10 * 1000)
     public void run() throws Exception {
-        final List<User> users = userService.getAll();
+        final List<User> users = userService.getAll().getData();
         for (User user : users) {
             List<RecurringExpense> recurringExpenses = recurringExpenseService.getToProcessForUser(user);
             logger.info("{} Recurring expense process for user {}", recurringExpenses.size(), user.getId());
