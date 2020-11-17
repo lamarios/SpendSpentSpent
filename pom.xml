@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>17</version>
+    <version>18</version>
 
     <properties>
         <automation.skip>true</automation.skip>
@@ -256,7 +256,7 @@
                 <version>1.2.0</version>
                 <configuration>
                     <description>
-                        add shading to category icons to indicate the highest spending categories of the month
+                        add pagination to user list in admin screen
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>
