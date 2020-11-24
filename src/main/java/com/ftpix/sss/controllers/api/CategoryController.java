@@ -2,12 +2,12 @@ package com.ftpix.sss.controllers.api;
 
 
 import com.ftpix.sss.models.Category;
+import com.ftpix.sss.models.NewCategoryIcon;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.CategoryService;
 import com.ftpix.sss.services.HistoryService;
 import com.ftpix.sss.services.UserService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,6 @@ public class CategoryController {
         final User currentUser = userService.getCurrentUser();
 
 
-
         return historyService.monthly(currentUser)
                 .stream()
                 .skip(1) // first is always the overall category
@@ -86,7 +85,7 @@ public class CategoryController {
      * @throws SQLException
      */
     @GetMapping(value = "/Available")
-    public List<String> getAvailable() throws Exception {
+    public Map<String, List<NewCategoryIcon>> getAvailable() throws Exception {
         return categoryService.getAvailable(userService.getCurrentUser());
     }
 
@@ -150,6 +149,11 @@ public class CategoryController {
     public Map<String, Object> searchAvailableIcon(@RequestBody String name) throws SQLException {
         final User currentUser = userService.getCurrentUser();
         return categoryService.searchAvailableIcon(name, currentUser);
+    }
+
+    @GetMapping("/is-using-legacy")
+    public boolean isUsingLegacy() throws SQLException {
+        return categoryService.isUsingLegacyIcons(userService.getCurrentUser());
     }
 
     public List<Long> getUserCategoriesId() throws Exception {

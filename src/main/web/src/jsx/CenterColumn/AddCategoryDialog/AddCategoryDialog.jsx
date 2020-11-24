@@ -123,6 +123,7 @@ export default class AddCategoryDialog extends React.Component {
                         selected={this.state.selected}
                     />
                     }
+                    {keys.length === 0 && <div className="empty">No categories available</div>}
                 </div>
             </div>
         </Dialog>

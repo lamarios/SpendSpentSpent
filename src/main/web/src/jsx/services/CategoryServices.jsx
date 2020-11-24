@@ -32,4 +32,10 @@ export default class CategoryService {
     mergeCategory(id, cat) {
         return Http.put(API.CATEGORY.MERGE_CATEGORY.format(id), cat);
     }
+
+    isUsingLegacy(){
+        return Http.get(API.CATEGORY.IS_USING_LEGACY);
+    }
 }
+
+export const categoryService = new CategoryService();

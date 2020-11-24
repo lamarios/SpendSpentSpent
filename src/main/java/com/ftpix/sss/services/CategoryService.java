@@ -7,11 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class CategoryService {
@@ -45,11 +43,11 @@ public class CategoryService {
         }
     }
 
-    public List<String> getAvailable(User user) throws SQLException {
+    public Map<String, List<NewCategoryIcon>> getAvailable(User user) throws SQLException {
         List<Category> categories = getAll(user);
-        return CategoryIcons.ALL.stream()
-                .filter(s -> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s)))
-                .collect(Collectors.toList());
+        return Stream.of(NewCategoryIcon.values())
+                .filter(s -> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s.name())))
+                .collect(Collectors.groupingBy(NewCategoryIcon::getCategory));
     }
 
     public long getNewCategoryOrder(User user) throws SQLException {
@@ -65,7 +63,8 @@ public class CategoryService {
     }
 
     public Category create(Category category, User user) throws Exception {
-        boolean found = CategoryIcons.ALL.contains(category.getIcon());
+        boolean found = Stream.of(NewCategoryIcon.values())
+                .anyMatch(c -> category.getIcon().equalsIgnoreCase(c.name()));
 
         if (!found) {
             throw new Exception("Icon doesn't exist");
@@ -152,26 +151,31 @@ public class CategoryService {
         List<Category> categories = getAll(user);
 
 
-        List<String> iconResults = CategoryIcons.ALL.stream()
-                .filter(s -> StringUtils.containsIgnoreCase(s, name))
-                .filter(s -> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s)))
-                .collect(Collectors.toList());
-
+        Map<String, List<NewCategoryIcon>> results = Stream.of(NewCategoryIcon.values())
+                .filter(c -> Arrays.stream(c.getSearchTerms()).anyMatch(t -> StringUtils.containsIgnoreCase(t, name) || StringUtils.containsIgnoreCase(name, t)))
+                .filter(s -> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s.name())))
+                .collect(Collectors.groupingBy(NewCategoryIcon::getCategory));
 
         Map<String, Object> result = new HashMap<>();
         result.put("query", name);
-        result.put("results", iconResults);
+        result.put("results", results);
 
         return result;
     }
 
+    public boolean isUsingLegacyIcons(User user) throws SQLException {
+        return getAll(user).stream()
+                .map(Category::getIcon)
+                .anyMatch(name -> name.startsWith("icon-"));
+    }
 
     public boolean mergeCategory(long id, Category catdiff, User currentUser) throws Exception {
         Optional<Category> categoryOptional = Optional.ofNullable(get(id, currentUser));
 
 
         if (categoryOptional.isPresent()) {
-            boolean found = CategoryIcons.ALL.contains(catdiff.getIcon());
+            boolean found = Stream.of(NewCategoryIcon.values())
+                    .anyMatch(c -> catdiff.getIcon().equalsIgnoreCase(c.name()));
 
             if (!found) {
                 throw new Exception("Icon doesn't exist");

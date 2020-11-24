@@ -12,4 +12,10 @@ String.prototype.format = function () {
     return s;
 };
 
+// catering for both new and old icons
+// TODO: remove when old icons are removed
+String.prototype.categoryIcon = function () {
+    return this.startsWith("icon-") ? "cat " + this : "cat-" + this;
+}
+
 render(<App></App>, document.getElementById('app'));
