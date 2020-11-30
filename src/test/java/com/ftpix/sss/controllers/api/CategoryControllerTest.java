@@ -19,7 +19,6 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 @SpringBootTest(classes = App.class)
-@RunWith(SpringJUnit4ClassRunner.class)
 @Import(TestConfig.class)
 public class CategoryControllerTest {
 
