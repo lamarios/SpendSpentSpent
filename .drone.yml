@@ -27,7 +27,7 @@ type: docker
 name: build
 
 steps:
-  - name: publish
+  - name: build
     image: plugins/docker
     settings:
       dry_run: true
