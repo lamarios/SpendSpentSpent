@@ -13,7 +13,7 @@ steps:
       tags:
         - latest
         - '${DRONE_COMMIT}'
-      repo: gonzauge/spendspendspent
+      repo: gonzague/spendspendspent
 
 trigger:
   branch:
