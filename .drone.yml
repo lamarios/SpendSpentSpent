@@ -12,8 +12,8 @@ steps:
         from_secret: docker_password
       tags:
         - latest
-        - '${DRONE_COMMIT}'
-      repo: gonzague/spendspendspent
+        - ${DRONE_COMMIT}
+      repo: gonzauge/spendspendspent
 
 trigger:
   branch:
