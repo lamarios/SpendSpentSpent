@@ -1,0 +1,41 @@
+kind: pipeline
+type: docker
+name: build and publish
+
+steps:
+  - name: publish
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      tags:
+        - latest
+        - ${DRONE_COMMIT}
+      repo: gonzauge/spendspendspent
+
+trigger:
+  branch:
+    - master
+  event:
+    - push
+
+---
+kind: pipeline
+type: docker
+name: build
+
+steps:
+  - name: publish
+    image: plugins/docker
+    settings:
+      dry_run: true
+
+trigger:
+  branch:
+    exclude:
+      - master
+  event:
+    - push
+
