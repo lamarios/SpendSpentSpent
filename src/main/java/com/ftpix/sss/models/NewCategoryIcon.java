@@ -12,7 +12,12 @@ public enum NewCategoryIcon {
     apple(Constants.BRANDS, new String[]{"apple", "icloud", "iphone", "ipad", "mac", "ipod", "streaming", "apple music"}),
     netflix(Constants.BRANDS, new String[]{"netflix", "streaming"}),
     google(Constants.BRANDS, new String[]{"google", "suite", "youtube", "gmail"}),
-    youtube(Constants.BRANDS, new String[]{"youtube", "streaming"});
+    youtube(Constants.BRANDS, new String[]{"youtube", "streaming"}),
+    books(Constants.HOBBIES, new String[]{"book", "books", "reading", "read", "litterature", "magazines"}),
+    camera(Constants.HOBBIES, new String[]{"photo", "photography", "lens", "video", "camera", "recording"}),
+    eyecare(Constants.HEALTH, new String[]{"glasses", "eye care", "optician", "spectacles"}),
+    healthcare(Constants.HEALTH, new String[]{"doctor", "hospital", "health", "health care"}),
+    medicine(Constants.HEALTH, new String[]{"medicine", "pills", "prescription"});
 
     private final String category;
     private final String[] searchTerms;
@@ -34,5 +39,7 @@ public enum NewCategoryIcon {
         public static final String SHOPPING = "shopping";
         public static final String TRANSPORTS = "transports";
         public static final String BRANDS = "brands";
+        public static final String HOBBIES = "hobbies";
+        public static final String HEALTH = "health";
     }
 }

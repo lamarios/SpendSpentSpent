@@ -84,6 +84,7 @@ public class Config {
     @Bean
     public Gson gson() {
         GsonBuilder builder = new GsonBuilder();
+        builder.serializeSpecialFloatingPointValues();
         builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
             final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 

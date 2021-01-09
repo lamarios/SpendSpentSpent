@@ -56,8 +56,10 @@ public class CategoryController {
                 .stream()
                 .skip(1) // first is always the overall category
                 .map(c -> {
-                    double percentage = c.getAmount() / c.getTotal();
-                    c.getCategory().setPercentageOfMonthly(percentage);
+                    if (c.getTotal() > 0) {
+                        double percentage = c.getAmount() / c.getTotal();
+                        c.getCategory().setPercentageOfMonthly(percentage);
+                    }
                     return c.getCategory();
                 })
                 .sorted(Comparator.comparingInt(Category::getCategoryOrder))
