@@ -27,11 +27,8 @@ public class CategoryController {
 
     protected final Log logger = LogFactory.getLog(this.getClass());
 
-
     private final UserService userService;
-
     private final CategoryService categoryService;
-
     private final HistoryService historyService;
 
     @Autowired
