@@ -7,7 +7,6 @@ import com.ftpix.sss.services.CategoryService;
 import com.ftpix.sss.services.HistoryService;
 import com.ftpix.sss.services.UserService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,13 +51,14 @@ public class CategoryController {
         final User currentUser = userService.getCurrentUser();
 
 
-
         return historyService.monthly(currentUser)
                 .stream()
                 .skip(1) // first is always the overall category
                 .map(c -> {
-                    double percentage = c.getAmount() / c.getTotal();
-                    c.getCategory().setPercentageOfMonthly(percentage);
+                    if (c.getTotal() > 0) {
+                        double percentage = c.getAmount() / c.getTotal();
+                        c.getCategory().setPercentageOfMonthly(percentage);
+                    }
                     return c.getCategory();
                 })
                 .sorted(Comparator.comparingInt(Category::getCategoryOrder))
