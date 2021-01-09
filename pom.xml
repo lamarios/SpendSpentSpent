@@ -257,6 +257,7 @@
                 <configuration>
                     <description>
                         add pagination to user list in admin screen
+                        fix issue where division by 0 might happen
                     </description>
                     <releaseName>${project.version}</releaseName>
                     <tag>${project.version}</tag>
