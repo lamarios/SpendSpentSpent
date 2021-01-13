@@ -3,7 +3,7 @@ type: docker
 name: build and publish
 
 steps:
-  - name: publish
+  - name: build and publish latest
     image: plugins/docker
     settings:
       username:
@@ -13,7 +13,7 @@ steps:
       tags:
         - latest
         - '${DRONE_COMMIT}'
-      repo: gonzauge/spendspendspent
+      repo: gonzague/spendspendspent
 
 trigger:
   branch:
@@ -27,10 +27,16 @@ type: docker
 name: build
 
 steps:
-  - name: build
+  - name: build and publish
     image: plugins/docker
     settings:
-      dry_run: true
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      tags:
+        - '${DRONE_COMMIT}'
+      repo: gonzague/spendspendspent
 
 trigger:
   branch:
