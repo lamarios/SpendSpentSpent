@@ -23,7 +23,15 @@ public enum NewCategoryIcon {
     playstation(Constants.BRANDS, new String[]{"sony", "playstation", "ps", "game", "gaming"}),
     school(Constants.EDUCATION, new String[]{"school", "education", "graduation", "college", "primary", "secondary", "degree"}),
     spotify(Constants.BRANDS, new String[]{"spotify", "streaming", "music", "podcast"}),
-    xbox(Constants.BRANDS, new String[]{"xbox", "game pass", "game", "gaming"});
+    xbox(Constants.BRANDS, new String[]{"xbox", "game pass", "game", "gaming"}),
+    apartment(Constants.HOUSING, new String[]{"apartment", "home", "rent", "loan","house", "condo", "condominium", "flat"}),
+    electricity(Constants.HOUSING, new String[]{"electricity", "bills", "energy", "light", "lighting"}),
+    furniture(Constants.HOUSING, new String[]{"furniture", "deco", "decoration"}),
+    heater(Constants.HOUSING, new String[]{"heater", "bills", "energy", "heat"}),
+    movies(Constants.HOBBIES, new String[]{"movies", "entertainment", "series", "tv", "television", "telly"}),
+    music(Constants.HOBBIES, new String[]{"music", "streaming", "spotify", "deezer"}),
+    music_equipment(Constants.HOBBIES, new String[]{"music", "guitar", "instrument", "piano"}),
+    sport_equipment(Constants.HOBBIES, new String[]{"sport", "balls", "equipment"});
 
     private final String category;
     private final String[] searchTerms;
@@ -48,5 +56,6 @@ public enum NewCategoryIcon {
         public static final String HOBBIES = "hobbies";
         public static final String HEALTH = "health";
         public static final String EDUCATION = "education";
+        public static final String HOUSING = "housing";
     }
 }
