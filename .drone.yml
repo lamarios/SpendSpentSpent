@@ -90,9 +90,7 @@ steps:
       files: target/SpendSpentSpent-*.jar
     when:
       event: tag
-trigger:
-  event:
-    - push
+
 
 volumes:
   - name: cache
