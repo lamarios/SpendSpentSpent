@@ -57,7 +57,7 @@ steps:
       tags:
         - '${DRONE_COMMIT}'
         - '${DRONE_TAG}'
-        #- latest
+        - latest
       repo: gonzague/spendspentspent
       context: ./
       dockerfile: docker/Dockerfile.lite
