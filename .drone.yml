@@ -21,6 +21,15 @@ steps:
       - npm install
       - npm run build
 
+  ## setting maven version if it's a new release
+  - name: set version
+    image: maven:3.6-jdk-14
+    commands:
+      - mvn versions:set -DnewVersion=${DRONE_TAG} -Dmaven.repo.local=./m2
+      - mvn versions:commit-Dmaven.repo.local=./m2
+    when:
+      event: tag
+
   - name: build backend
     image: maven:3.6-jdk-14
     commands:
@@ -36,7 +45,9 @@ steps:
       mount:
         - ./m2
         - ./src/main/web/node_modules
-  - name: publish latest
+
+
+  - name: publish new version
     image: plugins/docker
     settings:
       username:
@@ -45,12 +56,14 @@ steps:
         from_secret: docker_password
       tags:
         - '${DRONE_COMMIT}'
+        - '${DRONE_TAG}'
+        #- latest
       repo: gonzague/spendspentspent
       context: ./
       dockerfile: docker/Dockerfile.lite
     when:
-      branch:
-        - master
+      event: tag
+
   - name: publish commit
     image: plugins/docker
     settings:
@@ -64,10 +77,19 @@ steps:
       context: ./
       dockerfile: docker/Dockerfile.lite
     when:
-      branch:
+      event:
         exclude:
-          - master
+          - tag
 
+
+  - name: git hub release
+    image: plugins/github-release
+    settings:
+      api_key:
+        from_secret: github_token
+      files: target/SpendSpentSpent-*.jar
+    when:
+      event: tag
 trigger:
   event:
     - push
