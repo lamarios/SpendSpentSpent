@@ -24,14 +24,25 @@ public enum NewCategoryIcon {
     school(Constants.EDUCATION, new String[]{"school", "education", "graduation", "college", "primary", "secondary", "degree"}),
     spotify(Constants.BRANDS, new String[]{"spotify", "streaming", "music", "podcast"}),
     xbox(Constants.BRANDS, new String[]{"xbox", "game pass", "game", "gaming"}),
-    apartment(Constants.HOUSING, new String[]{"apartment", "home", "rent", "loan","house", "condo", "condominium", "flat"}),
+    apartment(Constants.HOUSING, new String[]{"apartment", "home", "rent", "loan", "house", "condo", "condominium", "flat"}),
     electricity(Constants.HOUSING, new String[]{"electricity", "bills", "energy", "light", "lighting"}),
     furniture(Constants.HOUSING, new String[]{"furniture", "deco", "decoration"}),
     heater(Constants.HOUSING, new String[]{"heater", "bills", "energy", "heat"}),
     movies(Constants.HOBBIES, new String[]{"movies", "entertainment", "series", "tv", "television", "telly"}),
     music(Constants.HOBBIES, new String[]{"music", "streaming", "spotify", "deezer"}),
     music_equipment(Constants.HOBBIES, new String[]{"music", "guitar", "instrument", "piano"}),
-    sport_equipment(Constants.HOBBIES, new String[]{"sport", "balls", "equipment"});
+    sport_equipment(Constants.HOBBIES, new String[]{"sport", "balls", "equipment"}),
+    cloth(Constants.SHOPPING, new String[]{"cloth", "shop", "shopping"}),
+    cloud(Constants.TECH, new String[]{"cloud", "storage", "icloud", "drive", "dropbox", "onedrive", "one drive", "goolge drive"}),
+    credit_card(Constants.SHOPPING, new String[]{"credit card", "credit", "card", "shopping", "bill", "bank", "loan"}),
+    gift(Constants.SHOPPING, new String[]{"gift", "birthday", "celebration", "shopping"}),
+    groceries_bag(Constants.SHOPPING, new String[]{"groceries", "shopping", "supermarket", "market"}),
+    haircut(Constants.SHOPPING, new String[]{"haircut", "cut", "hair", "hair do"}),
+    handbag(Constants.SHOPPING, new String[]{"handbag", "shopping"}),
+    house(Constants.HOUSING, new String[]{"home", "house", "rent", "loan"}),
+    restaurant(Constants.HOUSING, new String[]{"restaurant", "food", "eat", "fast food"}),
+    shopping_cart(Constants.SHOPPING, new String[]{"shopping", "groceries", "market", "supermarket"}),
+    water(Constants.HOUSING, new String[]{"bill", "water"});
 
     private final String category;
     private final String[] searchTerms;
@@ -57,5 +68,6 @@ public enum NewCategoryIcon {
         public static final String HEALTH = "health";
         public static final String EDUCATION = "education";
         public static final String HOUSING = "housing";
+        public static final String TECH = "tech";
     }
 }
