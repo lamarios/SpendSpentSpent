@@ -1,9 +1,42 @@
 kind: pipeline
 type: docker
-name: build and publish
+name: default
 
 steps:
-  - name: publish
+  - name: restore-cache
+    image: drillster/drone-volume-cache
+    volumes:
+      - name: cache
+        path: /cache
+    settings:
+      restore: true
+      mount:
+        - ./m2
+        - ./src/main/web/node_modules
+
+  - name: build web
+    image: node:10
+    commands:
+      - cd src/main/web
+      - npm install
+      - npm run build
+
+  - name: build backend
+    image: maven:3.6-jdk-14
+    commands:
+      - mvn clean install -Dmaven.repo.local=./m2
+
+  - name: rebuild-cache
+    image: drillster/drone-volume-cache
+    volumes:
+      - name: cache
+        path: /cache
+    settings:
+      rebuild: true
+      mount:
+        - ./m2
+        - ./src/main/web/node_modules
+  - name: publish latest
     image: plugins/docker
     settings:
       username:
@@ -13,29 +46,34 @@ steps:
       tags:
         - latest
         - '${DRONE_COMMIT}'
-      repo: gonzauge/spendspendspent
-
-trigger:
-  branch:
-    - master
-  event:
-    - push
-
----
-kind: pipeline
-type: docker
-name: build
-
-steps:
-  - name: build
+      repo: gonzague/spendspentspent
+      context: ./
+      dockerfile: docker/Dockerfile.lite
+    when:
+      branch:
+        - master
+  - name: publish commit
     image: plugins/docker
     settings:
-      dry_run: true
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      tags:
+        - '${DRONE_COMMIT}'
+      repo: gonzague/spendspentspent
+      context: ./
+      dockerfile: docker/Dockerfile.lite
+    when:
+      branch:
+        exclude:
+          - master
 
 trigger:
-  branch:
-    exclude:
-      - master
   event:
     - push
 
+volumes:
+  - name: cache
+    host:
+      path: /tmp/cache
