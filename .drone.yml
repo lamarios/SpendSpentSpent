@@ -26,7 +26,7 @@ steps:
     image: maven:3.6-jdk-14
     commands:
       - mvn versions:set -DnewVersion=${DRONE_TAG} -Dmaven.repo.local=./m2
-      - mvn versions:commit-Dmaven.repo.local=./m2
+      - mvn versions:commit -Dmaven.repo.local=./m2
     when:
       event: tag
 
