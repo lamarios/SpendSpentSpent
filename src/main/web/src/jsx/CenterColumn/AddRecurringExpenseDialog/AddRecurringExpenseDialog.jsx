@@ -142,7 +142,7 @@ export default class AddRecurringExpenseDialog extends React.Component {
                                     onClick={() => this.setState({category: cat.id})}
                                     className={(this.state.category === cat.id ? 'selected' : '')}
                                 >
-                                    <i className={'cat ' + cat.icon}/>
+                                    <i className={cat.icon.categoryIcon()}/>
                                 </li>
                             )}
                         </ul>

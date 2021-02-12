@@ -225,7 +225,7 @@ export default class AddExpenseDialog extends React.Component {
                 {this.state.loading && <LoadingOverlay/>}
 
                 <div className={'header'}>
-                    <i className={'cat ' + this.props.category.icon}/>
+                    <i className={this.props.category.icon.categoryIcon()}/>
                 </div>
                 <div className={'amount'}>
                     {this.state.fromCurrency !== undefined && this.state.toCurrency !== undefined &&

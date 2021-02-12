@@ -18,7 +18,7 @@ export default class Expense extends React.Component {
                  onClick={() => this.setState({flipped: !this.state.flipped})}>
                 {this.state.flipped === false &&
                 <div className={'front fade-in'}>
-                    <i className={'cat ' + this.props.expense.category.icon}/>
+                    <i className={this.props.expense.category.icon.categoryIcon()}/>
                     <span className={'amount'}>
                          <Amount>{this.props.expense.amount}</Amount>
                     </span>

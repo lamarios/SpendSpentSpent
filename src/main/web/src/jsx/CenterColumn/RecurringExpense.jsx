@@ -61,7 +61,7 @@ export default class RecurringExpense extends React.Component {
                         {this.getFrequence(this.props.expense.type)}
                     </div>
                     <div className={'icon'}>
-                        <i className={'cat ' + this.props.expense.category.icon}></i>
+                        <i className={this.props.expense.category.icon.categoryIcon()}></i>
                     </div>
                     <div className={'amount'}>
                         <Amount>{this.props.expense.amount}</Amount>

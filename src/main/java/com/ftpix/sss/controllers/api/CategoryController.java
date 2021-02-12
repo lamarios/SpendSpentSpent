@@ -2,6 +2,7 @@ package com.ftpix.sss.controllers.api;
 
 
 import com.ftpix.sss.models.Category;
+import com.ftpix.sss.models.NewCategoryIcon;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.CategoryService;
 import com.ftpix.sss.services.HistoryService;
@@ -26,11 +27,8 @@ public class CategoryController {
 
     protected final Log logger = LogFactory.getLog(this.getClass());
 
-
     private final UserService userService;
-
     private final CategoryService categoryService;
-
     private final HistoryService historyService;
 
     @Autowired
@@ -86,7 +84,7 @@ public class CategoryController {
      * @throws SQLException
      */
     @GetMapping(value = "/Available")
-    public List<String> getAvailable() throws Exception {
+    public Map<String, List<NewCategoryIcon>> getAvailable() throws Exception {
         return categoryService.getAvailable(userService.getCurrentUser());
     }
 
@@ -150,6 +148,11 @@ public class CategoryController {
     public Map<String, Object> searchAvailableIcon(@RequestBody String name) throws SQLException {
         final User currentUser = userService.getCurrentUser();
         return categoryService.searchAvailableIcon(name, currentUser);
+    }
+
+    @GetMapping("/is-using-legacy")
+    public boolean isUsingLegacy() throws SQLException {
+        return categoryService.isUsingLegacyIcons(userService.getCurrentUser());
     }
 
     public List<Long> getUserCategoriesId() throws Exception {

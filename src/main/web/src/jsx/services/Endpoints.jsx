@@ -7,10 +7,11 @@ export const API = {
         AVAILABLE: API_URL + '/Category/Available',
         ADD: API_URL + '/Category',
         GET: API_URL + '/Category/ById/{0}',
-        MERGE_CATEGORY: API_URL+'/Category/{0}',
+        MERGE_CATEGORY: API_URL + '/Category/{0}',
         UPDATE_ALL: API_URL + '/Category',
         DELETE: API_URL + '/Category/{0}',
         SEARCH: API_URL + '/Category/search-icon',
+        IS_USING_LEGACY: API_URL + "/Category/is-using-legacy",
     },
     EXPENSE: {
         ADD: API_URL + '/Expense',

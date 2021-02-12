@@ -3,37 +3,41 @@
   height: 70vh;
   overflow-y: auto;
 
-  p {
-    margin: 5px;
-    cursor: pointer;
-    font-size: 20px;
-
-  }
 
   .category-icons {
-    text-align: center;
+    h2 {
+      text-transform: capitalize;
+      text-align: left;
+      padding: 5px 10px;
+      margin: 0;
+      color: #eee;
+      font-size: 20px;
+    }
 
-    i {
-      cursor: pointer;
-      display: inline-block;
-      font-size: 30px;
-      margin: 10px;
-      padding: 5px;
-      width: 30px;
-      height: 30px;
+    .icons {
+      padding: 0 20px;
+      i {
+        cursor: pointer;
+        display: inline-block;
+        font-size: 30px;
+        margin: 10px;
+        padding: 5px;
+        width: 30px;
+        height: 30px;
 
-      transition: transform 0.25s;
+        transition: transform 0.25s;
 
-      &:hover {
-        transform: scale(1.2);
-      }
+        &:hover {
+          transform: scale(1.2);
+        }
 
-      &.selected {
-        animation-name: category-selected;
-        animation-duration: .75s;
-        animation-iteration-count: infinite;
-        animation-direction: alternate;
-        border-radius: 5px;
+        &.selected {
+          animation-name: category-selected;
+          animation-duration: .75s;
+          animation-iteration-count: infinite;
+          animation-direction: alternate;
+          border-radius: 5px;
+        }
       }
     }
   }

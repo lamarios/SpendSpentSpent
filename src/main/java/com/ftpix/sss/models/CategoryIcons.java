@@ -3,7 +3,10 @@ package com.ftpix.sss.models;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Deprecated
+/**
+ * Deprecated in favor of new icons, will be removed 6 months after release
+ */
 public class CategoryIcons {
     //public static final List<> ALL = new ArrayList<>();
     public static final List<String> ALL = new ArrayList<>();

@@ -52,7 +52,8 @@ export default class CategoryGridIcon extends React.Component {
         return <li className={'CategoryGridIcon ' + (this.props.overlay ? ' editting' : '')} style={style}
                    onClick={this.toggleAddExpenseDialog}>
             {this.state.showDialog &&
-            <AddExpenseDialog refresh={this.props.refresh} dismiss={this.toggleAddExpenseDialog} category={this.props.category}/>
+            <AddExpenseDialog refresh={this.props.refresh} dismiss={this.toggleAddExpenseDialog}
+                              category={this.props.category}/>
             }
 
             {this.state.showDeleteDialog &&
@@ -62,7 +63,10 @@ export default class CategoryGridIcon extends React.Component {
             </OkCancelDialog>
             }
             <div className="shading" style={percentageStyle}>
-                <i className={'cat ' + this.props.category.icon}/>
+                <i className={this.props.category.icon.categoryIcon()}/>
+                {this.props.category.icon.startsWith("icon-") &&
+                <i className="legacy fa fa-exclamation" aria-hidden="true"></i>}
+
                 <div className={'grid-overlay ' + (this.props.overlay ? 'showing fade-in' : '')}
                      onClick={(e) => e.stopPropagation()}>
                     <div className="delete-button" onClick={(e) => {
@@ -72,8 +76,11 @@ export default class CategoryGridIcon extends React.Component {
                         <i className="fa fa-times"/>
                     </div>
                     <i onClick={() => this.setState({showChangeCategoryDialog: true})} title="Change category icon"
-                       className={'cat ' + this.props.category.icon}/>
+                       className={this.props.category.icon.categoryIcon()}/>
                     <DragHandle/>
+                    {this.props.category.icon.startsWith("icon-") &&
+                    <i onClick={() => this.setState({showChangeCategoryDialog: true})}
+                       className="legacy fa fa-exclamation" aria-hidden="true"></i>}
                 </div>
             </div>
 
