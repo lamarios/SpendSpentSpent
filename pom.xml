@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>18</version>
+    <version>19</version>
 
     <properties>
         <automation.skip>true</automation.skip>
@@ -255,38 +255,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
-            <!-- release to github -->
-            <plugin>
-                <groupId>de.jutzig</groupId>
-                <artifactId>github-release-plugin</artifactId>
-                <version>1.4.0</version>
-                <configuration>
-                    <description>
-                        add pagination to user list in admin screen
-                        fix issue where division by 0 might happen
-                    </description>
-                    <releaseName>${project.version}</releaseName>
-                    <tag>${project.version}</tag>
-                    <serverId>github-release</serverId>
-                    <!-- If your project has additional artifacts, such as ones produced by
-                         the maven-assembly-plugin, you can define the following
-                         (requires version 1.1.1 of the plugin or higher): -->
-                    <fileSets>
-                        <fileSet>
-                            <directory>${project.build.directory}</directory>
-                            <excludes>
-                                <exclude>
-                                    spendspentspent-${project.version}.jar
-                                </exclude>
-                            </excludes>
-                            <includes>
-                                <include>SpendSpentSpent.jar</include>
-                            </includes>
-                        </fileSet>
-                    </fileSets>
-                </configuration>
             </plugin>
 
             <plugin>
