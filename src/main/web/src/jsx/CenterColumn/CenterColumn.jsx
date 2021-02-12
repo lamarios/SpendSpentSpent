@@ -54,7 +54,7 @@ export default class CenterColumn extends React.Component {
                 }
                 {this.state.isUsingLegacy && <div className="legacy-alert">
                     You are currently using legacy category icons, those icons will be removed from the software on the
-                    ___some date___.<br/>Please make sure to migrate the icons marked with an exclamation mark to the
+                    <b>June 1st 2021</b>.<br/>Please make sure to migrate the icons marked with an exclamation mark to the
                     new ones
                     by clicking on the <i className="fa fa-cog"/> icon then click on the category icon to update it.
                     <br/><br/>
