@@ -3,16 +3,8 @@ import Http from './Http';
 
 export default class SettingsService {
 
-    putSettings(setting) {
-        return Http.put(API.SETTINGS.UPDATE, [setting]);
-    }
-
-    putSettingsList(settings) {
-        return Http.put(API.SETTINGS.UPDATE, settings);
-    }
-
-    getAll() {
-        return Http.get(API.SETTINGS.ALL);
+    putSettings(settings) {
+        return Http.post(API.SETTINGS.UPDATE, settings);
     }
 
     get(name) {

@@ -1,18 +1,22 @@
 package com.ftpix.sss.models;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "SETTING")
-public class Setting {
-    public static final String PASSWORD = "password", USERNAME = "username", PUSHBULLET = "pushbullet", PUSHBULLET_API = "pushbulletapi", AUTHENTICATION = "authentication", PUSHALOT = "pushalot", PUSHALOTAPI = "pushalotApi", WINDOWS_TILE = "windowsTile", PUSHOVER = "pushover", PUSHOVER_APP_TOKEN = "pushoverAppToken", PUSHOVER_USER_TOKEN = "pushoverUserToken", GOOGLE_MAP = "googlemap";
+@DatabaseTable(tableName = "SETTINGS")
+public class Settings {
+    public static final String CURRENCY_API_KEY = "currencyApiKey";
 
 
     @DatabaseField(columnName = "NAME", id = true)
     private String name;
 
-    @DatabaseField(columnName = "VALUE")
+    @DatabaseField(columnName = "VALUE", dataType = DataType.LONG_STRING)
     private String value;
+
+    @DatabaseField(columnName = "SECRET", defaultValue = "false")
+    private boolean secret;
 
 
     public String getName() {
@@ -29,5 +33,13 @@ public class Setting {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public boolean isSecret() {
+        return secret;
+    }
+
+    public void setSecret(boolean secret) {
+        this.secret = secret;
     }
 }

@@ -39,9 +39,9 @@ export const API = {
         RESET_PASSWORD: API_ROOT + "/ResetPassword",
     },
     SETTINGS: {
-        UPDATE: API_URL + '/Setting',
-        ALL: API_URL + '/Setting',
-        GET: API_URL + '/Setting/{0}',
+        UPDATE: API_URL + '/Settings',
+        ALL: API_URL + '/Settings',
+        GET: API_URL + '/Settings/{0}',
     },
     MISC: {
         VERSION: API_URL + '/Misc/version',

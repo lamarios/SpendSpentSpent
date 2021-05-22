@@ -1,10 +1,9 @@
 package com.ftpix.sss;
 
 
+import com.ftpix.sss.models.Settings;
 import com.ftpix.sss.models.User;
-import com.ftpix.sss.utils.JsonIgnoreStrategy;
-import com.ftpix.sss.utils.SpringfoxJsonToGsonAdapter;
-import com.ftpix.sss.utils.UserSerializer;
+import com.ftpix.sss.utils.*;
 import com.google.gson.*;
 import freemarker.template.TemplateExceptionHandler;
 import org.simplejavamail.api.mailer.Mailer;
@@ -100,6 +99,8 @@ public class Config {
         });
 
         builder.registerTypeAdapter(User.class, new UserSerializer());
+        builder.registerTypeAdapter(Settings.class, new SettingsDeserializer());
+        builder.registerTypeAdapter(Settings.class, new SettingsSerializer());
         builder.registerTypeAdapter(Json.class, new SpringfoxJsonToGsonAdapter());
 
         return builder

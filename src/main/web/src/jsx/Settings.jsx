@@ -8,6 +8,7 @@ import Notification from "./Notification";
 import moment from 'moment';
 import {miscService} from "./services/MiscService";
 import Pagination from "./components/Pagination";
+import SingleSetting from "./components/SingleSetting";
 
 const LONG_MAX = 9223372036854776000;
 
@@ -154,6 +155,9 @@ const Settings = (props) => {
             <li onClick={() => setTab('users')}
                 className={tab === 'users' ? 'active' : ''}>Users
             </li>
+            <li onClick={() => setTab('settings')}
+                className={tab === 'settings' ? 'active' : ''}>Settings
+            </li>
             {/*
             <li onClick={() => setTab('settings')}
                 className={tab === 'settings' ? 'active' : ''}>Other settings
@@ -206,7 +210,9 @@ const Settings = (props) => {
         }
 
         {tab === 'settings' && <div className={'tab-content scale-fade-in'}>
-            other settings
+            <SingleSetting name="currencyApiKey" title="Currency converter API key" secret={true}>
+                API key from <a href="https://freecurrencyapi.net" target="_blank">freecurrencyapi</a>.
+            </SingleSetting>
         </div>
         }
 
@@ -235,7 +241,7 @@ const Settings = (props) => {
 
         {newUser && <OkCancelDialog dismiss={() => setNewUser(null)} onOk={saveNewUser}>
             <h2>Add new user</h2>
-            {newUserError && <p class="error">{newUserError}</p>}
+            {newUserError && <p className="error">{newUserError}</p>}
             <div className="setting-input">
                 <label htmlFor="email">Email</label>
                 <input id="email" type="text" value={newUser.email}

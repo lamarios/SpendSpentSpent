@@ -27,21 +27,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.sparkjava:spark-core:2.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-server:9.4.4.v20170414" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-http:9.4.4.v20170414" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-util:9.4.4.v20170414" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-io:9.4.4.v20170414" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-webapp:9.4.4.v20170414" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-xml:9.4.4.v20170414" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-servlet:9.4.4.v20170414" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-security:9.4.4.v20170414" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-server:9.4.4.v20170414" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-common:9.4.4.v20170414" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-client:9.4.4.v20170414" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-client:9.4.4.v20170414" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-servlet:9.4.4.v20170414" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-api:9.4.4.v20170414" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-web:2.3.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:2.3.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.3.5.RELEASE" level="project" />

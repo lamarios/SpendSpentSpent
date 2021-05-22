@@ -90,6 +90,13 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
         return dao;
     }
 
+    @Bean
+    public Dao<Settings, String> settingsDao(ConnectionSource connectionSource) throws SQLException {
+        final Dao<Settings, String> dao = DaoManager.createDao(connectionSource, Settings.class);
+        TableUtils.createTableIfNotExists(connectionSource, Settings.class);
+        return dao;
+    }
+
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
@@ -154,7 +161,7 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
                     jooq.alterTable("EXPENSE").addColumn("TIMESTAMP", SQLDataType.BIGINT.default_(0L).nullable(false)).execute();
                 } catch (Exception e) {
                     // issues with original migration
-                    if(!e.getMessage().contains("Duplicate column name")){
+                    if (!e.getMessage().contains("Duplicate column name")) {
                         e.printStackTrace();
                         throw e;
                     }
