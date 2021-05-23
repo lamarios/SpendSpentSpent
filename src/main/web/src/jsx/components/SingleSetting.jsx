@@ -13,10 +13,14 @@ const SingleSetting = (props) => {
         getSettings();
     }, []);
 
-    const saveSettings = () => {
+    const saveSettings = (newValue) => {
         clearTimeout(saveTimeout);
         setSaveTimeout(setTimeout(async () => {
-                const response = await settingsService.putSettings(settings);
+                const response = await settingsService.putSettings({
+                    name: props.name,
+                    value: newValue,
+                    secret: props.secret
+                });
 
                 setShowSuccess(true);
                 setTimeout(() => {
@@ -31,11 +35,10 @@ const SingleSetting = (props) => {
         const set = settings;
         set.value = newValue;
         setSettings(set);
-        saveSettings();
+        saveSettings(newValue);
     };
 
     const getSettings = async () => {
-        console.log('yooo');
         const response = await settingsService.get(props.name);
         setSettings(response);
         setNewValue(response.value);
@@ -47,10 +50,12 @@ const SingleSetting = (props) => {
             <div className="description">
                 {props.children}
             </div>
-            <div>
-                <input type={settings.secret ? "password" : "text"} id={uuid} value={newValue}
+            <div className="input-container">
+                <input type={props.secret ? "password" : "text"} id={uuid} value={newValue}
                        onChange={e => valueChanged(e.target.value)}/>
-                {showSuccess && <div>Done !!!</div>}
+                {showSuccess && <div className="done">
+                    <i className="fa fa-check"/>
+                </div>}
             </div>
         </Fragment>}
     </div>

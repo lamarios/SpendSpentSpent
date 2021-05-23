@@ -1,4 +1,5 @@
 import React from 'react';
+import {currencyService} from "../../services/CurrencyService";
 
 const CURRENCIES = [
     "AUD",
@@ -42,8 +43,8 @@ export default class CurrencySelector extends React.Component {
         super(props);
 
         this.state = {
-            from: localStorage.getItem('fromCurrency') !== null ? localStorage.getItem("fromCurrency") : '',
-            to: localStorage.getItem('toCurrency') !== null ? localStorage.getItem("toCurrency") : '',
+            from: localStorage.getItem('fromCurrency') !== null ? localStorage.getItem("fromCurrency") : CURRENCIES[0],
+            to: localStorage.getItem('toCurrency') !== null ? localStorage.getItem("toCurrency") : CURRENCIES[0],
             rate: 1,
             fetching: false
         }
@@ -79,13 +80,22 @@ export default class CurrencySelector extends React.Component {
     getRate() {
         this.setState({fetching: true}, () => {
             let self = this;
-            fetch('https://api.exchangeratesapi.io/latest?symbols=' + this.state.to + '&base=' + this.state.from)
-                .then((response) => response.json())
-                .then(json => {
-                    let rate = json.rates[self.state.to];
-                    self.setState({rate: rate, fetching: false}, () =>
+            /*
+                        fetch('https://api.exchangeratesapi.io/latest?symbols=' + this.state.to + '&base=' + this.state.from)
+                            .then((response) => response.json())
+                            .then(json => {
+                                let rate = json.rates[self.state.to];
+                                self.setState({rate: rate, fetching: false}, () =>
+                                    self.props.onChange(self.state.from, self.state.to, self.state.rate));
+                            });
+            */
+
+            currencyService.get(this.state.from, this.state.to)
+                .then(res => {
+                    self.setState({rate: res, fetching: false}, () =>
                         self.props.onChange(self.state.from, self.state.to, self.state.rate));
-                });
+                })
+
         });
     }
 

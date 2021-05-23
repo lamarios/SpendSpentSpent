@@ -1,5 +1,6 @@
 package com.ftpix.sss.models;
 
+import com.ftpix.sss.services.Encryption;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -25,6 +26,14 @@ public class Settings {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRealValue() {
+        if (secret) {
+            return Encryption.decrypt(value);
+        } else {
+            return value;
+        }
     }
 
     public String getValue() {

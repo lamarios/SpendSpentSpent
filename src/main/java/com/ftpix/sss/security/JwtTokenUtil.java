@@ -122,9 +122,9 @@ public class JwtTokenUtil implements Serializable, ApplicationContextAware {
             md.update(bean.getSalt().getBytes());
             byte[] digest = md.digest();
             String myHash = DatatypeConverter
-                    .printHexBinary(digest).toUpperCase();
+                    .printHexBinary(digest);
 
-            Encryption.SALT = salt.substring(0, 16);
+            Encryption.SALT = myHash.substring(0, 16);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }

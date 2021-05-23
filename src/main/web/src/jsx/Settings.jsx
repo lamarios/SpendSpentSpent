@@ -151,70 +151,72 @@ const Settings = (props) => {
 
     return <div className={'Settings scale-fade-in'}>
         <h1> Settings </h1>
-        <ul className={'tabs'}>
-            <li onClick={() => setTab('users')}
-                className={tab === 'users' ? 'active' : ''}>Users
-            </li>
-            <li onClick={() => setTab('settings')}
-                className={tab === 'settings' ? 'active' : ''}>Settings
-            </li>
-            {/*
+        <div className="tab-container">
+            <ul className={'tabs'}>
+                <li onClick={() => setTab('users')}
+                    className={tab === 'users' ? 'active' : ''}>Users
+                </li>
+                <li onClick={() => setTab('settings')}
+                    className={tab === 'settings' ? 'active' : ''}>Settings
+                </li>
+                {/*
             <li onClick={() => setTab('settings')}
                 className={tab === 'settings' ? 'active' : ''}>Other settings
             </li>
 */}
-        </ul>
+            </ul>
 
-        {tab === 'users' && <div className={'tab-content scale-fade-in'}>
-            <input type="text" placeholder="Search" value={userSearch} onChange={searchUsers}/>
-            <table>
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Email</th>
-                    <th>Name</th>
-                    {hasSubscription && <th>Account expiry</th>}
-                    <th>Admin</th>
-                    <th>Change password</th>
-                    <th>Delete user</th>
-                </tr>
-                </thead>
-                <tbody>
-                {users && users.data && users.data.map(u => <tr key={u.id}>
-                    <td>{u.id}</td>
-                    <td>{u.email}</td>
-                    <td>{u.firstName + " " + u.lastName}</td>
-                    {hasSubscription &&
-                    <td>{u.subscriptionExpiryDate === LONG_MAX || u.subscriptionExpiryDate === 0 ? 'Never' : moment(u.subscriptionExpiryDate).format('MMMM Do YYYY')}</td>}
-                    <td className="action"><input type="checkbox" checked={u.isAdmin}
-                                                  disabled={u.id === loginService.getCurrentUser().id}
-                                                  onChange={() => toggleAdmin(u)}/></td>
-                    <td className="action"><i className="fa fa-key" onClick={e => setEditPasswordOf(u)}/></td>
-                    <td className="action">{u.id !== loginService.getCurrentUser().id &&
-                    <i className="fa fa-times" onClick={e => deleteUser(u)}/>}</td>
-                </tr>)}
-                {!users || !users.data || users.data.length === 0 &&
-                <tr>
-                    <td colSpan={hasSubscription ? 7 : 6}>No users matching criteria</td>
-                </tr>}
-                </tbody>
-            </table>
-            {users && users.pagination &&
-            <Pagination pagination={users.pagination} setPage={(i) => setUserPage(i)}></Pagination>}
-            <div>
-                <button onClick={e => setNewUser({})}>
-                    <i className="fa fa-plus"/> Add new user
-                </button>
+            {tab === 'users' && <div className={'tab-content scale-fade-in'}>
+                <input type="text" placeholder="Search" value={userSearch} onChange={searchUsers}/>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Name</th>
+                        {hasSubscription && <th>Account expiry</th>}
+                        <th>Admin</th>
+                        <th>Change password</th>
+                        <th>Delete user</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {users && users.data && users.data.map(u => <tr key={u.id}>
+                        <td>{u.id}</td>
+                        <td>{u.email}</td>
+                        <td>{u.firstName + " " + u.lastName}</td>
+                        {hasSubscription &&
+                        <td>{u.subscriptionExpiryDate === LONG_MAX || u.subscriptionExpiryDate === 0 ? 'Never' : moment(u.subscriptionExpiryDate).format('MMMM Do YYYY')}</td>}
+                        <td className="action"><input type="checkbox" checked={u.isAdmin}
+                                                      disabled={u.id === loginService.getCurrentUser().id}
+                                                      onChange={() => toggleAdmin(u)}/></td>
+                        <td className="action"><i className="fa fa-key" onClick={e => setEditPasswordOf(u)}/></td>
+                        <td className="action">{u.id !== loginService.getCurrentUser().id &&
+                        <i className="fa fa-times" onClick={e => deleteUser(u)}/>}</td>
+                    </tr>)}
+                    {!users || !users.data || users.data.length === 0 &&
+                    <tr>
+                        <td colSpan={hasSubscription ? 7 : 6}>No users matching criteria</td>
+                    </tr>}
+                    </tbody>
+                </table>
+                {users && users.pagination &&
+                <Pagination pagination={users.pagination} setPage={(i) => setUserPage(i)}></Pagination>}
+                <div>
+                    <button onClick={e => setNewUser({})}>
+                        <i className="fa fa-plus"/> Add new user
+                    </button>
+                </div>
             </div>
-        </div>
-        }
+            }
 
-        {tab === 'settings' && <div className={'tab-content scale-fade-in'}>
-            <SingleSetting name="currencyApiKey" title="Currency converter API key" secret={true}>
-                API key from <a href="https://freecurrencyapi.net" target="_blank">freecurrencyapi</a>.
-            </SingleSetting>
+            {tab === 'settings' && <div className={'tab-content scale-fade-in'}>
+                <SingleSetting name="currencyApiKey" title="Currency converter API key (optional)" secret={true}>
+                    API key from <a href="https://freecurrencyapi.net" target="_blank">freecurrencyapi</a>.
+                </SingleSetting>
+            </div>
+            }
         </div>
-        }
 
         {showErrorDialog === true &&
         <OkDialog dismiss={() => setShowErrorDialog(false)}>{errorMessage}</OkDialog>}

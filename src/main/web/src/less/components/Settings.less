@@ -12,34 +12,36 @@
 
   }
 
-  .tabs {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    border-bottom: 1px solid @accentColor;
+  .tab-container {
+    display: flex;
 
-    li {
-      display: inline-block;
-      padding: 5px 20px;
-      cursor: pointer;
+    .tabs {
+      list-style: none;
+      padding: 0;
+      margin: 0;
 
-      transition: all .25s;
-      width: 49%;
-      box-sizing: border-box;
-      text-align: center;
+      li {
+        display: block;
+        padding: 5px 20px;
+        cursor: pointer;
 
-      &:hover {
-        color: darken(@accentColor, 10%);
-      }
+        transition: all .25s;
+        box-sizing: border-box;
+        text-align: center;
 
-      &.active {
-        color: @accentColor;
+        &:hover {
+          color: darken(@accentColor, 10%);
+        }
+
+        &.active {
+          color: @accentColor;
+        }
       }
     }
-  }
 
-  .tab-content {
-    padding: 20px;
+    .tab-content {
+      padding: 20px;
+    }
   }
 
   button {
@@ -89,8 +91,18 @@
 
 @media screen and (max-width: @mobileBreakPoint) {
   .Settings {
-    .tabs {
-      font-size: 10px;
+    .tab-container {
+      flex-direction: column;
+      .tabs {
+        font-size: 10px;
+
+        li {
+          display: inline-block;
+          padding: 5px 20px;
+          width: 49%;
+          border-bottom: 1px solid @accentColor;
+        }
+      }
     }
   }
 }

@@ -54,6 +54,9 @@ export const API = {
         UPDATE_PASSWORD: API_URL + "/User/{0}/setPassword",
         ADD_USER: API_URL + "/User",
         DELETE_USER: API_URL + "/User/{0}",
+    },
+    CURRENCY: {
+        GET: API_URL + '/Currency/{0}/{1}',
     }
 
 };
