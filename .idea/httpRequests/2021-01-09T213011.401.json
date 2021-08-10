@@ -1,0 +1,7 @@
+{
+  "timestamp": "Jan 9, 2021, 9:30:11 PM",
+  "status": 401,
+  "error": "Unauthorized",
+  "message": "",
+  "path": "/API/Category"
+}
