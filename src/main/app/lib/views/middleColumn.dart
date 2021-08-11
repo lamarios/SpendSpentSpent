@@ -17,6 +17,7 @@ class MiddleColumn extends StatefulWidget {
 class _MiddleColumnState extends State<MiddleColumn>
     with AfterLayoutMixin<MiddleColumn> {
   List<Category>? categories;
+  Widget grid = DummyGrid();
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class _MiddleColumnState extends State<MiddleColumn>
     List<Category> categories = await service.getCategories();
     setState(() {
       this.categories = categories;
+      this.grid = CategoryGrid(this.categories as List<Category>);
     });
   }
 
@@ -38,8 +40,15 @@ class _MiddleColumnState extends State<MiddleColumn>
 
   @override
   Widget build(BuildContext context) {
-    return categories == null
-        ? DummyGrid()
-        : CategoryGrid(categories as List<Category>);
+    return AnimatedSwitcher(
+      duration: panelTransition,
+      child: grid,
+      switchInCurve: Curves.easeInOut,
+      switchOutCurve: Curves.easeInOut,
+      transitionBuilder: (child, animation) => FadeTransition(
+        opacity: animation,
+        child: child,
+      ),
+    );
   }
 }

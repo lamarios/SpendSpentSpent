@@ -1,6 +1,8 @@
+import 'package:animations/animations.dart';
 import 'package:app/globals.dart';
 import 'package:app/icons.dart';
 import 'package:app/models/category.dart';
+import 'package:app/views/addExpense.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -23,27 +25,42 @@ class CategoryGridItemState extends State<CategoryGridItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: defaultBorder,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3), //color of shadow
-              spreadRadius: 2, //spread radius
-              blurRadius: 3, // blur radius
-              offset: Offset(0, 2), // changes position of shadow
-              //first paramerter of offset is left-right
-              //second parameter is top to down
-            ),
-            //you can set more BoxShadow() here
-          ],
-          gradient: LinearGradient(
-              colors: [Colors.blueAccent, Colors.blue],
-              stops: [0, 0.5],
-              begin: Alignment.bottomCenter,
-              end: Alignment.topRight)),
-      child: getIcon(widget.category.icon, size: 40),
+    return OpenContainer(
+      transitionDuration: panelTransition,
+      transitionType: ContainerTransitionType.fade,
+      closedElevation: 0,
+      closedShape: const RoundedRectangleBorder(
+        borderRadius: defaultBorder,
+      ),
+      openShape: const RoundedRectangleBorder(
+        borderRadius: defaultBorder,
+      ),
+      openBuilder: (context, action) =>
+          AddExpense(category: widget.category, onClose: action),
+      closedBuilder: (context, action) => Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            borderRadius: defaultBorder,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3), //color of shadow
+                spreadRadius: 2, //spread radius
+                blurRadius: 3, // blur radius
+                offset: Offset(0, 2), // changes position of shadow
+                //first paramerter of offset is left-right
+                //second parameter is top to down
+              ),
+              //you can set more BoxShadow() here
+            ],
+            gradient: LinearGradient(
+                colors: [Colors.blueAccent, Colors.blue],
+                stops: [0, 0.5],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topRight)),
+        child: Hero(
+            tag: widget.category.icon,
+            child: getIcon(widget.category.icon, size: 40)),
+      ),
     );
   }
 }

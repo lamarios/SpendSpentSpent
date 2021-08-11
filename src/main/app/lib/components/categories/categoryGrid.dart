@@ -1,3 +1,4 @@
+import 'package:app/components/categories/addCategoryGridItem.dart';
 import 'package:app/components/categories/categoryGridItem.dart';
 import 'package:app/models/category.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +22,15 @@ class CategoryGridState extends State<CategoryGrid> {
           mainAxisSpacing: 15,
           crossAxisSpacing: 15,
         ),
-        itemCount: widget.categories.length,
+        itemCount: widget.categories.length + 1,
         padding: const EdgeInsets.only(top: 20),
         itemBuilder: (BuildContext context, int index) {
-          Category cat = widget.categories[index];
-          return CategoryGridItem(category: cat);
+          if (index == widget.categories.length) {
+            return AddCategoryGridItem();
+          } else {
+            Category cat = widget.categories[index];
+            return CategoryGridItem(category: cat);
+          }
         });
   }
 }
