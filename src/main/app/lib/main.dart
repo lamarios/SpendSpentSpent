@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'SpendSpentSpent',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
             style: TextButton.styleFrom(
               padding: EdgeInsets.all(defaultPadding * 0.75),
               shape: StadiumBorder(),
-              backgroundColor: backgroundColor,
+              backgroundColor: Colors.white,
             ),
           ),
         ),

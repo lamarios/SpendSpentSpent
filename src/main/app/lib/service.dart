@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app/models/category.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -58,10 +59,22 @@ class Service {
         ifAbsent: () => "application/json");
   }
 
-  Future<bool> needLogin() async {
-    var token = await Preferences.get(Preferences.TOKEN);
+  void setUrl(String url) {
+    this.url = url;
+  }
 
-    return JwtDecoder.isExpired(token);
+  Future<bool> needLogin() async {
+    try {
+      var token = await Preferences.get(Preferences.TOKEN);
+
+      bool expired = JwtDecoder.isExpired(token);
+      if (!expired) {
+        await setToken(token);
+      }
+      return expired;
+    } catch (e) {
+      return true;
+    }
   }
 
   Uri formatUrl(String url, [List<String> params = emptyList]) {
@@ -92,13 +105,25 @@ class Service {
 
     final response = await http.post(this.formatUrl(SESSION_LOGIN),
         body: jsonEncode(creds), headers: this.headers);
-    if (response.statusCode == 401) {
-      throw Exception("Invalid username/password combination");
+
+    if (response.body == '"Invalid username or password"') {
+      throw Exception("Invalid email/password combination");
     } else if (response.statusCode == 200) {
       final tokenSet = await setToken(response.body);
       return tokenSet;
     } else {
       throw Exception("Error while connecting to server");
+    }
+  }
+
+  Future<List<Category>> getCategories() async {
+    final response =
+        await http.get(this.formatUrl(CATEGORY_ALL), headers: headers);
+    if (response.statusCode == 200) {
+      Iterable i = jsonDecode(response.body);
+      return List<Category>.from(i.map((e) => Category.fromJson(e)));
+    } else {
+      throw Exception("Couldn't get categories ${response.body}");
     }
   }
 }

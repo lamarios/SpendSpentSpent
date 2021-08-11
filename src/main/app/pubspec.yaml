@@ -33,10 +33,16 @@ dependencies:
   flutter_svg: ^0.22.0
   google_fonts: ^2.1.0
   after_layout: 1.1.0
+  font_awesome_flutter: 9.1.0
+  carousel_slider: 4.0.0
+  fbroadcast: 1.1.1
+  json_annotation: ^4.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: ^1.1.1
+  json_serializable: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -79,3 +85,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: Icons
+      fonts:
+        - asset: fonts/sss.ttf
