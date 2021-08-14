@@ -23,21 +23,19 @@ class CategoryGridItemState extends State<CategoryGridItem> {
     print('Cat: ${widget.category.icon}');
   }
 
+  showDialog(BuildContext context) {
+    showModal(
+        context: context,
+        builder: (context) => Card(
+            shape: RoundedRectangleBorder(borderRadius: defaultBorder),
+            child: AddExpense(category: widget.category)));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return OpenContainer(
-      transitionDuration: panelTransition,
-      transitionType: ContainerTransitionType.fade,
-      closedElevation: 0,
-      closedShape: const RoundedRectangleBorder(
-        borderRadius: defaultBorder,
-      ),
-      openShape: const RoundedRectangleBorder(
-        borderRadius: defaultBorder,
-      ),
-      openBuilder: (context, action) =>
-          AddExpense(category: widget.category, onClose: action),
-      closedBuilder: (context, action) => Container(
+    return GestureDetector(
+      onTap: () => showDialog(context),
+      child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
             borderRadius: defaultBorder,
@@ -58,8 +56,8 @@ class CategoryGridItemState extends State<CategoryGridItem> {
                 begin: Alignment.bottomCenter,
                 end: Alignment.topRight)),
         child: Hero(
-            tag: widget.category.icon,
-            child: getIcon(widget.category.icon, size: 40)),
+            tag: widget.category.icon!,
+            child: getIcon(widget.category.icon!, size: 40)),
       ),
     );
   }

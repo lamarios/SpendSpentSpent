@@ -17,11 +17,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with AfterLayoutMixin<HomeScreen> {
   final homeController = HomeController();
+  bool needLogin = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
           bottom: false,
           child: AnimatedBuilder(
@@ -38,18 +40,21 @@ class _HomeScreenState extends State<HomeScreen>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [MainView()]),
                   ),
-                  AnimatedPositioned(
-                    duration: panelTransition,
-                    curve: Curves.easeInOutQuart,
-                    left: 0,
-                    right: 0,
-                    top: homeController.homeState == HomeState.login
-                        ? 0
-                        : constraints.maxHeight,
-                    bottom: homeController.homeState == HomeState.login
-                        ? 0
-                        : -constraints.maxHeight,
-                    child: Login(onLoginSuccess: loginSuccess),
+                  Visibility(
+                    visible: needLogin,
+                    child: AnimatedPositioned(
+                      duration: panelTransition,
+                      curve: Curves.easeInOutQuart,
+                      left: 0,
+                      right: 0,
+                      top: homeController.homeState == HomeState.login
+                          ? 0
+                          : constraints.maxHeight,
+                      bottom: homeController.homeState == HomeState.login
+                          ? 0
+                          : -constraints.maxHeight,
+                      child: Login(onLoginSuccess: loginSuccess),
+                    ),
                   )
                 ]);
               });
@@ -70,5 +75,8 @@ class _HomeScreenState extends State<HomeScreen>
     }
     homeController
         .changeHomeState(needLogin ? HomeState.login : HomeState.normal);
+    setState(() {
+      this.needLogin = needLogin;
+    });
   }
 }

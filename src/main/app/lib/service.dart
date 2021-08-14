@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app/models/category.dart';
+import 'package:app/models/expense.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -116,12 +117,35 @@ class Service {
     }
   }
 
+  Future<Expense> addExpense(Expense expense) async {
+    Map map = expense.toJson();
+
+    final response = await http.post(this.formatUrl(EXPENSE_ADD),
+        body: jsonEncode(map), headers: headers);
+    if (response.statusCode == 200) {
+      return Expense.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Couldn't create expense ${response.body}");
+    }
+  }
+
   Future<List<Category>> getCategories() async {
     final response =
         await http.get(this.formatUrl(CATEGORY_ALL), headers: headers);
     if (response.statusCode == 200) {
       Iterable i = jsonDecode(response.body);
       return List<Category>.from(i.map((e) => Category.fromJson(e)));
+    } else {
+      throw Exception("Couldn't get categories ${response.body}");
+    }
+  }
+
+  Future<double> getCurrencyRate(String from, String to) async {
+    final response = await http.get(this.formatUrl(CURRENCY_GET, [from, to]),
+        headers: headers);
+
+    if (response.statusCode == 200) {
+      return double.parse(response.body);
     } else {
       throw Exception("Couldn't get categories ${response.body}");
     }

@@ -38,6 +38,7 @@ dependencies:
   fbroadcast: 1.1.1
   json_annotation: ^4.0.0
   animations: 2.0.1
+  intl: 0.17.0
 
 dev_dependencies:
   flutter_test:

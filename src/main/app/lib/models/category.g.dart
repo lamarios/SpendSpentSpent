@@ -8,10 +8,10 @@ part of 'category.dart';
 
 Category _$CategoryFromJson(Map<String, dynamic> json) {
   return Category(
-    json['icon'] as String,
-    json['categoryOrder'] as int,
-    json['id'] as int,
-    (json['percentageOfMonthly'] as num).toDouble(),
+    icon: json['icon'] as String?,
+    categoryOrder: json['categoryOrder'] as int?,
+    id: json['id'] as int?,
+    percentageOfMonthly: (json['percentageOfMonthly'] as num?)?.toDouble(),
   );
 }
 

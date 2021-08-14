@@ -9,11 +9,11 @@ part 'category.g.dart';
 /// JSON serialization logic to be generated.
 @JsonSerializable()
 class Category {
-  Category(this.icon, this.categoryOrder, this.id, this.percentageOfMonthly);
+  Category({this.icon, this.categoryOrder, this.id, this.percentageOfMonthly});
 
-  String icon;
-  int categoryOrder,id;
-  double percentageOfMonthly;
+  String? icon;
+  int? categoryOrder,id;
+  double? percentageOfMonthly;
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.

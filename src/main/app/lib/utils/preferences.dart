@@ -3,7 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Preferences {
   static String SERVER_URL = 'server_url',
       TOKEN = 'token',
-      CURRENT_PAGE = 'current_page';
+      CURRENT_PAGE = 'current_page',
+      FROM_CURRENCY = "from_currency",
+      TO_CURRENCY = "to_currency";
 
   static void set(String key, String value) async {
     final prefs = await SharedPreferences.getInstance();
