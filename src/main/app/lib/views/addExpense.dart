@@ -1,14 +1,19 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:app/components/expenseDialog/actions.dart';
+import 'package:app/components/expenseDialog/currencyConverter.dart';
 import 'package:app/components/expenseDialog/keypad.dart';
 import 'package:app/globals.dart';
 import 'package:app/icons.dart';
 import 'package:app/models/category.dart';
 import 'package:app/models/currencyConversion.dart';
 import 'package:app/models/expense.dart';
+import 'package:app/utils/dialogs.dart';
+import 'package:app/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:location/location.dart';
 
 class AddExpense extends StatefulWidget {
   Category category;
@@ -19,28 +24,31 @@ class AddExpense extends StatefulWidget {
   AddExpenseState createState() => AddExpenseState();
 }
 
-class AddExpenseState extends State<AddExpense> {
+class AddExpenseState extends State<AddExpense>
+    with AfterLayoutMixin<AddExpense> {
   String value = "";
   String valueFrom = "";
   var expenseDate = DateTime.now();
   var expenseNote = "";
   bool useLocation = false;
   CurrencyConversion? currencyConversion;
+  bool showCurrencyConversion = false;
 
   void addNumber(String i) {
     if (currencyConversion == null) {
       setState(() {
-        value += i;
+        value = (value + i).replaceFirst(RegExp(r'^0+'), '');
       });
     } else {
       setState(() {
-        valueFrom += i;
+        valueFrom = (valueFrom + i).replaceFirst(RegExp(r'^0+'), '');
         calculateRateConversion();
       });
     }
   }
 
   void setLocation(location) {
+    Preferences.setBool(Preferences.EXPENSE_LOCATION, location);
     setState(() {
       this.useLocation = location;
     });
@@ -86,7 +94,35 @@ class AddExpenseState extends State<AddExpense> {
     return str;
   }
 
-  Future<void> addExpense() async {
+  Future<LocationData> getLocation() async {
+    Location location = new Location();
+
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        throw Exception('Location service not enabled');
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        throw Exception('Location not allowed');
+      }
+    }
+
+    _locationData = await location.getLocation();
+
+    return _locationData;
+  }
+
+  Future<void> addExpense(BuildContext context) async {
     var amount = double.parse(valueToStr(value));
     var date = DateFormat('yyyy-MM-dd').format(expenseDate);
     var note = expenseNote;
@@ -94,10 +130,24 @@ class AddExpenseState extends State<AddExpense> {
       if (note.length > 0) {
         note += "\n";
       }
-      note += '${currencyConversion?.from} ${valueToStr(valueFrom)} -> ${currencyConversion?.to}';
+      note +=
+          '${currencyConversion?.from} ${valueToStr(valueFrom)} -> ${currencyConversion?.to}';
     }
     var expense = Expense(
         amount: amount, category: widget.category, date: date, note: note);
+
+    //checking location\
+    if (useLocation) {
+      try {
+        LocationData locationData = await getLocation();
+        expense.latitude = locationData.latitude;
+        expense.longitude = locationData.longitude;
+      } catch (e) {
+        print(e.toString());
+        showAlertDialog(context, 'Error getting Location', e.toString());
+        return;
+      }
+    }
 
     await service.addExpense(expense);
     closeDialog();
@@ -133,7 +183,7 @@ class AddExpenseState extends State<AddExpense> {
               Row(
                 children: [
                   Visibility(
-                    visible: currencyConversion == null,
+                    visible: !showCurrencyConversion,
                     child: Expanded(
                         child: Container(
                             height: 70,
@@ -146,31 +196,15 @@ class AddExpenseState extends State<AddExpense> {
                             ))),
                   ),
                   Visibility(
-                    visible: currencyConversion != null,
+                    visible: showCurrencyConversion,
                     child: Expanded(
-                        child: Container(
-                            height: 70,
-                            color: Colors.grey[350],
-                            alignment: Alignment.centerRight,
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                        '${currencyConversion?.from}  ${valueToStr(valueFrom)}',
-                                        style: TextStyle(fontSize: 20)),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                        '${currencyConversion?.to}  ${valueToStr(value)}',
-                                        style: TextStyle(fontSize: 20)),
-                                  ),
-                                ],
-                              ),
-                            ))),
+                        child: CurrencyConverter(
+                      value: value,
+                      valueFrom: valueFrom,
+                      currencyConversion: currencyConversion,
+                      setCurrencyConversion: setCurrencyConversion,
+                      valueToStr: valueToStr,
+                    )),
                   )
                 ],
               ),
@@ -190,8 +224,15 @@ class AddExpenseState extends State<AddExpense> {
                   },
                   location: useLocation,
                   setLocation: setLocation,
-                  currencyConversion: currencyConversion,
-                  setCurrencyConversion: setCurrencyConversion,
+                  currencyConversionEnabled: showCurrencyConversion,
+                  enableCurrencyConversion: (enable) {
+                    setState(() {
+                      showCurrencyConversion = enable;
+                      if (!enable) {
+                        currencyConversion = null;
+                      }
+                    });
+                  },
                 ),
               ),
               Padding(
@@ -200,7 +241,9 @@ class AddExpenseState extends State<AddExpense> {
                   children: [
                     Expanded(
                         child: TextButton(
-                            onPressed: addExpense,
+                            onPressed: value.length > 0
+                                ? () => addExpense(context)
+                                : null,
                             child: Text('Save'),
                             style: flatButtonStyle)),
                   ],
@@ -222,5 +265,13 @@ class AddExpenseState extends State<AddExpense> {
         ],
       ),
     );
+  }
+
+  @override
+  Future<void> afterFirstLayout(BuildContext context) async {
+    var location = await Preferences.getBool(Preferences.EXPENSE_LOCATION);
+    setState(() {
+      useLocation = location;
+    });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:app/controllers/homeController.dart';
 import 'package:app/globals.dart';
+import 'package:app/utils/preferences.dart';
 import 'package:app/views/login.dart';
 import 'package:app/views/main.dart';
 import 'package:fbroadcast/fbroadcast.dart';
@@ -71,12 +72,16 @@ class _HomeScreenState extends State<HomeScreen>
   Future<void> afterFirstLayout(BuildContext context) async {
     var needLogin = await service.needLogin();
     if (!needLogin) {
+      var server = await Preferences.get(Preferences.SERVER_URL, "");
+      print('saved server $server');
+      await service.setUrl(server);
       FBroadcast.instance().broadcast(BROADCAST_LOGGED_IN);
     }
-    homeController
-        .changeHomeState(needLogin ? HomeState.login : HomeState.normal);
+    print('Need login ? $needLogin');
     setState(() {
       this.needLogin = needLogin;
+      homeController
+          .changeHomeState(needLogin ? HomeState.login : HomeState.normal);
     });
   }
 }

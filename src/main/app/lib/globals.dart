@@ -14,7 +14,7 @@ const panelTransition = Duration(milliseconds: 350);
 
 
 // broadcast message types
-const BROADCAST_LOGGED_IN='loggedIn';
+const BROADCAST_LOGGED_IN='loggedIn', NEED_LOGIN='needLogin';
 
 ButtonStyle flatButtonStyle = TextButton.styleFrom(
   primary: Colors.white,

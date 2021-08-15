@@ -34,7 +34,7 @@ class _LoginState extends State<Login> {
 
   Future<void> logIn() async {
     try {
-      globals.service.setUrl(urlController.text);
+      await globals.service.setUrl(urlController.text);
       var loggedIn = await globals.service
           .login(usernameController.text, passwordController.text);
       setState(() {

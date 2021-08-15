@@ -60,7 +60,8 @@ class Service {
         ifAbsent: () => "application/json");
   }
 
-  void setUrl(String url) {
+  Future<void> setUrl(String url) async {
+    await Preferences.set(Preferences.SERVER_URL, url);
     this.url = url;
   }
 
@@ -89,7 +90,7 @@ class Service {
   }
 
   Future<bool> setToken(String token) async {
-    Preferences.set(Preferences.TOKEN, token);
+    await Preferences.set(Preferences.TOKEN, token);
     token = token.replaceAll('"', '');
     token = "Bearer " + token;
 

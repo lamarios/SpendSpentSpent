@@ -80,16 +80,16 @@ class MenuBarState extends State<MenuBar>
     double? left = 0, right = 0;
     switch (selected) {
       case 0:
-        left = 5;
-        right = 155;
+        left = 8;
+        right = 151;
         break;
       case 1:
         left = 55;
         right = 55;
         break;
       case 2:
-        left = 155;
-        right = 5;
+        left = 151;
+        right = 8;
         break;
     }
 
@@ -98,7 +98,7 @@ class MenuBarState extends State<MenuBar>
       width: 200,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        borderRadius: defaultBorder,
+        borderRadius: BorderRadius.all(Radius.circular(25)),
         gradient: LinearGradient(
             colors: [Colors.blueAccent, Colors.blue],
             stops: [0, 0.75],
@@ -118,11 +118,20 @@ class MenuBarState extends State<MenuBar>
           AnimatedPositioned(
               right: right,
               left: left,
+              top: 3.5,
               curve: Curves.easeInOutQuart,
               child: Container(
                 decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(40))),
+                    borderRadius: BorderRadius.all(Radius.circular(40)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 3,
+                        offset: Offset(0, 2),
+                      )
+                    ]),
                 height: 40,
                 width: 40,
               ),
