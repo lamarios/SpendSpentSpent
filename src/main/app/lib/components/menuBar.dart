@@ -6,16 +6,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MenuBar extends StatefulWidget {
   Function setPage;
+  int page;
 
-  MenuBar({required this.setPage});
+  MenuBar({required this.setPage, required this.page});
 
   @override
   MenuBarState createState() => MenuBarState();
 }
 
-class MenuBarState extends State<MenuBar>
-    with TickerProviderStateMixin, AfterLayoutMixin<MenuBar> {
-  int selected = 1;
+class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLayoutMixin<MenuBar> {
+  late ColorTween colorTween = ColorTween(begin: Colors.white, end: Colors.blue);
   late Animation<Color> animation0, animation1, animation2;
   late AnimationController controller0, controller1, controller2;
 
@@ -23,32 +23,33 @@ class MenuBarState extends State<MenuBar>
   void initState() {
     super.initState();
     controller0 = AnimationController(duration: panelTransition, vsync: this);
-    animation0 = (ColorTween(begin: Colors.white, end: Colors.blue)
-        .animate(controller0) as Animation<Color>)
+    animation0 = (ColorTween(begin: Colors.white, end: Colors.blue).animate(controller0) as Animation<Color>)
       ..addListener(() {
         setState(() {});
       });
     controller1 = AnimationController(duration: panelTransition, vsync: this);
-    animation1 = (ColorTween(begin: Colors.white, end: Colors.blue)
-        .animate(controller1) as Animation<Color>)
+    animation1 = (ColorTween(begin: Colors.white, end: Colors.blue).animate(controller1) as Animation<Color>)
       ..addListener(() {
         setState(() {});
       });
     controller2 = AnimationController(duration: panelTransition, vsync: this);
-    animation2 = (ColorTween(begin: Colors.white, end: Colors.blue)
-        .animate(controller2) as Animation<Color>)
+    animation2 = (ColorTween(begin: Colors.white, end: Colors.blue).animate(controller2) as Animation<Color>)
       ..addListener(() {
         setState(() {});
       });
   }
 
-  void setSelected(int s) {
-    widget.setPage(s);
-    setState(() {
-      this.selected = s;
-    });
+  @override
+  void didUpdateWidget(covariant MenuBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.page != widget.page) {
+      setIconColors();
+    }
+  }
 
-    switch (selected) {
+
+  void setIconColors(){
+    switch (widget.page) {
       case 0:
         controller0.forward();
         controller1.reverse();
@@ -67,18 +68,19 @@ class MenuBarState extends State<MenuBar>
     }
   }
 
+  void setSelected(int s) {
+    widget.setPage(s);
+  }
+
   @override
   void dispose() {
-    controller0.dispose();
-    controller1.dispose();
-    controller2.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     double? left = 0, right = 0;
-    switch (selected) {
+    switch (widget.page) {
       case 0:
         left = 8;
         right = 151;
@@ -99,11 +101,7 @@ class MenuBarState extends State<MenuBar>
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(25)),
-        gradient: LinearGradient(
-            colors: [Colors.blueAccent, Colors.blue],
-            stops: [0, 0.75],
-            begin: Alignment.bottomCenter,
-            end: Alignment.topRight),
+        gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.75], begin: Alignment.bottomCenter, end: Alignment.topRight),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
@@ -121,17 +119,14 @@ class MenuBarState extends State<MenuBar>
               top: 3.5,
               curve: Curves.easeInOutQuart,
               child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(40)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 3,
-                        offset: Offset(0, 2),
-                      )
-                    ]),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(40)), boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 3,
+                    offset: Offset(0, 2),
+                  )
+                ]),
                 height: 40,
                 width: 40,
               ),
@@ -183,6 +178,6 @@ class MenuBarState extends State<MenuBar>
 
   @override
   void afterFirstLayout(BuildContext context) {
-    setSelected(1);
+    setIconColors();
   }
 }

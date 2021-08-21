@@ -1,5 +1,4 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:app/controllers/homeController.dart';
 import 'package:app/globals.dart';
 import 'package:app/utils/preferences.dart';
 import 'package:app/views/login.dart';
@@ -7,6 +6,7 @@ import 'package:app/views/main.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen() : super();
@@ -17,71 +17,54 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with AfterLayoutMixin<HomeScreen> {
-  final homeController = HomeController();
-  bool needLogin = false;
+  late Widget homeWidget = getMainView();
+
+  Widget getMainView() {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center, children: [MainView()]);
+  }
+
+  Widget getLogin() {
+    return Login(onLoginSuccess: loginSuccess);
+  }
+
+  @override
+  initState() {
+    super.initState();
+
+    service.needLogin().then((needLogin) {
+      this.homeWidget = needLogin ? getLogin() : getMainView();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PlatformScaffold(
         backgroundColor: Colors.white,
-        resizeToAvoidBottomInset: false,
         body: SafeArea(
           bottom: false,
-          child: AnimatedBuilder(
-            animation: homeController,
-            builder: (context, _) {
-              return LayoutBuilder(builder: (context, constraints) {
-                return Stack(children: [
-                  AnimatedOpacity(
-                    duration: panelTransition,
-                    curve: Curves.easeInOutQuart,
-                    opacity:
-                        homeController.homeState == HomeState.login ? 0.3 : 1,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [MainView()]),
-                  ),
-                  Visibility(
-                    visible: needLogin,
-                    child: AnimatedPositioned(
-                      duration: panelTransition,
-                      curve: Curves.easeInOutQuart,
-                      left: 0,
-                      right: 0,
-                      top: homeController.homeState == HomeState.login
-                          ? 0
-                          : constraints.maxHeight,
-                      bottom: homeController.homeState == HomeState.login
-                          ? 0
-                          : -constraints.maxHeight,
-                      child: Login(onLoginSuccess: loginSuccess),
-                    ),
-                  )
-                ]);
-              });
-            },
-          ),
+          child: AnimatedSwitcher(duration: panelTransition,
+              switchInCurve: Curves.easeInOutQuart,
+              switchOutCurve: Curves.easeInOutQuart,
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return ScaleTransition(child: child, scale: animation);
+              },
+              child: homeWidget),
         ));
   }
 
   void loginSuccess() {
-    homeController.changeHomeState(HomeState.normal);
+    setState(() {
+      this.homeWidget = getMainView();
+    });
   }
 
   @override
   Future<void> afterFirstLayout(BuildContext context) async {
-    var needLogin = await service.needLogin();
-    if (!needLogin) {
-      var server = await Preferences.get(Preferences.SERVER_URL, "");
-      print('saved server $server');
-      await service.setUrl(server);
-      FBroadcast.instance().broadcast(BROADCAST_LOGGED_IN);
-    }
-    print('Need login ? $needLogin');
-    setState(() {
-      this.needLogin = needLogin;
-      homeController
-          .changeHomeState(needLogin ? HomeState.login : HomeState.normal);
+    FBroadcast.instance().register(BROADCAST_LOGGED_OUT, (value, callback) {
+      setState(() {
+        this.homeWidget = getLogin();
+      });
     });
   }
 }

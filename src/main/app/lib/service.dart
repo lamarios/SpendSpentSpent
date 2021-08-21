@@ -1,10 +1,15 @@
 import 'dart:convert';
 
+import 'package:app/globals.dart';
+import 'package:app/models/availableCategories.dart';
 import 'package:app/models/category.dart';
 import 'package:app/models/expense.dart';
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
+import 'models/searchCategories.dart';
 import 'utils/preferences.dart';
 
 const API_ROOT = "{apiUrl}";
@@ -54,8 +59,7 @@ class Service {
 
   Map<String, String> headers = Map();
 
-  Service([url = "https://exp.ftpix.com"]) {
-    this.url = url;
+  Service([url]) {
     headers.update("Content-Type", (value) => "application/json",
         ifAbsent: () => "application/json");
   }
@@ -79,13 +83,24 @@ class Service {
     }
   }
 
-  Uri formatUrl(String url, [List<String> params = emptyList]) {
-    url = url.replaceFirst("\{apiUrl\}", this.url);
+  Future<String> getUrl() async {
+    if (url == '') {
+      var server = await Preferences.get(Preferences.SERVER_URL, "");
+      print('saved server $server');
+      await setUrl(server);
+    }
+
+    return url;
+  }
+
+  Future<Uri> formatUrl(String url, [List<String> params = emptyList]) async {
+    final serverUrl = await this.getUrl();
+    url = url.replaceFirst("\{apiUrl\}", serverUrl);
 
     params.asMap().forEach((key, value) {
       url = url.replaceFirst('\{$key\}', value);
     });
-    print("$url");
+    print("Calling $url");
     return Uri.parse(url);
   }
 
@@ -105,7 +120,7 @@ class Service {
     creds.putIfAbsent("email", () => username);
     creds.putIfAbsent("password", () => password);
 
-    final response = await http.post(this.formatUrl(SESSION_LOGIN),
+    final response = await http.post(await this.formatUrl(SESSION_LOGIN),
         body: jsonEncode(creds), headers: this.headers);
 
     if (response.body == '"Invalid username or password"') {
@@ -118,37 +133,81 @@ class Service {
     }
   }
 
+  Future<AvailableCategories> getAvailableCategories() async {
+    final response =
+        await http.get(await this.formatUrl(CATEGORY_AVAILABLE), headers: headers);
+
+    processResponse(response);
+    return AvailableCategories.fromJson(jsonDecode(response.body));
+  }
+
+  Future<AvailableCategories> searchAvailableCategories(String search) async {
+    if (search == '') {
+      return getAvailableCategories();
+    }
+
+    final response = await http.post(await this.formatUrl(CATEGORY_SEARCH),
+        body: '"$search"', headers: headers);
+
+    processResponse(response);
+    return SearchCategories.fromJson(jsonDecode(response.body)).results;
+  }
+
+  Future<bool> addCategory(String category) async {
+    Map<String, dynamic> data = Map();
+    data.putIfAbsent('icon', () => category);
+    data.putIfAbsent('order', () => 0);
+
+    final response = await http.post(await this.formatUrl(CATEGORY_ADD),
+        body: jsonEncode(data), headers: headers);
+
+    processResponse(response);
+    return true;
+  }
+
   Future<Expense> addExpense(Expense expense) async {
     Map map = expense.toJson();
 
-    final response = await http.post(this.formatUrl(EXPENSE_ADD),
+    final response = await http.post(await this.formatUrl(EXPENSE_ADD),
         body: jsonEncode(map), headers: headers);
-    if (response.statusCode == 200) {
-      return Expense.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception("Couldn't create expense ${response.body}");
-    }
+
+    processResponse(response);
+    return Expense.fromJson(jsonDecode(response.body));
   }
 
   Future<List<Category>> getCategories() async {
     final response =
-        await http.get(this.formatUrl(CATEGORY_ALL), headers: headers);
-    if (response.statusCode == 200) {
-      Iterable i = jsonDecode(response.body);
-      return List<Category>.from(i.map((e) => Category.fromJson(e)));
-    } else {
-      throw Exception("Couldn't get categories ${response.body}");
-    }
+        await http.get(await this.formatUrl(CATEGORY_ALL), headers: headers);
+
+    processResponse(response);
+    Iterable i = jsonDecode(response.body);
+    return List<Category>.from(i.map((e) => Category.fromJson(e)));
   }
 
   Future<double> getCurrencyRate(String from, String to) async {
-    final response = await http.get(this.formatUrl(CURRENCY_GET, [from, to]),
+    final response = await http.get(await this.formatUrl(CURRENCY_GET, [from, to]),
         headers: headers);
 
-    if (response.statusCode == 200) {
-      return double.parse(response.body);
-    } else {
-      throw Exception("Couldn't get categories ${response.body}");
+    processResponse(response);
+    return double.parse(response.body);
+  }
+
+  Future<void> logout() async {
+    await Preferences.remove(Preferences.TOKEN);
+    await Preferences.remove(Preferences.SERVER_URL);
+
+    FBroadcast.instance().broadcast(BROADCAST_LOGGED_OUT);
+  }
+
+  void processResponse(Response response) {
+    switch (response.statusCode) {
+      case 200:
+        return;
+      case 401:
+        logout();
+        throw Exception("Couldn't execute request ${response.body}");
+      default:
+        throw Exception("Couldn't execute request ${response.body}");
     }
   }
 }

@@ -22,21 +22,29 @@ class _MiddleColumnState extends State<MiddleColumn>
   @override
   void initState() {
     super.initState();
-    FBroadcast.instance().register(BROADCAST_LOGGED_IN, (value, callback) {
-      loadCategories();
-    });
+  }
+
+  void dispose() {
+    FBroadcast.instance().unregister(this);
+    super.dispose();
   }
 
   Future<void> loadCategories() async {
     List<Category> categories = await service.getCategories();
-    setState(() {
-      this.categories = categories;
-      this.grid = CategoryGrid(this.categories as List<Category>);
-    });
+    if (this.mounted) {
+      setState(() {
+        this.categories = categories;
+        this.grid = CategoryGrid(this.categories as List<Category>);
+      });
+    }
   }
 
   @override
-  void afterFirstLayout(BuildContext context) {}
+  void afterFirstLayout(BuildContext context) {
+    loadCategories();
+    FBroadcast.instance().register(BROADCAST_REFRESH_CATEGORIES,
+        (context, somethingElse) => loadCategories());
+  }
 
   @override
   Widget build(BuildContext context) {
