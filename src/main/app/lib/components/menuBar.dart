@@ -15,7 +15,6 @@ class MenuBar extends StatefulWidget {
 }
 
 class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLayoutMixin<MenuBar> {
-  late ColorTween colorTween = ColorTween(begin: Colors.white, end: Colors.blue);
   late Animation<Color> animation0, animation1, animation2;
   late AnimationController controller0, controller1, controller2;
 

@@ -2,6 +2,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:app/components/menuBar.dart';
 import 'package:app/globals.dart';
 import 'package:app/screens/settings.dart';
+import 'package:app/views/categoryList.dart';
 import 'package:app/views/middleColumn.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,7 +44,6 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
   }
 
   void onPageChanged(int page, CarouselPageChangedReason reason) {
-    print('page ${page}');
     setState(() {
       this.page = page;
     });
