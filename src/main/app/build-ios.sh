@@ -1,4 +1,4 @@
 flutter clean \
-        && rm ios/Podfile.lock pubspec.lock \
-        && rm -rf ios/Pods ios/Runner.xcworkspace \
-        && flutter build ios --build-name=1.0.0 --build-number=1 --release --no-sound-null-safety
+        && rm ios/Podfile.lock pubspec.lock || true\
+        && rm -rf ios/Pods ios/Runner.xcworkspace || true \
+        && flutter build ios --no-sound-null-safety --release
