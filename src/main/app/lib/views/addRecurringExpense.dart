@@ -146,11 +146,11 @@ class AddRecurringExpenseDialogState extends State<AddRecurringExpenseDialog> wi
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  PlatformButton(
+                  PlatformDialogAction(
                     onPressed: () => backward(context),
                     child: PlatformText(step == 0 ? 'Cancel' : 'Back'),
                   ),
-                  PlatformButton(
+                  PlatformDialogAction(
                     onPressed: stepValid() ? () => forward(context) : null,
                     child: PlatformText(step == 2 ? 'Add' : 'Next'),
                   )
