@@ -82,7 +82,7 @@ class ExpenseState extends State<Expense> {
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: AnimatedContainer(
           curve: Curves.easeInOutQuart,
-          height: opened ? 150 : 40,
+          height: opened ? 170 : 40,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(25)),
@@ -158,10 +158,10 @@ class ExpenseState extends State<Expense> {
                             child: FadeIn(
                           duration: panelTransition,
                           curve: Curves.easeInOutQuart,
-                          child: PlatformButton(
+                          child:TextButton(
                             child: Text('Delete', style: TextStyle(color: Colors.red)),
-                            color: Theme.of(context).primaryColorDark,
                             onPressed: () => deleteRecurringExpense(context),
+                            style: flatButtonStyle,
                           ),
                         )),
                       ],

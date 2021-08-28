@@ -29,10 +29,10 @@ class MyApp extends StatelessWidget {
     return Theme(
       data: materialTheme,
       child: PlatformProvider(
-        settings: PlatformSettingsData(iosUsesMaterialWidgets: true),
+        settings: PlatformSettingsData(iosUsesMaterialWidgets: true, platformStyle: PlatformStyleData(ios: PlatformStyle.Material)),
         builder: (context) => PlatformApp(
           title: 'SpendSpentSpent',
-          home: HomeScreen(),
+          home: Material(child: HomeScreen()),
           material: (_, __) => MaterialAppData(theme: materialTheme),
           cupertino: (_, __) => CupertinoAppData(
               theme:

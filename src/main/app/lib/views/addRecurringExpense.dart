@@ -126,10 +126,10 @@ class AddRecurringExpenseDialogState extends State<AddRecurringExpenseDialog> wi
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Visibility(
-          visible: stepWidget != null,
+      child: Visibility(
+        visible: stepWidget != null,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               Switcher(labels: ['Which category ?', 'How often ?', 'How much ?'], selected: step, onSelect: (step) {}),
@@ -144,13 +144,13 @@ class AddRecurringExpenseDialogState extends State<AddRecurringExpenseDialog> wi
                 ),
               )),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Expanded(child: Container()),
-                  PlatformDialogAction(
+                  PlatformButton(
                     onPressed: () => backward(context),
                     child: PlatformText(step == 0 ? 'Cancel' : 'Back'),
                   ),
-                  PlatformDialogAction(
+                  PlatformButton(
                     onPressed: stepValid() ? () => forward(context) : null,
                     child: PlatformText(step == 2 ? 'Add' : 'Next'),
                   )
