@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:app/globals.dart' as globals;
 import 'package:app/icons.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class Login extends StatefulWidget {
   Function onLoginSuccess;
@@ -27,7 +30,7 @@ InputDecoration getFieldDecoration(String label, String hint) {
 }
 
 class _LoginState extends State<Login> {
-  final urlController = TextEditingController(text: "https://exp.ftpix.com");
+  final urlController = TextEditingController(text: "https://sss.ftpix.com");
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   String error = '';
@@ -95,31 +98,35 @@ class _LoginState extends State<Login> {
                                   child: getIcon('groceries_bag',
                                       size: 200, color: Colors.white)),
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: PlatformTextField(
+                                    showCursor: true,
+                                    material: (_, __) => MaterialTextFieldData(
+                                        decoration: getFieldDecoration(
+                                            'Server Url',
+                                            'https://sss.ftpix.com')),
                                     controller: urlController,
                                     autocorrect: false,
-                                    enableSuggestions: false,
-                                    decoration: getFieldDecoration(
-                                        "Server", "https://exp.ftpix.com")),
-                              ),
+                                  )),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                    controller: usernameController,
-                                    autocorrect: false,
-                                    enableSuggestions: false,
-                                    decoration: getFieldDecoration(
-                                        "Email", "user@example.org")),
+                                child: PlatformTextField(
+                                  controller: usernameController,
+                                  autocorrect: false,
+                                  material: (_, __) => MaterialTextFieldData(
+                                      decoration: getFieldDecoration(
+                                          "Email", "user@example.org")),
+                                ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: PlatformTextField(
                                     controller: passwordController,
                                     obscureText: true,
-                                    decoration:
-                                        getFieldDecoration("Password", "")),
-                              ),
+                                    material: (_, __) => MaterialTextFieldData(
+                                        decoration:
+                                            getFieldDecoration("Password", "")),
+                                  )),
                               Visibility(
                                 visible: error.length > 0,
                                 child: Padding(

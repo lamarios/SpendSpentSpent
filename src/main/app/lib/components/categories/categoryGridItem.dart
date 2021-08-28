@@ -17,12 +17,6 @@ class CategoryGridItem extends StatefulWidget {
 }
 
 class CategoryGridItemState extends State<CategoryGridItem> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    print('Cat: ${widget.category.icon}');
-  }
 
   showDialog(BuildContext context) {
     showModal(

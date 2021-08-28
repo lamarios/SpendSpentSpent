@@ -40,4 +40,9 @@ class Preferences {
     var value = prefs.getBool(key);
     return value == null ? defaultValue : value;
   }
+
+  static Future<void> remove(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(key);
+  }
 }

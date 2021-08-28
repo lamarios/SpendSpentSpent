@@ -12,9 +12,11 @@ const BorderRadius defaultBorder = BorderRadius.all(Radius.circular(15));
 const defaultPadding = 20.0;
 const panelTransition = Duration(milliseconds: 350);
 
-
 // broadcast message types
-const BROADCAST_LOGGED_IN='loggedIn', NEED_LOGIN='needLogin';
+const BROADCAST_LOGGED_IN = 'loggedIn',
+    BROADCAST_REFRESH_CATEGORIES = 'refreshCategories',
+    NEED_LOGIN = 'needLogin',
+    BROADCAST_LOGGED_OUT = 'loggedOut';
 
 ButtonStyle flatButtonStyle = TextButton.styleFrom(
   primary: Colors.white,

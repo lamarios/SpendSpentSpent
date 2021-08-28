@@ -23,7 +23,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/web/.cache" />
-      <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/app/linux/flutter/ephemeral/.plugin_symlinks/shared_preferences_linux/build" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/app/linux/flutter/ephemeral/.plugin_symlinks/shared_preferences_linux/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/app/linux/flutter/ephemeral/.plugin_symlinks/path_provider_linux/example/build" />
@@ -34,6 +33,7 @@
       <excludeFolder url="file://$MODULE_DIR$/src/main/app/linux/flutter/ephemeral/.plugin_symlinks/shared_preferences_linux/example/build" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/app/linux/flutter/ephemeral/.plugin_symlinks/path_provider_linux/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/app/linux/flutter/ephemeral/.plugin_symlinks/path_provider_linux/build" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -1,54 +1,48 @@
-import 'package:after_layout/after_layout.dart';
-import 'package:app/components/categories/categoryGrid.dart';
-import 'package:app/components/dummies/dummyGrid.dart';
+import 'package:app/components/switcher.dart';
 import 'package:app/globals.dart';
-import 'package:app/models/category.dart';
-import 'package:fbroadcast/fbroadcast.dart';
+import 'package:app/views/categoryList.dart';
+import 'package:app/views/recurringExpenseList.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class MiddleColumn extends StatefulWidget {
-  MiddleColumn() : super();
-
   @override
-  _MiddleColumnState createState() => _MiddleColumnState();
+  MiddleColumnState createState() => MiddleColumnState();
 }
 
-class _MiddleColumnState extends State<MiddleColumn>
-    with AfterLayoutMixin<MiddleColumn> {
-  List<Category>? categories;
-  Widget grid = DummyGrid();
+class MiddleColumnState extends State<MiddleColumn> {
+  Widget current = CategoryList();
+  int selected = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    FBroadcast.instance().register(BROADCAST_LOGGED_IN, (value, callback) {
-      loadCategories();
-    });
-  }
-
-  Future<void> loadCategories() async {
-    List<Category> categories = await service.getCategories();
+  void switchTab(int selected) {
     setState(() {
-      this.categories = categories;
-      this.grid = CategoryGrid(this.categories as List<Category>);
+      this.selected = selected;
+      current = selected == 0 ? CategoryList() : RecurringExpenseList();
     });
   }
-
-  @override
-  void afterFirstLayout(BuildContext context) {}
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: panelTransition,
-      child: grid,
-      switchInCurve: Curves.easeInOut,
-      switchOutCurve: Curves.easeInOut,
-      transitionBuilder: (child, animation) => FadeTransition(
-        opacity: animation,
-        child: child,
-      ),
+    // TODO: implement build
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Switcher(
+            selected: selected,
+            labels: ['Normal', 'Recurring'],
+            onSelect: switchTab,
+          ),
+        ),
+        Expanded(
+            child: AnimatedSwitcher(
+                duration: panelTransition,
+                switchInCurve: Curves.easeInOutQuart,
+                switchOutCurve: Curves.easeInOutQuart,
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return ScaleTransition(child: child, scale: animation);
+                },
+                child: current))
+      ],
     );
   }
 }
