@@ -42,6 +42,7 @@ dependencies:
   location: 4.3.0
   flutter_platform_widgets: 1.9.5
   settings_ui: 1.0.0
+  flutter_fadein: 2.0.0
 
 dev_dependencies:
   flutter_test:

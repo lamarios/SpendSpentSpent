@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
+import 'models/recurringExpense.dart';
 import 'models/searchCategories.dart';
 import 'utils/preferences.dart';
 
@@ -60,8 +61,7 @@ class Service {
   Map<String, String> headers = Map();
 
   Service([url]) {
-    headers.update("Content-Type", (value) => "application/json",
-        ifAbsent: () => "application/json");
+    headers.update("Content-Type", (value) => "application/json", ifAbsent: () => "application/json");
   }
 
   Future<void> setUrl(String url) async {
@@ -120,8 +120,7 @@ class Service {
     creds.putIfAbsent("email", () => username);
     creds.putIfAbsent("password", () => password);
 
-    final response = await http.post(await this.formatUrl(SESSION_LOGIN),
-        body: jsonEncode(creds), headers: this.headers);
+    final response = await http.post(await this.formatUrl(SESSION_LOGIN), body: jsonEncode(creds), headers: this.headers);
 
     if (response.body == '"Invalid username or password"') {
       throw Exception("Invalid email/password combination");
@@ -134,8 +133,7 @@ class Service {
   }
 
   Future<AvailableCategories> getAvailableCategories() async {
-    final response =
-        await http.get(await this.formatUrl(CATEGORY_AVAILABLE), headers: headers);
+    final response = await http.get(await this.formatUrl(CATEGORY_AVAILABLE), headers: headers);
 
     processResponse(response);
     return AvailableCategories.fromJson(jsonDecode(response.body));
@@ -146,8 +144,7 @@ class Service {
       return getAvailableCategories();
     }
 
-    final response = await http.post(await this.formatUrl(CATEGORY_SEARCH),
-        body: '"$search"', headers: headers);
+    final response = await http.post(await this.formatUrl(CATEGORY_SEARCH), body: '"$search"', headers: headers);
 
     processResponse(response);
     return SearchCategories.fromJson(jsonDecode(response.body)).results;
@@ -158,8 +155,7 @@ class Service {
     data.putIfAbsent('icon', () => category);
     data.putIfAbsent('order', () => 0);
 
-    final response = await http.post(await this.formatUrl(CATEGORY_ADD),
-        body: jsonEncode(data), headers: headers);
+    final response = await http.post(await this.formatUrl(CATEGORY_ADD), body: jsonEncode(data), headers: headers);
 
     processResponse(response);
     return true;
@@ -168,16 +164,14 @@ class Service {
   Future<Expense> addExpense(Expense expense) async {
     Map map = expense.toJson();
 
-    final response = await http.post(await this.formatUrl(EXPENSE_ADD),
-        body: jsonEncode(map), headers: headers);
+    final response = await http.post(await this.formatUrl(EXPENSE_ADD), body: jsonEncode(map), headers: headers);
 
     processResponse(response);
     return Expense.fromJson(jsonDecode(response.body));
   }
 
   Future<List<Category>> getCategories() async {
-    final response =
-        await http.get(await this.formatUrl(CATEGORY_ALL), headers: headers);
+    final response = await http.get(await this.formatUrl(CATEGORY_ALL), headers: headers);
 
     processResponse(response);
     Iterable i = jsonDecode(response.body);
@@ -185,8 +179,7 @@ class Service {
   }
 
   Future<double> getCurrencyRate(String from, String to) async {
-    final response = await http.get(await this.formatUrl(CURRENCY_GET, [from, to]),
-        headers: headers);
+    final response = await http.get(await this.formatUrl(CURRENCY_GET, [from, to]), headers: headers);
 
     processResponse(response);
     return double.parse(response.body);
@@ -197,6 +190,27 @@ class Service {
     await Preferences.remove(Preferences.SERVER_URL);
 
     FBroadcast.instance().broadcast(BROADCAST_LOGGED_OUT);
+  }
+
+  Future<List<RecurringExpense>> getRecurringExpenses() async {
+    final response = await http.get(await this.formatUrl(RECURRING_GET), headers: headers);
+
+    processResponse(response);
+    Iterable i = jsonDecode(response.body);
+    return List<RecurringExpense>.from(i.map((e) => RecurringExpense.fromJson(e)));
+  }
+
+  Future<bool> deleteRecurringExpense(int id) async {
+    final response = await http.delete(await this.formatUrl(RECURRING_DELETE, [id.toString()]), headers: headers);
+    processResponse(response);
+    return true;
+  }
+
+  Future<bool> addRecurringExpense(RecurringExpense expense) async {
+    final response = await http.post(await this.formatUrl(RECURRING_ADD), headers: headers, body: jsonEncode(expense));
+
+    processResponse(response);
+    return true;
   }
 
   void processResponse(Response response) {
