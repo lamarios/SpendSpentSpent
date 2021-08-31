@@ -99,7 +99,7 @@ class ExpenseActionsState extends State<ExpenseActions>
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: IconButton(
                     onPressed: () => showNoteDialog(context),
-                    icon: FaIcon(FontAwesomeIcons.solidEdit,
+                    icon: FaIcon(FontAwesomeIcons.commentDots,
                         color: noteController.text.length > 0
                             ? Theme.of(context).accentColor
                             : Colors.black)),
