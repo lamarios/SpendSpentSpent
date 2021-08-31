@@ -4,6 +4,7 @@ import 'package:app/globals.dart';
 import 'package:app/screens/settings.dart';
 import 'package:app/views/categoryList.dart';
 import 'package:app/views/middleColumn.dart';
+import 'package:app/views/rigtColumn.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +83,7 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
                 Column(
                   children: [
                     Expanded(
-                      child: Text('RIGHT'),
+                      child: RightColumn(),
                     ),
                   ],
                 )

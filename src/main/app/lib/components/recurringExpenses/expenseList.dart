@@ -16,6 +16,7 @@ class ExpenseList extends StatelessWidget {
       itemBuilder: (context, index) {
         if (index < expenses.length) {
           return Expense(
+            key: Key(expenses[index].id.toString()),
             expense: expenses[index],
             refreshExpenses: refreshExpenses,
           );

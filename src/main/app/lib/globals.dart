@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:app/service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 Service service = new Service();
 
@@ -13,10 +14,7 @@ const defaultPadding = 20.0;
 const panelTransition = Duration(milliseconds: 350);
 
 // broadcast message types
-const BROADCAST_LOGGED_IN = 'loggedIn',
-    BROADCAST_REFRESH_CATEGORIES = 'refreshCategories',
-    NEED_LOGIN = 'needLogin',
-    BROADCAST_LOGGED_OUT = 'loggedOut';
+const BROADCAST_LOGGED_IN = 'loggedIn', BROADCAST_REFRESH_CATEGORIES = 'refreshCategories', NEED_LOGIN = 'needLogin', BROADCAST_LOGGED_OUT = 'loggedOut', BROADCAST_REFRESH_EXPENSES = 'refreshExpenses';
 
 ButtonStyle flatButtonStyle = TextButton.styleFrom(
   primary: Colors.white,
@@ -26,3 +24,7 @@ ButtonStyle flatButtonStyle = TextButton.styleFrom(
     borderRadius: BorderRadius.all(Radius.circular(2.0)),
   ),
 );
+
+String formatCurrency(double amount) {
+  return NumberFormat.currency(decimalDigits: 2, symbol: '').format(amount);
+}

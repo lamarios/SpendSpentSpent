@@ -11,8 +11,9 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 class Expense extends StatefulWidget {
   RecurringExpense expense;
   Function refreshExpenses;
+  Key? key;
 
-  Expense({required this.expense, required this.refreshExpenses});
+  Expense({this.key, required this.expense, required this.refreshExpenses});
 
   ExpenseState createState() => ExpenseState();
 }
@@ -108,7 +109,7 @@ class ExpenseState extends State<Expense> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
-                          widget.expense.amount.toStringAsFixed(2),
+                          formatCurrency(widget.expense.amount),
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -158,7 +159,7 @@ class ExpenseState extends State<Expense> {
                             child: FadeIn(
                           duration: panelTransition,
                           curve: Curves.easeInOutQuart,
-                          child:TextButton(
+                          child: TextButton(
                             child: Text('Delete', style: TextStyle(color: Colors.red)),
                             onPressed: () => deleteRecurringExpense(context),
                             style: flatButtonStyle,

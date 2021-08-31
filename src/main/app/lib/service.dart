@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:app/globals.dart';
 import 'package:app/models/availableCategories.dart';
 import 'package:app/models/category.dart';
+import 'package:app/models/dayExpense.dart';
 import 'package:app/models/expense.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:http/http.dart' as http;
@@ -210,6 +211,30 @@ class Service {
     final response = await http.post(await this.formatUrl(RECURRING_ADD), headers: headers, body: jsonEncode(expense));
 
     processResponse(response);
+    return true;
+  }
+
+  Future<List<String>> getExpensesMonths() async {
+    final response = await http.get(await this.formatUrl(EXPENSE_GET_MONTHS), headers: headers);
+    processResponse(response);
+    Iterable i = jsonDecode(response.body);
+    return List<String>.from(i.map((e) => e as String));
+  }
+
+  Future<Map<String, DayExpense>> getMonthExpenses(String month) async {
+    final response = await http.get(await this.formatUrl(EXPENSE_BY_MONTH, [month]), headers: headers);
+    processResponse(response);
+    Map<String, dynamic> map = jsonDecode(response.body);
+
+    return map.map((key, value) => MapEntry(key, DayExpense.fromJson(value)));
+  }
+
+  Future<bool> deleteExpense(int id) async {
+    final response = await http.delete(await this.formatUrl(EXPENSE_DELETE, [id.toString()]), headers: headers);
+    processResponse(response);
+
+    FBroadcast.instance().broadcast(BROADCAST_REFRESH_EXPENSES);
+
     return true;
   }
 
