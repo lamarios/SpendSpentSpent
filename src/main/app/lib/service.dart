@@ -168,6 +168,7 @@ class Service {
     final response = await http.post(await this.formatUrl(EXPENSE_ADD), body: jsonEncode(map), headers: headers);
 
     processResponse(response);
+    FBroadcast.instance().broadcast(BROADCAST_REFRESH_EXPENSES);
     return Expense.fromJson(jsonDecode(response.body));
   }
 
