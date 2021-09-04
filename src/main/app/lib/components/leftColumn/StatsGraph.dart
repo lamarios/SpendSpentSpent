@@ -181,7 +181,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
                       child: Text(
                         'avg',
                         style: TextStyle(color: avg ? Theme.of(context).primaryColorDark : Colors.white, fontSize: 10),
@@ -215,18 +215,18 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                   }
                 },
                 behavior: HitTestBehavior.translucent,
-                child: FaIcon(
-                  FontAwesomeIcons.minus,
-                  color: Colors.white,
-                  size: 15,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14),
+                  child: FaIcon(
+                    FontAwesomeIcons.minus,
+                    color: Colors.white,
+                    size: 15,
+                  ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                  count.toString() + (widget.monthly ? ' Months' : ' Years'),
-                  style: TextStyle(color: Colors.white),
-                ),
+              Text(
+                count.toString() + (widget.monthly ? ' Months' : ' Years'),
+                style: TextStyle(color: Colors.white),
               ),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
@@ -236,10 +236,13 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                     getGraphData();
                   });
                 },
-                child: FaIcon(
-                  FontAwesomeIcons.plus,
-                  size: 15,
-                  color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14),
+                  child: FaIcon(
+                    FontAwesomeIcons.plus,
+                    size: 15,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
