@@ -11,7 +11,7 @@ class AddExpense extends StatelessWidget {
   AddExpense({required this.refreshExpenses});
 
   showAddRecurringExpenseDialog(BuildContext context) {
-    showModal(context: context, builder: (context) => Card(margin: getInsetsForMaxSize(MediaQuery.of(context), 600), child: AddRecurringExpenseDialog(refreshRecurringExpenses: refreshExpenses,)));
+    showModal(context: context, builder: (context) => Card(margin: getInsetsForMaxSize(MediaQuery.of(context), 350, vertical: 60) , child: AddRecurringExpenseDialog(refreshRecurringExpenses: refreshExpenses,)));
   }
 
   @override

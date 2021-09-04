@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:app/globals.dart';
 import 'package:app/models/availableCategories.dart';
 import 'package:app/models/category.dart';
 import 'package:app/models/dayExpense.dart';
 import 'package:app/models/expense.dart';
+import 'package:app/models/graphDataPoint.dart';
+import 'package:app/models/leftColumnStats.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -96,6 +99,12 @@ class Service {
 
   Future<Uri> formatUrl(String url, [List<String> params = emptyList]) async {
     final serverUrl = await this.getUrl();
+
+    if(serverUrl.length == 0){
+      logout();
+      throw Exception("No server url, going back to login screen");
+    }
+
     url = url.replaceFirst("\{apiUrl\}", serverUrl);
 
     params.asMap().forEach((key, value) {
@@ -168,7 +177,6 @@ class Service {
     final response = await http.post(await this.formatUrl(EXPENSE_ADD), body: jsonEncode(map), headers: headers);
 
     processResponse(response);
-    FBroadcast.instance().broadcast(BROADCAST_REFRESH_EXPENSES);
     return Expense.fromJson(jsonDecode(response.body));
   }
 
@@ -237,6 +245,40 @@ class Service {
     FBroadcast.instance().broadcast(BROADCAST_REFRESH_EXPENSES);
 
     return true;
+  }
+
+  Future<List<LeftColumnStats>> getMonthStats() async {
+    final response = await http.get(await this.formatUrl(HISTORY_OVERALL_MONTH), headers: headers);
+
+    processResponse(response);
+
+    Iterable i = jsonDecode(response.body);
+    return List<LeftColumnStats>.from(i.map((e) => LeftColumnStats.fromJson(e)));
+  }
+
+  Future<List<LeftColumnStats>> getYearStats() async {
+    final response = await http.get(await this.formatUrl(HISTORY_OVERALL_YEAR), headers: headers);
+
+    processResponse(response);
+
+    Iterable i = jsonDecode(response.body);
+    return List<LeftColumnStats>.from(i.map((e) => LeftColumnStats.fromJson(e)));
+  }
+
+  Future<List<GraphDataPoint>> getMonthlyData(int categoryId, int count) async {
+    final response = await http.get(await this.formatUrl(HISTORY_MONTHLY, [categoryId.toString(), count.toString()]), headers: headers);
+
+    processResponse(response);
+    Iterable i = jsonDecode(response.body);
+    return List<GraphDataPoint>.from(i.map((e) => GraphDataPoint.fromJson(e)));
+  }
+
+  Future<List<GraphDataPoint>> getYearlyData(int categoryId, int count) async {
+    final response = await http.get(await this.formatUrl(HISTORY_YEARLY, [categoryId.toString(), count.toString()]), headers: headers);
+
+    processResponse(response);
+    Iterable i = jsonDecode(response.body);
+    return List<GraphDataPoint>.from(i.map((e) => GraphDataPoint.fromJson(e)));
   }
 
   void processResponse(Response response) {

@@ -30,13 +30,15 @@ class OneExpenseState extends State<OneExpense> {
     setState(() {
       opened = !opened;
 
-      if (opened) {
-        Future.delayed(panelTransition, () {
+      Future.delayed(panelTransition, () {
+        if (opened) {
           setState(() {
             showInfo = !showInfo;
           });
-        });
-      } else {
+        }
+      });
+
+      if (!opened) {
         showInfo = false;
       }
     });

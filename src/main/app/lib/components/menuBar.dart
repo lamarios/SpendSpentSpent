@@ -46,8 +46,7 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
     }
   }
 
-
-  void setIconColors(){
+  void setIconColors() {
     switch (widget.page) {
       case 0:
         controller0.forward();
@@ -78,22 +77,6 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
 
   @override
   Widget build(BuildContext context) {
-    double? left = 0, right = 0;
-    switch (widget.page) {
-      case 0:
-        left = 8;
-        right = 151;
-        break;
-      case 1:
-        left = 55;
-        right = 55;
-        break;
-      case 2:
-        left = 151;
-        right = 8;
-        break;
-    }
-
     return Container(
       height: 50,
       width: 200,
@@ -110,67 +93,98 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
           )
         ],
       ),
-      child: Stack(
-        children: [
-          AnimatedPositioned(
-              right: right,
-              left: left,
-              top: 3.5,
-              curve: Curves.easeInOutQuart,
-              child: Container(
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(40)), boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 2,
-                    blurRadius: 3,
-                    offset: Offset(0, 2),
-                  )
-                ]),
-                height: 40,
-                width: 40,
-              ),
-              duration: panelTransition),
-          Row(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          double? left = 0, right = 0;
+          double oneThird =  constraints.maxWidth / 3;
+          switch (widget.page) {
+            case 0:
+              left = 0;
+              right = oneThird*2;
+              break;
+            case 1:
+              left = oneThird;
+              right = oneThird;
+              break;
+            case 2:
+              left = oneThird*2;
+              right = 0;
+              break;
+          }
+
+          return Stack(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 5.0),
-                child: IconButton(
-                    color: animation0.value,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    icon: FaIcon(FontAwesomeIcons.chartBar),
-                    onPressed: () {
-                      setSelected(0);
-                    }),
-              ),
-              Expanded(
-                  child: Container(
-                child: IconButton(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    color: animation1.value,
-                    icon: FaIcon(FontAwesomeIcons.squareFull),
-                    onPressed: () {
-                      setSelected(1);
-                    }),
-              )),
-              Padding(
-                padding: const EdgeInsets.only(right: 5.0),
-                child: IconButton(
-                    color: animation2.value,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    icon: FaIcon(FontAwesomeIcons.bars),
-                    onPressed: () {
-                      setSelected(2);
-                    }),
-              ),
+              AnimatedPositioned(
+                  right: right,
+                  left: left,
+                  top: 3.5,
+                  bottom: 3.5,
+                  curve: Curves.easeInOutQuart,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Container(
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(40)), boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 2,
+                          blurRadius: 3,
+                          offset: Offset(0, 2),
+                        )
+                      ]),
+                      height: 1,
+                      width: 1,
+                    ),
+                  ),
+                  duration: panelTransition),
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: IconButton(
+                          color: animation0.value,
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          icon: FaIcon(FontAwesomeIcons.chartBar),
+                          onPressed: () {
+                            setSelected(0);
+                          }),
+                    ),
+                    Expanded(
+                        child: Container(
+                      child: IconButton(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          color: animation1.value,
+                          icon: FaIcon(FontAwesomeIcons.squareFull),
+                          onPressed: () {
+                            setSelected(1);
+                          }),
+                    )),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: IconButton(
+                          color: animation2.value,
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          icon: FaIcon(FontAwesomeIcons.bars),
+                          onPressed: () {
+                            setSelected(2);
+                          }),
+                    ),
+                  ],
+                ),
+              )
             ],
-          )
-        ],
+          );
+        },
       ),
     );
   }

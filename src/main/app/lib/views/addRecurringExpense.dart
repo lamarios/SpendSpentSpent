@@ -132,7 +132,7 @@ class AddRecurringExpenseDialogState extends State<AddRecurringExpenseDialog> wi
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Switcher(labels: ['Which category ?', 'How often ?', 'How much ?'], selected: step, onSelect: (step) {}),
+              Switcher(labels: ['What ?', 'How often ?', 'How much ?'], selected: step, onSelect: (step) {}),
               Expanded(
                   child: SingleChildScrollView(
                 child: AnimatedSwitcher(

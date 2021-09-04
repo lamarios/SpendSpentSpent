@@ -1,3 +1,4 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:app/components/switcher.dart';
 import 'package:app/globals.dart';
 import 'package:app/views/categoryList.dart';
@@ -9,7 +10,7 @@ class MiddleColumn extends StatefulWidget {
   MiddleColumnState createState() => MiddleColumnState();
 }
 
-class MiddleColumnState extends State<MiddleColumn> {
+class MiddleColumnState extends State<MiddleColumn> with AfterLayoutMixin {
   Widget current = CategoryList();
   int selected = 0;
 
@@ -20,29 +21,38 @@ class MiddleColumnState extends State<MiddleColumn> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Switcher(
-            selected: selected,
-            labels: ['Normal', 'Recurring'],
-            onSelect: switchTab,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Switcher(
+              selected: selected,
+              labels: ['Normal', 'Recurring'],
+              onSelect: switchTab,
+            ),
           ),
-        ),
-        Expanded(
-            child: AnimatedSwitcher(
-                duration: panelTransition,
-                switchInCurve: Curves.easeInOutQuart,
-                switchOutCurve: Curves.easeInOutQuart,
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return ScaleTransition(child: child, scale: animation);
-                },
-                child: current))
-      ],
+          Expanded(
+              child: AnimatedSwitcher(
+                  duration: panelTransition,
+                  switchInCurve: Curves.easeInOutQuart,
+                  switchOutCurve: Curves.easeInOutQuart,
+                  transitionBuilder: (Widget child, Animation<double> animation) {
+                    return ScaleTransition(child: child, scale: animation);
+                  },
+                  child: current))
+        ],
+      ),
     );
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    // TODO: implement afterFirstLayout
   }
 }

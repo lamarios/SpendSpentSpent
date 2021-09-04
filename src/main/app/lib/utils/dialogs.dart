@@ -44,7 +44,7 @@ void showPromptDialog(BuildContext context, String title, String label, TextEdit
           ));
 }
 
-EdgeInsetsGeometry getInsetsForMaxSize(MediaQueryData data, double maxSize, {double? bottom}) {
-  var width = max<double>(0, (data.size.width - maxSize) / 2);
-  return EdgeInsets.only(left: width, right: width, bottom: bottom ?? 0);
+EdgeInsetsGeometry getInsetsForMaxSize(MediaQueryData data, double maxWidth, {double? vertical}) {
+  var horizontal = max<double>(0, (data.size.width - maxWidth) / 2);
+  return EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical?? 0);
 }

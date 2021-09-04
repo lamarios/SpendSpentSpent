@@ -21,15 +21,17 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
     List<String> months = await service.getExpensesMonths();
     String now = DateFormat("yyyy-MM").format(DateTime.now());
     int nowIndex = months.indexWhere((element) => element == now);
-    setState(() {
-      this.months = months;
-      if (months.length > 0 && selected == '' && nowIndex != -1) {
-        selected = months[nowIndex];
-      } else if (months.length > 0 && selected == '') {
-        selected = months[months.length - 1];
-      }
-      getExpenses();
-    });
+    if (this.mounted) {
+      setState(() {
+        this.months = months;
+        if (months.length > 0 && selected == '' && nowIndex != -1) {
+          selected = months[nowIndex];
+        } else if (months.length > 0 && selected == '') {
+          selected = months[months.length - 1];
+        }
+        getExpenses();
+      });
+    }
   }
 
   @override
@@ -39,10 +41,12 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
   }
 
   void monthChanged(value) {
-    setState(() {
-      selected = value ?? '';
-      getExpenses();
-    });
+    if (this.mounted) {
+      setState(() {
+        selected = value ?? '';
+        getExpenses();
+      });
+    }
   }
 
   String convertDate(String date) {
@@ -52,10 +56,12 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
   getExpenses() async {
     var expenses = await service.getMonthExpenses(selected);
     var total = expenses.values.map((e) => e.total).reduce((value, element) => value + element);
-    setState(() {
-      this.expenses = expenses;
-      this.total = total;
-    });
+    if (this.mounted) {
+      setState(() {
+        this.expenses = expenses;
+        this.total = total;
+      });
+    }
   }
 
   @override
@@ -135,7 +141,6 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
   @override
   void afterFirstLayout(BuildContext context) {
     getMonths();
-    FBroadcast.instance().register(BROADCAST_REFRESH_EXPENSES,
-            (context, somethingElse) => getExpenses());
+    FBroadcast.instance().register(BROADCAST_REFRESH_EXPENSES, (context, somethingElse) => getExpenses());
   }
 }

@@ -17,9 +17,11 @@ class RecurringExpenseListState extends State<RecurringExpenseList> with AfterLa
   getRecurringExpenses() {
     service.getRecurringExpenses().then((value) {
       print(value);
-      setState(() {
-        this.expenses = value;
-      });
+      if(this.mounted) {
+        setState(() {
+          this.expenses = value;
+        });
+      }
     });
   }
 

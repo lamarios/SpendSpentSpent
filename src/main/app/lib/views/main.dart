@@ -2,7 +2,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:app/components/menuBar.dart';
 import 'package:app/globals.dart';
 import 'package:app/screens/settings.dart';
-import 'package:app/views/categoryList.dart';
+import 'package:app/views/leftColumn.dart';
 import 'package:app/views/middleColumn.dart';
 import 'package:app/views/rigtColumn.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -33,15 +33,11 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
   }
 
   void setPage(int page) {
-    buttonCarouselController.animateToPage(page,
-        duration: panelTransition, curve: Curves.easeInOutQuart);
+    buttonCarouselController.animateToPage(page, duration: panelTransition, curve: Curves.easeInOutQuart);
   }
 
   void openSettings(context) {
-    Navigator.push(
-        context,
-        platformPageRoute(
-            context: context, builder: (context) => SettingsScreen()));
+    Navigator.push(context, platformPageRoute(context: context, builder: (context) => SettingsScreen()));
   }
 
   void onPageChanged(int page, CarouselPageChangedReason reason) {
@@ -60,16 +56,16 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
     return Stack(
       children: [
         Container(
-          width: 400,
+          width: MediaQuery.of(context).size.width,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 65.0),
+            padding: const EdgeInsets.only(bottom: 67.0),
             child: CarouselSlider(
               carouselController: buttonCarouselController,
               items: [
                 Column(
                   children: [
                     Expanded(
-                      child: Text('LEFT'),
+                      child: LeftColumn(),
                     ),
                   ],
                 ),
@@ -88,22 +84,11 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
                   ],
                 )
               ],
-              options: CarouselOptions(
-                  height: MediaQuery.of(context).size.height,
-                  enableInfiniteScroll: false,
-                  enlargeCenterPage: false,
-                  onPageChanged: onPageChanged,
-                  initialPage: 1),
+              options: CarouselOptions(height: MediaQuery.of(context).size.height, enableInfiniteScroll: false, viewportFraction: 1,  onPageChanged: onPageChanged, initialPage: 1),
             ),
           ),
         ),
-        AnimatedPositioned(
-            bottom: showMenuBar ? 15 : -15,
-            curve: Curves.easeInOutQuart,
-            left: 100,
-            right: 100,
-            child: MenuBar(setPage: setPage, page: page),
-            duration: panelTransition),
+        AnimatedPositioned(bottom: showMenuBar ? 15 : -15, curve: Curves.easeInOutQuart, left: 100, right: 100, child: MenuBar(setPage: setPage, page: page), duration: panelTransition),
         Positioned(
             bottom: 10,
             right: 10,

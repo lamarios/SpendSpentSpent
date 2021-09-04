@@ -27,9 +27,11 @@ class ExpenseState extends State<Expense> {
       opened = !opened;
       if (opened) {
         Future.delayed(panelTransition, () {
-          setState(() {
-            showInfo = !showInfo;
-          });
+          if (opened) {
+            setState(() {
+              showInfo = !showInfo;
+            });
+          }
         });
       } else {
         showInfo = false;

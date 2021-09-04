@@ -27,7 +27,9 @@ class SwitcherState extends State<Switcher> with TickerProviderStateMixin, After
       final controller = AnimationController(duration: panelTransition, vsync: this);
       final animation = (ColorTween(begin: Colors.blue, end: Colors.white).animate(controller) as Animation<Color>)
         ..addListener(() {
-          setState(() {});
+          if (this.mounted) {
+            setState(() {});
+          }
         });
 
       controllers.add(controller);
