@@ -52,12 +52,12 @@ public class CategoryService {
 
     public long getNewCategoryOrder(User user) throws SQLException {
         return Optional.ofNullable(categoryDao.queryBuilder()
-                .selectColumns("category_order")
-                .limit(1L)
-                .orderBy("category_order", false)
-                .where()
-                .eq("user_id", user.getId())
-                .queryForFirst())
+                        .selectColumns("category_order")
+                        .limit(1L)
+                        .orderBy("category_order", false)
+                        .where()
+                        .eq("user_id", user.getId())
+                        .queryForFirst())
                 .map(Category::getCategoryOrder)
                 .orElse(0);
     }
@@ -109,6 +109,9 @@ public class CategoryService {
                 .map(c -> {
                     try {
                         final Category category = get(c.getId(), user);
+
+                        Optional.ofNullable(c.getIcon()).ifPresent(category::setIcon);
+
                         category.setCategoryOrder(c.getCategoryOrder());
                         return category;
                     } catch (SQLException throwables) {
