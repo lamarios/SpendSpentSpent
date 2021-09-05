@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:app/globals.dart';
 import 'package:app/models/availableCategories.dart';
@@ -15,6 +14,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'models/recurringExpense.dart';
 import 'models/searchCategories.dart';
+import 'models/user.dart';
 import 'utils/preferences.dart';
 
 const API_ROOT = "{apiUrl}";
@@ -100,7 +100,7 @@ class Service {
   Future<Uri> formatUrl(String url, [List<String> params = emptyList]) async {
     final serverUrl = await this.getUrl();
 
-    if(serverUrl.length == 0){
+    if (serverUrl.length == 0) {
       logout();
       throw Exception("No server url, going back to login screen");
     }
@@ -281,6 +281,44 @@ class Service {
     return List<GraphDataPoint>.from(i.map((e) => GraphDataPoint.fromJson(e)));
   }
 
+  Future<bool> saveAllCategories(List<Category> categories) async {
+    final response = await http.put(await this.formatUrl(CATEGORY_UPDATE_ALL), headers: headers, body: jsonEncode(categories));
+
+    processResponse(response);
+    return true;
+  }
+
+  Future<bool> deleteCategory(int id) async {
+    print('id $id');
+    final response = await http.delete(await this.formatUrl(CATEGORY_DELETE, [id.toString()]), headers: headers);
+
+    processResponse(response);
+    return true;
+  }
+
+  Future<User> getCurrentUser() async {
+    var token = await Preferences.get(Preferences.TOKEN);
+
+    Map<String, dynamic> map = JwtDecoder.decode(token);
+
+    User user = User.fromJson(map['user']);
+
+    return user;
+  }
+
+  Future<bool> saveUser(User user) async {
+
+    final response  = await http.post(await this.formatUrl(USER_EDIT_PROFILE), body: jsonEncode(user), headers: headers);
+
+    processResponse(response);
+
+    String newToken = response.body;
+
+    setToken(newToken);
+
+    return true;
+  }
+
   void processResponse(Response response) {
     switch (response.statusCode) {
       case 200:
@@ -289,7 +327,7 @@ class Service {
         logout();
         throw Exception("Couldn't execute request ${response.body}");
       default:
-        throw Exception("Couldn't execute request ${response.body}");
+        throw Exception("Couldn't execute request ${response.statusCode} -> ${response.body}");
     }
   }
 }

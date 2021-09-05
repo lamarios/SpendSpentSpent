@@ -4,19 +4,22 @@ import 'package:after_layout/after_layout.dart';
 import 'package:app/components/addCategoryDialog/categories.dart';
 import 'package:app/globals.dart';
 import 'package:app/models/availableCategories.dart';
-import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AddCategory extends StatefulWidget {
+  Function onSelected;
+  String? buttonLabel;
+
+  AddCategory({required this.onSelected, this.buttonLabel});
+
   @override
   AddCategoryState createState() => AddCategoryState();
 }
 
-class AddCategoryState extends State<AddCategory>
-    with AfterLayoutMixin<AddCategory> {
+class AddCategoryState extends State<AddCategory> with AfterLayoutMixin<AddCategory> {
   AvailableCategories categories = AvailableCategories();
   String selected = '';
 
@@ -56,12 +59,11 @@ class AddCategoryState extends State<AddCategory>
   }
 
   addCategory(BuildContext context) async {
-    await service.addCategory(selected);
-    FBroadcast.instance().broadcast(BROADCAST_REFRESH_CATEGORIES);
+    widget.onSelected(selected);
     Navigator.pop(context);
   }
 
-  closeDialog(BuildContext context){
+  closeDialog(BuildContext context) {
     Navigator.pop(context);
   }
 
@@ -93,14 +95,14 @@ class AddCategoryState extends State<AddCategory>
                           color: Colors.white,
                         ),
                         hintText: 'Search',
-                        material: (_,__) => MaterialTextFieldData(decoration: InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.black.withOpacity(0.2))
-                        )),
+                        material: (_, __) => MaterialTextFieldData(
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                hintStyle: TextStyle(color: Colors.black.withOpacity(0.2)))),
                       ),
                     ),
                   ],
@@ -176,19 +178,14 @@ class AddCategoryState extends State<AddCategory>
                 child: Row(
                   children: [
                     Expanded(
-                        child: TextButton(
-                            onPressed: selected != ''
-                                ? () => addCategory(context)
-                                : null,
-                            child: Text('Add category'),
-                            style: flatButtonStyle)),
+                        child:
+                            TextButton(onPressed: selected != '' ? () => addCategory(context) : null, child: Text(widget.buttonLabel ?? 'Add category'), style: flatButtonStyle)),
                   ],
                 ),
               ),
             ],
           ),
         ),
-
         Positioned(
           right: 10,
           top: 3,

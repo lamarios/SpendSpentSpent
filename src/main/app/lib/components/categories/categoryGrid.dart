@@ -1,5 +1,6 @@
 import 'package:app/components/categories/addCategoryGridItem.dart';
 import 'package:app/components/categories/categoryGridItem.dart';
+import 'package:app/components/categories/settingsCategoryItem.dart';
 import 'package:app/models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -22,10 +23,12 @@ class CategoryGridState extends State<CategoryGrid> {
           mainAxisSpacing: 15,
           crossAxisSpacing: 15,
         ),
-        itemCount: widget.categories.length + 1,
+        itemCount: widget.categories.length + 2,
         padding: const EdgeInsets.only(top: 20),
         itemBuilder: (BuildContext context, int index) {
-          if (index == widget.categories.length) {
+          if (index == widget.categories.length + 1) {
+            return SettingsCategoryGridItem();
+          } else if (index == widget.categories.length) {
             return AddCategoryGridItem();
           } else {
             Category cat = widget.categories[index];

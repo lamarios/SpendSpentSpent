@@ -47,6 +47,8 @@ dependencies:
   latlong2: 0.8.0
   fl_chart: ^0.40.0
   animated_rotation: 2.0.0
+  drag_and_drop_lists: 0.3.2
+  fluttertoast: 8.0.8
 
 dev_dependencies:
   flutter_test:

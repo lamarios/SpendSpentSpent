@@ -1,16 +1,25 @@
-import 'package:json_annotation/json_annotation.dart';
-
-part 'graphDataPoint.g.dart';
-
-class GraphDataPoint{
+class GraphDataPoint {
   String date;
   double amount;
+
   GraphDataPoint({required this.date, required this.amount});
 
-  factory GraphDataPoint.fromJson(Map<String, dynamic> json) => _$GraphDataPointFromJson(json);
+  static GraphDataPoint fromJson(Map<String, dynamic> json) {
+    String date;
+    try {
+      date = json['date'] as String;
+    } catch (e) {
+      date = (json['date'] as int).toString();
+    }
 
-  /// `toJson` is the convention for a class to declare support for serialization
-  /// to JSON. The implementation simply calls the private, generated
-  /// helper method `_$UserToJson`.
-  Map<String, dynamic> toJson() => _$GraphDataPointToJson(this);
+    return GraphDataPoint(
+      date: date,
+      amount: (json['amount'] as num).toDouble(),
+    );
+  }
+
+  static Map<String, dynamic> toJson(GraphDataPoint instance) => <String, dynamic>{
+        'date': instance.date,
+        'amount': instance.amount,
+      };
 }

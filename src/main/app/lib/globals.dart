@@ -25,6 +25,10 @@ ButtonStyle flatButtonStyle = TextButton.styleFrom(
   ),
 );
 
+bool isTablet(MediaQueryData data){
+  return data.size.width > 768;
+}
+
 String formatCurrency(double amount) {
   return NumberFormat.currency(decimalDigits: 2, symbol: '').format(amount);
 }
