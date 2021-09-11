@@ -1,5 +1,6 @@
+import 'dart:math';
+
 import 'package:after_layout/after_layout.dart';
-import 'package:animated_rotation/animated_rotation.dart';
 import 'package:spend_spent_spent/components/leftColumn/StatsGraph.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
@@ -67,7 +68,8 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: AnimatedRotation(angle: open ? 90 : 0, duration: panelTransition, curve: Curves.easeInOutQuart, child: FaIcon(FontAwesomeIcons.chevronRight, size: 10)),
+                  child: AnimatedRotation(turns: open ? 0.25 : 0, duration: panelTransition, curve: Curves.easeInOutQuart,
+                  child: FaIcon(FontAwesomeIcons.chevronRight, size: 10)),
                 ),
                 Visibility(visible: widget.stats.category.id != -1, child: getIcon(widget.stats.category.icon!, color: Theme.of(context).primaryColor, size: 20)),
                 Spacer(),
