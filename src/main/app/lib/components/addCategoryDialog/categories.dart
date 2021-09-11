@@ -1,5 +1,5 @@
-import 'package:app/globals.dart';
-import 'package:app/icons.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';

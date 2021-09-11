@@ -1,8 +1,8 @@
 import 'package:animations/animations.dart';
-import 'package:app/icons.dart';
-import 'package:app/models/category.dart';
-import 'package:app/utils/dialogs.dart';
-import 'package:app/views/addCategory.dart';
+import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/models/category.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
+import 'package:spend_spent_spent/views/addCategory.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -29,11 +29,17 @@ class CategoryEntry extends StatelessWidget {
         content: Text('The category will only be deleted when you press the save button, this will delete all related expenses.'),
         actions: <Widget>[
           PlatformDialogAction(
-            child: PlatformText('Cancel'),
+            child: PlatformText(
+              'Cancel',
+              style: TextStyle(color: Colors.grey[850]),
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
           PlatformDialogAction(
-            child: PlatformText('Delete', style: TextStyle(color: Colors.red),),
+            child: PlatformText(
+              'Delete',
+              style: TextStyle(color: Colors.red),
+            ),
             onPressed: () {
               delete(category);
               Navigator.of(context).pop();

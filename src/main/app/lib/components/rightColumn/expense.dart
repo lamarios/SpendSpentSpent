@@ -1,6 +1,6 @@
-import 'package:app/globals.dart';
-import 'package:app/icons.dart';
-import 'package:app/models/expense.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/models/expense.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
@@ -60,7 +60,7 @@ class OneExpenseState extends State<OneExpense> {
               content: Text('This will only delete this expense, it is not recoverable.'),
               actions: <Widget>[
                 PlatformDialogAction(
-                  child: PlatformText('Cancel'),
+                  child: PlatformText('Cancel', style: TextStyle(color: Colors.grey[850]),),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

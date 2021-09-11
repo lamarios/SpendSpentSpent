@@ -1,6 +1,6 @@
 import 'package:animations/animations.dart';
-import 'package:app/utils/dialogs.dart';
-import 'package:app/views/addRecurringExpense.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
+import 'package:spend_spent_spent/views/addRecurringExpense.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

@@ -1,8 +1,8 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:app/components/leftColumn/SingleStat.dart';
-import 'package:app/components/switcher.dart';
-import 'package:app/globals.dart';
-import 'package:app/models/leftColumnStats.dart';
+import 'package:spend_spent_spent/components/leftColumn/SingleStat.dart';
+import 'package:spend_spent_spent/components/switcher.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/leftColumnStats.dart';
 import 'package:flutter/cupertino.dart';
 
 class LeftColumn extends StatefulWidget {

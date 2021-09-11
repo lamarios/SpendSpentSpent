@@ -1,10 +1,10 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:app/components/menuBar.dart';
-import 'package:app/globals.dart';
-import 'package:app/screens/settings.dart';
-import 'package:app/views/leftColumn.dart';
-import 'package:app/views/middleColumn.dart';
-import 'package:app/views/rigtColumn.dart';
+import 'package:spend_spent_spent/components/menuBar.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/screens/settings.dart';
+import 'package:spend_spent_spent/views/leftColumn.dart';
+import 'package:spend_spent_spent/views/middleColumn.dart';
+import 'package:spend_spent_spent/views/rigtColumn.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

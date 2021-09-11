@@ -1,4 +1,4 @@
-import 'package:app/components/dummies/dummyCategory.dart';
+import 'package:spend_spent_spent/components/dummies/dummyCategory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 

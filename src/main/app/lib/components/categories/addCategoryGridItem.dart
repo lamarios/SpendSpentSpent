@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
-import 'package:app/globals.dart';
-import 'package:app/utils/dialogs.dart';
-import 'package:app/views/addCategory.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
+import 'package:spend_spent_spent/views/addCategory.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

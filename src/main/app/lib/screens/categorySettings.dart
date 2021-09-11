@@ -1,7 +1,7 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:app/components/categorySettings/categoryEntry.dart';
-import 'package:app/globals.dart';
-import 'package:app/models/category.dart';
+import 'package:spend_spent_spent/components/categorySettings/categoryEntry.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/category.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';

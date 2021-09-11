@@ -1,11 +1,12 @@
-import 'package:app/globals.dart';
+import 'package:spend_spent_spent/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class MasterDetail extends StatefulWidget {
   Widget master;
+  Key key;
 
-  MasterDetail({required this.master});
+  MasterDetail({required this.key, required this.master});
 
   late MasterDetailState state;
 
@@ -24,20 +25,21 @@ class MasterDetailState extends State<MasterDetail> {
   Widget? detail;
 
   void changeDetails(BuildContext context, String title, Widget detail) {
-    setState(() {
-      this.detail = detail;
-      if (!isTablet(MediaQuery.of(context))) {
-        print(' showing detail');
-        Navigator.push(
-            context,
-            platformPageRoute(
-                context: context,
-                builder: (context) => PlatformScaffold(
-                      appBar: PlatformAppBar(title: PlatformText(title)),
-                      body: this.detail,
-                    )));
-      }
-    });
+
+    if (!isTablet(MediaQuery.of(context))) {
+      Navigator.push(
+          context,
+          platformPageRoute(
+              context: context,
+              builder: (context) => PlatformScaffold(
+                    appBar: PlatformAppBar(title: PlatformText(title)),
+                    body: detail,
+                  )));
+    } else {
+      setState(() {
+        this.detail = detail;
+      });
+    }
   }
 
   @override

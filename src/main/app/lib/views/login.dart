@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:app/globals.dart' as globals;
-import 'package:app/icons.dart';
+import 'package:spend_spent_spent/globals.dart' as globals;
+import 'package:spend_spent_spent/icons.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

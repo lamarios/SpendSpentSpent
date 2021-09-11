@@ -1,7 +1,7 @@
-import 'package:app/components/categories/addCategoryGridItem.dart';
-import 'package:app/components/categories/categoryGridItem.dart';
-import 'package:app/components/categories/settingsCategoryItem.dart';
-import 'package:app/models/category.dart';
+import 'package:spend_spent_spent/components/categories/addCategoryGridItem.dart';
+import 'package:spend_spent_spent/components/categories/categoryGridItem.dart';
+import 'package:spend_spent_spent/components/categories/settingsCategoryItem.dart';
+import 'package:spend_spent_spent/models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 

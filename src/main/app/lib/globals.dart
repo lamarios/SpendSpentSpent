@@ -2,7 +2,7 @@ library app.globals;
 
 import 'dart:ui';
 
-import 'package:app/service.dart';
+import 'package:spend_spent_spent/service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';

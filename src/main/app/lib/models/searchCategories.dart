@@ -1,4 +1,4 @@
-import 'package:app/models/availableCategories.dart';
+import 'package:spend_spent_spent/models/availableCategories.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'searchCategories.g.dart';

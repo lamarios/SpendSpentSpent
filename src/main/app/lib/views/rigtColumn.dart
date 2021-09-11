@@ -1,7 +1,7 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:app/components/rightColumn/oneDay.dart';
-import 'package:app/globals.dart';
-import 'package:app/models/dayExpense.dart';
+import 'package:spend_spent_spent/components/rightColumn/oneDay.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/dayExpense.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

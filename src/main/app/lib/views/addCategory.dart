@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:after_layout/after_layout.dart';
-import 'package:app/components/addCategoryDialog/categories.dart';
-import 'package:app/globals.dart';
-import 'package:app/models/availableCategories.dart';
+import 'package:spend_spent_spent/components/addCategoryDialog/categories.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/availableCategories.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';

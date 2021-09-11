@@ -1,7 +1,7 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:app/components/recurringExpenses/expenseList.dart';
-import 'package:app/globals.dart';
-import 'package:app/models/recurringExpense.dart';
+import 'package:spend_spent_spent/components/recurringExpenses/expenseList.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/recurringExpense.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';

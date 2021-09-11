@@ -1,9 +1,9 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:animated_rotation/animated_rotation.dart';
-import 'package:app/components/leftColumn/StatsGraph.dart';
-import 'package:app/globals.dart';
-import 'package:app/icons.dart';
-import 'package:app/models/leftColumnStats.dart';
+import 'package:spend_spent_spent/components/leftColumn/StatsGraph.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/models/leftColumnStats.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

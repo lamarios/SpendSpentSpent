@@ -1,8 +1,8 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:app/components/switcher.dart';
-import 'package:app/globals.dart';
-import 'package:app/views/categoryList.dart';
-import 'package:app/views/recurringExpenseList.dart';
+import 'package:spend_spent_spent/components/switcher.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/views/categoryList.dart';
+import 'package:spend_spent_spent/views/recurringExpenseList.dart';
 import 'package:flutter/cupertino.dart';
 
 class MiddleColumn extends StatefulWidget {
@@ -42,9 +42,6 @@ class MiddleColumnState extends State<MiddleColumn> with AfterLayoutMixin {
                   duration: panelTransition,
                   switchInCurve: Curves.easeInOutQuart,
                   switchOutCurve: Curves.easeInOutQuart,
-                  transitionBuilder: (Widget child, Animation<double> animation) {
-                    return ScaleTransition(child: child, scale: animation);
-                  },
                   child: current))
         ],
       ),

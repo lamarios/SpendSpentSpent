@@ -29,16 +29,16 @@ void showPromptDialog(BuildContext context, String title, String label, TextEdit
             actions: <Widget>[
               PlatformDialogAction(
                 onPressed: () {
+                  Navigator.pop(context, 'Cancel');
+                },
+                child: const Text('Cancel', style: TextStyle(color: Colors.black),),
+              ),
+              PlatformDialogAction(
+                onPressed: () {
                   Navigator.pop(context, 'OK');
                   onOk();
                 },
                 child: const Text('OK'),
-              ),
-              PlatformDialogAction(
-                onPressed: () {
-                  Navigator.pop(context, 'Cancel');
-                },
-                child: const Text('Cancel'),
               ),
             ],
           ));

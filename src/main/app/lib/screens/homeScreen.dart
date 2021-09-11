@@ -1,8 +1,8 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:app/globals.dart';
-import 'package:app/utils/preferences.dart';
-import 'package:app/views/login.dart';
-import 'package:app/views/main.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/utils/preferences.dart';
+import 'package:spend_spent_spent/views/login.dart';
+import 'package:spend_spent_spent/views/main.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

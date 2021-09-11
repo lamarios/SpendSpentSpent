@@ -1,4 +1,4 @@
-import 'package:app/components/expenseDialog/keypad.dart';
+import 'package:spend_spent_spent/components/expenseDialog/keypad.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

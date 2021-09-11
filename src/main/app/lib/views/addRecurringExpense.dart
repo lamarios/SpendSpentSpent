@@ -1,12 +1,13 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:app/components/addRecurringExpenseDialog/step1.dart';
-import 'package:app/components/addRecurringExpenseDialog/step2.dart';
-import 'package:app/components/addRecurringExpenseDialog/step3.dart';
-import 'package:app/components/switcher.dart';
-import 'package:app/globals.dart';
-import 'package:app/models/category.dart';
-import 'package:app/models/recurringExpense.dart';
+import 'package:spend_spent_spent/components/addRecurringExpenseDialog/step1.dart';
+import 'package:spend_spent_spent/components/addRecurringExpenseDialog/step2.dart';
+import 'package:spend_spent_spent/components/addRecurringExpenseDialog/step3.dart';
+import 'package:spend_spent_spent/components/switcher.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/category.dart';
+import 'package:spend_spent_spent/models/recurringExpense.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class AddRecurringExpenseDialog extends StatefulWidget {
@@ -148,7 +149,10 @@ class AddRecurringExpenseDialogState extends State<AddRecurringExpenseDialog> wi
                 children: [
                   PlatformDialogAction(
                     onPressed: () => backward(context),
-                    child: PlatformText(step == 0 ? 'Cancel' : 'Back'),
+                    child: PlatformText(
+                      step == 0 ? 'Cancel' : 'Back',
+                      style: TextStyle(color: Colors.grey[850]),
+                    ),
                   ),
                   PlatformDialogAction(
                     onPressed: stepValid() ? () => forward(context) : null,

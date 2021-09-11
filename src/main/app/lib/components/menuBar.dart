@@ -1,5 +1,5 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:app/globals.dart';
+import 'package:spend_spent_spent/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

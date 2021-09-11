@@ -1,6 +1,6 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:app/globals.dart';
-import 'package:app/models/graphDataPoint.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/graphDataPoint.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

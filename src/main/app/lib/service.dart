@@ -1,16 +1,18 @@
 import 'dart:convert';
 
-import 'package:app/globals.dart';
-import 'package:app/models/availableCategories.dart';
-import 'package:app/models/category.dart';
-import 'package:app/models/dayExpense.dart';
-import 'package:app/models/expense.dart';
-import 'package:app/models/graphDataPoint.dart';
-import 'package:app/models/leftColumnStats.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/availableCategories.dart';
+import 'package:spend_spent_spent/models/category.dart';
+import 'package:spend_spent_spent/models/dayExpense.dart';
+import 'package:spend_spent_spent/models/expense.dart';
+import 'package:spend_spent_spent/models/graphDataPoint.dart';
+import 'package:spend_spent_spent/models/leftColumnStats.dart';
+import 'package:spend_spent_spent/models/paginatedResults.dart';
+import 'package:spend_spent_spent/models/pagination.dart';
 
 import 'models/recurringExpense.dart';
 import 'models/searchCategories.dart';
@@ -50,7 +52,7 @@ const SETTINGS_GET = API_URL + '/Settings/{0}';
 const MISC_VERSION = API_URL + '/Misc/version';
 const MISC_GET_CONFIG = API_ROOT + "/config";
 const USER_EDIT_PROFILE = API_URL + "/User";
-const USER_GET = API_URL + "/User";
+const USER_GET = API_URL + "/User?search={0}&page={1}&pageSize={2}";
 const USER_SET_ADMIN = API_URL + "/User/{0}/setAdmin/{1}";
 const USER_UPDATE_PASSWORD = API_URL + "/User/{0}/setPassword";
 const USER_ADD_USER = API_URL + "/User";
@@ -307,8 +309,7 @@ class Service {
   }
 
   Future<bool> saveUser(User user) async {
-
-    final response  = await http.post(await this.formatUrl(USER_EDIT_PROFILE), body: jsonEncode(user), headers: headers);
+    final response = await http.post(await this.formatUrl(USER_EDIT_PROFILE), body: jsonEncode(user), headers: headers);
 
     processResponse(response);
 
@@ -316,6 +317,50 @@ class Service {
 
     setToken(newToken);
 
+    return true;
+  }
+
+  Future<PaginatedResults<User>> getUsers(String? search, int page, int pageSize) async {
+    final response = await http.get(await this.formatUrl(USER_GET, [search ?? '', page.toString(), pageSize.toString()]), headers: headers);
+
+    processResponse(response);
+    print(response.body);
+    Map<String, dynamic> json = jsonDecode(response.body);
+
+    Pagination pagination = Pagination.fromJson(json['pagination']);
+
+    Iterable i = json['data'];
+    List<User> users = List<User>.from(i.map((e) => User.fromJson(e)));
+
+    return PaginatedResults<User>(data: users, pagination: pagination);
+  }
+
+  Future<User> createUser(User user) async {
+    final response = await http.put(await this.formatUrl(USER_ADD_USER), body: jsonEncode(user), headers: headers);
+
+    processResponse(response);
+
+    return User.fromJson(jsonDecode(response.body));
+  }
+
+  Future<bool> deleteUser(String id) async {
+    final response = await http.delete(await this.formatUrl(USER_DELETE_USER, [id]), headers: headers);
+
+    processResponse(response);
+
+    return true;
+  }
+
+  Future<bool> setUserAdmin(String id, bool admin) async {
+    final response = await http.get(await this.formatUrl(USER_SET_ADMIN, [id, admin.toString()]), headers: headers);
+
+    processResponse(response);
+    return true;
+  }
+
+  Future<bool> setUserPassword(String id, String password) async {
+    final response = await http.post(await this.formatUrl(USER_UPDATE_PASSWORD, [id]), body: '"$password"', headers: headers);
+    processResponse(response);
     return true;
   }
 

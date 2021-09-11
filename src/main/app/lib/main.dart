@@ -1,15 +1,15 @@
-import 'package:app/globals.dart';
-import 'package:app/screens/homeScreen.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/screens/homeScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(SpendSpentSpent());
 }
 
-class MyApp extends StatelessWidget {
+class SpendSpentSpent extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,8 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:app/components/categories/categoryGrid.dart';
-import 'package:app/components/dummies/dummyGrid.dart';
-import 'package:app/globals.dart';
-import 'package:app/models/category.dart';
+import 'package:spend_spent_spent/components/categories/categoryGrid.dart';
+import 'package:spend_spent_spent/components/dummies/dummyGrid.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/category.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

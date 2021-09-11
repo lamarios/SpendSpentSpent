@@ -1,6 +1,6 @@
-import 'package:app/components/recurringExpenses/addExpense.dart';
-import 'package:app/components/recurringExpenses/expense.dart';
-import 'package:app/models/recurringExpense.dart';
+import 'package:spend_spent_spent/components/recurringExpenses/addExpense.dart';
+import 'package:spend_spent_spent/components/recurringExpenses/expense.dart';
+import 'package:spend_spent_spent/models/recurringExpense.dart';
 import 'package:flutter/cupertino.dart';
 
 class ExpenseList extends StatelessWidget {

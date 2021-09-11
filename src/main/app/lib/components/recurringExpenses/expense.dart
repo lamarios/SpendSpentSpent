@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:app/globals.dart';
-import 'package:app/icons.dart';
-import 'package:app/models/recurringExpense.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/models/recurringExpense.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
