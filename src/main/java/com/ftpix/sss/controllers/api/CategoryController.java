@@ -123,6 +123,12 @@ public class CategoryController {
         return categoryService.mergeCategory(id, catdiff, currentUser);
     }
 
+    @GetMapping("/{id}/expenses/count")
+    public long countCategoryExpenses(@PathVariable("id") long id) throws Exception{
+        final User currentUser = userService.getCurrentUser();
+        return categoryService.countExpenses(id, currentUser);
+    }
+
 
     /**
      * Deletes a single castegory
