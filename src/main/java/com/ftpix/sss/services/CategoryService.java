@@ -2,6 +2,7 @@ package com.ftpix.sss.services;
 
 import com.ftpix.sss.models.*;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -197,5 +198,19 @@ public class CategoryService {
         } else {
             return false;
         }
+    }
+
+    public long countExpenses(long id, User currentUser) throws SQLException {
+        return Optional.ofNullable(get(id, currentUser))
+                .map(c -> {
+                    final QueryBuilder<Expense, Long> query = expenseDao.queryBuilder();
+                    try {
+                        return query.where().eq("CATEGORY_ID", id)
+                                .countOf();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                }).orElse(0L);
     }
 }

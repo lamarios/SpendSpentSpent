@@ -7,7 +7,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "SETTINGS")
 public class Settings {
-    public static final String CURRENCY_API_KEY = "currencyApiKey";
+    public static final String CURRENCY_API_KEY = "currencyApiKey", ALLOW_SIGNUP="allowSignUp", DEMO_MODE="demoMode", MOTD="motd";
 
 
     @DatabaseField(columnName = "NAME", id = true)

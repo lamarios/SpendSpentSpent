@@ -2,8 +2,10 @@ package com.ftpix.sss.controllers;
 
 
 import com.ftpix.sss.Constants;
+import com.ftpix.sss.models.Settings;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.EmailService;
+import com.ftpix.sss.services.SettingsService;
 import com.j256.ormlite.dao.Dao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,17 +20,25 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
 public class ApplicationController {
     protected final Log logger = LogFactory.getLog(this.getClass());
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
+
+    private final SettingsService settingsService;
+
+    private final Dao<User, UUID> userDao;
 
     @Autowired
-    private Dao<User, UUID> userDao;
+    public ApplicationController(EmailService emailService, SettingsService settingsService, Dao<User, UUID> userDao) {
+        this.emailService = emailService;
+        this.settingsService = settingsService;
+        this.userDao = userDao;
+    }
 
 
     /**
@@ -43,7 +53,16 @@ public class ApplicationController {
         Map<String, Object> results = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
-        Constants.ANNOUNCEMENT_MESSAGE.ifPresent(sb::append);
+
+
+        Optional<String> motd = Optional.ofNullable(settingsService.getByName(Settings.MOTD))
+                .map(Settings::getValue);
+
+        if (!motd.isPresent()) {
+            motd = Constants.ANNOUNCEMENT_MESSAGE;
+        }
+
+        motd.ifPresent(sb::append);
 
 
         long userCount = userDao.countOf();
@@ -55,13 +74,21 @@ public class ApplicationController {
             sb.append("There are no users on this instance, the first user to sign up will be set as an admin. If the signup link doesn't show up above, add the environment variable ALLOW_SIGNUP=1.\n\nIf you had existing expenses from a previous version it will be all migrated to the first user to sign up.");
         }
 
+        final boolean allowSignups = Optional.ofNullable(settingsService.getByName(Settings.ALLOW_SIGNUP))
+                .map(Settings::getValue)
+                .map(v -> v.equalsIgnoreCase("1"))
+                .orElse(Constants.ALLOW_SIGNUP);
+
+
         results.put("hasSubscription", Constants.HAS_SUBSCRIPTIONS);
 
         results.put("announcement", sb.toString());
 
-        results.put("allowSignup", Constants.ALLOW_SIGNUP);
+        results.put("allowSignup", allowSignups);
 
         results.put("canResetPassword", emailService.isEnabled());
+
+        results.put("demoMode", Optional.ofNullable(settingsService.getByName(Settings.DEMO_MODE)).map(s -> s.getValue().equalsIgnoreCase("1")).orElse(false));
 
         return results;
     }
