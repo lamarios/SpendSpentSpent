@@ -3,10 +3,12 @@ package com.ftpix.sss.controllers.api;
 
 import com.ftpix.sss.Constants;
 import com.ftpix.sss.models.ResetPasswordNew;
+import com.ftpix.sss.models.Settings;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.security.JwtTokenUtil;
 import com.ftpix.sss.security.JwtUserDetailsService;
 import com.ftpix.sss.services.ResetPasswordService;
+import com.ftpix.sss.services.SettingsService;
 import com.ftpix.sss.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 public class UserSessionController {
@@ -27,12 +31,15 @@ public class UserSessionController {
 
     private final ResetPasswordService resetPasswordService;
 
+    private final SettingsService settingsService;
+
     @Autowired
-    public UserSessionController(UserService userService, JwtTokenUtil jwtTokenUtil, JwtUserDetailsService jwtUserDetailsService, ResetPasswordService resetPasswordService) {
+    public UserSessionController(UserService userService, JwtTokenUtil jwtTokenUtil, JwtUserDetailsService jwtUserDetailsService, ResetPasswordService resetPasswordService, SettingsService settingsService) {
         this.userService = userService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.jwtUserDetailsService = jwtUserDetailsService;
         this.resetPasswordService = resetPasswordService;
+        this.settingsService = settingsService;
     }
 
     @PostMapping("/ResetPasswordRequest")
@@ -52,7 +59,13 @@ public class UserSessionController {
 
     @PostMapping(value = "/SignUp")
     public String signUp(@RequestBody User user) throws Exception {
-        if (!Constants.ALLOW_SIGNUP) {
+
+        final boolean allowSignups = Optional.ofNullable(settingsService.getByName(Settings.ALLOW_SIGNUP))
+                .map(Settings::getValue)
+                .map(v -> v.equalsIgnoreCase("1"))
+                .orElse(Constants.ALLOW_SIGNUP);
+
+        if (!allowSignups) {
             throw new Exception("Signups not allowed");
         }
 
