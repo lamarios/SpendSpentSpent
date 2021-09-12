@@ -1,13 +1,13 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:spend_spent_spent/components/categorySettings/categoryEntry.dart';
-import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/category.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spend_spent_spent/components/categorySettings/categoryEntry.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/category.dart';
 
 class CategorySettingsScreen extends StatefulWidget {
   @override
@@ -17,6 +17,7 @@ class CategorySettingsScreen extends StatefulWidget {
 class CategorySettingsScreenState extends State<CategorySettingsScreen> with AfterLayoutMixin {
   List<Category> categories = [];
   List<Category> toDelete = [];
+  int expensesToDelete = 0;
 
   getCategories() {
     service.getCategories().then((value) {
@@ -48,11 +49,14 @@ class CategorySettingsScreenState extends State<CategorySettingsScreen> with Aft
     });
   }
 
-  addToDelete(Category category) {
+  addToDelete(Category category) async {
+    int expenses = await service.countCategoryExpenses(category.id!);
+
     setState(() {
       toDelete.add(category);
       int index = categories.indexWhere((element) => element.id == category.id);
       categories.removeAt(index);
+      expensesToDelete += expenses;
     });
   }
 
@@ -131,22 +135,30 @@ class CategorySettingsScreenState extends State<CategorySettingsScreen> with Aft
               ],
             ),
             Visibility(
-                visible: toDelete.length > 0,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FaIcon(
+              visible: toDelete.length > 0,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FaIcon(
                         FontAwesomeIcons.exclamationTriangle,
                         color: Colors.red,
                         size: 15,
                       ),
-                      PlatformText(' '+toDelete.length.toString()),
-                      PlatformText(' categor${(toDelete.length == 1 ? 'y' : 'ies')} to delete.'),
-                    ],
-                  ),
-                ))
+                    ),
+                    Column(
+                      children: [
+                        PlatformText('${toDelete.length.toString()} categor${(toDelete.length == 1 ? 'y' : 'ies')} to delete.'),
+                        PlatformText('$expensesToDelete expense${(expensesToDelete > 1 ? 's' : '')} to delete.'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            )
           ],
         ));
   }

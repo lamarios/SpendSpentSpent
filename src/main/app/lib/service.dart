@@ -13,6 +13,7 @@ import 'package:spend_spent_spent/models/graphDataPoint.dart';
 import 'package:spend_spent_spent/models/leftColumnStats.dart';
 import 'package:spend_spent_spent/models/paginatedResults.dart';
 import 'package:spend_spent_spent/models/pagination.dart';
+import 'package:spend_spent_spent/models/settings.dart';
 
 import 'models/recurringExpense.dart';
 import 'models/searchCategories.dart';
@@ -31,6 +32,7 @@ const CATEGORY_UPDATE_ALL = API_URL + '/Category';
 const CATEGORY_DELETE = API_URL + '/Category/{0}';
 const CATEGORY_SEARCH = API_URL + '/Category/search-icon';
 const CATEGORY_IS_USING_LEGACY = API_URL + "/Category/is-using-legacy";
+const CATEGORY_COUNT_EXPENSES = API_URL + "/Category/{0}/expenses/count";
 const EXPENSE_ADD = API_URL + '/Expense';
 const EXPENSE_BY_MONTH = API_URL + '/Expense/ByDay?month={0}';
 const EXPENSE_GET_MONTHS = API_URL + '/Expense/GetMonths';
@@ -361,6 +363,29 @@ class Service {
   Future<bool> setUserPassword(String id, String password) async {
     final response = await http.post(await this.formatUrl(USER_UPDATE_PASSWORD, [id]), body: '"$password"', headers: headers);
     processResponse(response);
+    return true;
+  }
+
+  Future<int> countCategoryExpenses(int id) async {
+    final response = await http.get(await this.formatUrl(CATEGORY_COUNT_EXPENSES, [id.toString()]), headers: headers);
+    processResponse(response);
+
+    return int.parse(response.body);
+  }
+
+  Future<List<Settings>> getAllSettings() async {
+    final response = await http.get(await this.formatUrl(SETTINGS_ALL), headers: headers);
+
+    processResponse(response);
+    Iterable i = jsonDecode(response.body);
+    return List<Settings>.from(i.map((e) => Settings.fromJson(e)));
+  }
+
+  Future<bool> setSettings(Settings settings) async {
+    final response = await http.post(await this.formatUrl(SETTINGS_UPDATE), body: jsonEncode(settings), headers: headers);
+
+    processResponse(response);
+
     return true;
   }
 

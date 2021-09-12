@@ -6,10 +6,13 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:spend_spent_spent/components/masterDetail.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/settings.dart';
 import 'package:spend_spent_spent/models/user.dart';
 import 'package:spend_spent_spent/views/settings/changePassword.dart';
 import 'package:spend_spent_spent/views/settings/editProfile.dart';
 import 'package:spend_spent_spent/views/settings/manageUsers.dart';
+
+const ALLOW_SIGNUP = "allowSignUp", DEMO_MODE = "demoMode", MOTD = "motd", CURRENCY_API_KEY = "currencyApiKey";
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -21,6 +24,9 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
   User? currentUser;
   GlobalKey<MasterDetailState> masterDetailKey = GlobalKey<MasterDetailState>();
   PackageInfo? packageInfo;
+  String motd = "";
+  bool demoMode = false;
+  bool allowSignUp = false;
 
   logOut(BuildContext context) async {
     await service.logout();
@@ -38,7 +44,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     masterDetailKey.currentState!.changeDetails(context, 'Change password', ChangePassword());
   }
 
-  showManageUsers(BuildContext context){
+  showManageUsers(BuildContext context) {
     masterDetailKey.currentState!.changeDetails(context, 'Manage users', ManageUsers());
   }
 
@@ -56,27 +62,62 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
         ));
   }
 
-  setSetting(String label, dynamic value) {}
+  Future<void> refreshSettings() async {
+    List<Settings> settings = await service.getAllSettings();
+
+    setState(() {
+      settings.forEach((element) {
+        switch (element.name) {
+          case MOTD:
+            motd = element.value;
+            break;
+          case ALLOW_SIGNUP:
+            allowSignUp = element.value == "1";
+            break;
+          case DEMO_MODE:
+            demoMode = element.value == "1";
+            break;
+        }
+      });
+    });
+  }
+
+  setSetting(String label, String value, bool secret) async {
+    Settings settings = Settings(name: label, value: value, secret: secret);
+    await service.setSettings(settings);
+    await refreshSettings();
+  }
 
   @override
   Widget build(BuildContext context) {
+    const iconSize = 15.0;
+
     List<SettingsSection> sections = [
       SettingsSection(
         title: '${currentUser?.firstName ?? ""} ${currentUser?.lastName ?? ""}',
         tiles: [
           SettingsTile(
             title: 'Edit profile',
-            leading: FaIcon(FontAwesomeIcons.userAlt),
+            leading: FaIcon(
+              FontAwesomeIcons.userAlt,
+              size: iconSize,
+            ),
             onPressed: showEditProfile,
           ),
           SettingsTile(
             title: 'Change password',
-            leading: FaIcon(FontAwesomeIcons.key),
+            leading: FaIcon(
+              FontAwesomeIcons.key,
+              size: iconSize,
+            ),
             onPressed: showPasswordChange,
           ),
           SettingsTile(
             title: 'Logout',
-            leading: FaIcon(FontAwesomeIcons.signOutAlt),
+            leading: FaIcon(
+              FontAwesomeIcons.signOutAlt,
+              size: iconSize,
+            ),
             onPressed: logOut,
           )
         ],
@@ -89,34 +130,49 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
         tiles: [
           SettingsTile(
             title: 'Manage users',
-            leading: FaIcon(FontAwesomeIcons.users),
+            leading: FaIcon(
+              FontAwesomeIcons.users,
+              size: iconSize,
+            ),
             onPressed: showManageUsers,
           ),
           SettingsTile(
             title: 'Currency Converter API key',
-            subtitle: 'Optional currency converter api key',
-            leading: FaIcon(FontAwesomeIcons.dollarSign),
+            subtitle: 'Optional freecurrencyapi.net key',
+            leading: FaIcon(
+              FontAwesomeIcons.dollarSign,
+              size: iconSize,
+            ),
             // onPressed: showEditProfile,
           ),
           SettingsTile(
             title: 'Set login screen message',
-            subtitle: 'Message displayed on the login screen',
-            leading: FaIcon(FontAwesomeIcons.comment),
+            subtitle: motd,
+            leading: FaIcon(
+              FontAwesomeIcons.comment,
+              size: iconSize,
+            ),
             // onPressed: showEditProfile,
           ),
           SettingsTile.switchTile(
             title: 'Allow registration',
-            leading: FaIcon(FontAwesomeIcons.pencilAlt),
-            switchValue: true,
-            onToggle: (bool value) {},
+            leading: FaIcon(
+              FontAwesomeIcons.pencilAlt,
+              size: iconSize,
+            ),
+            switchValue: allowSignUp,
+            onToggle: (bool value) => setSetting(ALLOW_SIGNUP, value ? "1":"0", false),
             // onPressed: showEditProfile,
           ),
           SettingsTile.switchTile(
             title: 'Demo mode',
             subtitle: 'Non-admin accounts cannot edit their profiles or change their passwords',
-            leading: FaIcon(FontAwesomeIcons.pencilAlt),
-            switchValue: true,
-            onToggle: (bool value) {},
+            leading: FaIcon(
+              FontAwesomeIcons.pencilAlt,
+              size: iconSize,
+            ),
+            switchValue: demoMode,
+            onToggle: (bool value) => setSetting(DEMO_MODE, value ? "1":"0", false),
             // onPressed: showEditProfile,
           ),
         ],
@@ -154,6 +210,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     User user = await service.getCurrentUser();
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    refreshSettings();
 
     setState(() {
       this.packageInfo = packageInfo;
