@@ -15,7 +15,7 @@ steps:
         - ./src/main/web/node_modules
 
   - name: build web
-    image: node:10
+    image: node:16
     commands:
       - cd src/main/web
       - npm install
