@@ -61,7 +61,7 @@ class ExpenseState extends State<Expense> {
         actions: <Widget>[
           PlatformDialogAction(
             onPressed: () => Navigator.pop(context),
-            child: PlatformText('Cancel'),
+            child: PlatformText('Cancel', style: TextStyle(color: Colors.grey[800]),),
           ),
           PlatformDialogAction(
             onPressed: () async {

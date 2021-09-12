@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:spend_spent_spent/components/categories/addCategoryGridItem.dart';
 import 'package:spend_spent_spent/components/categories/categoryGridItem.dart';
 import 'package:spend_spent_spent/components/categories/settingsCategoryItem.dart';
+import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/category.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CategoryGrid extends StatefulWidget {
   List<Category> categories;
@@ -14,12 +15,24 @@ class CategoryGrid extends StatefulWidget {
   CategoryGridState createState() => CategoryGridState();
 }
 
+int columnCount(MediaQueryData data) {
+  if (isTablet(data)) {
+    return 7;
+  } else if (isBigPhone(data)) {
+    return 5;
+  } else {
+    return 4;
+  }
+}
+
 class CategoryGridState extends State<CategoryGrid> {
   @override
   Widget build(BuildContext context) {
+    int columns = columnCount(MediaQuery.of(context));
+
     return GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: columns,
           mainAxisSpacing: 15,
           crossAxisSpacing: 15,
         ),

@@ -33,7 +33,6 @@ class AddCategoryState extends State<AddCategory> with AfterLayoutMixin<AddCateg
   }
 
   void search() {
-    print('searching');
     if (debounce?.isActive ?? false) debounce?.cancel();
     debounce = Timer(const Duration(milliseconds: 300), () {
       service.searchAvailableCategories(searchController.text).then((value) {

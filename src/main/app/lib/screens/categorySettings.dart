@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:after_layout/after_layout.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:fbroadcast/fbroadcast.dart';
@@ -8,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_spent_spent/components/categorySettings/categoryEntry.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/category.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
 
 class CategorySettingsScreen extends StatefulWidget {
   @override
@@ -80,86 +83,94 @@ class CategorySettingsScreenState extends State<CategorySettingsScreen> with Aft
           title: PlatformText('Category Settings'),
           trailingActions: [],
         ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
-              child: PlatformText(
-                'Drag and drop the categoryies to change its order in the grid, all changes (edit, delete, reorder) are only applied when the save button is pressed.',
-                style: TextStyle(fontSize: 10, color: Colors.grey[600]),
-              ),
-            ),
-            Expanded(
-              child: DragAndDropLists(
-                itemDragHandle: DragHandle(
-                  onLeft: true,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Icon(
-                      Icons.menu,
-                      color: Colors.blueGrey,
-                      size: 15,
-                    ),
-                  ),
-                ),
-                children: [
-                  DragAndDropList(
-                      children: categories.map((e) {
-                    return DragAndDropItem(
-                        child: CategoryEntry(
-                      setIcon: updateCategoryIcon,
-                      delete: addToDelete,
-                      category: e,
-                    ));
-                  }).toList())
-                ],
-                onItemReorder: onItemReorder,
-                onListReorder: onListReorder,
-              ),
-            ),
-            Row(
+        body: Container(
+          alignment: Alignment.center,
+          child: AnimatedContainer(
+            duration: panelTransition,
+            curve: Curves.easeInOutQuart,
+            width: min(MediaQuery.of(context).size.width, TABLET),
+            child: Column(
               children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: PlatformButton(
-                      color: Theme.of(context).primaryColorDark,
-                      onPressed: () => saveCategories(context),
-                      child: Text(
-                        'Save',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: PlatformText(
+                    'Drag and drop the categoryies to change its order in the grid, all changes (edit, delete, reorder) are only applied when the save button is pressed.',
+                    style: TextStyle(fontSize: 10, color: Colors.grey[600]),
                   ),
                 ),
-              ],
-            ),
-            Visibility(
-              visible: toDelete.length > 0,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FaIcon(
-                        FontAwesomeIcons.exclamationTriangle,
-                        color: Colors.red,
-                        size: 15,
+                Expanded(
+                  child: DragAndDropLists(
+                    itemDragHandle: DragHandle(
+                      onLeft: true,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Icon(
+                          Icons.menu,
+                          color: Colors.blueGrey,
+                          size: 15,
+                        ),
                       ),
                     ),
-                    Column(
-                      children: [
-                        PlatformText('${toDelete.length.toString()} categor${(toDelete.length == 1 ? 'y' : 'ies')} to delete.'),
-                        PlatformText('$expensesToDelete expense${(expensesToDelete > 1 ? 's' : '')} to delete.'),
-                      ],
+                    children: [
+                      DragAndDropList(
+                          children: categories.map((e) {
+                        return DragAndDropItem(
+                            child: CategoryEntry(
+                          setIcon: updateCategoryIcon,
+                          delete: addToDelete,
+                          category: e,
+                        ));
+                      }).toList())
+                    ],
+                    onItemReorder: onItemReorder,
+                    onListReorder: onListReorder,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: PlatformButton(
+                          color: Theme.of(context).primaryColorDark,
+                          onPressed: () => saveCategories(context),
+                          child: Text(
+                            'Save',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-            )
-          ],
+                Visibility(
+                  visible: toDelete.length > 0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: FaIcon(
+                            FontAwesomeIcons.exclamationTriangle,
+                            color: Colors.red,
+                            size: 15,
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            PlatformText('${toDelete.length.toString()} categor${(toDelete.length == 1 ? 'y' : 'ies')} to delete.'),
+                            PlatformText('$expensesToDelete expense${(expensesToDelete > 1 ? 's' : '')} to delete.'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ));
   }
 

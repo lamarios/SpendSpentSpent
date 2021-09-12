@@ -1,15 +1,16 @@
 import 'package:after_layout/after_layout.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_fadein/flutter_fadein.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_spent_spent/components/menuBar.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/screens/settings.dart';
 import 'package:spend_spent_spent/views/leftColumn.dart';
 import 'package:spend_spent_spent/views/middleColumn.dart';
 import 'package:spend_spent_spent/views/rigtColumn.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MainView extends StatefulWidget {
   MainView() : super();
@@ -51,8 +52,18 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
     super.initState();
   }
 
+  double columnMaxWidth(MediaQueryData data) {
+    if (isTablet(data)) {
+      return TABLET;
+    } else {
+      return data.size.width;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    double columnWidth = columnMaxWidth(MediaQuery.of(context));
+
     return Stack(
       children: [
         Container(
@@ -62,33 +73,58 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
             child: CarouselSlider(
               carouselController: buttonCarouselController,
               items: [
-                Column(
-                  children: [
-                    Expanded(
-                      child: LeftColumn(),
-                    ),
-                  ],
+                AnimatedContainer(
+                  width: columnWidth,
+                  duration: panelTransition,
+                  curve: Curves.easeInOutQuart,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: FadeIn(duration: panelTransition, child: LeftColumn()),
+                      ),
+                    ],
+                  ),
                 ),
-                Column(
-                  children: [
-                    Expanded(
-                      child: MiddleColumn(),
-                    ),
-                  ],
+                AnimatedContainer(
+                  width: columnWidth,
+                  duration: panelTransition,
+                  curve: Curves.easeInOutQuart,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: FadeIn(duration: panelTransition, child: MiddleColumn()),
+                      ),
+                    ],
+                  ),
                 ),
-                Column(
-                  children: [
-                    Expanded(
-                      child: RightColumn(),
-                    ),
-                  ],
+                AnimatedContainer(
+                  width: columnWidth,
+                  duration: panelTransition,
+                  curve: Curves.easeInOutQuart,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: FadeIn(duration: panelTransition, child: RightColumn()),
+                      ),
+                    ],
+                  ),
                 )
               ],
-              options: CarouselOptions(height: MediaQuery.of(context).size.height, enableInfiniteScroll: false, viewportFraction: 1,  onPageChanged: onPageChanged, initialPage: 1),
+              options: CarouselOptions(height: MediaQuery.of(context).size.height, enableInfiniteScroll: false, viewportFraction: 1, onPageChanged: onPageChanged, initialPage: 1),
             ),
           ),
         ),
-        AnimatedPositioned(bottom: showMenuBar ? 15 : -15, curve: Curves.easeInOutQuart, left: 100, right: 100, child: MenuBar(setPage: setPage, page: page), duration: panelTransition),
+        AnimatedPositioned(
+            bottom: showMenuBar ? 15 : -15,
+            left: 0,
+            right: 0,
+            curve: Curves.easeInOutQuart,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment.center,
+              child: MenuBar(setPage: setPage, page: page),
+            ),
+            duration: panelTransition),
         Positioned(
             bottom: 10,
             right: 10,

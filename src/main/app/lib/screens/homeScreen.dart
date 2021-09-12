@@ -46,9 +46,6 @@ class _HomeScreenState extends State<HomeScreen>
           child: AnimatedSwitcher(duration: panelTransition,
               switchInCurve: Curves.easeInOutQuart,
               switchOutCurve: Curves.easeInOutQuart,
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                return ScaleTransition(child: child, scale: animation);
-              },
               child: homeWidget),
         ));
   }

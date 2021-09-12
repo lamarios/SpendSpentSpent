@@ -18,7 +18,7 @@ class CategoryEntry extends StatelessWidget {
     showModal(
         context: context,
         builder: (context) =>
-            Card(margin: getInsetsForMaxSize(MediaQuery.of(context), 350, vertical: 60), child: AddCategory(onSelected: (newIcon) => setIcon(category, newIcon), buttonLabel: 'Choose new Icon')));
+            Card(margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 600), child: AddCategory(onSelected: (newIcon) => setIcon(category, newIcon), buttonLabel: 'Choose new Icon')));
   }
 
   deleteIcon(BuildContext context) {

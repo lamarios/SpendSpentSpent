@@ -48,15 +48,6 @@ class _CategoryListState extends State<CategoryList>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: panelTransition,
-      child: grid,
-      switchInCurve: Curves.easeInOut,
-      switchOutCurve: Curves.easeInOut,
-      transitionBuilder: (child, animation) => FadeTransition(
-        opacity: animation,
-        child: child,
-      ),
-    );
+    return grid;
   }
 }

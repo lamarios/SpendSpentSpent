@@ -17,7 +17,7 @@ class AddCategoryGridItem extends StatelessWidget {
     showModal(
         context: context,
         builder: (context) => Card(
-            margin: getInsetsForMaxSize(MediaQuery.of(context), 350, vertical: 60),
+            margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth:350, maxHeight: 500),
             child: AddCategory(
               onSelected: addCategory,
             )));

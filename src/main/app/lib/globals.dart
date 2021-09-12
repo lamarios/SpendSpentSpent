@@ -16,6 +16,9 @@ const panelTransition = Duration(milliseconds: 350);
 // broadcast message types
 const BROADCAST_LOGGED_IN = 'loggedIn', BROADCAST_REFRESH_CATEGORIES = 'refreshCategories', NEED_LOGIN = 'needLogin', BROADCAST_LOGGED_OUT = 'loggedOut', BROADCAST_REFRESH_EXPENSES = 'refreshExpenses';
 
+const TABLET = 768.0;
+const BIG_PHONE= 500;
+
 ButtonStyle flatButtonStyle = TextButton.styleFrom(
   primary: Colors.white,
   backgroundColor: Colors.blue[800],
@@ -26,7 +29,11 @@ ButtonStyle flatButtonStyle = TextButton.styleFrom(
 );
 
 bool isTablet(MediaQueryData data){
-  return data.size.width > 768;
+  return data.size.width > TABLET;
+}
+
+bool isBigPhone(MediaQueryData data){
+  return data.size.width > BIG_PHONE;
 }
 
 String formatCurrency(double amount) {

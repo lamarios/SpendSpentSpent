@@ -1,9 +1,9 @@
 import 'package:after_layout/after_layout.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/models/category.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class Step1 extends StatefulWidget {
   Function setCategory;
@@ -33,33 +33,35 @@ class Step1State extends State<Step1> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
-
     print('selected ${widget.selected}');
     return Container(
       alignment: Alignment.topCenter,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Wrap(
-          spacing: 8.0,
-          runSpacing: 4,
-          children: categories
-              .map((e) => GestureDetector(
-                    onTap: () => onSelect(e),
-                    child: AnimatedContainer(
-                      decoration: BoxDecoration(
-                        borderRadius: defaultBorder,
-                        color: (widget.selected?.icon ?? '') != e.icon ? Colors.white : Theme.of(context).primaryColor,
-                      ),
-                      duration: panelTransition,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: getIcon(e.icon!, size: 30, color: (widget.selected?.icon ?? '') == e.icon ? Colors.white : Theme.of(context).primaryColor),
-                      ),
-                    ),
-                  ))
-              .toList(),
-        ),
-      ),
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Wrap(
+              direction: Axis.horizontal,
+              spacing: 8.0,
+              runSpacing: 4,
+              children: categories
+                  .map((e) => GestureDetector(
+                        onTap: () => onSelect(e),
+                        child: AnimatedContainer(
+                          decoration: BoxDecoration(
+                            borderRadius: defaultBorder,
+                            color: (widget.selected?.icon ?? '') != e.icon ? Colors.white : Theme.of(context).primaryColor,
+                          ),
+                          duration: panelTransition,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: getIcon(e.icon!, size: 30, color: (widget.selected?.icon ?? '') == e.icon ? Colors.white : Theme.of(context).primaryColor),
+                          ),
+                        ),
+                      ))
+                  .toList(),
+            ),
+          )),
     );
   }
 

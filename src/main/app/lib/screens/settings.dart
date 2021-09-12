@@ -8,6 +8,7 @@ import 'package:spend_spent_spent/components/masterDetail.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/settings.dart';
 import 'package:spend_spent_spent/models/user.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/views/settings/changePassword.dart';
 import 'package:spend_spent_spent/views/settings/editProfile.dart';
 import 'package:spend_spent_spent/views/settings/manageUsers.dart';
@@ -24,7 +25,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
   User? currentUser;
   GlobalKey<MasterDetailState> masterDetailKey = GlobalKey<MasterDetailState>();
   PackageInfo? packageInfo;
-  String motd = "";
+  TextEditingController motdController = TextEditingController(), freeCurrencyConverterApiKeyController = TextEditingController();
   bool demoMode = false;
   bool allowSignUp = false;
 
@@ -48,6 +49,18 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     masterDetailKey.currentState!.changeDetails(context, 'Manage users', ManageUsers());
   }
 
+  setMotd(){
+    showPromptDialog(context, 'Login screen message', "", motdController, () {
+      setSetting(MOTD, motdController.text.trim(), false);
+    }, maxLines: 5);
+  }
+
+  setCurrencyApiKey(){
+    showPromptDialog(context, 'Free currency api key', "", motdController, () {
+      setSetting(MOTD, freeCurrencyConverterApiKeyController.text.trim(), true);
+    });
+  }
+
   @override
   initState() {
     super.initState();
@@ -69,7 +82,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
       settings.forEach((element) {
         switch (element.name) {
           case MOTD:
-            motd = element.value;
+            motdController.text = element.value;
             break;
           case ALLOW_SIGNUP:
             allowSignUp = element.value == "1";
@@ -143,16 +156,16 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
               FontAwesomeIcons.dollarSign,
               size: iconSize,
             ),
-            // onPressed: showEditProfile,
+            onPressed: (context) => setCurrencyApiKey(),
           ),
           SettingsTile(
             title: 'Set login screen message',
-            subtitle: motd,
+            subtitle: motdController.text,
             leading: FaIcon(
               FontAwesomeIcons.comment,
               size: iconSize,
             ),
-            // onPressed: showEditProfile,
+            onPressed: (context) => setMotd(),
           ),
           SettingsTile.switchTile(
             title: 'Allow registration',
@@ -168,7 +181,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
             title: 'Demo mode',
             subtitle: 'Non-admin accounts cannot edit their profiles or change their passwords',
             leading: FaIcon(
-              FontAwesomeIcons.pencilAlt,
+              FontAwesomeIcons.userLock,
               size: iconSize,
             ),
             switchValue: demoMode,
@@ -186,7 +199,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
           SettingsTile(
             title: 'Version: ${packageInfo?.version ?? 'n/a'}',
             subtitle: 'Build: ${packageInfo?.buildNumber ?? 'n/a'}',
-            leading: FaIcon(FontAwesomeIcons.comment),
+            leading: FaIcon(FontAwesomeIcons.infoCircle),
             // onPressed: showEditProfile,
           ),
         ],

@@ -2,6 +2,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:spend_spent_spent/components/paginationSwitcher.dart';
 import 'package:spend_spent_spent/components/settings/addUserDialog.dart';
@@ -45,7 +46,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
     showModal(
         context: context,
         builder: (context) => Card(
-            margin: getInsetsForMaxSize(MediaQuery.of(context), 350, vertical: 60),
+            margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth:350, maxHeight: 250),
             child: ChangePasswordDialog(
               userId: user.id!,
             )));
@@ -79,7 +80,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
     showModal(
         context: context,
         builder: (context) => Card(
-            margin: getInsetsForMaxSize(MediaQuery.of(context), 350, vertical: 60),
+            margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth:350, maxHeight: 600),
             child: AddUserDialog(
               saveUser: saveUser,
             )));
@@ -122,7 +123,86 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
 
   Widget getUserWidget(BuildContext context) {
     if (isTablet(MediaQuery.of(context))) {
-      return Text('yo');
+      List<TableRow> rows = [
+        TableRow(children: [
+          TableCell(
+              child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Email',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          )),
+          TableCell(
+              child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Name', style: TextStyle(fontWeight: FontWeight.bold)),
+          )),
+          TableCell(
+              child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Admin', style: TextStyle(fontWeight: FontWeight.bold)),
+          )),
+          TableCell(
+              child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Actions', style: TextStyle(fontWeight: FontWeight.bold)),
+          )),
+        ])
+      ];
+
+      rows.addAll((users?.data ?? []).map((e) {
+        bool isCurrentUser = (currentUser?.id ?? -1) == e.id;
+        return TableRow(children: [
+          TableCell(
+              child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(e.email),
+          )),
+          TableCell(
+              child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('${e.firstName} ${e.lastName}'),
+          )),
+          TableCell(
+              child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: PlatformSwitch(value: e.isAdmin, onChanged: !isCurrentUser ? (value) => toggleUserAdmin(e, value) : null),
+          )),
+          Visibility(
+            visible: !isCurrentUser,
+            child: TableCell(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: PlatformButton(
+                        child: Text('Change password'),
+                        onPressed: () => changeUserPassword(e),
+                      ),
+                    ),
+                    PlatformButton(
+                      child: Text(
+                        'Delete',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.red,
+                      onPressed: () => showDeleteUserDialog(context, e.id!),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          )
+        ]);
+      }).toList());
+
+      return Table(
+        border: TableBorder.all(),
+        children: rows,
+      );
     } else {
       return Expanded(
           child: ListView(

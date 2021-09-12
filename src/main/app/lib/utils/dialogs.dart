@@ -18,20 +18,24 @@ void showAlertDialog(BuildContext context, String title, String text) {
           ));
 }
 
-void showPromptDialog(BuildContext context, String title, String label, TextEditingController controller, Function onOk) {
+void showPromptDialog(BuildContext context, String title, String label, TextEditingController controller, Function onOk, {int? maxLines}) {
   showPlatformDialog(
       context: context,
       builder: (BuildContext context) => PlatformAlertDialog(
             title: Text(title),
             content: PlatformTextField(
               controller: controller,
+              maxLines: maxLines,
             ),
             actions: <Widget>[
               PlatformDialogAction(
                 onPressed: () {
                   Navigator.pop(context, 'Cancel');
                 },
-                child: const Text('Cancel', style: TextStyle(color: Colors.black),),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
               PlatformDialogAction(
                 onPressed: () {
@@ -44,7 +48,8 @@ void showPromptDialog(BuildContext context, String title, String label, TextEdit
           ));
 }
 
-EdgeInsetsGeometry getInsetsForMaxSize(MediaQueryData data, double maxWidth, {double? vertical}) {
-  var horizontal = max<double>(0, (data.size.width - maxWidth) / 2);
-  return EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical?? 0);
+EdgeInsetsGeometry getInsetsForMaxSize(MediaQueryData data, {double? maxWidth, double? maxHeight}) {
+  var horizontal = max<double>(0, (data.size.width - (maxWidth ?? data.size.width)) / 2);
+  var vertical = max<double>(0, (data.size.height - (maxHeight ?? data.size.height)) / 2);
+  return EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical);
 }
