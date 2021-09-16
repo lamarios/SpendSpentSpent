@@ -1,9 +1,10 @@
 import 'package:after_layout/after_layout.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:spend_spent_spent/components/dummies/dummyStatsList.dart';
 import 'package:spend_spent_spent/components/leftColumn/SingleStat.dart';
 import 'package:spend_spent_spent/components/switcher.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/leftColumnStats.dart';
-import 'package:flutter/cupertino.dart';
 
 class LeftColumn extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class LeftColumn extends StatefulWidget {
 class LeftColumnState extends State<LeftColumn> with AfterLayoutMixin {
   int selected = 0;
   List<LeftColumnStats> stats = [];
+  Widget statsWidget = DummyStatsList();
 
   switchTab(int selected) {
     setState(() {
@@ -22,6 +24,9 @@ class LeftColumnState extends State<LeftColumn> with AfterLayoutMixin {
   }
 
   Future<void> getStats() async {
+    setState(() {
+      statsWidget = DummyStatsList();
+    });
     List<LeftColumnStats> stats = [];
     switch (selected) {
       case 0:
@@ -35,8 +40,24 @@ class LeftColumnState extends State<LeftColumn> with AfterLayoutMixin {
     if (this.mounted) {
       setState(() {
         this.stats = stats;
+        buildWidget();
       });
     }
+  }
+
+  void buildWidget() {
+    setState(() {
+      this.statsWidget = ListView.builder(
+        itemCount: stats.length,
+        itemBuilder: (context, index) {
+          return SingleStats(
+            key: Key(stats[index].category.id.toString()),
+            stats: stats[index],
+            monthly: selected == 0,
+          );
+        },
+      );
+    });
   }
 
   @override
@@ -53,18 +74,8 @@ class LeftColumnState extends State<LeftColumn> with AfterLayoutMixin {
               onSelect: switchTab,
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: stats.length,
-              itemBuilder: (context, index) {
-                return SingleStats(
-                  key: Key(stats[index].category.id.toString()),
-                  stats: stats[index],
-                  monthly: selected == 0,
-                );
-              },
-            ),
-          )
+          Expanded(child: AnimatedSwitcher(duration: panelTransition,
+          child: statsWidget))
         ],
       ),
     );

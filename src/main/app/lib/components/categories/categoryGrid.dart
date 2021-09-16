@@ -15,15 +15,6 @@ class CategoryGrid extends StatefulWidget {
   CategoryGridState createState() => CategoryGridState();
 }
 
-int columnCount(MediaQueryData data) {
-  if (isTablet(data)) {
-    return 7;
-  } else if (isBigPhone(data)) {
-    return 5;
-  } else {
-    return 4;
-  }
-}
 
 class CategoryGridState extends State<CategoryGrid> {
   @override

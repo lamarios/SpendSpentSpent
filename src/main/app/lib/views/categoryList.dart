@@ -48,6 +48,7 @@ class _CategoryListState extends State<CategoryList>
 
   @override
   Widget build(BuildContext context) {
-    return grid;
+    return AnimatedSwitcher(duration: panelTransition,
+    child: grid);
   }
 }

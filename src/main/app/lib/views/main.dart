@@ -2,6 +2,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -63,6 +64,8 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
   @override
   Widget build(BuildContext context) {
     double columnWidth = columnMaxWidth(MediaQuery.of(context));
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
     return Stack(
       children: [

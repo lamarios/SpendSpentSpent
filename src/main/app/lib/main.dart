@@ -15,7 +15,9 @@ class SpendSpentSpent extends StatelessWidget {
   Widget build(BuildContext context) {
     final materialTheme = ThemeData(
       primarySwatch: Colors.blue,
-      textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
+      textTheme: GoogleFonts.poppinsTextTheme(Theme
+          .of(context)
+          .textTheme),
       backgroundColor: Colors.white,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: TextButton.styleFrom(
@@ -30,14 +32,16 @@ class SpendSpentSpent extends StatelessWidget {
       data: materialTheme,
       child: PlatformProvider(
         settings: PlatformSettingsData(iosUsesMaterialWidgets: true, platformStyle: PlatformStyleData(ios: PlatformStyle.Material)),
-        builder: (context) => PlatformApp(
-          title: 'SpendSpentSpent',
-          home: Material(child: HomeScreen()),
-          material: (_, __) => MaterialAppData(theme: materialTheme),
-          cupertino: (_, __) => CupertinoAppData(
-              theme:
-                  CupertinoThemeData(primaryColor: materialTheme.primaryColor)),
-        ),
+        builder: (context) =>
+            PlatformApp(
+              title: 'SpendSpentSpent',
+              home: Material(child: HomeScreen()),
+              material: (_, __) => MaterialAppData(theme: materialTheme),
+              cupertino: (_, __) =>
+                  CupertinoAppData(
+                      theme:
+                      CupertinoThemeData(primaryColor: materialTheme.primaryColor)),
+            ),
       ),
     );
   }

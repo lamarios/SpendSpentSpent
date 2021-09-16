@@ -1,9 +1,10 @@
 import 'package:animations/animations.dart';
-import 'package:spend_spent_spent/utils/dialogs.dart';
-import 'package:spend_spent_spent/views/addRecurringExpense.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
+import 'package:spend_spent_spent/views/addRecurringExpense.dart';
 
 class AddExpense extends StatelessWidget {
   Function refreshExpenses;
@@ -11,7 +12,14 @@ class AddExpense extends StatelessWidget {
   AddExpense({required this.refreshExpenses});
 
   showAddRecurringExpenseDialog(BuildContext context) {
-    showModal(context: context, builder: (context) => Card(margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 400) , child: AddRecurringExpenseDialog(refreshRecurringExpenses: refreshExpenses,)));
+    showModal(
+        context: context,
+        builder: (context) => Card(
+            margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 450),
+            shape: RoundedRectangleBorder(borderRadius: defaultBorder),
+            child: AddRecurringExpenseDialog(
+              refreshRecurringExpenses: refreshExpenses,
+            )));
   }
 
   @override

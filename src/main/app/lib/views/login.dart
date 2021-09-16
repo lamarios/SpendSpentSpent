@@ -1,6 +1,10 @@
+import 'dart:math';
+
+import 'package:after_layout/after_layout.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:spend_spent_spent/globals.dart' as globals;
 import 'package:spend_spent_spent/globals.dart';
@@ -26,7 +30,7 @@ InputDecoration getFieldDecoration(String label, String hint) {
       fillColor: Colors.white);
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
   final urlController = TextEditingController(text: "https://sss.ftpix.com");
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
@@ -51,8 +55,20 @@ class _LoginState extends State<Login> {
     }
   }
 
+  double getIconSize(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    return min(200, height / 3);
+  }
+
+  double getTopPadding(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    return min(50, height / 3);
+  }
+
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     MediaQueryData mq = MediaQuery.of(context);
     bool tablet = isTablet(mq);
@@ -97,7 +113,7 @@ class _LoginState extends State<Login> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(50.0),
+                        padding: EdgeInsets.all(50.0),
                         child: Container(
                             decoration: BoxDecoration(
                               borderRadius: globals.defaultBorder,
@@ -106,7 +122,7 @@ class _LoginState extends State<Login> {
                                 padding: EdgeInsets.all(20),
                                 child: Column(
                                   children: [
-                                    Padding(padding: const EdgeInsets.all(8.0), child: getIcon('groceries_bag', size: 200, color: Colors.white)),
+                                    Padding(padding: const EdgeInsets.all(8.0), child: getIcon('groceries_bag', size: getIconSize(context), color: Colors.white)),
                                     Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: PlatformTextField(
@@ -160,4 +176,7 @@ class _LoginState extends State<Login> {
       ],
     );
   }
+
+  @override
+  void afterFirstLayout(BuildContext context) {}
 }

@@ -1,11 +1,12 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:spend_spent_spent/components/rightColumn/oneDay.dart';
-import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/dayExpense.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:spend_spent_spent/components/dummies/dummyExpenses.dart';
+import 'package:spend_spent_spent/components/rightColumn/oneDay.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/dayExpense.dart';
 
 class RightColumn extends StatefulWidget {
   RightColumnState createState() => RightColumnState();
@@ -16,6 +17,7 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
   String selected = '';
   Map<String, DayExpense> expenses = {};
   double total = 0;
+  Widget expensesWidget = DummyExpenses();
 
   void getMonths() async {
     List<String> months = await service.getExpensesMonths();
@@ -54,19 +56,32 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
   }
 
   getExpenses() async {
+    setState(() {
+      expensesWidget = DummyExpenses();
+    });
     var expenses = await service.getMonthExpenses(selected);
     var total = expenses.values.map((e) => e.total).reduce((value, element) => value + element);
     if (this.mounted) {
       setState(() {
         this.expenses = expenses;
         this.total = total;
+        expensesWidget = getExpensesWidget();
       });
     }
   }
 
+  Widget getExpensesWidget() {
+    List<String> expensesKeys = expenses.keys.toList();
+    return ListView.builder(
+      itemCount: expenses.length,
+      itemBuilder: (context, index) {
+        return OneDay(expense: expenses[expensesKeys[index]]!);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<String> expensesKeys = expenses.keys.toList();
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
       child: Column(
@@ -126,12 +141,7 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: expenses.length,
-              itemBuilder: (context, index) {
-                return OneDay(expense: expenses[expensesKeys[index]]!);
-              },
-            ),
+            child: AnimatedSwitcher(duration: panelTransition, child: expensesWidget),
           )
         ],
       ),

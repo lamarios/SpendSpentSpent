@@ -22,7 +22,7 @@ class CategoryGridItemState extends State<CategoryGridItem> {
     showModal(
         context: context,
         builder: (context) => Card(
-        margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 600),
+        margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 650),
             shape: RoundedRectangleBorder(borderRadius: defaultBorder),
             child: AddExpense(category: widget.category)));
   }

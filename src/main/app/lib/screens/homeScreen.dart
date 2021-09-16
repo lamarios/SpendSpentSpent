@@ -33,9 +33,13 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
 
     service.needLogin().then((needLogin) {
+      if(needLogin){
+
+      }
       this.homeWidget = needLogin ? getLogin() : getMainView();
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
