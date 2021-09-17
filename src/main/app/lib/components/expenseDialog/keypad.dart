@@ -1,17 +1,18 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class KeyPad extends StatelessWidget {
   Function addNumber, removeNumber;
 
-  KeyPad(
-      {required this.addNumber,
-      required this.removeNumber});
+  KeyPad({required this.addNumber, required this.removeNumber});
 
   @override
   Widget build(BuildContext context) {
-    const TextStyle keyPadStyle = TextStyle(fontSize: 25);
+    AppColors colors = get(context);
+    TextStyle keyPadStyle = TextStyle(fontSize: 25, color: colors.text);
 
     return Column(children: [
       Row(children: [
@@ -100,6 +101,7 @@ class KeyPad extends StatelessWidget {
             child: FaIcon(
               FontAwesomeIcons.arrowLeft,
               size: 30,
+              color: colors.text,
             ),
           ),
         ),
@@ -135,7 +137,7 @@ class KeyPadButton extends StatelessWidget {
     return Expanded(
       flex: 1,
       child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
+          behavior: HitTestBehavior.opaque,
           onTap: onPress,
           child: Row(
             children: [

@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+import 'colorUtils.dart';
+
 void showAlertDialog(BuildContext context, String title, String text) {
   showPlatformDialog(
       context: context,
@@ -19,33 +21,36 @@ void showAlertDialog(BuildContext context, String title, String text) {
 }
 
 void showPromptDialog(BuildContext context, String title, String label, TextEditingController controller, Function onOk, {int? maxLines}) {
+  final colors = get(context);
   showPlatformDialog(
       context: context,
-      builder: (BuildContext context) => PlatformAlertDialog(
-            title: Text(title),
-            content: PlatformTextField(
-              controller: controller,
-              maxLines: maxLines,
+      builder: (BuildContext context) {
+        return PlatformAlertDialog(
+          title: Text(title),
+          content: PlatformTextField(
+            controller: controller,
+            maxLines: maxLines,
+          ),
+          actions: <Widget>[
+            PlatformDialogAction(
+              onPressed: () {
+                Navigator.pop(context, 'Cancel');
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: colors.cancelText),
+              ),
             ),
-            actions: <Widget>[
-              PlatformDialogAction(
-                onPressed: () {
-                  Navigator.pop(context, 'Cancel');
-                },
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-              PlatformDialogAction(
-                onPressed: () {
-                  Navigator.pop(context, 'OK');
-                  onOk();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          ));
+            PlatformDialogAction(
+              onPressed: () {
+                Navigator.pop(context, 'OK');
+                onOk();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      });
 }
 
 EdgeInsetsGeometry getInsetsForMaxSize(MediaQueryData data, {double? maxWidth, double? maxHeight}) {

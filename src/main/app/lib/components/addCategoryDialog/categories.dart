@@ -3,6 +3,8 @@ import 'package:spend_spent_spent/icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class Categories extends StatelessWidget {
   String label, selected;
@@ -16,6 +18,7 @@ class Categories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return Visibility(
       visible: categories != null,
       child: Padding(
@@ -25,7 +28,7 @@ class Categories extends StatelessWidget {
           children: [
             PlatformText(
               label,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: colors.textOnMain),
             ),
             Wrap(
               spacing: 8.0,
@@ -38,7 +41,7 @@ class Categories extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: defaultBorder,
                         color: selected == e
-                            ? Colors.white
+                            ? colors.iconOnMain
                             : Theme
                             .of(context)
                             .primaryColor,
@@ -52,7 +55,7 @@ class Categories extends StatelessWidget {
                                 ? Theme
                                 .of(context)
                                 .primaryColor
-                                : Colors.white),
+                                : colors.iconOnMain),
                       ),
                     ),
                   ))

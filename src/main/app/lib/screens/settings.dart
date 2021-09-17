@@ -1,13 +1,16 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:spend_spent_spent/components/masterDetail.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/settings.dart';
 import 'package:spend_spent_spent/models/user.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/views/settings/changePassword.dart';
 import 'package:spend_spent_spent/views/settings/editProfile.dart';
@@ -49,13 +52,13 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     masterDetailKey.currentState!.changeDetails(context, 'Manage users', ManageUsers());
   }
 
-  setMotd(){
+  setMotd() {
     showPromptDialog(context, 'Login screen message', "", motdController, () {
       setSetting(MOTD, motdController.text.trim(), false);
     }, maxLines: 5);
   }
 
-  setCurrencyApiKey(){
+  setCurrencyApiKey() {
     showPromptDialog(context, 'Free currency api key', "", motdController, () {
       setSetting(MOTD, freeCurrencyConverterApiKeyController.text.trim(), true);
     });
@@ -103,11 +106,14 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
+
     const iconSize = 15.0;
 
     List<SettingsSection> sections = [
       SettingsSection(
         title: '${currentUser?.firstName ?? ""} ${currentUser?.lastName ?? ""}',
+        titleTextStyle: TextStyle(color: colors.main, fontWeight: FontWeight.bold),
         tiles: [
           SettingsTile(
             title: 'Edit profile',
@@ -140,6 +146,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     if (currentUser?.isAdmin ?? false) {
       sections.add(SettingsSection(
         title: 'Admin',
+        titleTextStyle: TextStyle(color: colors.main, fontWeight: FontWeight.bold),
         tiles: [
           SettingsTile(
             title: 'Manage users',
@@ -174,7 +181,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
               size: iconSize,
             ),
             switchValue: allowSignUp,
-            onToggle: (bool value) => setSetting(ALLOW_SIGNUP, value ? "1":"0", false),
+            onToggle: (bool value) => setSetting(ALLOW_SIGNUP, value ? "1" : "0", false),
             // onPressed: showEditProfile,
           ),
           SettingsTile.switchTile(
@@ -185,7 +192,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
               size: iconSize,
             ),
             switchValue: demoMode,
-            onToggle: (bool value) => setSetting(DEMO_MODE, value ? "1":"0", false),
+            onToggle: (bool value) => setSetting(DEMO_MODE, value ? "1" : "0", false),
             // onPressed: showEditProfile,
           ),
         ],
@@ -194,6 +201,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
 
     if (packageInfo != null) {
       sections.add(SettingsSection(
+        titleTextStyle: TextStyle(color: colors.main, fontWeight: FontWeight.bold),
         title: 'App info',
         tiles: [
           SettingsTile(
@@ -211,8 +219,11 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
       // body: Visibility(visible: masterDetail != null, child: masterDetail ?? Container()),
       body: MasterDetail(
         key: masterDetailKey,
-        master: SettingsList(
-          sections: sections,
+        master: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: SettingsList(
+            sections: sections,
+          ),
         ),
       ),
     );

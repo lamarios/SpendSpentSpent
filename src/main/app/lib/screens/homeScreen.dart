@@ -1,5 +1,7 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
 import 'package:spend_spent_spent/views/login.dart';
 import 'package:spend_spent_spent/views/main.dart';
@@ -43,8 +45,9 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return PlatformScaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: colors.background,
         body: SafeArea(
           bottom: false,
           child: AnimatedSwitcher(duration: panelTransition,

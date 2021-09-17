@@ -9,7 +9,9 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_spent_spent/components/categorySettings/categoryEntry.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/category.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 
 class CategorySettingsScreen extends StatefulWidget {
@@ -78,6 +80,7 @@ class CategorySettingsScreenState extends State<CategorySettingsScreen> with Aft
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return PlatformScaffold(
         appBar: PlatformAppBar(
           title: PlatformText('Category Settings'),
@@ -95,7 +98,7 @@ class CategorySettingsScreenState extends State<CategorySettingsScreen> with Aft
                   padding: EdgeInsets.all(10),
                   child: PlatformText(
                     'Drag and drop the categoryies to change its order in the grid, all changes (edit, delete, reorder) are only applied when the save button is pressed.',
-                    style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+                    style: TextStyle(fontSize: 10),
                   ),
                 ),
                 Expanded(
@@ -132,11 +135,9 @@ class CategorySettingsScreenState extends State<CategorySettingsScreen> with Aft
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: PlatformButton(
-                          color: Theme.of(context).primaryColorDark,
                           onPressed: () => saveCategories(context),
                           child: Text(
                             'Save',
-                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                       ),

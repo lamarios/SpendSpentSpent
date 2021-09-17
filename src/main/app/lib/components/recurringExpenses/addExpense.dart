@@ -2,7 +2,8 @@ import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/views/addRecurringExpense.dart';
 
@@ -16,7 +17,6 @@ class AddExpense extends StatelessWidget {
         context: context,
         builder: (context) => Card(
             margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 450),
-            shape: RoundedRectangleBorder(borderRadius: defaultBorder),
             child: AddRecurringExpenseDialog(
               refreshRecurringExpenses: refreshExpenses,
             )));
@@ -24,6 +24,7 @@ class AddExpense extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: GestureDetector(
@@ -32,10 +33,10 @@ class AddExpense extends StatelessWidget {
         child: Container(
           height: 40,
           alignment: Alignment.center,
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(25)), border: Border.all(width: 3, color: Colors.blue[100]!)),
+          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), border: Border.all(width: 3, color: colors.main.withOpacity(0.5))),
           child: FaIcon(
             FontAwesomeIcons.plus,
-            color: Colors.blue[100],
+            color: colors.main.withOpacity(0.5),
           ),
         ),
       ),

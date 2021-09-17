@@ -1,8 +1,10 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:spend_spent_spent/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class MenuBar extends StatefulWidget {
   Function setPage;
@@ -21,21 +23,6 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
   @override
   void initState() {
     super.initState();
-    controller0 = AnimationController(duration: panelTransition, vsync: this);
-    animation0 = (ColorTween(begin: Colors.white, end: Colors.blue).animate(controller0) as Animation<Color>)
-      ..addListener(() {
-        setState(() {});
-      });
-    controller1 = AnimationController(duration: panelTransition, vsync: this);
-    animation1 = (ColorTween(begin: Colors.white, end: Colors.blue).animate(controller1) as Animation<Color>)
-      ..addListener(() {
-        setState(() {});
-      });
-    controller2 = AnimationController(duration: panelTransition, vsync: this);
-    animation2 = (ColorTween(begin: Colors.white, end: Colors.blue).animate(controller2) as Animation<Color>)
-      ..addListener(() {
-        setState(() {});
-      });
   }
 
   @override
@@ -77,37 +64,30 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    AppColors colors = get(context);
+    return controller0 != null ? Container(
       height: 50,
       width: 200,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(25)),
-        gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.75], begin: Alignment.bottomCenter, end: Alignment.topRight),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 3,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          )
-        ],
+        gradient: defaultGradient(context),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
           double? left = 0, right = 0;
-          double oneThird =  constraints.maxWidth / 3;
+          double oneThird = constraints.maxWidth / 3;
           switch (widget.page) {
             case 0:
               left = 0;
-              right = oneThird*2;
+              right = oneThird * 2;
               break;
             case 1:
               left = oneThird;
               right = oneThird;
               break;
             case 2:
-              left = oneThird*2;
+              left = oneThird * 2;
               right = 0;
               break;
           }
@@ -123,14 +103,10 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
                     child: Container(
-                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(40)), boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          spreadRadius: 2,
-                          blurRadius: 3,
-                          offset: Offset(0, 2),
-                        )
-                      ]),
+                      decoration: BoxDecoration(
+                        color: colors.iconOnMain,
+                        borderRadius: BorderRadius.all(Radius.circular(40)),
+                      ),
                       height: 1,
                       width: 1,
                     ),
@@ -186,11 +162,29 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
           );
         },
       ),
-    );
+    ): SizedBox.shrink();
   }
 
   @override
   void afterFirstLayout(BuildContext context) {
-    setIconColors();
+    AppColors colors = get(context);
+    setState(() {
+      controller0 = AnimationController(duration: panelTransition, vsync: this);
+      animation0 = (ColorTween(begin: colors.iconOnMain, end: colors.main).animate(controller0) as Animation<Color>)
+        ..addListener(() {
+          setState(() {});
+        });
+      controller1 = AnimationController(duration: panelTransition, vsync: this);
+      animation1 = (ColorTween(begin: colors.iconOnMain, end: colors.main).animate(controller1) as Animation<Color>)
+        ..addListener(() {
+          setState(() {});
+        });
+      controller2 = AnimationController(duration: panelTransition, vsync: this);
+      animation2 = (ColorTween(begin: colors.iconOnMain, end: colors.main).animate(controller2) as Animation<Color>)
+        ..addListener(() {
+          setState(() {});
+        });
+      setIconColors();
+    });
   }
 }

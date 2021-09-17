@@ -4,12 +4,14 @@ import 'package:after_layout/after_layout.dart';
 import 'package:spend_spent_spent/components/leftColumn/StatsGraph.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/leftColumnStats.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class SingleStats extends StatefulWidget {
   LeftColumnStats stats;
@@ -56,6 +58,7 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     // TODO: implement build
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
@@ -69,7 +72,7 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: AnimatedRotation(turns: open ? 0.25 : 0, duration: panelTransition, curve: Curves.easeInOutQuart,
-                  child: FaIcon(FontAwesomeIcons.chevronRight, size: 10)),
+                  child: FaIcon(FontAwesomeIcons.chevronRight, size: 10, color: colors.text,)),
                 ),
                 Visibility(visible: widget.stats.category.id != -1, child: getIcon(widget.stats.category.icon!, color: Theme.of(context).primaryColor, size: 20)),
                 Spacer(),
@@ -86,7 +89,7 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     // gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.75], begin: Alignment.bottomCenter, end: Alignment.topRight),
-                    color: Colors.grey[300]),
+                    color: colors.statsBackground),
                 child: LayoutBuilder(
                   builder: (context, constraints) => AnimatedContainer(
                     duration: panelTransition,
@@ -95,15 +98,7 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
                     height: open ? openedHeight : 10,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
-                      gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.75], begin: Alignment.bottomCenter, end: Alignment.topRight),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: widget.stats.amount > 0 ? 1 : 0,
-                          blurRadius: widget.stats.amount > 0 ? 2 : 0,
-                          offset: Offset(2, 2),
-                        )
-                      ],
+                      gradient: defaultGradient(context),
                     ),
                     child: Visibility(
                       visible: showGraph,

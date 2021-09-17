@@ -1,13 +1,15 @@
 import 'dart:async';
 
 import 'package:after_layout/after_layout.dart';
-import 'package:spend_spent_spent/components/addCategoryDialog/categories.dart';
-import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/availableCategories.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spend_spent_spent/components/addCategoryDialog/categories.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/models/availableCategories.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class AddCategory extends StatefulWidget {
   Function onSelected;
@@ -68,6 +70,7 @@ class AddCategoryState extends State<AddCategory> with AfterLayoutMixin<AddCateg
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return Stack(
       children: [
         Container(
@@ -76,7 +79,7 @@ class AddCategoryState extends State<AddCategory> with AfterLayoutMixin<AddCateg
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                color: Theme.of(context).primaryColorDark,
+                color: colors.mainDark,
                 child: Row(
                   children: [
                     Padding(
@@ -90,12 +93,13 @@ class AddCategoryState extends State<AddCategory> with AfterLayoutMixin<AddCateg
                     Expanded(
                       child: PlatformTextField(
                         controller: searchController,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
                         hintText: 'Search',
+                        style: TextStyle(color: colors.textOnDarkMain),
                         material: (_, __) => MaterialTextFieldData(
                             decoration: InputDecoration(
+
+                                filled: true,
+                                fillColor: colors.mainDark,
                                 border: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                                 enabledBorder: InputBorder.none,
@@ -177,8 +181,10 @@ class AddCategoryState extends State<AddCategory> with AfterLayoutMixin<AddCateg
                 child: Row(
                   children: [
                     Expanded(
-                        child:
-                            TextButton(onPressed: selected != '' ? () => addCategory(context) : null, child: Text(widget.buttonLabel ?? 'Add category'), style: flatButtonStyle)),
+                        child: PlatformButton(
+                      onPressed: selected != '' ? () => addCategory(context) : null,
+                      child: Text(widget.buttonLabel ?? 'Add category'),
+                    )),
                   ],
                 ),
               ),
@@ -192,7 +198,7 @@ class AddCategoryState extends State<AddCategory> with AfterLayoutMixin<AddCateg
               onPressed: () => closeDialog(context),
               icon: FaIcon(
                 FontAwesomeIcons.times,
-                color: Colors.white,
+                color: colors.textOnDarkMain,
                 size: 20,
               )),
         ),

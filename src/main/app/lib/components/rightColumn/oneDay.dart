@@ -1,9 +1,11 @@
-import 'package:spend_spent_spent/components/rightColumn/expense.dart';
-import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/dayExpense.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:spend_spent_spent/components/rightColumn/expense.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/models/dayExpense.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class OneDay extends StatelessWidget {
   DayExpense expense;
@@ -17,6 +19,7 @@ class OneDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     double total = expense.expenses.map((e) => e.amount).reduce((value, element) => value + element);
     List<Widget> widgets = [
       Text(displayDate()),
@@ -28,13 +31,16 @@ class OneDay extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
-          Text('Total:'),
+          Text(
+            'Total:',
+            style: TextStyle(color: colors.text),
+          ),
           Expanded(
               child: Container(
                   alignment: Alignment.centerRight,
                   child: Text(
                     formatCurrency(total),
-                    style: TextStyle(color: Theme.of(context).primaryColor),
+                    style: TextStyle(color: colors.main),
                   ))),
         ],
       ),

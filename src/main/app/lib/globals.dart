@@ -24,7 +24,6 @@ const BROADCAST_LOGGED_IN = 'loggedIn',
 const TABLET = 768.0;
 const BIG_PHONE = 500;
 
-const DUMMY_COLOR = Color.fromRGBO(238, 238, 238, 1);
 
 ButtonStyle flatButtonStyle = TextButton.styleFrom(
   primary: Colors.white,

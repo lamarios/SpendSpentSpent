@@ -8,8 +8,10 @@ import 'package:spend_spent_spent/components/paginationSwitcher.dart';
 import 'package:spend_spent_spent/components/settings/addUserDialog.dart';
 import 'package:spend_spent_spent/components/settings/changePasswordDialog.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/paginatedResults.dart';
 import 'package:spend_spent_spent/models/user.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 
 class ManageUsers extends StatefulWidget {
@@ -87,6 +89,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
   }
 
   showDeleteUserDialog(BuildContext context, String id) {
+    AppColors colors = get(context);
     showPlatformDialog(
         context: context,
         builder: (_) => PlatformAlertDialog(
@@ -96,7 +99,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
                 PlatformDialogAction(
                   child: PlatformText(
                     'Cancel',
-                    style: TextStyle(color: Colors.grey[850]),
+                    style: TextStyle(color: colors.text),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -122,6 +125,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
   }
 
   Widget getUserWidget(BuildContext context) {
+    AppColors colors = get(context);
     if (isTablet(MediaQuery.of(context))) {
       List<TableRow> rows = [
         TableRow(children: [
@@ -211,7 +215,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-              decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(5)),
+              decoration: BoxDecoration(color: colors.containerOnDialogBackground, borderRadius: BorderRadius.circular(5)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -243,7 +247,6 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
                           PlatformButton(
                             child: Text(
                               'Delete',
-                              style: TextStyle(color: Colors.white),
                             ),
                             color: Colors.red,
                             onPressed: () => showDeleteUserDialog(context, e.id!),
@@ -263,6 +266,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -280,7 +284,6 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
                 onPressed: () => addUser(context),
                 child: Text(
                   'Add user',
-                  style: TextStyle(color: Colors.white),
                 ),
               )
             ],

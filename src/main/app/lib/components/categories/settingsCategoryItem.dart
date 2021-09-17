@@ -1,6 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/screens/categorySettings.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/views/addCategory.dart';
 import 'package:flutter/material.dart';
@@ -16,17 +18,17 @@ class SettingsCategoryGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return GestureDetector(
       onTap: () => showAddCategory(context),
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: Colors.white,
             borderRadius: defaultBorder,
-            border: Border.all(width: 3, color: Colors.blue[100]!)),
+            border: Border.all(width: 3, color: colors.main.withOpacity(0.5))),
         child: FaIcon(
           FontAwesomeIcons.cog,
-          color: Colors.blue[100],
+          color: colors.main.withOpacity(0.5),
         ),
       ),
     );

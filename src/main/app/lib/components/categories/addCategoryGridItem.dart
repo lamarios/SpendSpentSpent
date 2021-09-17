@@ -1,11 +1,13 @@
 import 'package:animations/animations.dart';
-import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/utils/dialogs.dart';
-import 'package:spend_spent_spent/views/addCategory.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
+import 'package:spend_spent_spent/views/addCategory.dart';
 
 class AddCategoryGridItem extends StatelessWidget {
   void addCategory(String selected) async {
@@ -17,7 +19,7 @@ class AddCategoryGridItem extends StatelessWidget {
     showModal(
         context: context,
         builder: (context) => Card(
-            margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth:350, maxHeight: 500),
+            margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 500),
             child: AddCategory(
               onSelected: addCategory,
             )));
@@ -25,14 +27,15 @@ class AddCategoryGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return GestureDetector(
       onTap: () => showAddCategory(context),
       child: Container(
         alignment: Alignment.center,
-        decoration: BoxDecoration(color: Colors.white, borderRadius: defaultBorder, border: Border.all(width: 3, color: Colors.blue[100]!)),
+        decoration: BoxDecoration(borderRadius: defaultBorder, border: Border.all(width: 3, color: colors.main.withOpacity(0.5))),
         child: FaIcon(
           FontAwesomeIcons.plus,
-          color: Colors.blue[100],
+          color: colors.main.withOpacity(0.5),
         ),
       ),
     );

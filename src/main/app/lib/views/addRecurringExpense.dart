@@ -4,11 +4,13 @@ import 'package:spend_spent_spent/components/addRecurringExpenseDialog/step2.dar
 import 'package:spend_spent_spent/components/addRecurringExpenseDialog/step3.dart';
 import 'package:spend_spent_spent/components/switcher.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/category.dart';
 import 'package:spend_spent_spent/models/recurringExpense.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class AddRecurringExpenseDialog extends StatefulWidget {
   Function refreshRecurringExpenses;
@@ -126,6 +128,8 @@ class AddRecurringExpenseDialogState extends State<AddRecurringExpenseDialog> wi
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
+
     return Container(
       child: Visibility(
         visible: stepWidget != null,
@@ -151,7 +155,7 @@ class AddRecurringExpenseDialogState extends State<AddRecurringExpenseDialog> wi
                     onPressed: () => backward(context),
                     child: PlatformText(
                       step == 0 ? 'Cancel' : 'Back',
-                      style: TextStyle(color: Colors.grey[850]),
+                      style: TextStyle(color: colors.cancelText),
                     ),
                   ),
                   PlatformDialogAction(

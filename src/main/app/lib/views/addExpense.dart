@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
@@ -12,9 +13,11 @@ import 'package:spend_spent_spent/components/expenseDialog/currencyConverter.dar
 import 'package:spend_spent_spent/components/expenseDialog/keypad.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/category.dart';
 import 'package:spend_spent_spent/models/currencyConversion.dart';
 import 'package:spend_spent_spent/models/expense.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
 
@@ -142,6 +145,8 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
     setState(() {
       saving = true;
     });
+
+    await Future.delayed(panelTransition);
     print('add expense');
     var amount = double.parse(valueToStr(value));
     var date = DateFormat('yyyy-MM-dd').format(expenseDate);
@@ -187,8 +192,9 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
   Widget build(BuildContext context) {
     double iconHeight = getIconHeight(MediaQuery.of(context));
 
+    AppColors colors = get(context);
+
     return Container(
-      decoration: BoxDecoration(color: Colors.white, borderRadius: defaultBorder),
       child: LayoutBuilder(builder: (context, constraints) {
         return Stack(
           children: [
@@ -205,7 +211,7 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: defaultBorder,
-                        color: Colors.grey[350],
+                        color: colors.expenseInputBackground,
                       ),
                       child: Row(
                         children: [
@@ -217,7 +223,7 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
                                     alignment: Alignment.centerRight,
                                     child: Padding(
                                       padding: const EdgeInsets.all(10.0),
-                                      child: Text(valueToStr(value), style: TextStyle(fontSize: 20)),
+                                      child: Text(valueToStr(value), style: TextStyle(fontSize: 20, color: colors.expenseInput)),
                                     ))),
                           ),
                           Visibility(
@@ -264,7 +270,7 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        Expanded(child: TextButton(onPressed: value.length > 0 ? () => addExpense(context) : null, child: Text('Save'), style: flatButtonStyle)),
+                        Expanded(child: PlatformButton(onPressed: value.length > 0 ? () => addExpense(context) : null, child: Text('Save'), )),
                       ],
                     ),
                   ),
@@ -280,18 +286,8 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
               curve: Curves.easeInOutQuart,
               child: Container(
                 alignment: Alignment.center,
-                decoration: BoxDecoration(boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3), //color of shadow
-                    spreadRadius: 2, //spread radius
-                    blurRadius: 3, // blur radius
-                    offset: Offset(0, 2), // changes position of shadow
-                    //first paramerter of offset is left-right
-                    //second parameter is top to down
-                  ),
-                  //you can set more BoxShadow() here
-                ], gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.5], begin: Alignment.bottomCenter, end: Alignment.topRight), borderRadius: defaultBorder),
-                child: Hero(tag: widget.category.icon!, child: DummyFade(running: saving, child: getIcon(widget.category.icon!, size: iconHeight * 0.66))),
+                decoration: BoxDecoration(gradient: defaultGradient(context), borderRadius: BorderRadius.circular(4)),
+                child: Hero(tag: widget.category.icon!, child: DummyFade(running: saving, child: getIcon(widget.category.icon!, size: iconHeight * 0.66, color: colors.iconOnMain))),
               ),
             ),
             Positioned(
@@ -304,7 +300,7 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
                     onPressed: closeDialog,
                     icon: FaIcon(
                       FontAwesomeIcons.times,
-                      color: Colors.white,
+                      color: colors.iconOnMain,
                       size: 20,
                     )),
               ),

@@ -4,11 +4,12 @@ import 'package:after_layout/after_layout.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:spend_spent_spent/globals.dart' as globals;
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class Login extends StatefulWidget {
   Function onLoginSuccess;
@@ -19,15 +20,15 @@ class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
-InputDecoration getFieldDecoration(String label, String hint) {
+InputDecoration getFieldDecoration(String label, String hint, AppColors colors) {
   return InputDecoration(
-      border: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-      labelText: label,
+      border: OutlineInputBorder(borderSide: BorderSide(color: colors.dialogBackground)),
+      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: colors.dialogBackground)),
+      enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: colors.dialogBackground)),
       hintText: hint,
+      hintStyle: TextStyle(color: colors.text.withOpacity(0.3)),
       filled: true,
-      fillColor: Colors.white);
+      fillColor: colors.dialogBackground);
 }
 
 class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
@@ -67,7 +68,7 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    AppColors colors = get(context);
 
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     MediaQueryData mq = MediaQuery.of(context);
@@ -91,20 +92,7 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
               height: height,
               duration: panelTransition,
               curve: Curves.easeInOutQuart,
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3), //color of shadow
-                      spreadRadius: 2, //spread radius
-                      blurRadius: 3, // blur radius
-                      offset: Offset(0, 2), // changes position of shadow
-                      //first paramerter of offset is left-right
-                      //second parameter is top to down
-                    ),
-                    //you can set more BoxShadow() here
-                  ],
-                  gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.5], begin: Alignment.bottomCenter, end: Alignment.topRight),
-                  borderRadius: BorderRadius.circular(tablet ? 20 : 0)),
+              decoration: BoxDecoration(gradient: defaultGradient(context), borderRadius: BorderRadius.circular(tablet ? 20 : 0)),
               child: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.only(bottom: bottom),
@@ -122,29 +110,41 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
                                 padding: EdgeInsets.all(20),
                                 child: Column(
                                   children: [
-                                    Padding(padding: const EdgeInsets.all(8.0), child: getIcon('groceries_bag', size: getIconSize(context), color: Colors.white)),
+                                    Padding(padding: const EdgeInsets.all(8.0), child: getIcon('groceries_bag', size: getIconSize(context), color: colors.iconOnMain)),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Container(alignment: Alignment.centerLeft, child: Text('Server URL', style: TextStyle(color: colors.textOnMain))),
+                                    ),
                                     Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: PlatformTextField(
                                           showCursor: true,
-                                          material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration('Server Url', 'https://sss.ftpix.com')),
                                           controller: urlController,
                                           autocorrect: false,
+                                          material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Email", "user@example.org", colors)),
                                         )),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Container(alignment: Alignment.centerLeft, child: Text('Email', style: TextStyle(color: colors.textOnMain))),
+                                    ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: PlatformTextField(
                                         controller: usernameController,
                                         autocorrect: false,
-                                        material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Email", "user@example.org")),
+                                        material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Email", "user@example.org", colors)),
                                       ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Container(alignment: Alignment.centerLeft, child: Text('Password', style: TextStyle(color: colors.textOnMain))),
                                     ),
                                     Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: PlatformTextField(
                                           controller: passwordController,
                                           obscureText: true,
-                                          material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Password", "")),
+                                          material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Password", "", colors)),
                                         )),
                                     Visibility(
                                       visible: error.length > 0,
@@ -158,7 +158,7 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
                                       child: Row(
                                         children: [
                                           Expanded(
-                                            child: TextButton(style: globals.flatButtonStyle, onPressed: logIn, child: Text('Log in')),
+                                            child: PlatformButton(onPressed: logIn, child: Text('Log in')),
                                           ),
                                         ],
                                       ),

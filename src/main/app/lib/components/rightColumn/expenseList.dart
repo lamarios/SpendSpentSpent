@@ -33,7 +33,6 @@ class ExpenseListState extends State<ExpenseList> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('o'),
         SingleChildScrollView(child: Column(
           children: expenses.values.map((e) => OneDay(expense: e)).toList(),
         ),)

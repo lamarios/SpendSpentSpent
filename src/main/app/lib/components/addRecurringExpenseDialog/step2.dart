@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 import '../../globals.dart';
 
@@ -86,6 +88,7 @@ class Step2State extends State<Step2> {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return Container(
       alignment: Alignment.topCenter,
       child: Column(
@@ -103,12 +106,12 @@ class Step2State extends State<Step2> {
                         child: AnimatedContainer(
                           decoration: BoxDecoration(
                             borderRadius: defaultBorder,
-                            color: (widget.type ?? -1) != index ? Colors.white : Theme.of(context).primaryColor,
+                            color: (widget.type ?? -1) != index ? colors.dialogBackground: colors.main,
                           ),
                           duration: panelTransition,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(e, style: TextStyle(fontSize: 15, color: (widget.type ?? -1) == index ? Colors.white : Theme.of(context).primaryColor)),
+                            child: Text(e, style: TextStyle(fontSize: 15, color: (widget.type ?? -1) == index ? colors.textOnMain : colors.main)),
                           ),
                         ),
                       )))
@@ -131,12 +134,12 @@ class Step2State extends State<Step2> {
                           child: AnimatedContainer(
                             decoration: BoxDecoration(
                               borderRadius: defaultBorder,
-                              color: (widget.typeParam ?? -1) != index ? Colors.white : Theme.of(context).primaryColor,
+                              color: (widget.typeParam ?? -1) != index ? colors.dialogBackground : colors.main,
                             ),
                             duration: panelTransition,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(e, style: TextStyle(fontSize: 15, color: (widget.typeParam ?? -1) == index ? Colors.white : Theme.of(context).primaryColor)),
+                              child: Text(e, style: TextStyle(fontSize: 15, color: (widget.typeParam ?? -1) == index ? colors.textOnMain : colors.main)),
                             ),
                           ),
                         )))

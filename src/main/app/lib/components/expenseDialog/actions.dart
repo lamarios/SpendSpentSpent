@@ -1,10 +1,12 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
 
 class ExpenseActions extends StatefulWidget {
   Function setDate, setNote, setLocation, enableCurrencyConversion;
@@ -59,6 +61,7 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     // TODO: implement build
     return Column(
       children: [
@@ -67,7 +70,7 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
           child: Row(
             children: [
               TextButton(
-                  style: flatButtonStyle,
+                  // style: flatButtonStyle,
                   onPressed: selectDate,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 4),
@@ -79,17 +82,15 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
                     onPressed: () {
                       widget.setLocation(!widget.location);
                     },
-                    icon: FaIcon(FontAwesomeIcons.locationArrow, color: widget.location ? Theme.of(context).accentColor : Colors.black)),
+                    icon: FaIcon(FontAwesomeIcons.locationArrow, color: widget.location ? colors.main : colors.text)),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: IconButton(
-                    onPressed: () => showNoteDialog(context), icon: FaIcon(FontAwesomeIcons.commentDots, color: noteController.text.length > 0 ? Theme.of(context).accentColor : Colors.black)),
+                child: IconButton(onPressed: () => showNoteDialog(context), icon: FaIcon(FontAwesomeIcons.commentDots, color: noteController.text.length > 0 ? colors.main : colors.text)),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 0),
-                child:
-                    IconButton(onPressed: enableCurrencyConversion, icon: FaIcon(FontAwesomeIcons.dollarSign, color: widget.currencyConversionEnabled ? Theme.of(context).accentColor : Colors.black)),
+                child: IconButton(onPressed: enableCurrencyConversion, icon: FaIcon(FontAwesomeIcons.dollarSign, color: widget.currencyConversionEnabled ? colors.main : colors.text)),
               ),
             ],
           ),

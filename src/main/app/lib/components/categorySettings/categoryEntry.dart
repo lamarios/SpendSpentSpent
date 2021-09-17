@@ -1,6 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/category.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/views/addCategory.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,16 +24,17 @@ class CategoryEntry extends StatelessWidget {
   }
 
   deleteIcon(BuildContext context) {
+    AppColors colors = get(context);
     showPlatformDialog(
       context: context,
       builder: (_) => PlatformAlertDialog(
-        title: Text('Delete cateogory'),
+        title: Text('Delete category'),
         content: Text('The category will only be deleted when you press the save button, this will delete all related expenses.'),
         actions: <Widget>[
           PlatformDialogAction(
             child: PlatformText(
               'Cancel',
-              style: TextStyle(color: Colors.grey[850]),
+              style: TextStyle(color: colors.cancelText),
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
@@ -52,15 +55,16 @@ class CategoryEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
-        color: Colors.grey[200],
+        color: colors.containerOnDialogBackground,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0, left: 35, right: 8, bottom: 8),
           child: Row(
             children: [
-              getIcon(category.icon!, color: Theme.of(context).primaryColor, size: 20),
+              getIcon(category.icon!, color: colors.main, size: 20),
               Spacer(),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,

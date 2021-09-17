@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:spend_spent_spent/components/dummies/dummyExpense.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class DummyDay extends StatelessWidget {
   int expenses;
@@ -9,6 +11,7 @@ class DummyDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     double total = 0;
     List<Widget> widgets = [
       Container(
@@ -16,7 +19,7 @@ class DummyDay extends StatelessWidget {
         height: 10,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(25)),
-          color: DUMMY_COLOR,
+          color: colors.dummy,
         ),
       ),
     ];
@@ -34,7 +37,7 @@ class DummyDay extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: Text(
                     formatCurrency(total),
-                    style: TextStyle(color: DUMMY_COLOR),
+                    style: TextStyle(color: colors.dummy),
                   ))),
         ],
       ),

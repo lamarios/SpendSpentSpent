@@ -6,7 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/components/dummies/dummyExpenses.dart';
 import 'package:spend_spent_spent/components/rightColumn/oneDay.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/dayExpense.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class RightColumn extends StatefulWidget {
   RightColumnState createState() => RightColumnState();
@@ -82,6 +84,7 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
       child: Column(
@@ -89,15 +92,7 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(25)),
-              gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.75], begin: Alignment.bottomCenter, end: Alignment.topRight),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 3,
-                  blurRadius: 5,
-                  offset: Offset(0, 3),
-                )
-              ],
+              gradient: defaultGradient(context),
             ),
             child: Row(
               children: [
@@ -108,16 +103,16 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
                       value: selected,
                       items: months
                           .map((e) => DropdownMenuItem(
-                                child: Text(convertDate(e)),
+                                child: Text(convertDate(e), style: TextStyle(color: colors.textOnMain),),
                                 value: e,
                               ))
                           .toList(),
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: colors.textOnMain),
                       isExpanded: true,
-                      iconEnabledColor: Colors.white,
+                      iconEnabledColor: colors.textOnMain,
                       underline: SizedBox.shrink(),
                       isDense: true,
-                      dropdownColor: Colors.blue,
+                      dropdownColor: colors.main,
                       onChanged: monthChanged,
                     ),
                   ),
@@ -129,13 +124,13 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                Text('Total:'),
+                Text('Total:', style: TextStyle(color: colors.text)),
                 Expanded(
                     child: Container(
                         alignment: Alignment.centerRight,
                         child: Text(
                           formatCurrency(total),
-                          style: TextStyle(color: Theme.of(context).primaryColor),
+                          style: TextStyle(color: colors.main),
                         ))),
               ],
             ),

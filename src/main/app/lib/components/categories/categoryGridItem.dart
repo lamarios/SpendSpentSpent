@@ -1,7 +1,9 @@
 import 'package:animations/animations.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/category.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/views/addExpense.dart';
 import 'package:flutter/material.dart';
@@ -23,38 +25,22 @@ class CategoryGridItemState extends State<CategoryGridItem> {
         context: context,
         builder: (context) => Card(
         margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 650),
-            shape: RoundedRectangleBorder(borderRadius: defaultBorder),
             child: AddExpense(category: widget.category)));
   }
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return GestureDetector(
       onTap: () => showDialog(context),
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
             borderRadius: defaultBorder,
-            border: Border.all(width: 2, color: Colors.blue[100]!),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.3), //color of shadow
-                spreadRadius: 2, //spread radius
-                blurRadius: 3, // blur radius
-                offset: Offset(0, 2), // changes position of shadow
-                //first paramerter of offset is left-right
-                //second parameter is top to down
-              ),
-              //you can set more BoxShadow() here
-            ],
-            gradient: LinearGradient(
-                colors: [Colors.blueAccent, Colors.blue],
-                stops: [0, 0.5],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topRight)),
+            gradient: defaultGradient(context)),
         child: Hero(
             tag: widget.category.icon!,
-            child: getIcon(widget.category.icon!, size: 40)),
+            child: getIcon(widget.category.icon!, size: 40, color: colors.iconOnMain)),
       ),
     );
   }

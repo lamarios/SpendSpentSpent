@@ -3,7 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/category.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class Step1 extends StatefulWidget {
   Function setCategory;
@@ -33,7 +35,8 @@ class Step1State extends State<Step1> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
-    print('selected ${widget.selected}');
+
+    AppColors colors = get(context);
     return Container(
       alignment: Alignment.topCenter,
       child: Padding(
@@ -50,12 +53,12 @@ class Step1State extends State<Step1> with AfterLayoutMixin {
                         child: AnimatedContainer(
                           decoration: BoxDecoration(
                             borderRadius: defaultBorder,
-                            color: (widget.selected?.icon ?? '') != e.icon ? Colors.white : Theme.of(context).primaryColor,
+                            color: (widget.selected?.icon ?? '') != e.icon ? colors.dialogBackground : colors.main,
                           ),
                           duration: panelTransition,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: getIcon(e.icon!, size: 30, color: (widget.selected?.icon ?? '') == e.icon ? Colors.white : Theme.of(context).primaryColor),
+                            child: getIcon(e.icon!, size: 30, color: (widget.selected?.icon ?? '') == e.icon ? colors.iconOnMain : colors.main),
                           ),
                         ),
                       ))

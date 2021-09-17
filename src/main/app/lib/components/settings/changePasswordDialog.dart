@@ -6,6 +6,8 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:random_string/random_string.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class ChangePasswordDialog extends StatefulWidget {
   String userId;
@@ -41,6 +43,7 @@ class ChangePasswordDialogState extends State<ChangePasswordDialog> {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -67,12 +70,12 @@ class ChangePasswordDialogState extends State<ChangePasswordDialog> {
                 },
                 child: PlatformText(
                   'Cancel',
-                  style: TextStyle(color: Colors.grey[850]),
+                  style: TextStyle(color: colors.text),
                 ),
               ),
               PlatformDialogAction(
                 onPressed: passwordController.text.trim().length > 0 ? () => savePassword(context) : null,
-                child: PlatformText('Save'),
+                child: PlatformText('Save', style: TextStyle(color: colors.main)),
               )
             ],
           )

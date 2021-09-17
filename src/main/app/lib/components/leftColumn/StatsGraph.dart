@@ -1,10 +1,12 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/graphDataPoint.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/models/graphDataPoint.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class StatsGraph extends StatefulWidget {
   bool monthly;
@@ -90,20 +92,21 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
     }
   }
 
-  LineChartData getData() {
+  LineChartData getData(BuildContext context) {
+    AppColors colors = get(context);
     return LineChartData(
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: const Color.fromRGBO(255, 255, 255, 0.2),
+            color: colors.textOnMain.withOpacity(0.2),
             strokeWidth: 1,
           );
         },
         getDrawingVerticalLine: (value) {
           return FlLine(
-            color: const Color.fromRGBO(255, 255, 255, 0.2),
+            color: colors.textOnMain.withOpacity(0.2),
             strokeWidth: 1,
           );
         },
@@ -116,7 +119,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
           showTitles: true,
           reservedSize: 35,
           rotateAngle: 90,
-          getTextStyles: (context, value) => const TextStyle(color: Colors.white, fontSize: 10),
+          getTextStyles: (context, value) => TextStyle(color: colors.textOnMain, fontSize: 10),
           getTitles: (value) {
             return graphDataPoints[value.toInt()].date;
           },
@@ -125,18 +128,20 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
         leftTitles: SideTitles(
           showTitles: true,
           reservedSize: 50,
-          getTextStyles: (context, value) => const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 10,
-          ),
+          getTextStyles: (context, value) {
+            return TextStyle(
+              color: colors.textOnMain,
+              fontWeight: FontWeight.bold,
+              fontSize: 10,
+            );
+          },
           getTitles: (value) {
             return formatCurrency(value);
           },
           margin: 12,
         ),
       ),
-      borderData: FlBorderData(show: true, border: Border.all(color: const Color.fromRGBO(255, 255, 255, 0.3), width: 1)),
+      borderData: FlBorderData(show: true, border: Border.all(color: colors.textOnMain.withOpacity(0.3), width: 1)),
       minX: 0,
       minY: avg && avgData.length > 0 ? (avgData[0].y * 0.7).ceil().toDouble() : 0,
       maxY: avg && avgData.length > 0 ? (avgData[0].y * 1.3).ceil().toDouble() : null,
@@ -144,7 +149,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
         LineChartBarData(
           spots: avg ? avgData : graphData,
           isCurved: false,
-          colors: [Colors.white],
+          colors: [colors.textOnMain],
           barWidth: 2,
           isStrokeCapRound: true,
           dotData: FlDotData(
@@ -152,7 +157,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
           ),
           belowBarData: BarAreaData(
             show: true,
-            colors: gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+            colors: [colors.textOnMain.withOpacity(0), colors.textOnMain.withOpacity(1)].map((color) => color.withOpacity(0.3)).toList(),
           ),
         ),
       ],
@@ -161,6 +166,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return Column(
       children: [
         Row(
@@ -177,14 +183,14 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                 child: AnimatedContainer(
                     duration: panelTransition,
                     decoration: BoxDecoration(
-                      color: avg ? Colors.white : Theme.of(context).primaryColorDark,
+                      color: avg ? colors.text : colors.iconOnMain,
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
                       child: Text(
                         'avg',
-                        style: TextStyle(color: avg ? Theme.of(context).primaryColorDark : Colors.white, fontSize: 10),
+                        style: TextStyle(color: avg ? colors.iconOnMain : colors.text, fontSize: 10),
                       ),
                     )),
               ),
@@ -197,7 +203,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
           child: Container(
               child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: LineChart(getData()),
+            child: LineChart(getData(context)),
           )),
         )),
         Padding(
@@ -219,14 +225,14 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                   padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14),
                   child: FaIcon(
                     FontAwesomeIcons.minus,
-                    color: Colors.white,
+                    color: colors.textOnMain,
                     size: 15,
                   ),
                 ),
               ),
               Text(
                 count.toString() + (widget.monthly ? ' Months' : ' Years'),
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: colors.textOnMain),
               ),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
@@ -241,7 +247,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                   child: FaIcon(
                     FontAwesomeIcons.plus,
                     size: 15,
-                    color: Colors.white,
+                    color: colors.textOnMain,
                   ),
                 ),
               ),

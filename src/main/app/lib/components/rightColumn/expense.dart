@@ -1,5 +1,7 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/expense.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 const double MAP_HEIGHT = 200;
 const double NOTE_HEIGHT = 30;
@@ -53,6 +56,7 @@ class OneExpenseState extends State<OneExpense> {
   }
 
   showDeleteExpenseDialog(BuildContext context) {
+    AppColors colors = get(context);
     showPlatformDialog(
         context: context,
         builder: (_) => PlatformAlertDialog(
@@ -60,7 +64,7 @@ class OneExpenseState extends State<OneExpense> {
               content: Text('This will only delete this expense, it is not recoverable.'),
               actions: <Widget>[
                 PlatformDialogAction(
-                  child: PlatformText('Cancel', style: TextStyle(color: Colors.grey[850]),),
+                  child: PlatformText('Cancel', style: TextStyle(color: colors.cancelText),),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -98,6 +102,7 @@ class OneExpenseState extends State<OneExpense> {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return GestureDetector(
       onTap: openContainer,
       child: Row(
@@ -112,15 +117,7 @@ class OneExpenseState extends State<OneExpense> {
                 height: opened ? getOpenedHeight() : 40,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(25)),
-                  gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.75], begin: Alignment.bottomCenter, end: Alignment.topRight),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 3,
-                      blurRadius: 5,
-                      offset: Offset(0, 3),
-                    )
-                  ],
+                  gradient: defaultGradient(context),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -128,13 +125,13 @@ class OneExpenseState extends State<OneExpense> {
                     children: [
                       Row(
                         children: [
-                          getIcon(widget.expense.category.icon!, size: 20),
+                          getIcon(widget.expense.category.icon!, size: 20, color: colors.iconOnMain),
                           Expanded(
                               child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Text(
                               formatCurrency(widget.expense.amount),
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: colors.textOnMain),
                             ),
                           )),
                           Visibility(
@@ -143,7 +140,7 @@ class OneExpenseState extends State<OneExpense> {
                                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: FaIcon(
                                   FontAwesomeIcons.locationArrow,
-                                  color: Colors.white,
+                                  color: colors.textOnMain,
                                   size: 15,
                                 ),
                               )),
@@ -153,7 +150,7 @@ class OneExpenseState extends State<OneExpense> {
                                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: FaIcon(
                                   FontAwesomeIcons.commentDots,
-                                  color: Colors.white,
+                                  color: colors.textOnMain,
                                   size: 15,
                                 ),
                               )),
@@ -163,7 +160,7 @@ class OneExpenseState extends State<OneExpense> {
                                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: FaIcon(
                                   FontAwesomeIcons.redo,
-                                  color: Colors.white,
+                                  color: colors.textOnMain,
                                   size: 15,
                                 ),
                               )),
@@ -181,7 +178,7 @@ class OneExpenseState extends State<OneExpense> {
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                                         child: Container(
-                                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: Theme.of(context).primaryColorDark),
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: colors.mainDark),
                                           height: NOTE_HEIGHT,
                                           child: Row(
                                             children: [
@@ -189,13 +186,13 @@ class OneExpenseState extends State<OneExpense> {
                                                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                                 child: FaIcon(
                                                   FontAwesomeIcons.commentDots,
-                                                  color: Colors.white,
+                                                  color: colors.textOnDarkMain,
                                                   size: 15,
                                                 ),
                                               ),
                                               Text(
                                                 widget.expense.note ?? '',
-                                                style: TextStyle(color: Colors.white),
+                                                style: TextStyle(color: colors.textOnDarkMain),
                                               )
                                             ],
                                           ),
@@ -221,7 +218,7 @@ class OneExpenseState extends State<OneExpense> {
                                                     alignment: Alignment.center,
                                                     decoration: BoxDecoration(
                                                       borderRadius: BorderRadius.all(Radius.circular(25)),
-                                                      gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.75], begin: Alignment.bottomCenter, end: Alignment.topRight),
+                                                      gradient: defaultGradient(context),
                                                     ),
                                                     child: getIcon(widget.expense.category.icon!, color: Colors.white, size: 20),
                                                   ),
@@ -237,7 +234,6 @@ class OneExpenseState extends State<OneExpense> {
                                       Expanded(
                                         child: PlatformButton(
                                           onPressed: () => showDeleteExpenseDialog(context),
-                                          color: Theme.of(context).primaryColorDark,
                                           child: Text(
                                             'Delete',
                                             style: TextStyle(color: Colors.red),

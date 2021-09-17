@@ -1,12 +1,14 @@
 import 'dart:async';
 
-import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/icons.dart';
-import 'package:spend_spent_spent/models/recurringExpense.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/models/recurringExpense.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class Expense extends StatefulWidget {
   RecurringExpense expense;
@@ -53,6 +55,7 @@ class ExpenseState extends State<Expense> {
   }
 
   deleteRecurringExpense(BuildContext context) {
+    AppColors colors = get(context);
     showPlatformDialog(
       context: context,
       builder: (_) => PlatformAlertDialog(
@@ -61,7 +64,10 @@ class ExpenseState extends State<Expense> {
         actions: <Widget>[
           PlatformDialogAction(
             onPressed: () => Navigator.pop(context),
-            child: PlatformText('Cancel', style: TextStyle(color: Colors.grey[800]),),
+            child: PlatformText(
+              'Cancel',
+              style: TextStyle(color: colors.cancelText),
+            ),
           ),
           PlatformDialogAction(
             onPressed: () async {
@@ -69,7 +75,7 @@ class ExpenseState extends State<Expense> {
               widget.refreshExpenses();
               Navigator.pop(context);
             },
-            child: PlatformText('Ok'),
+            child: PlatformText('Delete', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -78,6 +84,7 @@ class ExpenseState extends State<Expense> {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: toggle,
@@ -89,15 +96,7 @@ class ExpenseState extends State<Expense> {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(25)),
-            gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.75], begin: Alignment.bottomCenter, end: Alignment.topRight),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 3,
-                blurRadius: 5,
-                offset: Offset(0, 3),
-              )
-            ],
+            gradient: defaultGradient(context),
           ),
           duration: panelTransition,
           child: Padding(
@@ -106,19 +105,19 @@ class ExpenseState extends State<Expense> {
               children: [
                 Row(
                   children: [
-                    getIcon(widget.expense.category.icon ?? '', size: 20, color: Colors.white),
+                    getIcon(widget.expense.category.icon ?? '', size: 20, color: colors.textOnMain),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
                           formatCurrency(widget.expense.amount),
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: colors.textOnMain),
                         ),
                       ),
                     ),
                     Text(
                       getType(widget.expense.type ?? 0),
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: colors.textOnMain),
                     )
                   ],
                 ),
@@ -137,14 +136,14 @@ class ExpenseState extends State<Expense> {
                                   visible: widget.expense.lastOccurrence != null,
                                   child: Text(
                                     'Last occurrence: ' + (widget.expense.lastOccurrence ?? ''),
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: colors.textOnMain),
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 20.0),
                                   child: Text(
                                     'Next occurrence: ' + (widget.expense.nextOccurrence ?? ''),
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: colors.textOnMain),
                                   ),
                                 ),
                               ],
@@ -161,10 +160,9 @@ class ExpenseState extends State<Expense> {
                             child: FadeIn(
                           duration: panelTransition,
                           curve: Curves.easeInOutQuart,
-                          child: TextButton(
+                          child: PlatformButton(
                             child: Text('Delete', style: TextStyle(color: Colors.red)),
                             onPressed: () => deleteRecurringExpense(context),
-                            style: flatButtonStyle,
                           ),
                         )),
                       ],
