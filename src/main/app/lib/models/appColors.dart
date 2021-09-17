@@ -17,11 +17,15 @@ class AppColors {
       buttonText,
       statsBackground,
       textOnMain,
-      textOnDarkMain;
+      textOnDarkMain,
+      announcement,
+      announcementText;
   final MaterialColor materialColor;
 
   AppColors(
       {required this.materialColor,
+      required this.announcementText,
+      required this.announcement,
       required this.textOnDarkMain,
       required this.background,
       required this.containerOnDialogBackground,

@@ -15,6 +15,7 @@ import 'package:spend_spent_spent/models/paginatedResults.dart';
 import 'package:spend_spent_spent/models/pagination.dart';
 import 'package:spend_spent_spent/models/settings.dart';
 
+import 'models/config.dart';
 import 'models/recurringExpense.dart';
 import 'models/searchCategories.dart';
 import 'models/user.dart';
@@ -60,6 +61,7 @@ const USER_UPDATE_PASSWORD = API_URL + "/User/{0}/setPassword";
 const USER_ADD_USER = API_URL + "/User";
 const USER_DELETE_USER = API_URL + "/User/{0}";
 const CURRENCY_GET = API_URL + '/Currency/{0}/{1}';
+const CONFIG = API_ROOT + 'config';
 
 const List<String> emptyList = [];
 
@@ -387,6 +389,19 @@ class Service {
     processResponse(response);
 
     return true;
+  }
+
+  Future<Config> getServerConfig(String url) async {
+    if (!url.endsWith('/')) {
+      url += '/';
+    }
+
+    url += 'config';
+
+    final response = await http.get(Uri.parse(url));
+    processResponse(response);
+
+    return Config.fromJson(jsonDecode(response.body));
   }
 
   void processResponse(Response response) {

@@ -4,6 +4,8 @@ import 'package:spend_spent_spent/models/appColors.dart';
 final Map<Brightness, AppColors> COLORS = {
   Brightness.light: AppColors(
       materialColor: Colors.blue,
+      announcement: Colors.amberAccent.shade100,
+      announcementText: Colors.grey.shade800,
       main: Colors.blue,
       mainDark: Colors.blue.shade800,
       iconOnMain: Colors.white,
@@ -23,6 +25,8 @@ final Map<Brightness, AppColors> COLORS = {
       cancelText: Colors.grey.shade700),
   Brightness.dark: AppColors(
       statsBackground: Colors.grey.shade900,
+      announcement: Colors.amberAccent.shade100,
+      announcementText: Colors.grey.shade800,
       iconOnMain: Colors.blue.shade900,
       mainDark: Colors.blue.shade800,
       background: Colors.black,
