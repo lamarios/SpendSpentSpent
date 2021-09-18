@@ -404,6 +404,18 @@ class Service {
     return Config.fromJson(jsonDecode(response.body));
   }
 
+  Future<bool> signUp(String url, User user) async {
+    if (!url.endsWith('/')) {
+      url += '/';
+    }
+
+    url += 'SignUp';
+
+    final response = await http.post(Uri.parse(url), body: jsonEncode(user), headers: {'Content-Type': 'application/json'});
+    processResponse(response);
+    return true;
+  }
+
   void processResponse(Response response) {
     switch (response.statusCode) {
       case 200:

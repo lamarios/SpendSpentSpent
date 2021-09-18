@@ -69,6 +69,9 @@ public class UserSessionController {
             throw new Exception("Signups not allowed");
         }
 
+        // set users as non admin by default
+        user.setAdmin(false);
+
         User newUser = userService.createUser(user);
 
         final UserDetails userDetails = jwtUserDetailsService
