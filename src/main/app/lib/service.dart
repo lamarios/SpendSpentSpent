@@ -416,6 +416,19 @@ class Service {
     return true;
   }
 
+  Future<bool> resetPassword(String url, String email) async {
+    if (!url.endsWith('/')) {
+      url += '/';
+    }
+
+    url += 'ResetPasswordRequest';
+
+    final response = await http.post(Uri.parse(url), body: jsonEncode(email), headers: {'Content-Type': 'application/json'});
+    print(response.body);
+    processResponse(response);
+    return true;
+  }
+
   void processResponse(Response response) {
     switch (response.statusCode) {
       case 200:

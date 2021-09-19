@@ -45,30 +45,35 @@ public class ResetPasswordService {
     }
 
     public boolean createResetPasswordRequest(String email) throws SQLException {
-        Optional.ofNullable(userService.getByEmail(email))
-                .ifPresent(u -> {
-                    try {
-                        ResetPassword resetPassword = new ResetPassword();
-                        resetPassword.setUser(u);
-                        // it expires in a day
-                        LocalDateTime expiry = LocalDateTime.now().plusDays(1);
-                        resetPassword.setExpiryDate(Timestamp.valueOf(expiry).getTime());
-                        resetPasswordDao.create(resetPassword);
+        try {
+            Optional.ofNullable(userService.getByEmail(email))
+                    .ifPresent(u -> {
+                        try {
+                            ResetPassword resetPassword = new ResetPassword();
+                            resetPassword.setUser(u);
+                            // it expires in a day
+                            LocalDateTime expiry = LocalDateTime.now().plusDays(1);
+                            resetPassword.setExpiryDate(Timestamp.valueOf(expiry).getTime());
+                            resetPasswordDao.create(resetPassword);
 
-                        Map<String, Object> templateData = new HashMap<>();
+                            Map<String, Object> templateData = new HashMap<>();
 
-                        String resetPasswordUrl = rootUrl + "/reset-password?reset-id=" + resetPassword.getId().toString();
-                        templateData.put("url", resetPasswordUrl);
-                        templateData.put("firstName", u.getFirstName());
+                            String resetPasswordUrl = rootUrl + "/reset-password?reset-id=" + resetPassword.getId().toString();
+                            templateData.put("url", resetPasswordUrl);
+                            templateData.put("firstName", u.getFirstName());
 
-                        emailService.sendTemplate(u.getEmail(), "[SpendSpentSpent] Reset password request", "email/reset-password.ftl", templateData);
-                        // sending email
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                            emailService.sendTemplate(u.getEmail(), "[SpendSpentSpent] Reset password request", "email/reset-password.ftl", templateData);
+                            // sending email
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+        } catch (Exception e) {
+            logger.error("error while resetting password", e);
+        }
+
         clearExpiredRequests();
-        // never fail a reset password request, so peopel can't try to find emails in system
+        // never fail a reset password request, so people can't try to find emails in system
         return true;
     }
 

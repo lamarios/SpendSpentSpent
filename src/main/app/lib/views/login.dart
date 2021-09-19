@@ -12,7 +12,10 @@ import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/config.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/views/welcome/loginForm.dart';
+import 'package:spend_spent_spent/views/welcome/resetPassword.dart';
 import 'package:spend_spent_spent/views/welcome/signUp.dart';
+
+enum Page { login, resetPassword, signUp }
 
 class Login extends StatefulWidget {
   Function onLoginSuccess;
@@ -38,7 +41,7 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
   SharedAxisTransitionType? _transitionType = SharedAxisTransitionType.horizontal;
   Config? config;
   String loginError = '';
-  bool showSignUp = false;
+  Page page = Page.login;
   TextEditingController urlController = TextEditingController(text: 'https://sss.ftpix.com');
   Timer? debounce;
   Widget toDisplay = SizedBox.shrink();
@@ -83,7 +86,13 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
 
   signUp(bool signUp) {
     setState(() {
-      this.showSignUp = signUp;
+      this.page = signUp ? Page.signUp : Page.login;
+    });
+  }
+
+  resetPassword(bool resetPassword) {
+    setState(() {
+      this.page = resetPassword ? Page.resetPassword : Page.login;
     });
   }
 
@@ -132,7 +141,7 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
                               animation: rotate,
                               child: child,
                               builder: (BuildContext context, Widget? child) {
-                                final angle = (ValueKey(showSignUp) != widget.key) ? min(rotate.value, pi / 2) : rotate.value;
+                                final angle = (ValueKey(page) != widget.key) ? min(rotate.value, pi / 2) : rotate.value;
                                 return Transform(
                                   transform: Matrix4.rotationY(angle),
                                   child: child,
@@ -140,16 +149,19 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
                                 );
                               });
                         },
-                        child: showSignUp
-                            ? SignUp(key: ValueKey(true), onBack: () => signUp(false), server: urlController.text.trim())
-                            : LoginForm(
-                                error: loginError,
-                                key: ValueKey(false),
-                                urlController: urlController,
-                                config: config,
-                                logIn: logIn,
-                                showSignUp: () => signUp(true),
-                              ),
+                        child: page == Page.signUp
+                            ? SignUp(key: ValueKey(page), onBack: () => signUp(false), server: urlController.text.trim())
+                            : page == Page.resetPassword
+                                ? ResetPassword(onBack: () => resetPassword(false), server: urlController.text.trim(), key: ValueKey(page))
+                                : LoginForm(
+                                    error: loginError,
+                                    key: ValueKey(false),
+                                    urlController: urlController,
+                                    config: config,
+                                    logIn: logIn,
+                                    showSignUp: () => signUp(true),
+                                    showResetPassword: () => resetPassword(true)
+                                  ),
                       ),
                     ),
                   ),

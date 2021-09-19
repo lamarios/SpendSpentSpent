@@ -12,13 +12,13 @@ import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/views/login.dart';
 
 class LoginForm extends StatefulWidget {
-  Function showSignUp, logIn;
+  Function showSignUp, logIn, showResetPassword;
   Config? config;
   TextEditingController urlController;
   Key key;
   String error;
 
-  LoginForm({required this.error, required this.key, this.config, required this.showSignUp, required this.logIn, required this.urlController});
+  LoginForm({required this.showResetPassword, required this.error, required this.key, this.config, required this.showSignUp, required this.logIn, required this.urlController});
 
   @override
   LoginFormState createState() => LoginFormState();
@@ -116,6 +116,15 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                                 onPressed: () => widget.showSignUp(),
                                 child: Text(
                                   'or Sign Up',
+                                  style: TextStyle(color: colors.text),
+                                )),
+                          ),
+                          Visibility(
+                            visible: widget.config?.canResetPassword ?? false,
+                            child: TextButton(
+                                onPressed: () => widget.showResetPassword(),
+                                child: Text(
+                                  'Forgot password ?',
                                   style: TextStyle(color: colors.text),
                                 )),
                           )
