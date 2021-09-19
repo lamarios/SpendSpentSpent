@@ -16,7 +16,7 @@ class Preferences {
   static Future<String> get(String key, [defaultValue = ""]) async {
     final prefs = await SharedPreferences.getInstance();
     var value = prefs.getString(key);
-    return value == null ? defaultValue : value;
+    return value == null  || value.trim().length == 0? defaultValue : value;
   }
 
   static Future<void> setInt(String key, int value) async {

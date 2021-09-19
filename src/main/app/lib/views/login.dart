@@ -193,6 +193,7 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
   @override
   Future<void> afterFirstLayout(BuildContext context) async {
     String server = await Preferences.get(Preferences.SERVER_URL, 'https://sss.ftpix.com');
+    print('server: $server');
     setState(() {
       urlController.text = server;
     });

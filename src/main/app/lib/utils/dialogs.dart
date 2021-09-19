@@ -30,6 +30,7 @@ void showPromptDialog(BuildContext context, String title, String label, TextEdit
           content: PlatformTextField(
             controller: controller,
             maxLines: maxLines,
+            keyboardType: TextInputType.multiline,
           ),
           actions: <Widget>[
             PlatformDialogAction(

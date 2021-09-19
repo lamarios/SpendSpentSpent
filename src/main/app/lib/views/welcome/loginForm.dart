@@ -62,6 +62,7 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                               child: PlatformTextField(
                                 showCursor: true,
                                 controller: widget.urlController,
+                                keyboardType: TextInputType.url,
                                 autocorrect: false,
                                 material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("", "https://sss-server.example.com", colors)),
                               )),
@@ -73,6 +74,7 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                             padding: const EdgeInsets.all(8.0),
                             child: PlatformTextField(
                               controller: usernameController,
+                              keyboardType: TextInputType.emailAddress,
                               autocorrect: false,
                               material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Email", "user@example.org", colors)),
                             ),

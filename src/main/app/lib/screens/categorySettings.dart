@@ -12,7 +12,6 @@ import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/category.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
-import 'package:spend_spent_spent/utils/dialogs.dart';
 
 class CategorySettingsScreen extends StatefulWidget {
   @override
@@ -82,6 +81,7 @@ class CategorySettingsScreenState extends State<CategorySettingsScreen> with Aft
   Widget build(BuildContext context) {
     AppColors colors = get(context);
     return PlatformScaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: PlatformAppBar(
           title: PlatformText('Category Settings'),
           trailingActions: [],

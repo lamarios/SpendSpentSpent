@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:spend_spent_spent/globals.dart';
@@ -96,6 +97,7 @@ class SignUpState extends State<SignUp> {
             child: PlatformTextField(
               controller: usernameController,
               autocorrect: false,
+              keyboardType: TextInputType.emailAddress,
               material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Email", "user@example.org", colors)),
             ),
           ),
@@ -129,7 +131,8 @@ class SignUpState extends State<SignUp> {
               padding: const EdgeInsets.all(8.0),
               child: PlatformTextField(
                 controller: firstNameController,
-                obscureText: false,
+                keyboardType: TextInputType.name,
+                autocorrect: false,
                 material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("First name", "John", colors)),
               )),
           Padding(
@@ -140,7 +143,8 @@ class SignUpState extends State<SignUp> {
               padding: const EdgeInsets.all(8.0),
               child: PlatformTextField(
                 controller: lastNameController,
-                obscureText: true,
+                keyboardType: TextInputType.name,
+                autocorrect: false,
                 material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Last name", "Doe", colors)),
               )),
           Visibility(

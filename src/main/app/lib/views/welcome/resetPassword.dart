@@ -56,6 +56,7 @@ class ResetPasswordState extends State<ResetPassword> {
             child: PlatformTextField(
               controller: usernameController,
               autocorrect: false,
+              keyboardType: TextInputType.emailAddress,
               material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Email", "user@example.org", colors)),
             ),
           ),

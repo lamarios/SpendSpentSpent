@@ -216,6 +216,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
 
     return PlatformScaffold(
       appBar: PlatformAppBar(title: PlatformText('Settings')),
+      backgroundColor: Theme.of(context).backgroundColor,
       // body: Visibility(visible: masterDetail != null, child: masterDetail ?? Container()),
       body: MasterDetail(
         key: masterDetailKey,

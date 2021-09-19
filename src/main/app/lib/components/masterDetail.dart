@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -33,6 +34,7 @@ class MasterDetailState extends State<MasterDetail> {
               context: context,
               builder: (context) => PlatformScaffold(
                     appBar: PlatformAppBar(title: PlatformText(title)),
+                    backgroundColor: Theme.of(context).backgroundColor,
                     body: detail,
                   )));
     } else {
