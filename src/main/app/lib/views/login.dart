@@ -11,6 +11,7 @@ import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/config.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
+import 'package:spend_spent_spent/utils/preferences.dart';
 import 'package:spend_spent_spent/views/welcome/loginForm.dart';
 import 'package:spend_spent_spent/views/welcome/resetPassword.dart';
 import 'package:spend_spent_spent/views/welcome/signUp.dart';
@@ -160,8 +161,7 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
                                     config: config,
                                     logIn: logIn,
                                     showSignUp: () => signUp(true),
-                                    showResetPassword: () => resetPassword(true)
-                                  ),
+                                    showResetPassword: () => resetPassword(true)),
                       ),
                     ),
                   ),
@@ -191,7 +191,12 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
   }
 
   @override
-  void afterFirstLayout(BuildContext context) {
+  Future<void> afterFirstLayout(BuildContext context) async {
+    String server = await Preferences.get(Preferences.SERVER_URL, 'https://sss.ftpix.com');
+    setState(() {
+      urlController.text = server;
+    });
+
     getConfig();
     urlController.addListener(() {
       debounce?.cancel();

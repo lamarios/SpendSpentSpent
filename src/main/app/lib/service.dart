@@ -203,7 +203,6 @@ class Service {
 
   Future<void> logout() async {
     await Preferences.remove(Preferences.TOKEN);
-    await Preferences.remove(Preferences.SERVER_URL);
 
     FBroadcast.instance().broadcast(BROADCAST_LOGGED_OUT);
   }
