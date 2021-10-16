@@ -1,6 +1,8 @@
-import 'package:spend_spent_spent/components/expenseDialog/keypad.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:spend_spent_spent/components/expenseDialog/keypad.dart';
+import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class Step3 extends StatefulWidget {
   Function setAmount;
@@ -37,6 +39,7 @@ class Step3State extends State<Step3> {
 
   @override
   Widget build(BuildContext context) {
+    AppColors colors = get(context);
     return Column(
       children: [
         Row(children: [
@@ -45,12 +48,12 @@ class Step3State extends State<Step3> {
                   height: 70,
                   alignment: Alignment.centerRight,
                   decoration: BoxDecoration(
-                    color: Colors.grey[350],
+                    color: colors.expenseInputBackground,
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Text(valueToStr(widget.amount), style: TextStyle(fontSize: 20)),
+                    child: Text(valueToStr(widget.amount), style: TextStyle(fontSize: 20, color: colors.expenseInput)),
                   ))),
         ]),
         KeyPad(addNumber: addNumber, removeNumber: removeNumber)

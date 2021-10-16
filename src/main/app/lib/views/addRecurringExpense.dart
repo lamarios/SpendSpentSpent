@@ -1,4 +1,7 @@
 import 'package:after_layout/after_layout.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:spend_spent_spent/components/addRecurringExpenseDialog/step1.dart';
 import 'package:spend_spent_spent/components/addRecurringExpenseDialog/step2.dart';
 import 'package:spend_spent_spent/components/addRecurringExpenseDialog/step3.dart';
@@ -7,9 +10,6 @@ import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/category.dart';
 import 'package:spend_spent_spent/models/recurringExpense.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class AddRecurringExpenseDialog extends StatefulWidget {
@@ -45,9 +45,15 @@ class AddRecurringExpenseDialogState extends State<AddRecurringExpenseDialog> wi
 
   Future<void> addRecurringExpense() async {
     double doubleAmount = double.parse(amount) / 100;
+
+    if (type != null && type == 0) {
+      typeParam = 0;
+    }
     if (category != null && type != null && typeParam != null && doubleAmount > 0) {
       RecurringExpense expense = RecurringExpense(category: category!, amount: doubleAmount, income: false, name: '', typeParam: typeParam!, type: type!);
       await service.addRecurringExpense(expense);
+    } else {
+      print('Missing parameters');
     }
   }
 
