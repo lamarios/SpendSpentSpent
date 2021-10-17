@@ -48,7 +48,6 @@ final Map<Brightness, AppColors> COLORS = {
 
 AppColors get(BuildContext context) {
   var brightness = MediaQuery.of(context).platformBrightness;
-  print(brightness);
   return COLORS[brightness]!;
   // return COLORS[Brightness.dark]!;
 }
