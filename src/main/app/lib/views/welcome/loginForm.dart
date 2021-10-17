@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:spend_spent_spent/globals.dart';
@@ -53,19 +54,25 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                       child: Column(
                         children: [
                           Padding(padding: const EdgeInsets.all(8.0), child: getIcon('groceries_bag', size: getIconSize(context), color: colors.iconOnMain)),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Container(alignment: Alignment.centerLeft, child: Text('Server URL', style: TextStyle(color: colors.textOnMain))),
+                          Visibility(
+                            visible: (kIsWeb && !kReleaseMode) || !kIsWeb,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Container(alignment: Alignment.centerLeft, child: Text('Server URL', style: TextStyle(color: colors.textOnMain))),
+                            ),
                           ),
-                          Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: PlatformTextField(
-                                showCursor: true,
-                                controller: widget.urlController,
-                                keyboardType: TextInputType.url,
-                                autocorrect: false,
-                                material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("", "https://sss-server.example.com", colors)),
-                              )),
+                          Visibility(
+                            visible: (kIsWeb && !kReleaseMode) || !kIsWeb,
+                            child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: PlatformTextField(
+                                  showCursor: true,
+                                  controller: widget.urlController,
+                                  keyboardType: TextInputType.url,
+                                  autocorrect: false,
+                                  material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("", "https://sss-server.example.com", colors)),
+                                )),
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
                             child: Container(alignment: Alignment.centerLeft, child: Text('Email', style: TextStyle(color: colors.textOnMain))),

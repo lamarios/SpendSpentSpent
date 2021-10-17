@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:core';
-import 'dart:html';
 import 'dart:math';
 
 import 'package:after_layout/after_layout.dart';
@@ -46,7 +45,7 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
   Config? config;
   String loginError = '';
   Page page = Page.login;
-  TextEditingController urlController = TextEditingController(text: kIsWeb ? '${window.location.href}' : 'https://sss.ftpix.com');
+  TextEditingController urlController = TextEditingController(text: 'https://sss.ftpix.com');
   Timer? debounce;
   Widget toDisplay = SizedBox.shrink();
 
@@ -196,7 +195,16 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
 
   @override
   Future<void> afterFirstLayout(BuildContext context) async {
-    String server = kIsWeb ? '${window.location.href.replaceAll('/#/',  '')}' : await Preferences.get(Preferences.SERVER_URL, 'https://sss.ftpix.com');
+    Uri base = Uri.base;
+    String server = await Preferences.get(Preferences.SERVER_URL, 'https://sss.ftpix.com');
+    if (kIsWeb) {
+      server = '${base.scheme}://${base.host}';
+
+      if (base.port != 80 || base.port != 443) {
+        server += ':${base.port}';
+      }
+    }
+
     print('server: $server');
     setState(() {
       urlController.text = server;
