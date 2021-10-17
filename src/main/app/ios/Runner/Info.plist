@@ -26,6 +26,8 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location is used as an option to add location to one of your expenses</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+	<string>Location is used as an option to add location to one of your expenses</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
