@@ -40,7 +40,10 @@
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then(resp => alert('Password reset successfully'));
+        }).then(resp => {
+            alert('Password reset successfully')
+            window.location.href= '/';
+        });
 
     }
 </script>

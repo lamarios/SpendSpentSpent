@@ -20,8 +20,9 @@ steps:
       - cd src/main/app
       - sudo chown -R cirrus:cirrus .
       - flutter pub get
-      - flutter build web --no-sound-null-safety
+      - flutter build web --no-sound-null-safety --release
       - cp -R build/web ../resources/public
+      - sudo chown -R root:root ../resources/public
 
   ## setting maven version if it's a new release
   - name: set version
