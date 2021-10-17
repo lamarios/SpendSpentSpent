@@ -7,6 +7,9 @@ import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.EmailService;
 import com.ftpix.sss.services.SettingsService;
 import com.j256.ormlite.dao.Dao;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +17,12 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.security.InvalidParameterException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,11 +39,15 @@ public class ApplicationController {
 
     private final Dao<User, UUID> userDao;
 
+    private final Configuration templateEngine;
+
     @Autowired
-    public ApplicationController(EmailService emailService, SettingsService settingsService, Dao<User, UUID> userDao) {
+    public ApplicationController(EmailService emailService, SettingsService settingsService, Dao<User, UUID> userDao, Configuration templateEngine) {
         this.emailService = emailService;
         this.settingsService = settingsService;
         this.userDao = userDao;
+
+        this.templateEngine = templateEngine;
     }
 
 
@@ -104,9 +114,22 @@ public class ApplicationController {
         return "index.html";
     }
 
-    @RequestMapping("/reset-password")
-    public String resetPassword() {
-        return serveIndex();
+    @GetMapping(value = "/reset-password", produces = MediaType.TEXT_HTML_VALUE)
+    @ResponseBody
+    public String resetPassword(@RequestParam("reset-id") String resetId) throws IOException, TemplateException {
+        if (resetId == null) {
+            throw new InvalidParameterException("Invalid request");
+        }
+
+        try (StringWriter templateStr = new StringWriter()) {
+
+            Map<String, Object> templateData = new HashMap<>();
+            templateData.put("resetId", resetId);
+            final Template template = templateEngine.getTemplate("web/reset-password.ftl");
+            template.process(templateData, templateStr);
+
+            return templateStr.toString();
+        }
     }
 
     @RequestMapping(value = "/history")

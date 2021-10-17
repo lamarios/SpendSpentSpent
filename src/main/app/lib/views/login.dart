@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:core';
+import 'dart:html';
 import 'dart:math';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:animations/animations.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/globals.dart' as globals;
 import 'package:spend_spent_spent/globals.dart';
@@ -43,7 +46,7 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
   Config? config;
   String loginError = '';
   Page page = Page.login;
-  TextEditingController urlController = TextEditingController(text: 'https://sss.ftpix.com');
+  TextEditingController urlController = TextEditingController(text: kIsWeb ? '${window.location.href}' : 'https://sss.ftpix.com');
   Timer? debounce;
   Widget toDisplay = SizedBox.shrink();
 
@@ -71,6 +74,7 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
   }
 
   getConfig() async {
+    print('${kIsWeb} ${Uri.base.scheme} ${Uri.base.host} ${Uri.base.port}');
     try {
       print('getting config');
       Config config = await service.getServerConfig(urlController.text.trim());
@@ -192,7 +196,7 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
 
   @override
   Future<void> afterFirstLayout(BuildContext context) async {
-    String server = await Preferences.get(Preferences.SERVER_URL, 'https://sss.ftpix.com');
+    String server = kIsWeb ? '${window.location.href.replaceAll('/#/',  '')}' : await Preferences.get(Preferences.SERVER_URL, 'https://sss.ftpix.com');
     print('server: $server');
     setState(() {
       urlController.text = server;
