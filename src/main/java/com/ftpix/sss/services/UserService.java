@@ -4,6 +4,7 @@ package com.ftpix.sss.services;
 import com.ftpix.sss.Constants;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.PaginatedResults;
+import com.ftpix.sss.models.Settings;
 import com.ftpix.sss.models.User;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -38,11 +39,12 @@ public class UserService {
     private final Dao<User, UUID> userDao;
     private final EmailService emailService;
     private final PaginationService paginationService;
+    private final SettingsService settingsService;
     @Value("${SALT}")
     private String SALT;
 
     @Autowired
-    public UserService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, Dao<Category, Long> categoryDao, Dao<User, UUID> userDao, EmailService emailService, PaginationService paginationService) {
+    public UserService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, Dao<Category, Long> categoryDao, Dao<User, UUID> userDao, EmailService emailService, PaginationService paginationService, SettingsService settingsService) {
         this.recurringExpenseService = recurringExpenseService;
         this.expenseService = expenseService;
         this.categoryService = categoryService;
@@ -50,6 +52,7 @@ public class UserService {
         this.userDao = userDao;
         this.emailService = emailService;
         this.paginationService = paginationService;
+        this.settingsService = settingsService;
     }
 
     /**
@@ -271,7 +274,10 @@ public class UserService {
         user.setFirstName(newUserData.getFirstName());
         user.setLastName(newUserData.getLastName());
 
-        if (newUserData.getPassword() != null && newUserData.getPassword().length() > 0) {
+        final String value = settingsService.getByName(Settings.DEMO_MODE).getValue();
+        boolean demo = value.equalsIgnoreCase("1");
+
+        if ((!demo || demo && user.isAdmin()) && newUserData.getPassword() != null && newUserData.getPassword().length() > 0) {
             user.setPassword(hashUserCredentials(user.getEmail(), newUserData.getPassword()));
         }
 

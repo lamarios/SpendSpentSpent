@@ -8,6 +8,7 @@ import 'package:settings_ui/settings_ui.dart';
 import 'package:spend_spent_spent/components/masterDetail.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/models/config.dart';
 import 'package:spend_spent_spent/models/settings.dart';
 import 'package:spend_spent_spent/models/user.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
@@ -31,6 +32,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
   TextEditingController motdController = TextEditingController(), freeCurrencyConverterApiKeyController = TextEditingController();
   bool demoMode = false;
   bool allowSignUp = false;
+  bool showChangePassword = false;
 
   logOut(BuildContext context) async {
     await service.logout();
@@ -110,11 +112,20 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
 
     const iconSize = 15.0;
 
-    List<SettingsSection> sections = [
-      SettingsSection(
-        title: '${currentUser?.firstName ?? ""} ${currentUser?.lastName ?? ""}',
-        titleTextStyle: TextStyle(color: colors.main, fontWeight: FontWeight.bold),
-        tiles: [
+    var tiles = [
+      SettingsTile(
+        title: 'Logout',
+        leading: FaIcon(
+          FontAwesomeIcons.signOutAlt,
+          size: iconSize,
+        ),
+        onPressed: logOut,
+      )
+    ];
+
+    if (showChangePassword) {
+      tiles.insert(
+          0,
           SettingsTile(
             title: 'Edit profile',
             leading: FaIcon(
@@ -122,7 +133,9 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
               size: iconSize,
             ),
             onPressed: showEditProfile,
-          ),
+          ));
+      tiles.insert(
+          1,
           SettingsTile(
             title: 'Change password',
             leading: FaIcon(
@@ -130,16 +143,14 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
               size: iconSize,
             ),
             onPressed: showPasswordChange,
-          ),
-          SettingsTile(
-            title: 'Logout',
-            leading: FaIcon(
-              FontAwesomeIcons.signOutAlt,
-              size: iconSize,
-            ),
-            onPressed: logOut,
-          )
-        ],
+          ));
+    }
+
+    List<SettingsSection> sections = [
+      SettingsSection(
+        title: '${currentUser?.firstName ?? ""} ${currentUser?.lastName ?? ""}',
+        titleTextStyle: TextStyle(color: colors.main, fontWeight: FontWeight.bold),
+        tiles: tiles,
       ),
     ];
 
@@ -233,13 +244,17 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
   @override
   Future<void> afterFirstLayout(BuildContext context) async {
     User user = await service.getCurrentUser();
+    Config config = await service.getServerConfig(service.url);
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     refreshSettings();
 
+    print(config.demoMode);
+
     setState(() {
       this.packageInfo = packageInfo;
       this.currentUser = user;
+      this.showChangePassword = user.isAdmin || !config.demoMode;
     });
   }
 }
