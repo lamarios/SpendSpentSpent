@@ -1,0 +1,162 @@
+:root {
+    --blue: #2196F3FF;
+}
+
+body {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 10px;
+    font-family: "Open Sans", sans-serif;
+}
+
+a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: normal;
+}
+
+
+.blue {
+    background-color: var(--blue);
+}
+
+.blue-text {
+    color: var(--blue);
+}
+
+.hero {
+    margin-bottom: 20px;
+}
+
+.hero .title {
+    font-size: 40px;
+}
+
+.links {
+    background-color: white;
+    display: flex;
+    align-content: center;
+    justify-content: end;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    text-align: right;
+    padding: 5px;
+
+}
+
+.links .spacer{
+    flex-grow: 3;
+}
+
+.links .try-button {
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.scaffold {
+    display: flex;
+    margin-top: 40px;
+    flex-direction: column;
+}
+
+.device-video {
+    height: 300px;
+}
+
+.device {
+    transform: scale(0.3) !important;
+    transform-origin: top center;
+    margin: 0 auto;
+}
+
+.text {
+    font-weight: lighter;
+}
+
+.text p {
+    margin-top: 0;
+}
+
+.content h1 {
+    font-weight: normal;
+}
+
+.content h2 {
+    font-weight: normal;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+code {
+    display: block;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #eee;
+    color: black !important;
+}
+
+footer {
+    margin-top: 50px;
+}
+
+video.dark {
+    display: none;
+}
+
+.download-links{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.download-links .android-link{
+    width: 150px;
+}
+
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: black;
+        color: white;
+    }
+
+    .dark {
+        display: block !important;
+    }
+
+    .light {
+        display: none !important;
+    }
+
+    .links {
+        background-color: black;
+    }
+}
+
+@media (min-device-width: 768px ) {
+    .hero .title {
+        font-size: 60px;
+    }
+
+    .scaffold {
+        flex-direction: row;
+    }
+
+    .device-video, .text{
+        flex-grow: 1;
+    }
+
+    .device-video{
+        height: 610px;
+    }
+
+    .device{
+        transform: scale(0.7) !important;
+    }
+}
