@@ -67,7 +67,7 @@ class LeftColumnState extends State<LeftColumn> with AfterLayoutMixin {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 8.0),
+            padding: const EdgeInsets.only(top: 8.0, bottom: 20),
             child: Switcher(
               selected: selected,
               labels: ['Monthly', 'Yearly'],

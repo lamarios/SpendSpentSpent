@@ -9,9 +9,10 @@ import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class OneDay extends StatelessWidget {
   DayExpense expense;
+  Function showExpense;
   double total = 0;
 
-  OneDay({required this.expense});
+  OneDay({required this.expense, required this.showExpense});
 
   displayDate() {
     return DateFormat.yMMMMd('en_US').format(DateFormat('yyyy-MM-dd').parse(expense.date));
@@ -25,7 +26,13 @@ class OneDay extends StatelessWidget {
       Text(displayDate()),
     ];
 
-    expense.expenses.forEach((e) => widgets.add(OneExpense(key: Key(e.id.toString()), expense: e)));
+    List<Widget> expenses = [];
+    expense.expenses.forEach((e) => expenses.add(OneExpense(key: Key(e.id.toString()), expense: e, showExpense: showExpense)));
+
+    widgets.add(Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Wrap(runSpacing: 10, spacing: 10, alignment: WrapAlignment.center, children: expenses),
+    ));
 
     widgets.add(Padding(
       padding: const EdgeInsets.all(8.0),

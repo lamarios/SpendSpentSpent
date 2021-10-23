@@ -1,4 +1,5 @@
 import 'package:after_layout/after_layout.dart';
+import 'package:animations/animations.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,11 @@ import 'package:spend_spent_spent/components/rightColumn/oneDay.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/dayExpense.dart';
+import 'package:spend_spent_spent/models/expense.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
+
+import 'expenseView.dart';
 
 class RightColumn extends StatefulWidget {
   RightColumnState createState() => RightColumnState();
@@ -53,6 +58,10 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
     }
   }
 
+  void showExpense(Expense expense) {
+    showModal(context: context, builder: (context) => Card(margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 550, maxHeight: 950), child: ExpenseView(expense)));
+  }
+
   String convertDate(String date) {
     return DateFormat('MMMM yyyy').format(DateFormat('yyyy-MM-dd').parse('$date-01'));
   }
@@ -77,7 +86,7 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
     return ListView.builder(
       itemCount: expenses.length,
       itemBuilder: (context, index) {
-        return OneDay(expense: expenses[expensesKeys[index]]!);
+        return OneDay(showExpense: showExpense, expense: expenses[expensesKeys[index]]!);
       },
     );
   }
@@ -103,7 +112,10 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
                       value: selected,
                       items: months
                           .map((e) => DropdownMenuItem(
-                                child: Text(convertDate(e), style: TextStyle(color: colors.textOnMain),),
+                                child: Text(
+                                  convertDate(e),
+                                  style: TextStyle(color: colors.textOnMain),
+                                ),
                                 value: e,
                               ))
                           .toList(),
