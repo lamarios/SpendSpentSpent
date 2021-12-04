@@ -8,11 +8,16 @@ import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:spend_spent_spent/exceptions/BackendNeedUpgradeException.dart';
+import 'package:spend_spent_spent/exceptions/NeedUpgradeException.dart';
 import 'package:spend_spent_spent/globals.dart' as globals;
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/Compatibility.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/config.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
 import 'package:spend_spent_spent/views/welcome/loginForm.dart';
 import 'package:spend_spent_spent/views/welcome/resetPassword.dart';
@@ -76,11 +81,16 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
     print('${kIsWeb} ${Uri.base.scheme} ${Uri.base.host} ${Uri.base.port}');
     try {
       print('getting config');
-      Config config = await service.getServerConfig(urlController.text.trim());
-      print('can register ? ${config.allowSignup}');
+      Config c = await service.getServerConfig(urlController.text.trim());
+      print('can register ? ${c.allowSignup}');
+
       setState(() {
-        this.config = config;
+        this.config = c;
       });
+    } on NeedUpgradeException catch (e) {
+      showAlertDialog(context, "Application needs update", "The server requires a newer application version please upgrade");
+    } on BackendNeedUpgradeException catch (e) {
+      showAlertDialog(context, "Backend needs update", "The backends is out dated and needs to be updated");
     } catch (e) {
       setState(() {
         this.config = null;

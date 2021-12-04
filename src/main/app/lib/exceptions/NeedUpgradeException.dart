@@ -1,0 +1,1 @@
+class NeedUpgradeException implements Exception {}

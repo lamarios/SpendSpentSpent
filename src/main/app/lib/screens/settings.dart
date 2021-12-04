@@ -33,6 +33,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
   bool demoMode = false;
   bool allowSignUp = false;
   bool showChangePassword = false;
+  Config? config;
 
   logOut(BuildContext context) async {
     await service.logout();
@@ -65,6 +66,8 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
       setSetting(MOTD, freeCurrencyConverterApiKeyController.text.trim(), true);
     });
   }
+
+
 
   @override
   initState() {
@@ -225,6 +228,18 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
       ));
     }
 
+    sections.add(SettingsSection(
+      titleTextStyle: TextStyle(color: colors.main, fontWeight: FontWeight.bold),
+      title: 'Backend info',
+      tiles: [
+        SettingsTile(
+          title: 'Version: ${config?.backendVersion.toString() ?? 'n/a'}',
+          leading: FaIcon(FontAwesomeIcons.server),
+          // onPressed: showEditProfile,
+        ),
+      ],
+    ));
+
     return PlatformScaffold(
       appBar: PlatformAppBar(title: PlatformText('Settings')),
       backgroundColor: Theme.of(context).backgroundColor,
@@ -255,6 +270,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
       this.packageInfo = packageInfo;
       this.currentUser = user;
       this.showChangePassword = user.isAdmin || !config.demoMode;
+      this.config = config;
     });
   }
 }

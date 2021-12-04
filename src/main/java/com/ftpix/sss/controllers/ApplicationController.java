@@ -13,6 +13,7 @@ import freemarker.template.TemplateException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,14 +41,18 @@ public class ApplicationController {
     private final Dao<User, UUID> userDao;
 
     private final Configuration templateEngine;
+    private final BuildProperties buildProperties;
+
+    public final static int MIN_APP_VERSION = 20;
 
     @Autowired
-    public ApplicationController(EmailService emailService, SettingsService settingsService, Dao<User, UUID> userDao, Configuration templateEngine) {
+    public ApplicationController(EmailService emailService, SettingsService settingsService, Dao<User, UUID> userDao, Configuration templateEngine, BuildProperties buildProperties) {
         this.emailService = emailService;
         this.settingsService = settingsService;
         this.userDao = userDao;
 
         this.templateEngine = templateEngine;
+        this.buildProperties = buildProperties;
     }
 
 
@@ -97,6 +102,9 @@ public class ApplicationController {
         results.put("allowSignup", allowSignups);
 
         results.put("canResetPassword", emailService.isEnabled());
+
+        results.put("backendVersion", Integer.parseInt(buildProperties.getVersion()));
+
 
         results.put("demoMode", Optional.ofNullable(settingsService.getByName(Settings.DEMO_MODE)).map(s -> s.getValue().equalsIgnoreCase("1")).orElse(false));
 

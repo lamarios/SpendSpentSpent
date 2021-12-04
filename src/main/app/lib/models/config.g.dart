@@ -6,15 +6,15 @@ part of 'config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Config _$ConfigFromJson(Map<String, dynamic> json) {
-  return Config(
-    demoMode: json['demoMode'] as bool,
-    allowSignup: json['allowSignup'] as bool,
-    announcement: json['announcement'] as String,
-    canResetPassword: json['canResetPassword'] as bool,
-    hasSubscription: json['hasSubscription'] as bool,
-  );
-}
+Config _$ConfigFromJson(Map<String, dynamic> json) => Config(
+      demoMode: json['demoMode'] as bool,
+      allowSignup: json['allowSignup'] as bool,
+      announcement: json['announcement'] as String,
+      canResetPassword: json['canResetPassword'] as bool,
+      hasSubscription: json['hasSubscription'] as bool,
+      minAppVersion: json['minAppVersion'] as String,
+      backendVersion: json['backendVersion'] as int,
+    );
 
 Map<String, dynamic> _$ConfigToJson(Config instance) => <String, dynamic>{
       'allowSignup': instance.allowSignup,
@@ -22,4 +22,6 @@ Map<String, dynamic> _$ConfigToJson(Config instance) => <String, dynamic>{
       'demoMode': instance.demoMode,
       'hasSubscription': instance.hasSubscription,
       'announcement': instance.announcement,
+      'minAppVersion': instance.minAppVersion,
+      'backendVersion': instance.backendVersion,
     };

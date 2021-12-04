@@ -4,7 +4,11 @@ import 'package:fbroadcast/fbroadcast.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:spend_spent_spent/exceptions/BackendNeedUpgradeException.dart';
+import 'package:spend_spent_spent/exceptions/NeedUpgradeException.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/models/Compatibility.dart';
 import 'package:spend_spent_spent/models/availableCategories.dart';
 import 'package:spend_spent_spent/models/category.dart';
 import 'package:spend_spent_spent/models/dayExpense.dart';
@@ -14,6 +18,7 @@ import 'package:spend_spent_spent/models/leftColumnStats.dart';
 import 'package:spend_spent_spent/models/paginatedResults.dart';
 import 'package:spend_spent_spent/models/pagination.dart';
 import 'package:spend_spent_spent/models/settings.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
 
 import 'models/config.dart';
 import 'models/recurringExpense.dart';
@@ -69,6 +74,7 @@ class Service {
   String url = "";
 
   Map<String, String> headers = Map();
+  int? appBuildVersion;
 
   Service([url]) {
     headers.update("Content-Type", (value) => "application/json", ifAbsent: () => "application/json");
@@ -77,6 +83,18 @@ class Service {
   Future<void> setUrl(String url) async {
     await Preferences.set(Preferences.SERVER_URL, url);
     this.url = url;
+  }
+
+  Future<int> getVersion() async {
+    // ugly but that should work
+    if (appBuildVersion == null) {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      appBuildVersion = int.parse(packageInfo.buildNumber);
+      headers.update("x-version", (value) => appBuildVersion!.toString(), ifAbsent: () => appBuildVersion!.toString());
+      return appBuildVersion!;
+    } else {
+      return appBuildVersion!;
+    }
   }
 
   Future<bool> needLogin() async {
@@ -105,6 +123,7 @@ class Service {
 
   Future<Uri> formatUrl(String url, [List<String> params = emptyList]) async {
     final serverUrl = await this.getUrl();
+    final version = await this.getVersion();
 
     if (serverUrl.length == 0) {
       logout();
@@ -116,6 +135,7 @@ class Service {
     params.asMap().forEach((key, value) {
       url = url.replaceFirst('\{$key\}', value);
     });
+
     print("Calling $url");
     return Uri.parse(url);
   }
@@ -397,7 +417,9 @@ class Service {
 
     url += 'config';
 
-    final response = await http.get(Uri.parse(url));
+    final version = await this.getVersion();
+
+    final response = await http.get(Uri.parse(url), headers: {'x-version': version.toString()});
     processResponse(response);
 
     return Config.fromJson(jsonDecode(response.body));
@@ -409,8 +431,8 @@ class Service {
     }
 
     url += 'SignUp';
-
-    final response = await http.post(Uri.parse(url), body: jsonEncode(user), headers: {'Content-Type': 'application/json'});
+    int version = await this.getVersion();
+    final response = await http.post(Uri.parse(url), body: jsonEncode(user), headers: {'Content-Type': 'application/json', 'x-version': version.toString()});
     processResponse(response);
     return true;
   }
@@ -422,19 +444,42 @@ class Service {
 
     url += 'ResetPasswordRequest';
 
-    final response = await http.post(Uri.parse(url), body: jsonEncode(email), headers: {'Content-Type': 'application/json'});
-    print(response.body);
+    int version = await this.getVersion();
+    final response = await http.post(Uri.parse(url), body: jsonEncode(email), headers: {'Content-Type': 'application/json', 'x-version': version.toString()});
     processResponse(response);
     return true;
   }
 
   void processResponse(Response response) {
+    response.headers.forEach((key, value) {
+      print('$key => $value');
+    });
+    if (response.headers.containsKey("x-version")) {
+      String version = response.headers['x-version']!;
+      try {
+        int versionInt = int.parse(version);
+        print('server version: $versionInt, required version: $MIN_BACKEND_VERSION');
+        if (versionInt < MIN_BACKEND_VERSION) {
+          logout();
+          throw BackendNeedUpgradeException();
+        }
+      } catch (e) {
+        logout();
+        throw BackendNeedUpgradeException();
+      }
+    }else{
+      print('no server version');
+    }
+
     switch (response.statusCode) {
       case 200:
         return;
       case 401:
         logout();
         throw Exception("Couldn't execute request ${response.body}");
+      case 426:
+        logout();
+        throw NeedUpgradeException();
       default:
         throw Exception("Couldn't execute request ${response.statusCode} -> ${response.body}");
     }

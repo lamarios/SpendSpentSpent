@@ -15,7 +15,7 @@ RUN mvn clean install
 
 
 
-FROM openjdk:14
+FROM openjdk:17
 
 RUN mkdir /app && mkdir /config
 

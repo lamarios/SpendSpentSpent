@@ -6,8 +6,10 @@ import com.ftpix.sss.models.User;
 import com.ftpix.sss.utils.*;
 import com.google.gson.*;
 import freemarker.template.TemplateExceptionHandler;
+import org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria;
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.api.mailer.config.TransportStrategy;
+import org.simplejavamail.converter.EmailConverter;
 import org.simplejavamail.mailer.MailerBuilder;
 import org.simplejavamail.mailer.internal.MailerRegularBuilderImpl;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,28 +58,27 @@ public class Config {
 
     @Bean
     public Mailer mailer() {
-        MailerRegularBuilderImpl mailer;
-        if (smtpHost == null || smtpPort == 0 || smtpHost.trim().length() == 0) {
-            return null;
-        }
-
-        if (smtpUsername != null && smtpUsername.length() > 0) {
-            if (smtpPassword == null || smtpPassword.trim().length() == 0) {
-                mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort, smtpUsername);
-            } else {
-                mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort, smtpUsername, smtpPassword);
+            MailerRegularBuilderImpl mailer;
+            if (smtpHost == null || smtpPort == 0 || smtpHost.trim().length() == 0) {
+                return null;
             }
-        } else {
-            mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort);
-        }
 
-        mailer = mailer.withTransportStrategy(transportStrategy);
+            if (smtpUsername != null && smtpUsername.length() > 0) {
+                if (smtpPassword == null || smtpPassword.trim().length() == 0) {
+                    mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort, smtpUsername);
+                } else {
+                    mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort, smtpUsername, smtpPassword);
+                }
+            } else {
+                mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort);
+            }
 
-        return mailer.clearEmailAddressCriteria() // turns off email validation
-//                .withDebugLogging(true)
-                .async()
-                // not enough? what about this:
-                .buildMailer();
+
+
+            mailer = mailer.withTransportStrategy(transportStrategy);
+
+            mailer = mailer.clearEmailAddressCriteria().async().withEmailAddressCriteria(EmailAddressCriteria.RFC_COMPLIANT);
+            return mailer.buildMailer();
     }
 
     @Bean

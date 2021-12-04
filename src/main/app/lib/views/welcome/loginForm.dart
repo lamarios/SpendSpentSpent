@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/models/Compatibility.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/config.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
