@@ -67,8 +67,6 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     });
   }
 
-
-
   @override
   initState() {
     super.initState();
@@ -228,17 +226,19 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
       ));
     }
 
-    sections.add(SettingsSection(
-      titleTextStyle: TextStyle(color: colors.main, fontWeight: FontWeight.bold),
-      title: 'Backend info',
-      tiles: [
-        SettingsTile(
-          title: 'Version: ${config?.backendVersion.toString() ?? 'n/a'}',
-          leading: FaIcon(FontAwesomeIcons.server),
-          // onPressed: showEditProfile,
-        ),
-      ],
-    ));
+    if (config?.backendVersion != null) {
+      sections.add(SettingsSection(
+        titleTextStyle: TextStyle(color: colors.main, fontWeight: FontWeight.bold),
+        title: 'Backend info',
+        tiles: [
+          SettingsTile(
+            title: 'Version: ${config?.backendVersion.toString() ?? 'n/a'}',
+            leading: FaIcon(FontAwesomeIcons.server),
+            // onPressed: showEditProfile,
+          ),
+        ],
+      ));
+    }
 
     return PlatformScaffold(
       appBar: PlatformAppBar(title: PlatformText('Settings')),

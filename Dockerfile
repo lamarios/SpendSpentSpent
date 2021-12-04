@@ -14,7 +14,7 @@ COPY --from=frontend /app/src/main/resources/public/ /app/src/main/resources/pub
 RUN ls /app/src/main/resources
 WORKDIR  /app
 #salt and db path is only for the unit tests
-RUN mvn clean install
+RUN mvn clean install -Dmaven.repo.local=./m2
 
 
 
