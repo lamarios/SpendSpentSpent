@@ -4,6 +4,7 @@ import com.ftpix.sss.models.DailyExpense;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.ExpenseService;
+import com.ftpix.sss.services.HistoryService;
 import com.ftpix.sss.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,11 +27,13 @@ public class ExpenseController {
     protected final Log logger = LogFactory.getLog(this.getClass());
     private final UserService userService;
     private final ExpenseService expenseService;
+    private final HistoryService historyService;
 
     @Autowired
-    public ExpenseController(UserService userService, ExpenseService expenseService) {
+    public ExpenseController(UserService userService, ExpenseService expenseService, HistoryService historyService) {
         this.userService = userService;
         this.expenseService = expenseService;
+        this.historyService = historyService;
     }
 
     /**
@@ -96,7 +99,10 @@ public class ExpenseController {
     @PostMapping
     public Expense create(@RequestBody Expense expense) throws Exception {
         final User currentUser = userService.getCurrentUser();
-        return expenseService.create(expense, currentUser);
+        Expense expense1 = expenseService.create(expense, currentUser);
+
+        historyService.cacheForExpense(expense1);
+        return expense1;
     }
 
     /**

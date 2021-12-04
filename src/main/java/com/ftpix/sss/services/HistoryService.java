@@ -1,12 +1,12 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.models.Category;
-import com.ftpix.sss.models.CategoryOverall;
-import com.ftpix.sss.models.Expense;
-import com.ftpix.sss.models.User;
+import com.ftpix.sss.models.*;
+import com.ftpix.sss.utils.DateUtils;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +20,25 @@ import java.util.stream.Collectors;
 
 @Service
 public class HistoryService {
+    protected final Log logger = LogFactory.getLog(this.getClass());
     private final CategoryService categoryService;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final DateTimeFormatter historyDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMM");
+    private final DateTimeFormatter monthlyHistoryDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
+    private final DateTimeFormatter yearlyHistoryDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
+    private final ExpenseService expenseService;
 
+    private final Dao<YearlyHistory, UUID> yearlyHistoryDao;
+    private final Dao<MonthlyHistory, UUID> monthlyHistoryDao;
     private final Dao<Expense, Long> expenseDao;
 
 
     @Autowired
-    public HistoryService(CategoryService categoryService, Dao<Expense, Long> expenseDao) {
+    public HistoryService(CategoryService categoryService, ExpenseService expenseService, Dao<YearlyHistory, UUID> yearlyHistoryDao, Dao<MonthlyHistory, UUID> monthlyHistoryDao, Dao<Expense, Long> expenseDao) {
         this.categoryService = categoryService;
+        this.expenseService = expenseService;
+        this.yearlyHistoryDao = yearlyHistoryDao;
+        this.monthlyHistoryDao = monthlyHistoryDao;
         this.expenseDao = expenseDao;
     }
 
@@ -245,4 +255,80 @@ public class HistoryService {
 
         return result;
     }
+
+    public void cacheForExpense(Expense expense) throws SQLException {
+        LocalDate localDate = DateUtils.convertToLocalDateViaInstant(expense.getDate());
+        String date = localDate.format(historyDateTimeFormatter);
+        System.out.println(date);
+
+        cacheForCategory(Integer.parseInt(date), expense.getCategory());
+    }
+
+    /**
+     * date in format YYYYMM
+     *
+     * @param date
+     * @param category
+     */
+    public void cacheForCategory(int date, Category category) throws SQLException {
+        logger.info("Refreshing cache for category :" + category.getId());
+
+        cacheForCategoryMonthly(date, category);
+        cacheForCategoryYearly(Math.floorDiv(date, 100), category);
+    }
+
+    /**
+     * @param date     in formay yyyy-DD
+     * @param category
+     */
+    private void cacheForCategoryYearly(int date, Category category) throws SQLException {
+
+        List<Expense> forDateLikeAndCategory = expenseService.getForDateLikeAndCategory(Integer.toString(date), category);
+        double sum = forDateLikeAndCategory.stream().mapToDouble(Expense::getAmount)
+                .sum();
+
+        QueryBuilder<YearlyHistory, UUID> query = yearlyHistoryDao.queryBuilder();
+        Where<YearlyHistory, UUID> eq = query.where().eq("CATEGORY_ID", category.getId()).and().eq("DATE", date);
+        query.setWhere(eq);
+
+        YearlyHistory yearlyHistory = query.queryForFirst();
+        if (yearlyHistory == null) {
+            yearlyHistory = new YearlyHistory();
+            yearlyHistory.setCategory(category);
+            yearlyHistory.setDate(date);
+        }
+
+        yearlyHistory.setTotal(sum);
+
+        yearlyHistoryDao.createOrUpdate(yearlyHistory);
+    }
+
+    /**
+     * @param date     in format YYYY
+     * @param category
+     */
+    private void cacheForCategoryMonthly(int date, Category category) throws SQLException {
+        int year = Math.floorDiv(date, 100);
+        int month = Math.floorMod(date, 100);
+        List<Expense> forDateLikeAndCategory = expenseService.getForDateLikeAndCategory(year + "-" + month, category);
+        double sum = forDateLikeAndCategory.stream().mapToDouble(Expense::getAmount)
+                .sum();
+
+        QueryBuilder<MonthlyHistory, UUID> query = monthlyHistoryDao.queryBuilder();
+        Where<MonthlyHistory, UUID> eq = query.where().eq("CATEGORY_ID", category.getId()).and().eq("DATE", date);
+        query.setWhere(eq);
+
+        MonthlyHistory monthlyHistory = query.queryForFirst();
+        if (monthlyHistory == null) {
+            monthlyHistory = new MonthlyHistory();
+            monthlyHistory.setCategory(category);
+            monthlyHistory.setDate(date);
+        }
+
+        monthlyHistory.setTotal(sum);
+
+        monthlyHistoryDao.createOrUpdate(monthlyHistory);
+    }
+
+
 }

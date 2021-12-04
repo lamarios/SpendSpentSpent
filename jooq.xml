@@ -1,0 +1,52 @@
+<configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.15.0.xsd">
+    <jdbc>
+        <driver>com.mysql.jdbc.Driver</driver>
+        <url>jdbc:mysql://localhost:3306/sss?useSSL=false</url>
+        <user>root</user>
+        <password>password</password>
+    </jdbc>
+
+    <generator>
+        <!-- The default code generator. You can override this one, to generate your own code style.
+             Supported generators:
+             - org.jooq.codegen.JavaGenerator
+             - org.jooq.codegen.ScalaGenerator
+             Defaults to org.jooq.codegen.JavaGenerator -->
+        <name>org.jooq.codegen.JavaGenerator</name>
+
+        <!--                                <forcedTypes>
+                                            <forcedType>
+                                                <name>BOOLEAN</name>
+                                                <types>(?i:TINYINT)</types>
+                                            </forcedType>
+                                        </forcedTypes>-->
+
+        <database>
+            <!-- The database type. The format here is:
+                 org.jooq.meta.[database].[database]Database -->
+            <name>org.jooq.meta.mysql.MySQLDatabase</name>
+
+            <!-- The database schema (or in the absence of schema support, in your RDBMS this
+                 can be the owner, user, database name) to be generated -->
+            <inputSchema>sss</inputSchema>
+
+            <!-- All elements that are generated from your schema
+                 (A Java regular expression. Use the pipe to separate several expressions)
+                 Watch out for case-sensitivity. Depending on your database, this might be important! -->
+            <includes>.*</includes>
+
+            <!-- All elements that are excluded from your schema
+                 (A Java regular expression. Use the pipe to separate several expressions).
+                 Excludes match before includes, i.e. excludes have a higher priority -->
+            <excludes></excludes>
+        </database>
+
+        <target>
+            <!-- The destination package of your generated classes (within the destination directory) -->
+            <packageName>com.ftpix.sss.dsl</packageName>
+
+            <!-- The destination directory of your generated classes. Using Maven directory layout here -->
+            <directory>${basedir}/src/main/java</directory>
+        </target>
+    </generator>
+</configuration>

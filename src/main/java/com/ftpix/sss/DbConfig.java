@@ -10,6 +10,7 @@ import com.j256.ormlite.table.TableUtils;
 import org.jooq.AlterTableAddStep;
 import org.jooq.CloseableDSLContext;
 import org.jooq.impl.DSL;
+import org.jooq.impl.DefaultDSLContext;
 import org.jooq.impl.SQLDataType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.sql.SQLException;
+import java.time.Year;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -51,50 +53,87 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
     @Bean
     public Dao<Category, Long> categoryDao(ConnectionSource connectionSource) throws SQLException {
         final Dao<Category, Long> dao = DaoManager.createDao(connectionSource, Category.class);
-        TableUtils.createTableIfNotExists(connectionSource, Category.class);
+        if (!dao.isTableExists()) {
+            TableUtils.createTableIfNotExists(connectionSource, Category.class);
+        }
         return dao;
     }
 
     @Bean
     public Dao<Expense, Long> expenseDao(ConnectionSource connectionSource) throws SQLException {
         final Dao<Expense, Long> dao = DaoManager.createDao(connectionSource, Expense.class);
-        TableUtils.createTableIfNotExists(connectionSource, Expense.class);
+        if (!dao.isTableExists()) {
+            TableUtils.createTableIfNotExists(connectionSource, Expense.class);
+        }
         return dao;
     }
 
     @Bean
     public Dao<RecurringExpense, Long> recurringExpenseDao(ConnectionSource connectionSource) throws SQLException {
         final Dao<RecurringExpense, Long> dao = DaoManager.createDao(connectionSource, RecurringExpense.class);
-        TableUtils.createTableIfNotExists(connectionSource, RecurringExpense.class);
+        if (!dao.isTableExists()) {
+            TableUtils.createTableIfNotExists(connectionSource, RecurringExpense.class);
+        }
         return dao;
     }
 
     @Bean
     public Dao<SchemaVersion, Long> schemaDao(ConnectionSource connectionSource) throws SQLException {
         final Dao<SchemaVersion, Long> dao = DaoManager.createDao(connectionSource, SchemaVersion.class);
-        TableUtils.createTableIfNotExists(connectionSource, SchemaVersion.class);
+        if (!dao.isTableExists()) {
+            TableUtils.createTableIfNotExists(connectionSource, SchemaVersion.class);
+        }
         return dao;
     }
 
     @Bean
     public Dao<User, UUID> userDao(ConnectionSource connectionSource) throws SQLException {
         final Dao<User, UUID> dao = DaoManager.createDao(connectionSource, User.class);
-        TableUtils.createTableIfNotExists(connectionSource, User.class);
+        if (!dao.isTableExists()) {
+            TableUtils.createTableIfNotExists(connectionSource, User.class);
+        }
         return dao;
     }
 
     @Bean
     public Dao<ResetPassword, UUID> resetPasswordDao(ConnectionSource connectionSource) throws SQLException {
         final Dao<ResetPassword, UUID> dao = DaoManager.createDao(connectionSource, ResetPassword.class);
-        TableUtils.createTableIfNotExists(connectionSource, ResetPassword.class);
+        if (!dao.isTableExists()) {
+            TableUtils.createTableIfNotExists(connectionSource, ResetPassword.class);
+        }
         return dao;
     }
 
     @Bean
     public Dao<Settings, String> settingsDao(ConnectionSource connectionSource) throws SQLException {
         final Dao<Settings, String> dao = DaoManager.createDao(connectionSource, Settings.class);
-        TableUtils.createTableIfNotExists(connectionSource, Settings.class);
+        if (!dao.isTableExists()) {
+            TableUtils.createTableIfNotExists(connectionSource, Settings.class);
+        }
         return dao;
+    }
+
+    @Bean
+    Dao<YearlyHistory, UUID> yearlyHistoryDao(ConnectionSource connectionSource) throws SQLException {
+        final Dao<YearlyHistory, UUID> dao = DaoManager.createDao(connectionSource, YearlyHistory.class);
+        if (!dao.isTableExists()) {
+            TableUtils.createTableIfNotExists(connectionSource, YearlyHistory.class);
+        }
+        return dao;
+    }
+
+    @Bean
+    Dao<MonthlyHistory, UUID> monthlyHistoryDao(ConnectionSource connectionSource) throws SQLException {
+        final Dao<MonthlyHistory, UUID> dao = DaoManager.createDao(connectionSource, MonthlyHistory.class);
+        if (!dao.isTableExists()) {
+            TableUtils.createTableIfNotExists(connectionSource, MonthlyHistory.class);
+        }
+        return dao;
+    }
+
+    @Bean
+    public DefaultDSLContext dslContext(String jdbcUrl) {
+        return (DefaultDSLContext) DSL.using(jdbcUrl, dbUsername, dbPassword);
     }
 
 

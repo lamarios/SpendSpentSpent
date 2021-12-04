@@ -3,6 +3,7 @@ package com.ftpix.sss.services;
 import com.ftpix.sss.models.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -213,4 +214,5 @@ public class CategoryService {
 
                 }).orElse(0L);
     }
+
 }

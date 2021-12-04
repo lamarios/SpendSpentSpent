@@ -1,13 +1,20 @@
 package com.ftpix.sss.services;
 
+import com.ftpix.sss.dsl.Sss;
+import com.ftpix.sss.dsl.Tables;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.DailyExpense;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jooq.Field;
+import org.jooq.Table;
+import org.jooq.impl.DSL;
+import org.jooq.impl.DefaultDSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +23,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.ftpix.sss.dsl.Tables.*;
 
 @Service
 public class ExpenseService {
@@ -26,11 +35,13 @@ public class ExpenseService {
     private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     private final Dao<Expense, Long> expenseDao;
+    private final DefaultDSLContext dslContext;
 
     @Autowired
-    public ExpenseService(CategoryService categoryService, Dao<Expense, Long> expenseDao) {
+    public ExpenseService(CategoryService categoryService, Dao<Expense, Long> expenseDao, DefaultDSLContext dslContext) {
         this.categoryService = categoryService;
         this.expenseDao = expenseDao;
+        this.dslContext = dslContext;
     }
 
     public List<Expense> getAll(User user) throws Exception {
@@ -188,5 +199,16 @@ public class ExpenseService {
                 .map(s -> s.substring(0, 7))
                 .distinct()
                 .collect(Collectors.toList());
+    }
+
+    public List<Expense> getForDateLikeAndCategory(String date, Category category) throws SQLException {
+        List<Expense> fetch = dslContext.select().from(EXPENSE).where(EXPENSE.DATE.like(date + '%'), EXPENSE.CATEGORY_ID.eq(category.getId()))
+                .fetch(record -> {
+                    Expense into = record.into(Expense.class);
+                    into.setCategory(category);
+                    return into;
+                });
+
+        return fetch;
     }
 }
