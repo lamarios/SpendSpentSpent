@@ -18,6 +18,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @RestController
 @RequestMapping("/API/Expense")
@@ -115,7 +117,10 @@ public class ExpenseController {
     @DeleteMapping("/{id}")
     public boolean delete(@PathVariable("id") long id) throws Exception {
         final User currentUser = userService.getCurrentUser();
-        return expenseService.delete(id, currentUser);
+        Expense expense = get(id);
+        boolean delete = expenseService.delete(id, currentUser);
+        historyService.cacheForExpense(expense);
+        return delete;
 
     }
 }

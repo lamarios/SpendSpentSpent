@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +33,8 @@ public class HistoryService {
     private final Dao<YearlyHistory, UUID> yearlyHistoryDao;
     private final Dao<MonthlyHistory, UUID> monthlyHistoryDao;
     private final Dao<Expense, Long> expenseDao;
+
+    private final ExecutorService cacheUpdateThread = Executors.newSingleThreadExecutor();
 
 
     @Autowired
@@ -273,8 +277,14 @@ public class HistoryService {
     public void cacheForCategory(int date, Category category) throws SQLException {
         logger.info("Refreshing cache for category :" + category.getId());
 
-        cacheForCategoryMonthly(date, category);
-        cacheForCategoryYearly(Math.floorDiv(date, 100), category);
+        cacheUpdateThread.execute(() -> {
+            try {
+                cacheForCategoryMonthly(date, category);
+                cacheForCategoryYearly(Math.floorDiv(date, 100), category);
+            } catch (SQLException e) {
+                logger.error(e);
+            }
+        });
     }
 
     /**

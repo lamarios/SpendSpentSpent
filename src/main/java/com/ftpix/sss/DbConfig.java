@@ -1,6 +1,7 @@
 package com.ftpix.sss;
 
 
+import com.ftpix.sss.dao.ExpenseDao;
 import com.ftpix.sss.models.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
