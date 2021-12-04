@@ -451,9 +451,6 @@ class Service {
   }
 
   void processResponse(Response response) {
-    response.headers.forEach((key, value) {
-      print('$key => $value');
-    });
     if (response.headers.containsKey("x-version")) {
       String version = response.headers['x-version']!;
       try {

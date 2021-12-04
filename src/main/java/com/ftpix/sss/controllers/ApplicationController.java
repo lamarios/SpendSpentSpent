@@ -86,7 +86,7 @@ public class ApplicationController {
             if (sb.length() > 0) {
                 sb.append("\n\n");
             }
-            sb.append("There are no users on this instance, the first user to sign up will be set as an admin. If the signup link doesn't show up above, add the environment variable ALLOW_SIGNUP=1.\n\nIf you had existing expenses from a previous version it will be all migrated to the first user to sign up.");
+            sb.append("There are no users on this instance, the first user to sign up will be set as an admin. If the signup link doesn't show up, add the environment variable ALLOW_SIGNUP=1.\n\nIf you had existing expenses from a previous version it will be all migrated to the first user to sign up.");
         }
 
         final boolean allowSignups = Optional.ofNullable(settingsService.getByName(Settings.ALLOW_SIGNUP))
