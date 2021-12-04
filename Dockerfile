@@ -8,7 +8,7 @@ RUN cd /app/src/main/app \
     &&  cp -R build/web ../resources/public
 
 
-FROM maven:3.8-jdk-17 as maven
+FROM maven:3.8-openjdk-17 as maven
 ADD ./ /app
 COPY --from=frontend /app/src/main/resources/public/ /app/src/main/resources/public/
 RUN ls /app/src/main/resources
