@@ -1,11 +1,14 @@
-FROM node:10 as frontend
+FROM cirrusci/flutter:stable as frontend
 ADD ./ /app
-WORKDIR /app/src/main/web
+WORKDIR /app/src/main/app
 
-RUN npm install && npm run build
+RUN cd /app/src/main/app \
+    && flutter pub get \
+    &&  flutter build web --no-sound-null-safety --release \
+    &&  cp -R build/web ../resources/public
 
 
-FROM maven:3.6-jdk-14 as maven
+FROM maven:3.8-jdk-17 as maven
 ADD ./ /app
 COPY --from=frontend /app/src/main/resources/public/ /app/src/main/resources/public/
 RUN ls /app/src/main/resources
