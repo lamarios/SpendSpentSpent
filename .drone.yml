@@ -33,7 +33,7 @@ steps:
       event: tag
 
   - name: build backend
-    image: maven:3.6-jdk-14
+    image: maven:3.8-openjdk-17
     commands:
       - mvn clean install -Dmaven.repo.local=./m2
 

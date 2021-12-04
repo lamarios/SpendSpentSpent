@@ -5,7 +5,7 @@ WORKDIR /app/src/main/app
 RUN cd /app/src/main/app \
     && flutter pub get \
     &&  flutter build web --no-sound-null-safety --release \
-    &&  cp -R build/web ../resources/public
+    &&  cp -Rf build/web ../resources/public
 
 
 FROM maven:3.8-openjdk-17 as maven
