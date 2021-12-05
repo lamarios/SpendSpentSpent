@@ -2,6 +2,7 @@ package com.ftpix.sss.services;
 
 import com.ftpix.sss.dao.ExpenseDao;
 import com.ftpix.sss.dsl.Tables;
+import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.DailyExpense;
 import com.ftpix.sss.models.Expense;
@@ -32,14 +33,12 @@ public class ExpenseService {
 
     private final Dao<Expense, Long> expenseDao;
     private final ExpenseDao expenseDaoJooq;
-    private final DefaultDSLContext dslContext;
 
     @Autowired
-    public ExpenseService(CategoryService categoryService, Dao<Expense, Long> expenseDao, ExpenseDao expenseDaoJooq, DefaultDSLContext dslContext) {
+    public ExpenseService(CategoryService categoryService, Dao<Expense, Long> expenseDao, ExpenseDao expenseDaoJooq) {
         this.categoryService = categoryService;
         this.expenseDao = expenseDao;
         this.expenseDaoJooq = expenseDaoJooq;
-        this.dslContext = dslContext;
     }
 
     public List<Expense> getAll(User user) throws Exception {
@@ -165,7 +164,7 @@ public class ExpenseService {
             expense.setType(Expense.TYPE_NORMAL);
         }
 
-        expenseDao.create(expense);
+        expenseDaoJooq.create(user, expense);
 
         return expense;
     }
@@ -173,8 +172,7 @@ public class ExpenseService {
     public boolean delete(long id, User user) throws Exception {
         final Expense expense = get(id, user);
         if (expense.getCategory().getUser().getId().equals(user.getId())) {
-            expenseDao.deleteById(id);
-            return true;
+            return expenseDaoJooq.delete(user, expense);
         } else {
             return false;
         }
@@ -199,7 +197,8 @@ public class ExpenseService {
                 .collect(Collectors.toList());
     }
 
-    public List<Expense> getForDateLikeAndCategory(String date, Category category) throws SQLException {
-        return expenseDaoJooq.getWhere(EXPENSE.DATE.like(date + "%"), EXPENSE.CATEGORY_ID.eq(category.getId()));
+    public List<Expense> getForDateLikeAndCategory(User user, String date, Category category) throws SQLException {
+        return expenseDaoJooq.getWhere(user, EXPENSE.DATE.like(date + "%"), EXPENSE.CATEGORY_ID.eq(category.getId()));
     }
+
 }

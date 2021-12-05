@@ -1,5 +1,7 @@
 package com.ftpix.sss.services;
 
+import com.ftpix.sss.dao.ExpenseDao;
+import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.utils.DateUtils;
 import com.j256.ormlite.dao.Dao;
@@ -21,7 +23,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Service
-public class HistoryService {
+public class HistoryService implements DaoListener<Expense> {
     protected final Log logger = LogFactory.getLog(this.getClass());
     private final CategoryService categoryService;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -33,17 +35,20 @@ public class HistoryService {
     private final Dao<YearlyHistory, UUID> yearlyHistoryDao;
     private final Dao<MonthlyHistory, UUID> monthlyHistoryDao;
     private final Dao<Expense, Long> expenseDao;
+    private final ExpenseDao expenseDaoJooq;
 
     private final ExecutorService cacheUpdateThread = Executors.newSingleThreadExecutor();
 
 
     @Autowired
-    public HistoryService(CategoryService categoryService, ExpenseService expenseService, Dao<YearlyHistory, UUID> yearlyHistoryDao, Dao<MonthlyHistory, UUID> monthlyHistoryDao, Dao<Expense, Long> expenseDao) {
+    public HistoryService(CategoryService categoryService, ExpenseService expenseService, Dao<YearlyHistory, UUID> yearlyHistoryDao, Dao<MonthlyHistory, UUID> monthlyHistoryDao, Dao<Expense, Long> expenseDao, ExpenseDao expenseDaoJooq) {
         this.categoryService = categoryService;
         this.expenseService = expenseService;
         this.yearlyHistoryDao = yearlyHistoryDao;
         this.monthlyHistoryDao = monthlyHistoryDao;
         this.expenseDao = expenseDao;
+        this.expenseDaoJooq = expenseDaoJooq;
+        this.expenseDaoJooq.addListener(this);
     }
 
     public List<CategoryOverall> yearly(User user) throws Exception {
@@ -260,12 +265,12 @@ public class HistoryService {
         return result;
     }
 
-    public void cacheForExpense(Expense expense) throws SQLException {
+    public void cacheForExpense(User user, Expense expense) throws SQLException {
         LocalDate localDate = DateUtils.convertToLocalDateViaInstant(expense.getDate());
         String date = localDate.format(historyDateTimeFormatter);
         System.out.println(date);
 
-        cacheForCategory(Integer.parseInt(date), expense.getCategory());
+        cacheForCategory(user, Integer.parseInt(date), expense.getCategory());
     }
 
     /**
@@ -274,13 +279,13 @@ public class HistoryService {
      * @param date
      * @param category
      */
-    public void cacheForCategory(int date, Category category) throws SQLException {
+    public void cacheForCategory(User user, int date, Category category) throws SQLException {
         logger.info("Refreshing cache for category :" + category.getId());
 
         cacheUpdateThread.execute(() -> {
             try {
-                cacheForCategoryMonthly(date, category);
-                cacheForCategoryYearly(Math.floorDiv(date, 100), category);
+                cacheForCategoryMonthly(user, date, category);
+                cacheForCategoryYearly(user, Math.floorDiv(date, 100), category);
             } catch (SQLException e) {
                 logger.error(e);
             }
@@ -291,9 +296,9 @@ public class HistoryService {
      * @param date     in formay yyyy-DD
      * @param category
      */
-    private void cacheForCategoryYearly(int date, Category category) throws SQLException {
+    private void cacheForCategoryYearly(User user, int date, Category category) throws SQLException {
 
-        List<Expense> forDateLikeAndCategory = expenseService.getForDateLikeAndCategory(Integer.toString(date), category);
+        List<Expense> forDateLikeAndCategory = expenseService.getForDateLikeAndCategory(user, Integer.toString(date), category);
         double sum = forDateLikeAndCategory.stream().mapToDouble(Expense::getAmount)
                 .sum();
 
@@ -317,10 +322,10 @@ public class HistoryService {
      * @param date     in format YYYY
      * @param category
      */
-    private void cacheForCategoryMonthly(int date, Category category) throws SQLException {
+    private void cacheForCategoryMonthly(User user, int date, Category category) throws SQLException {
         int year = Math.floorDiv(date, 100);
         int month = Math.floorMod(date, 100);
-        List<Expense> forDateLikeAndCategory = expenseService.getForDateLikeAndCategory(year + "-" + month, category);
+        List<Expense> forDateLikeAndCategory = expenseService.getForDateLikeAndCategory(user, year + "-" + month, category);
         double sum = forDateLikeAndCategory.stream().mapToDouble(Expense::getAmount)
                 .sum();
 
@@ -341,4 +346,21 @@ public class HistoryService {
     }
 
 
+    @Override
+    public void afterInsert(User user, Expense newRecord) {
+        try {
+            cacheForExpense(user, newRecord);
+        } catch (SQLException e) {
+            logger.error("Couldn't refresh cache expense", e);
+        }
+    }
+
+    @Override
+    public void afterDelete(User user, Expense deleted) {
+        try {
+            cacheForExpense(user, deleted);
+        } catch (SQLException e) {
+            logger.error("Couldn't refresh cache expense", e);
+        }
+    }
 }

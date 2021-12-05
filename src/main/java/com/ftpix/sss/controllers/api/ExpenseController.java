@@ -102,8 +102,6 @@ public class ExpenseController {
     public Expense create(@RequestBody Expense expense) throws Exception {
         final User currentUser = userService.getCurrentUser();
         Expense expense1 = expenseService.create(expense, currentUser);
-
-        historyService.cacheForExpense(expense1);
         return expense1;
     }
 
@@ -119,7 +117,6 @@ public class ExpenseController {
         final User currentUser = userService.getCurrentUser();
         Expense expense = get(id);
         boolean delete = expenseService.delete(id, currentUser);
-        historyService.cacheForExpense(expense);
         return delete;
 
     }
