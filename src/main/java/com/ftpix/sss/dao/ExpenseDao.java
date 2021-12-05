@@ -4,23 +4,25 @@ import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
-import com.google.common.base.Functions;
 import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.commons.lang.ArrayUtils;
 import org.jooq.Condition;
 import org.jooq.Record;
-import org.jooq.Record1;
 import org.jooq.impl.DefaultDSLContext;
-import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import springfox.bean.validators.plugins.parameter.ExpandedParameterPatternAnnotationPlugin;
 
 import java.security.InvalidParameterException;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -32,6 +34,7 @@ public class ExpenseDao {
 
     private final DefaultDSLContext dslContext;
     private final DateTimeFormatter date = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final DateTimeFormatter time = DateTimeFormatter.ofPattern("HH:mm");
 
     private List<DaoListener<Expense>> listeners = new ArrayList<>();
@@ -51,9 +54,13 @@ public class ExpenseDao {
         return Optional.ofNullable(dslContext.select().from(EXPENSE)
                 .where(EXPENSE.CATEGORY_ID.in(userCategories.keySet()), EXPENSE.ID.eq(id))
                 .fetchOne(record -> {
-                    Expense into = record.into(Expense.class);
-                    into.setCategory(userCategories.get(record.get(EXPENSE.CATEGORY_ID)));
-                    return into;
+                    try {
+                        Expense into = fromRecord(record);
+                        into.setCategory(userCategories.get(record.get(EXPENSE.CATEGORY_ID)));
+                        return into;
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
                 }));
     }
 
@@ -78,7 +85,8 @@ public class ExpenseDao {
                         EXPENSE.LONGITUDE,
                         EXPENSE.NOTE,
                         EXPENSE.TIME,
-                        EXPENSE.TIMESTAMP
+                        EXPENSE.TIMESTAMP,
+                        EXPENSE.INCOME
                 ).values(
                         expense.getAmount(),
                         expense.getCategory().getId(),
@@ -88,7 +96,8 @@ public class ExpenseDao {
                         expense.getLongitude(),
                         expense.getNote(),
                         now.format(time),
-                        System.currentTimeMillis()
+                        System.currentTimeMillis(),
+                        (byte) (expense.isIncome() ? 1 : 0)
                 ).returningResult(EXPENSE.ID)
                 .fetchOne(r -> r.into(Long.class));
 
@@ -116,6 +125,26 @@ public class ExpenseDao {
     }
 
     /**
+     * Gets available months of expenses
+     *
+     * @param user
+     * @return
+     */
+    public List<String> getMonths(User user) {
+        Map<Long, Category> userCategories = getUserCategories(user);
+
+        return dslContext.selectDistinct(EXPENSE.DATE)
+                .from(EXPENSE)
+                .where(EXPENSE.CATEGORY_ID.in(userCategories.keySet()))
+                .fetch(r -> r.get(EXPENSE.DATE))
+                .stream()
+                .map(s -> s.substring(0, 7))
+                .sorted()
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Base filter to get any expense
      *
      * @param user
@@ -124,7 +153,11 @@ public class ExpenseDao {
     private Map<Long, Category> getUserCategories(User user) {
         return dslContext.select().from(CATEGORY)
                 .where(CATEGORY.USER_ID.eq(user.getId().toString()))
-                .fetch(record -> record.into(Category.class))
+                .fetch(record -> {
+                    Category into = record.into(Category.class);
+                    into.setUser(user);
+                    return into;
+                })
                 .stream().collect(Collectors.toMap(Category::getId, Function.identity()));
     }
 
@@ -137,14 +170,46 @@ public class ExpenseDao {
                     .from(EXPENSE)
                     .where(conditions)
                     .fetch(record -> {
-                        Expense into = record.into(Expense.class);
-                        into.setCategory(userCategories.get(record.getValue(EXPENSE.CATEGORY_ID)));
-                        return into;
+                        try {
+                            Expense into = fromRecord(record);
+
+                            into.setCategory(userCategories.get(record.getValue(EXPENSE.CATEGORY_ID)));
+                            return into;
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
                     });
 
             return expenses;
         } else {
             return Collections.emptyList();
         }
+    }
+
+    private Expense fromRecord(Record record) throws ParseException {
+        Expense exp = record.into(Expense.class);
+        String text = record.get(EXPENSE.DATE);
+        exp.setDate(dateFormat.parse(text));
+
+        return exp;
+    }
+
+    public void deleteWhere(User user, Condition... filter) {
+        Map<Long, Category> userCategories = getUserCategories(user);
+        Condition[] conditions = (Condition[]) ArrayUtils.add(filter, EXPENSE.CATEGORY_ID.in(userCategories.keySet()));
+
+        if (userCategories.isEmpty()) {
+            return;
+        }
+
+        dslContext.delete(EXPENSE)
+                .where(conditions)
+                .execute();
+    }
+
+
+    public long countExpenses(User user, long categoryId) {
+        Map<Long, Category> userCategories = getUserCategories(user);
+        return dslContext.fetchCount(EXPENSE, EXPENSE.CATEGORY_ID.in(userCategories.keySet()), EXPENSE.CATEGORY_ID.eq(categoryId));
     }
 }

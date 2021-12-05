@@ -1,9 +1,11 @@
 package com.ftpix.sss.services;
 
+import com.ftpix.sss.dao.CategoryDao;
+import com.ftpix.sss.dao.ExpenseDao;
+import com.ftpix.sss.dsl.Tables;
 import com.ftpix.sss.models.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.Where;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,32 +19,28 @@ import java.util.stream.Stream;
 public class CategoryService {
 
     private final Dao<Category, Long> categoryDao;
+    private final CategoryDao categoryDaoJooq;
     private final Dao<Expense, Long> expenseDao;
+    private final ExpenseDao expenseDaoJooq;
     private final Dao<RecurringExpense, Long> recurringExpenseDao;
 
 
     @Autowired
-    public CategoryService(Dao<Category, Long> categoryDao, Dao<Expense, Long> expenseDao, Dao<RecurringExpense, Long> recurringExpenseDao) {
+    public CategoryService(Dao<Category, Long> categoryDao, CategoryDao categoryDaoJooq, Dao<Expense, Long> expenseDao, ExpenseDao expenseDaoJooq, Dao<RecurringExpense, Long> recurringExpenseDao) {
         this.categoryDao = categoryDao;
+        this.categoryDaoJooq = categoryDaoJooq;
         this.expenseDao = expenseDao;
+        this.expenseDaoJooq = expenseDaoJooq;
         this.recurringExpenseDao = recurringExpenseDao;
     }
 
 
     public List<Category> getAll(User user) throws SQLException {
-        return categoryDao.queryBuilder()
-                .orderBy("category_order", true)
-                .where().eq("user_id", user.getId())
-                .query();
+        return categoryDaoJooq.getWhere(user);
     }
 
     public Category get(long id, User user) throws SQLException {
-        final Category category = categoryDao.queryForId(id);
-        if (category != null && category.getUser().getId().equals(user.getId())) {
-            return category;
-        } else {
-            return null;
-        }
+        return categoryDaoJooq.get(user, id).orElse(null);
     }
 
     public Map<String, List<NewCategoryIcon>> getAvailable(User user) throws SQLException {
@@ -50,18 +48,6 @@ public class CategoryService {
         return Stream.of(NewCategoryIcon.values())
                 .filter(s -> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s.name())))
                 .collect(Collectors.groupingBy(NewCategoryIcon::getCategory));
-    }
-
-    public long getNewCategoryOrder(User user) throws SQLException {
-        return Optional.ofNullable(categoryDao.queryBuilder()
-                        .selectColumns("category_order")
-                        .limit(1L)
-                        .orderBy("category_order", false)
-                        .where()
-                        .eq("user_id", user.getId())
-                        .queryForFirst())
-                .map(Category::getCategoryOrder)
-                .orElse(0);
     }
 
     public Category create(Category category, User user) throws Exception {
@@ -72,21 +58,17 @@ public class CategoryService {
             throw new Exception("Icon doesn't exist");
         }
 
-        long order = getNewCategoryOrder(user);
+        long order = categoryDaoJooq.getMaxCategoryOrder(user);
         category.setCategoryOrder((int) (order + 1));
         category.setUser(user);
-        categoryDao.create(category);
+        categoryDaoJooq.create(user, category);
 
         return category;
     }
 
     public Category update(Category category, User user) throws Exception {
-        if (category.getUser().getId().equals(user.getId())) {
-            categoryDao.update(category);
-            return category;
-        } else {
-            throw new Exception("Not allowed to edit category");
-        }
+        categoryDaoJooq.update(user, category);
+        return category;
     }
 
     public boolean delete(long id, User user) throws SQLException {
@@ -96,10 +78,10 @@ public class CategoryService {
         final Category category = get(id, user);
         if (category.getUser().getId().equals(user.getId())) {
 
-            expenseDao.delete(expenseDao.queryForFieldValues(fields));
+            expenseDaoJooq.deleteWhere(user, Tables.EXPENSE.CATEGORY_ID.eq(category.getId()));
             recurringExpenseDao.delete(recurringExpenseDao.queryForFieldValues(fields));
 
-            categoryDao.deleteById(id);
+            categoryDaoJooq.delete(user, category);
             return true;
         } else {
             return false;
@@ -203,16 +185,8 @@ public class CategoryService {
 
     public long countExpenses(long id, User currentUser) throws SQLException {
         return Optional.ofNullable(get(id, currentUser))
-                .map(c -> {
-                    final QueryBuilder<Expense, Long> query = expenseDao.queryBuilder();
-                    try {
-                        return query.where().eq("CATEGORY_ID", id)
-                                .countOf();
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                }).orElse(0L);
+                .map(c -> expenseDaoJooq.countExpenses(currentUser, id))
+                .orElse(0L);
     }
 
 }

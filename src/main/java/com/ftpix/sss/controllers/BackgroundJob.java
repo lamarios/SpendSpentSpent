@@ -1,5 +1,6 @@
 package com.ftpix.sss.controllers;
 
+import com.ftpix.sss.dao.ExpenseDao;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
@@ -23,15 +24,15 @@ public class BackgroundJob {
 
     private final Logger logger = LogManager.getLogger();
     private final RecurringExpenseService recurringExpenseService;
-    private final Dao<Expense, Long> expenseDao;
+    private final ExpenseDao expenseDaoJooq;
     private final Dao<RecurringExpense, Long> recurringExpenseDao;
     private final UserService userService;
     private final EmailService emailService;
 
     @Autowired
-    public BackgroundJob(RecurringExpenseService recurringExpenseService, Dao<Expense, Long> expenseDao, Dao<RecurringExpense, Long> recurringExpenseDao, UserService userService, EmailService emailService) {
+    public BackgroundJob(RecurringExpenseService recurringExpenseService, ExpenseDao expenseDaoJooq, Dao<RecurringExpense, Long> recurringExpenseDao, UserService userService, EmailService emailService) {
         this.recurringExpenseService = recurringExpenseService;
-        this.expenseDao = expenseDao;
+        this.expenseDaoJooq = expenseDaoJooq;
         this.recurringExpenseDao = recurringExpenseDao;
         this.userService = userService;
         this.emailService = emailService;
@@ -55,7 +56,7 @@ public class BackgroundJob {
                     expense.setCategory(recurring.getCategory());
                     expense.setDate(recurring.getNextOccurrence());
                     expense.setIncome(false);
-                    expenseDao.create(expense);
+                    expenseDaoJooq.create(user, expense);
 
                     recurring.setLastOccurrence(recurring.getNextOccurrence());
                     recurring.setNextOccurrence(recurringExpenseService.calculateNextDate(recurring));

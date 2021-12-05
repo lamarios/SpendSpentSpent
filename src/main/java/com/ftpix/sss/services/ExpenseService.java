@@ -2,6 +2,7 @@ package com.ftpix.sss.services;
 
 import com.ftpix.sss.dao.ExpenseDao;
 import com.ftpix.sss.dsl.Tables;
+import com.ftpix.sss.dsl.tables.records.ExpenseRecord;
 import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.DailyExpense;
@@ -30,113 +31,42 @@ public class ExpenseService {
     public final CategoryService categoryService;
     protected final Log logger = LogFactory.getLog(this.getClass());
     private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat monthOnly = new SimpleDateFormat("yyyy-MM");
 
-    private final Dao<Expense, Long> expenseDao;
     private final ExpenseDao expenseDaoJooq;
 
     @Autowired
-    public ExpenseService(CategoryService categoryService, Dao<Expense, Long> expenseDao, ExpenseDao expenseDaoJooq) {
+    public ExpenseService(CategoryService categoryService, ExpenseDao expenseDaoJooq) {
         this.categoryService = categoryService;
-        this.expenseDao = expenseDao;
         this.expenseDaoJooq = expenseDaoJooq;
     }
 
     public List<Expense> getAll(User user) throws Exception {
-        final List<Long> userCategoriesId = categoryService.getUserCategoriesId(user);
-        if (!userCategoriesId.isEmpty()) {
-            return expenseDao.queryBuilder()
-                    .where()
-                    .in(CATEGORY_ID, userCategoriesId)
-                    .query();
-        } else {
-            return new ArrayList<Expense>(0);
-        }
+        return expenseDaoJooq.getWhere(user);
     }
 
     public Expense get(long id, User user) throws Exception {
-        final List<Long> userCategoriesId = categoryService.getUserCategoriesId(user);
-        if (!userCategoriesId.isEmpty()) {
-            return expenseDao.queryBuilder()
-                    .where()
-                    .in(CATEGORY_ID, userCategoriesId)
-                    .and()
-                    .eq("ID", id)
-                    .queryForFirst();
-        } else {
-            return null;
-        }
+        return expenseDaoJooq.get(user, id).orElse(null);
     }
 
     public Map<String, DailyExpense> getByDay(String month, User user) throws Exception {
-        String sql = "SELECT DISTINCT `date` FROM `expense`";
-
-        // this should already throw exception if the user is not allowed
-        final List<Long> userCategoriesId = categoryService.getUserCategoriesId(user);
-
-        if (!userCategoriesId.isEmpty()) {
-            QueryBuilder<Expense, Long> builder = expenseDao.queryBuilder().distinct().selectColumns(DATE);
-
-            if (month != null) {
-//            sql += " WHERE `date` LIKE '" + query.get("month")[0] + "%'";
-                sql += " WHERE `date` LIKE '" + month + "%'";
-                final Date fromDate = df.parse(month + "-01");
-                Calendar c = Calendar.getInstance();
-                c.setTime(fromDate);
-                c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-                System.out.println(c.getTime());
-                builder.setWhere(builder.where().ge(DATE, fromDate).and().le(DATE, c.getTime()));
-            }
-
-            sql += " ORDER BY `date` DESC";
-            builder = builder.orderBy(DATE, false);
-
-            logger.info("String SQL: [" + sql + "]");
-//        List<SqlRow> rows = Ebean.createSqlQuery(sql).findList();
 
 
-            Map<String, DailyExpense> result = new LinkedHashMap<>();
-//        List<String[]> sqlResults = expenseDao.queryRaw(sql).getResults();
+        Map<String, List<Expense>> grouped = expenseDaoJooq.getWhere(user, EXPENSE.DATE.like(month + "%"))
+                .stream()
+                .collect(Collectors.groupingBy(expense -> df.format(expense.getDate())));
 
-            List<String[]> sqlResults = builder.queryRaw().getResults();
-            sqlResults.forEach((row) -> {
-                String date = row[0];
-                try {
-//            List<Expense> expenses = Expense.find.select("*").where().eq(DATE, date).findList();
+        Map<String, DailyExpense> result = new HashMap<>();
 
-                    Map<String, Object> fields = new HashMap<>();
-                    fields.put(DATE, df.parse(date));
-                    final List<Expense> expenses = expenseDao.queryBuilder()
-                            .where()
-                            .in(CATEGORY_ID, userCategoriesId)
-                            .and()
-                            .eq(DATE, df.parse(date))
-                            .query();
+        grouped.forEach((s, expenses) -> {
+            DailyExpense exp = new DailyExpense();
+            exp.setDate(s);
+            exp.setExpenses(expenses);
+            exp.setTotal(expenses.stream().mapToDouble(Expense::getAmount).sum());
+            result.put(s, exp);
+        });
 
-                    if (!expenses.isEmpty()) {
-                        double outcome = 0;
-                        for (Expense expense : expenses) {
-                            outcome += expense.getAmount();
-                            //Weird bug, not showing category and color if not calling this…
-                            expense.getCategory().getIcon();
-                        }
-
-                        final DailyExpense dailyExpense = new DailyExpense();
-                        dailyExpense.setTotal(outcome);
-                        dailyExpense.setExpenses(expenses);
-                        dailyExpense.setDate(date);
-
-                        result.put(date, dailyExpense);
-                    }
-                } catch (SQLException | ParseException e) {
-                    logger.error("Couldn't get the expenses for date {}", e);
-                }
-
-            });
-
-            return result;
-        } else {
-            return new HashMap<>();
-        }
+        return result;
     }
 
     public Expense create(Expense expense, User user) throws Exception {
@@ -179,22 +109,7 @@ public class ExpenseService {
     }
 
     public List<String> getMonths(User user) throws Exception {
-        // this should already throw exception if the user is not allowed
-        final List<Long> userCategoriesId = categoryService.getUserCategoriesId(user);
-//        String sql = "SELECT `date` FROM `expense`  ORDER BY `date` ASC";
-
-        return expenseDao.queryBuilder()
-                .distinct()
-                .selectColumns(DATE)
-                .orderBy(DATE, true)
-                .where()
-                .in(CATEGORY_ID, userCategoriesId).queryRaw()
-                .getResults()
-                .stream()
-                .map(r -> r[0])
-                .map(s -> s.substring(0, 7))
-                .distinct()
-                .collect(Collectors.toList());
+        return expenseDaoJooq.getMonths(user);
     }
 
     public List<Expense> getForDateLikeAndCategory(User user, String date, Category category) throws SQLException {
