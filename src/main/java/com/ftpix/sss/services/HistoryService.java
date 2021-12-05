@@ -1,6 +1,10 @@
 package com.ftpix.sss.services;
 
+import com.ftpix.sss.dao.CategoryDao;
 import com.ftpix.sss.dao.ExpenseDao;
+import com.ftpix.sss.dao.MonthlyHistoryDao;
+import com.ftpix.sss.dao.YearlyHistoryDao;
+import com.ftpix.sss.dsl.Tables;
 import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.utils.DateUtils;
@@ -23,7 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Service
-public class HistoryService implements DaoListener<Expense> {
+public class HistoryService {
     protected final Log logger = LogFactory.getLog(this.getClass());
     private final CategoryService categoryService;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -36,19 +40,59 @@ public class HistoryService implements DaoListener<Expense> {
     private final Dao<MonthlyHistory, UUID> monthlyHistoryDao;
     private final Dao<Expense, Long> expenseDao;
     private final ExpenseDao expenseDaoJooq;
+    private final CategoryDao categoryDaoJooq;
+    private final MonthlyHistoryDao monthlyHistoryDaoJooq;
+    private final YearlyHistoryDao yearlyHistoryDaoJooq;
 
     private final ExecutorService cacheUpdateThread = Executors.newSingleThreadExecutor();
+    private final DaoListener<Category> categoryDaoListener = new DaoListener<Category>() {
+        @Override
+        public void afterInsert(User user, Category newRecord) {
+
+        }
+
+        @Override
+        public void afterDelete(User user, Category deleted) {
+            monthlyHistoryDaoJooq.deleteWhere(Tables.MONTHLY_HISTORY.CATEGORY_ID.eq(deleted.getId()));
+            yearlyHistoryDaoJooq.deleteWhere(Tables.YEARLY_HISTORY.CATEGORY_ID.eq(deleted.getId()));
+        }
+    };
+
+    private final DaoListener<Expense> expenseDaoListener = new DaoListener<Expense>() {
+        @Override
+        public void afterInsert(User user, Expense newRecord) {
+            try {
+                cacheForExpense(user, newRecord);
+            } catch (SQLException e) {
+                logger.error("Couldn't refresh cache expense", e);
+            }
+        }
+
+        @Override
+        public void afterDelete(User user, Expense deleted) {
+            try {
+                cacheForExpense(user, deleted);
+            } catch (SQLException e) {
+                logger.error("Couldn't refresh cache expense", e);
+            }
+        }
+    };
 
 
     @Autowired
-    public HistoryService(CategoryService categoryService, ExpenseService expenseService, Dao<YearlyHistory, UUID> yearlyHistoryDao, Dao<MonthlyHistory, UUID> monthlyHistoryDao, Dao<Expense, Long> expenseDao, ExpenseDao expenseDaoJooq) {
+    public HistoryService(CategoryService categoryService, ExpenseService expenseService, Dao<YearlyHistory, UUID> yearlyHistoryDao, Dao<MonthlyHistory, UUID> monthlyHistoryDao, Dao<Expense, Long> expenseDao, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq) {
         this.categoryService = categoryService;
         this.expenseService = expenseService;
         this.yearlyHistoryDao = yearlyHistoryDao;
         this.monthlyHistoryDao = monthlyHistoryDao;
         this.expenseDao = expenseDao;
         this.expenseDaoJooq = expenseDaoJooq;
-        this.expenseDaoJooq.addListener(this);
+        this.categoryDaoJooq = categoryDaoJooq;
+        this.monthlyHistoryDaoJooq = monthlyHistoryDaoJooq;
+        this.yearlyHistoryDaoJooq = yearlyHistoryDaoJooq;
+
+        this.expenseDaoJooq.addListener(expenseDaoListener);
+        this.categoryDaoJooq.addListener(categoryDaoListener);
     }
 
     public List<CategoryOverall> yearly(User user) throws Exception {
@@ -346,21 +390,4 @@ public class HistoryService implements DaoListener<Expense> {
     }
 
 
-    @Override
-    public void afterInsert(User user, Expense newRecord) {
-        try {
-            cacheForExpense(user, newRecord);
-        } catch (SQLException e) {
-            logger.error("Couldn't refresh cache expense", e);
-        }
-    }
-
-    @Override
-    public void afterDelete(User user, Expense deleted) {
-        try {
-            cacheForExpense(user, deleted);
-        } catch (SQLException e) {
-            logger.error("Couldn't refresh cache expense", e);
-        }
-    }
 }

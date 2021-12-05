@@ -1,6 +1,7 @@
 package com.ftpix.sss.dao;
 
 import com.ftpix.sss.dsl.Tables;
+import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
 import org.apache.commons.lang.ArrayUtils;
@@ -10,6 +11,7 @@ import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,8 @@ import static com.ftpix.sss.dsl.Tables.*;
 @Component("categoryDaoJooq")
 public class CategoryDao {
     private final DSLContext dslContext;
+
+    private final List<DaoListener<Category>> listeners = new ArrayList<>();
 
     @Autowired
     public CategoryDao(DSLContext dslContext) {
@@ -34,6 +38,10 @@ public class CategoryDao {
                 }));
     }
 
+    public void addListener(DaoListener<Category> listener) {
+        listeners.add(listener);
+    }
+
 
     public Category create(User user, Category category) {
         Long id = dslContext.insertInto(CATEGORY,
@@ -48,6 +56,8 @@ public class CategoryDao {
                 .fetchOne(r -> r.into(Long.class));
         category.setId(id);
 
+
+        listeners.forEach(l -> l.afterInsert(user, category));
         return category;
     }
 
@@ -87,9 +97,15 @@ public class CategoryDao {
     }
 
     public boolean delete(User user, Category category) {
-        return dslContext.delete(CATEGORY)
+        boolean b = dslContext.delete(CATEGORY)
                 .where(CATEGORY.USER_ID.eq(user.getId().toString()), CATEGORY.ID.eq(category.getId()))
                 .execute() > 0;
+
+        if (b) {
+            listeners.forEach(l -> l.afterDelete(user, category));
+        }
+
+        return b;
     }
 
 }

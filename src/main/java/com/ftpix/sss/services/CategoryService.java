@@ -3,6 +3,7 @@ package com.ftpix.sss.services;
 import com.ftpix.sss.dao.CategoryDao;
 import com.ftpix.sss.dao.ExpenseDao;
 import com.ftpix.sss.dsl.Tables;
+import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -18,18 +19,14 @@ import java.util.stream.Stream;
 @Service
 public class CategoryService {
 
-    private final Dao<Category, Long> categoryDao;
     private final CategoryDao categoryDaoJooq;
-    private final Dao<Expense, Long> expenseDao;
     private final ExpenseDao expenseDaoJooq;
     private final Dao<RecurringExpense, Long> recurringExpenseDao;
 
 
     @Autowired
-    public CategoryService(Dao<Category, Long> categoryDao, CategoryDao categoryDaoJooq, Dao<Expense, Long> expenseDao, ExpenseDao expenseDaoJooq, Dao<RecurringExpense, Long> recurringExpenseDao) {
-        this.categoryDao = categoryDao;
+    public CategoryService(CategoryDao categoryDaoJooq, ExpenseDao expenseDaoJooq, Dao<RecurringExpense, Long> recurringExpenseDao) {
         this.categoryDaoJooq = categoryDaoJooq;
-        this.expenseDao = expenseDao;
         this.expenseDaoJooq = expenseDaoJooq;
         this.recurringExpenseDao = recurringExpenseDao;
     }
