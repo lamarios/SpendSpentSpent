@@ -1,5 +1,6 @@
 package com.ftpix.sss.services;
 
+import com.ftpix.sss.dao.SettingsDao;
 import com.ftpix.sss.models.Settings;
 import com.j256.ormlite.dao.Dao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +12,16 @@ import java.util.List;
 @Service
 public class SettingsService {
     public final static String OBFUSCATED_PASSWORD = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-    private final Dao<Settings, String> settingsDao;
+    private final SettingsDao settingsDaoJooq;
 
     @Autowired
-    public SettingsService(Dao<Settings, String> settingsDao) {
-        this.settingsDao = settingsDao;
+    public SettingsService(SettingsDao settingsDaoJooq) {
+        this.settingsDaoJooq = settingsDaoJooq;
     }
 
 
     public List<Settings> getAll() throws SQLException {
-        return settingsDao.queryForAll();
+        return settingsDaoJooq.getWhere();
     }
 
     public boolean saveAll(List<Settings> settings) throws SQLException {
@@ -32,7 +33,7 @@ public class SettingsService {
     }
 
     public Settings getByName(String name) throws SQLException {
-        return settingsDao.queryForId(name);
+        return settingsDaoJooq.queryForId(name);
     }
 
     public Settings save(Settings settings) throws SQLException {
@@ -41,7 +42,7 @@ public class SettingsService {
             return settings;
         }
 
-        settingsDao.createOrUpdate(settings);
+        settingsDaoJooq.createOrUpdate(settings);
         return settings;
     }
 }

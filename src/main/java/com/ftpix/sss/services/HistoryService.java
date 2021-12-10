@@ -36,8 +36,6 @@ public class HistoryService {
     private final DateTimeFormatter yearlyHistoryDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
     private final ExpenseService expenseService;
 
-    private final Dao<YearlyHistory, UUID> yearlyHistoryDao;
-    private final Dao<MonthlyHistory, UUID> monthlyHistoryDao;
     private final Dao<Expense, Long> expenseDao;
     private final ExpenseDao expenseDaoJooq;
     private final CategoryDao categoryDaoJooq;
@@ -61,30 +59,32 @@ public class HistoryService {
     private final DaoListener<Expense> expenseDaoListener = new DaoListener<Expense>() {
         @Override
         public void afterInsert(User user, Expense newRecord) {
-            try {
-                cacheForExpense(user, newRecord);
-            } catch (SQLException e) {
-                logger.error("Couldn't refresh cache expense", e);
-            }
+            cacheUpdateThread.execute(() -> {
+                try {
+                    cacheForExpense(user, newRecord);
+                } catch (SQLException e) {
+                    logger.error(e);
+                }
+            });
         }
 
         @Override
         public void afterDelete(User user, Expense deleted) {
-            try {
-                cacheForExpense(user, deleted);
-            } catch (SQLException e) {
-                logger.error("Couldn't refresh cache expense", e);
-            }
+            cacheUpdateThread.execute(() -> {
+                try {
+                    cacheForExpense(user, deleted);
+                } catch (SQLException e) {
+                    logger.error(e);
+                }
+            });
         }
     };
 
 
     @Autowired
-    public HistoryService(CategoryService categoryService, ExpenseService expenseService, Dao<YearlyHistory, UUID> yearlyHistoryDao, Dao<MonthlyHistory, UUID> monthlyHistoryDao, Dao<Expense, Long> expenseDao, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq) {
+    public HistoryService(CategoryService categoryService, ExpenseService expenseService, Dao<Expense, Long> expenseDao, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq) {
         this.categoryService = categoryService;
         this.expenseService = expenseService;
-        this.yearlyHistoryDao = yearlyHistoryDao;
-        this.monthlyHistoryDao = monthlyHistoryDao;
         this.expenseDao = expenseDao;
         this.expenseDaoJooq = expenseDaoJooq;
         this.categoryDaoJooq = categoryDaoJooq;
@@ -312,7 +312,6 @@ public class HistoryService {
     public void cacheForExpense(User user, Expense expense) throws SQLException {
         LocalDate localDate = DateUtils.convertToLocalDateViaInstant(expense.getDate());
         String date = localDate.format(historyDateTimeFormatter);
-        System.out.println(date);
 
         cacheForCategory(user, Integer.parseInt(date), expense.getCategory());
     }
@@ -326,14 +325,8 @@ public class HistoryService {
     public void cacheForCategory(User user, int date, Category category) throws SQLException {
         logger.info("Refreshing cache for category :" + category.getId());
 
-        cacheUpdateThread.execute(() -> {
-            try {
-                cacheForCategoryMonthly(user, date, category);
-                cacheForCategoryYearly(user, Math.floorDiv(date, 100), category);
-            } catch (SQLException e) {
-                logger.error(e);
-            }
-        });
+        cacheForCategoryMonthly(user, date, category);
+        cacheForCategoryYearly(user, Math.floorDiv(date, 100), category);
     }
 
     /**
@@ -346,20 +339,20 @@ public class HistoryService {
         double sum = forDateLikeAndCategory.stream().mapToDouble(Expense::getAmount)
                 .sum();
 
-        QueryBuilder<YearlyHistory, UUID> query = yearlyHistoryDao.queryBuilder();
-        Where<YearlyHistory, UUID> eq = query.where().eq("CATEGORY_ID", category.getId()).and().eq("DATE", date);
-        query.setWhere(eq);
+        Optional<YearlyHistory> history = yearlyHistoryDaoJooq.getFirstWhere(Tables.YEARLY_HISTORY.CATEGORY_ID.eq(category.getId()), Tables.YEARLY_HISTORY.DATE.eq(date));
 
-        YearlyHistory yearlyHistory = query.queryForFirst();
-        if (yearlyHistory == null) {
+        YearlyHistory yearlyHistory;
+        if (history.isEmpty()) {
             yearlyHistory = new YearlyHistory();
             yearlyHistory.setCategory(category);
             yearlyHistory.setDate(date);
+        } else {
+            yearlyHistory = history.get();
         }
 
         yearlyHistory.setTotal(sum);
 
-        yearlyHistoryDao.createOrUpdate(yearlyHistory);
+        yearlyHistoryDaoJooq.createOrUpdate(yearlyHistory);
     }
 
     /**
@@ -373,20 +366,20 @@ public class HistoryService {
         double sum = forDateLikeAndCategory.stream().mapToDouble(Expense::getAmount)
                 .sum();
 
-        QueryBuilder<MonthlyHistory, UUID> query = monthlyHistoryDao.queryBuilder();
-        Where<MonthlyHistory, UUID> eq = query.where().eq("CATEGORY_ID", category.getId()).and().eq("DATE", date);
-        query.setWhere(eq);
+        Optional<MonthlyHistory> history = monthlyHistoryDaoJooq.getFirstWhere(Tables.MONTHLY_HISTORY.CATEGORY_ID.eq(category.getId()), Tables.MONTHLY_HISTORY.DATE.eq(date));
 
-        MonthlyHistory monthlyHistory = query.queryForFirst();
-        if (monthlyHistory == null) {
+        MonthlyHistory monthlyHistory;
+        if (history.isEmpty()) {
             monthlyHistory = new MonthlyHistory();
             monthlyHistory.setCategory(category);
             monthlyHistory.setDate(date);
+        } else {
+            monthlyHistory = history.get();
         }
 
         monthlyHistory.setTotal(sum);
 
-        monthlyHistoryDao.createOrUpdate(monthlyHistory);
+        monthlyHistoryDaoJooq.createOrUpdate(monthlyHistory);
     }
 
 

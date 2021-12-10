@@ -3,11 +3,14 @@ package com.ftpix.sss;
 
 import com.ftpix.sss.dao.ExpenseDao;
 import com.ftpix.sss.models.*;
+import com.ftpix.sss.services.HistoryService;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jooq.AlterTableAddStep;
 import org.jooq.CloseableDSLContext;
 import org.jooq.impl.DSL;
@@ -15,12 +18,15 @@ import org.jooq.impl.DefaultDSLContext;
 import org.jooq.impl.SQLDataType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +35,8 @@ import java.util.stream.Stream;
 
 @Configuration
 public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
-    private final static int DB_VERSION = 10;
+    protected final Log logger = LogFactory.getLog(this.getClass());
+    private final static int DB_VERSION = 11;
     @Value("${DB_PATH:./SSS}")
     private String dbPath;
     @Value("${DB_USER:}")
@@ -134,7 +141,9 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
 
     @Bean
     public DefaultDSLContext dslContext(String jdbcUrl) {
-        return (DefaultDSLContext) DSL.using(jdbcUrl, dbUsername, dbPassword);
+        DefaultDSLContext using = (DefaultDSLContext) DSL.using(jdbcUrl, dbUsername, dbPassword);
+        using.settings().setRenderSchema(false);
+        return using;
     }
 
 
@@ -144,8 +153,11 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
         Dao<SchemaVersion, Long> schemaDao = (Dao<SchemaVersion, Long>) applicationReadyEvent.getApplicationContext().getBean("schemaDao");
         Dao<Category, Long> categoryDao = (Dao<Category, Long>) applicationReadyEvent.getApplicationContext().getBean("categoryDao");
         Dao<Expense, Long> expenseDao = (Dao<Expense, Long>) applicationReadyEvent.getApplicationContext().getBean("expenseDao");
+        Dao<User, Long> userDao = (Dao<User, Long>) applicationReadyEvent.getApplicationContext().getBean("userDao");
 
         final String jdbcUrl = (String) applicationReadyEvent.getApplicationContext().getBean("jdbcUrl");
+        final HistoryService historyService = (HistoryService) applicationReadyEvent.getApplicationContext().getBean("historyService");
+        final ExpenseDao expenseDaoJooq = (ExpenseDao) applicationReadyEvent.getApplicationContext().getBean("expenseDaoJooq");
 
         Integer schemaVersion = null;
         try {
@@ -240,6 +252,25 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
                 } catch (Exception e) {
                     e.printStackTrace();
                     throw e;
+                }
+            }
+
+            if (schemaVersion < 11) {
+                newVersion = 11;
+                int pageSize = 20;
+                int offset = 0;
+
+                List<Expense> expenses;
+                for (User user : userDao.queryForAll()) {
+
+                    do {
+                        logger.info("user:" + user.getId() + " offset " + offset);
+                        expenses = expenseDaoJooq.getWhere(user, pageSize, offset);
+                        for (Expense e : expenses) {
+                            historyService.cacheForExpense(user, e);
+                        }
+                        offset += pageSize;
+                    } while (expenses.size() == pageSize);
                 }
             }
 

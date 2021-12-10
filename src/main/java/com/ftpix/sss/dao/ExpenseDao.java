@@ -1,12 +1,13 @@
 package com.ftpix.sss.dao;
 
+import com.ftpix.sss.dsl.tables.records.ExpenseRecord;
 import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
 import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.commons.lang.ArrayUtils;
-import org.jooq.Condition;
+import org.jooq.*;
 import org.jooq.Record;
 import org.jooq.impl.DefaultDSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class ExpenseDao {
     private final DefaultDSLContext dslContext;
     private final DateTimeFormatter date = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
     private final DateTimeFormatter time = DateTimeFormatter.ofPattern("HH:mm");
 
     private List<DaoListener<Expense>> listeners = new ArrayList<>();
@@ -75,7 +77,6 @@ public class ExpenseDao {
             throw new InvalidParameterException("User can't add expense to this category");
         }
 
-        LocalDateTime now = LocalDateTime.now();
         Long id = dslContext.insertInto(EXPENSE,
                         EXPENSE.AMOUNT,
                         EXPENSE.CATEGORY_ID,
@@ -90,12 +91,12 @@ public class ExpenseDao {
                 ).values(
                         expense.getAmount(),
                         expense.getCategory().getId(),
-                        now.format(date),
+                        dateFormat.format(expense.getDate()),
                         expense.getType(),
                         expense.getLatitude(),
                         expense.getLongitude(),
                         expense.getNote(),
-                        now.format(time),
+                        timeFormat.format(expense.getDate()),
                         System.currentTimeMillis(),
                         (byte) (expense.isIncome() ? 1 : 0)
                 ).returningResult(EXPENSE.ID)
@@ -162,13 +163,21 @@ public class ExpenseDao {
     }
 
     public List<Expense> getWhere(User user, Condition... filter) throws SQLException {
+        return getWhere(user, null, null, filter);
+    }
+
+    public List<Expense> getWhere(User user, Integer limit, Integer offset, Condition... filter) throws SQLException {
         Map<Long, Category> userCategories = getUserCategories(user);
         Condition[] conditions = (Condition[]) ArrayUtils.add(filter, EXPENSE.CATEGORY_ID.in(userCategories.keySet()));
 
         if (userCategories.size() > 0) {
-            List<Expense> expenses = dslContext.select()
+            Select<Record> select = dslContext.select()
                     .from(EXPENSE)
                     .where(conditions)
+                    .limit(limit != null ? limit : Integer.MAX_VALUE)
+                    .offset(offset != null ? offset : 0);
+
+            List<Expense> expenses = select
                     .fetch(record -> {
                         try {
                             Expense into = fromRecord(record);
