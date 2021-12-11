@@ -52,7 +52,7 @@ public class ResetPasswordService {
                             // it expires in a day
                             LocalDateTime expiry = LocalDateTime.now().plusDays(1);
                             resetPassword.setExpiryDate(Timestamp.valueOf(expiry).getTime());
-                            resetPasswordDaoJooq.create(resetPassword);
+                            resetPasswordDaoJooq.insert(resetPassword);
 
                             Map<String, Object> templateData = new HashMap<>();
 

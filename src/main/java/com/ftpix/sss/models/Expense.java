@@ -1,5 +1,6 @@
 package com.ftpix.sss.models;
 
+import com.ftpix.sss.dao.HasCategory;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -7,7 +8,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.util.Date;
 
 @DatabaseTable(tableName = "EXPENSE")
-public class Expense {
+public class Expense implements HasCategory {
 
     public static final int TYPE_NORMAL = 1, TYPE_RECURRENT = 2;
 
@@ -86,10 +87,12 @@ public class Expense {
         this.income = income;
     }
 
+    @Override
     public Category getCategory() {
         return category;
     }
 
+    @Override
     public void setCategory(Category category) {
         this.category = category;
     }

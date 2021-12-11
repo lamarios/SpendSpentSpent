@@ -5,7 +5,7 @@ import com.ftpix.sss.dao.ExpenseDao;
 import com.ftpix.sss.dao.MonthlyHistoryDao;
 import com.ftpix.sss.dao.YearlyHistoryDao;
 import com.ftpix.sss.dsl.Tables;
-import com.ftpix.sss.listeners.DaoListener;
+import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.utils.DateUtils;
 import com.j256.ormlite.dao.Dao;
@@ -43,7 +43,7 @@ public class HistoryService {
     private final YearlyHistoryDao yearlyHistoryDaoJooq;
 
     private final ExecutorService cacheUpdateThread = Executors.newSingleThreadExecutor();
-    private final DaoListener<Category> categoryDaoListener = new DaoListener<Category>() {
+    private final DaoUserListener<Category> categoryDaoListener = new DaoUserListener<Category>() {
         @Override
         public void afterInsert(User user, Category newRecord) {
 
@@ -56,7 +56,7 @@ public class HistoryService {
         }
     };
 
-    private final DaoListener<Expense> expenseDaoListener = new DaoListener<Expense>() {
+    private final DaoUserListener<Expense> expenseDaoListener = new DaoUserListener<Expense>() {
         @Override
         public void afterInsert(User user, Expense newRecord) {
             cacheUpdateThread.execute(() -> {
@@ -339,20 +339,21 @@ public class HistoryService {
         double sum = forDateLikeAndCategory.stream().mapToDouble(Expense::getAmount)
                 .sum();
 
-        Optional<YearlyHistory> history = yearlyHistoryDaoJooq.getFirstWhere(Tables.YEARLY_HISTORY.CATEGORY_ID.eq(category.getId()), Tables.YEARLY_HISTORY.DATE.eq(date));
+        Optional<YearlyHistory> history = yearlyHistoryDaoJooq.getOneWhere(Tables.YEARLY_HISTORY.CATEGORY_ID.eq(category.getId()), Tables.YEARLY_HISTORY.DATE.eq(date));
 
         YearlyHistory yearlyHistory;
         if (history.isEmpty()) {
             yearlyHistory = new YearlyHistory();
             yearlyHistory.setCategory(category);
             yearlyHistory.setDate(date);
+            yearlyHistoryDaoJooq.insert(yearlyHistory);
         } else {
             yearlyHistory = history.get();
         }
 
         yearlyHistory.setTotal(sum);
 
-        yearlyHistoryDaoJooq.createOrUpdate(yearlyHistory);
+        yearlyHistoryDaoJooq.update(yearlyHistory);
     }
 
     /**
@@ -366,20 +367,21 @@ public class HistoryService {
         double sum = forDateLikeAndCategory.stream().mapToDouble(Expense::getAmount)
                 .sum();
 
-        Optional<MonthlyHistory> history = monthlyHistoryDaoJooq.getFirstWhere(Tables.MONTHLY_HISTORY.CATEGORY_ID.eq(category.getId()), Tables.MONTHLY_HISTORY.DATE.eq(date));
+        Optional<MonthlyHistory> history = monthlyHistoryDaoJooq.getOneWhere(Tables.MONTHLY_HISTORY.CATEGORY_ID.eq(category.getId()), Tables.MONTHLY_HISTORY.DATE.eq(date));
 
         MonthlyHistory monthlyHistory;
         if (history.isEmpty()) {
             monthlyHistory = new MonthlyHistory();
             monthlyHistory.setCategory(category);
             monthlyHistory.setDate(date);
+            monthlyHistoryDaoJooq.insert(monthlyHistory);
         } else {
             monthlyHistory = history.get();
         }
 
         monthlyHistory.setTotal(sum);
 
-        monthlyHistoryDaoJooq.createOrUpdate(monthlyHistory);
+        monthlyHistoryDaoJooq.update(monthlyHistory);
     }
 
 

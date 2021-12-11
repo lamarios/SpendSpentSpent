@@ -258,19 +258,19 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
             if (schemaVersion < 11) {
                 newVersion = 11;
                 int pageSize = 20;
-                int offset = 0;
+                int page = 0;
 
-                List<Expense> expenses;
+                PaginatedResults<Expense> expenses;
                 for (User user : userDao.queryForAll()) {
 
                     do {
-                        logger.info("user:" + user.getId() + " offset " + offset);
-                        expenses = expenseDaoJooq.getWhere(user, pageSize, offset);
-                        for (Expense e : expenses) {
+                        logger.info("user:" + user.getId() + " page " + page);
+                        expenses = expenseDaoJooq.getPaginatedWhere(user, page, pageSize);
+                        for (Expense e : expenses.getData()) {
                             historyService.cacheForExpense(user, e);
                         }
-                        offset += pageSize;
-                    } while (expenses.size() == pageSize);
+                        page++;
+                    } while (expenses.getData().size() == pageSize);
                 }
             }
 

@@ -116,18 +116,8 @@ public class RecurringExpenseService {
     }
 
     public RecurringExpense create(RecurringExpense expense, User user) throws Exception {
-
-        Category category = categoryService.get(expense.getCategory().getId(), user);
-        if (category == null) {
-            throw new Exception("Category doesn't exist");
-        } else {
-            expense.setCategory(category);
-        }
-
         expense.setNextOccurrence(calculateNextDate(expense));
-
-        recurringExpenseDaoJooq.create(expense);
-
+        recurringExpenseDaoJooq.insert(user, expense);
         return expense;
     }
 

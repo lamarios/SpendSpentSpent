@@ -90,7 +90,7 @@ public class ExpenseService {
             expense.setType(Expense.TYPE_NORMAL);
         }
 
-        expenseDaoJooq.create(user, expense);
+        expenseDaoJooq.insert(user, expense);
 
         return expense;
     }

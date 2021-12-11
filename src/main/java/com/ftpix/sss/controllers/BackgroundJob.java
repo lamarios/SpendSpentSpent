@@ -57,12 +57,12 @@ public class BackgroundJob {
                     expense.setCategory(recurring.getCategory());
                     expense.setDate(recurring.getNextOccurrence());
                     expense.setIncome(false);
-                    expenseDaoJooq.create(user, expense);
+                    expenseDaoJooq.insert(user, expense);
 
                     recurring.setLastOccurrence(recurring.getNextOccurrence());
                     recurring.setNextOccurrence(recurringExpenseService.calculateNextDate(recurring));
 
-                    recurringExpenseDaoJooq.update(recurring);
+                    recurringExpenseDaoJooq.update(user, recurring);
                     logger.info("Expense added, next occurence:[{}]", recurring.getNextOccurrence());
 
                     String type = "";

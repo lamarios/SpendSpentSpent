@@ -1,37 +1,72 @@
 package com.ftpix.sss.dao;
 
-import com.ftpix.sss.dsl.Tables;
+import com.ftpix.sss.dsl.tables.records.YearlyHistoryRecord;
+import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.YearlyHistory;
-import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.impl.TableImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import static com.ftpix.sss.dsl.Tables.*;
+import static com.ftpix.sss.dsl.Tables.CATEGORY;
+import static com.ftpix.sss.dsl.Tables.YEARLY_HISTORY;
 
 @Component("yearlyHistoryDaoJooq")
-public class YearlyHistoryDao {
+public class YearlyHistoryDao implements Dao<YearlyHistoryRecord, YearlyHistory> {
 
     private final DSLContext dslContext;
+    private final List<DaoListener<YearlyHistory>> listeners = new ArrayList<>();
 
     @Autowired
     public YearlyHistoryDao(DSLContext dslContext) {
         this.dslContext = dslContext;
     }
 
-
-    public void deleteWhere(Condition... conditions) {
-        if (conditions.length > 0) {
-            dslContext.delete(YEARLY_HISTORY)
-                    .where(conditions)
-                    .execute();
-        }
+    @Override
+    public DSLContext getDsl() {
+        return dslContext;
     }
 
+    @Override
+    public void addListener(DaoListener<YearlyHistory> listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public List<DaoListener<YearlyHistory>> getListeners() {
+        return listeners;
+    }
+
+    @Override
+    public TableImpl<YearlyHistoryRecord> getTable() {
+        return YEARLY_HISTORY;
+    }
+
+    @Override
+    public YearlyHistory fromRecord(YearlyHistoryRecord r) {
+        YearlyHistory h = new YearlyHistory();
+        h.setId(UUID.fromString(r.getId()));
+        h.setCategory(getCategory(r.getCategoryId()));
+        h.setDate(r.getDate());
+        h.setTotal(r.getTotal());
+
+        return h;
+    }
+
+    @Override
+    public YearlyHistoryRecord toRecord(YearlyHistory o) {
+        YearlyHistoryRecord r = new YearlyHistoryRecord();
+        r.setId(o.getId().toString());
+        r.setCategoryId(o.getCategory().getId());
+        r.setDate(o.getDate());
+        r.setTotal(o.getTotal());
+        return r;
+    }
 
     private Category getCategory(long id) {
         return dslContext.select()
@@ -42,33 +77,9 @@ public class YearlyHistoryDao {
                 });
     }
 
-    public Optional<YearlyHistory> getFirstWhere(Condition... conditions) {
-        if (conditions.length > 0) {
-            return dslContext.select().from(YEARLY_HISTORY)
-                    .where(conditions)
-                    .fetchOptional(r -> {
-                        YearlyHistory history = r.into(YearlyHistory.class);
-                        history.setCategory(getCategory(r.get(YEARLY_HISTORY.CATEGORY_ID)));
-                        return history;
-                    });
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    public void createOrUpdate(YearlyHistory monthlyHistory) {
-        dslContext.insertInto(YEARLY_HISTORY,
-                        YEARLY_HISTORY.ID,
-                        YEARLY_HISTORY.CATEGORY_ID,
-                        YEARLY_HISTORY.TOTAL,
-                        YEARLY_HISTORY.DATE)
-                .values(
-                        UUID.randomUUID().toString(),
-                        monthlyHistory.getCategory().getId(),
-                        monthlyHistory.getTotal(),
-                        monthlyHistory.getDate()
-                ).onDuplicateKeyUpdate()
-                .set(YEARLY_HISTORY.TOTAL, monthlyHistory.getTotal())
-                .execute();
+    @Override
+    public boolean insert(YearlyHistory object) {
+        object.setId(UUID.randomUUID());
+        return Dao.super.insert(object);
     }
 }

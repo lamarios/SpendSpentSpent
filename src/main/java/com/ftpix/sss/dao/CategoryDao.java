@@ -1,7 +1,6 @@
 package com.ftpix.sss.dao;
 
-import com.ftpix.sss.dsl.Tables;
-import com.ftpix.sss.listeners.DaoListener;
+import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
 import org.apache.commons.lang.ArrayUtils;
@@ -13,16 +12,15 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import static com.ftpix.sss.dsl.Tables.*;
+import static com.ftpix.sss.dsl.Tables.CATEGORY;
 
 @Component("categoryDaoJooq")
 public class CategoryDao {
     private final DSLContext dslContext;
 
-    private final List<DaoListener<Category>> listeners = new ArrayList<>();
+    private final List<DaoUserListener<Category>> listeners = new ArrayList<>();
 
     @Autowired
     public CategoryDao(DSLContext dslContext) {
@@ -39,7 +37,7 @@ public class CategoryDao {
                 }));
     }
 
-    public void addListener(DaoListener<Category> listener) {
+    public void addListener(DaoUserListener<Category> listener) {
         listeners.add(listener);
     }
 

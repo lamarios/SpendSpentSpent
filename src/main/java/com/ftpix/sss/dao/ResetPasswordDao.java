@@ -2,22 +2,42 @@ package com.ftpix.sss.dao;
 
 import com.ftpix.sss.dsl.Tables;
 import com.ftpix.sss.dsl.tables.records.ResetPasswordRecord;
+import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.ResetPassword;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.ftpix.sss.dsl.Tables.*;
 
 @Component("resetPasswordDaoJooq")
-public class ResetPasswordDao {
+public class ResetPasswordDao implements Dao<ResetPasswordRecord, ResetPassword> {
     private final DSLContext dslContext;
+    private final List<DaoListener<ResetPassword>> listeners = new ArrayList<>();
 
     public ResetPasswordDao(DSLContext dslContext) {
         this.dslContext = dslContext;
+    }
+
+    @Override
+    public DSLContext getDsl() {
+        return dslContext;
+    }
+
+    @Override
+    public void addListener(DaoListener<ResetPassword> listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public List<DaoListener<ResetPassword>> getListeners() {
+        return listeners;
     }
 
     public int deleteWhere(Condition... conditions) {
@@ -28,21 +48,17 @@ public class ResetPasswordDao {
         }
     }
 
-    public void create(ResetPassword resetPassword) {
-        resetPassword.setId(UUID.randomUUID());
-        dslContext.executeInsert(toRecord(resetPassword));
-    }
-
     public Optional<ResetPassword> getById(UUID id) {
-        return dslContext.fetchOptional(RESET_PASSWORD, RESET_PASSWORD.ID.eq(id.toString()))
-                .map(this::fromRecord);
+        return this.getOneWhere(RESET_PASSWORD.ID.eq(id.toString()));
     }
 
-    private ResetPassword fromRecord(ResetPasswordRecord r) {
+    @Override
+    public ResetPassword fromRecord(ResetPasswordRecord r) {
         return r.into(ResetPassword.class);
     }
 
-    private ResetPasswordRecord toRecord(ResetPassword p) {
+    @Override
+    public ResetPasswordRecord toRecord(ResetPassword p) {
         ResetPasswordRecord r = new ResetPasswordRecord();
         r.setId(p.getId().toString());
         r.setUserId(p.getUser().getId().toString());
@@ -50,8 +66,14 @@ public class ResetPasswordDao {
         return r;
     }
 
-    public void delete(ResetPassword resetPassword) {
-        ResetPasswordRecord resetPasswordRecord = toRecord(resetPassword);
-        dslContext.executeDelete(resetPasswordRecord);
+    @Override
+    public TableImpl<ResetPasswordRecord> getTable() {
+        return RESET_PASSWORD;
+    }
+
+    @Override
+    public boolean insert(ResetPassword object) {
+        object.setId(UUID.randomUUID());
+        return Dao.super.insert(object);
     }
 }

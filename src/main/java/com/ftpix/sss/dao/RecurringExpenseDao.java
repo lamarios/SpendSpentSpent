@@ -1,6 +1,7 @@
 package com.ftpix.sss.dao;
 
 import com.ftpix.sss.dsl.tables.records.RecurringExpenseRecord;
+import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
@@ -8,10 +9,13 @@ import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.commons.lang.ArrayUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Field;
+import org.jooq.impl.TableImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +25,10 @@ import java.util.stream.Collectors;
 import static com.ftpix.sss.dsl.Tables.*;
 
 @Component("recurringExpenseDaoJooq")
-public class RecurringExpenseDao {
+public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpenseRecord, RecurringExpense> {
     private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private final DSLContext dslContext;
+    private final List<DaoUserListener<RecurringExpense>> listeners = new ArrayList<>();
 
     @Autowired
     public RecurringExpenseDao(DSLContext dslContext) {
@@ -31,48 +36,8 @@ public class RecurringExpenseDao {
     }
 
 
-    /**
-     * Base filter to get any expense
-     *
-     * @param user
-     * @return
-     */
-    private Map<Long, Category> getUserCategories(User user) {
-        return dslContext.select().from(CATEGORY)
-                .where(CATEGORY.USER_ID.eq(user.getId().toString()))
-                .fetch(record -> {
-                    Category into = record.into(Category.class);
-                    into.setUser(user);
-                    return into;
-                })
-                .stream().collect(Collectors.toMap(Category::getId, Function.identity()));
-    }
-
-
-    public RecurringExpense getOneWhere(User user, Condition... filter) {
-        Map<Long, Category> userCategories = getUserCategories(user);
-        Condition[] conditions = (Condition[]) ArrayUtils.add(filter, RECURRING_EXPENSE.CATEGORY_ID.in(userCategories.keySet()));
-
-        if (userCategories.size() > 0) {
-            RecurringExpenseRecord recurringExpenseRecord = dslContext.fetchOne(RECURRING_EXPENSE, conditions);
-            return fromRecord(recurringExpenseRecord, userCategories.values());
-        } else {
-            return null;
-        }
-    }
-
-    public List<RecurringExpense> getWhere(User user, Condition... filter) {
-        Map<Long, Category> userCategories = getUserCategories(user);
-        Condition[] conditions = (Condition[]) ArrayUtils.add(filter, RECURRING_EXPENSE.CATEGORY_ID.in(userCategories.keySet()));
-
-        if (userCategories.size() > 0) {
-            return dslContext.fetch(RECURRING_EXPENSE, conditions).stream().map(r -> fromRecord(r, userCategories.values())).collect(Collectors.toList());
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    private RecurringExpense fromRecord(RecurringExpenseRecord r, Collection<Category> categories) {
+    @Override
+    public RecurringExpense fromRecord(RecurringExpenseRecord r, Map<Long, Category> categories) {
         try {
             RecurringExpense e = new RecurringExpense();
             e.setId(r.getId());
@@ -80,10 +45,10 @@ public class RecurringExpenseDao {
             e.setLastOccurrence(df.parse(r.getLastOccurrence()));
             e.setNextOccurrence(df.parse(r.getNextOccurrence()));
             e.setTypeParam(r.getTypeParam());
-            e.setIncome(r.getIncome().equals((byte) 1));
+            e.setIncome(r.getIncome() != null && r.getIncome().equals((byte) 1));
             e.setAmount(r.getAmount());
             e.setName(r.getName());
-            e.setCategory(categories.stream().filter(c -> c.getId() == r.getCategoryId()).findFirst().get());
+            e.setCategory(categories.get(r.getCategoryId()));
 
             return e;
         } catch (Exception e) {
@@ -91,7 +56,28 @@ public class RecurringExpenseDao {
         }
     }
 
-    private RecurringExpenseRecord toRecord(RecurringExpense e) {
+    @Override
+    public DSLContext getDsl() {
+        return dslContext;
+    }
+
+    @Override
+    public void addListener(DaoUserListener<RecurringExpense> listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public List<DaoUserListener<RecurringExpense>> getListeners() {
+        return listeners;
+    }
+
+    @Override
+    public TableImpl<RecurringExpenseRecord> getTable() {
+        return RECURRING_EXPENSE;
+    }
+
+    @Override
+    public RecurringExpenseRecord toRecord(RecurringExpense e) {
         RecurringExpenseRecord r = new RecurringExpenseRecord();
         r.setId(e.getId());
         r.setName(e.getName());
@@ -106,37 +92,16 @@ public class RecurringExpenseDao {
         return r;
     }
 
-    public void create(RecurringExpense expense) {
-        RecurringExpenseRecord recurringExpenseRecord = toRecord(expense);
-        dslContext.executeInsert(recurringExpenseRecord);
+    @Override
+    public Field<Long> getCategoryField() {
+        return RECURRING_EXPENSE.CATEGORY_ID;
     }
 
     public RecurringExpense queryForId(User user, long id) {
-        return getOneWhere(user, RECURRING_EXPENSE.ID.eq(id));
+        return getOneWhere(user, RECURRING_EXPENSE.ID.eq(id)).orElse(null);
     }
 
     public boolean deleteById(User user, long id) {
-        Map<Long, Category> userCategories = getUserCategories(user);
-        return dslContext.delete(RECURRING_EXPENSE)
-                .where(RECURRING_EXPENSE.CATEGORY_ID.in(userCategories.values()), RECURRING_EXPENSE.ID.eq(id))
-                .execute() == 1;
-    }
-
-    public void deleteWhere(User user, Condition... filter) {
-        Map<Long, Category> userCategories = getUserCategories(user);
-        Condition[] conditions = (Condition[]) ArrayUtils.add(filter, RECURRING_EXPENSE.CATEGORY_ID.in(userCategories.keySet()));
-
-        if (userCategories.isEmpty()) {
-            return;
-        }
-
-        dslContext.delete(RECURRING_EXPENSE)
-                .where(conditions)
-                .execute();
-    }
-
-    public void update(RecurringExpense recurring) {
-        RecurringExpenseRecord recurringExpenseRecord = toRecord(recurring);
-        dslContext.executeUpdate(recurringExpenseRecord);
+        return deleteWhere(user, RECURRING_EXPENSE.ID.eq(id)) == 1;
     }
 }

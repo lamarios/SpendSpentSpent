@@ -2,6 +2,7 @@ package com.ftpix.sss.dao;
 
 import com.ftpix.sss.dsl.Tables;
 import com.ftpix.sss.dsl.tables.records.UserRecord;
+import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.PaginatedResults;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.PaginationService;
@@ -11,54 +12,48 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.SelectConditionStep;
 import org.jooq.impl.DSL;
+import org.jooq.impl.TableImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.ftpix.sss.dsl.Tables.*;
 
 @Component("userDaoJooq")
-public class UserDao {
+public class UserDao implements Dao<UserRecord, User> {
     private final DSLContext dslContext;
+    private final List<DaoListener<User>> listeners = new ArrayList<>();
 
     @Autowired
     public UserDao(DSLContext dslContext) {
         this.dslContext = dslContext;
     }
 
-    public Optional<User> getOneWhere(Condition... conditions) {
-        if (conditions.length > 0) {
-            return dslContext.select().from(USER)
-                    .where(conditions)
-                    .fetchOptional(r -> r.into(User.class));
-        } else {
-            return Optional.empty();
-        }
+    @Override
+    public DSLContext getDsl() {
+        return dslContext;
     }
 
-    public PaginatedResults<User> getWhere(int page, int pageSize, Condition... conditions) {
-        SelectConditionStep<Record> where = dslContext.select().from(USER)
-                .where(conditions);
+    @Override
+    public void addListener(DaoListener<User> listener) {
+        listeners.add(listener);
+    }
 
-        return PaginationService.getPaginatedResults(where, page, pageSize, r -> r.into(User.class));
+    @Override
+    public List<DaoListener<User>> getListeners() {
+        return listeners;
     }
 
     public int countUsers(Condition... conditions) {
-
-
         return dslContext.select(DSL.count()).from(USER).where(conditions).fetchOne(r -> r.into(Integer.class));
     }
 
-    public User create(User user) {
-        user.setId(UUID.randomUUID());
-        UserRecord userRecord = toRecord(user);
-        dslContext.executeInsert(userRecord);
-        return user;
-    }
-
-    private UserRecord toRecord(User user) {
+    @Override
+    public UserRecord toRecord(User user) {
         UserRecord record = new UserRecord();
         record.setId(user.getId().toString());
         record.setPassword(user.getPassword());
@@ -72,12 +67,24 @@ public class UserDao {
         return record;
     }
 
-    public void delete(User user) {
-        dslContext.delete(USER).where(USER.ID.eq(user.getId().toString())).execute();
+    @Override
+    public TableImpl<UserRecord> getTable() {
+        return USER;
     }
 
-    public void update(User u) {
-        UserRecord userRecord = toRecord(u);
-        dslContext.executeUpdate(userRecord);
+    @Override
+    public User fromRecord(UserRecord r) {
+        User u = new User();
+        u.setId(UUID.fromString(r.getId()));
+        u.setPassword(r.getPassword());
+        u.setEmail(r.getEmail());
+        u.setFirstName(r.getFirstname());
+        u.setLastName(r.getLastname());
+        u.setSubscriptionExpiryDate(r.getSubscriptionexpirydate());
+        u.setShowAnnouncement(r.getShowannouncement() != null && r.getShowannouncement().equals((byte) 1));
+        u.setAdmin(r.getIsadmin() != null && r.getIsadmin().equals((byte) 1));
+
+
+        return u;
     }
 }

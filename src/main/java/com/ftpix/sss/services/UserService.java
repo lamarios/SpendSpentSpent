@@ -97,9 +97,9 @@ public class UserService {
         if (search.trim().length() > 0) {
             String searchQuery = "%" + search.trim() + "%";
 
-            return userDaoJooq.getWhere(page, pageSize, USER.EMAIL.like(searchQuery).or(USER.FIRSTNAME.like(searchQuery)).or(USER.LASTNAME.like(searchQuery)));
+            return userDaoJooq.getPaginatedWhere(page, pageSize, USER.EMAIL.like(searchQuery).or(USER.FIRSTNAME.like(searchQuery)).or(USER.LASTNAME.like(searchQuery)));
         } else {
-            return userDaoJooq.getWhere(page, pageSize);
+            return userDaoJooq.getPaginatedWhere(page, pageSize);
         }
     }
 
@@ -146,7 +146,7 @@ public class UserService {
         }
 
         user.setPassword(hashUserCredentials(user.getEmail(), user.getPassword()));
-        userDaoJooq.create(user);
+        userDaoJooq.insert(user);
 
 
         Map<String, Object> templateData = new HashMap<>();

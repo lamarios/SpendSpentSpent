@@ -1,14 +1,19 @@
 package com.ftpix.sss.dao;
 
 import com.ftpix.sss.dsl.Tables;
+import com.ftpix.sss.dsl.tables.records.MonthlyHistoryRecord;
+import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.MonthlyHistory;
 import com.ftpix.sss.services.HistoryService;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.impl.TableImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,19 +21,54 @@ import static com.ftpix.sss.dsl.Tables.CATEGORY;
 import static com.ftpix.sss.dsl.Tables.MONTHLY_HISTORY;
 
 @Component("monthlyHistoryDaoJooq")
-public class MonthlyHistoryDao {
+public class MonthlyHistoryDao implements Dao<MonthlyHistoryRecord, MonthlyHistory> {
     private final DSLContext dslContext;
+    private final List<DaoListener<MonthlyHistory>> listeners = new ArrayList<>();
 
     @Autowired
     public MonthlyHistoryDao(DSLContext dslContext) {
         this.dslContext = dslContext;
     }
 
-    public void deleteWhere(Condition... conditions) {
-        if (conditions.length > 0) {
-            dslContext.delete(MONTHLY_HISTORY)
-                    .where(conditions).execute();
-        }
+    @Override
+    public DSLContext getDsl() {
+        return dslContext;
+    }
+
+    @Override
+    public void addListener(DaoListener<MonthlyHistory> listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public List<DaoListener<MonthlyHistory>> getListeners() {
+        return listeners;
+    }
+
+    @Override
+    public TableImpl<MonthlyHistoryRecord> getTable() {
+        return MONTHLY_HISTORY;
+    }
+
+    @Override
+    public MonthlyHistory fromRecord(MonthlyHistoryRecord r) {
+        MonthlyHistory h = new MonthlyHistory();
+        h.setId(UUID.fromString(r.getId()));
+        h.setCategory(getCategory(r.getCategoryId()));
+        h.setDate(r.getDate());
+        h.setTotal(r.getTotal());
+
+        return h;
+    }
+
+    @Override
+    public MonthlyHistoryRecord toRecord(MonthlyHistory o) {
+        MonthlyHistoryRecord r = new MonthlyHistoryRecord();
+        r.setId(o.getId().toString());
+        r.setCategoryId(o.getCategory().getId());
+        r.setDate(o.getDate());
+        r.setTotal(o.getTotal());
+        return r;
     }
 
     private Category getCategory(long id) {
@@ -40,33 +80,9 @@ public class MonthlyHistoryDao {
                 });
     }
 
-    public Optional<MonthlyHistory> getFirstWhere(Condition... conditions) {
-        if (conditions.length > 0) {
-            return dslContext.select().from(MONTHLY_HISTORY)
-                    .where(conditions)
-                    .fetchOptional(r -> {
-                        MonthlyHistory history = r.into(MonthlyHistory.class);
-                        history.setCategory(getCategory(r.get(MONTHLY_HISTORY.CATEGORY_ID)));
-                        return history;
-                    });
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    public void createOrUpdate(MonthlyHistory monthlyHistory) {
-        dslContext.insertInto(MONTHLY_HISTORY,
-                        MONTHLY_HISTORY.ID,
-                        MONTHLY_HISTORY.CATEGORY_ID,
-                        MONTHLY_HISTORY.TOTAL,
-                        MONTHLY_HISTORY.DATE)
-                .values(
-                        UUID.randomUUID().toString(),
-                        monthlyHistory.getCategory().getId(),
-                        monthlyHistory.getTotal(),
-                        monthlyHistory.getDate()
-                ).onDuplicateKeyUpdate()
-                .set(MONTHLY_HISTORY.TOTAL, monthlyHistory.getTotal())
-                .execute();
+    @Override
+    public boolean insert(MonthlyHistory object) {
+        object.setId(UUID.randomUUID());
+        return Dao.super.insert(object);
     }
 }
