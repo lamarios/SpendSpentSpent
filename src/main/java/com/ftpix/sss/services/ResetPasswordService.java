@@ -1,10 +1,9 @@
 package com.ftpix.sss.services;
 
+import com.ftpix.sss.dao.ResetPasswordDao;
 import com.ftpix.sss.models.ResetPassword;
 import com.ftpix.sss.models.ResetPasswordNew;
 import com.ftpix.sss.models.User;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.DeleteBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,32 +15,31 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
+
+import static com.ftpix.sss.dsl.Tables.*;
 
 @Service
 public class ResetPasswordService {
     private final static Logger logger = LogManager.getLogger();
-    private final Dao<ResetPassword, UUID> resetPasswordDao;
     private final UserService userService;
     private final EmailService emailService;
+    private final ResetPasswordDao resetPasswordDaoJooq;
 
 
     private final String rootUrl;
 
     @Autowired
-    public ResetPasswordService(Dao<ResetPassword, UUID> resetPasswordDao, UserService userService, EmailService emailService, String rootUrl) {
-        this.resetPasswordDao = resetPasswordDao;
+    public ResetPasswordService(UserService userService, EmailService emailService, ResetPasswordDao resetPasswordDaoJooq, String rootUrl) {
         this.userService = userService;
         this.emailService = emailService;
+        this.resetPasswordDaoJooq = resetPasswordDaoJooq;
         this.rootUrl = rootUrl;
     }
 
     private void clearExpiredRequests() throws SQLException {
-        final DeleteBuilder<ResetPassword, UUID> builder = resetPasswordDao.deleteBuilder();
-        var delete = builder.where().lt("expiryDate", System.currentTimeMillis());
-        builder.setWhere(delete);
-        final int count = builder.delete();
-        logger.info("Deleted {} expired password requests", count);
+        int i = resetPasswordDaoJooq.deleteWhere(RESET_PASSWORD.EXPIRYDATE.lt(System.currentTimeMillis()));
+
+        logger.info("Deleted {} expired password requests", i);
     }
 
     public boolean createResetPasswordRequest(String email) throws SQLException {
@@ -54,7 +52,7 @@ public class ResetPasswordService {
                             // it expires in a day
                             LocalDateTime expiry = LocalDateTime.now().plusDays(1);
                             resetPassword.setExpiryDate(Timestamp.valueOf(expiry).getTime());
-                            resetPasswordDao.create(resetPassword);
+                            resetPasswordDaoJooq.create(resetPassword);
 
                             Map<String, Object> templateData = new HashMap<>();
 
@@ -79,11 +77,7 @@ public class ResetPasswordService {
 
     public boolean resetPassword(ResetPasswordNew resetPasswordNew) throws Exception {
 
-        final ResetPassword resetPassword = resetPasswordDao.queryForId(resetPasswordNew.getResetId());
-
-        if (resetPassword == null) {
-            throw new Exception("Invalid password request");
-        }
+        final ResetPassword resetPassword = resetPasswordDaoJooq.getById(resetPasswordNew.getResetId()).orElseThrow(() -> new Exception("Invalid password request"));
         final LocalDateTime expiry = new Timestamp(resetPassword.getExpiryDate()).toLocalDateTime();
 
         if (expiry.isBefore(LocalDateTime.now())) {
@@ -94,7 +88,7 @@ public class ResetPasswordService {
         user.setPassword(resetPasswordNew.getNewPassword());
         userService.updateUserProfile(user, user);
 
-        resetPasswordDao.delete(resetPassword);
+        resetPasswordDaoJooq.delete(resetPassword);
         clearExpiredRequests();
         return true;
     }

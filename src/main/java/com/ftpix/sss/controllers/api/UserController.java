@@ -46,7 +46,7 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public PaginatedResults<User> getUsers(@ApiParam("Page starts from 0") @RequestParam(defaultValue = "0") long page, @RequestParam(defaultValue = "20") long pageSize, @RequestParam(defaultValue = "") String search) throws Exception {
+    public PaginatedResults<User> getUsers(@ApiParam("Page starts from 0") @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int pageSize, @RequestParam(defaultValue = "") String search) throws Exception {
         return userService.getAll(search, page, pageSize);
     }
 

@@ -2,13 +2,11 @@ package com.ftpix.sss.services;
 
 
 import com.ftpix.sss.Constants;
-import com.ftpix.sss.models.Category;
+import com.ftpix.sss.dao.CategoryDao;
+import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.PaginatedResults;
 import com.ftpix.sss.models.Settings;
 import com.ftpix.sss.models.User;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.Where;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.ftpix.sss.dsl.Tables.*;
+
 
 @Service
 public class UserService {
@@ -35,24 +35,22 @@ public class UserService {
     private final ExpenseService recurringExpenseService;
     private final ExpenseService expenseService;
     private final ExpenseService categoryService;
-    private final Dao<Category, Long> categoryDao;
-    private final Dao<User, UUID> userDao;
+    private final CategoryDao categoryDaoJooq;
     private final EmailService emailService;
-    private final PaginationService paginationService;
     private final SettingsService settingsService;
     @Value("${SALT}")
     private String SALT;
+    private final UserDao userDaoJooq;
 
     @Autowired
-    public UserService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, Dao<Category, Long> categoryDao, Dao<User, UUID> userDao, EmailService emailService, PaginationService paginationService, SettingsService settingsService) {
+    public UserService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, CategoryDao categoryDaoJooq, EmailService emailService, SettingsService settingsService, UserDao userDaoJooq) {
         this.recurringExpenseService = recurringExpenseService;
         this.expenseService = expenseService;
         this.categoryService = categoryService;
-        this.categoryDao = categoryDao;
-        this.userDao = userDao;
+        this.categoryDaoJooq = categoryDaoJooq;
         this.emailService = emailService;
-        this.paginationService = paginationService;
         this.settingsService = settingsService;
+        this.userDaoJooq = userDaoJooq;
     }
 
     /**
@@ -83,7 +81,7 @@ public class UserService {
     }
 
     public User getByEmail(String email) throws SQLException {
-        return userDao.queryBuilder().where().eq("email", email).queryForFirst();
+        return userDaoJooq.getOneWhere(USER.EMAIL.eq(email)).orElse(null);
     }
 
     public User getCurrentUser() throws SQLException {
@@ -94,29 +92,15 @@ public class UserService {
         return getByEmail(user.getUsername());
     }
 
-    public PaginatedResults<User> getAll(String search, long page, long pageSize) throws SQLException {
-
-        final QueryBuilder<User, UUID> builder = userDao.queryBuilder();
+    public PaginatedResults<User> getAll(String search, int page, int pageSize) throws SQLException {
 
         if (search.trim().length() > 0) {
-            Where<User, UUID> where = builder.where();
-            where = where.like("email", "%" + search + "%")
-                    .or().like("firstName", "%" + search + "%")
-                    .or().like("lastName", "%" + search + "%");
+            String searchQuery = "%" + search.trim() + "%";
 
-            final String[] split = search.split("\\s");
-            if (split.length > 0) {
-                for (String s : split) {
-                    where = where.or().like("firstName", "%" + s + "%")
-                            .or().like("lastName", "%" + s + "%");
-                }
-
-            }
-            builder.setWhere(where);
+            return userDaoJooq.getWhere(page, pageSize, USER.EMAIL.like(searchQuery).or(USER.FIRSTNAME.like(searchQuery)).or(USER.LASTNAME.like(searchQuery)));
+        } else {
+            return userDaoJooq.getWhere(page, pageSize);
         }
-
-
-        return paginationService.getPaginatedResults(builder, page, pageSize);
     }
 
     public PaginatedResults<User> getAll() throws SQLException {
@@ -124,7 +108,7 @@ public class UserService {
     }
 
     public User getById(UUID id) throws SQLException {
-        return userDao.queryForId(id);
+        return userDaoJooq.getOneWhere(USER.ID.eq(id.toString())).orElse(null);
     }
 
     public User createUser(User user) throws Exception {
@@ -136,7 +120,7 @@ public class UserService {
             throw new Exception("All fields must be filled.");
         }
 
-        final long count = userDao.countOf();
+        final long count = userDaoJooq.countUsers();
 
         if (count == 0) {
             user.setAdmin(true);
@@ -155,17 +139,14 @@ public class UserService {
         }
 
         // checking if user already exists
-        final long emailCheck = userDao.queryBuilder()
-                .where()
-                .eq("email", user.getEmail())
-                .countOf();
+        final long emailCheck = userDaoJooq.countUsers(USER.EMAIL.eq(user.getEmail()));
 
         if (emailCheck > 0) {
             throw new Exception("Email already in use");
         }
 
         user.setPassword(hashUserCredentials(user.getEmail(), user.getPassword()));
-        userDao.create(user);
+        userDaoJooq.create(user);
 
 
         Map<String, Object> templateData = new HashMap<>();
@@ -176,14 +157,9 @@ public class UserService {
         // Migration code
         // migrating all existing categories to new user as it's the first one
         if (count == 0) {
-            categoryDao.queryForAll().forEach(c -> {
-                try {
-                    c.setUser(user);
-                    categoryDao.update(c);
-                } catch (SQLException e) {
-                    logger.error("Couldn't migrate categories", e);
-                    throw new RuntimeException(e);
-                }
+            categoryDaoJooq.queryForAll().forEach(c -> {
+                c.setUser(user);
+                categoryDaoJooq.update(user, c);
             });
         }
 
@@ -227,7 +203,7 @@ public class UserService {
                                     }
                                 });
 
-                        userDao.delete(user);
+                        userDaoJooq.delete(user);
                         return true;
                     } catch (Exception e) {
                         throw new RuntimeException(e);
@@ -241,9 +217,9 @@ public class UserService {
                 .map(u -> {
                     try {
                         u.setPassword(hashUserCredentials(u.getEmail(), newPassword));
-                        userDao.update(u);
+                        userDaoJooq.update(u);
                         return true;
-                    } catch (NoSuchAlgorithmException | SQLException e) {
+                    } catch (NoSuchAlgorithmException e) {
                         throw new RuntimeException(e);
                     }
                 }).orElse(false);
@@ -257,12 +233,8 @@ public class UserService {
         return Optional.ofNullable(getById(UUID.fromString(userId)))
                 .map(u -> {
                     u.setAdmin(isAdmin);
-                    try {
-                        userDao.update(u);
-                        return true;
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
+                    userDaoJooq.update(u);
+                    return true;
                 }).orElse(false);
     }
 
@@ -281,10 +253,7 @@ public class UserService {
             user.setPassword(hashUserCredentials(user.getEmail(), newUserData.getPassword()));
         }
 
-        userDao.update(user);
-
-
+        userDaoJooq.update(user);
         return user;
-
     }
 }

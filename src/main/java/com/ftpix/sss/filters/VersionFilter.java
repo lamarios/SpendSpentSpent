@@ -34,7 +34,6 @@ public class VersionFilter extends OncePerRequestFilter {
         if (request.getHeader(VERSION_HEADER) != null) {
             try {
                 String clientVersionStr = request.getHeader(VERSION_HEADER);
-                logger.info("Client version:" + clientVersionStr);
                 int clientVersion = Integer.parseInt(clientVersionStr);
                 if (clientVersion < ApplicationController.MIN_APP_VERSION) {
                     logger.info("Client version [" + clientVersion + "] is too old, required: " + ApplicationController.MIN_APP_VERSION);

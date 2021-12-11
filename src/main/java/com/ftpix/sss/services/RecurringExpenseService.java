@@ -1,28 +1,35 @@
 package com.ftpix.sss.services;
 
+import com.ftpix.sss.dao.RecurringExpenseDao;
+import com.ftpix.sss.dsl.Tables;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
 import com.j256.ormlite.dao.Dao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static com.ftpix.sss.dsl.Tables.*;
 
 @Service
 public class RecurringExpenseService {
     private final static Logger logger = LogManager.getLogger();
     private final CategoryService categoryService;
-
-    private final Dao<RecurringExpense, Long> recurringExpenseDao;
+    private final RecurringExpenseDao recurringExpenseDaoJooq;
+    private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
-    public RecurringExpenseService(CategoryService categoryService, Dao<RecurringExpense, Long> recurringExpenseDao) {
+    public RecurringExpenseService(CategoryService categoryService, RecurringExpenseDao recurringExpenseDaoJooq) {
         this.categoryService = categoryService;
-        this.recurringExpenseDao = recurringExpenseDao;
+        this.recurringExpenseDaoJooq = recurringExpenseDaoJooq;
     }
 
     /**
@@ -119,67 +126,28 @@ public class RecurringExpenseService {
 
         expense.setNextOccurrence(calculateNextDate(expense));
 
-        recurringExpenseDao.create(expense);
+        recurringExpenseDaoJooq.create(expense);
 
         return expense;
     }
 
     public List<RecurringExpense> get(User user) throws Exception {
-        final List<Long> userCategoriesId = categoryService.getUserCategoriesId(user);
-        if (!userCategoriesId.isEmpty()) {
-            return recurringExpenseDao.queryBuilder()
-                    .where()
-                    .in("category_id", userCategoriesId)
-                    .query();
-        } else {
-            return new ArrayList<RecurringExpense>(0);
-        }
+        return recurringExpenseDaoJooq.getWhere(user);
     }
 
 
     public RecurringExpense getId(long id, User user) throws Exception {
-        final RecurringExpense recurringExpense = recurringExpenseDao.queryForId(id);
-        if (recurringExpense.getCategory().getUser().getId().equals(user.getId())) {
-            return recurringExpense;
-        } else {
-            return null;
-        }
+        return recurringExpenseDaoJooq.queryForId(user, id);
     }
 
 
     public boolean delete(long id, User user) throws Exception {
-        final RecurringExpense recurringExpenses = getId(id, user);
-
-        if (recurringExpenses != null) {
-            recurringExpenseDao.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
+        recurringExpenseDaoJooq.deleteById(user, id);
+        return true;
     }
 
-
-    public List<RecurringExpense> getToProcess() throws SQLException {
-//        String sql = "SELECT `id` FROM `recurring_expense` WHERE `next_occurrence` <= '" + df.format(new Date()) + "'";
-
-        List<RecurringExpense> recurringExpenses = recurringExpenseDao.queryBuilder().where().le("next_occurrence", new Date()).query();
-
-        logger.info("[{}] recurring expense to process", recurringExpenses.size());
-        return recurringExpenses;
-    }
 
     public List<RecurringExpense> getToProcessForUser(User user) throws Exception {
-        final List<Long> userCategoriesId = categoryService.getUserCategoriesId(user);
-        if (!userCategoriesId.isEmpty()) {
-            return recurringExpenseDao.queryBuilder()
-                    .where()
-                    .in("category_id", userCategoriesId)
-                    .and()
-                    .le("next_occurrence", new Date())
-                    .query();
-        } else {
-            return new ArrayList<RecurringExpense>(0);
-        }
-
+        return recurringExpenseDaoJooq.getWhere(user, RECURRING_EXPENSE.NEXT_OCCURRENCE.le(df.format(new Date())));
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.ftpix.sss.dsl.Tables.*;
@@ -108,4 +109,7 @@ public class CategoryDao {
         return b;
     }
 
+    public List<Category> queryForAll() {
+        return dslContext.select().from(CATEGORY).fetch(r -> r.into(Category.class));
+    }
 }

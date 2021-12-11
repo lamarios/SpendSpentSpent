@@ -1,6 +1,7 @@
 package com.ftpix.sss.controllers;
 
 import com.ftpix.sss.dao.ExpenseDao;
+import com.ftpix.sss.dao.RecurringExpenseDao;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
@@ -25,15 +26,15 @@ public class BackgroundJob {
     private final Logger logger = LogManager.getLogger();
     private final RecurringExpenseService recurringExpenseService;
     private final ExpenseDao expenseDaoJooq;
-    private final Dao<RecurringExpense, Long> recurringExpenseDao;
+    private final RecurringExpenseDao recurringExpenseDaoJooq;
     private final UserService userService;
     private final EmailService emailService;
 
     @Autowired
-    public BackgroundJob(RecurringExpenseService recurringExpenseService, ExpenseDao expenseDaoJooq, Dao<RecurringExpense, Long> recurringExpenseDao, UserService userService, EmailService emailService) {
+    public BackgroundJob(RecurringExpenseService recurringExpenseService, ExpenseDao expenseDaoJooq, RecurringExpenseDao recurringExpenseDaoJooq, UserService userService, EmailService emailService) {
         this.recurringExpenseService = recurringExpenseService;
         this.expenseDaoJooq = expenseDaoJooq;
-        this.recurringExpenseDao = recurringExpenseDao;
+        this.recurringExpenseDaoJooq = recurringExpenseDaoJooq;
         this.userService = userService;
         this.emailService = emailService;
     }
@@ -61,7 +62,7 @@ public class BackgroundJob {
                     recurring.setLastOccurrence(recurring.getNextOccurrence());
                     recurring.setNextOccurrence(recurringExpenseService.calculateNextDate(recurring));
 
-                    recurringExpenseDao.update(recurring);
+                    recurringExpenseDaoJooq.update(recurring);
                     logger.info("Expense added, next occurence:[{}]", recurring.getNextOccurrence());
 
                     String type = "";

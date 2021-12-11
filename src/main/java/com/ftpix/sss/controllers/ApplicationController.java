@@ -2,11 +2,10 @@ package com.ftpix.sss.controllers;
 
 
 import com.ftpix.sss.Constants;
+import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.Settings;
-import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.EmailService;
 import com.ftpix.sss.services.SettingsService;
-import com.j256.ormlite.dao.Dao;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -28,7 +27,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 @Controller
 public class ApplicationController {
@@ -38,21 +36,21 @@ public class ApplicationController {
 
     private final SettingsService settingsService;
 
-    private final Dao<User, UUID> userDao;
 
     private final Configuration templateEngine;
     private final BuildProperties buildProperties;
 
     public final static int MIN_APP_VERSION = 20;
+    private final UserDao userDaoJooq;
 
     @Autowired
-    public ApplicationController(EmailService emailService, SettingsService settingsService, Dao<User, UUID> userDao, Configuration templateEngine, BuildProperties buildProperties) {
+    public ApplicationController(EmailService emailService, SettingsService settingsService, Configuration templateEngine, BuildProperties buildProperties, UserDao userDaoJooq) {
         this.emailService = emailService;
         this.settingsService = settingsService;
-        this.userDao = userDao;
 
         this.templateEngine = templateEngine;
         this.buildProperties = buildProperties;
+        this.userDaoJooq = userDaoJooq;
     }
 
 
@@ -80,7 +78,7 @@ public class ApplicationController {
         motd.ifPresent(sb::append);
 
 
-        long userCount = userDao.countOf();
+        long userCount = userDaoJooq.countUsers();
 
         if (userCount == 0) {
             if (sb.length() > 0) {

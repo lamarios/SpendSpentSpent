@@ -1,28 +1,24 @@
 package com.ftpix.sss.services;
 
 import com.ftpix.sss.dao.ExpenseDao;
-import com.ftpix.sss.dsl.Tables;
-import com.ftpix.sss.dsl.tables.records.ExpenseRecord;
-import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.DailyExpense;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jooq.impl.DefaultDSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.ftpix.sss.dsl.Tables.*;
+import static com.ftpix.sss.dsl.Tables.EXPENSE;
 
 @Service
 public class ExpenseService {

@@ -2,11 +2,9 @@ package com.ftpix.sss.services;
 
 import com.ftpix.sss.dao.CategoryDao;
 import com.ftpix.sss.dao.ExpenseDao;
+import com.ftpix.sss.dao.RecurringExpenseDao;
 import com.ftpix.sss.dsl.Tables;
-import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.*;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,14 +19,14 @@ public class CategoryService {
 
     private final CategoryDao categoryDaoJooq;
     private final ExpenseDao expenseDaoJooq;
-    private final Dao<RecurringExpense, Long> recurringExpenseDao;
+    private final RecurringExpenseDao recurringExpenseDaoJooq;
 
 
     @Autowired
-    public CategoryService(CategoryDao categoryDaoJooq, ExpenseDao expenseDaoJooq, Dao<RecurringExpense, Long> recurringExpenseDao) {
+    public CategoryService(CategoryDao categoryDaoJooq, ExpenseDao expenseDaoJooq, RecurringExpenseDao recurringExpenseDaoJooq) {
         this.categoryDaoJooq = categoryDaoJooq;
         this.expenseDaoJooq = expenseDaoJooq;
-        this.recurringExpenseDao = recurringExpenseDao;
+        this.recurringExpenseDaoJooq = recurringExpenseDaoJooq;
     }
 
 
@@ -76,7 +74,7 @@ public class CategoryService {
         if (category.getUser().getId().equals(user.getId())) {
 
             expenseDaoJooq.deleteWhere(user, Tables.EXPENSE.CATEGORY_ID.eq(category.getId()));
-            recurringExpenseDao.delete(recurringExpenseDao.queryForFieldValues(fields));
+            recurringExpenseDaoJooq.deleteWhere(user, Tables.RECURRING_EXPENSE.CATEGORY_ID.eq(category.getId()));
 
             categoryDaoJooq.delete(user, category);
             return true;

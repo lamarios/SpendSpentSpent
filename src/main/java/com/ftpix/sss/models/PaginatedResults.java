@@ -1,10 +1,15 @@
 package com.ftpix.sss.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PaginatedResults<T> {
     private final List<T> data;
     private final PaginationDetails pagination;
+
+    public static <T> PaginatedResults<T> empty(long pageSize) {
+        return new PaginatedResults<T>(0, 0, pageSize, new ArrayList<T>());
+    }
 
     public PaginatedResults(long page, long total, long pageSize, List<T> data) {
         this.data = data;
