@@ -6,6 +6,7 @@ import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.Settings;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.OrderField;
 import org.jooq.impl.TableImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -75,11 +76,15 @@ public class SettingsDao implements Dao<SettingsRecord, Settings> {
     }
 
     @Override
-    public SettingsRecord toRecord(Settings o) {
-        SettingsRecord r = new SettingsRecord();
+    public SettingsRecord setRecordData(SettingsRecord r, Settings o) {
         r.setName(o.getName());
         r.setSecret((byte) (o.isSecret() ? 1 : 0));
         r.setValue(o.getValue());
         return r;
+    }
+
+    @Override
+    public OrderField[] getDefaultOrderBy() {
+        return new OrderField[]{SETTINGS.NAME.asc()};
     }
 }

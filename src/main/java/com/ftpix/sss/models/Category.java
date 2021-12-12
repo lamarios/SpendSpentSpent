@@ -1,11 +1,12 @@
 package com.ftpix.sss.models;
 
+import com.ftpix.sss.dao.HasCategory;
 import com.ftpix.sss.utils.JsonIgnore;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "CATEGORY")
-public class Category {
+public class Category implements HasCategory {
 
 
     @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)
@@ -62,5 +63,15 @@ public class Category {
 
     public void setPercentageOfMonthly(double percentageOfMonthly) {
         this.percentageOfMonthly = percentageOfMonthly;
+    }
+
+    @Override
+    public Category getCategory() {
+        return this;
+    }
+
+    @Override
+    public void setCategory(Category category) {
+
     }
 }

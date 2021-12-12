@@ -7,6 +7,7 @@ import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
 import org.jooq.DSLContext;
 import org.jooq.Field;
+import org.jooq.OrderField;
 import org.jooq.Record;
 import org.jooq.impl.DefaultDSLContext;
 import org.jooq.impl.TableImpl;
@@ -45,12 +46,12 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
     }
 
     @Override
-    public void addListener(DaoUserListener<Expense> listener) {
+    public void addUserBasedListener(DaoUserListener<Expense> listener) {
         listeners.add(listener);
     }
 
     @Override
-    public List<DaoUserListener<Expense>> getListeners() {
+    public List<DaoUserListener<Expense>> getUserBasedListeners() {
         return listeners;
     }
 
@@ -107,8 +108,7 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
     }
 
     @Override
-    public ExpenseRecord toRecord(Expense o) {
-        ExpenseRecord r = new ExpenseRecord();
+    public ExpenseRecord setRecordData(ExpenseRecord r, Expense o) {
         r.setId(o.getId());
         r.setCategoryId(o.getCategory().getId());
         r.setType(o.getType());
@@ -128,12 +128,9 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
         return EXPENSE.CATEGORY_ID;
     }
 
-    private Expense fromRecord(Record record) throws ParseException {
-        Expense exp = record.into(Expense.class);
-        String text = record.get(EXPENSE.DATE);
-        exp.setDate(dateFormat.parse(text));
-
-        return exp;
+    @Override
+    public OrderField[] getDefaultOrderBy() {
+        return new OrderField[]{EXPENSE.DATE.desc()};
     }
 
     public long countExpenses(User user, long categoryId) {

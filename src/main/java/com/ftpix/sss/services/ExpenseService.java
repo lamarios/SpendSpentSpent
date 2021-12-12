@@ -90,9 +90,7 @@ public class ExpenseService {
             expense.setType(Expense.TYPE_NORMAL);
         }
 
-        expenseDaoJooq.insert(user, expense);
-
-        return expense;
+        return expenseDaoJooq.insert(user, expense);
     }
 
     public boolean delete(long id, User user) throws Exception {

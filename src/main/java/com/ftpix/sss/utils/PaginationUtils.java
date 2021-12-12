@@ -1,19 +1,17 @@
-package com.ftpix.sss.services;
+package com.ftpix.sss.utils;
 
 
 import com.ftpix.sss.models.PaginatedResults;
-import com.j256.ormlite.stmt.QueryBuilder;
 import org.jooq.Record;
 import org.jooq.RecordMapper;
 import org.jooq.SelectConditionStep;
 import org.jooq.SelectForUpdateStep;
-import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public class PaginationService {
-    private final int DEFAULT_PAGE_SIZE = 20, DEFAULT_PAGE = 0;
+public class PaginationUtils {
+    public final static int DEFAULT_PAGE_SIZE = 20, DEFAULT_PAGE = 0;
 
 
     /**

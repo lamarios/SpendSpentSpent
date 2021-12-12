@@ -146,7 +146,7 @@ public class UserService {
         }
 
         user.setPassword(hashUserCredentials(user.getEmail(), user.getPassword()));
-        userDaoJooq.insert(user);
+        User toReturn = userDaoJooq.insert(user);
 
 
         Map<String, Object> templateData = new HashMap<>();
@@ -158,12 +158,12 @@ public class UserService {
         // migrating all existing categories to new user as it's the first one
         if (count == 0) {
             categoryDaoJooq.queryForAll().forEach(c -> {
-                c.setUser(user);
-                categoryDaoJooq.update(user, c);
+                c.setUser(toReturn);
+                categoryDaoJooq.update(toReturn, c);
             });
         }
 
-        return user;
+        return toReturn;
     }
 
     public boolean deleteUser(String userId, User currentUser) throws Exception {

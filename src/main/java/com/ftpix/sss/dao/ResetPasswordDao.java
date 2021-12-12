@@ -1,11 +1,11 @@
 package com.ftpix.sss.dao;
 
-import com.ftpix.sss.dsl.Tables;
 import com.ftpix.sss.dsl.tables.records.ResetPasswordRecord;
 import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.ResetPassword;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.OrderField;
 import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Component;
 
@@ -58,12 +58,16 @@ public class ResetPasswordDao implements Dao<ResetPasswordRecord, ResetPassword>
     }
 
     @Override
-    public ResetPasswordRecord toRecord(ResetPassword p) {
-        ResetPasswordRecord r = new ResetPasswordRecord();
+    public ResetPasswordRecord setRecordData(ResetPasswordRecord r, ResetPassword p) {
         r.setId(p.getId().toString());
         r.setUserId(p.getUser().getId().toString());
         r.setExpirydate(p.getExpiryDate());
         return r;
+    }
+
+    @Override
+    public OrderField[] getDefaultOrderBy() {
+        return new OrderField[]{RESET_PASSWORD.EXPIRYDATE.desc()};
     }
 
     @Override
@@ -72,7 +76,7 @@ public class ResetPasswordDao implements Dao<ResetPasswordRecord, ResetPassword>
     }
 
     @Override
-    public boolean insert(ResetPassword object) {
+    public ResetPassword insert(ResetPassword object) {
         object.setId(UUID.randomUUID());
         return Dao.super.insert(object);
     }

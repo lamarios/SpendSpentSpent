@@ -91,8 +91,8 @@ public class HistoryService {
         this.monthlyHistoryDaoJooq = monthlyHistoryDaoJooq;
         this.yearlyHistoryDaoJooq = yearlyHistoryDaoJooq;
 
-        this.expenseDaoJooq.addListener(expenseDaoListener);
-        this.categoryDaoJooq.addListener(categoryDaoListener);
+        this.expenseDaoJooq.addUserBasedListener(expenseDaoListener);
+        this.categoryDaoJooq.addUserBasedListener(categoryDaoListener);
     }
 
     public List<CategoryOverall> yearly(User user) throws Exception {

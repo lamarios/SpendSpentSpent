@@ -1,16 +1,11 @@
 package com.ftpix.sss.dao;
 
-import com.ftpix.sss.dsl.Tables;
 import com.ftpix.sss.dsl.tables.records.UserRecord;
 import com.ftpix.sss.listeners.DaoListener;
-import com.ftpix.sss.models.PaginatedResults;
 import com.ftpix.sss.models.User;
-import com.ftpix.sss.services.PaginationService;
-import org.checkerframework.checker.units.qual.C;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.SelectConditionStep;
+import org.jooq.OrderField;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.ftpix.sss.dsl.Tables.*;
@@ -53,8 +47,7 @@ public class UserDao implements Dao<UserRecord, User> {
     }
 
     @Override
-    public UserRecord toRecord(User user) {
-        UserRecord record = new UserRecord();
+    public UserRecord setRecordData(UserRecord record, User user) {
         record.setId(user.getId().toString());
         record.setPassword(user.getPassword());
         record.setEmail(user.getEmail());
@@ -65,6 +58,11 @@ public class UserDao implements Dao<UserRecord, User> {
         record.setIsadmin((byte) (user.isAdmin() ? 1 : 0));
 
         return record;
+    }
+
+    @Override
+    public OrderField[] getDefaultOrderBy() {
+        return new OrderField[]{USER.EMAIL.asc()};
     }
 
     @Override
@@ -86,5 +84,11 @@ public class UserDao implements Dao<UserRecord, User> {
 
 
         return u;
+    }
+
+    @Override
+    public User insert(User object) {
+        object.setId(UUID.randomUUID());
+        return Dao.super.insert(object);
     }
 }

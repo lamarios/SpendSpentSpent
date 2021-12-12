@@ -117,8 +117,7 @@ public class RecurringExpenseService {
 
     public RecurringExpense create(RecurringExpense expense, User user) throws Exception {
         expense.setNextOccurrence(calculateNextDate(expense));
-        recurringExpenseDaoJooq.insert(user, expense);
-        return expense;
+        return recurringExpenseDaoJooq.insert(user, expense);
     }
 
     public List<RecurringExpense> get(User user) throws Exception {

@@ -5,24 +5,19 @@ import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
-import edu.emory.mathcs.backport.java.util.Collections;
-import org.apache.commons.lang.ArrayUtils;
-import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Field;
+import org.jooq.OrderField;
 import org.jooq.impl.TableImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
-import static com.ftpix.sss.dsl.Tables.*;
+import static com.ftpix.sss.dsl.Tables.RECURRING_EXPENSE;
 
 @Component("recurringExpenseDaoJooq")
 public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpenseRecord, RecurringExpense> {
@@ -42,8 +37,8 @@ public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpens
             RecurringExpense e = new RecurringExpense();
             e.setId(r.getId());
             e.setType(r.getType());
-            e.setLastOccurrence(df.parse(r.getLastOccurrence()));
-            e.setNextOccurrence(df.parse(r.getNextOccurrence()));
+            e.setLastOccurrence(r.getLastOccurrence().length() > 0 ? df.parse(r.getLastOccurrence()) : null);
+            e.setNextOccurrence(r.getNextOccurrence().length() > 0 ? df.parse(r.getNextOccurrence()) : null);
             e.setTypeParam(r.getTypeParam());
             e.setIncome(r.getIncome() != null && r.getIncome().equals((byte) 1));
             e.setAmount(r.getAmount());
@@ -62,12 +57,12 @@ public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpens
     }
 
     @Override
-    public void addListener(DaoUserListener<RecurringExpense> listener) {
+    public void addUserBasedListener(DaoUserListener<RecurringExpense> listener) {
         listeners.add(listener);
     }
 
     @Override
-    public List<DaoUserListener<RecurringExpense>> getListeners() {
+    public List<DaoUserListener<RecurringExpense>> getUserBasedListeners() {
         return listeners;
     }
 
@@ -77,15 +72,14 @@ public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpens
     }
 
     @Override
-    public RecurringExpenseRecord toRecord(RecurringExpense e) {
-        RecurringExpenseRecord r = new RecurringExpenseRecord();
+    public RecurringExpenseRecord setRecordData(RecurringExpenseRecord r, RecurringExpense e) {
         r.setId(e.getId());
         r.setName(e.getName());
         r.setCategoryId(e.getCategory().getId());
         r.setType(e.getType());
         r.setTypeParam(e.getTypeParam());
-        r.setLastOccurrence(df.format(e.getLastOccurrence()));
-        r.setNextOccurrence(df.format(e.getNextOccurrence()));
+        r.setLastOccurrence(e.getLastOccurrence() != null ? df.format(e.getLastOccurrence()) : "");
+        r.setNextOccurrence(e.getNextOccurrence() != null ? df.format(e.getNextOccurrence()) : "");
         r.setAmount(e.getAmount());
         r.setIncome((byte) (e.isIncome() ? 1 : 0));
 
@@ -95,6 +89,11 @@ public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpens
     @Override
     public Field<Long> getCategoryField() {
         return RECURRING_EXPENSE.CATEGORY_ID;
+    }
+
+    @Override
+    public OrderField[] getDefaultOrderBy() {
+        return new OrderField[]{RECURRING_EXPENSE.ID.asc()};
     }
 
     public RecurringExpense queryForId(User user, long id) {

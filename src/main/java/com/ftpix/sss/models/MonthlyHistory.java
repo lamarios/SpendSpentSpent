@@ -1,18 +1,19 @@
 package com.ftpix.sss.models;
 
 
+import com.ftpix.sss.dao.HasCategory;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.UUID;
 
 @DatabaseTable(tableName = "MONTHLY_HISTORY")
-public class MonthlyHistory {
+public class MonthlyHistory implements HasCategory {
 
     @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)
     private UUID id = UUID.randomUUID();
 
-    @DatabaseField(columnName = "CATEGORY_ID", foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreignColumnName = "ID",uniqueIndexName = "monthly_history_unique_idx")
+    @DatabaseField(columnName = "CATEGORY_ID", foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreignColumnName = "ID", uniqueIndexName = "monthly_history_unique_idx")
     private Category category;
 
     @DatabaseField(columnName = "TOTAL")
@@ -30,10 +31,12 @@ public class MonthlyHistory {
         this.id = id;
     }
 
+    @Override
     public Category getCategory() {
         return category;
     }
 
+    @Override
     public void setCategory(Category category) {
         this.category = category;
     }

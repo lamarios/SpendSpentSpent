@@ -56,9 +56,7 @@ public class CategoryService {
         long order = categoryDaoJooq.getMaxCategoryOrder(user);
         category.setCategoryOrder((int) (order + 1));
         category.setUser(user);
-        categoryDaoJooq.create(user, category);
-
-        return category;
+        return categoryDaoJooq.insert(user, category);
     }
 
     public Category update(Category category, User user) throws Exception {

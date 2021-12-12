@@ -1,12 +1,13 @@
 package com.ftpix.sss.models;
 
+import com.ftpix.sss.dao.HasCategory;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.UUID;
 
 @DatabaseTable(tableName = "YEARLY_HISTORY")
-public class YearlyHistory {
+public class YearlyHistory implements HasCategory {
 
     @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)
     private UUID id = UUID.randomUUID();
@@ -29,10 +30,12 @@ public class YearlyHistory {
         this.id = id;
     }
 
+    @Override
     public Category getCategory() {
         return category;
     }
 
+    @Override
     public void setCategory(Category category) {
         this.category = category;
     }
