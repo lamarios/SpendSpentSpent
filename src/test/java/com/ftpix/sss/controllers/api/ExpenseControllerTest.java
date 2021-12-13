@@ -65,7 +65,6 @@ public class ExpenseControllerTest {
     public void createNullCategoryExpense() throws Exception {
 
         Expense exp = create(12d, 32131, "2012-10-10", false, Expense.TYPE_NORMAL, 0, 0, "");
-
     }
 
     @Test()
@@ -73,7 +72,7 @@ public class ExpenseControllerTest {
 
         Expense newExpense = create(10d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
 
-        Expense fromController = expenseService.getAll(currentUser).stream().reduce((first, second) -> second).get();
+        Expense fromController = expenseService.get(newExpense.getId(), currentUser);
 
         assertEquals(newExpense.getId(), fromController.getId());
 

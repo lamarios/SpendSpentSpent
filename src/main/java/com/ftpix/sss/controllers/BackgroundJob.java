@@ -40,7 +40,7 @@ public class BackgroundJob {
     }
 
 
-    @Scheduled(fixedRate = 100 * 60 * 1000)
+    @Scheduled(fixedRate = 100 * 60 * 1000, initialDelay = 60*60*1000)
 //    @Scheduled(fixedRate = 10 * 1000)
     public void run() throws Exception {
         final List<User> users = userService.getAll().getData();

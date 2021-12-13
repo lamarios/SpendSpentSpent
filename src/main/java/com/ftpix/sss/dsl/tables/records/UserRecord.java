@@ -36,98 +36,98 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
     }
 
     /**
-     * Setter for <code>sss.USER.email</code>.
+     * Setter for <code>sss.USER.EMAIL</code>.
      */
     public void setEmail(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>sss.USER.email</code>.
+     * Getter for <code>sss.USER.EMAIL</code>.
      */
     public String getEmail() {
         return (String) get(1);
     }
 
     /**
-     * Setter for <code>sss.USER.firstName</code>.
+     * Setter for <code>sss.USER.FIRSTNAME</code>.
      */
     public void setFirstname(String value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>sss.USER.firstName</code>.
+     * Getter for <code>sss.USER.FIRSTNAME</code>.
      */
     public String getFirstname() {
         return (String) get(2);
     }
 
     /**
-     * Setter for <code>sss.USER.password</code>.
+     * Setter for <code>sss.USER.PASSWORD</code>.
      */
     public void setPassword(String value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>sss.USER.password</code>.
+     * Getter for <code>sss.USER.PASSWORD</code>.
      */
     public String getPassword() {
         return (String) get(3);
     }
 
     /**
-     * Setter for <code>sss.USER.lastName</code>.
+     * Setter for <code>sss.USER.LASTNAME</code>.
      */
     public void setLastname(String value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>sss.USER.lastName</code>.
+     * Getter for <code>sss.USER.LASTNAME</code>.
      */
     public String getLastname() {
         return (String) get(4);
     }
 
     /**
-     * Setter for <code>sss.USER.subscriptionExpiryDate</code>.
+     * Setter for <code>sss.USER.SUBSCRIPTIONEXPIRYDATE</code>.
      */
     public void setSubscriptionexpirydate(Long value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>sss.USER.subscriptionExpiryDate</code>.
+     * Getter for <code>sss.USER.SUBSCRIPTIONEXPIRYDATE</code>.
      */
     public Long getSubscriptionexpirydate() {
         return (Long) get(5);
     }
 
     /**
-     * Setter for <code>sss.USER.showAnnouncement</code>.
+     * Setter for <code>sss.USER.SHOWANNOUNCEMENT</code>.
      */
     public void setShowannouncement(Byte value) {
         set(6, value);
     }
 
     /**
-     * Getter for <code>sss.USER.showAnnouncement</code>.
+     * Getter for <code>sss.USER.SHOWANNOUNCEMENT</code>.
      */
     public Byte getShowannouncement() {
         return (Byte) get(6);
     }
 
     /**
-     * Setter for <code>sss.USER.isAdmin</code>.
+     * Setter for <code>sss.USER.ISADMIN</code>.
      */
     public void setIsadmin(Byte value) {
         set(7, value);
     }
 
     /**
-     * Getter for <code>sss.USER.isAdmin</code>.
+     * Getter for <code>sss.USER.ISADMIN</code>.
      */
     public Byte getIsadmin() {
         return (Byte) get(7);

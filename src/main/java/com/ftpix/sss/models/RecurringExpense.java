@@ -14,7 +14,7 @@ public class RecurringExpense implements HasCategory {
 
 
     @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)
-    private long id;
+    private Long id;
 
     @DatabaseField(columnName = "NAME")
     private String name;
@@ -40,11 +40,11 @@ public class RecurringExpense implements HasCategory {
     @DatabaseField(columnName = "INCOME")
     private boolean income = false;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -13,7 +13,7 @@ public class Expense implements HasCategory {
     public static final int TYPE_NORMAL = 1, TYPE_RECURRENT = 2;
 
     @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)
-    private long id;
+    private Long id;
 
     @DatabaseField(columnName = "AMOUNT")
     private double amount;
@@ -47,11 +47,11 @@ public class Expense implements HasCategory {
     private long timestamp = System.currentTimeMillis();
 
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

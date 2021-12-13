@@ -50,14 +50,14 @@ public class ResetPasswordRecord extends UpdatableRecordImpl<ResetPasswordRecord
     }
 
     /**
-     * Setter for <code>sss.RESET_PASSWORD.expiryDate</code>.
+     * Setter for <code>sss.RESET_PASSWORD.EXPIRYDATE</code>.
      */
     public void setExpirydate(Long value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>sss.RESET_PASSWORD.expiryDate</code>.
+     * Getter for <code>sss.RESET_PASSWORD.EXPIRYDATE</code>.
      */
     public Long getExpirydate() {
         return (Long) get(2);

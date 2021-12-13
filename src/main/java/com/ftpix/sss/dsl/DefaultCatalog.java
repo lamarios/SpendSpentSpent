@@ -27,7 +27,7 @@ public class DefaultCatalog extends CatalogImpl {
     /**
      * The schema <code>sss</code>.
      */
-    public final Sss SSS = Sss.SSS;
+    public final SSS SSS = com.ftpix.sss.dsl.SSS.SSS;
 
     /**
      * No further instances allowed
@@ -39,7 +39,7 @@ public class DefaultCatalog extends CatalogImpl {
     @Override
     public final List<Schema> getSchemas() {
         return Arrays.asList(
-            Sss.SSS
+            SSS.SSS
         );
     }
 }

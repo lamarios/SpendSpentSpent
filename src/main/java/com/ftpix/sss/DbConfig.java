@@ -274,6 +274,106 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
                 }
             }
 
+/*
+            if (schemaVersion < 12) {
+                newVersion = 11;
+                int pageSize = 20;
+                int page = 0;
+
+                try (final CloseableDSLContext jooq = DSL.using(jdbcUrl, dbUsername, dbPassword)) {
+                    // migrating expenses
+                    jooq.alterTable("EXPENSE").dropPrimaryKey().execute();
+                    jooq.alterTable("EXPENSE").
+                    jooq.alterTable("EXPENSE").renameColumn("ID").to("ID_OLD").execute();
+                    jooq.alterTable("EXPENSE").addColumn("ID", SQLDataType.VARCHAR(48)).before("ID_OLD").execute();
+                    try {
+                        jooq.alterTable("EXPENSE").dropForeignKey(DSL.foreignKey(DSL.field("CATEGORY_ID")).references(DSL.table("CATEGORY"))).execute();
+                    } catch (Exception e) {
+                        logger.error("Probably ok, no foreign key", e);
+                    }
+
+                    List<Long> fetch;
+
+                    do {
+                        fetch = (List<Long>) jooq.select().from("EXPENSE")
+                                .limit(pageSize)
+                                .offset(page * pageSize).fetch("ID_OLD");
+
+                        fetch.forEach(id -> {
+                            logger.info("Updating id of expense " + id);
+                            jooq.update(DSL.table("EXPENSE"))
+                                    .set(DSL.field("ID"), UUID.randomUUID().toString())
+                                    .where(DSL.field("ID_OLD").eq(id))
+                                    .execute();
+                        });
+                        page++;
+                    } while (fetch.size() == pageSize);
+
+                    jooq.alterTable("RECURRING_EXPENSE").dropPrimaryKey().execute();
+                    jooq.alterTable("RECURRING_EXPENSE").renameColumn("ID").to("ID_OLD").execute();
+                    jooq.alterTable("RECURRING_EXPENSE").addColumn("ID", SQLDataType.VARCHAR(48)).before("ID_OLD").execute();
+                    try {
+                        jooq.alterTable("RECURRING_EXPENSE").dropForeignKey(DSL.constraint().foreignKey(DSL.field("CATEGORY_ID")).references(DSL.table("CATEGORY"))).execute();
+                    } catch (Exception e) {
+                        logger.error("Probably ok, no foreign key", e);
+                    }
+                    page = 0;
+                    do {
+                        fetch = (List<Long>) jooq.select().from("RECURRING_EXPENSE")
+                                .limit(pageSize)
+                                .offset(page * pageSize).fetch("ID_OLD");
+
+                        fetch.forEach(id -> {
+                            logger.info("Updating id of recurring expense " + id);
+                            jooq.update(DSL.table("RECURRING_EXPENSE"))
+                                    .set(DSL.field("ID"), UUID.randomUUID().toString())
+                                    .where(DSL.field("ID_OLD").eq(id))
+                                    .execute();
+                        });
+                        page++;
+                    } while (fetch.size() == pageSize);
+
+                    jooq.alterTable("CATEGORY").dropPrimaryKey().execute();
+                    jooq.alterTable("CATEGORY").renameColumn("ID").to("ID_OLD").execute();
+                    jooq.alterTable("CATEGORY").addColumn("ID", SQLDataType.VARCHAR(48)).before("ID_OLD").execute();
+
+                    page = 0;
+                    do {
+                        fetch = (List<Long>) jooq.select().from("CATEGORY")
+                                .limit(pageSize)
+                                .offset(page * pageSize).fetch("ID_OLD");
+
+                        fetch.forEach(id -> {
+                            logger.info("Updating id of category " + id);
+                            String uuid = UUID.randomUUID().toString();
+                            jooq.update(DSL.table("CATEGORY"))
+                                    .set(DSL.field("ID"), uuid)
+                                    .where(DSL.field("ID_OLD").eq(id))
+                                    .execute();
+
+
+                            logger.info("Updating expenses");
+                            int updated = jooq.update(DSL.table("EXPENSE"))
+                                    .set(DSL.field("CATEGORY_ID"), uuid)
+                                    .where(DSL.field("CATEGORY_ID").eq(id))
+                                    .execute();
+                            logger.info("Updated " + updated + " expenses");
+
+                            logger.info("Updating recurring expenses");
+                            updated = jooq.update(DSL.table("RECURRING_EXPENSE"))
+                                    .set(DSL.field("CATEGORY_ID"), uuid)
+                                    .where(DSL.field("CATEGORY_ID").eq(id))
+                                    .execute();
+                            logger.info("Updated " + updated + " recurring expenses");
+
+
+                        });
+                        page++;
+                    } while (fetch.size() == pageSize);
+                }
+            }
+*/
+
             TableUtils.clearTable(connectionSource, SchemaVersion.class);
             schemaDao.create(new SchemaVersion(newVersion));
         } catch (Exception e) {

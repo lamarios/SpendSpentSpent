@@ -33,17 +33,17 @@ public class TestConfig {
 
 
         Category anchor = new Category();
-        anchor.setId(1);
+        anchor.setId(1L);
         anchor.setIcon("icon-anchor");
         anchor.setUser(user);
 
         Category violin = new Category();
-        violin.setId(2);
+        violin.setId(2L);
         violin.setIcon("icon-violin");
         violin.setUser(user);
 
         Category gas = new Category();
-        gas.setId(3);
+        gas.setId(3L);
         gas.setIcon("icon-gas");
         gas.setUser(user);
 

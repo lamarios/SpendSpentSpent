@@ -16,8 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @SpringBootTest(classes = App.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -67,9 +66,10 @@ public class RecurringExpenseControllerTest {
     }
 
 
-    @Test(expected = Exception.class)
+    @Test()
     public void testAddingWronCategory() throws Exception {
-        create(3213121, 10d, false, "spotify", RecurringExpense.TYPE_DAILY, 0);
+        RecurringExpense spotify = create(3213121, 10d, false, "spotify", RecurringExpense.TYPE_DAILY, 0);
+        assertNull(spotify);
     }
 
     @Test

@@ -10,7 +10,7 @@ public class Category implements HasCategory {
 
 
     @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)
-    private long id;
+    private Long id;
 
     @DatabaseField(columnName = "ICON")
     private String icon;
@@ -25,11 +25,11 @@ public class Category implements HasCategory {
 
     private double percentageOfMonthly = 0;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

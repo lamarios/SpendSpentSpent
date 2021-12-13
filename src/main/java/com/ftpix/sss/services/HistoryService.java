@@ -102,7 +102,7 @@ public class HistoryService {
 
         CategoryOverall overall = new CategoryOverall();
         Category categoryAll = new Category();
-        categoryAll.setId(-1);
+        categoryAll.setId(-1L);
         categoryAll.setIcon("all");
         categoryAll.setUser(user);
         overall.setCategory(categoryAll);
@@ -149,7 +149,7 @@ public class HistoryService {
 
         CategoryOverall overall = new CategoryOverall();
         Category categoryAll = new Category();
-        categoryAll.setId(-1);
+        categoryAll.setId(-1L);
         categoryAll.setIcon("all");
         categoryAll.setUser(user);
         overall.setCategory(categoryAll);

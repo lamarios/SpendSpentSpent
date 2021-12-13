@@ -5,7 +5,7 @@ package com.ftpix.sss.dsl.tables;
 
 
 import com.ftpix.sss.dsl.Keys;
-import com.ftpix.sss.dsl.Sss;
+import com.ftpix.sss.dsl.SSS;
 import com.ftpix.sss.dsl.tables.records.SettingsRecord;
 
 import org.jooq.Field;
@@ -94,7 +94,7 @@ public class Settings extends TableImpl<SettingsRecord> {
 
     @Override
     public Schema getSchema() {
-        return aliased() ? null : Sss.SSS;
+        return aliased() ? null : SSS.SSS;
     }
 
     @Override

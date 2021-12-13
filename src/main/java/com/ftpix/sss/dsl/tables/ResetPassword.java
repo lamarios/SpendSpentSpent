@@ -5,7 +5,7 @@ package com.ftpix.sss.dsl.tables;
 
 
 import com.ftpix.sss.dsl.Keys;
-import com.ftpix.sss.dsl.Sss;
+import com.ftpix.sss.dsl.SSS;
 import com.ftpix.sss.dsl.tables.records.ResetPasswordRecord;
 
 import org.jooq.Field;
@@ -55,9 +55,9 @@ public class ResetPassword extends TableImpl<ResetPasswordRecord> {
     public final TableField<ResetPasswordRecord, String> USER_ID = createField(DSL.name("USER_ID"), SQLDataType.VARCHAR(48), this, "");
 
     /**
-     * The column <code>sss.RESET_PASSWORD.expiryDate</code>.
+     * The column <code>sss.RESET_PASSWORD.EXPIRYDATE</code>.
      */
-    public final TableField<ResetPasswordRecord, Long> EXPIRYDATE = createField(DSL.name("expiryDate"), SQLDataType.BIGINT, this, "");
+    public final TableField<ResetPasswordRecord, Long> EXPIRYDATE = createField(DSL.name("EXPIRYDATE"), SQLDataType.BIGINT, this, "");
 
     private ResetPassword(Name alias, Table<ResetPasswordRecord> aliased) {
         this(alias, aliased, null);
@@ -94,7 +94,7 @@ public class ResetPassword extends TableImpl<ResetPasswordRecord> {
 
     @Override
     public Schema getSchema() {
-        return aliased() ? null : Sss.SSS;
+        return aliased() ? null : SSS.SSS;
     }
 
     @Override

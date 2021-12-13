@@ -6,7 +6,7 @@ package com.ftpix.sss.dsl.tables;
 
 import com.ftpix.sss.dsl.Indexes;
 import com.ftpix.sss.dsl.Keys;
-import com.ftpix.sss.dsl.Sss;
+import com.ftpix.sss.dsl.SSS;
 import com.ftpix.sss.dsl.tables.records.MonthlyHistoryRecord;
 
 import java.util.Arrays;
@@ -104,7 +104,7 @@ public class MonthlyHistory extends TableImpl<MonthlyHistoryRecord> {
 
     @Override
     public Schema getSchema() {
-        return aliased() ? null : Sss.SSS;
+        return aliased() ? null : SSS.SSS;
     }
 
     @Override

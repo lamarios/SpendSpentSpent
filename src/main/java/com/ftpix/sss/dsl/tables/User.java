@@ -5,7 +5,7 @@ package com.ftpix.sss.dsl.tables;
 
 
 import com.ftpix.sss.dsl.Keys;
-import com.ftpix.sss.dsl.Sss;
+import com.ftpix.sss.dsl.SSS;
 import com.ftpix.sss.dsl.tables.records.UserRecord;
 
 import java.util.Arrays;
@@ -53,39 +53,39 @@ public class User extends TableImpl<UserRecord> {
     public final TableField<UserRecord, String> ID = createField(DSL.name("ID"), SQLDataType.VARCHAR(48).nullable(false), this, "");
 
     /**
-     * The column <code>sss.USER.email</code>.
+     * The column <code>sss.USER.EMAIL</code>.
      */
-    public final TableField<UserRecord, String> EMAIL = createField(DSL.name("email"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<UserRecord, String> EMAIL = createField(DSL.name("EMAIL"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
-     * The column <code>sss.USER.firstName</code>.
+     * The column <code>sss.USER.FIRSTNAME</code>.
      */
-    public final TableField<UserRecord, String> FIRSTNAME = createField(DSL.name("firstName"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<UserRecord, String> FIRSTNAME = createField(DSL.name("FIRSTNAME"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
-     * The column <code>sss.USER.password</code>.
+     * The column <code>sss.USER.PASSWORD</code>.
      */
-    public final TableField<UserRecord, String> PASSWORD = createField(DSL.name("password"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<UserRecord, String> PASSWORD = createField(DSL.name("PASSWORD"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
-     * The column <code>sss.USER.lastName</code>.
+     * The column <code>sss.USER.LASTNAME</code>.
      */
-    public final TableField<UserRecord, String> LASTNAME = createField(DSL.name("lastName"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<UserRecord, String> LASTNAME = createField(DSL.name("LASTNAME"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
-     * The column <code>sss.USER.subscriptionExpiryDate</code>.
+     * The column <code>sss.USER.SUBSCRIPTIONEXPIRYDATE</code>.
      */
-    public final TableField<UserRecord, Long> SUBSCRIPTIONEXPIRYDATE = createField(DSL.name("subscriptionExpiryDate"), SQLDataType.BIGINT, this, "");
+    public final TableField<UserRecord, Long> SUBSCRIPTIONEXPIRYDATE = createField(DSL.name("SUBSCRIPTIONEXPIRYDATE"), SQLDataType.BIGINT, this, "");
 
     /**
-     * The column <code>sss.USER.showAnnouncement</code>.
+     * The column <code>sss.USER.SHOWANNOUNCEMENT</code>.
      */
-    public final TableField<UserRecord, Byte> SHOWANNOUNCEMENT = createField(DSL.name("showAnnouncement"), SQLDataType.TINYINT, this, "");
+    public final TableField<UserRecord, Byte> SHOWANNOUNCEMENT = createField(DSL.name("SHOWANNOUNCEMENT"), SQLDataType.TINYINT, this, "");
 
     /**
-     * The column <code>sss.USER.isAdmin</code>.
+     * The column <code>sss.USER.ISADMIN</code>.
      */
-    public final TableField<UserRecord, Byte> ISADMIN = createField(DSL.name("isAdmin"), SQLDataType.TINYINT, this, "");
+    public final TableField<UserRecord, Byte> ISADMIN = createField(DSL.name("ISADMIN"), SQLDataType.TINYINT, this, "");
 
     private User(Name alias, Table<UserRecord> aliased) {
         this(alias, aliased, null);
@@ -122,7 +122,7 @@ public class User extends TableImpl<UserRecord> {
 
     @Override
     public Schema getSchema() {
-        return aliased() ? null : Sss.SSS;
+        return aliased() ? null : SSS.SSS;
     }
 
     @Override

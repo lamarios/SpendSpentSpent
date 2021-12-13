@@ -5,7 +5,7 @@ package com.ftpix.sss.dsl.tables;
 
 
 import com.ftpix.sss.dsl.Keys;
-import com.ftpix.sss.dsl.Sss;
+import com.ftpix.sss.dsl.SSS;
 import com.ftpix.sss.dsl.tables.records.ExpenseRecord;
 
 import org.jooq.Field;
@@ -135,7 +135,7 @@ public class Expense extends TableImpl<ExpenseRecord> {
 
     @Override
     public Schema getSchema() {
-        return aliased() ? null : Sss.SSS;
+        return aliased() ? null : SSS.SSS;
     }
 
     @Override
