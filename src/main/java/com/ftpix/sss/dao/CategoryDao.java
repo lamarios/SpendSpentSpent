@@ -101,12 +101,16 @@ public class CategoryDao implements UserCategoryBasedDao<CategoryRecord, Categor
     }
 
     public long getMaxCategoryOrder(User user) {
-        return dslContext.select(DSL.max(CATEGORY.CATEGORY_ORDER))
-                .from(CATEGORY)
-                .where(CATEGORY.USER_ID.eq(user.getId().toString()))
-                .fetchOne(integerRecord1 -> {
-                    return integerRecord1.get(0, Long.class);
-                });
+        try {
+            return dslContext.select(DSL.max(CATEGORY.CATEGORY_ORDER))
+                    .from(CATEGORY)
+                    .where(CATEGORY.USER_ID.eq(user.getId().toString()))
+                    .fetchOne(integerRecord1 -> {
+                        return integerRecord1.get(0, Long.class);
+                    });
+        } catch (Exception e) {
+            return 0L;
+        }
     }
 
     public List<Category> queryForAll() {
