@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.ftpix.sss.dsl.Tables.EXPENSE;
@@ -52,7 +49,7 @@ public class ExpenseService {
                 .stream()
                 .collect(Collectors.groupingBy(expense -> df.format(expense.getDate())));
 
-        Map<String, DailyExpense> result = new HashMap<>();
+        Map<String, DailyExpense> result = new TreeMap<>(Collections.reverseOrder());
 
         grouped.forEach((s, expenses) -> {
             DailyExpense exp = new DailyExpense();

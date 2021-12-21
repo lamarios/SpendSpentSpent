@@ -25,7 +25,7 @@ public class PaginatedResults<T> {
     }
 
 
-    private class PaginationDetails {
+    public static class PaginationDetails {
 
 
         private final long totalPages, currentPageCount;

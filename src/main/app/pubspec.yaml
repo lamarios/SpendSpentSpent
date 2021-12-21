@@ -41,7 +41,7 @@ dependencies:
   intl: 0.17.0
   location: 4.3.0
   flutter_platform_widgets: 1.10.0
-  settings_ui: 1.0.0
+  flutter_settings_ui: ^2.0.1
   flutter_fadein: 2.0.0
   flutter_map: 0.14.0
   latlong2: 0.8.1

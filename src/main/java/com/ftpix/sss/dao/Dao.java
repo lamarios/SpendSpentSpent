@@ -58,7 +58,6 @@ public interface Dao<R extends UpdatableRecord<R>, M> {
 
         Integer count = getDsl().select(DSL.count()).from(getTable())
                 .where(filter)
-                .orderBy(orderBy)
                 .fetchOne().into(Integer.class);
 
         return new PaginatedResults<>(page, count, pageSize, results);

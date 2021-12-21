@@ -89,7 +89,7 @@ public class MonthlyHistoryDao implements Dao<MonthlyHistoryRecord, MonthlyHisto
 
     @Override
     public Field<Long> getCategoryField() {
-        return null;
+        return MONTHLY_HISTORY.CATEGORY_ID;
     }
 
     @Override

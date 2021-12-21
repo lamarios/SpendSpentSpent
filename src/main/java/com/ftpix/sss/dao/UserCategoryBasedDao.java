@@ -66,17 +66,17 @@ public interface UserCategoryBasedDao<R extends UpdatableRecord<R>, M extends Ha
         Map<Long, Category> userCategories = getUserCategories(user);
         Condition[] conditions = (Condition[]) ArrayUtils.add(filter, getCategoryField().in(userCategories.keySet()));
 
+        int offset = page * pageSize;
         List<M> results = getDsl().select().from(getTable())
                 .where(conditions)
                 .orderBy(orderBy)
                 .limit(pageSize)
-                .offset(page * pageSize)
+                .offset(offset)
                 .fetch(r -> fromRecord((R) r, userCategories));
 
-        Integer count = getDsl().select(DSL.count()).from(getTable())
+        Integer count = getDsl().select(DSL.count().as("count")).from(getTable())
                 .where(conditions)
-                .orderBy(orderBy)
-                .fetchOne().into(Integer.class);
+                .fetchOne(r -> r.get("count", Integer.class));
 
         return new PaginatedResults<>(page, count, pageSize, results);
     }

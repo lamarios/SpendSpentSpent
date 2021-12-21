@@ -257,8 +257,9 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
 
             if (schemaVersion < 11) {
                 newVersion = 11;
-                int pageSize = 20;
+                int pageSize = 1000;
                 int page = 0;
+                int totalProcessed = 0;
 
                 PaginatedResults<Expense> expenses;
                 for (User user : userDao.queryForAll()) {
@@ -270,6 +271,8 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
                             historyService.cacheForExpense(user, e);
                         }
                         page++;
+                        totalProcessed += expenses.getData().size();
+                        logger.info("Proccessed " + totalProcessed + "/" + expenses.getPagination().getTotal());
                     } while (expenses.getData().size() == pageSize);
                 }
             }
