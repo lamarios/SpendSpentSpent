@@ -88,6 +88,7 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
     @Override
     public Expense fromRecord(ExpenseRecord r, Map<Long, Category> categories) {
         try {
+            System.out.println(r.getDate());
             Expense e = new Expense();
             e.setId(r.getId());
             e.setCategory(categories.get(r.getCategoryId()));

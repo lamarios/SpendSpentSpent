@@ -43,7 +43,6 @@ public class HistoryService {
     private final MonthlyHistoryDao monthlyHistoryDaoJooq;
     private final YearlyHistoryDao yearlyHistoryDaoJooq;
 
-    private final ExecutorService cacheUpdateThread = Executors.newSingleThreadExecutor();
     private final DaoUserListener<Category> categoryDaoListener = new DaoUserListener<Category>() {
         @Override
         public void afterInsert(User user, Category newRecord) {
@@ -60,24 +59,20 @@ public class HistoryService {
     private final DaoUserListener<Expense> expenseDaoListener = new DaoUserListener<Expense>() {
         @Override
         public void afterInsert(User user, Expense newRecord) {
-            cacheUpdateThread.execute(() -> {
-                try {
-                    cacheForExpense(user, newRecord);
-                } catch (SQLException e) {
-                    logger.error(e);
-                }
-            });
+            try {
+                cacheForExpense(user, newRecord);
+            } catch (SQLException e) {
+                logger.error(e);
+            }
         }
 
         @Override
         public void afterDelete(User user, Expense deleted) {
-            cacheUpdateThread.execute(() -> {
-                try {
-                    cacheForExpense(user, deleted);
-                } catch (SQLException e) {
-                    logger.error(e);
-                }
-            });
+            try {
+                cacheForExpense(user, deleted);
+            } catch (SQLException e) {
+                logger.error(e);
+            }
         }
     };
 
