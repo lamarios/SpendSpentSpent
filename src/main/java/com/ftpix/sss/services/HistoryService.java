@@ -325,8 +325,7 @@ public class HistoryService {
      */
     private void cacheForCategoryYearly(User user, int date, Category category) throws SQLException {
 
-        List<Expense> forDateLikeAndCategory = expenseService.getForDateLikeAndCategory(user, Integer.toString(date), category);
-        double sum = forDateLikeAndCategory.stream().mapToDouble(Expense::getAmount).sum();
+        double sum = expenseService.getSumWhere(user, Integer.toString(date), category);
 
         Optional<YearlyHistory> history = yearlyHistoryDaoJooq.getOneWhere(YEARLY_HISTORY.CATEGORY_ID.eq(category.getId()), YEARLY_HISTORY.DATE.eq(date));
 
@@ -352,8 +351,8 @@ public class HistoryService {
     private void cacheForCategoryMonthly(User user, int date, Category category) throws SQLException {
         int year = Math.floorDiv(date, 100);
         int month = Math.floorMod(date, 100);
-        List<Expense> forDateLikeAndCategory = expenseService.getForDateLikeAndCategory(user, year + "-" + String.format("%02d", month), category);
-        double sum = forDateLikeAndCategory.stream().mapToDouble(Expense::getAmount).sum();
+
+        double sum = expenseService.getSumWhere(user, year + "-" + String.format("%02d", month), category);
 
         Optional<MonthlyHistory> history = monthlyHistoryDaoJooq.getOneWhere(MONTHLY_HISTORY.CATEGORY_ID.eq(category.getId()), MONTHLY_HISTORY.DATE.eq(date));
 

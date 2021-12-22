@@ -103,6 +103,10 @@ public class ExpenseService {
         return expenseDaoJooq.getMonths(user);
     }
 
+    public double getSumWhere(User user, String date, Category category){
+        return expenseDaoJooq.sumWhere(user, EXPENSE.DATE.like(date + "%"), EXPENSE.CATEGORY_ID.eq(category.getId()));
+    }
+
     public List<Expense> getForDateLikeAndCategory(User user, String date, Category category) throws SQLException {
         return expenseDaoJooq.getWhere(user, EXPENSE.DATE.like(date + "%"), EXPENSE.CATEGORY_ID.eq(category.getId()));
     }

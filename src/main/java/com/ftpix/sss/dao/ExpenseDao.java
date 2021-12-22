@@ -5,15 +5,16 @@ import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
-import org.jooq.DSLContext;
-import org.jooq.Field;
-import org.jooq.OrderField;
+import org.apache.commons.lang.ArrayUtils;
+import org.jooq.*;
 import org.jooq.Record;
+import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultDSLContext;
 import org.jooq.impl.TableImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -137,5 +138,17 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
     public long countExpenses(User user, long categoryId) {
         Map<Long, Category> userCategories = getUserCategories(user);
         return dslContext.fetchCount(EXPENSE, EXPENSE.CATEGORY_ID.in(userCategories.keySet()), EXPENSE.CATEGORY_ID.eq(categoryId));
+    }
+
+    public double sumWhere(User user, Condition... filter) {
+        Map<Long, Category> userCategories = getUserCategories(user);
+
+        Condition[] conditions = (Condition[]) ArrayUtils.add(filter, getCategoryField().in(userCategories.keySet()));
+        return getDsl().select(DSL.sum(EXPENSE.AMOUNT))
+                .from(getTable())
+                .where(conditions)
+                .fetchOne()
+                .get(0, BigDecimal.class)
+                .doubleValue();
     }
 }
