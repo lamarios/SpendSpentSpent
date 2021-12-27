@@ -12,7 +12,7 @@ steps:
       - flutter doctor
       - cd src/main/app
       - ls
-      - security unlock-keychain
+      - security unlock-keychain -p ${keychain_pass}
       - ./build-ios.sh
 
 trigger:
