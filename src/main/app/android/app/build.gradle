@@ -43,6 +43,10 @@ if (keystorePropertiesFile.exists()) {
 android {
     compileSdkVersion 30
 
+    lintOptions {
+        checkReleaseBuilds false
+    }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
