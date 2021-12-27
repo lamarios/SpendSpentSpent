@@ -1,0 +1,1 @@
+Upgrade to flutter 2.8 for better performance

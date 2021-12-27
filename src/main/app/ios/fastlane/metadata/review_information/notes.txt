@@ -1,0 +1,1 @@
+server url: https://sss.ftpix.com
