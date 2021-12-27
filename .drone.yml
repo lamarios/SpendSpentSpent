@@ -1,10 +1,12 @@
 kind: pipeline
-type: exec
-name: Mobile apps
+type: ssh
+name: default
 
-platform:
-  os: darwin
-  arch: amd64
+server:
+  host: osx.lan
+  user: gz
+  password:
+    from_secret: osx-ssh-password
 
 steps:
   - name: build apps
