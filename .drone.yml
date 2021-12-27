@@ -11,11 +11,13 @@ steps:
     environment:
       KEYCHAIN_PASS:
         from_secrets: keychain_pass
+      TEST: 'yoo'
     commands:
       - source /Users/gz/.zshrc
       - flutter doctor
       - cd src/main/app
       - ls
+      - echo ${TEST}
       - security unlock-keychain -p ${KEYCHAIN_PASS}
       - ./build-ios.sh
 
