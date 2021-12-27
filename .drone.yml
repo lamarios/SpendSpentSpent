@@ -12,7 +12,7 @@ steps:
       - flutter doctor
       - cd src/main/app
       - ls
-      - ./build-ios
+      - ./build-ios.sh
 
 trigger:
   event:
