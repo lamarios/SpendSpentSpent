@@ -102,6 +102,7 @@ public class ApplicationController {
         results.put("canResetPassword", emailService.isEnabled());
 
         results.put("backendVersion", Integer.parseInt(buildProperties.getVersion()));
+        results.put("minAppVersion", Integer.toString(MIN_APP_VERSION));
 
 
         results.put("demoMode", Optional.ofNullable(settingsService.getByName(Settings.DEMO_MODE)).map(s -> s.getValue().equalsIgnoreCase("1")).orElse(false));

@@ -27,8 +27,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+def keyFile = ENV['ANDROID_KEY_FILE'];
+if (keyFile == null) {
+    keyFile = '/home/gz/dev/android/keys/key.properties'
+}
+
+println keyFile
+
 def keystoreProperties = new Properties()
-def keystorePropertiesFile = file(ENV["ANDROID_KEY_FILE"])
+def keystorePropertiesFile = file(keyFile)
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }

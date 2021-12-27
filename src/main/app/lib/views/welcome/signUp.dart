@@ -37,7 +37,7 @@ class SignUpState extends State<SignUp> {
     User user =
         User(email: usernameController.text.trim(), firstName: firstNameController.text.trim(), lastName: lastNameController.text.trim(), password: passwordController.text.trim(), isAdmin: false);
 
-    if (user.email.length == 0 || user.password.length == 0 || user.firstName.length == 0 || user.lastName.length == 0) {
+    if (user.email.length == 0 || user.password?.length == 0 || user.firstName.length == 0 || user.lastName.length == 0) {
       setState(() {
         error = 'Please fill all the fields';
       });

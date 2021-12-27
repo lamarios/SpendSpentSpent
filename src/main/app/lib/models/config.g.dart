@@ -12,7 +12,7 @@ Config _$ConfigFromJson(Map<String, dynamic> json) => Config(
       announcement: json['announcement'] as String,
       canResetPassword: json['canResetPassword'] as bool,
       hasSubscription: json['hasSubscription'] as bool,
-      minAppVersion: json['minAppVersion'] as String,
+      minAppVersion: json['minAppVersion'] as String?,
       backendVersion: json['backendVersion'] as int,
     );
 

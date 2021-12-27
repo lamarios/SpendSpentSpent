@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:fbroadcast/fbroadcast.dart';
+import 'package:fbroadcast_nullsafety/fbroadcast_nullsafety.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -224,7 +224,7 @@ class Service {
   Future<void> logout() async {
     await Preferences.remove(Preferences.TOKEN);
 
-    FBroadcast.instance().broadcast(BROADCAST_LOGGED_OUT);
+    FBroadcast.instance()?.broadcast(BROADCAST_LOGGED_OUT);
   }
 
   Future<List<RecurringExpense>> getRecurringExpenses() async {
@@ -267,7 +267,7 @@ class Service {
     final response = await http.delete(await this.formatUrl(EXPENSE_DELETE, [id.toString()]), headers: headers);
     processResponse(response);
 
-    FBroadcast.instance().broadcast(BROADCAST_REFRESH_EXPENSES);
+    FBroadcast.instance()?.broadcast(BROADCAST_REFRESH_EXPENSES);
 
     return true;
   }
@@ -422,7 +422,8 @@ class Service {
     final response = await http.get(Uri.parse(url), headers: {'x-version': version.toString()});
     processResponse(response);
 
-    return Config.fromJson(jsonDecode(response.body));
+    var jsonDecode2 = jsonDecode(response.body);
+    return Config.fromJson(jsonDecode2);
   }
 
   Future<bool> signUp(String url, User user) async {

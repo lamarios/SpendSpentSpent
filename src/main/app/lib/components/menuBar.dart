@@ -17,7 +17,7 @@ class MenuBar extends StatefulWidget {
 }
 
 class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLayoutMixin<MenuBar> {
-  late Animation<Color> animation0, animation1, animation2;
+  late Animation<Color?> animation0, animation1, animation2;
   late AnimationController controller0, controller1, controller2;
 
   @override
@@ -170,17 +170,17 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
     AppColors colors = get(context);
     setState(() {
       controller0 = AnimationController(duration: panelTransition, vsync: this);
-      animation0 = (ColorTween(begin: colors.iconOnMain, end: colors.main).animate(controller0) as Animation<Color>)
+      animation0 = (ColorTween(begin: colors.iconOnMain, end: colors.main).animate(controller0))
         ..addListener(() {
           setState(() {});
         });
       controller1 = AnimationController(duration: panelTransition, vsync: this);
-      animation1 = (ColorTween(begin: colors.iconOnMain, end: colors.main).animate(controller1) as Animation<Color>)
+      animation1 = (ColorTween(begin: colors.iconOnMain, end: colors.main).animate(controller1))
         ..addListener(() {
           setState(() {});
         });
       controller2 = AnimationController(duration: panelTransition, vsync: this);
-      animation2 = (ColorTween(begin: colors.iconOnMain, end: colors.main).animate(controller2) as Animation<Color>)
+      animation2 = (ColorTween(begin: colors.iconOnMain, end: colors.main).animate(controller2))
         ..addListener(() {
           setState(() {});
         });

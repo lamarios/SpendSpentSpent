@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
-import 'package:fbroadcast/fbroadcast.dart';
+import 'package:fbroadcast_nullsafety/fbroadcast_nullsafety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -73,7 +73,7 @@ class CategorySettingsScreenState extends State<CategorySettingsScreen> with Aft
       await service.deleteCategory(element.id!);
     });
 
-    FBroadcast.instance().broadcast(BROADCAST_REFRESH_CATEGORIES);
+    FBroadcast.instance()?.broadcast(BROADCAST_REFRESH_CATEGORIES);
     Navigator.of(context).pop();
   }
 

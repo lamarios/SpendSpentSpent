@@ -8,11 +8,12 @@ part 'config.g.dart';
 @JsonSerializable()
 class Config {
   bool allowSignup, canResetPassword, demoMode, hasSubscription;
-  String announcement, minAppVersion;
+  String announcement;
+  String? minAppVersion;
   int backendVersion;
 
 
-  Config({required this.demoMode, required this.allowSignup, required this.announcement, required this.canResetPassword, required this.hasSubscription, required this.minAppVersion, required this.backendVersion});
+  Config({required this.demoMode, required this.allowSignup, required this.announcement, required this.canResetPassword, required this.hasSubscription, this.minAppVersion, required this.backendVersion});
 
 
   factory Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);

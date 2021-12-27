@@ -3,7 +3,7 @@ import 'package:spend_spent_spent/components/categories/categoryGrid.dart';
 import 'package:spend_spent_spent/components/dummies/dummyGrid.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/category.dart';
-import 'package:fbroadcast/fbroadcast.dart';
+import 'package:fbroadcast_nullsafety/fbroadcast_nullsafety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +25,7 @@ class _CategoryListState extends State<CategoryList>
   }
 
   void dispose() {
-    FBroadcast.instance().unregister(this);
+    FBroadcast.instance()?.unregister(this);
     super.dispose();
   }
 
@@ -42,7 +42,7 @@ class _CategoryListState extends State<CategoryList>
   @override
   void afterFirstLayout(BuildContext context) {
     loadCategories();
-    FBroadcast.instance().register(BROADCAST_REFRESH_CATEGORIES,
+    FBroadcast.instance()?.register(BROADCAST_REFRESH_CATEGORIES,
         (context, somethingElse) => loadCategories());
   }
 

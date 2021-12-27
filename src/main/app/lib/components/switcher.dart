@@ -19,7 +19,7 @@ class Switcher extends StatefulWidget {
 
 class SwitcherState extends State<Switcher> with TickerProviderStateMixin, AfterLayoutMixin {
   late List<AnimationController> controllers = [];
-  late List<Animation<Color>> animations = [];
+  late List<Animation<Color?>> animations = [];
 
   @override
   void initState() {
@@ -103,10 +103,10 @@ class SwitcherState extends State<Switcher> with TickerProviderStateMixin, After
     AppColors colors = get(context);
 
     late List<AnimationController> controllers = [];
-    late List<Animation<Color>> animations = [];
+    late List<Animation<Color?>> animations = [];
     for (int i = 0; i < widget.labels.length; i++) {
       final controller = AnimationController(duration: panelTransition, vsync: this);
-      final animation = (ColorTween(begin: colors.main, end: colors.iconOnMain).animate(controller) as Animation<Color>)
+      final animation = (ColorTween(begin: colors.main, end: colors.iconOnMain).animate(controller))
         ..addListener(() {
           if (this.mounted) {
             setState(() {});

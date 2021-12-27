@@ -4,7 +4,7 @@ import 'dart:math';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:animations/animations.dart';
-import 'package:fbroadcast/fbroadcast.dart';
+import 'package:fbroadcast_nullsafety/fbroadcast_nullsafety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -66,7 +66,7 @@ class _LoginState extends State<Login> with AfterLayoutMixin<Login> {
         loginError = '';
       });
       if (loggedIn) {
-        FBroadcast.instance().broadcast(globals.BROADCAST_LOGGED_IN);
+        FBroadcast.instance()?.broadcast(globals.BROADCAST_LOGGED_IN);
         print(loggedIn);
         widget.onLoginSuccess();
       }

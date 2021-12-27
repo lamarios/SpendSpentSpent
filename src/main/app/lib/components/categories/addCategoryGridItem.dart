@@ -1,5 +1,5 @@
 import 'package:animations/animations.dart';
-import 'package:fbroadcast/fbroadcast.dart';
+import 'package:fbroadcast_nullsafety/fbroadcast_nullsafety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,7 +12,7 @@ import 'package:spend_spent_spent/views/addCategory.dart';
 class AddCategoryGridItem extends StatelessWidget {
   void addCategory(String selected) async {
     await service.addCategory(selected);
-    FBroadcast.instance().broadcast(BROADCAST_REFRESH_CATEGORIES);
+    FBroadcast.instance()?.broadcast(BROADCAST_REFRESH_CATEGORIES);
   }
 
   void showAddCategory(BuildContext context) {

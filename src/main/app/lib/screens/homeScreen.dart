@@ -5,10 +5,10 @@ import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
 import 'package:spend_spent_spent/views/login.dart';
 import 'package:spend_spent_spent/views/main.dart';
-import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:fbroadcast_nullsafety/fbroadcast_nullsafety.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen() : super();
@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Future<void> afterFirstLayout(BuildContext context) async {
-    FBroadcast.instance().register(BROADCAST_LOGGED_OUT, (value, callback) {
+    FBroadcast.instance()?.register(BROADCAST_LOGGED_OUT, (value, callback) {
       setState(() {
         this.homeWidget = getLogin();
       });
