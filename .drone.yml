@@ -101,3 +101,21 @@ volumes:
   - name: cache
     host:
       path: /home/core/cache
+---
+kind: pipeline
+type: exec
+name: app-build
+
+platform:
+  os: macos
+  arch: amd64
+
+steps:
+  - name: flutter test
+    commands:
+      - flutter doctor
+
+trigger:
+  event:
+    - push
+    - tag
