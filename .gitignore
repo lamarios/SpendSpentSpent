@@ -103,3 +103,4 @@ web-drivers
 /SSS.trace.db
 /src/main/resources/public/
 /m2/
+/src/main/app/linux/.flatpak-builder/
