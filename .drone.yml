@@ -1,20 +1,20 @@
 kind: pipeline
 type: exec
-name: Mobile apps yo
+name: Mobile apps
 
 platform:
   os: darwin
   arch: amd64
 
 steps:
-  - name: flutter test
+  - name: build apps
     environment:
       KEYCHAIN_PASS:
         from_secret: keychain_pass
     commands:
       - source /Users/gz/.zshrc
       - flutter doctor
-      - security unlock-keychain -p $${KEYCHAIN_PASS}
+      - security unlock-keychain -p $${KEYCHAIN_PASS} /Users/gz/Library/Keychains/login.keychain-db
       - ./build-ios.sh
 
 trigger:
