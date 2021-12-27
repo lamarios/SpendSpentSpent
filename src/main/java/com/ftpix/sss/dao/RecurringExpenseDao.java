@@ -37,8 +37,8 @@ public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpens
             RecurringExpense e = new RecurringExpense();
             e.setId(r.getId());
             e.setType(r.getType());
-            e.setLastOccurrence(r.getLastOccurrence().length() > 0 ? df.parse(r.getLastOccurrence()) : null);
-            e.setNextOccurrence(r.getNextOccurrence().length() > 0 ? df.parse(r.getNextOccurrence()) : null);
+            e.setLastOccurrence(r.getLastOccurrence() != null && r.getLastOccurrence().length() > 0 ? df.parse(r.getLastOccurrence()) : null);
+            e.setNextOccurrence(r.getNextOccurrence() != null && r.getNextOccurrence().length() > 0 ? df.parse(r.getNextOccurrence()) : null);
             e.setTypeParam(r.getTypeParam());
             e.setIncome(r.getIncome() != null && r.getIncome().equals((byte) 1));
             e.setAmount(r.getAmount());
@@ -78,8 +78,8 @@ public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpens
         r.setCategoryId(e.getCategory().getId());
         r.setType(e.getType());
         r.setTypeParam(e.getTypeParam());
-        r.setLastOccurrence(e.getLastOccurrence() != null ? df.format(e.getLastOccurrence()) : "");
-        r.setNextOccurrence(e.getNextOccurrence() != null ? df.format(e.getNextOccurrence()) : "");
+        r.setLastOccurrence(e.getLastOccurrence() != null ? df.format(e.getLastOccurrence()) : null);
+        r.setNextOccurrence(e.getNextOccurrence() != null ? df.format(e.getNextOccurrence()) : null);
         r.setAmount(e.getAmount());
         r.setIncome((byte) (e.isIncome() ? 1 : 0));
 
