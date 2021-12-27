@@ -1,6 +1,24 @@
 kind: pipeline
+type: exec
+name: Mobile apps
+
+platform:
+  os: darwin
+  arch: amd64
+
+steps:
+  - name: flutter test
+    commands:
+      - flutter doctor
+
+trigger:
+  event:
+    - push
+    - tag
+---
+kind: pipeline
 type: docker
-name: default
+name: Backend & web
 
 steps:
   - name: restore-cache
@@ -102,20 +120,3 @@ volumes:
     host:
       path: /home/core/cache
 ---
-kind: pipeline
-type: exec
-name: app-build
-
-platform:
-  os: macos
-  arch: amd64
-
-steps:
-  - name: flutter test
-    commands:
-      - flutter doctor
-
-trigger:
-  event:
-    - push
-    - tag
