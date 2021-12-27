@@ -27,14 +27,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-def keyFile = ENV['ANDROID_KEY_FILE'];
+def keyFile = ENV['ANDROID_KEY_FILE']
 if (keyFile == null) {
     keyFile = '/home/gz/dev/android/keys/key.properties'
 }
 
-def buildNumber = ENV['DRONE_TAG']
-if (buildNumber == null) {
-    buildNumber = flutterVersionCode.toInteger()
+println flutterVersionCode
+println ENV['DRONE_TAG'].toInteger()
+def buildNumber = flutterVersionCode.toInteger()
+if (ENV['DRONE_TAG'] != null) {
+    buildNumber = ENV['DRONE_TAG'].toInteger()
 }
 
 println keyFile
