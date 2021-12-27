@@ -1,6 +1,6 @@
 kind: pipeline
 type: exec
-name: Mobile apps
+name: Mobile apps yo
 
 platform:
   os: darwin
