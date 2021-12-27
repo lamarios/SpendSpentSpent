@@ -1,9 +1,9 @@
 OPTS=""
 if [ -z ${DRONE_TAG+x} ]; then
+  echo "No build number, using default"
+else
   echo "Build number: ${DRONE_TAG}"
   OPTS="--build-number ${DRONE_TAG}"
-else
-  echo "No build number, using default"
 fi
 
 flutter clean \
