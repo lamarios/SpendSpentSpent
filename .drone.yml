@@ -16,7 +16,6 @@ trigger:
     - push
     - tag
 ---
-# yo
 kind: pipeline
 type: docker
 name: Backend & web
