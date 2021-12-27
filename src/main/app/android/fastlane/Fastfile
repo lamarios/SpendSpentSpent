@@ -36,7 +36,7 @@ platform :android do
     #gradle(task: "clean assembleRelease")
     upload_to_play_store(
         version_code: ENV['DRONE_TAG'],
-        aab: "../build/app/outputs/bundle/release/app-release.aab"
+        aab: "../build/app/outputs/bundle/release/app-release.aab",
         skip_upload_changelogs: true
     )
   end
