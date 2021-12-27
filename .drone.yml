@@ -21,6 +21,7 @@ steps:
       - security unlock-keychain -p $${KEYCHAIN_PASS} /Users/gz/Library/Keychains/login.keychain-db
       - cd src/main/app
       - ./build-ios.sh
+      - flutter build appbundle --no-sound-null-safety
 
 trigger:
   event:
