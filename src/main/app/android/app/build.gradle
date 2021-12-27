@@ -32,8 +32,9 @@ if (keyFile == null) {
     keyFile = '/home/gz/dev/android/keys/key.properties'
 }
 
+def tag = ENV['DRONE_TAG']
 println flutterVersionCode
-println ENV['DRONE_TAG'].toInteger()
+println ENV['DRONE_TAG']
 def buildNumber = flutterVersionCode.toInteger()
 if (ENV['DRONE_TAG'] != null) {
     buildNumber = ENV['DRONE_TAG'].toInteger()
