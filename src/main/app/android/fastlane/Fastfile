@@ -34,6 +34,7 @@ platform :android do
   lane :deploy do
     gradle(task: "clean assembleRelease")
     upload_to_play_store(
+        version_code: ENV['DRONE_TAG']
         skip_upload_changelogs: true
     )
   end
