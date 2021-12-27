@@ -20,7 +20,7 @@ platform :ios do
   lane :release do
     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
     upload_to_app_store(
-        build_number: env['DRONE_TAG'],
+        build_number: ENV['DRONE_TAG'],
 #         submit_for_review: true,
 #         automatic_release: true,
         submission_information: {
