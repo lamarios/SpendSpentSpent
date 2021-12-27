@@ -144,11 +144,11 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
         Map<Long, Category> userCategories = getUserCategories(user);
 
         Condition[] conditions = (Condition[]) ArrayUtils.add(filter, getCategoryField().in(userCategories.keySet()));
-        return getDsl().select(DSL.sum(EXPENSE.AMOUNT))
-                .from(getTable())
-                .where(conditions)
-                .fetchOne()
-                .get(0, BigDecimal.class)
-                .doubleValue();
+        return Optional.ofNullable(getDsl().select(DSL.sum(EXPENSE.AMOUNT))
+                        .from(getTable())
+                        .where(conditions)
+                        .fetchOneInto(BigDecimal.class))
+                .map(BigDecimal::doubleValue)
+                .orElse(0d);
     }
 }
