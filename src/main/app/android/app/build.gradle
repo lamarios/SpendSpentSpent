@@ -32,7 +32,14 @@ if (keyFile == null) {
     keyFile = '/home/gz/dev/android/keys/key.properties'
 }
 
+def buildNumber = ENV['DRONE_TAG']
+if (buildNumber == null) {
+    buildNumber = flutterVersionCode.toInteger()
+}
+
 println keyFile
+
+println buildNumber
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = file(keyFile)
@@ -52,11 +59,10 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.spendspentspent.app"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode flutterVersionCode.toInteger()
+        versionCode buildNumber
         versionName flutterVersionName
     }
 
