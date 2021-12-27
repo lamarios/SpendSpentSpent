@@ -12,7 +12,7 @@ steps:
       KEYCHAIN_PASS:
         from_secrets: keychain_pass
     commands:
-      - source ~/.zshrc
+      - source /Users/gz/.zshrc
       - flutter doctor
       - cd src/main/app
       - ls
