@@ -1,6 +1,6 @@
 kind: pipeline
 type: exec
-name: default
+name: Mobile apps
 
 platform:
   os: darwin
@@ -10,6 +10,9 @@ steps:
   - name: flutter test
     commands:
       - flutter doctor
+      - cd src/main/app
+      - ls
+      - ./build-ios
 
 trigger:
   event:
