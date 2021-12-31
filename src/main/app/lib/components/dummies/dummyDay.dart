@@ -26,7 +26,7 @@ class DummyDay extends StatelessWidget {
 
     List<Widget> wrap = [];
     for (int i = 0; i < expenses; i++) {
-      wrap.add(DummyExpense(expenses*10+100));
+      wrap.add(DummyExpense(expenses * 10 + 100));
     }
 
     widgets.add(Padding(
@@ -34,20 +34,16 @@ class DummyDay extends StatelessWidget {
       child: Wrap(runSpacing: 10, spacing: 10, alignment: WrapAlignment.center, children: wrap),
     ));
 
-    widgets.add(Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Expanded(
-              child: Container(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    formatCurrency(total),
-                    style: TextStyle(color: colors.dummy),
-                  ))),
-        ],
+    widgets.add(
+      Container(
+        width: 150,
+        height: 10,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(25)),
+          color: colors.dummy,
+        ),
       ),
-    ));
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: Column(children: widgets),

@@ -37,18 +37,16 @@ class OneDay extends StatelessWidget {
     widgets.add(Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             'Total:',
             style: TextStyle(color: colors.text),
           ),
-          Expanded(
-              child: Container(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    formatCurrency(total),
-                    style: TextStyle(color: colors.main),
-                  ))),
+          Text(
+            formatCurrency(total),
+            style: TextStyle(color: colors.main),
+          ),
         ],
       ),
     ));

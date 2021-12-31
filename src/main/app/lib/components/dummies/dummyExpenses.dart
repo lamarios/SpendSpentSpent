@@ -10,10 +10,6 @@ class DummyExpenses extends StatelessWidget {
         DummyDay(4),
         DummyDay(1),
         DummyDay(3),
-        DummyDay(8),
-        DummyDay(3),
-        DummyDay(2),
-        DummyDay(4),
       ]),
     );
   }

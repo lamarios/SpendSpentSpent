@@ -1,6 +1,7 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:spend_spent_spent/components/dummies/dummyExpenses.dart';
 import 'package:spend_spent_spent/components/dummies/dummyRecurringExpenseList.dart';
 import 'package:spend_spent_spent/components/recurringExpenses/expenseList.dart';
 import 'package:spend_spent_spent/globals.dart';
@@ -13,7 +14,7 @@ class RecurringExpenseList extends StatefulWidget {
 
 class RecurringExpenseListState extends State<RecurringExpenseList> with AfterLayoutMixin<RecurringExpenseList> {
   List<RecurringExpense>? expenses;
-  Widget expensesWidget = DummyRecurringExpenseList();
+  Widget expensesWidget = DummyExpenses();
 
   getRecurringExpenses() {
     service.getRecurringExpenses().then((value) {
