@@ -1,0 +1,2 @@
+- Make recurring expenses view more useful with less wasted spance
+- Minor UI fixes on the daily expense list
