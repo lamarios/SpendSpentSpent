@@ -53,6 +53,9 @@ trigger:
   event:
     - push
     - tag
+  paths:
+    include:
+      - ./src/main/app/**
 ---
 kind: pipeline
 type: docker
