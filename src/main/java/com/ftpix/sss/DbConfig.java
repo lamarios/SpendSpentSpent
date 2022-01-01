@@ -280,6 +280,7 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
             // redoing migration of history records, as bug was introduce for instances with multiple users
             // as there was a bug where page  was not reset to 0 for each user...
             if (schemaVersion < 12) {
+                newVersion = 12;
                 int pageSize = 1000;
                 PaginatedResults<Expense> expenses;
                 for (User user : userDao.queryForAll()) {
