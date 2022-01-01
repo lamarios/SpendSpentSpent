@@ -277,6 +277,27 @@ public class DbConfig implements ApplicationListener<ApplicationReadyEvent> {
                 }
             }
 
+            // redoing migration of history records, as bug was introduce for instances with multiple users
+            // as there was a bug where page  was not reset to 0 for each user...
+            if (schemaVersion < 12) {
+                int pageSize = 1000;
+                PaginatedResults<Expense> expenses;
+                for (User user : userDao.queryForAll()) {
+                    int page = 0;
+                    int totalProcessed = 0;
+                    do {
+                        logger.info("user:" + user.getId() + " page " + page);
+                        expenses = expenseDaoJooq.getPaginatedWhere(user, page, pageSize);
+                        for (Expense e : expenses.getData()) {
+                            historyService.cacheForExpense(user, e);
+                        }
+                        page++;
+                        totalProcessed += expenses.getData().size();
+                        logger.info("Proccessed " + totalProcessed + "/" + expenses.getPagination().getTotal());
+                    } while (expenses.getData().size() == pageSize);
+                }
+            }
+
 /*
             if (schemaVersion < 12) {
                 newVersion = 11;
