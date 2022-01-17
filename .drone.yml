@@ -21,6 +21,19 @@ steps:
       - cd src/main/app
       - ./build-ios.sh
       - flutter build appbundle
+  - name: Release Android
+    environment:
+      KEYCHAIN_PASS:
+        from_secret: keychain_pass
+      PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/gz/dev/flutter/bin"
+    commands:
+      - source /Users/gz/.zshrc
+      - flutter doctor
+      - security unlock-keychain -p $${KEYCHAIN_PASS} /Users/gz/Library/Keychains/login.keychain-db
+      - cd src/main/app/android
+      - fastlane deploy
+    when:
+      event: tag
   - name: Release iOS
     environment:
       FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD:
@@ -34,19 +47,6 @@ steps:
       - security unlock-keychain -p $${KEYCHAIN_PASS} /Users/gz/Library/Keychains/login.keychain-db
       - cd src/main/app/ios
       - fastlane release
-    when:
-      event: tag
-  - name: Release Android
-    environment:
-      KEYCHAIN_PASS:
-        from_secret: keychain_pass
-      PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/gz/dev/flutter/bin"
-    commands:
-      - source /Users/gz/.zshrc
-      - flutter doctor
-      - security unlock-keychain -p $${KEYCHAIN_PASS} /Users/gz/Library/Keychains/login.keychain-db
-      - cd src/main/app/android
-      - fastlane deploy
     when:
       event: tag
 trigger:
