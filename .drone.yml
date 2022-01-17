@@ -33,7 +33,9 @@ steps:
       - cd src/main/app/android
       - fastlane deploy
     when:
-      event: tag
+      event: promote
+      target:
+        - production
   - name: Release iOS
     environment:
       FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD:
