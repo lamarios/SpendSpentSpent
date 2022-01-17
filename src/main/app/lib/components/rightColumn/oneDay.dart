@@ -40,7 +40,7 @@ class OneDay extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Total:',
+            'Total: ',
             style: TextStyle(color: colors.text),
           ),
           Text(

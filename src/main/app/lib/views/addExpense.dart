@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:after_layout/after_layout.dart';
@@ -39,6 +40,7 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
   CurrencyConversion? currencyConversion;
   bool showCurrencyConversion = false;
   bool saving = false;
+  Widget? savingIcon;
 
   void addNumber(String i) {
     if (currencyConversion == null) {
@@ -100,37 +102,28 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
     return str;
   }
 
-  Future<LocationData> getLocation() async {
+  Future<LocationData?> getLocation() async {
     Location location = new Location();
-    print(1);
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
     LocationData _locationData;
 
-    print(2);
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
-      print(3);
       _serviceEnabled = await location.requestService();
-      print(4);
       if (!_serviceEnabled) {
         throw Exception('Location service not enabled');
       }
     }
 
-    print(5);
     _permissionGranted = await location.hasPermission();
-    print(6);
     if (_permissionGranted == PermissionStatus.denied) {
-      print(7);
       _permissionGranted = await location.requestPermission();
-      print(8);
       if (_permissionGranted != PermissionStatus.granted) {
         throw Exception('Location not allowed');
       }
     }
 
-    print(9);
     try {
       _locationData = await location.getLocation();
       return _locationData;
@@ -138,7 +131,6 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
       print(e);
       throw Exception("Couldn't get data");
     }
-    print(10);
   }
 
   Future<void> addExpense(BuildContext context) async {
@@ -147,7 +139,10 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
     });
 
     await Future.delayed(panelTransition);
-    print('add expense');
+    double iconHeight = getIconHeight(MediaQuery.of(context)) * 0.66;
+
+    AppColors colors = get(context);
+
     var amount = double.parse(valueToStr(value));
     var date = DateFormat('yyyy-MM-dd').format(expenseDate);
     var note = expenseNote;
@@ -159,22 +154,31 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
     }
     var expense = Expense(amount: amount, category: widget.category, date: date, note: note);
 
-    print('before location');
     //checking location\
     if (useLocation) {
+      setState(() {
+        savingIcon = FaIcon(FontAwesomeIcons.locationArrow, color: colors.iconOnMain, size: iconHeight, key: Key('location'));
+      });
       try {
-        print('yooo');
-        LocationData locationData = await getLocation();
-        print('sup');
-        expense.latitude = locationData.latitude;
-        expense.longitude = locationData.longitude;
+        LocationData? locationData = await getLocation().timeout(Duration(seconds: 2), onTimeout: () => null);
+        if (locationData != null) {
+          expense.latitude = locationData.latitude;
+          expense.longitude = locationData.longitude;
+        }
       } catch (e) {
-        print(e.toString());
         showAlertDialog(context, 'Error getting Location', e.toString());
         return;
       }
     }
-    print('after location');
+
+    setState(() {
+      savingIcon = FaIcon(
+        FontAwesomeIcons.cloudUploadAlt,
+        color: colors.iconOnMain,
+        size: iconHeight,
+        key: Key('upload'),
+      );
+    });
 
     await service.addExpense(expense);
     closeDialog();
@@ -186,6 +190,18 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
 
   double getIconHeight(MediaQueryData mq) {
     return min(mq.size.height / 5, 150);
+  }
+
+  Widget getIconHeader(BuildContext context) {
+    double iconHeight = getIconHeight(MediaQuery.of(context));
+
+    AppColors colors = get(context);
+
+    if (saving && savingIcon != null) {
+      return savingIcon!;
+    } else {
+      return getIcon(widget.category.icon!, size: iconHeight * 0.66, color: colors.iconOnMain);
+    }
   }
 
   @override
@@ -270,7 +286,11 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        Expanded(child: PlatformButton(onPressed: value.length > 0 ? () => addExpense(context) : null, child: Text('Save'), )),
+                        Expanded(
+                            child: PlatformButton(
+                          onPressed: value.length > 0 ? () => addExpense(context) : null,
+                          child: Text('Save'),
+                        )),
                       ],
                     ),
                   ),
@@ -287,7 +307,18 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
               child: Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(gradient: defaultGradient(context), borderRadius: BorderRadius.circular(4)),
-                child: Hero(tag: widget.category.icon!, child: DummyFade(running: saving, child: getIcon(widget.category.icon!, size: iconHeight * 0.66, color: colors.iconOnMain))),
+                child: Hero(
+                    tag: widget.category.icon!,
+                    child: DummyFade(
+                        running: saving,
+                        child: AnimatedSwitcher(
+                            duration: Duration(milliseconds: 130),
+                            transitionBuilder: (Widget child, Animation<double> animation) {
+                              return ScaleTransition(scale: animation, child: child);
+                            },
+                            switchInCurve: Curves.easeInOutQuart,
+                            switchOutCurve: Curves.easeInOutQuart,
+                            child: getIconHeader(context)))),
               ),
             ),
             Positioned(
