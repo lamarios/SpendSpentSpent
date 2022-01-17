@@ -33,9 +33,7 @@ steps:
       - cd src/main/app/android
       - fastlane deploy
     when:
-      event: promote
-      target:
-        - production
+      event: tag
   - name: Release iOS
     environment:
       FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD:
@@ -50,9 +48,7 @@ steps:
       - cd src/main/app/ios
       - fastlane release
     when:
-      event: promote
-      target:
-        - production
+      event: tag
 trigger:
   event:
     - push
