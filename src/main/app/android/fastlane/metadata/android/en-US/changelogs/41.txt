@@ -1,0 +1,3 @@
+- Make loading when adding new expense more informative
+- Adding timeout when getting location in case it's stuck
+- fix typo
