@@ -50,7 +50,9 @@ steps:
       - cd src/main/app/ios
       - fastlane release
     when:
-      event: tag
+      event: promote
+      target:
+        - production
 trigger:
   event:
     - push
