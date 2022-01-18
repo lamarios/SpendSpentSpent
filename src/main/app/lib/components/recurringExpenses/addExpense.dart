@@ -26,7 +26,7 @@ class AddExpense extends StatelessWidget {
   Widget build(BuildContext context) {
     AppColors colors = get(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 8.0),
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () => showAddRecurringExpenseDialog(context),
