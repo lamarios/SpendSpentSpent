@@ -22,6 +22,8 @@ import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
 
+const LOCATION_TIMEOUT = 7;
+
 class AddExpense extends StatefulWidget {
   Category category;
 
@@ -160,7 +162,7 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
         savingIcon = FaIcon(FontAwesomeIcons.locationArrow, color: colors.iconOnMain, size: iconHeight, key: Key('location'));
       });
       try {
-        LocationData? locationData = await getLocation().timeout(Duration(seconds: 2), onTimeout: () => null);
+        LocationData? locationData = await getLocation().timeout(Duration(seconds: LOCATION_TIMEOUT), onTimeout: () => null);
         if (locationData != null) {
           expense.latitude = locationData.latitude;
           expense.longitude = locationData.longitude;

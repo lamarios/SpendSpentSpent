@@ -19,6 +19,7 @@ platform :ios do
   desc "Push a new release build to the App Store"
   lane :release do
     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
+    upload_to_testflight(build_number: ENV['DRONE_TAG'])
     upload_to_app_store(
         build_number: ENV['DRONE_TAG'],
 #         submit_for_review: true,
