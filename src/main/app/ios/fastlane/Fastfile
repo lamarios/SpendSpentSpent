@@ -23,7 +23,7 @@ platform :ios do
     upload_to_app_store(
         build_number: ENV['DRONE_TAG'],
 #         submit_for_review: true,
-#         automatic_release: true,
+        automatic_release: true,
         submission_information: {
             export_compliance_platform: 'ios',
             export_compliance_uses_encryption: true,
