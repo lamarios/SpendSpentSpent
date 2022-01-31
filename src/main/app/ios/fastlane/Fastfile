@@ -22,8 +22,9 @@ platform :ios do
     upload_to_testflight(build_number: ENV['DRONE_TAG'])
     upload_to_app_store(
         build_number: ENV['DRONE_TAG'],
-#         submit_for_review: true,
+        submit_for_review: true,
         automatic_release: true,
+        skip_binary_upload: true,
         submission_information: {
             export_compliance_platform: 'ios',
             export_compliance_uses_encryption: true,
