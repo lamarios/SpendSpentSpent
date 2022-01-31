@@ -1,4 +1,8 @@
+import 'dart:math';
+
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_spent_spent/globals.dart';
@@ -21,7 +25,9 @@ class OneExpense extends StatefulWidget {
   OneExpenseState createState() => OneExpenseState();
 }
 
-class OneExpenseState extends State<OneExpense> {
+class OneExpenseState extends State<OneExpense> with AfterLayoutMixin {
+  Offset offset = Offset(-3, 0);
+  double opacity = 0;
 
   openContainer() {
     widget.showExpense(widget.expense);
@@ -37,6 +43,8 @@ class OneExpenseState extends State<OneExpense> {
 
   @override
   Widget build(BuildContext context) {
+    bool hasExtra = hasLocation() || hasNote() || widget.expense.type == 2;
+
     AppColors colors = get(context);
     return GestureDetector(
       onTap: openContainer,
@@ -45,58 +53,119 @@ class OneExpenseState extends State<OneExpense> {
         children: [
           Container(
             alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(25)),
-              gradient: defaultGradient(context),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  getIcon(widget.expense.category.icon!, size: 20, color: colors.iconOnMain),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                  formatCurrency(widget.expense.amount),
-                  style: TextStyle(color: colors.textOnMain),
+            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: colors.mainDark),
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      getIcon(widget.expense.category.icon!, size: 20, color: colors.iconOnMain),
+                      Padding(
+                        padding: EdgeInsets.only(right: hasExtra ? 24 : 16),
+                        child: Text(
+                          formatCurrency(widget.expense.amount),
+                          style: TextStyle(color: colors.textOnMain),
+                        ),
+                      ),
+                      Visibility(
+                          visible: hasLocation(),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: AnimatedOpacity(
+                              duration: panelTransition,
+                              opacity: opacity,
+                              child: AnimatedSlide(
+                                duration: panelTransition,
+                                curve: Curves.easeInOutQuart,
+                                offset: offset,
+                                child: FaIcon(
+                                  FontAwesomeIcons.locationArrow,
+                                  color: colors.textOnDarkMain,
+                                  size: 15,
+                                ),
+                              ),
+                            ),
+                          )),
+                      Visibility(
+                          visible: hasNote(),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: AnimatedOpacity(
+                              opacity: opacity,
+                              duration: panelTransition,
+                              child: AnimatedSlide(
+                                duration: panelTransition,
+                                curve: Curves.easeInOutQuart,
+                                offset: offset,
+                                child: FaIcon(
+                                  FontAwesomeIcons.commentDots,
+                                  color: colors.textOnDarkMain,
+                                  size: 15,
+                                ),
+                              ),
+                            ),
+                          )),
+                      Visibility(
+                          visible: widget.expense.type == 2,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: AnimatedOpacity(
+                              duration: panelTransition,
+                              opacity: opacity,
+                              child: AnimatedSlide(
+                                duration: panelTransition,
+                                curve: Curves.easeInOutQuart,
+                                offset: offset,
+                                child: FaIcon(
+                                  FontAwesomeIcons.redo,
+                                  color: colors.textOnDarkMain,
+                                  size: 15,
+                                ),
+                              ),
+                            ),
+                          )),
+                    ],
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    gradient: defaultGradient(context),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        getIcon(widget.expense.category.icon!, size: 20, color: colors.iconOnMain),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            formatCurrency(widget.expense.amount),
+                            style: TextStyle(color: colors.textOnMain),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Visibility(
-                      visible: hasLocation(),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: FaIcon(
-                          FontAwesomeIcons.locationArrow,
-                          color: colors.textOnMain,
-                          size: 15,
-                        ),
-                      )),
-                  Visibility(
-                      visible: hasNote(),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: FaIcon(
-                          FontAwesomeIcons.commentDots,
-                          color: colors.textOnMain,
-                          size: 15,
-                        ),
-                      )),
-                  Visibility(
-                      visible: widget.expense.type == 2,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: FaIcon(
-                          FontAwesomeIcons.redo,
-                          color: colors.textOnMain,
-                          size: 15,
-                        ),
-                      )),
-                ],
-              ),
+                )
+              ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    Random rand = Random();
+    Future.delayed(Duration(milliseconds: rand.nextInt(250)), () {
+      setState(() {
+        offset += const Offset(3, 0);
+        opacity = 1;
+      });
+    });
   }
 }
