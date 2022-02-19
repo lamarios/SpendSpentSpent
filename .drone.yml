@@ -72,10 +72,12 @@ steps:
 
   - name: build web
     image: cirrusci/flutter:stable
+    pull: always
     commands:
       - id
       - cd src/main/app
       - flutter pub get
+      - flutter doctor
       - flutter build web --release
       - cp -R build/web ../resources/public
 
