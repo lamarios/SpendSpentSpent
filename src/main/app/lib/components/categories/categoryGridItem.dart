@@ -28,7 +28,6 @@ class CategoryGridItemState extends State<CategoryGridItem> with AfterLayoutMixi
   double scale = 0.5;
   double opacity = 0;
   Offset offset = Offset(0, 1);
-  BoxDecoration container = BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(START_BORDER)), color: Colors.blue);
 
   showDialog(BuildContext context) {
     showModal(context: context, builder: (context) => Card(margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 650), child: AddExpense(category: widget.category)));
@@ -41,7 +40,7 @@ class CategoryGridItemState extends State<CategoryGridItem> with AfterLayoutMixi
       onTap: () => showDialog(context),
       child: AnimatedContainer(
         alignment: Alignment.center,
-        decoration: container,
+        decoration: BoxDecoration(borderRadius: defaultBorder, gradient: defaultGradient(context)),
         duration: panelTransition,
         curve: Curves.easeInOutQuart,
         child: AnimatedOpacity(
@@ -61,20 +60,15 @@ class CategoryGridItemState extends State<CategoryGridItem> with AfterLayoutMixi
 
   @override
   void afterFirstLayout(BuildContext context) {
-    AppColors colors = get(context);
 
-
-    setState(() {
-      container = BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(START_BORDER)), color: Colors.blue);
-    });
     Random rand = Random();
-    int darkening = (((widget.category.percentageOfMonthly ?? 0) * 100) / 2).ceil();
+    // int darkening = (((widget.category.percentageOfMonthly ?? 0) * 100) / 2).ceil();
     Future.delayed(Duration(milliseconds: rand.nextInt(150)), () {
       setState(() {
         scale = 1.0;
         opacity = 1.0;
         offset += const Offset(0, -1);
-        container = BoxDecoration(borderRadius: defaultBorder, color: TinyColor(colors.main).darken(darkening).color);
+        // container = BoxDecoration(borderRadius: defaultBorder, color: TinyColor(colors.main).darken(darkening).color);
       });
     });
   }
