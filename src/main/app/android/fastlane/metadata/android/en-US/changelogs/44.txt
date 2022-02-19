@@ -1,0 +1,2 @@
+- fix version
+- upgrade flutter version for better performance
