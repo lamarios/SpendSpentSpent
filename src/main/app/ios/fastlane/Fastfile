@@ -26,7 +26,7 @@ platform :ios do
         automatic_release: true,
         skip_binary_upload: true,
         submission_information: {
-            add_id_info_uses_idfa: false
+            add_id_info_uses_idfa: false,
             export_compliance_platform: 'ios',
             export_compliance_uses_encryption: true,
             export_compliance_is_exempt: true,
