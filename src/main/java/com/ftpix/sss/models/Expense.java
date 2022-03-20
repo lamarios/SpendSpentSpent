@@ -28,7 +28,7 @@ public class Expense implements HasCategory {
     @DatabaseField(columnName = "TYPE")
     private int type = 1;
 
-    @DatabaseField(columnName = "INCOME")
+    @DatabaseField(columnName = "INCOME", dataType = DataType.BOOLEAN_INTEGER)
     private boolean income = false;
 
     @DatabaseField(columnName = "LATITUDE")

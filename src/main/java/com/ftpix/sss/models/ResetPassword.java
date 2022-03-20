@@ -15,7 +15,7 @@ public class ResetPassword {
     @DatabaseField(columnName = "USER_ID", foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreignColumnName = "ID")
     private User user;
 
-    @DatabaseField
+    @DatabaseField(columnName = "EXPIRYDATE")
     private long expiryDate;
 
     public long getExpiryDate() {

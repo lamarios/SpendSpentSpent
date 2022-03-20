@@ -1,5 +1,6 @@
 package com.ftpix.sss.models;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -13,27 +14,27 @@ public class User {
     private UUID id = UUID.randomUUID();
 
 
-    @DatabaseField(unique = true, canBeNull = false)
+    @DatabaseField(columnName = "EMAIL", unique = true, canBeNull = false)
     private String email;
 
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(columnName = "FIRSTNAME", canBeNull = false)
     private String firstName;
 
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(columnName = "PASSWORD", canBeNull = false)
     private String password;
 
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(columnName = "LASTNAME", canBeNull = false)
     private String lastName;
 
-    @DatabaseField
+    @DatabaseField(columnName = "SUBSCRIPTIONEXPIRYDATE")
     private long subscriptionExpiryDate;
 
-    @DatabaseField
+    @DatabaseField(columnName = "SHOWANNOUNCEMENT", dataType = DataType.BOOLEAN_INTEGER)
     private boolean showAnnouncement = false;
-    @DatabaseField
+    @DatabaseField(columnName = "ISADMIN", dataType = DataType.BOOLEAN_INTEGER)
     private boolean isAdmin = false;
 
-//    @DatabaseField(columnName = "TIMECREATED")
+    //    @DatabaseField(columnName = "TIMECREATED")
     private long timeCreated = System.currentTimeMillis();
 
 

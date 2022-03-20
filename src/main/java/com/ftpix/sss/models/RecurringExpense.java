@@ -37,7 +37,7 @@ public class RecurringExpense implements HasCategory {
     @DatabaseField(columnName = "AMOUNT")
     private double amount;
 
-    @DatabaseField(columnName = "INCOME")
+    @DatabaseField(columnName = "INCOME", dataType = DataType.BOOLEAN_INTEGER)
     private boolean income = false;
 
     public Long getId() {
