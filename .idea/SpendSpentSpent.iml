@@ -250,7 +250,6 @@
     <orderEntry type="library" name="Maven: javax.xml.bind:jaxb-api:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: javax.activation:javax.activation-api:1.2.0" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.25" level="project" />
-    <orderEntry type="library" name="Maven: org.postgresql:postgresql:42.3.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.codehaus.mojo:versions-maven-plugin:2.8.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.maven:maven-artifact:2.2.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.maven:maven-artifact-manager:2.2.1" level="project" />
