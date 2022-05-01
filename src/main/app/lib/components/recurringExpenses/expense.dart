@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:math';
 
+import 'package:after_layout/after_layout.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +25,12 @@ class Expense extends StatefulWidget {
   ExpenseState createState() => ExpenseState();
 }
 
-class ExpenseState extends State<Expense> {
+class ExpenseState extends State<Expense> with AfterLayoutMixin {
   bool opened = false;
   bool showInfo = false;
+
+  Offset offset = Offset(-1, 0);
+  double opacity = 0;
 
   toggle() {
     setState(() {
@@ -74,33 +79,94 @@ class ExpenseState extends State<Expense> {
     AppColors colors = get(context);
     return GestureDetector(
       onTap: () => openContainer(context),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+      child: Stack(
         children: [
-          Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(25)),
-              gradient: defaultGradient(context),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  getIcon(widget.expense.category.icon!, size: 20, color: colors.iconOnMain),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      formatCurrency(widget.expense.amount),
-                      style: TextStyle(color: colors.textOnMain),
-                    ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: colors.mainDark),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      getIcon(widget.expense.category.icon!, size: 20, color: colors.iconOnMain),
+                      Visibility(
+                        visible: widget.expense.name.trim().length > 0,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            widget.expense.name.trim(),
+                            style: TextStyle(color: colors.textOnMain),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0, right: 8.0),
+                        child: AnimatedOpacity(
+                          opacity: opacity,
+                          duration: panelTransition,
+                          child: AnimatedSlide(
+                            duration: panelTransition,
+                            curve: Curves.easeInOutQuart,
+                            offset: offset,
+                            child: Text(
+                              formatCurrency(widget.expense.amount),
+                              style: TextStyle(color: colors.textOnDarkMain),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(25)),
+                  gradient: defaultGradient(context),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      getIcon(widget.expense.category.icon!, size: 20, color: colors.iconOnMain),
+                      Visibility(
+                        visible: widget.expense.name.trim().length > 0,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            widget.expense.name.trim(),
+                            style: TextStyle(color: colors.textOnMain),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    Random rand = Random();
+    Future.delayed(Duration(milliseconds: rand.nextInt(250)), () {
+      setState(() {
+        offset += const Offset(1, 0);
+        opacity = 1;
+      });
+    });
   }
 }

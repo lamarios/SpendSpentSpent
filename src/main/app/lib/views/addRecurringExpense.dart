@@ -27,7 +27,7 @@ class AddRecurringExpenseDialogState extends State<AddRecurringExpenseDialog> wi
   Category? category;
   int? type;
   int? typeParam;
-  String amount = '';
+  String amount = '', name = '';
 
   Future<void> forward(BuildContext context) async {
     if (step == 2) {
@@ -50,7 +50,7 @@ class AddRecurringExpenseDialogState extends State<AddRecurringExpenseDialog> wi
       typeParam = 0;
     }
     if (category != null && type != null && typeParam != null && doubleAmount > 0) {
-      RecurringExpense expense = RecurringExpense(category: category!, amount: doubleAmount, income: false, name: '', typeParam: typeParam!, type: type!);
+      RecurringExpense expense = RecurringExpense(category: category!, amount: doubleAmount, income: false, name: name, typeParam: typeParam!, type: type!);
       await service.addRecurringExpense(expense);
     } else {
       print('Missing parameters');
@@ -61,6 +61,12 @@ class AddRecurringExpenseDialogState extends State<AddRecurringExpenseDialog> wi
     setState(() {
       this.category = category;
       setStepWidget(step);
+    });
+  }
+
+  setName(String name) {
+    setState(() {
+      this.name = name;
     });
   }
 
@@ -92,6 +98,8 @@ class AddRecurringExpenseDialogState extends State<AddRecurringExpenseDialog> wi
         this.stepWidget = Step1(
           selected: category,
           setCategory: setCategory,
+          setName: setName,
+          name: name,
         );
         break;
       case 1:

@@ -51,7 +51,12 @@ public class RecurringExpenseController {
     public List<RecurringExpense> get() throws Exception {
         final User user = userService.getCurrentUser();
         return recurringExpenseService.get(user);
+    }
 
+    @PostMapping("/{id}")
+    public boolean updateExpense(@RequestBody RecurringExpense expense) throws Exception {
+        final User user = userService.getCurrentUser();
+        return recurringExpenseService.update(expense, user);
     }
 
 

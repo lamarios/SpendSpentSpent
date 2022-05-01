@@ -40,7 +40,7 @@ public class BackgroundJob {
     }
 
 
-    @Scheduled(fixedRate = 100 * 60 * 1000, initialDelay = 60*60*1000)
+    @Scheduled(fixedRate = 100 * 60 * 1000, initialDelay = 60 * 60 * 1000)
 //    @Scheduled(fixedRate = 10 * 1000)
     public void run() throws Exception {
         final List<User> users = userService.getAll().getData();
@@ -57,6 +57,11 @@ public class BackgroundJob {
                     expense.setCategory(recurring.getCategory());
                     expense.setDate(recurring.getNextOccurrence());
                     expense.setIncome(false);
+
+                    if (recurring.getName() != null && recurring.getName().trim().length() > 0) {
+                        expense.setNote(recurring.getName().trim());
+                    }
+
                     expenseDaoJooq.insert(user, expense);
 
                     recurring.setLastOccurrence(recurring.getNextOccurrence());

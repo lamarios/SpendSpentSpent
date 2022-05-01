@@ -1,3 +1,4 @@
+import 'package:after_layout/after_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -12,6 +13,8 @@ import 'package:spend_spent_spent/models/expense.dart';
 import 'package:spend_spent_spent/models/recurringExpense.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
 
+import '../utils/dialogs.dart';
+
 class RecurringExpenseView extends StatefulWidget {
   RecurringExpense expense;
   Function refreshExpenses;
@@ -22,7 +25,8 @@ class RecurringExpenseView extends StatefulWidget {
   RecurringExpenseViewState createState() => RecurringExpenseViewState();
 }
 
-class RecurringExpenseViewState extends State<RecurringExpenseView> {
+class RecurringExpenseViewState extends State<RecurringExpenseView> with AfterLayoutMixin {
+  TextEditingController nameController = TextEditingController(text: '');
 
   Widget getRepeatedIcon(AppColors colors) {
     List<Widget> icons = [];
@@ -39,6 +43,15 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> {
         runSpacing: 20,
       ),
     );
+  }
+
+  setName(BuildContext context) {
+    showPromptDialog(context, 'Change expense name', "", nameController, () async {
+      print('New expense name: ${nameController.text}');
+      widget.expense.name = nameController.text;
+      await service.updateRecurringExpense(widget.expense);
+      widget.refreshExpenses();
+    }, maxLines: 1);
   }
 
   deleteExpense(BuildContext context) {
@@ -90,11 +103,27 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> {
               children: [
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
+                  onTap: () => setName(context),
+                  child: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: FaIcon(
+                        FontAwesomeIcons.pencilAlt,
+                        color: colors.text,
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () => deleteExpense(context),
                   child: Container(
-                    child: FaIcon(
-                      FontAwesomeIcons.trash,
-                      color: Colors.red,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 15.0),
+                      child: FaIcon(
+                        FontAwesomeIcons.trash,
+                        color: Colors.red,
+                      ),
                     ),
                   ),
                 )
@@ -142,6 +171,23 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> {
                 alignment: Alignment.center,
                 height: 100,
               ),
+              Visibility(
+                visible: widget.expense.name.trim().length > 0,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: defaultBorder,
+                      color: Colors.transparent,
+                    ),
+                    child: Text(
+                      widget.expense.name,
+                      style: TextStyle(fontSize: 50, color: colors.main, fontWeight: FontWeight.w300),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Container(
@@ -186,5 +232,10 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> {
         ),
       ],
     );
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    nameController.text = widget.expense.name;
   }
 }

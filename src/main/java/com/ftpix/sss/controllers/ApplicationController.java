@@ -40,7 +40,7 @@ public class ApplicationController {
     private final Configuration templateEngine;
     private final BuildProperties buildProperties;
 
-    public final static int MIN_APP_VERSION = 20;
+    public final static int MIN_APP_VERSION = 47;
     private final UserDao userDaoJooq;
 
     @Autowired

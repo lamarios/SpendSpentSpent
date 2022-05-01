@@ -139,4 +139,18 @@ public class RecurringExpenseService {
     public List<RecurringExpense> getToProcessForUser(User user) throws Exception {
         return recurringExpenseDaoJooq.getWhere(user, RECURRING_EXPENSE.NEXT_OCCURRENCE.le(df.format(new Date())));
     }
+
+    public boolean update(RecurringExpense expense, User user) throws Exception {
+        RecurringExpense existing = getId(expense.getId(), user);
+
+
+        if (existing != null) {
+            // dates should only be updated by the cron job !
+            expense.setNextOccurrence(existing.getNextOccurrence());
+            expense.setLastOccurrence(existing.getLastOccurrence());
+            return recurringExpenseDaoJooq.update(user, expense);
+        } else {
+            return false;
+        }
+    }
 }

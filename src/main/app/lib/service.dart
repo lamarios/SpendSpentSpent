@@ -8,7 +8,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:spend_spent_spent/exceptions/BackendNeedUpgradeException.dart';
 import 'package:spend_spent_spent/exceptions/NeedUpgradeException.dart';
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/Compatibility.dart';
 import 'package:spend_spent_spent/models/availableCategories.dart';
 import 'package:spend_spent_spent/models/category.dart';
 import 'package:spend_spent_spent/models/dayExpense.dart';
@@ -18,7 +17,6 @@ import 'package:spend_spent_spent/models/leftColumnStats.dart';
 import 'package:spend_spent_spent/models/paginatedResults.dart';
 import 'package:spend_spent_spent/models/pagination.dart';
 import 'package:spend_spent_spent/models/settings.dart';
-import 'package:spend_spent_spent/utils/dialogs.dart';
 
 import 'models/config.dart';
 import 'models/recurringExpense.dart';
@@ -50,6 +48,7 @@ const HISTORY_MONTHLY = API_URL + "/History/Monthly/{0}/{1}";
 const RECURRING_GET = API_URL + '/RecurringExpense';
 const RECURRING_ADD = API_URL + '/RecurringExpense';
 const RECURRING_DELETE = API_URL + '/RecurringExpense/{0}';
+const RECURRING_UPDATE = API_URL + '/RecurringExpense/{0}';
 const SESSION_LOGIN = API_ROOT + '/Login';
 const SESSION_SIGNUP = API_ROOT + '/SignUp';
 const SESSION_RESET_PASSWORD_REQUEST = API_ROOT + "/ResetPasswordRequest";
@@ -233,6 +232,12 @@ class Service {
     processResponse(response);
     Iterable i = jsonDecode(response.body);
     return List<RecurringExpense>.from(i.map((e) => RecurringExpense.fromJson(e)));
+  }
+
+  Future<bool> updateRecurringExpense(RecurringExpense expense) async {
+    final response = await http.post(await this.formatUrl(RECURRING_UPDATE, [expense.id.toString()]), headers: headers, body: jsonEncode(expense));
+    processResponse(response);
+    return true;
   }
 
   Future<bool> deleteRecurringExpense(int id) async {
@@ -465,7 +470,7 @@ class Service {
         logout();
         throw BackendNeedUpgradeException();
       }
-    }else{
+    } else {
       print('no server version');
     }
 
