@@ -1,0 +1,2 @@
+- add possibility to set a name for a recurring expense (requires an up-to-date backend)
+- upgrade flutter version for better performance
