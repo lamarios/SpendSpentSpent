@@ -1,0 +1,2 @@
+- fix bug when adding recurring expense
+- fix issue with charts showing multiple times the same date
