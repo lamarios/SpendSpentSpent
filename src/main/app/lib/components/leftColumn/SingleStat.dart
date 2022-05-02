@@ -27,12 +27,12 @@ class SingleStats extends StatefulWidget {
 class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
   bool open = false, showGraph = false, showPercentage = false;
   double openedHeight = 300;
+  double percentage = 0;
 
   double getBarWidth(BoxConstraints constraints) {
     if (open) {
       return constraints.maxWidth;
     } else if (showPercentage && widget.stats.total > 0) {
-      double percentage = widget.stats.amount / widget.stats.total;
       return constraints.maxWidth * percentage;
     } else {
       return 0;
@@ -121,6 +121,12 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
   void afterFirstLayout(BuildContext context) {
     setState(() {
       showPercentage = true;
+    });
+    Random rand = Random();
+    Future.delayed(Duration(milliseconds: rand.nextInt(150)), () {
+      setState(() {
+        percentage = widget.stats.amount / widget.stats.total;
+      });
     });
   }
 }

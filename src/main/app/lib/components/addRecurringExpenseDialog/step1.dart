@@ -21,7 +21,7 @@ class Step1 extends StatefulWidget {
 
 class Step1State extends State<Step1> with AfterLayoutMixin {
   List<Category> categories = [];
-  TextEditingController nameController = TextEditingController(text:'');
+  TextEditingController nameController = TextEditingController(text: '');
 
   getCategories() {
     service.getCategories().then((value) {
@@ -32,10 +32,7 @@ class Step1State extends State<Step1> with AfterLayoutMixin {
   }
 
   onSelect(Category e) {
-    print('selecting, name: ${nameController.value.text}');
-    widget.setName(nameController.value.text);
     widget.setCategory(e);
-
   }
 
   @override
@@ -45,15 +42,14 @@ class Step1State extends State<Step1> with AfterLayoutMixin {
       alignment: Alignment.topCenter,
       child: Column(
         children: [
-          Padding(padding: const EdgeInsets.all(8.0),
-            child:PlatformTextField(
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: PlatformTextField(
               controller: nameController,
               keyboardType: TextInputType.emailAddress,
               autocorrect: false,
               hintText: 'A name maybe ?',
-
             ),
-
           ),
           Padding(
               padding: const EdgeInsets.all(8.0),
@@ -64,21 +60,20 @@ class Step1State extends State<Step1> with AfterLayoutMixin {
                   spacing: 8.0,
                   runSpacing: 4,
                   children: categories
-                      .map((e) =>
-                      GestureDetector(
-                        onTap: () => onSelect(e),
-                        child: AnimatedContainer(
-                          decoration: BoxDecoration(
-                            borderRadius: defaultBorder,
-                            color: (widget.selected?.icon ?? '') != e.icon ? colors.dialogBackground : colors.main,
-                          ),
-                          duration: panelTransition,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: getIcon(e.icon!, size: 30, color: (widget.selected?.icon ?? '') == e.icon ? colors.iconOnMain : colors.main),
-                          ),
-                        ),
-                      ))
+                      .map((e) => GestureDetector(
+                            onTap: () => onSelect(e),
+                            child: AnimatedContainer(
+                              decoration: BoxDecoration(
+                                borderRadius: defaultBorder,
+                                color: (widget.selected?.icon ?? '') != e.icon ? colors.dialogBackground : colors.main,
+                              ),
+                              duration: panelTransition,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: getIcon(e.icon!, size: 30, color: (widget.selected?.icon ?? '') == e.icon ? colors.iconOnMain : colors.main),
+                              ),
+                            ),
+                          ))
                       .toList(),
                 ),
               )),
@@ -89,8 +84,10 @@ class Step1State extends State<Step1> with AfterLayoutMixin {
 
   @override
   void afterFirstLayout(BuildContext context) {
-    print('getting cats');
     getCategories();
-    nameController = new TextEditingController(text: widget.name);
+    nameController.text = widget.name;
+    nameController.addListener(() {
+      widget.setName(nameController.value.text);
+    });
   }
 }
