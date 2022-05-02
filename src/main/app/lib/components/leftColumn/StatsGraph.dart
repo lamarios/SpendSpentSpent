@@ -113,33 +113,59 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
       ),
       titlesData: FlTitlesData(
         show: true,
-        rightTitles: SideTitles(showTitles: false),
-        topTitles: SideTitles(showTitles: false),
-        bottomTitles: SideTitles(
-          showTitles: true,
-          reservedSize: 35,
-          rotateAngle: 90,
-          getTextStyles: (context, value) => TextStyle(color: colors.textOnMain, fontSize: 10),
-          getTitles: (value) {
-            return graphDataPoints[value.toInt()].date;
-          },
-          margin: 8,
-        ),
-        leftTitles: SideTitles(
-          showTitles: true,
-          reservedSize: 50,
-          getTextStyles: (context, value) {
-            return TextStyle(
-              color: colors.textOnMain,
-              fontWeight: FontWeight.bold,
-              fontSize: 10,
-            );
-          },
-          getTitles: (value) {
-            return formatCurrency(value);
-          },
-          margin: 12,
-        ),
+        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        // rightTitles: SideTitles(showTitles: false),
+        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        // topTitles: SideTitles(showTitles: false),
+        bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 35,
+                getTitlesWidget: (value, meta) {
+                  var style = TextStyle(
+                    color: colors.textOnMain,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                  );
+
+                  if(value == value.roundToDouble()) {
+                    return Padding(
+                        padding: EdgeInsets.only(top: 12), child: RotationTransition(turns: AlwaysStoppedAnimation(-45 / 360), child: Text(graphDataPoints[value.toInt()].date, style: style)));
+                  }else{
+                    return Text('');
+                  }
+                }
+                // rotateAngle: 90,
+                // getTextStyles: (context, value) => TextStyle(color: colors.textOnMain, fontSize: 10),
+                // getTitles: (value) {
+                //   return graphDataPoints[value.toInt()].date;
+                // },
+                // margin: 8,
+                )),
+        leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 50,
+                getTitlesWidget: (value, meta) {
+                  var style = TextStyle(
+                    color: colors.textOnMain,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                  );
+                  return Text(formatCurrency(value), style: style);
+                }
+                // getTextStyles: (context, value) {
+                //   return TextStyle(
+                //     color: colors.textOnMain,
+                //     fontWeight: FontWeight.bold,
+                //     fontSize: 10,
+                //   );
+                // },
+                // getTitles: (value) {
+                //   return formatCurrency(value);
+                // },
+                // margin: 12,
+                )),
       ),
       borderData: FlBorderData(show: true, border: Border.all(color: colors.textOnMain.withOpacity(0.3), width: 1)),
       minX: 0,
@@ -149,7 +175,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
         LineChartBarData(
           spots: avg ? avgData : graphData,
           isCurved: false,
-          colors: [colors.textOnMain],
+          color: colors.textOnMain,
           barWidth: 2,
           isStrokeCapRound: true,
           dotData: FlDotData(
@@ -157,7 +183,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
           ),
           belowBarData: BarAreaData(
             show: true,
-            colors: [colors.textOnMain.withOpacity(0), colors.textOnMain.withOpacity(1)].map((color) => color.withOpacity(0.3)).toList(),
+            color: colors.textOnMain.withOpacity(0.2),
           ),
         ),
       ],
