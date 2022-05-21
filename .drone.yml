@@ -76,6 +76,7 @@ steps:
     commands:
       - id
       - cd src/main/app
+      - flutter doctor
       - flutter pub get
       - flutter doctor
       - flutter build web --release
