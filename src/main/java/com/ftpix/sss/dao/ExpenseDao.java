@@ -7,7 +7,6 @@ import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
 import org.apache.commons.lang.ArrayUtils;
 import org.jooq.*;
-import org.jooq.Record;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultDSLContext;
 import org.jooq.impl.TableImpl;
@@ -150,5 +149,16 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
                         .fetchOneInto(BigDecimal.class))
                 .map(BigDecimal::doubleValue)
                 .orElse(0d);
+    }
+
+    public List<String> getNotes(User currentUser, long categoryId, double minExpense, double maxExpense) {
+        Map<Long, Category> userCategories = getUserCategories(currentUser);
+        return dslContext.select(EXPENSE.NOTE)
+                .from(EXPENSE)
+                .where(EXPENSE.CATEGORY_ID.in(userCategories.keySet()))
+                .and(EXPENSE.CATEGORY_ID.eq(categoryId))
+                .and(EXPENSE.AMOUNT.ge(minExpense))
+                .and(EXPENSE.AMOUNT.le(maxExpense))
+                .fetch(EXPENSE.NOTE);
     }
 }

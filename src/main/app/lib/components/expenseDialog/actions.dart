@@ -13,6 +13,7 @@ class ExpenseActions extends StatefulWidget {
   DateTime expenseDate;
   bool location;
   bool currencyConversionEnabled;
+  Map<String, int> noteSuggestions;
 
   ExpenseActions(
       {required this.setDate,
@@ -21,7 +22,8 @@ class ExpenseActions extends StatefulWidget {
       required this.location,
       required this.setLocation,
       required this.enableCurrencyConversion,
-      required this.currencyConversionEnabled});
+      required this.currencyConversionEnabled,
+      required this.noteSuggestions});
 
   @override
   ExpenseActionsState createState() => ExpenseActionsState();
@@ -59,6 +61,11 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
     showPromptDialog(context, 'Expense note', "Something about this expense", noteController, () {});
   }
 
+  void tapSuggestion(String text) {
+    widget.setNote(text);
+    noteController.text = text;
+  }
+
   @override
   Widget build(BuildContext context) {
     AppColors colors = get(context);
@@ -66,7 +73,7 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(left: 8.0, top: 8.0, right: 8.0),
           child: Row(
             children: [
               TextButton(
@@ -86,7 +93,13 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: IconButton(onPressed: () => showNoteDialog(context), icon: FaIcon(FontAwesomeIcons.commentDots, color: noteController.text.length > 0 ? colors.main : colors.text)),
+                child: AnimatedContainer(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+                      color: widget.noteSuggestions.isEmpty ? colors.background : colors.expenseInputBackground,
+                    ),
+                    duration: Duration(milliseconds: panelTransition.inMilliseconds ~/ 2),
+                    child: IconButton(onPressed: () => showNoteDialog(context), icon: FaIcon(FontAwesomeIcons.commentDots, color: noteController.text.length > 0 ? colors.main : colors.text))),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 0),
@@ -95,6 +108,47 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
             ],
           ),
         ),
+        AnimatedOpacity(
+            opacity: widget.noteSuggestions.isNotEmpty ? 1 : 0,
+            duration: panelTransition ~/ 2,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: defaultBorder,
+                  color: colors.expenseInputBackground,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Wrap(
+                        children: widget.noteSuggestions.keys
+                            .map((e) => Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: GestureDetector(
+                                    onTap: () => tapSuggestion(e),
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: defaultBorder,
+                                          color: colors.main,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            e,
+                                            style: TextStyle(color: colors.textOnMain),
+                                          ),
+                                        )),
+                                  ),
+                                ))
+                            .toList(),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ))
       ],
     );
   }

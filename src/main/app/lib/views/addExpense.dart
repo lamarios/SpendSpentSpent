@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:io';
 import 'dart:math';
 
@@ -43,11 +44,24 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
   bool showCurrencyConversion = false;
   bool saving = false;
   Widget? savingIcon;
+  SplayTreeMap<String, int> noteSuggestions = SplayTreeMap();
+
+  void getNoteSuggestions(String value) {
+    service.getNoteSuggestions(Expense(amount: double.parse(valueToStr(value)), date: '2022-01-23', category: widget.category)).then((suggestions) {
+      SplayTreeMap<String, int> sortedValuesDesc = SplayTreeMap<String, int>.from(suggestions, (keys1, keys2) => suggestions[keys2]!.compareTo(suggestions[keys1]!));
+      setState(() {
+        noteSuggestions = sortedValuesDesc;
+        print(noteSuggestions);
+      });
+    });
+  }
 
   void addNumber(String i) {
     if (currencyConversion == null) {
+      String tempValue = (value + i).replaceFirst(RegExp(r'^0+'), '');
+      this.getNoteSuggestions(tempValue);
       setState(() {
-        value = (value + i).replaceFirst(RegExp(r'^0+'), '');
+        value = tempValue;
       });
     } else {
       setState(() {
@@ -65,9 +79,11 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
   }
 
   void removeNumber() {
+    String tempValue = value.substring(0, value.length - 1);
+    this.getNoteSuggestions(tempValue);
     if (value.length > 0) {
       setState(() {
-        value = value.substring(0, value.length - 1);
+        value = tempValue;
       });
     }
     if (valueFrom.length > 0) {
@@ -222,7 +238,7 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
               bottom: 0,
               top: iconHeight,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -261,6 +277,7 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
                   ),
                   KeyPad(addNumber: addNumber, removeNumber: removeNumber),
                   ExpenseActions(
+                    noteSuggestions: noteSuggestions,
                     expenseDate: expenseDate,
                     setDate: (date) {
                       setState(() {
@@ -270,6 +287,7 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
                     setNote: (note) {
                       setState(() {
                         expenseNote = note;
+                        noteSuggestions = SplayTreeMap();
                       });
                     },
                     location: useLocation,
@@ -284,16 +302,19 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
                       });
                     },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: PlatformButton(
-                          onPressed: value.length > 0 ? () => addExpense(context) : null,
-                          child: Text('Save'),
-                        )),
-                      ],
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                              child: PlatformButton(
+                            onPressed: value.length > 0 ? () => addExpense(context) : null,
+                            child: Text('Save'),
+                          )),
+                        ],
+                      ),
                     ),
                   ),
                 ],

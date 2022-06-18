@@ -41,6 +41,7 @@ const EXPENSE_ADD = API_URL + '/Expense';
 const EXPENSE_BY_MONTH = API_URL + '/Expense/ByDay?month={0}';
 const EXPENSE_GET_MONTHS = API_URL + '/Expense/GetMonths';
 const EXPENSE_DELETE = API_URL + '/Expense/{0}';
+const EXPENSE_GET_NOTE_SUGGESTIONS = API_URL + '/Expense/suggest-notes';
 const HISTORY_OVERALL_MONTH = API_URL + "/History/CurrentMonth";
 const HISTORY_OVERALL_YEAR = API_URL + "/History/CurrentYear";
 const HISTORY_YEARLY = API_URL + "/History/Yearly/{0}/{1}";
@@ -182,7 +183,9 @@ class Service {
     final response = await http.post(await this.formatUrl(CATEGORY_SEARCH), body: '"$search"', headers: headers);
 
     processResponse(response);
-    return SearchCategories.fromJson(jsonDecode(response.body)).results;
+    return SearchCategories
+        .fromJson(jsonDecode(response.body))
+        .results;
   }
 
   Future<bool> addCategory(String category) async {
@@ -203,6 +206,19 @@ class Service {
 
     processResponse(response);
     return Expense.fromJson(jsonDecode(response.body));
+  }
+
+  Future<Map<String, int>> getNoteSuggestions(Expense expense) async {
+    Map map = expense.toJson();
+
+    final response = await http.post(await this.formatUrl(EXPENSE_GET_NOTE_SUGGESTIONS), body: jsonEncode(map), headers: headers);
+
+    processResponse(response);
+    print(response.body);
+    Map<String, dynamic> result = jsonDecode(response.body);
+    return result.map((key, value) {
+      return MapEntry(key, value as int);
+    });
   }
 
   Future<List<Category>> getCategories() async {

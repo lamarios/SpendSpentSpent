@@ -120,4 +120,10 @@ public class ExpenseController {
         return delete;
 
     }
+
+    @PostMapping("/suggest-notes")
+    public Map<String, Long> suggestNotes(@RequestBody Expense expense) throws Exception{
+        final User currentUser = userService.getCurrentUser();
+        return expenseService.suggestNotes(currentUser, expense);
+    }
 }

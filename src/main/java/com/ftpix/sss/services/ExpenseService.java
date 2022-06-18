@@ -42,6 +42,20 @@ public class ExpenseService {
         return expenseDaoJooq.get(user, id).orElse(null);
     }
 
+    public Map<String, Long> suggestNotes(User currentUser, Expense expense) {
+        double minExpense = expense.getAmount() * 0.8;
+        double maxExpense = expense.getAmount() * 1.2;
+
+        return expenseDaoJooq.getNotes(currentUser, expense.getCategory().getId(), minExpense, maxExpense)
+                .stream()
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> s.length() > 0)
+                .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+
+
+    }
+
     public Map<String, DailyExpense> getByDay(String month, User user) throws Exception {
 
 
@@ -103,7 +117,7 @@ public class ExpenseService {
         return expenseDaoJooq.getMonths(user);
     }
 
-    public double getSumWhere(User user, String date, Category category){
+    public double getSumWhere(User user, String date, Category category) {
         return expenseDaoJooq.sumWhere(user, EXPENSE.DATE.like(date + "%"), EXPENSE.CATEGORY_ID.eq(category.getId()));
     }
 
