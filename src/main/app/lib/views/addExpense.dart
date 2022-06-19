@@ -44,13 +44,15 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
   bool showCurrencyConversion = false;
   bool saving = false;
   Widget? savingIcon;
-  SplayTreeMap<String, int> noteSuggestions = SplayTreeMap();
+  List<String> noteSuggestions = [];
 
   void getNoteSuggestions(String value) {
     service.getNoteSuggestions(Expense(amount: double.parse(valueToStr(value)), date: '2022-01-23', category: widget.category)).then((suggestions) {
-      SplayTreeMap<String, int> sortedValuesDesc = SplayTreeMap<String, int>.from(suggestions, (keys1, keys2) => suggestions[keys2]!.compareTo(suggestions[keys1]!));
+      List<String> results = suggestions.keys.toList(growable: false);
+      results.sort((a, b) => suggestions[b]!.compareTo(suggestions[a]!));
+
       setState(() {
-        noteSuggestions = sortedValuesDesc;
+        noteSuggestions = results;
         print(noteSuggestions);
       });
     });
@@ -287,7 +289,7 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
                     setNote: (note) {
                       setState(() {
                         expenseNote = note;
-                        noteSuggestions = SplayTreeMap();
+                        noteSuggestions = [];
                       });
                     },
                     location: useLocation,

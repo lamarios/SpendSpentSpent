@@ -1,0 +1,2 @@
+- Add note suggestions based on the expense history for the given category
+- Flutter upgrade

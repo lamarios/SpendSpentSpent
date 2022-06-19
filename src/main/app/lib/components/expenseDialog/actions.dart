@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:spend_spent_spent/components/expenseDialog/noteSuggestionPill.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
@@ -13,7 +14,7 @@ class ExpenseActions extends StatefulWidget {
   DateTime expenseDate;
   bool location;
   bool currencyConversionEnabled;
-  Map<String, int> noteSuggestions;
+  List<String> noteSuggestions;
 
   ExpenseActions(
       {required this.setDate,
@@ -96,7 +97,7 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
                 child: AnimatedContainer(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-                      color: widget.noteSuggestions.isEmpty ? colors.background : colors.expenseInputBackground,
+                      color: widget.noteSuggestions.isEmpty ? colors.dialogBackground : colors.expenseInputBackground,
                     ),
                     duration: Duration(milliseconds: panelTransition.inMilliseconds ~/ 2),
                     child: IconButton(onPressed: () => showNoteDialog(context), icon: FaIcon(FontAwesomeIcons.commentDots, color: noteController.text.length > 0 ? colors.main : colors.text))),
@@ -120,31 +121,11 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Wrap(
-                        children: widget.noteSuggestions.keys
-                            .map((e) => Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: GestureDetector(
-                                    onTap: () => tapSuggestion(e),
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: defaultBorder,
-                                          color: colors.main,
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            e,
-                                            style: TextStyle(color: colors.textOnMain),
-                                          ),
-                                        )),
-                                  ),
-                                ))
-                            .toList(),
-                      )
-                    ],
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: widget.noteSuggestions.map((e) => NoteSuggestionPill(text: e, tapSuggestion: tapSuggestion)).toList(),
+                    ),
                   ),
                 ),
               ),
