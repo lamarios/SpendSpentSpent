@@ -81,7 +81,7 @@ class AddUserDialogState extends State<AddUserDialog> {
               controller: passwordController,
             ),
           ),
-          PlatformButton(
+          PlatformTextButton(
             child: Text('Generate password'),
             onPressed: randomPassword,
           ),

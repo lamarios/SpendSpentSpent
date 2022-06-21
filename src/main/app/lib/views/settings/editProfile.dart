@@ -70,7 +70,7 @@ class EditProfileState extends State<EditProfile> with AfterLayoutMixin{
               child: Row(
                 children: [
                   Expanded(
-                    child: PlatformButton(
+                    child: PlatformElevatedButton(
                       onPressed: !canSave ? null : savePassword,
                       color: Theme.of(context).primaryColorDark,
                       child: PlatformText(

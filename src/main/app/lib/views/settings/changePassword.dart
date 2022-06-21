@@ -78,7 +78,7 @@ class ChangePasswordState extends State<ChangePassword> {
               child: Row(
                 children: [
                   Expanded(
-                    child: PlatformButton(
+                    child: PlatformElevatedButton(
                       onPressed: invalid || !canSave ? null : savePassword,
                       color: Theme.of(context).primaryColorDark,
                       child: PlatformText(

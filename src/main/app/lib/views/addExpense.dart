@@ -311,7 +311,8 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Expanded(
-                              child: PlatformButton(
+                              child: PlatformElevatedButton(
+                               color: colors.main,
                             onPressed: value.length > 0 ? () => addExpense(context) : null,
                             child: Text('Save'),
                           )),

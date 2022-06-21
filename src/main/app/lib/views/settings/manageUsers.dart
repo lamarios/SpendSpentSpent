@@ -182,12 +182,12 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(right: 10.0),
-                      child: PlatformButton(
+                      child: PlatformTextButton(
                         child: Text('Change password'),
                         onPressed: () => changeUserPassword(e),
                       ),
                     ),
-                    PlatformButton(
+                    PlatformTextButton(
                       child: Text(
                         'Delete',
                         style: TextStyle(color: Colors.white),
@@ -239,12 +239,12 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 10.0),
-                            child: PlatformButton(
+                            child: PlatformTextButton(
                               child: Text('Change password'),
                               onPressed: () => changeUserPassword(e),
                             ),
                           ),
-                          PlatformButton(
+                          PlatformTextButton(
                             child: Text(
                               'Delete',
                             ),
@@ -279,7 +279,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
           Visibility(visible: users != null, child: users != null ? PaginationSwitcher(pagination: users!.pagination, previous: previous, next: next) : SizedBox.shrink()),
           Row(
             children: [
-              PlatformButton(
+              PlatformTextButton(
                 color: Theme.of(context).primaryColor,
                 onPressed: () => addUser(context),
                 child: Text(

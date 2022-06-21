@@ -115,7 +115,9 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: PlatformButton(onPressed: () => widget.logIn(usernameController.text.trim(), passwordController.text.trim()), child: Text('Log in')),
+                                  child: PlatformElevatedButton(
+                                    color: colors.mainDark,
+                                      onPressed: () => widget.logIn(usernameController.text.trim(), passwordController.text.trim()), child: Text('Log in')),
                                 ),
                               ],
                             ),

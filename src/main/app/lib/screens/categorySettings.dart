@@ -134,7 +134,8 @@ class CategorySettingsScreenState extends State<CategorySettingsScreen> with Aft
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: PlatformButton(
+                        child: PlatformElevatedButton(
+                          color: colors.main,
                           onPressed: () => saveCategories(context),
                           child: Text(
                             'Save',

@@ -181,7 +181,8 @@ class AddCategoryState extends State<AddCategory> with AfterLayoutMixin<AddCateg
                 child: Row(
                   children: [
                     Expanded(
-                        child: PlatformButton(
+                        child: PlatformElevatedButton(
+                          color: colors.mainDark,
                       onPressed: selected != '' ? () => addCategory(context) : null,
                       child: Text(widget.buttonLabel ?? 'Add category'),
                     )),

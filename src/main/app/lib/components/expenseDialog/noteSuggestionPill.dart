@@ -11,8 +11,8 @@ import '../../utils/colorUtils.dart';
 class NoteSuggestionPill extends StatefulWidget{
   String text;
   Function tapSuggestion;
-
-  NoteSuggestionPill({required this.text, required this.tapSuggestion});
+  Key? key;
+  NoteSuggestionPill({this.key, required this.text, required this.tapSuggestion});
 
   @override
   NoteSuggestionPillState createState() => NoteSuggestionPillState();

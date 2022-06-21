@@ -164,7 +164,7 @@ class SignUpState extends State<SignUp> {
             child: Row(
               children: [
                 Expanded(
-                  child: PlatformButton(onPressed: () => signup(context), child: Text('Sign up')),
+                  child: PlatformElevatedButton(color: colors.mainDark, onPressed: () => signup(context), child: Text('Sign up')),
                 ),
               ],
             ),

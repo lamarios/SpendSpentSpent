@@ -65,7 +65,9 @@ class ResetPasswordState extends State<ResetPassword> {
             child: Row(
               children: [
                 Expanded(
-                  child: PlatformButton(onPressed: () => resetPassword(context), child: Text('Reset password')),
+                  child: PlatformElevatedButton(onPressed: () => resetPassword(context),
+                      color: colors.mainDark,
+                      child: Text('Reset password')),
                 ),
               ],
             ),

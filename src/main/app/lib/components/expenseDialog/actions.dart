@@ -112,23 +112,30 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
         AnimatedOpacity(
             opacity: widget.noteSuggestions.isNotEmpty ? 1 : 0,
             duration: panelTransition ~/ 2,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: defaultBorder,
-                  color: colors.expenseInputBackground,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: widget.noteSuggestions.map((e) => NoteSuggestionPill(text: e, tapSuggestion: tapSuggestion)).toList(),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: defaultBorder,
+                        color: colors.expenseInputBackground,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: widget.noteSuggestions.map((e) => NoteSuggestionPill(key: Key(e), text: e, tapSuggestion: tapSuggestion)).toList(),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ))
       ],
     );
