@@ -6,7 +6,7 @@
 
     <groupId>com.ftpix</groupId>
     <artifactId>SpendSpentSpent</artifactId>
-    <version>50</version>
+    <version>53</version>
 
     <properties>
         <automatioon.skip>true</automatioon.skip>

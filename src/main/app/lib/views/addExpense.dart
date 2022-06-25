@@ -100,8 +100,10 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
     double rate = currencyConversion?.rate ?? 1;
     double fromDouble = double.parse(from);
     var newToValue = fromDouble * rate;
+    var tmpValue = newToValue.floor().toString();
+    this.getNoteSuggestions(tmpValue);
     setState(() {
-      value = newToValue.floor().toString();
+      value = tmpValue;
     });
   }
 

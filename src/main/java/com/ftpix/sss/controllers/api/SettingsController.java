@@ -2,6 +2,7 @@ package com.ftpix.sss.controllers.api;
 
 
 import com.ftpix.sss.models.Settings;
+import com.ftpix.sss.services.CurrencyService;
 import com.ftpix.sss.services.SettingsService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,12 @@ import java.util.List;
 public class SettingsController {
 
     private final SettingsService settingsService;
+    private final CurrencyService currencyService;
 
     @Autowired
-    public SettingsController(SettingsService settingsService) {
+    public SettingsController(SettingsService settingsService, CurrencyService currencyService) {
         this.settingsService = settingsService;
+        this.currencyService = currencyService;
     }
 
     @GetMapping
@@ -36,7 +39,11 @@ public class SettingsController {
 
     @PostMapping
     public Settings save(@RequestBody Settings settings) throws SQLException {
-        return settingsService.save(settings);
+        Settings save = settingsService.save(settings);
+        if(save.getName().equalsIgnoreCase(Settings.CURRENCY_API_KEY)){
+           currencyService.resetCache();
+        }
+        return save;
     }
 
 }

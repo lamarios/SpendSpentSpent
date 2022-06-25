@@ -76,6 +76,8 @@ class Service {
   Map<String, String> headers = Map();
   int? appBuildVersion;
 
+  Config? config;
+
   Service([url]) {
     headers.update("Content-Type", (value) => "application/json", ifAbsent: () => "application/json");
   }
@@ -162,6 +164,7 @@ class Service {
       throw Exception("Invalid email/password combination");
     } else if (response.statusCode == 200) {
       final tokenSet = await setToken(response.body);
+      await getServerConfig(url);
       return tokenSet;
     } else {
       throw Exception("Error while connecting to server");
@@ -428,6 +431,8 @@ class Service {
 
     processResponse(response);
 
+    await getServerConfig(url);
+
     return true;
   }
 
@@ -444,7 +449,8 @@ class Service {
     processResponse(response);
 
     var jsonDecode2 = jsonDecode(response.body);
-    return Config.fromJson(jsonDecode2);
+    this.config = Config.fromJson(jsonDecode2);
+    return this.config!;
   }
 
   Future<bool> signUp(String url, User user) async {

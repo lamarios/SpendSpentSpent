@@ -69,6 +69,7 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
 
   @override
   Widget build(BuildContext context) {
+    print(service.config?.canConvertCurrency);
     AppColors colors = get(context);
     // TODO: implement build
     return Column(
@@ -102,9 +103,12 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
                     duration: Duration(milliseconds: panelTransition.inMilliseconds ~/ 2),
                     child: IconButton(onPressed: () => showNoteDialog(context), icon: FaIcon(FontAwesomeIcons.commentDots, color: noteController.text.length > 0 ? colors.main : colors.text))),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 0),
-                child: IconButton(onPressed: enableCurrencyConversion, icon: FaIcon(FontAwesomeIcons.dollarSign, color: widget.currencyConversionEnabled ? colors.main : colors.text)),
+              Visibility(
+                visible: service.config?.canConvertCurrency ?? false,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 0),
+                  child: IconButton(onPressed: enableCurrencyConversion, icon: FaIcon(FontAwesomeIcons.dollarSign, color: widget.currencyConversionEnabled ? colors.main : colors.text)),
+                ),
               ),
             ],
           ),

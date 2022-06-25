@@ -29,7 +29,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
   User? currentUser;
   GlobalKey<MasterDetailState> masterDetailKey = GlobalKey<MasterDetailState>();
   PackageInfo? packageInfo;
-  TextEditingController motdController = TextEditingController(), freeCurrencyConverterApiKeyController = TextEditingController();
+  TextEditingController motdController = TextEditingController(), currencyapiKey = TextEditingController();
   bool demoMode = false;
   bool allowSignUp = false;
   bool showChangePassword = false;
@@ -62,8 +62,8 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
   }
 
   setCurrencyApiKey() {
-    showPromptDialog(context, 'Free currency api key', "", motdController, () {
-      setSetting(MOTD, freeCurrencyConverterApiKeyController.text.trim(), true);
+    showPromptDialog(context, 'currencyapi.com api key', "", currencyapiKey, () {
+      setSetting(CURRENCY_API_KEY, currencyapiKey.text.trim(), true);
     });
   }
 
@@ -169,8 +169,8 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
             onPressed: showManageUsers,
           ),
           SettingsTile(
-            title: 'Currency Converter API key',
-            subtitle: 'Optional freecurrencyapi.net key',
+            title: 'Currencyapi.com api key',
+            subtitle: (service.config?.canConvertCurrency ?? false) ? (service.config?.convertCurrencyQuota ?? '') + ' remaining api calls \nthis month' : 'No api key set',
             leading: FaIcon(
               FontAwesomeIcons.dollarSign,
               size: iconSize,

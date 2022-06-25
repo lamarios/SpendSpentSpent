@@ -3,7 +3,9 @@ package com.ftpix.sss.controllers;
 
 import com.ftpix.sss.Constants;
 import com.ftpix.sss.dao.UserDao;
+import com.ftpix.sss.models.CurrencyStatus;
 import com.ftpix.sss.models.Settings;
+import com.ftpix.sss.services.CurrencyService;
 import com.ftpix.sss.services.EmailService;
 import com.ftpix.sss.services.SettingsService;
 import freemarker.template.Configuration;
@@ -39,17 +41,19 @@ public class ApplicationController {
 
     private final Configuration templateEngine;
     private final BuildProperties buildProperties;
+    private final CurrencyService currencyService;
 
     public final static int MIN_APP_VERSION = 47;
     private final UserDao userDaoJooq;
 
     @Autowired
-    public ApplicationController(EmailService emailService, SettingsService settingsService, Configuration templateEngine, BuildProperties buildProperties, UserDao userDaoJooq) {
+    public ApplicationController(EmailService emailService, SettingsService settingsService, Configuration templateEngine, BuildProperties buildProperties, CurrencyService currencyService, UserDao userDaoJooq) {
         this.emailService = emailService;
         this.settingsService = settingsService;
 
         this.templateEngine = templateEngine;
         this.buildProperties = buildProperties;
+        this.currencyService = currencyService;
         this.userDaoJooq = userDaoJooq;
     }
 
@@ -103,6 +107,15 @@ public class ApplicationController {
 
         results.put("backendVersion", Integer.parseInt(buildProperties.getVersion()));
         results.put("minAppVersion", Integer.toString(MIN_APP_VERSION));
+
+        results.put("canConvertCurrency", currencyService.canUseCurrencyConversion());
+
+        try {
+            CurrencyStatus currencyStatus = currencyService.getQuota();
+            results.put("convertCurrencyQuota", "" + currencyStatus.getRemaining() + "/" + currencyStatus.getTotal());
+        } catch (Exception e) {
+            results.put("convertCurrencyQuota", "");
+        }
 
 
         results.put("demoMode", Optional.ofNullable(settingsService.getByName(Settings.DEMO_MODE)).map(s -> s.getValue().equalsIgnoreCase("1")).orElse(false));
