@@ -126,7 +126,7 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           hoverColor: Colors.transparent,
-                          icon: FaIcon(FontAwesomeIcons.chartBar),
+                          icon: FaIcon(FontAwesomeIcons.barsProgress),
                           onPressed: () {
                             setSelected(0);
                           }),
@@ -138,7 +138,7 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
                           highlightColor: Colors.transparent,
                           hoverColor: Colors.transparent,
                           color: animation1.value,
-                          icon: FaIcon(FontAwesomeIcons.squareFull),
+                          icon: FaIcon(FontAwesomeIcons.solidSquare),
                           onPressed: () {
                             setSelected(1);
                           }),

@@ -39,9 +39,9 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
     }
   }
 
-  toggleContainer() {
+  openContainer() {
     setState(() {
-      open = !open;
+      open = true;
       Future.delayed(panelTransition, () {
         if (open) {
           setState(() {
@@ -49,10 +49,13 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
           });
         }
       });
+    });
+  }
 
-      if (!open) {
-        showGraph = false;
-      }
+  closeContainer() {
+    setState(() {
+      open = false;
+      showGraph = false;
     });
   }
 
@@ -63,7 +66,7 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
       child: GestureDetector(
-        onTap: toggleContainer,
+        onTap: openContainer,
         behavior: HitTestBehavior.translucent,
         child: Column(
           children: [
@@ -71,8 +74,15 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: AnimatedRotation(turns: open ? 0.25 : 0, duration: panelTransition, curve: Curves.easeInOutQuart,
-                  child: FaIcon(FontAwesomeIcons.chevronRight, size: 10, color: colors.text,)),
+                  child: AnimatedRotation(
+                      turns: open ? 0.25 : 0,
+                      duration: panelTransition,
+                      curve: Curves.easeInOutQuart,
+                      child: FaIcon(
+                        FontAwesomeIcons.chevronRight,
+                        size: 10,
+                        color: colors.text,
+                      )),
                 ),
                 Visibility(visible: widget.stats.category.id != -1, child: getIcon(widget.stats.category.icon!, color: Theme.of(context).primaryColor, size: 20)),
                 Spacer(),
@@ -104,7 +114,7 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
                       visible: showGraph,
                       child: FadeIn(
                         duration: panelTransition,
-                        child: StatsGraph(categoryId: widget.stats.category.id!, monthly: widget.monthly),
+                        child: StatsGraph(categoryId: widget.stats.category.id!, monthly: widget.monthly, close: closeContainer),
                       ),
                     ),
                   ),

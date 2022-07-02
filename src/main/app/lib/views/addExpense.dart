@@ -20,6 +20,7 @@ import 'package:spend_spent_spent/models/category.dart';
 import 'package:spend_spent_spent/models/currencyConversion.dart';
 import 'package:spend_spent_spent/models/expense.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
+import 'package:spend_spent_spent/utils/debouncer.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
 
@@ -45,15 +46,18 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
   bool saving = false;
   Widget? savingIcon;
   List<String> noteSuggestions = [];
+  Debouncer debouncer = Debouncer(milliseconds: 500);
 
   void getNoteSuggestions(String value) {
-    service.getNoteSuggestions(Expense(amount: double.parse(valueToStr(value)), date: '2022-01-23', category: widget.category)).then((suggestions) {
-      List<String> results = suggestions.keys.toList(growable: false);
-      results.sort((a, b) => suggestions[b]!.compareTo(suggestions[a]!));
+    debouncer.run(() {
+      service.getNoteSuggestions(Expense(amount: double.parse(valueToStr(value)), date: '2022-01-23', category: widget.category)).then((suggestions) {
+        List<String> results = suggestions.keys.toList(growable: false);
+        results.sort((a, b) => suggestions[b]!.compareTo(suggestions[a]!));
 
-      setState(() {
-        noteSuggestions = results;
-        print(noteSuggestions);
+        setState(() {
+          noteSuggestions = results;
+          print(noteSuggestions);
+        });
       });
     });
   }
@@ -314,7 +318,7 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
                         children: [
                           Expanded(
                               child: PlatformElevatedButton(
-                               color: colors.main,
+                            color: colors.main,
                             onPressed: value.length > 0 ? () => addExpense(context) : null,
                             child: Text('Save'),
                           )),
