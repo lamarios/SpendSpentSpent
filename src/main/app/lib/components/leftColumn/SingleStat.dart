@@ -26,10 +26,10 @@ class SingleStats extends StatefulWidget {
 
 class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
   bool open = false, showGraph = false, showPercentage = false;
-  double openedHeight = 300;
+  double openedHeight = 400;
   double percentage = 0;
 
-  double getBarWidth(BoxConstraints constraints) {
+  double getBarWidth(BuildContext context, BoxConstraints constraints) {
     if (open) {
       return constraints.maxWidth;
     } else if (showPercentage && widget.stats.total > 0) {
@@ -39,16 +39,19 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
     }
   }
 
-  openContainer() {
+  openContainer(BuildContext context) {
     setState(() {
-      open = true;
-      Future.delayed(panelTransition, () {
-        if (open) {
-          setState(() {
-            showGraph = true;
-          });
-        }
-      });
+      if (!open) {
+        open = true;
+        Future.delayed(panelTransition, () {
+          if (open) {
+            Scrollable.ensureVisible(context, curve: Curves.easeInOutQuart, duration: panelTransition, alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd);
+            setState(() {
+              showGraph = true;
+            });
+          }
+        });
+      }
     });
   }
 
@@ -66,7 +69,7 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
       child: GestureDetector(
-        onTap: openContainer,
+        onTap: () => openContainer(context),
         behavior: HitTestBehavior.translucent,
         child: Column(
           children: [
@@ -104,7 +107,7 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
                   builder: (context, constraints) => AnimatedContainer(
                     duration: panelTransition,
                     curve: Curves.easeInOutQuart,
-                    width: getBarWidth(constraints),
+                    width: getBarWidth(context, constraints),
                     height: open ? openedHeight : 10,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10)),

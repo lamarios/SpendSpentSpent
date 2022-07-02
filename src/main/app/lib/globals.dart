@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/service.dart';
 
 Service service = new Service();
-const MIN_BACKEND_VERSION = 53;
+const MIN_BACKEND_VERSION = 55;
 
 const BorderRadius defaultBorder = BorderRadius.all(Radius.circular(15));
 const defaultPadding = 20.0;

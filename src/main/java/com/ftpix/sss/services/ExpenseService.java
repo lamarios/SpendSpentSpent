@@ -1,17 +1,18 @@
 package com.ftpix.sss.services;
 
 import com.ftpix.sss.dao.ExpenseDao;
-import com.ftpix.sss.models.Category;
-import com.ftpix.sss.models.DailyExpense;
-import com.ftpix.sss.models.Expense;
-import com.ftpix.sss.models.User;
+import com.ftpix.sss.models.*;
+import com.ftpix.sss.utils.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jooq.OrderField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -111,6 +112,20 @@ public class ExpenseService {
         } else {
             return false;
         }
+    }
+
+    /**
+     * @return
+     */
+    public ExpenseLimits getLimits(User user) {
+        PaginatedResults<Expense> data = expenseDaoJooq.getPaginatedWhere(user, 0, 1, new OrderField[]{EXPENSE.DATE.asc()});
+        if (data.getData().isEmpty()) {
+            return new ExpenseLimits(0, 0);
+        }
+        Expense exp = data.getData().get(0);
+        LocalDate localDate = DateUtils.convertToLocalDateViaInstant(exp.getDate());
+        Period diff = Period.between(localDate, LocalDate.now());
+        return new ExpenseLimits(diff.getYears(), (int) diff.toTotalMonths());
     }
 
     public List<String> getMonths(User user) throws Exception {

@@ -3,10 +3,12 @@ import 'package:after_layout/after_layout.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_spent_spent/components/dummies/DummyFade.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:spend_spent_spent/models/expenseLimit.dart';
 import 'package:spend_spent_spent/models/graphDataPoint.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -26,7 +28,11 @@ class StatsGraph extends StatefulWidget {
 
 class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
   static const AVG_BAR_WIDTH = 1.5;
+  static const MIN_PERIOD = 2;
   Debouncer debouncer = Debouncer(milliseconds: 500);
+
+  int periodMax = 10;
+
   bool loadingFirst = true;
   List<FlSpot> graphData = [
     FlSpot(0, 0),
@@ -68,57 +74,60 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
     }
   }
 
-  changeCount(bool increase) {
+  changeCount(int count) {
     setState(() {
-      if (increase) {
-        count++;
-      } else {
-        if (count > 5) {
-          count--;
-        }
-      }
+      this.count = max(count, MIN_PERIOD);
       debouncer.run(() => getGraphData());
     });
   }
 
+  Future<void> getLimits() async {
+    var expenseLimits = await service.getExpenseLimits();
+    setState(() {
+      periodMax = max(periodMax, widget.monthly ? expenseLimits.months + 3 : expenseLimits.years + 3);
+    });
+  }
+
   Future<void> getGraphData() async {
-    List<GraphDataPoint> data = [];
-    if (widget.monthly) {
-      data = await service.getMonthlyData(widget.categoryId, count);
-    } else {
-      data = await service.getYearlyData(widget.categoryId, count);
-    }
-    data = data.reversed.toList();
+    this.getLimits().then((value) async {
+      List<GraphDataPoint> data = [];
+      if (widget.monthly) {
+        data = await service.getMonthlyData(widget.categoryId, count);
+      } else {
+        data = await service.getYearlyData(widget.categoryId, count);
+      }
+      data = data.reversed.toList();
 
-    List<FlSpot> graphPoints = [];
-    double total = 0;
-    double minValue = 99999999999;
-    double maxValue = 0;
-    for (int i = 0; i < data.length; i++) {
-      GraphDataPoint e = data[i];
-      minValue = min(minValue, e.amount);
-      maxValue = max(maxValue, e.amount);
-      total += e.amount;
-      graphPoints.add(FlSpot(i.toDouble(), e.amount));
-    }
+      List<FlSpot> graphPoints = [];
+      double total = 0;
+      double minValue = 99999999999;
+      double maxValue = 0;
+      for (int i = 0; i < data.length; i++) {
+        GraphDataPoint e = data[i];
+        minValue = min(minValue, e.amount);
+        maxValue = max(maxValue, e.amount);
+        total += e.amount;
+        graphPoints.add(FlSpot(i.toDouble(), e.amount));
+      }
 
-    double average = total / data.length;
+      double average = total / data.length;
 
-    List<FlSpot> avgData = [];
-    for (int i = 0; i < data.length; i++) {
-      avgData.add(FlSpot(i.toDouble(), average));
-    }
+      List<FlSpot> avgData = [];
+      for (int i = 0; i < data.length; i++) {
+        avgData.add(FlSpot(i.toDouble(), average));
+      }
 
-    if (this.mounted) {
-      setState(() {
-        loadingFirst = false;
-        graphData = graphPoints;
-        graphDataPoints = data;
-        this.avgData = avgData;
-        this.minValue = minValue * 0.7;
-        this.maxValue = maxValue * 1.3;
-      });
-    }
+      if (this.mounted) {
+        setState(() {
+          loadingFirst = false;
+          graphData = graphPoints;
+          graphDataPoints = data;
+          this.avgData = avgData;
+          this.minValue = minValue * 0.7;
+          this.maxValue = maxValue * 1.3;
+        });
+      }
+    });
   }
 
   LineChartData getData(BuildContext context) {
@@ -228,6 +237,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
+    String label = '$count ${widget.monthly ? "months" : "years"}';
     AppColors colors = get(context);
     return Column(
       children: [
@@ -274,45 +284,27 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                           child: LineChart(getData(context)),
                         )),
                       )),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                changeCount(false);
-                              },
-                              behavior: HitTestBehavior.translucent,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14),
-                                child: FaIcon(
-                                  FontAwesomeIcons.minus,
-                                  color: colors.textOnMain,
-                                  size: 15,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              count.toString() + (widget.monthly ? ' Months' : ' Years'),
-                              style: TextStyle(color: colors.textOnMain),
-                            ),
-                            GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTap: () {
-                                changeCount(true);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14),
-                                child: FaIcon(
-                                  FontAwesomeIcons.plus,
-                                  size: 15,
-                                  color: colors.textOnMain,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                      Container(
+                        child: Text(label, style: TextStyle(color: colors.textOnMain)),
+                        alignment: Alignment.center,
+                      ),
+                      Slider.adaptive(
+
+                        min: 1,
+                        max: periodMax.toDouble(),
+                        divisions: this.periodMax-1,
+                        onChangeEnd: (p0) => this.changeCount(p0.toInt()),
+                        value: count.toDouble(),
+                        activeColor: colors.textOnMain,
+                        inactiveColor: colors.mainDark,
+                        thumbColor: colors.main.lighten(10),
+                        onChanged: (double) {
+                          setState(() {
+                            if (double >= MIN_PERIOD) {
+                              this.count = double.toInt();
+                            }
+                          });
+                        },
                       )
                     ],
                   ),

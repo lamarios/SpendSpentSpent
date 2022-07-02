@@ -19,6 +19,7 @@ import 'package:spend_spent_spent/models/pagination.dart';
 import 'package:spend_spent_spent/models/settings.dart';
 
 import 'models/config.dart';
+import 'models/expenseLimit.dart';
 import 'models/recurringExpense.dart';
 import 'models/searchCategories.dart';
 import 'models/user.dart';
@@ -42,6 +43,7 @@ const EXPENSE_BY_MONTH = API_URL + '/Expense/ByDay?month={0}';
 const EXPENSE_GET_MONTHS = API_URL + '/Expense/GetMonths';
 const EXPENSE_DELETE = API_URL + '/Expense/{0}';
 const EXPENSE_GET_NOTE_SUGGESTIONS = API_URL + '/Expense/suggest-notes';
+const EXPENSE_GET_LIMITS = API_URL + '/Expense/limits';
 const HISTORY_OVERALL_MONTH = API_URL + "/History/CurrentMonth";
 const HISTORY_OVERALL_YEAR = API_URL + "/History/CurrentYear";
 const HISTORY_YEARLY = API_URL + "/History/Yearly/{0}/{1}";
@@ -186,9 +188,7 @@ class Service {
     final response = await http.post(await this.formatUrl(CATEGORY_SEARCH), body: '"$search"', headers: headers);
 
     processResponse(response);
-    return SearchCategories
-        .fromJson(jsonDecode(response.body))
-        .results;
+    return SearchCategories.fromJson(jsonDecode(response.body)).results;
   }
 
   Future<bool> addCategory(String category) async {
@@ -211,13 +211,21 @@ class Service {
     return Expense.fromJson(jsonDecode(response.body));
   }
 
+  Future<ExpenseLimits> getExpenseLimits() async {
+
+    final response = await http.get(await this.formatUrl(EXPENSE_GET_LIMITS), headers: headers);
+
+    processResponse(response);
+    Map<String, dynamic> result = jsonDecode(response.body);
+    return ExpenseLimits.fromJson(jsonDecode(response.body));
+  }
+
   Future<Map<String, int>> getNoteSuggestions(Expense expense) async {
     Map map = expense.toJson();
 
     final response = await http.post(await this.formatUrl(EXPENSE_GET_NOTE_SUGGESTIONS), body: jsonEncode(map), headers: headers);
 
     processResponse(response);
-    print(response.body);
     Map<String, dynamic> result = jsonDecode(response.body);
     return result.map((key, value) {
       return MapEntry(key, value as int);

@@ -48,6 +48,7 @@ class LeftColumnState extends State<LeftColumn> with AfterLayoutMixin {
   void buildWidget() {
     setState(() {
       this.statsWidget = ListView.builder(
+        scrollDirection: Axis.vertical,
         itemCount: stats.length,
         itemBuilder: (context, index) {
           return SingleStats(

@@ -2,6 +2,7 @@ package com.ftpix.sss.controllers.api;
 
 import com.ftpix.sss.models.DailyExpense;
 import com.ftpix.sss.models.Expense;
+import com.ftpix.sss.models.ExpenseLimits;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.ExpenseService;
 import com.ftpix.sss.services.HistoryService;
@@ -18,8 +19,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @RestController
 @RequestMapping("/API/Expense")
@@ -122,8 +121,14 @@ public class ExpenseController {
     }
 
     @PostMapping("/suggest-notes")
-    public Map<String, Long> suggestNotes(@RequestBody Expense expense) throws Exception{
+    public Map<String, Long> suggestNotes(@RequestBody Expense expense) throws Exception {
         final User currentUser = userService.getCurrentUser();
         return expenseService.suggestNotes(currentUser, expense);
+    }
+
+    @GetMapping("/limits")
+    public ExpenseLimits getExpenseLimits() throws Exception {
+        final User currentUser = userService.getCurrentUser();
+        return expenseService.getLimits(currentUser);
     }
 }
