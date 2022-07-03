@@ -141,7 +141,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                 return list.map((e) {
                   bool avg = e.bar.barWidth == AVG_BAR_WIDTH;
                   String text = avg ? "Avg: " : "";
-                  return LineTooltipItem(text + formatCurrency(e.y), TextStyle(color: avg ? colors.textOnMain.withOpacity(0.7) : colors.textOnMain, fontSize: avg ? 12 : 20));
+                  return LineTooltipItem(text + formatCurrency(e.y), TextStyle(color: avg ? Colors.white.withOpacity(0.7) : Colors.white, fontSize: avg ? 12 : 20));
                 }).toList();
               })),
       gridData: FlGridData(
@@ -235,9 +235,26 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
     );
   }
 
+  String getLabel() {
+    print(count);
+    if (widget.monthly) {
+      int years = (count / 12).floor();
+      int months = count % 12;
+
+      if (years == 0) {
+        return '$count months';
+      } else if (months == 0) {
+        return '$years year${years > 1 ? 's' : ''}';
+      } else {
+        return '$years year${years > 1 ? 's' : ''} and $months month${months > 1 ? 's' : ''}';
+      }
+    } else {
+      return '$count years';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    String label = '$count ${widget.monthly ? "months" : "years"}';
     AppColors colors = get(context);
     return Column(
       children: [
@@ -285,14 +302,13 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                         )),
                       )),
                       Container(
-                        child: Text(label, style: TextStyle(color: colors.textOnMain)),
+                        child: Text(getLabel(), style: TextStyle(color: colors.textOnMain)),
                         alignment: Alignment.center,
                       ),
                       Slider.adaptive(
-
                         min: 1,
                         max: periodMax.toDouble(),
-                        divisions: this.periodMax-1,
+                        divisions: this.periodMax - 1,
                         onChangeEnd: (p0) => this.changeCount(p0.toInt()),
                         value: count.toDouble(),
                         activeColor: colors.textOnMain,
