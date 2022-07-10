@@ -30,7 +30,7 @@ class CategoryGridItemState extends State<CategoryGridItem> with AfterLayoutMixi
   Offset offset = Offset(0, 1);
 
   showDialog(BuildContext context) {
-    showModal(context: context, builder: (context) => Card(margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 650), child: AddExpense(category: widget.category)));
+    showModal(context: context, builder: (context) => Card(color: Colors.white.withOpacity(0), margin: EdgeInsets.zero, child: AddExpense(category: widget.category)));
   }
 
   @override

@@ -237,140 +237,167 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
     AppColors colors = get(context);
 
     return Container(
-      child: LayoutBuilder(builder: (context, constraints) {
-        return Stack(
-          children: [
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              top: iconHeight,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: defaultBorder,
-                        color: colors.expenseInputBackground,
-                      ),
-                      child: Row(
-                        children: [
-                          Visibility(
-                            visible: !showCurrencyConversion,
-                            child: Expanded(
-                                child: Container(
-                                    height: 70,
-                                    alignment: Alignment.centerRight,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Text(valueToStr(value), style: TextStyle(fontSize: 20, color: colors.expenseInput)),
-                                    ))),
-                          ),
-                          Visibility(
-                            visible: showCurrencyConversion,
-                            child: Expanded(
-                                child: CurrencyConverter(
-                              value: value,
-                              valueFrom: valueFrom,
-                              currencyConversion: currencyConversion,
-                              setCurrencyConversion: setCurrencyConversion,
-                              valueToStr: valueToStr,
-                            )),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  KeyPad(addNumber: addNumber, removeNumber: removeNumber),
-                  ExpenseActions(
-                    noteSuggestions: noteSuggestions,
-                    expenseDate: expenseDate,
-                    setDate: (date) {
-                      setState(() {
-                        expenseDate = date;
-                      });
-                    },
-                    setNote: (note) {
-                      setState(() {
-                        expenseNote = note;
-                        noteSuggestions = [];
-                      });
-                    },
-                    location: useLocation,
-                    setLocation: setLocation,
-                    currencyConversionEnabled: showCurrencyConversion,
-                    enableCurrencyConversion: (enable) {
-                      setState(() {
-                        showCurrencyConversion = enable;
-                        if (!enable) {
-                          currencyConversion = null;
-                        }
-                      });
-                    },
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Expanded(
-                              child: PlatformElevatedButton(
-                            color: colors.main,
-                            onPressed: value.length > 0 ? () => addExpense(context) : null,
-                            child: Text('Save'),
-                          )),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            AnimatedPositioned(
-              left: 0,
-              top: 0,
-              right: 0,
-              bottom: saving ? 0 : constraints.maxHeight - iconHeight,
-              duration: panelTransition,
-              curve: Curves.easeInOutQuart,
-              child: Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(gradient: defaultGradient(context), borderRadius: BorderRadius.circular(4)),
-                child: Hero(
-                    tag: widget.category.icon!,
-                    child: DummyFade(
-                        running: saving,
-                        child: AnimatedSwitcher(
-                            duration: Duration(milliseconds: 130),
-                            transitionBuilder: (Widget child, Animation<double> animation) {
-                              return ScaleTransition(scale: animation, child: child);
-                            },
-                            switchInCurve: Curves.easeInOutQuart,
-                            switchOutCurve: Curves.easeInOutQuart,
-                            child: getIconHeader(context)))),
-              ),
-            ),
-            Positioned(
-              right: 10,
-              top: 10,
-              child: AnimatedOpacity(
+      alignment: Alignment.center,
+      color: colors.background.withOpacity(0),
+      padding: EdgeInsets.all(30),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 350),
+        decoration: BoxDecoration(
+          borderRadius: defaultBorder,
+        ),
+        child: LayoutBuilder(builder: (context, constraints) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedSwitcher(
                 duration: panelTransition,
-                opacity: saving ? 0 : 1,
-                child: IconButton(
-                    onPressed: closeDialog,
-                    icon: FaIcon(
-                      FontAwesomeIcons.times,
-                      color: colors.iconOnMain,
-                      size: 20,
-                    )),
+                switchOutCurve: Curves.easeInOutQuart,
+                switchInCurve: Curves.easeInOutQuart,
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return ScaleTransition(scale: animation, child: child);
+                },
+                child: saving
+                    ? Container(
+                        key: Key("saving"),
+                        height: 150,
+                        width: 150,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(gradient: defaultGradient(context), borderRadius: defaultBorder),
+                        child: Hero(
+                            tag: widget.category.icon!,
+                            child: DummyFade(
+                                running: saving,
+                                child: AnimatedSwitcher(
+                                    duration: Duration(milliseconds: 130),
+                                    transitionBuilder: (Widget child, Animation<double> animation) {
+                                      return ScaleTransition(scale: animation, child: child);
+                                    },
+                                    switchInCurve: Curves.easeInOutQuart,
+                                    switchOutCurve: Curves.easeInOutQuart,
+                                    child: getIconHeader(context)))),
+                      )
+                    : Container(
+                        key: Key("input"),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: defaultBorder,
+                          color: colors.dialogBackground,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Stack(
+                              children: [
+                                Container(
+                                  height: 150,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(gradient: defaultGradient(context), borderRadius: BorderRadius.vertical(top: defaultBorder.topLeft)),
+                                  child: Hero(
+                                      tag: widget.category.icon!,
+                                      child: getIconHeader(context)),
+                                ),
+                                Positioned(
+                                  right: 10,
+                                  top: 10,
+                                  child: AnimatedOpacity(
+                                    duration: panelTransition,
+                                    opacity: saving ? 0 : 1,
+                                    child: IconButton(
+                                        onPressed: closeDialog,
+                                        icon: FaIcon(
+                                          FontAwesomeIcons.times,
+                                          color: colors.iconOnMain,
+                                          size: 20,
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: defaultBorder,
+                                  color: colors.expenseInputBackground,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Visibility(
+                                      visible: !showCurrencyConversion,
+                                      child: Expanded(
+                                          child: Container(
+                                              height: 70,
+                                              alignment: Alignment.centerRight,
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(10.0),
+                                                child: Text(valueToStr(value), style: TextStyle(fontSize: 20, color: colors.expenseInput)),
+                                              ))),
+                                    ),
+                                    Visibility(
+                                      visible: showCurrencyConversion,
+                                      child: Expanded(
+                                          child: CurrencyConverter(
+                                        value: value,
+                                        valueFrom: valueFrom,
+                                        currencyConversion: currencyConversion,
+                                        setCurrencyConversion: setCurrencyConversion,
+                                        valueToStr: valueToStr,
+                                      )),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            KeyPad(addNumber: addNumber, removeNumber: removeNumber),
+                            ExpenseActions(
+                              noteSuggestions: noteSuggestions,
+                              expenseDate: expenseDate,
+                              setDate: (date) {
+                                setState(() {
+                                  expenseDate = date;
+                                });
+                              },
+                              setNote: (note) {
+                                setState(() {
+                                  expenseNote = note;
+                                  noteSuggestions = [];
+                                });
+                              },
+                              location: useLocation,
+                              setLocation: setLocation,
+                              currencyConversionEnabled: showCurrencyConversion,
+                              enableCurrencyConversion: (enable) {
+                                setState(() {
+                                  showCurrencyConversion = enable;
+                                  if (!enable) {
+                                    currencyConversion = null;
+                                  }
+                                });
+                              },
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: PlatformElevatedButton(
+                                    color: colors.main,
+                                    onPressed: value.length > 0 ? () => addExpense(context) : null,
+                                    child: Text('Save'),
+                                  )),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
               ),
-            ),
-          ],
-        );
-      }),
+            ],
+          );
+        }),
+      ),
     );
   }
 

@@ -32,7 +32,6 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
       menuBar = MenuBar(setPage: setPage, page: page);
       showMenuBar = true;
     });
-    setPage(1);
   }
 
   void setPage(int page) {
