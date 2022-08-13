@@ -1,0 +1,1 @@
+Fix issue where currency conversion was not available until the user goes to the app settings.
