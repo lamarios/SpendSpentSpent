@@ -17,13 +17,11 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with AfterLayoutMixin<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScreen> {
   late Widget homeWidget = getMainView();
 
   Widget getMainView() {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center, children: [MainView()]);
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [MainView()]);
   }
 
   Widget getLogin() {
@@ -35,13 +33,12 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
 
     service.needLogin().then((needLogin) {
-      if(needLogin){
-
+      if (!needLogin) {
+        Preferences.get(Preferences.SERVER_URL).then((serverUrl) => service.getServerConfig(serverUrl));
       }
       this.homeWidget = needLogin ? getLogin() : getMainView();
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +47,7 @@ class _HomeScreenState extends State<HomeScreen>
         backgroundColor: colors.background,
         body: SafeArea(
           bottom: false,
-          child: AnimatedSwitcher(duration: panelTransition,
-              switchInCurve: Curves.easeInOutQuart,
-              switchOutCurve: Curves.easeInOutQuart,
-              child: homeWidget),
+          child: AnimatedSwitcher(duration: panelTransition, switchInCurve: Curves.easeInOutQuart, switchOutCurve: Curves.easeInOutQuart, child: homeWidget),
         ));
   }
 

@@ -212,7 +212,6 @@ class Service {
   }
 
   Future<ExpenseLimits> getExpenseLimits() async {
-
     final response = await http.get(await this.formatUrl(EXPENSE_GET_LIMITS), headers: headers);
 
     processResponse(response);
@@ -249,6 +248,8 @@ class Service {
 
   Future<void> logout() async {
     await Preferences.remove(Preferences.TOKEN);
+    this.config = null;
+    this.url = "";
 
     FBroadcast.instance()?.broadcast(BROADCAST_LOGGED_OUT);
   }
@@ -459,6 +460,14 @@ class Service {
     var jsonDecode2 = jsonDecode(response.body);
     this.config = Config.fromJson(jsonDecode2);
     return this.config!;
+  }
+
+  Future<Config> getCurrentServerConfig() async {
+    if (this.url.trim() != "") {
+      return getServerConfig(this.url);
+    }
+
+    throw new Exception("No server url set");
   }
 
   Future<bool> signUp(String url, User user) async {
