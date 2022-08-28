@@ -215,7 +215,7 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
   }
 
   double getIconHeight(MediaQueryData mq) {
-    return min(mq.size.height / 5, 150);
+    return min(mq.size.height / 6, 150);
   }
 
   Widget getIconHeader(BuildContext context) {
@@ -228,6 +228,12 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
     } else {
       return getIcon(widget.category.icon!, size: iconHeight * 0.66, color: colors.iconOnMain);
     }
+  }
+
+  double getHeaderHeight(BuildContext context) {
+    MediaQueryData mq = MediaQuery.of(context);
+
+    return min(mq.size.height / 6, 150.toDouble());
   }
 
   @override
@@ -290,12 +296,10 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
                             Stack(
                               children: [
                                 Container(
-                                  height: 150,
+                                  height: getHeaderHeight(context),
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(gradient: defaultGradient(context), borderRadius: BorderRadius.vertical(top: defaultBorder.topLeft)),
-                                  child: Hero(
-                                      tag: widget.category.icon!,
-                                      child: getIconHeader(context)),
+                                  child: Hero(tag: widget.category.icon!, child: getIconHeader(context)),
                                 ),
                                 Positioned(
                                   right: 10,
