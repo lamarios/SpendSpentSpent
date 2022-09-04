@@ -122,6 +122,7 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Container(
+                      height: 50,
                       decoration: BoxDecoration(
                         borderRadius: defaultBorder,
                         color: colors.expenseInputBackground,

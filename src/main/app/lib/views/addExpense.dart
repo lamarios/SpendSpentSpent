@@ -238,14 +238,13 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
 
   @override
   Widget build(BuildContext context) {
-    double iconHeight = getIconHeight(MediaQuery.of(context));
 
     AppColors colors = get(context);
 
     return Container(
       alignment: Alignment.center,
       color: colors.background.withOpacity(0),
-      padding: EdgeInsets.all(30),
+      padding: EdgeInsets.all(0),
       child: Container(
         constraints: BoxConstraints(maxWidth: 350),
         decoration: BoxDecoration(

@@ -1,0 +1,1 @@
+Fix expense dialog on short displays.
