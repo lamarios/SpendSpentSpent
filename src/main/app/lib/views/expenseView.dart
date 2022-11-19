@@ -69,7 +69,7 @@ class ExpenseViewState extends State<ExpenseView> {
     List<Widget> icons = [];
 
     for (int i = 0; i < 150; i++) {
-      icons.add(getIcon(widget.expense.category.icon!, color: colors.text, size:40));
+      icons.add(getIcon(widget.expense.category.icon!, color: colors.text, size: 40));
     }
 
     return Opacity(
@@ -107,9 +107,9 @@ class ExpenseViewState extends State<ExpenseView> {
               decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: Colors.white),
               child: FlutterMap(
                 options: MapOptions(center: LatLng((widget.expense.latitude ?? 0) - 0.013, widget.expense.longitude ?? 0), zoom: 15),
-                layers: [
-                  TileLayerOptions(urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", subdomains: ['a', 'b', 'c']),
-                  MarkerLayerOptions(markers: [
+                children: [
+                  TileLayer(urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png", userAgentPackageName: 'com.spendspentspent.app', retinaMode: MediaQuery.of(context).devicePixelRatio > 1.0),
+                  MarkerLayer(markers: [
                     Marker(
                         width: 40.0,
                         height: 40.0,
@@ -156,7 +156,7 @@ class ExpenseViewState extends State<ExpenseView> {
                     width: 30,
                     height: 30,
                     alignment: Alignment.center,
-                    decoration: BoxDecoration(color: hasLocation()?colors.dialogBackground: Colors.transparent, borderRadius: BorderRadius.circular(20)),
+                    decoration: BoxDecoration(color: hasLocation() ? colors.dialogBackground : Colors.transparent, borderRadius: BorderRadius.circular(20)),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: FaIcon(
@@ -175,7 +175,7 @@ class ExpenseViewState extends State<ExpenseView> {
           left: 0,
           right: 0,
           child: Column(
-            mainAxisAlignment:  MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
@@ -190,7 +190,7 @@ class ExpenseViewState extends State<ExpenseView> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: defaultBorder,
-                    color: hasLocation() ? colors.dialogBackground: Colors.transparent,
+                    color: hasLocation() ? colors.dialogBackground : Colors.transparent,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),

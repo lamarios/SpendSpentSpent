@@ -3,7 +3,7 @@ type: ssh
 name: Mobile apps
 
 server:
-  host: 100.86.71.84
+  host: 100.107.56.112
   user: gz
   password:
     from_secret: osx-ssh-password
