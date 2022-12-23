@@ -70,7 +70,7 @@ public class WebSecurityConfig {
                 // dont authenticate this particular request
                 .authorizeHttpRequests(authz -> {
                     try {
-                        authz.requestMatchers("/API/**/").authenticated()
+                        authz.requestMatchers("/API/**").authenticated()
                                 // all other requests need to be authenticate
                                 .anyRequest().permitAll().and().
                                 // make sure we use stateless session; session won't be used to
