@@ -35,8 +35,12 @@ public class JwtTokenUtil implements Serializable, ApplicationContextAware {
     private String salt;
     private String encodedSalt;
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public JwtTokenUtil(UserService userService) {
+        this.userService = userService;
+    }
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);

@@ -4,7 +4,7 @@ WORKDIR /app/src/main/app
 
 RUN cd /app/src/main/app \
     && flutter pub get \
-    &&  flutter build web --no-sound-null-safety --release \
+    &&  flutter build web --release \
     &&  cp -Rf build/web ../resources/public
 
 
@@ -14,7 +14,7 @@ COPY --from=frontend /app/src/main/resources/public/ /app/src/main/resources/pub
 RUN ls /app/src/main/resources
 WORKDIR  /app
 #salt and db path is only for the unit tests
-RUN mvn clean install -Dmaven.repo.local=./m2
+RUN mvn clean install -Dmaven.repo.local=./m2 -Dspring.main.allow-circular-references=true
 
 
 
