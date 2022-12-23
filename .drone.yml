@@ -94,7 +94,7 @@ steps:
   - name: build backend
     image: maven:3.8-openjdk-17
     commands:
-      - mvn clean install -Dmaven.repo.local=./m2
+      - mvn clean install -Dmaven.repo.local=./m2 -Dspring.main.allow-circular-references=true
 
   - name: rebuild-cache
     image: drillster/drone-volume-cache
