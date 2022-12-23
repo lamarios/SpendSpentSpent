@@ -21,7 +21,7 @@ platform :ios do
     api_key = app_store_connect_api_key(
        key_id: "VNWUR4CJX5",
        issuer_id: "7ec03c17-e05f-400d-a3d3-35b57a6c6f67",
-       key_filepath: "/Users/gz/AuthKey_VNWUR4CJX5.p8",
+       key_filepath: "/Users/gz/AuthKey_88P582SD8D.p8",
        duration: 1200, # optional (maximum 1200)
        in_house: false # optional but may be required if using match/sigh
      )
