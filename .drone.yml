@@ -1,6 +1,6 @@
 kind: pipeline
 type: ssh
-name: Mobile apps
+name: iOS app
 
 server:
   host: 100.107.56.112
@@ -20,20 +20,6 @@ steps:
       - security unlock-keychain -p $${KEYCHAIN_PASS} /Users/gz/Library/Keychains/login.keychain-db
       - cd src/main/app
       - ./build-ios.sh
-      - flutter build appbundle
-  - name: Release Android
-    environment:
-      KEYCHAIN_PASS:
-        from_secret: keychain_pass
-      PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/gz/dev/flutter/bin"
-    commands:
-      - source /Users/gz/.zshrc
-      - flutter doctor
-      - security unlock-keychain -p $${KEYCHAIN_PASS} /Users/gz/Library/Keychains/login.keychain-db
-      - cd src/main/app/android
-      - fastlane deploy
-    when:
-      event: tag
   - name: Release iOS
     environment:
       FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD:
@@ -47,6 +33,40 @@ steps:
       - security unlock-keychain -p $${KEYCHAIN_PASS} /Users/gz/Library/Keychains/login.keychain-db
       - cd src/main/app/ios
       - fastlane release
+    when:
+      event: tag
+trigger:
+  event:
+    - push
+    - tag
+---
+kind: pipeline
+type: docker
+name: Android app
+
+steps:
+  - name: build app
+    image: cirrusci/flutter:stable
+    pull: always
+    commands:
+      - cd src/main/app
+      - flutter doctor
+      - flutter pub get
+      - flutter doctor
+      - flutter build appbundle
+  - name: Release Android
+    image: fastlanetools/fastlane
+    pull: always
+    environment:
+      JSON_KEY_FILE: "/service-account.json"
+      JSON_KEY_FILE_CONTENT:
+        from_secret: json_key_file_content
+      PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/gz/dev/flutter/bin"
+    commands:
+      - echo $${JSON_KEY_FILE_CONTENT} > ${{JSON_KEY_FILE}}
+      - flutter doctor
+      - cd src/main/app/android
+      - fastlane deploy
     when:
       event: tag
 trigger:
