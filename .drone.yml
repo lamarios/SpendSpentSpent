@@ -63,7 +63,7 @@ steps:
         from_secret: json_key_file_content
       PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/gz/dev/flutter/bin"
     commands:
-      - echo $${JSON_KEY_FILE_CONTENT} > ${{JSON_KEY_FILE}
+      - echo $${JSON_KEY_FILE_CONTENT} > $${JSON_KEY_FILE}
       - flutter doctor
       - cd src/main/app/android
       - fastlane deploy
