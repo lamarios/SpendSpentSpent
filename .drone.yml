@@ -42,7 +42,7 @@ trigger:
 ---
 kind: pipeline
 type: ssh
-name: iOS app
+name: Android app
 
 server:
   host: 100.107.56.112
