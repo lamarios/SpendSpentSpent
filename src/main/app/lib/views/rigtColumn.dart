@@ -3,13 +3,16 @@ import 'package:animations/animations.dart';
 import 'package:fbroadcast_nullsafety/fbroadcast_nullsafety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/components/dummies/dummyExpenses.dart';
 import 'package:spend_spent_spent/components/rightColumn/oneDay.dart';
+import 'package:spend_spent_spent/components/rightColumn/search.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/dayExpense.dart';
 import 'package:spend_spent_spent/models/expense.dart';
+import 'package:spend_spent_spent/models/searchParameters.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 
@@ -25,6 +28,7 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
   Map<String, DayExpense> expenses = {};
   double total = 0;
   Widget expensesWidget = DummyExpenses();
+  bool searchMode = false;
 
   void getMonths() async {
     List<String> months = await service.getExpensesMonths();
@@ -81,6 +85,38 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
     }
   }
 
+  switchSearch() {
+    setState(() {
+      this.searchMode = !this.searchMode;
+    });
+
+    if (!this.searchMode) {
+      getExpenses();
+    } else {
+      setState(() {
+        this.expenses = Map<String, DayExpense>();
+        this.total = 0;
+        expensesWidget = getExpensesWidget();
+      });
+    }
+  }
+
+  search(SearchParameters params) async {
+    setState(() {
+      expensesWidget = DummyExpenses();
+    });
+
+    var expenses = await service.search(params);
+    double total = expenses.values.length > 0 ? expenses.values.map((e) => e.total).reduce((value, element) => value + element) : 0;
+    if (this.mounted) {
+      setState(() {
+        this.expenses = expenses;
+        this.total = total;
+        expensesWidget = getExpensesWidget();
+      });
+    }
+  }
+
   Widget getExpensesWidget() {
     List<String> expensesKeys = expenses.keys.toList();
     return ListView.builder(
@@ -98,39 +134,62 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
       padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
       child: Column(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(25)),
-              gradient: defaultGradient(context),
-            ),
-            child: Row(
-              children: [
-                Expanded(
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-                    child: DropdownButton<String>(
-                      value: selected,
-                      items: months
-                          .map((e) => DropdownMenuItem(
-                                child: Text(
-                                  convertDate(e),
-                                  style: TextStyle(color: colors.textOnMain),
-                                ),
-                                value: e,
-                              ))
-                          .toList(),
-                      style: TextStyle(color: colors.textOnMain),
-                      isExpanded: true,
-                      iconEnabledColor: colors.textOnMain,
-                      underline: SizedBox.shrink(),
-                      isDense: true,
-                      dropdownColor: colors.main,
-                      onChanged: monthChanged,
-                    ),
-                  ),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+                child: AnimatedSwitcher(
+                  duration: panelTransition,
+                  child: this.searchMode
+                      ? Search(
+                          search: this.search,
+                        )
+                      : Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                            gradient: defaultGradient(context),
+                          ),
+                          child: DropdownButton<String>(
+                            value: selected,
+                            items: months
+                                .map((e) => DropdownMenuItem(
+                                      child: Text(
+                                        convertDate(e),
+                                        style: TextStyle(color: colors.textOnMain),
+                                      ),
+                                      value: e,
+                                    ))
+                                .toList(),
+                            style: TextStyle(color: colors.textOnMain),
+                            isExpanded: true,
+                            iconEnabledColor: colors.textOnMain,
+                            underline: SizedBox.shrink(),
+                            isDense: true,
+                            dropdownColor: colors.main,
+                            onChanged: monthChanged,
+                          ),
+                        ),
                 ),
-              ],
-            ),
+              )),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    gradient: defaultGradient(context),
+                  ),
+                  child: IconButton(
+                      onPressed: switchSearch,
+                      padding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                      iconSize: 15,
+                      splashRadius: 15,
+                      icon: FaIcon(this.searchMode ? FontAwesomeIcons.xmark : FontAwesomeIcons.magnifyingGlass, color: colors.textOnMain)),
+                ),
+              )
+            ],
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),

@@ -16,6 +16,7 @@ import 'package:spend_spent_spent/models/graphDataPoint.dart';
 import 'package:spend_spent_spent/models/leftColumnStats.dart';
 import 'package:spend_spent_spent/models/paginatedResults.dart';
 import 'package:spend_spent_spent/models/pagination.dart';
+import 'package:spend_spent_spent/models/searchParameters.dart';
 import 'package:spend_spent_spent/models/settings.dart';
 
 import 'models/config.dart';
@@ -69,6 +70,7 @@ const USER_ADD_USER = API_URL + "/User";
 const USER_DELETE_USER = API_URL + "/User/{0}";
 const CURRENCY_GET = API_URL + '/Currency/{0}/{1}';
 const CONFIG = API_ROOT + 'config';
+const SEARCH = API_URL + '/Search';
 
 const List<String> emptyList = [];
 
@@ -495,13 +497,29 @@ class Service {
     return true;
   }
 
+  Future<SearchParameters> getSearchParameters() async {
+      final response = await http.get(await this.formatUrl(SEARCH), headers: headers);
+      processResponse(response);
+      Map<String, dynamic> map = jsonDecode(response.body);
+
+      return SearchParameters.fromJson(map);
+  }
+
+  Future<Map<String, DayExpense>> search(SearchParameters params) async {
+    final response = await http.post(await this.formatUrl(SEARCH), body: jsonEncode(params), headers: headers);
+    processResponse(response);
+    Map<String, dynamic> map = jsonDecode(response.body);
+
+    return map.map((key, value) => MapEntry(key, DayExpense.fromJson(value)));
+  }
+
   void processResponse(Response response) {
     if (response.headers.containsKey("x-version")) {
       String version = response.headers['x-version']!;
       try {
         int versionInt = int.parse(version);
-        print('server version: $versionInt, required version: $MIN_BACKEND_VERSION');
         if (versionInt < MIN_BACKEND_VERSION) {
+          print('server version: $versionInt, required version: $MIN_BACKEND_VERSION');
           logout();
           throw BackendNeedUpgradeException();
         }
