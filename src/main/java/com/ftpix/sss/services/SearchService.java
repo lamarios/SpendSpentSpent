@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.jooq.impl.DSL.*;
 import static com.ftpix.sss.dsl.Tables.EXPENSE;
 
 @Service
@@ -87,7 +88,7 @@ public class SearchService {
         //TODO: handle dates
 
         if (!Strings.isNullOrEmpty(parameters.note())) {
-            conditions.add(EXPENSE.NOTE.like("%" + parameters.note() + "%"));
+            conditions.add(upper(EXPENSE.NOTE).like("%" + parameters.note().toUpperCase() + "%"));
         }
 
         Map<String, List<Expense>> grouped = expenseDao.getWhere(currentUser, new OrderField[]{EXPENSE.DATE.desc()}, conditions.toArray(new Condition[0]))
