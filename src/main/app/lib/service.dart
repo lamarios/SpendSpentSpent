@@ -497,12 +497,14 @@ class Service {
     return true;
   }
 
-  Future<SearchParameters> getSearchParameters() async {
-      final response = await http.get(await this.formatUrl(SEARCH), headers: headers);
-      processResponse(response);
-      Map<String, dynamic> map = jsonDecode(response.body);
+  Future<SearchParameters> getSearchParameters(int? categoryId) async {
+    String url = '${SEARCH}${categoryId != null ? '?category_id=' + categoryId.toString() : ''}';
+    print(url);
+    final response = await http.get(await this.formatUrl(url), headers: headers);
+    processResponse(response);
+    Map<String, dynamic> map = jsonDecode(response.body);
 
-      return SearchParameters.fromJson(map);
+    return SearchParameters.fromJson(map);
   }
 
   Future<Map<String, DayExpense>> search(SearchParameters params) async {

@@ -140,37 +140,39 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
               Expanded(
                   child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-                child: AnimatedSwitcher(
+                child: AnimatedCrossFade(
+                  sizeCurve: Curves.easeInOutQuad,
+
+                  crossFadeState: this.searchMode ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                   duration: panelTransition,
-                  child: this.searchMode
-                      ? Search(
-                          search: this.search,
-                        )
-                      : Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(25)),
-                            gradient: defaultGradient(context),
-                          ),
-                          child: DropdownButton<String>(
-                            value: selected,
-                            items: months
-                                .map((e) => DropdownMenuItem(
-                                      child: Text(
-                                        convertDate(e),
-                                        style: TextStyle(color: colors.textOnMain),
-                                      ),
-                                      value: e,
-                                    ))
-                                .toList(),
-                            style: TextStyle(color: colors.textOnMain),
-                            isExpanded: true,
-                            iconEnabledColor: colors.textOnMain,
-                            underline: SizedBox.shrink(),
-                            isDense: true,
-                            dropdownColor: colors.main,
-                            onChanged: monthChanged,
-                          ),
-                        ),
+                  firstChild: Search(
+                    search: this.search,
+                  ),
+                  secondChild: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                      gradient: defaultGradient(context),
+                    ),
+                    child: DropdownButton<String>(
+                      value: selected,
+                      items: months
+                          .map((e) => DropdownMenuItem(
+                                child: Text(
+                                  convertDate(e),
+                                  style: TextStyle(color: colors.textOnMain),
+                                ),
+                                value: e,
+                              ))
+                          .toList(),
+                      style: TextStyle(color: colors.textOnMain),
+                      isExpanded: true,
+                      iconEnabledColor: colors.textOnMain,
+                      underline: SizedBox.shrink(),
+                      isDense: true,
+                      dropdownColor: colors.main,
+                      onChanged: monthChanged,
+                    ),
+                  ),
                 ),
               )),
               Padding(

@@ -27,9 +27,15 @@ public class SearchService {
         this.expenseDao = expenseDao;
     }
 
-    public SearchParameters getSearchParameters(User currentUser) throws SQLException {
+    public SearchParameters getSearchParameters(User currentUser, Long categoryId) throws SQLException {
+
+
         List<Category> categories = categoryService.getAll(currentUser);
-        int minAmount = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.AMOUNT.asc()})
+
+        Condition categoryCondition = categoryId != null ? EXPENSE.CATEGORY_ID.eq(categoryId) : null;
+
+
+        int minAmount = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.AMOUNT.asc()}, categoryCondition)
                 .getData()
                 .stream()
                 .map(Expense::getAmount)
@@ -37,7 +43,7 @@ public class SearchService {
                 .findFirst()
                 .orElse(0);
 
-        int maxAmount = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.AMOUNT.desc()})
+        int maxAmount = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.AMOUNT.desc()}, categoryCondition)
                 .getData()
                 .stream()
                 .map(Expense::getAmount)

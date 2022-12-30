@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spend_spent_spent/components/dummies/DummySearchCategories.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
@@ -32,16 +33,20 @@ class SearchState extends State<Search> with AfterLayoutMixin {
   Debouncer debouncer = Debouncer(milliseconds: 1000);
 
   getSearchParameters() {
-    service.getSearchParameters().then((value) {
+    int? categoryId;
+    if (this.searchParameters.categories.length > 0) {
+      categoryId = this.searchParameters.categories[0].id;
+    }
+
+    service.getSearchParameters(categoryId).then((value) {
       setState(() {
-        this.searchParameters = SearchParameters(categories: [], maxAmount: value.maxAmount, minAmount: value.minAmount, note: value.note);
+        this.searchParameters = SearchParameters(categories: searchParameters.categories, maxAmount: value.maxAmount, minAmount: value.minAmount, note: searchParameters.note);
         this.searchParametersBounds = SearchParameters(categories: value.categories, maxAmount: value.maxAmount, minAmount: value.minAmount, note: "");
       });
     });
   }
 
   updateRange(RangeValues range) {
-    print(range);
     SearchParameters params = this.searchParameters;
     params.minAmount = range.start.floor();
     params.maxAmount = range.end.ceil();
@@ -67,6 +72,7 @@ class SearchState extends State<Search> with AfterLayoutMixin {
     setState(() {
       this.searchParameters = params;
       debouncer.run(() => widget.search(searchParameters));
+      getSearchParameters();
     });
   }
 
@@ -88,27 +94,32 @@ class SearchState extends State<Search> with AfterLayoutMixin {
           Row(
             children: [
               Expanded(
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                      children: searchParametersBounds.categories.map((c) {
-                    var isSelected = searchParameters.categories.length == 1 && searchParameters.categories[0].id == c.id;
-                    return GestureDetector(
-                      onTap: () => selectCategory(c),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 4.0),
-                        child: AnimatedContainer(
-                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: isSelected ? colors.main : colors.background),
-                          duration: panelTransition,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: getIcon(c.icon ?? "", color: isSelected ? colors.textOnMain : colors.main, size: 20),
+                child: AnimatedCrossFade(
+                  duration: panelTransition,
+                  crossFadeState: searchParametersBounds.categories.length == 0 ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                  firstChild: DummySearchCategories(),
+                  secondChild: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                        children: searchParametersBounds.categories.map((c) {
+                      var isSelected = searchParameters.categories.length == 1 && searchParameters.categories[0].id == c.id;
+                      return GestureDetector(
+                        onTap: () => selectCategory(c),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: AnimatedContainer(
+                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: isSelected ? colors.main : colors.background),
+                            duration: panelTransition,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: getIcon(c.icon ?? "", color: isSelected ? colors.textOnMain : colors.main, size: 20),
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  }).toList()),
+                      );
+                    }).toList()),
+                  ),
                 ),
               )
             ],

@@ -27,8 +27,8 @@ public class SearchController {
 
 
     @GetMapping
-    public SearchParameters getSearchParameters() throws SQLException {
-        return this.searchService.getSearchParameters(userService.getCurrentUser());
+    public SearchParameters getSearchParameters(@RequestParam(value = "category_id", required = false) Long categoryId) throws SQLException {
+        return this.searchService.getSearchParameters(userService.getCurrentUser(), categoryId);
     }
 
     @PostMapping
