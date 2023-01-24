@@ -31,6 +31,8 @@ class DummyFadeState extends State<DummyFade> with TickerProviderStateMixin {
       if (widget.running ?? true) {
         _controller.repeat(reverse: true);
       } else {
+        print('animation finished');
+        _controller.value = 1.0;
         _controller.stop(canceled: false);
       }
     }

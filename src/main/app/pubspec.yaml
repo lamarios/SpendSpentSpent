@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.3.1+67
+version: 1.4.0+68
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -27,27 +27,27 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: 1.0.5
-  shared_preferences: 2.0.15
+  shared_preferences: 2.0.17
   http: 0.13.5
   jwt_decoder: 2.0.1
   flutter_svg: 1.1.6
   google_fonts: 3.0.1
   after_layout: 1.2.0
   font_awesome_flutter: 10.2.1
-  carousel_slider: 4.1.1
+  carousel_slider: 4.2.1
   fbroadcast_nullsafety: 3.0.0
-  json_annotation: 4.7.0
+  json_annotation: 4.8.0
   animations: 2.0.7
-  intl: 0.17.0
+  intl: 0.18.0
   location: 4.4.0
-  flutter_platform_widgets: 2.0.0
+  flutter_platform_widgets: 2.2.5
   flutter_settings_ui: 2.0.1
   flutter_fadein: 2.0.0
-  flutter_map: 3.0.0
+  flutter_map: 3.1.0
   latlong2: 0.8.1
   fl_chart: 0.55.2
   drag_and_drop_lists: 0.3.3
-  fluttertoast: 8.1.1
+  fluttertoast: 8.1.2
   package_info_plus: 3.0.2
   random_string: 2.3.1
   tinycolor2: 3.0.1
@@ -55,9 +55,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.1.7
-  json_serializable: ^6.3.1
-  flutter_launcher_icons: ^0.10.0
+  build_runner: ^2.3.3
+  json_serializable: ^6.6.0
+  flutter_launcher_icons: ^0.11.0
 
 
 flutter_icons:

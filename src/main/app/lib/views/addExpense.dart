@@ -24,7 +24,7 @@ import 'package:spend_spent_spent/utils/debouncer.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
 
-const LOCATION_TIMEOUT = 7;
+const LOCATION_TIMEOUT = 10;
 
 class AddExpense extends StatefulWidget {
   Category category;
@@ -40,12 +40,14 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
   String valueFrom = "";
   var expenseDate = DateTime.now();
   var expenseNote = "";
+  var gettingLocation = false;
   bool useLocation = false;
   CurrencyConversion? currencyConversion;
   bool showCurrencyConversion = false;
   bool saving = false;
   Widget? savingIcon;
   List<String> noteSuggestions = [];
+  LocationData? location;
   Debouncer debouncer = Debouncer(milliseconds: 500);
 
   void getNoteSuggestions(String value) {
@@ -82,6 +84,14 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
     setState(() {
       this.useLocation = location;
     });
+
+    if (useLocation) {
+      this.getLocation().timeout(Duration(seconds: LOCATION_TIMEOUT), onTimeout: () => null).then((loc) {
+        setState(() {
+          this.location = loc;
+        });
+      });
+    }
   }
 
   void removeNumber() {
@@ -129,6 +139,9 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
   }
 
   Future<LocationData?> getLocation() async {
+    setState(() {
+      gettingLocation = true;
+    });
     Location location = new Location();
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
@@ -156,6 +169,10 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
     } catch (e) {
       print(e);
       throw Exception("Couldn't get data");
+    } finally {
+      setState(() {
+        gettingLocation = false;
+      });
     }
   }
 
@@ -186,7 +203,7 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
         savingIcon = FaIcon(FontAwesomeIcons.locationArrow, color: colors.iconOnMain, size: iconHeight, key: Key('location'));
       });
       try {
-        LocationData? locationData = await getLocation().timeout(Duration(seconds: LOCATION_TIMEOUT), onTimeout: () => null);
+        LocationData? locationData = location ?? await getLocation().timeout(Duration(seconds: LOCATION_TIMEOUT), onTimeout: () => null);
         if (locationData != null) {
           expense.latitude = locationData.latitude;
           expense.longitude = locationData.longitude;
@@ -238,7 +255,6 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
 
   @override
   Widget build(BuildContext context) {
-
     AppColors colors = get(context);
 
     return Container(
@@ -368,6 +384,7 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
                                 });
                               },
                               location: useLocation,
+                              gettingLocation: gettingLocation,
                               setLocation: setLocation,
                               currencyConversionEnabled: showCurrencyConversion,
                               enableCurrencyConversion: (enable) {
@@ -406,9 +423,17 @@ class AddExpenseState extends State<AddExpense> with AfterLayoutMixin<AddExpense
 
   @override
   Future<void> afterFirstLayout(BuildContext context) async {
-    var location = await Preferences.getBool(Preferences.EXPENSE_LOCATION);
+    var useLocation = await Preferences.getBool(Preferences.EXPENSE_LOCATION);
     setState(() {
-      useLocation = location;
+      this.useLocation = useLocation;
     });
+
+    if (useLocation) {
+      this.getLocation().timeout(Duration(seconds: LOCATION_TIMEOUT), onTimeout: () => null).then((loc) {
+        setState(() {
+          this.location = loc;
+        });
+      });
+    }
   }
 }

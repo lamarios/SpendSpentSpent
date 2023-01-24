@@ -38,113 +38,117 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
   @override
   Widget build(BuildContext context) {
     AppColors colors = get(context);
-    return Container(
-        color: Colors.transparent,
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(50.0),
-              child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: defaultBorder,
-                  ),
-                  child: Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Column(
-                        children: [
-                          Padding(padding: const EdgeInsets.all(8.0), child: getIcon('groceries_bag', size: getIconSize(context), color: colors.iconOnMain)),
-                          Visibility(
-                            visible: (kIsWeb && !kReleaseMode) || !kIsWeb,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Container(alignment: Alignment.centerLeft, child: Text('Server URL', style: TextStyle(color: colors.textOnMain))),
+    return AutofillGroup(
+      child: Container(
+          color: Colors.transparent,
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(50.0),
+                child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: defaultBorder,
+                    ),
+                    child: Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Column(
+                          children: [
+                            Padding(padding: const EdgeInsets.all(8.0), child: getIcon('groceries_bag', size: getIconSize(context), color: colors.iconOnMain)),
+                            Visibility(
+                              visible: (kIsWeb && !kReleaseMode) || !kIsWeb,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Container(alignment: Alignment.centerLeft, child: Text('Server URL', style: TextStyle(color: colors.textOnMain))),
+                              ),
                             ),
-                          ),
-                          Visibility(
-                            visible: (kIsWeb && !kReleaseMode) || !kIsWeb,
-                            child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: PlatformTextField(
-                                  showCursor: true,
-                                  controller: widget.urlController,
-                                  keyboardType: TextInputType.url,
-                                  autocorrect: false,
-                                  material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("", "https://sss-server.example.com", colors)),
-                                )),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Container(alignment: Alignment.centerLeft, child: Text('Email', style: TextStyle(color: colors.textOnMain))),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: PlatformTextField(
-                              controller: usernameController,
-                              keyboardType: TextInputType.emailAddress,
-                              autocorrect: false,
-                              material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Email", "user@example.org", colors)),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Container(alignment: Alignment.centerLeft, child: Text('Password', style: TextStyle(color: colors.textOnMain))),
-                          ),
-                          Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: PlatformTextField(
-                                controller: passwordController,
-                                obscureText: true,
-                                material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Password", "", colors)),
-                              )),
-                          Visibility(
-                            visible: widget.error.length > 0,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                  decoration: BoxDecoration(borderRadius: defaultBorder, color: Colors.red.shade400),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(widget.error),
+                            Visibility(
+                              visible: (kIsWeb && !kReleaseMode) || !kIsWeb,
+                              child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: PlatformTextField(
+                                    showCursor: true,
+                                    controller: widget.urlController,
+                                    keyboardType: TextInputType.url,
+                                    autocorrect: false,
+                                    material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("", "https://sss-server.example.com", colors)),
                                   )),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: PlatformElevatedButton(
-                                    color: colors.mainDark,
-                                      onPressed: () => widget.logIn(usernameController.text.trim(), passwordController.text.trim()), child: Text('Log in')),
-                                ),
-                              ],
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Container(alignment: Alignment.centerLeft, child: Text('Email', style: TextStyle(color: colors.textOnMain))),
                             ),
-                          ),
-                          Visibility(
-                            visible: widget.config?.allowSignup ?? false,
-                            child: TextButton(
-                                onPressed: () => widget.showSignUp(),
-                                child: Text(
-                                  'or Sign Up',
-                                  style: TextStyle(color: colors.text),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: PlatformTextField(
+                                controller: usernameController,
+                                keyboardType: TextInputType.emailAddress,
+                                autofillHints: [AutofillHints.username],
+                                autocorrect: false,
+                                material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Email", "user@example.org", colors)),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Container(alignment: Alignment.centerLeft, child: Text('Password', style: TextStyle(color: colors.textOnMain))),
+                            ),
+                            Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: PlatformTextField(
+                                  controller: passwordController,
+                                  autofillHints: [AutofillHints.password],
+                                  obscureText: true,
+                                  material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Password", "", colors)),
                                 )),
-                          ),
-                          Visibility(
-                            visible: widget.config?.canResetPassword ?? false,
-                            child: TextButton(
-                                onPressed: () => widget.showResetPassword(),
-                                child: Text(
-                                  'Forgot password ?',
-                                  style: TextStyle(color: colors.text),
-                                )),
-                          )
-                        ],
-                      ))),
-            )
-          ],
-        ));
+                            Visibility(
+                              visible: widget.error.length > 0,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                    decoration: BoxDecoration(borderRadius: defaultBorder, color: Colors.red.shade400),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(widget.error),
+                                    )),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: PlatformElevatedButton(
+                                      color: colors.mainDark,
+                                        onPressed: () => widget.logIn(usernameController.text.trim(), passwordController.text.trim()), child: Text('Log in')),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Visibility(
+                              visible: widget.config?.allowSignup ?? false,
+                              child: TextButton(
+                                  onPressed: () => widget.showSignUp(),
+                                  child: Text(
+                                    'or Sign Up',
+                                    style: TextStyle(color: colors.text),
+                                  )),
+                            ),
+                            Visibility(
+                              visible: widget.config?.canResetPassword ?? false,
+                              child: TextButton(
+                                  onPressed: () => widget.showResetPassword(),
+                                  child: Text(
+                                    'Forgot password ?',
+                                    style: TextStyle(color: colors.text),
+                                  )),
+                            )
+                          ],
+                        ))),
+              )
+            ],
+          )),
+    );
   }
 
   @override

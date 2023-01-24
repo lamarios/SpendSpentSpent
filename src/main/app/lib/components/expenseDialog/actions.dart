@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:spend_spent_spent/components/dummies/DummyFade.dart';
 import 'package:spend_spent_spent/components/expenseDialog/noteSuggestionPill.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
@@ -12,7 +13,7 @@ import 'package:spend_spent_spent/utils/dialogs.dart';
 class ExpenseActions extends StatefulWidget {
   Function setDate, setNote, setLocation, enableCurrencyConversion;
   DateTime expenseDate;
-  bool location;
+  bool location, gettingLocation;
   bool currencyConversionEnabled;
   List<String> noteSuggestions;
 
@@ -24,7 +25,8 @@ class ExpenseActions extends StatefulWidget {
       required this.setLocation,
       required this.enableCurrencyConversion,
       required this.currencyConversionEnabled,
-      required this.noteSuggestions});
+      required this.noteSuggestions,
+      required this.gettingLocation});
 
   @override
   ExpenseActionsState createState() => ExpenseActionsState();
@@ -87,11 +89,14 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
                   )),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: IconButton(
-                    onPressed: () {
-                      widget.setLocation(!widget.location);
-                    },
-                    icon: FaIcon(FontAwesomeIcons.locationArrow, color: widget.location ? colors.main : colors.text)),
+                child: DummyFade(
+                  running: widget.gettingLocation,
+                  child: IconButton(
+                      onPressed: () {
+                        widget.setLocation(!widget.location);
+                      },
+                      icon: FaIcon(FontAwesomeIcons.locationArrow, color: widget.location ? colors.main : colors.text)),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
