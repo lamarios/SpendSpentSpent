@@ -253,7 +253,7 @@ class Service {
     this.config = null;
     this.url = "";
 
-    FBroadcast.instance()?.broadcast(BROADCAST_LOGGED_OUT);
+    FBroadcast.instance().broadcast(BROADCAST_LOGGED_OUT);
   }
 
   Future<List<RecurringExpense>> getRecurringExpenses() async {

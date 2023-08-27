@@ -49,7 +49,7 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
 
   @override
   void dispose() {
-    FBroadcast.instance()?.unregister(this);
+    FBroadcast.instance().unregister(this.context);
     super.dispose();
   }
 
@@ -219,6 +219,6 @@ class RightColumnState extends State<RightColumn> with AfterLayoutMixin {
   @override
   void afterFirstLayout(BuildContext context) {
     getMonths();
-    FBroadcast.instance()?.register(BROADCAST_REFRESH_EXPENSES, (context, somethingElse) => getExpenses());
+    FBroadcast.instance().register(BROADCAST_REFRESH_EXPENSES, (context, somethingElse) => getExpenses());
   }
 }

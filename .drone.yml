@@ -1,77 +1,52 @@
 kind: pipeline
-type: ssh
-name: iOS app
-
-server:
-  host: 100.107.56.112
-  user: gz
-  password:
-    from_secret: osx-ssh-password
-
-steps:
-  - name: build app
-    environment:
-      KEYCHAIN_PASS:
-        from_secret: keychain_pass
-      PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/gz/dev/flutter/bin"
-    commands:
-      - source /Users/gz/.zshrc
-      - flutter doctor
-      - security unlock-keychain -p $${KEYCHAIN_PASS} /Users/gz/Library/Keychains/login.keychain-db
-      - cd src/main/app
-      - ./build-ios.sh
-  - name: Release iOS
-    environment:
-      FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD:
-        from_secret: fastlane_apple_application_specific_password
-      KEYCHAIN_PASS:
-        from_secret: keychain_pass
-      PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/gz/dev/flutter/bin"
-    commands:
-      - source /Users/gz/.zshrc
-      - flutter doctor
-      - security unlock-keychain -p $${KEYCHAIN_PASS} /Users/gz/Library/Keychains/login.keychain-db
-      - cd src/main/app/ios
-      - fastlane release
-    when:
-      event: tag
-trigger:
-  event:
-    - push
-    - tag
----
-kind: pipeline
-type: ssh
+type: docker
 name: Android app
-
-server:
-  host: 100.107.56.112
-  user: gz
-  password:
-    from_secret: osx-ssh-password
-
 steps:
   - name: build app
+    image: ghcr.io/cirruslabs/flutter:stable
     environment:
-      KEYCHAIN_PASS:
-        from_secret: keychain_pass
-      PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/gz/dev/flutter/bin"
+      ANDROID_KEY_FILE: /tmp/key.properties
+      SERVER_URL:
+        from_secret: server_url
     commands:
-      - source /Users/gz/.zshrc
-      - flutter doctor
-      - security unlock-keychain -p $${KEYCHAIN_PASS} /Users/gz/Library/Keychains/login.keychain-db
       - cd src/main/app
-      - flutter build appbundle
+      - wget http://$SERVER_URL/service-account.json -O /tmp/service-account.json
+      - wget http://$SERVER_URL/key.properties -O /tmp/key.properties
+      - wget http://$SERVER_URL/keystore.jks -O /tmp/keystore.jks
+      - cd ..
+      - cp -R src /tmp/build
+      - cd /tmp/build
+      - git submodule init
+      - git submodule update
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - ./submodules/flutter/bin/flutter doctor
+      - ./submodules/flutter/bin/flutter config --no-analytics
+      - ./submodules/flutter/bin/flutter pub get
+      - ./submodules/flutter/bin/flutter pub run flutter_native_splash:create
+      - ./submodules/flutter/bin/flutter build apk --split-per-abi
+      - ./submodules/flutter/bin/flutter build apk
+      - ./submodules/flutter/bin/flutter build appbundle
+      - cd /drone/src/
+      - cd src/main/app
+      - mkdir -p build/app/outputs/flutter-apk
+      - mkdir -p build/app/outputs/bundle/release
+      - cp /tmp/build/build/app/outputs/flutter-apk/* build/app/outputs/flutter-apk/
+      - cp /tmp/build/build/app/outputs/bundle/release/* build/app/outputs/bundle/release/
+      - ls build/app/outputs/flutter-apk/
+      - ls build/app/outputs/bundle/release/
   - name: Release Android
+    image: ruby
     environment:
-      KEYCHAIN_PASS:
-        from_secret: keychain_pass
-      PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/gz/dev/flutter/bin"
+      JSON_KEY_FILE: /tmp/service-account.json
+      SERVER_URL:
+        from_secret: server_url
     commands:
-      - source /Users/gz/.zshrc
-      - flutter doctor
-      - security unlock-keychain -p $${KEYCHAIN_PASS} /Users/gz/Library/Keychains/login.keychain-db
-      - cd src/main/app/android
+      - cd src/main/app
+      - wget http://$SERVER_URL/service-account.json -O /tmp/service-account.json
+      - wget http://$SERVER_URL/key.properties -O /tmp/key.properties
+      - wget http://$SERVER_URL/keystore.jks -O /tmp/keystore.jks
+      - cd android
+      - gem install fastlane
       - fastlane deploy
     when:
       event: tag
@@ -102,10 +77,10 @@ steps:
     commands:
       - id
       - cd src/main/app
-      - flutter doctor
-      - flutter pub get
-      - flutter doctor
-      - flutter build web --release
+      - ./submodules/flutter/bin/flutter doctor
+      - ./submodules/flutter/bin/flutter pub get
+      - ./submodules/flutter/bin/flutter doctor
+      - ./submodules/flutter/bin/flutter build web --release
       - cp -R build/web ../resources/public
 
   ## setting maven version if it's a new release

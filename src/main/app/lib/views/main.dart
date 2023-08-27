@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:spend_spent_spent/components/menuBar.dart';
+import 'package:spend_spent_spent/components/menuBar.dart' as mb;
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/screens/settings.dart';
 import 'package:spend_spent_spent/views/leftColumn.dart';
@@ -23,13 +23,13 @@ class MainView extends StatefulWidget {
 class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
   bool showMenuBar = false;
   CarouselController buttonCarouselController = CarouselController();
-  MenuBar? menuBar;
+  mb.MenuBar? menuBar;
   int page = 1;
 
   @override
   void afterFirstLayout(BuildContext context) {
     setState(() {
-      menuBar = MenuBar(setPage: setPage, page: page);
+      menuBar = mb.MenuBar(setPage: setPage, page: page);
       showMenuBar = true;
     });
   }
@@ -125,7 +125,7 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
             child: Container(
               width: MediaQuery.of(context).size.width,
               alignment: Alignment.center,
-              child: MenuBar(setPage: setPage, page: page),
+              child: mb.MenuBar(setPage: setPage, page: page),
             ),
             duration: panelTransition),
         Positioned(

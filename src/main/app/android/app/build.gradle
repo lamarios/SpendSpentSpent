@@ -51,7 +51,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
 
     lintOptions {
         checkReleaseBuilds false
@@ -63,8 +63,8 @@ android {
 
     defaultConfig {
         applicationId "com.spendspentspent.app"
-        minSdkVersion 16
-        targetSdkVersion 31
+        minSdkVersion 21
+        targetSdkVersion 33
         versionCode buildNumber
         versionName flutterVersionName
     }
