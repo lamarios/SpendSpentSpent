@@ -14,7 +14,7 @@ steps:
       - wget http://$SERVER_URL/key.properties -O /tmp/key.properties
       - wget http://$SERVER_URL/keystore.jks -O /tmp/keystore.jks
       - cd ..
-      - cp -R src /tmp/build
+      - cp -R app /tmp/build
       - cd /tmp/build
       - git submodule init
       - git submodule update
@@ -77,6 +77,8 @@ steps:
     commands:
       - id
       - cd src/main/app
+      - git submodule init
+      - git submodule update
       - ./submodules/flutter/bin/flutter doctor
       - ./submodules/flutter/bin/flutter pub get
       - ./submodules/flutter/bin/flutter doctor
