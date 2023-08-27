@@ -10,14 +10,14 @@ steps:
         from_secret: server_url
     commands:
       - cd src/main/app
+      - git submodule init
+      - git submodule update
       - wget http://$SERVER_URL/service-account.json -O /tmp/service-account.json
       - wget http://$SERVER_URL/key.properties -O /tmp/key.properties
       - wget http://$SERVER_URL/keystore.jks -O /tmp/keystore.jks
       - cd ..
       - cp -R app /tmp/build
       - cd /tmp/build
-      - git submodule init
-      - git submodule update
       - export PUB_CACHE=$(pwd)/.pub-cache
       - ./submodules/flutter/bin/flutter doctor
       - ./submodules/flutter/bin/flutter config --no-analytics
