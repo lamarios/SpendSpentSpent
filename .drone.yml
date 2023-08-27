@@ -15,9 +15,10 @@ steps:
       - wget http://$SERVER_URL/service-account.json -O /tmp/service-account.json
       - wget http://$SERVER_URL/key.properties -O /tmp/key.properties
       - wget http://$SERVER_URL/keystore.jks -O /tmp/keystore.jks
-      - cd ..
-      - cp -R app /tmp/build
-      - cd /tmp/build
+# might need necessary if going f-droid someday
+#      - cd ..
+#      - cp -R app /tmp/build
+#      - cd /tmp/build
       - export PUB_CACHE=$(pwd)/.pub-cache
       - ./submodules/flutter/bin/flutter doctor
       - ./submodules/flutter/bin/flutter config --no-analytics
@@ -26,12 +27,12 @@ steps:
       - ./submodules/flutter/bin/flutter build apk --split-per-abi
       - ./submodules/flutter/bin/flutter build apk
       - ./submodules/flutter/bin/flutter build appbundle
-      - cd /drone/src/
-      - cd src/main/app
-      - mkdir -p build/app/outputs/flutter-apk
-      - mkdir -p build/app/outputs/bundle/release
-      - cp /tmp/build/build/app/outputs/flutter-apk/* build/app/outputs/flutter-apk/
-      - cp /tmp/build/build/app/outputs/bundle/release/* build/app/outputs/bundle/release/
+#      - cd /drone/src/
+#      - cd src/main/app
+#      - mkdir -p build/app/outputs/flutter-apk
+#      - mkdir -p build/app/outputs/bundle/release
+#      - cp /tmp/build/build/app/outputs/flutter-apk/* build/app/outputs/flutter-apk/
+#      - cp /tmp/build/build/app/outputs/bundle/release/* build/app/outputs/bundle/release/
       - ls build/app/outputs/flutter-apk/
       - ls build/app/outputs/bundle/release/
   - name: Release Android
