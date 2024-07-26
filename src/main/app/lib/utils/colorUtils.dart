@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
+import 'package:tinycolor2/tinycolor2.dart';
 
+/*
 final Map<Brightness, AppColors> COLORS = {
   Brightness.light: AppColors(
       materialColor: Colors.blue,
@@ -45,13 +47,17 @@ final Map<Brightness, AppColors> COLORS = {
       textOnDarkMain: Colors.grey.shade400,
       cancelText: Colors.grey.shade400),
 };
+*/
 
+/*
 AppColors get(BuildContext context) {
   var brightness = MediaQuery.of(context).platformBrightness;
   return COLORS[brightness]!;
   // return COLORS[Brightness.dark]!;
 }
+*/
 
 LinearGradient defaultGradient(BuildContext context) {
-  return LinearGradient(colors: [get(context).gradientDark, get(context).main], stops: [0, 0.5], begin: Alignment.bottomCenter, end: Alignment.topRight);
+  final colors = Theme.of(context).colorScheme;
+  return LinearGradient(colors: [colors.primary.darken(10), colors.primary], stops: [0, 0.5], begin: Alignment.bottomCenter, end: Alignment.topRight);
 }

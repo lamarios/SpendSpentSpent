@@ -39,7 +39,7 @@ class Step3State extends State<Step3> {
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     return Column(
       children: [
         Row(children: [
@@ -48,12 +48,12 @@ class Step3State extends State<Step3> {
                   height: 70,
                   alignment: Alignment.centerRight,
                   decoration: BoxDecoration(
-                    color: colors.expenseInputBackground,
+                    color: colors.surface,
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Text(valueToStr(widget.amount), style: TextStyle(fontSize: 20, color: colors.expenseInput)),
+                    child: Text(valueToStr(widget.amount), style: TextStyle(fontSize: 20, color: colors.onSurface)),
                   ))),
         ]),
         KeyPad(addNumber: addNumber, removeNumber: removeNumber)

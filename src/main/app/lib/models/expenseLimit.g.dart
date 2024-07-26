@@ -8,8 +8,8 @@ part of 'expenseLimit.dart';
 
 ExpenseLimits _$ExpenseLimitsFromJson(Map<String, dynamic> json) =>
     ExpenseLimits(
-      years: json['years'] as int,
-      months: json['months'] as int,
+      years: (json['years'] as num).toInt(),
+      months: (json['months'] as num).toInt(),
     );
 
 Map<String, dynamic> _$ExpenseLimitsToJson(ExpenseLimits instance) =>

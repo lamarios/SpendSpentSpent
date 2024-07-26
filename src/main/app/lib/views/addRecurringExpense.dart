@@ -5,12 +5,11 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:spend_spent_spent/components/addRecurringExpenseDialog/step1.dart';
 import 'package:spend_spent_spent/components/addRecurringExpenseDialog/step2.dart';
 import 'package:spend_spent_spent/components/addRecurringExpenseDialog/step3.dart';
-import 'package:spend_spent_spent/components/switcher.dart';
+import 'package:spend_spent_spent/utils/views/components/switcher.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
-import 'package:spend_spent_spent/models/category.dart';
+import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:spend_spent_spent/models/recurringExpense.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class AddRecurringExpenseDialog extends StatefulWidget {
   Function refreshRecurringExpenses;
@@ -142,7 +141,7 @@ class AddRecurringExpenseDialogState extends State<AddRecurringExpenseDialog> wi
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
 
     return Container(
       child: Visibility(
@@ -169,7 +168,7 @@ class AddRecurringExpenseDialogState extends State<AddRecurringExpenseDialog> wi
                     onPressed: () => backward(context),
                     child: PlatformText(
                       step == 0 ? 'Cancel' : 'Back',
-                      style: TextStyle(color: colors.cancelText),
+                      style: TextStyle(color: colors.secondary),
                     ),
                   ),
                   PlatformDialogAction(

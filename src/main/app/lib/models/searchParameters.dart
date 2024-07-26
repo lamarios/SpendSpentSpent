@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'category.dart';
+import '../categories/models/category.dart';
 
 part 'searchParameters.g.dart';
 

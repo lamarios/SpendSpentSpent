@@ -44,7 +44,7 @@ class ChangePasswordDialogState extends State<ChangePasswordDialog> with AfterLa
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -72,12 +72,12 @@ class ChangePasswordDialogState extends State<ChangePasswordDialog> with AfterLa
                 },
                 child: PlatformText(
                   'Cancel',
-                  style: TextStyle(color: colors.text),
+                  style: TextStyle(),
                 ),
               ),
               PlatformDialogAction(
                 onPressed: passwordController.text.trim().length > 0 ? () => savePassword(context) : null,
-                child: PlatformText('Save', style: TextStyle(color: colors.main)),
+                child: PlatformText('Save', style: TextStyle(color: colors.primary)),
               )
             ],
           )

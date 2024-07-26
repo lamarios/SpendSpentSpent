@@ -15,7 +15,7 @@ class EditProfile extends StatefulWidget {
   EditProfileState createState() => EditProfileState();
 }
 
-class EditProfileState extends State<EditProfile> with AfterLayoutMixin{
+class EditProfileState extends State<EditProfile> with AfterLayoutMixin {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   bool canSave = false;
@@ -37,12 +37,19 @@ class EditProfileState extends State<EditProfile> with AfterLayoutMixin{
     widget.onProfileSaved();
 
     await Fluttertoast.showToast(
-        msg: "Profile saved", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.green, textColor: Colors.white, fontSize: 16.0);
+        msg: "Profile saved",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   valueChanged() {
     setState(() {
-      canSave = lastNameController.text.trim().length > 0 && firstNameController.text.trim().length > 0;
+      canSave = lastNameController.text.trim().length > 0 &&
+          firstNameController.text.trim().length > 0;
     });
   }
 
@@ -70,12 +77,10 @@ class EditProfileState extends State<EditProfile> with AfterLayoutMixin{
               child: Row(
                 children: [
                   Expanded(
-                    child: PlatformElevatedButton(
+                    child: FilledButton.tonal(
                       onPressed: !canSave ? null : savePassword,
-                      color: Theme.of(context).primaryColorDark,
-                      child: PlatformText(
+                      child: Text(
                         'Save',
-                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   )

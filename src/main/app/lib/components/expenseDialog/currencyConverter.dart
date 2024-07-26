@@ -83,11 +83,11 @@ class CurrencyConverterState extends State<CurrencyConverter> with AfterLayoutMi
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     // TODO: implement build
     return Container(
         height: 70,
-        color: colors.expenseInputBackground,
+        color: colors.surfaceContainer,
         alignment: Alignment.centerRight,
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -100,16 +100,16 @@ class CurrencyConverterState extends State<CurrencyConverter> with AfterLayoutMi
                     DropdownButton(
                         value: fromCurrency,
                         onChanged: changeFromCurrency,
-                        dropdownColor: colors.background,
+                        dropdownColor: colors.surface,
                         items: CURRENCIES.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                               value: value,
                               child: Text(
                                 value,
-                                style: TextStyle(color: colors.expenseInput),
+                                style: TextStyle(color: colors.onSurface),
                               ));
                         }).toList()),
-                    Text('${widget.valueToStr(widget.valueFrom)}', style: TextStyle(fontSize: 20, color: colors.expenseInput)),
+                    Text('${widget.valueToStr(widget.valueFrom)}', style: TextStyle(fontSize: 20, color: colors.onSurface)),
                   ],
                 ),
               ),
@@ -119,17 +119,17 @@ class CurrencyConverterState extends State<CurrencyConverter> with AfterLayoutMi
                   children: [
                     DropdownButton(
                         value: toCurrency,
-                        dropdownColor: colors.background,
+                        dropdownColor: colors.surface,
                         onChanged: changeToCurrency,
                         items: CURRENCIES.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                               value: value,
                               child: Text(
                                 value,
-                                style: TextStyle(color: colors.expenseInput),
+                                style: TextStyle(color: colors.onSurface),
                               ));
                         }).toList()),
-                    Text('${widget.valueToStr(widget.value)}', style: TextStyle(fontSize: 20, color: colors.expenseInput)),
+                    Text('${widget.valueToStr(widget.value)}', style: TextStyle(fontSize: 20, color: colors.onSurface)),
                   ],
                 ),
               ),

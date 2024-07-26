@@ -13,7 +13,7 @@ Config _$ConfigFromJson(Map<String, dynamic> json) => Config(
       canResetPassword: json['canResetPassword'] as bool,
       hasSubscription: json['hasSubscription'] as bool,
       minAppVersion: json['minAppVersion'] as String?,
-      backendVersion: json['backendVersion'] as int,
+      backendVersion: (json['backendVersion'] as num).toInt(),
       canConvertCurrency: json['canConvertCurrency'] as bool,
       convertCurrencyQuota: json['convertCurrencyQuota'] as String,
     );

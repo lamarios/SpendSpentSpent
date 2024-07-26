@@ -7,16 +7,6 @@
 
 let
  aliases = [
-         {
-             name = "build-runner";
-             command = "dart run build_runner build --delete-conflicting-outputs";
-             description = "Run code generation once";
-         }
-         {
-             name = "build-runner-watch";
-             command = "dart run build_runner watch --delete-conflicting-outputs";
-             description = "Watch for changes and run code generation";
-         }
      ];
 
 
@@ -35,17 +25,14 @@ pkgs.mkShell {
   git submodule init
   git submodule update
 
-  echo "Setting up pre-commit hook"
-  dart run tools/setup_git_hooks.dart
+# echo "Setting up pre-commit hook"
+#  dart run tools/setup_git_hooks.dart
 
   "Adding flutter submodule to path"
   export PATH="./submodules/flutter/bin:$PATH"
 
   echo "creating useful aliases..."
 
-  ''+
-  pkgs.lib.concatStrings (map (x: ''alias ${x.name}="${x.command}";'') aliases)
-  +''
   echo -e "\nAll done 🎉 \nAvailable aliases:"
   ''+
           pkgs.lib.concatStrings (map (x: ''echo "${x.name}: ${x.description}";'') aliases);

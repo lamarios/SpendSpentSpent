@@ -4,6 +4,6 @@ export PATH := $(shell pwd)/submodules/flutter/bin:$(PATH)
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
 
 build-runner:
-	dart run build_runner build --delete-conflicting-outputs
+	dart run build_runner build --delete-conflicting-outputs lib
 build-runner-watch:
-	dart run build_runner watch --delete-conflicting-outputs
+	dart run build_runner watch --delete-conflicting-outputs lib

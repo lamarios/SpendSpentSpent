@@ -9,12 +9,11 @@ import 'package:spend_spent_spent/components/dummies/dummySearchCategories.dart'
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
-import 'package:spend_spent_spent/models/category.dart';
+import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:spend_spent_spent/models/searchParameters.dart';
 
 import '../../utils/colorUtils.dart';
 import '../../utils/debouncer.dart';
-import '../../views/login.dart';
 
 class Search extends StatefulWidget {
   Function search;
@@ -87,7 +86,7 @@ class SearchState extends State<Search> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     return Container(
       child: Column(
         children: [
@@ -109,11 +108,11 @@ class SearchState extends State<Search> with AfterLayoutMixin {
                         child: Padding(
                           padding: const EdgeInsets.only(right: 4.0),
                           child: AnimatedContainer(
-                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: isSelected ? colors.main : colors.background),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: isSelected ? colors.primary : colors.background),
                             duration: panelTransition,
                             child: Padding(
                               padding: const EdgeInsets.all(4.0),
-                              child: getIcon(c.icon ?? "", color: isSelected ? colors.textOnMain : colors.main, size: 20),
+                              child: getIcon(c.icon ?? "", color: isSelected ? colors.onPrimaryContainer : colors.primary, size: 20),
                             ),
                           ),
                         ),
@@ -125,7 +124,7 @@ class SearchState extends State<Search> with AfterLayoutMixin {
             ],
           ),
           Row(children: [
-            Container(width: iconWidth, child: FaIcon(FontAwesomeIcons.dollarSign, color: colors.main)),
+            Container(width: iconWidth, child: FaIcon(FontAwesomeIcons.dollarSign, color: colors.primary)),
             Expanded(
               child: RangeSlider(
                 values: RangeValues(this.searchParameters.minAmount.toDouble(), this.searchParameters.maxAmount.toDouble()),
@@ -139,7 +138,7 @@ class SearchState extends State<Search> with AfterLayoutMixin {
           ]),
           Row(
             children: [
-              Container(width: iconWidth, child: FaIcon(FontAwesomeIcons.commentDots, color: colors.main)),
+              Container(width: iconWidth, child: FaIcon(FontAwesomeIcons.commentDots, color: colors.primary)),
               Expanded(
                   child: PlatformTextField(
                 controller: noteController,

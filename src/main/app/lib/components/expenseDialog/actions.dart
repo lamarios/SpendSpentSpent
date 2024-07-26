@@ -1,17 +1,17 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/components/dummies/DummyFade.dart';
 import 'package:spend_spent_spent/components/expenseDialog/noteSuggestionPill.dart';
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 
 class ExpenseActions extends StatefulWidget {
-  Function setDate, setNote, setLocation, enableCurrencyConversion;
+  final Function(DateTime date) setDate;
+  final Function(String note) setNote;
+  final Function(bool enable) enableCurrencyConversion;
+  final Function(bool set) setLocation;
   DateTime expenseDate;
   bool location, gettingLocation;
   bool currencyConversionEnabled;
@@ -32,14 +32,19 @@ class ExpenseActions extends StatefulWidget {
   ExpenseActionsState createState() => ExpenseActionsState();
 }
 
-class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<ExpenseActions> {
+class ExpenseActionsState extends State<ExpenseActions>
+    with AfterLayoutMixin<ExpenseActions> {
   var expenseDate = DateTime.now();
   var location = false;
   var showCurrencyConversion = false;
   var noteController = TextEditingController();
 
   Future<void> selectDate() async {
-    var date = await showDatePicker(context: context, initialDate: widget.expenseDate, firstDate: DateTime(1900), lastDate: DateTime(2100));
+    var date = await showDatePicker(
+        context: context,
+        initialDate: widget.expenseDate,
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2100));
 
     widget.setDate(date ?? widget.expenseDate);
   }
@@ -61,7 +66,8 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
   }
 
   void showNoteDialog(BuildContext context) {
-    showPromptDialog(context, 'Expense note', "Something about this expense", noteController, () {});
+    showPromptDialog(context, 'Expense note', "Something about this expense",
+        noteController, () {});
   }
 
   void tapSuggestion(String text) {
@@ -72,7 +78,7 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
   @override
   Widget build(BuildContext context) {
     print(service.config?.canConvertCurrency);
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     // TODO: implement build
     return Column(
       children: [
@@ -84,8 +90,10 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
                   // style: flatButtonStyle,
                   onPressed: selectDate,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 4),
-                    child: Text(DateFormat('yyyy-MM-dd').format(widget.expenseDate)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 5.0, vertical: 4),
+                    child: Text(
+                        DateFormat('yyyy-MM-dd').format(widget.expenseDate)),
                   )),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -95,24 +103,42 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
                       onPressed: () {
                         widget.setLocation(!widget.location);
                       },
-                      icon: FaIcon(FontAwesomeIcons.locationArrow, color: widget.location ? colors.main : colors.text)),
+                      icon: FaIcon(FontAwesomeIcons.locationArrow,
+                          color: widget.location
+                              ? colors.primary
+                              : colors.onSurface)),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: AnimatedContainer(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-                      color: widget.noteSuggestions.isEmpty ? colors.dialogBackground : colors.expenseInputBackground,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15)),
+                      color: widget.noteSuggestions.isEmpty
+                          ? colors.surfaceContainer
+                          : colors.surface,
                     ),
-                    duration: Duration(milliseconds: panelTransition.inMilliseconds ~/ 2),
-                    child: IconButton(onPressed: () => showNoteDialog(context), icon: FaIcon(FontAwesomeIcons.commentDots, color: noteController.text.length > 0 ? colors.main : colors.text))),
+                    duration: Duration(
+                        milliseconds: panelTransition.inMilliseconds ~/ 2),
+                    child: IconButton(
+                        onPressed: () => showNoteDialog(context),
+                        icon: FaIcon(FontAwesomeIcons.commentDots,
+                            color: noteController.text.length > 0
+                                ? colors.primary
+                                : colors.onSurface))),
               ),
               Visibility(
                 visible: service.config?.canConvertCurrency ?? false,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10, right: 0),
-                  child: IconButton(onPressed: enableCurrencyConversion, icon: FaIcon(FontAwesomeIcons.dollarSign, color: widget.currencyConversionEnabled ? colors.main : colors.text)),
+                  child: IconButton(
+                      onPressed: enableCurrencyConversion,
+                      icon: FaIcon(FontAwesomeIcons.dollarSign,
+                          color: widget.currencyConversionEnabled
+                              ? colors.primary
+                              : colors.onSurface)),
                 ),
               ),
             ],
@@ -130,7 +156,7 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
                       height: 50,
                       decoration: BoxDecoration(
                         borderRadius: defaultBorder,
-                        color: colors.expenseInputBackground,
+                        color: colors.surface,
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -138,7 +164,12 @@ class ExpenseActionsState extends State<ExpenseActions> with AfterLayoutMixin<Ex
                           physics: BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            children: widget.noteSuggestions.map((e) => NoteSuggestionPill(key: Key(e), text: e, tapSuggestion: tapSuggestion)).toList(),
+                            children: widget.noteSuggestions
+                                .map((e) => NoteSuggestionPill(
+                                    key: Key(e),
+                                    text: e,
+                                    tapSuggestion: tapSuggestion))
+                                .toList(),
                           ),
                         ),
                       ),

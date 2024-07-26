@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/components/dummies/dummyExpense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
@@ -11,7 +12,7 @@ class DummyDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     double total = 0;
     List<Widget> widgets = [
       Container(
@@ -19,14 +20,14 @@ class DummyDay extends StatelessWidget {
         height: 10,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(25)),
-          color: colors.dummy,
+          color: colors.surfaceContainer,
         ),
       ),
     ];
 
     List<Widget> wrap = [];
     for (int i = 0; i < expenses; i++) {
-      wrap.add(DummyExpense(expenses * 10 + 100));
+      wrap.add(DummyExpense(width: expenses * 10 + 100));
     }
 
     widgets.add(Padding(
@@ -40,7 +41,7 @@ class DummyDay extends StatelessWidget {
         height: 10,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(25)),
-          color: colors.dummy,
+          color: colors.surfaceContainer,
         ),
       ),
     );

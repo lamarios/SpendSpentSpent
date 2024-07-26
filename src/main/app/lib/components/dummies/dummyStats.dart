@@ -8,7 +8,7 @@ import 'package:spend_spent_spent/utils/colorUtils.dart';
 class DummyStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     // TODO: implement build
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
@@ -21,13 +21,13 @@ class DummyStats extends StatelessWidget {
                 child: FaIcon(
                   FontAwesomeIcons.chevronRight,
                   size: 10,
-                  color: colors.dummy,
+                  color: colors.surfaceContainer,
                 ),
               ),
               Spacer(),
               Text(
                 '0.00',
-                style: TextStyle(color: colors.dummy),
+                style: TextStyle(color: colors.surfaceContainer),
               ),
             ],
           ),
@@ -36,7 +36,7 @@ class DummyStats extends StatelessWidget {
             child: Container(
               alignment: Alignment.topLeft,
               height: 10,
-              decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: colors.dummy),
+              decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: colors.surfaceContainer),
             ),
           )
         ],

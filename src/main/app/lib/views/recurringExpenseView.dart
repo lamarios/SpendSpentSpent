@@ -28,11 +28,11 @@ class RecurringExpenseView extends StatefulWidget {
 class RecurringExpenseViewState extends State<RecurringExpenseView> with AfterLayoutMixin {
   TextEditingController nameController = TextEditingController(text: '');
 
-  Widget getRepeatedIcon(AppColors colors) {
+  Widget getRepeatedIcon(ColorScheme colors) {
     List<Widget> icons = [];
 
     for (int i = 0; i < 150; i++) {
-      icons.add(getIcon(widget.expense.category.icon!, color: colors.text, size: 40));
+      icons.add(getIcon(widget.expense.category.icon!, color: colors.onSurface, size: 40));
     }
 
     return Opacity(
@@ -55,7 +55,7 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> with AfterLa
   }
 
   deleteExpense(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     showPlatformDialog(
       context: context,
       builder: (_) => PlatformAlertDialog(
@@ -66,7 +66,7 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> with AfterLa
             onPressed: () => Navigator.pop(context),
             child: PlatformText(
               'Cancel',
-              style: TextStyle(color: colors.cancelText),
+              style: TextStyle(color: colors.secondary),
             ),
           ),
           PlatformDialogAction(
@@ -85,7 +85,7 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> with AfterLa
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     return Stack(
       children: [
         Positioned(
@@ -109,7 +109,7 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> with AfterLa
                       padding: const EdgeInsets.symmetric(horizontal: 15.0),
                       child: FaIcon(
                         FontAwesomeIcons.pencilAlt,
-                        color: colors.text,
+                        color: colors.onSurface,
                       ),
                     ),
                   ),
@@ -147,7 +147,7 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> with AfterLa
                       padding: const EdgeInsets.all(8.0),
                       child: FaIcon(
                         FontAwesomeIcons.times,
-                        color: colors.text,
+                        color: colors.onSurface,
                         size: 15,
                       ),
                     ),
@@ -165,8 +165,8 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> with AfterLa
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                child: getIcon(widget.expense.category.icon!, color: colors.iconOnMain, size: 50),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: colors.main),
+                child: getIcon(widget.expense.category.icon!, color: colors.onPrimaryContainer, size: 50),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: colors.primaryContainer),
                 width: 100,
                 alignment: Alignment.center,
                 height: 100,
@@ -182,7 +182,7 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> with AfterLa
                     ),
                     child: Text(
                       widget.expense.name,
-                      style: TextStyle(fontSize: 50, color: colors.main, fontWeight: FontWeight.w300),
+                      style: TextStyle(fontSize: 50, color: colors.primary, fontWeight: FontWeight.w300),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -199,7 +199,7 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> with AfterLa
                     padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
                     child: Text(
                       formatCurrency(widget.expense.amount),
-                      style: TextStyle(fontSize: 50, color: colors.text, fontWeight: FontWeight.w300),
+                      style: TextStyle(fontSize: 50, color: colors.onSurface, fontWeight: FontWeight.w300),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -209,7 +209,7 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> with AfterLa
                 padding: const EdgeInsets.only(bottom: 0.0),
                 child: Container(
                   width: 300,
-                  decoration: BoxDecoration(borderRadius: defaultBorder, color: colors.announcement),
+                  decoration: BoxDecoration(borderRadius: defaultBorder, color: colors.tertiaryContainer),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
                     child: Column(
@@ -217,11 +217,11 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> with AfterLa
                         Visibility(
                             visible: widget.expense.lastOccurrence != null,
                             child: Text('Last: ' + (widget.expense.lastOccurrence ?? ''),
-                                textAlign: TextAlign.center, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w300, color: colors.announcementText))),
+                                textAlign: TextAlign.center, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w300, color: colors.onTertiaryContainer))),
                         Visibility(
                             visible: widget.expense.nextOccurrence != null,
                             child: Text('Next: ' + (widget.expense.nextOccurrence ?? ''),
-                                textAlign: TextAlign.center, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w300, color: colors.announcementText))),
+                                textAlign: TextAlign.center, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w300, color: colors.onTertiaryContainer))),
                       ],
                     ),
                   ),

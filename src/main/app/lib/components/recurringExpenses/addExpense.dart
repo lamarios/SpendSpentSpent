@@ -24,7 +24,7 @@ class AddExpense extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 8.0),
       child: GestureDetector(
@@ -33,10 +33,10 @@ class AddExpense extends StatelessWidget {
         child: Container(
           height: 40,
           alignment: Alignment.center,
-          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), border: Border.all(width: 3, color: colors.main.withOpacity(0.5))),
+          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), border: Border.all(width: 3, color: colors.primary.withOpacity(0.5))),
           child: FaIcon(
             FontAwesomeIcons.plus,
-            color: colors.main.withOpacity(0.5),
+            color: colors.primary.withOpacity(0.5),
           ),
         ),
       ),

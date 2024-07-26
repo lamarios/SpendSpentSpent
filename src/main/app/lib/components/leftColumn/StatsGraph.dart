@@ -35,19 +35,19 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
 
   bool loadingFirst = true;
   List<FlSpot> graphData = [
-    FlSpot(0, 0),
-    FlSpot(1, 0),
-    FlSpot(2, 0),
-    FlSpot(3, 0),
-    FlSpot(4, 0),
+    const FlSpot(0, 0),
+    const FlSpot(1, 0),
+    const FlSpot(2, 0),
+    const FlSpot(3, 0),
+    const FlSpot(4, 0),
   ];
 
   List<FlSpot> avgData = [
-    FlSpot(0, 0),
-    FlSpot(1, 0),
-    FlSpot(2, 0),
-    FlSpot(3, 0),
-    FlSpot(4, 0),
+    const FlSpot(0, 0),
+    const FlSpot(1, 0),
+    const FlSpot(2, 0),
+    const FlSpot(3, 0),
+    const FlSpot(4, 0),
   ];
 
   List<GraphDataPoint> graphDataPoints = [
@@ -89,7 +89,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
   }
 
   Future<void> getGraphData() async {
-    this.getLimits().then((value) async {
+    getLimits().then((value) async {
       List<GraphDataPoint> data = [];
       if (widget.monthly) {
         data = await service.getMonthlyData(widget.categoryId, count);
@@ -131,7 +131,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
   }
 
   LineChartData getData(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     return LineChartData(
       lineTouchData: LineTouchData(
           touchTooltipData: LineTouchTooltipData(
@@ -149,22 +149,22 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
         drawVerticalLine: true,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: colors.textOnMain.withOpacity(0.075),
+            color: colors.onPrimaryContainer.withOpacity(0.075),
             strokeWidth: 1,
           );
         },
         getDrawingVerticalLine: (value) {
           return FlLine(
-            color: colors.textOnMain.withOpacity(0.075),
+            color: colors.onPrimaryContainer.withOpacity(0.075),
             strokeWidth: 1,
           );
         },
       ),
       titlesData: FlTitlesData(
         show: true,
-        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         // rightTitles: SideTitles(showTitles: false),
-        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         // topTitles: SideTitles(showTitles: false),
         bottomTitles: AxisTitles(
             sideTitles: SideTitles(
@@ -172,16 +172,16 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                 reservedSize: 35,
                 getTitlesWidget: (value, meta) {
                   var style = TextStyle(
-                    color: colors.textOnMain,
+                    color: colors.onPrimaryContainer,
                     fontWeight: FontWeight.bold,
                     fontSize: 10,
                   );
 
                   if (value == value.roundToDouble()) {
                     return Padding(
-                        padding: EdgeInsets.only(top: 12), child: RotationTransition(turns: AlwaysStoppedAnimation(-45 / 360), child: Text(graphDataPoints[value.toInt()].date, style: style)));
+                        padding: const EdgeInsets.only(top: 12), child: RotationTransition(turns: const AlwaysStoppedAnimation(-45 / 360), child: Text(graphDataPoints[value.toInt()].date, style: style)));
                   } else {
-                    return Text('');
+                    return const Text('');
                   }
                 })),
         leftTitles: AxisTitles(
@@ -190,14 +190,14 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                 reservedSize: 50,
                 getTitlesWidget: (value, meta) {
                   var style = TextStyle(
-                    color: colors.textOnMain,
+                    color: colors.onPrimaryContainer,
                     fontWeight: FontWeight.bold,
                     fontSize: 10,
                   );
                   return Text(formatCurrency(value), style: style);
                 })),
       ),
-      borderData: FlBorderData(show: true, border: Border.all(color: colors.textOnMain.withOpacity(0.3), width: 1)),
+      borderData: FlBorderData(show: true, border: Border.all(color: colors.onPrimaryContainer.withOpacity(0.3), width: 1)),
       minX: 0,
       minY: this.minValue,
       maxY: this.maxValue,
@@ -206,29 +206,29 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
           isStrokeJoinRound: true,
           spots: avgData,
           isCurved: false,
-          color: colors.textOnMain.withOpacity(0.5),
+          color: colors.onPrimaryContainer.withOpacity(0.5),
           barWidth: AVG_BAR_WIDTH,
           isStrokeCapRound: true,
-          dotData: FlDotData(
+          dotData: const FlDotData(
             show: false,
           ),
           belowBarData: BarAreaData(
             show: false,
-            color: colors.textOnMain.withOpacity(0.2),
+            color: colors.onPrimaryContainer.withOpacity(0.2),
           ),
         ),
         LineChartBarData(
           spots: graphData,
           isCurved: false,
-          color: colors.textOnMain,
+          color: colors.onPrimaryContainer,
           barWidth: 2,
           isStrokeCapRound: true,
-          dotData: FlDotData(
+          dotData: const FlDotData(
             show: false,
           ),
           belowBarData: BarAreaData(
             show: true,
-            color: colors.textOnMain.withOpacity(0.2),
+            color: colors.onPrimaryContainer.withOpacity(0.2),
           ),
         ),
       ],
@@ -255,7 +255,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     return Column(
       children: [
         Row(
@@ -272,7 +272,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                       padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
                       child: FaIcon(
                         FontAwesomeIcons.xmark,
-                        color: colors.textOnMain,
+                        color: colors.onPrimaryContainer,
                         size: 20,
                       ),
                     )),
@@ -289,7 +289,7 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
             switchInCurve: Curves.easeInOutQuart,
             switchOutCurve: Curves.easeInOutQuart,
             child: loadingFirst
-                ? DummyFade(child: FaIcon(FontAwesomeIcons.chartLine, color: colors.mainDark, size: 90, key: Key('loading')))
+                ? DummyFade(child: FaIcon(FontAwesomeIcons.chartLine, color: colors.onPrimaryContainer, size: 90, key: const Key('loading')))
                 : Column(
                     children: [
                       Expanded(
@@ -302,8 +302,8 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                         )),
                       )),
                       Container(
-                        child: Text(getLabel(), style: TextStyle(color: colors.textOnMain)),
                         alignment: Alignment.center,
+                        child: Text(getLabel(), style: TextStyle(color: colors.onPrimaryContainer)),
                       ),
                       Slider.adaptive(
                         min: 1,
@@ -311,9 +311,9 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                         divisions: this.periodMax - 1,
                         onChangeEnd: (p0) => this.changeCount(p0.toInt()),
                         value: count.toDouble(),
-                        activeColor: colors.textOnMain,
-                        inactiveColor: colors.mainDark,
-                        thumbColor: colors.main.lighten(10),
+                        activeColor: colors.onPrimaryContainer,
+                        inactiveColor: colors.secondaryContainer,
+                        thumbColor: colors.primary.lighten(10),
                         onChanged: (double) {
                           setState(() {
                             if (double >= MIN_PERIOD) {

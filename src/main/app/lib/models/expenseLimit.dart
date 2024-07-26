@@ -1,4 +1,4 @@
-import 'package:spend_spent_spent/models/category.dart';
+import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'expenseLimit.g.dart';

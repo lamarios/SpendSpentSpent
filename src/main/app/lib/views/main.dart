@@ -11,10 +11,10 @@ import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/screens/settings.dart';
 import 'package:spend_spent_spent/views/leftColumn.dart';
 import 'package:spend_spent_spent/views/middleColumn.dart';
-import 'package:spend_spent_spent/views/rigtColumn.dart';
+import 'package:spend_spent_spent/expenses/views/screens/right_column.dart';
 
 class MainView extends StatefulWidget {
-  MainView() : super();
+  const MainView({super.key});
 
   @override
   _MainViewState createState() => _MainViewState();
@@ -48,10 +48,6 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   double columnMaxWidth(MediaQueryData data) {
     if (isTablet(data)) {
@@ -69,7 +65,7 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
 
     return Stack(
       children: [
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Padding(
             padding: const EdgeInsets.only(bottom: 67.0),
@@ -83,7 +79,7 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
                   child: Column(
                     children: [
                       Expanded(
-                        child: FadeIn(duration: panelTransition, child: LeftColumn()),
+                        child: FadeIn(duration: panelTransition, child: LeftColumnTab()),
                       ),
                     ],
                   ),
@@ -95,7 +91,7 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
                   child: Column(
                     children: [
                       Expanded(
-                        child: FadeIn(duration: panelTransition, child: MiddleColumn()),
+                        child: FadeIn(duration: panelTransition, child: MiddleColumnTab()),
                       ),
                     ],
                   ),
@@ -104,10 +100,10 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
                   width: columnWidth,
                   duration: panelTransition,
                   curve: Curves.easeInOutQuart,
-                  child: Column(
+                  child: const Column(
                     children: [
                       Expanded(
-                        child: FadeIn(duration: panelTransition, child: RightColumn()),
+                        child: FadeIn(duration: panelTransition, child: RightColumnTab()),
                       ),
                     ],
                   ),
@@ -122,12 +118,12 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
             left: 0,
             right: 0,
             curve: Curves.easeInOutQuart,
+            duration: panelTransition,
             child: Container(
               width: MediaQuery.of(context).size.width,
               alignment: Alignment.center,
               child: mb.MenuBar(setPage: setPage, page: page),
-            ),
-            duration: panelTransition),
+            )),
         Positioned(
             bottom: 10,
             right: 10,

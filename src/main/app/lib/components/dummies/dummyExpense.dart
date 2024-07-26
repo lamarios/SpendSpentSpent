@@ -1,18 +1,15 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
-import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
+import 'package:flutter/material.dart';
 
 class DummyExpense extends StatelessWidget {
-  double width;
-  DummyExpense(this.width);
+  final double width;
 
-  Random rand = Random();
+  const DummyExpense({super.key, required this.width});
+
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -21,8 +18,8 @@ class DummyExpense extends StatelessWidget {
           width: width,
           height: 35,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(25)),
-            color: colors.dummy,
+            borderRadius: const BorderRadius.all(Radius.circular(25)),
+            color: colors.surfaceContainer,
           ),
         ),
       ],

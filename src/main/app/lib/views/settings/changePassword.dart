@@ -35,14 +35,16 @@ class ChangePasswordState extends State<ChangePassword> {
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.green,
         textColor: Colors.white,
-        fontSize: 16.0
-    );
+        fontSize: 16.0);
   }
 
   valueChanged() {
     setState(() {
-      invalid = (passwordRepeatController.text.trim().length > 0 && passwordRepeatController.text.trim() != passwordController.text.trim());
-      canSave = passwordRepeatController.text.trim().length > 0 && passwordController.text.trim().length > 0;
+      invalid = (passwordRepeatController.text.trim().length > 0 &&
+          passwordRepeatController.text.trim() !=
+              passwordController.text.trim());
+      canSave = passwordRepeatController.text.trim().length > 0 &&
+          passwordController.text.trim().length > 0;
     });
   }
 
@@ -78,12 +80,10 @@ class ChangePasswordState extends State<ChangePassword> {
               child: Row(
                 children: [
                   Expanded(
-                    child: PlatformElevatedButton(
+                    child: FilledButton.tonal(
                       onPressed: invalid || !canSave ? null : savePassword,
-                      color: Theme.of(context).primaryColorDark,
-                      child: PlatformText(
+                      child: Text(
                         'Save',
-                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   )

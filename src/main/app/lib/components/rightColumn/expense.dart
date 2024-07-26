@@ -14,38 +14,29 @@ import 'package:spend_spent_spent/utils/colorUtils.dart';
 const double MAP_HEIGHT = 200;
 const double NOTE_HEIGHT = 30;
 
-class OneExpense extends StatefulWidget {
-  Expense expense;
-  Function showExpense;
-  Key? key;
+class OneExpense extends StatelessWidget {
+  final Expense expense;
+  final Function(Expense expense) showExpense;
 
-  OneExpense({this.key, required this.showExpense, required this.expense});
-
-  @override
-  OneExpenseState createState() => OneExpenseState();
-}
-
-class OneExpenseState extends State<OneExpense> with AfterLayoutMixin {
-  Offset offset = Offset(-3, 0);
-  double opacity = 0;
+  const OneExpense(
+      {super.key, required this.showExpense, required this.expense});
 
   openContainer() {
-    widget.showExpense(widget.expense);
+    showExpense(expense);
   }
 
   bool hasNote() {
-    return (widget.expense.note?.length ?? 0) > 0;
+    return (expense.note?.length ?? 0) > 0;
   }
 
   bool hasLocation() {
-    return widget.expense.longitude != 0 && widget.expense.latitude != 0;
+    return expense.longitude != 0 && expense.latitude != 0;
   }
 
   @override
   Widget build(BuildContext context) {
-    bool hasExtra = hasLocation() || hasNote() || widget.expense.type == 2;
 
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: openContainer,
       child: Row(
@@ -53,119 +44,68 @@ class OneExpenseState extends State<OneExpense> with AfterLayoutMixin {
         children: [
           Container(
             alignment: Alignment.center,
-            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: colors.mainDark),
-            child: Stack(
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(25)),
+                color: colors.secondaryContainer),
+            child: Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      getIcon(widget.expense.category.icon!, size: 20, color: colors.iconOnMain),
-                      Padding(
-                        padding: EdgeInsets.only(right: hasExtra ? 24 : 16),
-                        child: Text(
-                          formatCurrency(widget.expense.amount),
-                          style: TextStyle(color: colors.textOnMain),
-                        ),
-                      ),
-                      Visibility(
-                          visible: hasLocation(),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: AnimatedOpacity(
-                              duration: panelTransition,
-                              opacity: opacity,
-                              child: AnimatedSlide(
-                                duration: panelTransition,
-                                curve: Curves.easeInOutQuart,
-                                offset: offset,
-                                child: FaIcon(
-                                  FontAwesomeIcons.locationArrow,
-                                  color: colors.textOnDarkMain,
-                                  size: 15,
-                                ),
-                              ),
-                            ),
-                          )),
-                      Visibility(
-                          visible: hasNote(),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: AnimatedOpacity(
-                              opacity: opacity,
-                              duration: panelTransition,
-                              child: AnimatedSlide(
-                                duration: panelTransition,
-                                curve: Curves.easeInOutQuart,
-                                offset: offset,
-                                child: FaIcon(
-                                  FontAwesomeIcons.commentDots,
-                                  color: colors.textOnDarkMain,
-                                  size: 15,
-                                ),
-                              ),
-                            ),
-                          )),
-                      Visibility(
-                          visible: widget.expense.type == 2,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: AnimatedOpacity(
-                              duration: panelTransition,
-                              opacity: opacity,
-                              child: AnimatedSlide(
-                                duration: panelTransition,
-                                curve: Curves.easeInOutQuart,
-                                offset: offset,
-                                child: FaIcon(
-                                  FontAwesomeIcons.redo,
-                                  color: colors.textOnDarkMain,
-                                  size: 15,
-                                ),
-                              ),
-                            ),
-                          )),
-                    ],
-                  ),
-                ),
                 Container(
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(25)),
-                    gradient: defaultGradient(context),
-                  ),
+                      borderRadius: const BorderRadius.all(Radius.circular(25)),
+                      color: colors.primaryContainer),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        getIcon(widget.expense.category.icon!, size: 20, color: colors.iconOnMain),
+                        getIcon(expense.category.icon!,
+                            size: 20, color: colors.onPrimaryContainer),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
-                            formatCurrency(widget.expense.amount),
-                            style: TextStyle(color: colors.textOnMain),
+                            formatCurrency(expense.amount),
+                            style: TextStyle(color: colors.onPrimaryContainer),
                           ),
                         ),
                       ],
                     ),
                   ),
-                )
+                ),
+                Visibility(
+                    visible: hasLocation(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: FaIcon(
+                        FontAwesomeIcons.locationArrow,
+                        color: colors.onSecondaryContainer,
+                        size: 15,
+                      ),
+                    )),
+                Visibility(
+                    visible: hasNote(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: FaIcon(
+                        FontAwesomeIcons.commentDots,
+                        color: colors.onSecondaryContainer,
+                        size: 15,
+                      ),
+                    )),
+                Visibility(
+                    visible: expense.type == 2,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: FaIcon(
+                        FontAwesomeIcons.redo,
+                        color: colors.onSecondaryContainer,
+                        size: 15,
+                      ),
+                    )),
               ],
             ),
           ),
         ],
       ),
     );
-  }
-
-  @override
-  void afterFirstLayout(BuildContext context) {
-    Random rand = Random();
-    Future.delayed(Duration(milliseconds: rand.nextInt(250)), () {
-      setState(() {
-        offset += const Offset(3, 0);
-        opacity = 1;
-      });
-    });
   }
 }

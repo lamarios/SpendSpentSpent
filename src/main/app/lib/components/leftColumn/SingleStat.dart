@@ -1,38 +1,31 @@
-import 'dart:math';
-
-import 'package:after_layout/after_layout.dart';
-import 'package:spend_spent_spent/components/leftColumn/StatsGraph.dart';
-import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/icons.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
-import 'package:spend_spent_spent/models/leftColumnStats.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
+import 'package:spend_spent_spent/components/leftColumn/StatsGraph.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/models/leftColumnStats.dart';
 
 class SingleStats extends StatefulWidget {
-  LeftColumnStats stats;
-  bool monthly;
-  Key key;
+  final LeftColumnStats stats;
+  final bool monthly;
 
-  SingleStats({required this.monthly, required this.key, required this.stats});
+  const SingleStats({super.key, required this.monthly, required this.stats});
 
   @override
   SingleStatsState createState() => SingleStatsState();
 }
 
-class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
-  bool open = false, showGraph = false, showPercentage = false;
+class SingleStatsState extends State<SingleStats> {
+  bool open = false, showGraph = false;
   double openedHeight = 400;
-  double percentage = 0;
 
   double getBarWidth(BuildContext context, BoxConstraints constraints) {
+    final percentage = widget.stats.amount / widget.stats.total;
+
     if (open) {
       return constraints.maxWidth;
-    } else if (showPercentage && widget.stats.total > 0) {
+    } else if (widget.stats.total > 0) {
       return constraints.maxWidth * percentage;
     } else {
       return 0;
@@ -45,7 +38,11 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
         open = true;
         Future.delayed(panelTransition, () {
           if (open) {
-            Scrollable.ensureVisible(context, curve: Curves.easeInOutQuart, duration: panelTransition, alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd);
+            Scrollable.ensureVisible(context,
+                curve: Curves.easeInOutQuart,
+                duration: panelTransition,
+                alignmentPolicy:
+                    ScrollPositionAlignmentPolicy.keepVisibleAtEnd);
             setState(() {
               showGraph = true;
             });
@@ -64,7 +61,7 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     // TODO: implement build
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
@@ -84,11 +81,14 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
                       child: FaIcon(
                         FontAwesomeIcons.chevronRight,
                         size: 10,
-                        color: colors.text,
+                        color: colors.onSurface,
                       )),
                 ),
-                Visibility(visible: widget.stats.category.id != -1, child: getIcon(widget.stats.category.icon!, color: Theme.of(context).primaryColor, size: 20)),
-                Spacer(),
+                Visibility(
+                    visible: widget.stats.category.id != -1,
+                    child: getIcon(widget.stats.category.icon!,
+                        color: colors.primary, size: 20)),
+                const Spacer(),
                 Text(formatCurrency(widget.stats.amount)),
               ],
             ),
@@ -100,9 +100,9 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
                 alignment: Alignment.topLeft,
                 height: open ? openedHeight : 10,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
                     // gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.75], begin: Alignment.bottomCenter, end: Alignment.topRight),
-                    color: colors.statsBackground),
+                    color: colors.surfaceContainer),
                 child: LayoutBuilder(
                   builder: (context, constraints) => AnimatedContainer(
                     duration: panelTransition,
@@ -110,14 +110,16 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
                     width: getBarWidth(context, constraints),
                     height: open ? openedHeight : 10,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      gradient: defaultGradient(context),
-                    ),
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        color: colors.primaryContainer),
                     child: Visibility(
                       visible: showGraph,
                       child: FadeIn(
                         duration: panelTransition,
-                        child: StatsGraph(categoryId: widget.stats.category.id!, monthly: widget.monthly, close: closeContainer),
+                        child: StatsGraph(
+                            categoryId: widget.stats.category.id!,
+                            monthly: widget.monthly,
+                            close: closeContainer),
                       ),
                     ),
                   ),
@@ -128,18 +130,5 @@ class SingleStatsState extends State<SingleStats> with AfterLayoutMixin {
         ),
       ),
     );
-  }
-
-  @override
-  void afterFirstLayout(BuildContext context) {
-    setState(() {
-      showPercentage = true;
-    });
-    Random rand = Random();
-    Future.delayed(Duration(milliseconds: rand.nextInt(150)), () {
-      setState(() {
-        percentage = widget.stats.amount / widget.stats.total;
-      });
-    });
   }
 }

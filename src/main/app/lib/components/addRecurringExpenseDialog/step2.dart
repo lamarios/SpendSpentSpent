@@ -88,7 +88,7 @@ class Step2State extends State<Step2> {
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     return Container(
       alignment: Alignment.topCenter,
       child: Column(
@@ -106,12 +106,12 @@ class Step2State extends State<Step2> {
                         child: AnimatedContainer(
                           decoration: BoxDecoration(
                             borderRadius: defaultBorder,
-                            color: (widget.type ?? -1) != index ? colors.dialogBackground: colors.main,
+                            color: (widget.type ?? -1) != index ? Colors.transparent: colors.primaryContainer,
                           ),
                           duration: panelTransition,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(e, style: TextStyle(fontSize: 15, color: (widget.type ?? -1) == index ? colors.textOnMain : colors.main)),
+                            child: Text(e, style: TextStyle(fontSize: 15, color: (widget.type ?? -1) == index ? colors.onPrimaryContainer : colors.primary)),
                           ),
                         ),
                       )))
@@ -134,12 +134,12 @@ class Step2State extends State<Step2> {
                           child: AnimatedContainer(
                             decoration: BoxDecoration(
                               borderRadius: defaultBorder,
-                              color: (widget.typeParam ?? -1) != index ? colors.dialogBackground : colors.main,
+                              color: (widget.typeParam ?? -1) != index ? Colors.transparent : colors.primaryContainer,
                             ),
                             duration: panelTransition,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(e, style: TextStyle(fontSize: 15, color: (widget.typeParam ?? -1) == index ? colors.textOnMain : colors.main)),
+                              child: Text(e, style: TextStyle(fontSize: 15, color: (widget.typeParam ?? -1) == index ? colors.onPrimaryContainer : colors.primary)),
                             ),
                           ),
                         )))

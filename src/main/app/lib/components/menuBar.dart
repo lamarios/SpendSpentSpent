@@ -64,7 +64,7 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     return controller0 != null ? Container(
       height: 50,
       width: 200,
@@ -104,7 +104,7 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: colors.iconOnMain,
+                        color: colors.onPrimaryContainer,
                         borderRadius: BorderRadius.all(Radius.circular(40)),
                       ),
                       height: 1,
@@ -167,20 +167,20 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
 
   @override
   void afterFirstLayout(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     setState(() {
       controller0 = AnimationController(duration: panelTransition, vsync: this);
-      animation0 = (ColorTween(begin: colors.iconOnMain, end: colors.main).animate(controller0))
+      animation0 = (ColorTween(begin: colors.onPrimaryContainer, end: colors.primary).animate(controller0))
         ..addListener(() {
           setState(() {});
         });
       controller1 = AnimationController(duration: panelTransition, vsync: this);
-      animation1 = (ColorTween(begin: colors.iconOnMain, end: colors.main).animate(controller1))
+      animation1 = (ColorTween(begin: colors.onPrimaryContainer, end: colors.primary).animate(controller1))
         ..addListener(() {
           setState(() {});
         });
       controller2 = AnimationController(duration: panelTransition, vsync: this);
-      animation2 = (ColorTween(begin: colors.iconOnMain, end: colors.main).animate(controller2))
+      animation2 = (ColorTween(begin: colors.onPrimaryContainer, end: colors.primary).animate(controller2))
         ..addListener(() {
           setState(() {});
         });

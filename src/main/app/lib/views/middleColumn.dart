@@ -1,16 +1,18 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:spend_spent_spent/components/switcher.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:spend_spent_spent/utils/views/components/switcher.dart';
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/views/categoryList.dart';
+import 'package:spend_spent_spent/categories/views/components/category_list.dart';
 import 'package:spend_spent_spent/views/recurringExpenseList.dart';
 import 'package:flutter/cupertino.dart';
 
-class MiddleColumn extends StatefulWidget {
+@RoutePage()
+class MiddleColumnTab extends StatefulWidget {
   @override
-  MiddleColumnState createState() => MiddleColumnState();
+  MiddleColumnTabState createState() => MiddleColumnTabState();
 }
 
-class MiddleColumnState extends State<MiddleColumn> with AfterLayoutMixin {
+class MiddleColumnTabState extends State<MiddleColumnTab> {
   Widget current = CategoryList();
   int selected = 0;
 
@@ -33,7 +35,7 @@ class MiddleColumnState extends State<MiddleColumn> with AfterLayoutMixin {
             padding: const EdgeInsets.only(top: 8.0),
             child: Switcher(
               selected: selected,
-              labels: ['Normal', 'Recurring'],
+              labels: const ['Normal', 'Recurring'],
               onSelect: switchTab,
             ),
           ),
@@ -46,10 +48,5 @@ class MiddleColumnState extends State<MiddleColumn> with AfterLayoutMixin {
         ],
       ),
     );
-  }
-
-  @override
-  void afterFirstLayout(BuildContext context) {
-    // TODO: implement afterFirstLayout
   }
 }

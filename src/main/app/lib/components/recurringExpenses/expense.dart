@@ -3,10 +3,7 @@ import 'dart:math';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:animations/animations.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_fadein/flutter_fadein.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
@@ -76,7 +73,7 @@ class ExpenseState extends State<Expense> with AfterLayoutMixin {
   @override
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () => openContainer(context),
       child: Stack(
@@ -86,19 +83,19 @@ class ExpenseState extends State<Expense> with AfterLayoutMixin {
             children: [
               Container(
                 alignment: Alignment.center,
-                decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: colors.mainDark),
+                decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: colors.surfaceBright),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      getIcon(widget.expense.category.icon!, size: 20, color: colors.iconOnMain),
+                      getIcon(widget.expense.category.icon!, size: 20, color: colors.onSecondaryContainer),
                       Visibility(
                         visible: widget.expense.name.trim().length > 0,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
                             widget.expense.name.trim(),
-                            style: TextStyle(color: colors.textOnMain),
+                            style: TextStyle(color: colors.onSecondaryContainer),
                           ),
                         ),
                       ),
@@ -113,7 +110,7 @@ class ExpenseState extends State<Expense> with AfterLayoutMixin {
                             offset: offset,
                             child: Text(
                               formatCurrency(widget.expense.amount),
-                              style: TextStyle(color: colors.textOnDarkMain),
+                              style: TextStyle(color: colors.onSecondaryContainer),
                             ),
                           ),
                         ),
@@ -131,20 +128,20 @@ class ExpenseState extends State<Expense> with AfterLayoutMixin {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(25)),
-                  gradient: defaultGradient(context),
+                  color: colors.primaryContainer
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      getIcon(widget.expense.category.icon!, size: 20, color: colors.iconOnMain),
+                      getIcon(widget.expense.category.icon!, size: 20, color: colors.onPrimaryContainer),
                       Visibility(
                         visible: widget.expense.name.trim().length > 0,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
                             widget.expense.name.trim(),
-                            style: TextStyle(color: colors.textOnMain),
+                            style: TextStyle(color: colors.onPrimaryContainer),
                           ),
                         ),
                       ),

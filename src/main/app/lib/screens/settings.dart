@@ -12,6 +12,7 @@ import 'package:flutter_settings_ui/flutter_settings_ui.dart';
 import 'package:spend_spent_spent/models/config.dart';
 import 'package:spend_spent_spent/models/settings.dart';
 import 'package:spend_spent_spent/models/user.dart';
+import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/views/settings/changePassword.dart';
@@ -22,6 +23,15 @@ const ALLOW_SIGNUP = "allowSignUp",
     DEMO_MODE = "demoMode",
     MOTD = "motd",
     CURRENCY_API_KEY = "currencyApiKey";
+
+settingsTheme(ColorScheme colorScheme) => SettingsThemeData(
+    settingsSectionBackground: colorScheme.surface,
+    settingsListBackground: colorScheme.surface,
+    titleTextColor: colorScheme.primary,
+    dividerColor: colorScheme.onSurface,
+    tileDescriptionTextColor: colorScheme.secondary,
+    leadingIconsColor: colorScheme.secondary,
+    tileHighlightColor: colorScheme.secondaryContainer);
 
 @RoutePage()
 class SettingsScreen extends StatefulWidget {
@@ -43,7 +53,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
 
   logOut(BuildContext context) async {
     await service.logout();
-    Navigator.pop(context);
+    AutoRouter.of(context).replaceAll([const LoginRoute()]);
   }
 
   refreshProfile() async {
@@ -118,14 +128,17 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
+    SettingsThemeData theme = settingsTheme(colors);
 
     const iconSize = 15.0;
 
+
+
     var tiles = [
       SettingsTile(
-        title: Text('Logout'),
-        leading: FaIcon(
+        title: const Text('Logout'),
+        leading: const FaIcon(
           FontAwesomeIcons.signOutAlt,
           size: iconSize,
         ),
@@ -137,8 +150,8 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
       tiles.insert(
           0,
           SettingsTile(
-            title: Text('Edit profile'),
-            leading: FaIcon(
+            title: const Text('Edit profile'),
+            leading: const FaIcon(
               FontAwesomeIcons.userAlt,
               size: iconSize,
             ),
@@ -147,8 +160,8 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
       tiles.insert(
           1,
           SettingsTile(
-            title: Text('Change password'),
-            leading: FaIcon(
+            title: const Text('Change password'),
+            leading: const FaIcon(
               FontAwesomeIcons.key,
               size: iconSize,
             ),
@@ -160,7 +173,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
       SettingsSection(
         title: Text(
           '${currentUser?.firstName ?? ""} ${currentUser?.lastName ?? ""}',
-          style: TextStyle(color: colors.main, fontWeight: FontWeight.bold),
+          style: TextStyle(color: colors.primary, fontWeight: FontWeight.bold),
         ),
         tiles: tiles,
       ),
@@ -169,40 +182,40 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     if (currentUser?.isAdmin ?? false) {
       sections.add(SettingsSection(
         title: Text('Admin',
-            style: TextStyle(color: colors.main, fontWeight: FontWeight.bold)),
+            style: TextStyle(color: colors.primary, fontWeight: FontWeight.bold)),
         tiles: [
           SettingsTile(
-            title: Text('Manage users'),
-            leading: FaIcon(
+            title: const Text('Manage users'),
+            leading: const FaIcon(
               FontAwesomeIcons.users,
               size: iconSize,
             ),
             onPressed: showManageUsers,
           ),
           SettingsTile(
-            title: Text('Currencyapi.com api key'),
+            title: const Text('Currencyapi.com api key'),
             description: Text((service.config?.canConvertCurrency ?? false)
                 ? (service.config?.convertCurrencyQuota ?? '') +
                     ' remaining api calls \nthis month'
                 : 'No api key set'),
-            leading: FaIcon(
+            leading: const FaIcon(
               FontAwesomeIcons.dollarSign,
               size: iconSize,
             ),
             onPressed: (context) => setCurrencyApiKey(),
           ),
           SettingsTile(
-            title: Text('Set login screen message'),
+            title: const Text('Set login screen message'),
             description: Text(motdController.text),
-            leading: FaIcon(
+            leading: const FaIcon(
               FontAwesomeIcons.comment,
               size: iconSize,
             ),
             onPressed: (context) => setMotd(),
           ),
           SettingsTile.switchTile(
-            title: Text('Allow registration'),
-            leading: FaIcon(
+            title: const Text('Allow registration'),
+            leading: const FaIcon(
               FontAwesomeIcons.pencilAlt,
               size: iconSize,
             ),
@@ -212,10 +225,10 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
             // onPressed: showEditProfile,
           ),
           SettingsTile.switchTile(
-            title: Text('Demo mode'),
-            description: Text(
+            title: const Text('Demo mode'),
+            description: const Text(
                 'Non-admin accounts cannot edit their profiles or change their passwords'),
-            leading: FaIcon(
+            leading: const FaIcon(
               FontAwesomeIcons.userLock,
               size: iconSize,
             ),
@@ -231,12 +244,12 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     if (packageInfo != null) {
       sections.add(SettingsSection(
         title: Text('App info',
-            style: TextStyle(color: colors.main, fontWeight: FontWeight.bold)),
+            style: TextStyle(color: colors.primary, fontWeight: FontWeight.bold)),
         tiles: [
           SettingsTile(
             title: Text('Version: ${packageInfo?.version ?? 'n/a'}'),
             description: Text('Build: ${packageInfo?.buildNumber ?? 'n/a'}'),
-            leading: FaIcon(FontAwesomeIcons.infoCircle),
+            leading: const FaIcon(FontAwesomeIcons.infoCircle),
             // onPressed: showEditProfile,
           ),
         ],
@@ -246,20 +259,20 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     if (config?.backendVersion != null) {
       sections.add(SettingsSection(
         title: Text('Backend info',
-            style: TextStyle(color: colors.main, fontWeight: FontWeight.bold)),
+            style: TextStyle(color: colors.primary, fontWeight: FontWeight.bold)),
         tiles: [
           SettingsTile(
             title:
                 Text('Version: ${config?.backendVersion.toString() ?? 'n/a'}'),
-            leading: FaIcon(FontAwesomeIcons.server),
+            leading: const FaIcon(FontAwesomeIcons.server),
             // onPressed: showEditProfile,
           ),
         ],
       ));
     }
 
-    return PlatformScaffold(
-      appBar: PlatformAppBar(title: PlatformText('Settings')),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Settings')),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       // body: Visibility(visible: masterDetail != null, child: masterDetail ?? Container()),
       body: MasterDetail(
@@ -267,6 +280,8 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
         master: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: SettingsList(
+            lightTheme: theme,
+            darkTheme: theme,
             sections: sections,
           ),
         ),

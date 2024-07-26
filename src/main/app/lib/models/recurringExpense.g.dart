@@ -9,14 +9,14 @@ part of 'recurringExpense.dart';
 RecurringExpense _$RecurringExpenseFromJson(Map<String, dynamic> json) =>
     RecurringExpense(
       category: Category.fromJson(json['category'] as Map<String, dynamic>),
-      type: json['type'] as int?,
+      type: (json['type'] as num?)?.toInt(),
       amount: (json['amount'] as num).toDouble(),
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       income: json['income'] as bool,
       lastOccurrence: json['lastOccurrence'] as String?,
       name: json['name'] as String,
       nextOccurrence: json['nextOccurrence'] as String?,
-      typeParam: json['typeParam'] as int,
+      typeParam: (json['typeParam'] as num).toInt(),
     );
 
 Map<String, dynamic> _$RecurringExpenseToJson(RecurringExpense instance) =>

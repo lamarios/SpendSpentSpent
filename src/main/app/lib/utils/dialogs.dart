@@ -21,7 +21,7 @@ void showAlertDialog(BuildContext context, String title, String text) {
 }
 
 void showPromptDialog(BuildContext context, String title, String label, TextEditingController controller, Function onOk, {int? maxLines}) {
-  final colors = get(context);
+  final colors = Theme.of(context).colorScheme;
   showPlatformDialog(
       context: context,
       builder: (BuildContext context) {
@@ -39,7 +39,7 @@ void showPromptDialog(BuildContext context, String title, String label, TextEdit
               },
               child: Text(
                 'Cancel',
-                style: TextStyle(color: colors.cancelText),
+                style: TextStyle(color: colors.secondary),
               ),
             ),
             PlatformDialogAction(

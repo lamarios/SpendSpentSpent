@@ -5,7 +5,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
-import 'package:spend_spent_spent/models/category.dart';
+import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class Step1 extends StatefulWidget {
@@ -37,7 +37,7 @@ class Step1State extends State<Step1> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     return Container(
       alignment: Alignment.topCenter,
       child: Column(
@@ -65,12 +65,12 @@ class Step1State extends State<Step1> with AfterLayoutMixin {
                             child: AnimatedContainer(
                               decoration: BoxDecoration(
                                 borderRadius: defaultBorder,
-                                color: (widget.selected?.icon ?? '') != e.icon ? colors.dialogBackground : colors.main,
+                                color: (widget.selected?.icon ?? '') != e.icon ? Colors.transparent : colors.primaryContainer,
                               ),
                               duration: panelTransition,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: getIcon(e.icon!, size: 30, color: (widget.selected?.icon ?? '') == e.icon ? colors.iconOnMain : colors.main),
+                                child: getIcon(e.icon!, size: 30, color: (widget.selected?.icon ?? '') == e.icon ? colors.onPrimaryContainer : colors.primary),
                               ),
                             ),
                           ))

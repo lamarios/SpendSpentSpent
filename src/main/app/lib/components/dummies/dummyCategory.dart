@@ -7,7 +7,7 @@ import 'package:spend_spent_spent/utils/colorUtils.dart';
 class DummyCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
-    return Container(decoration: BoxDecoration(color: colors.dummy, borderRadius: defaultBorder));
+    final colors = Theme.of(context).colorScheme;
+    return Container(decoration: BoxDecoration(color: colors.surfaceContainer, borderRadius: defaultBorder));
   }
 }

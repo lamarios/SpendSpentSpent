@@ -35,7 +35,7 @@ class NoteSuggestionPillState extends State<NoteSuggestionPill> with AfterLayout
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
 
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
@@ -51,13 +51,13 @@ class NoteSuggestionPillState extends State<NoteSuggestionPill> with AfterLayout
             child: Container(
                 decoration: BoxDecoration(
                   borderRadius: defaultBorder,
-                  color: colors.main,
+                  color: colors.primaryContainer,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     widget.text,
-                    style: TextStyle(color: colors.textOnMain),
+                    style: TextStyle(color: colors.onPrimaryContainer),
                   ),
                 )),
           ),

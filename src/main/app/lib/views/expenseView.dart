@@ -30,7 +30,7 @@ class ExpenseViewState extends State<ExpenseView> {
   }
 
   showDeleteExpenseDialog(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     showPlatformDialog(
         context: context,
         builder: (_) => PlatformAlertDialog(
@@ -40,7 +40,7 @@ class ExpenseViewState extends State<ExpenseView> {
                 PlatformDialogAction(
                   child: PlatformText(
                     'Cancel',
-                    style: TextStyle(color: colors.cancelText),
+                    style: TextStyle(color: colors.secondary),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -65,11 +65,11 @@ class ExpenseViewState extends State<ExpenseView> {
     Navigator.pop(context);
   }
 
-  Widget getRepeatedIcon(AppColors colors) {
+  Widget getRepeatedIcon(ColorScheme colors) {
     List<Widget> icons = [];
 
     for (int i = 0; i < 150; i++) {
-      icons.add(getIcon(widget.expense.category.icon!, color: colors.text, size: 40));
+      icons.add(getIcon(widget.expense.category.icon!, color: colors.onSurface, size: 40));
     }
 
     return Opacity(
@@ -84,7 +84,7 @@ class ExpenseViewState extends State<ExpenseView> {
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     return Stack(
       children: [
         Visibility(
@@ -119,7 +119,7 @@ class ExpenseViewState extends State<ExpenseView> {
                         point: new LatLng(widget.expense.latitude ?? 0, widget.expense.longitude ?? 0),
                         child: FaIcon(
                               FontAwesomeIcons.mapMarkerAlt,
-                              color: colors.main,
+                              color: colors.primary,
                               size: 50,
                             ))
                   ])
@@ -159,12 +159,12 @@ class ExpenseViewState extends State<ExpenseView> {
                     width: 30,
                     height: 30,
                     alignment: Alignment.center,
-                    decoration: BoxDecoration(color: hasLocation() ? colors.dialogBackground : Colors.transparent, borderRadius: BorderRadius.circular(20)),
+                    decoration: BoxDecoration(color: hasLocation() ? colors.surfaceContainer : Colors.transparent, borderRadius: BorderRadius.circular(20)),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: FaIcon(
                         FontAwesomeIcons.times,
-                        color: colors.text,
+                        color: colors.onSurface,
                         size: 15,
                       ),
                     ),
@@ -182,8 +182,8 @@ class ExpenseViewState extends State<ExpenseView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                child: getIcon(widget.expense.category.icon!, color: colors.iconOnMain, size: 50),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: colors.main),
+                child: getIcon(widget.expense.category.icon!, color: colors.onPrimaryContainer, size: 50),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: colors.primaryContainer),
                 width: 100,
                 alignment: Alignment.center,
                 height: 100,
@@ -193,13 +193,13 @@ class ExpenseViewState extends State<ExpenseView> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: defaultBorder,
-                    color: hasLocation() ? colors.dialogBackground : Colors.transparent,
+                    color: hasLocation() ? colors.surfaceContainer : Colors.transparent,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
                     child: Text(
                       formatCurrency(widget.expense.amount),
-                      style: TextStyle(fontSize: 50, color: colors.text, fontWeight: FontWeight.w300),
+                      style: TextStyle(fontSize: 50, color: colors.onSurface, fontWeight: FontWeight.w300),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -211,10 +211,10 @@ class ExpenseViewState extends State<ExpenseView> {
                     padding: const EdgeInsets.only(bottom: 0.0),
                     child: Container(
                       width: 300,
-                      decoration: BoxDecoration(borderRadius: defaultBorder, color: colors.announcement),
+                      decoration: BoxDecoration(borderRadius: defaultBorder, color: colors.tertiaryContainer),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
-                        child: Text(widget.expense.note ?? '', textAlign: TextAlign.center, style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300, color: colors.announcementText)),
+                        child: Text(widget.expense.note ?? '', textAlign: TextAlign.center, style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300, color: colors.onTertiaryContainer)),
                       ),
                     ),
                   )),

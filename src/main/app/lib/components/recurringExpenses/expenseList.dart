@@ -1,12 +1,9 @@
-import 'dart:math';
-
+import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/components/recurringExpenses/addExpense.dart';
 import 'package:spend_spent_spent/components/recurringExpenses/expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/recurringExpense.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class ExpenseList extends StatelessWidget {
   List<RecurringExpense> expenses, daily = [], weekly = [], monthly = [], yearly = [];
@@ -36,7 +33,7 @@ class ExpenseList extends StatelessWidget {
     print(' total: ${expenses.length} daily: ${daily.length}, weekly: ${weekly.length}, monthly: ${monthly.length}, yearly: ${yearly.length}');
   }
 
-  List<Widget> expensesFromSplit(AppColors colors, List<RecurringExpense> expenses, String title) {
+  List<Widget> expensesFromSplit(ColorScheme colors, List<RecurringExpense> expenses, String title) {
     List<Widget> results = [];
 
     if (expenses.length > 0) {
@@ -46,7 +43,7 @@ class ExpenseList extends StatelessWidget {
           padding: const EdgeInsets.only(top: 8.0),
           child: Text(
             title,
-            style: TextStyle(color: colors.main),
+            style: TextStyle(color: colors.primary),
           ),
         ),
       ));
@@ -75,7 +72,7 @@ class ExpenseList extends StatelessWidget {
             Text('Total: '),
             Text(
               '${formatCurrency(total)}',
-              style: TextStyle(color: colors.main),
+              style: TextStyle(color: colors.primary),
             )
           ],
         ),
@@ -87,7 +84,7 @@ class ExpenseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     List<Widget> children = [];
 
     children.addAll(expensesFromSplit(colors, this.daily, 'Daily'));

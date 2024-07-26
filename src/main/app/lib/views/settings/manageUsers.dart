@@ -33,7 +33,8 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
 
   getUsers() async {
     print('getting users');
-    PaginatedResults<User> users = await service.getUsers(searchController.text, page, pageSize);
+    PaginatedResults<User> users =
+        await service.getUsers(searchController.text, page, pageSize);
     setState(() {
       this.users = users;
     });
@@ -48,7 +49,8 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
     showModal(
         context: context,
         builder: (context) => Card(
-            margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth:350, maxHeight: 250),
+            margin: getInsetsForMaxSize(MediaQuery.of(context),
+                maxWidth: 350, maxHeight: 250),
             child: ChangePasswordDialog(
               userId: user.id!,
             )));
@@ -82,24 +84,24 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
     showModal(
         context: context,
         builder: (context) => Card(
-            margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth:350, maxHeight: 600),
+            margin: getInsetsForMaxSize(MediaQuery.of(context),
+                maxWidth: 350, maxHeight: 600),
             child: AddUserDialog(
               saveUser: saveUser,
             )));
   }
 
   showDeleteUserDialog(BuildContext context, String id) {
-    AppColors colors = get(context);
     showPlatformDialog(
         context: context,
         builder: (_) => PlatformAlertDialog(
               title: Text('Delete user ?'),
-              content: Text('This will delete the user and all its expenses, it is not recoverable.'),
+              content: Text(
+                  'This will delete the user and all its expenses, it is not recoverable.'),
               actions: <Widget>[
                 PlatformDialogAction(
                   child: PlatformText(
                     'Cancel',
-                    style: TextStyle(color: colors.text),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -125,7 +127,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
   }
 
   Widget getUserWidget(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     if (isTablet(MediaQuery.of(context))) {
       List<TableRow> rows = [
         TableRow(children: [
@@ -150,7 +152,8 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
           TableCell(
               child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text('Actions', style: TextStyle(fontWeight: FontWeight.bold)),
+            child:
+                Text('Actions', style: TextStyle(fontWeight: FontWeight.bold)),
           )),
         ])
       ];
@@ -171,7 +174,11 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
           TableCell(
               child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: PlatformSwitch(value: e.isAdmin, onChanged: !isCurrentUser ? (value) => toggleUserAdmin(e, value) : null),
+            child: PlatformSwitch(
+                value: e.isAdmin,
+                onChanged: !isCurrentUser
+                    ? (value) => toggleUserAdmin(e, value)
+                    : null),
           )),
           Visibility(
             visible: !isCurrentUser,
@@ -215,7 +222,9 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-              decoration: BoxDecoration(color: colors.containerOnDialogBackground, borderRadius: BorderRadius.circular(5)),
+              decoration: BoxDecoration(
+                  color: colors.surfaceContainer,
+                  borderRadius: BorderRadius.circular(5)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -230,7 +239,11 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
                     Row(
                       children: [
                         Expanded(child: Text('Admin')),
-                        PlatformSwitch(value: e.isAdmin, onChanged: !isCurrentUser ? (value) => toggleUserAdmin(e, value) : null),
+                        PlatformSwitch(
+                            value: e.isAdmin,
+                            onChanged: !isCurrentUser
+                                ? (value) => toggleUserAdmin(e, value)
+                                : null),
                       ],
                     ),
                     Visibility(
@@ -249,7 +262,8 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
                               'Delete',
                             ),
                             color: Colors.red,
-                            onPressed: () => showDeleteUserDialog(context, e.id!),
+                            onPressed: () =>
+                                showDeleteUserDialog(context, e.id!),
                           )
                         ],
                       ),
@@ -266,7 +280,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
+    final colors = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -276,11 +290,17 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
             controller: searchController,
           ),
           getUserWidget(context),
-          Visibility(visible: users != null, child: users != null ? PaginationSwitcher(pagination: users!.pagination, previous: previous, next: next) : SizedBox.shrink()),
+          Visibility(
+              visible: users != null,
+              child: users != null
+                  ? PaginationSwitcher(
+                      pagination: users!.pagination,
+                      previous: previous,
+                      next: next)
+                  : SizedBox.shrink()),
           Row(
             children: [
-              PlatformTextButton(
-                color: Theme.of(context).primaryColor,
+              FilledButton.tonal(
                 onPressed: () => addUser(context),
                 child: Text(
                   'Add user',

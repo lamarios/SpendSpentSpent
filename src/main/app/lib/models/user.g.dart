@@ -13,7 +13,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       isAdmin: json['isAdmin'] as bool,
       lastName: json['lastName'] as String,
       password: json['password'] as String?,
-      subscriptionExpiry: json['subscriptionExpiry'] as int?,
+      subscriptionExpiry: (json['subscriptionExpiry'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{

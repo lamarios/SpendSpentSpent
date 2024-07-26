@@ -11,8 +11,8 @@ SearchParameters _$SearchParametersFromJson(Map<String, dynamic> json) =>
       categories: (json['categories'] as List<dynamic>)
           .map((e) => Category.fromJson(e as Map<String, dynamic>))
           .toList(),
-      maxAmount: json['maxAmount'] as int,
-      minAmount: json['minAmount'] as int,
+      maxAmount: (json['maxAmount'] as num).toInt(),
+      minAmount: (json['minAmount'] as num).toInt(),
       note: json['note'] as String,
     );
 

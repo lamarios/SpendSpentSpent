@@ -1,8 +1,5 @@
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class KeyPad extends StatelessWidget {
   Function addNumber, removeNumber;
@@ -11,8 +8,8 @@ class KeyPad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppColors colors = get(context);
-    TextStyle keyPadStyle = TextStyle(fontSize: 25, color: colors.text);
+    final colors = Theme.of(context).colorScheme;
+    TextStyle keyPadStyle = TextStyle(fontSize: 25, color: colors.onSurface);
 
     return Column(children: [
       Row(children: [
@@ -101,7 +98,7 @@ class KeyPad extends StatelessWidget {
             child: FaIcon(
               FontAwesomeIcons.arrowLeft,
               size: 30,
-              color: colors.text,
+              color: colors.onSurface,
             ),
           ),
         ),
