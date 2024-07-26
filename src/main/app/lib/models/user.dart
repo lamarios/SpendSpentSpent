@@ -11,7 +11,14 @@ class User {
   bool isAdmin;
   int? subscriptionExpiry;
 
-  User({required this.email, this.id, required this.firstName, required this.isAdmin, required this.lastName, this.password, this.subscriptionExpiry});
+  User(
+      {required this.email,
+      this.id,
+      required this.firstName,
+      required this.isAdmin,
+      required this.lastName,
+      this.password,
+      this.subscriptionExpiry});
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

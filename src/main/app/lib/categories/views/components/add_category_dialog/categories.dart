@@ -8,7 +8,8 @@ class Categories extends StatelessWidget {
   final Function(String selected) onSelect;
 
   const Categories(
-      {super.key, required this.label,
+      {super.key,
+      required this.label,
       this.categories,
       required this.onSelect,
       required this.selected});

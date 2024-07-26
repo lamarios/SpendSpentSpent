@@ -3,17 +3,14 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/login/views/components/login.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/user.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/stringUtils.dart';
 
 class SignUp extends StatefulWidget {
-  Function onBack;
-  String server;
-  Key key;
+  final Function onBack;
+  final String server;
 
-  SignUp({required this.onBack, required this.server, required this.key});
+  const SignUp({super.key, required this.onBack, required this.server});
 
   @override
   SignUpState createState() => SignUpState();
@@ -32,10 +29,17 @@ class SignUpState extends State<SignUp> {
       error = '';
     });
 
-    User user =
-        User(email: usernameController.text.trim(), firstName: firstNameController.text.trim(), lastName: lastNameController.text.trim(), password: passwordController.text.trim(), isAdmin: false);
+    User user = User(
+        email: usernameController.text.trim(),
+        firstName: firstNameController.text.trim(),
+        lastName: lastNameController.text.trim(),
+        password: passwordController.text.trim(),
+        isAdmin: false);
 
-    if (user.email.length == 0 || user.password?.length == 0 || user.firstName.length == 0 || user.lastName.length == 0) {
+    if (user.email.isEmpty ||
+        user.password?.length == 0 ||
+        user.firstName.isEmpty ||
+        user.lastName.isEmpty) {
       setState(() {
         error = 'Please fill all the fields';
       });
@@ -58,7 +62,7 @@ class SignUpState extends State<SignUp> {
     }
 
     try {
-      bool result = await service.signUp(widget.server, user);
+      await service.signUp(widget.server, user);
     } catch (e) {
       setState(() {
         error = e.toString();
@@ -88,7 +92,10 @@ class SignUpState extends State<SignUp> {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: Container(alignment: Alignment.centerLeft, child: Text('Email', style: TextStyle(color: colors.onPrimaryContainer))),
+            child: Container(
+                alignment: Alignment.centerLeft,
+                child: Text('Email',
+                    style: TextStyle(color: colors.onPrimaryContainer))),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -96,34 +103,47 @@ class SignUpState extends State<SignUp> {
               controller: usernameController,
               autocorrect: false,
               keyboardType: TextInputType.emailAddress,
-              material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Email", "user@example.org", colors)),
+              material: (_, __) => MaterialTextFieldData(
+                  decoration:
+                      getFieldDecoration("Email", "user@example.org", colors)),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: Container(alignment: Alignment.centerLeft, child: Text('Password', style: TextStyle(color: colors.onPrimaryContainer))),
+            child: Container(
+                alignment: Alignment.centerLeft,
+                child: Text('Password',
+                    style: TextStyle(color: colors.onPrimaryContainer))),
           ),
           Padding(
               padding: const EdgeInsets.all(8.0),
               child: PlatformTextField(
                 controller: passwordController,
                 obscureText: true,
-                material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Password", "", colors)),
+                material: (_, __) => MaterialTextFieldData(
+                    decoration: getFieldDecoration("Password", "", colors)),
               )),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: Container(alignment: Alignment.centerLeft, child: Text('Repeat Password', style: TextStyle(color: colors.onPrimaryContainer))),
+            child: Container(
+                alignment: Alignment.centerLeft,
+                child: Text('Repeat Password',
+                    style: TextStyle(color: colors.onPrimaryContainer))),
           ),
           Padding(
               padding: const EdgeInsets.all(8.0),
               child: PlatformTextField(
                 controller: repeatPasswordController,
                 obscureText: true,
-                material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Password", "", colors)),
+                material: (_, __) => MaterialTextFieldData(
+                    decoration: getFieldDecoration("Password", "", colors)),
               )),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: Container(alignment: Alignment.centerLeft, child: Text('First name', style: TextStyle(color: colors.onPrimaryContainer))),
+            child: Container(
+                alignment: Alignment.centerLeft,
+                child: Text('First name',
+                    style: TextStyle(color: colors.onPrimaryContainer))),
           ),
           Padding(
               padding: const EdgeInsets.all(8.0),
@@ -131,11 +151,16 @@ class SignUpState extends State<SignUp> {
                 controller: firstNameController,
                 keyboardType: TextInputType.name,
                 autocorrect: false,
-                material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("First name", "John", colors)),
+                material: (_, __) => MaterialTextFieldData(
+                    decoration:
+                        getFieldDecoration("First name", "John", colors)),
               )),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: Container(alignment: Alignment.centerLeft, child: Text('Last name', style: TextStyle(color: colors.onPrimaryContainer))),
+            child: Container(
+                alignment: Alignment.centerLeft,
+                child: Text('Last name',
+                    style: TextStyle(color: colors.onPrimaryContainer))),
           ),
           Padding(
               padding: const EdgeInsets.all(8.0),
@@ -143,14 +168,16 @@ class SignUpState extends State<SignUp> {
                 controller: lastNameController,
                 keyboardType: TextInputType.name,
                 autocorrect: false,
-                material: (_, __) => MaterialTextFieldData(decoration: getFieldDecoration("Last name", "Doe", colors)),
+                material: (_, __) => MaterialTextFieldData(
+                    decoration: getFieldDecoration("Last name", "Doe", colors)),
               )),
           Visibility(
-            visible: error.length > 0,
+            visible: error.isNotEmpty,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                  decoration: BoxDecoration(borderRadius: defaultBorder, color: Colors.red.shade400),
+                  decoration: BoxDecoration(
+                      borderRadius: defaultBorder, color: Colors.red.shade400),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(error),
@@ -162,7 +189,10 @@ class SignUpState extends State<SignUp> {
             child: Row(
               children: [
                 Expanded(
-                  child: PlatformElevatedButton(color: colors.secondaryContainer, onPressed: () => signup(context), child: Text('Sign up')),
+                  child: PlatformElevatedButton(
+                      color: colors.secondaryContainer,
+                      onPressed: () => signup(context),
+                      child: Text('Sign up')),
                 ),
               ],
             ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 /*
@@ -59,5 +58,9 @@ AppColors get(BuildContext context) {
 
 LinearGradient defaultGradient(BuildContext context) {
   final colors = Theme.of(context).colorScheme;
-  return LinearGradient(colors: [colors.primary.darken(10), colors.primary], stops: [0, 0.5], begin: Alignment.bottomCenter, end: Alignment.topRight);
+  return LinearGradient(
+      colors: [colors.primary.darken(10), colors.primary],
+      stops: [0, 0.5],
+      begin: Alignment.bottomCenter,
+      end: Alignment.topRight);
 }

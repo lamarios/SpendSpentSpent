@@ -14,9 +14,19 @@ class Expense {
   Category category;
   int? id;
 
-  Expense({required this.amount, this.id, required this.date, this.note, required this.category, this.type, this.latitude, this.longitude, this.timestamp});
+  Expense(
+      {required this.amount,
+      this.id,
+      required this.date,
+      this.note,
+      required this.category,
+      this.type,
+      this.latitude,
+      this.longitude,
+      this.timestamp});
 
-  factory Expense.fromJson(Map<String, dynamic> json) => _$ExpenseFromJson(json);
+  factory Expense.fromJson(Map<String, dynamic> json) =>
+      _$ExpenseFromJson(json);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated

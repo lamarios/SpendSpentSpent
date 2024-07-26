@@ -11,14 +11,13 @@ import 'package:spend_spent_spent/components/expenseDialog/currencyConverter.dar
 import 'package:spend_spent_spent/components/expenseDialog/keypad.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 const LOCATION_TIMEOUT = 10;
 
 class AddExpense extends StatelessWidget {
   final Category category;
 
-  const AddExpense({required this.category});
+  const AddExpense({super.key, required this.category});
 
   double getIconHeight(MediaQueryData mq) {
     return min(mq.size.height / 6, 150);
@@ -59,11 +58,11 @@ class AddExpense extends StatelessWidget {
 
         return Container(
           alignment: Alignment.center,
-          color: colors.background.withOpacity(0),
-          padding: EdgeInsets.all(0),
+          color: colors.surface.withOpacity(0),
+          padding: const EdgeInsets.all(0),
           child: Container(
-            constraints: BoxConstraints(maxWidth: 350),
-            decoration: BoxDecoration(
+            constraints: const BoxConstraints(maxWidth: 350),
+            decoration: const BoxDecoration(
               borderRadius: defaultBorder,
             ),
             child: LayoutBuilder(builder: (context, constraints) {
@@ -80,7 +79,7 @@ class AddExpense extends StatelessWidget {
                     },
                     child: state.saving
                         ? Container(
-                            key: Key("saving"),
+                            key: const Key("saving"),
                             height: 150,
                             width: 150,
                             alignment: Alignment.center,
@@ -92,7 +91,8 @@ class AddExpense extends StatelessWidget {
                                 child: DummyFade(
                                     running: state.saving,
                                     child: AnimatedSwitcher(
-                                        duration: Duration(milliseconds: 130),
+                                        duration:
+                                            const Duration(milliseconds: 130),
                                         transitionBuilder: (Widget child,
                                             Animation<double> animation) {
                                           return ScaleTransition(
@@ -103,7 +103,7 @@ class AddExpense extends StatelessWidget {
                                         child: getIconHeader(context)))),
                           )
                         : Container(
-                            key: Key("input"),
+                            key: const Key("input"),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: defaultBorder,
@@ -136,7 +136,7 @@ class AddExpense extends StatelessWidget {
                                             onPressed: () =>
                                                 Navigator.of(context).pop(),
                                             icon: FaIcon(
-                                              FontAwesomeIcons.times,
+                                              FontAwesomeIcons.xmark,
                                               color: colors.onPrimaryContainer,
                                               size: 20,
                                             )),
@@ -227,7 +227,7 @@ class AddExpense extends StatelessWidget {
                                                 Navigator.of(context).pop();
                                               }
                                             : null,
-                                        child: Text('Save'),
+                                        child: const Text('Save'),
                                       )),
                                     ],
                                   ),
@@ -244,5 +244,4 @@ class AddExpense extends StatelessWidget {
       }),
     );
   }
-
 }

@@ -1,22 +1,21 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class MenuBar extends StatefulWidget {
-  Function setPage;
-  int page;
+  final Function setPage;
+  final int page;
 
-  MenuBar({required this.setPage, required this.page});
+  const MenuBar({super.key, required this.setPage, required this.page});
 
   @override
   MenuBarState createState() => MenuBarState();
 }
 
-class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLayoutMixin<MenuBar> {
+class MenuBarState extends State<MenuBar>
+    with TickerProviderStateMixin, AfterLayoutMixin<MenuBar> {
   late Animation<Color?> animation0, animation1, animation2;
   late AnimationController controller0, controller1, controller2;
 
@@ -65,12 +64,12 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return controller0 != null ? Container(
+    return Container(
       height: 50,
       width: 200,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(25)),
+        borderRadius: const BorderRadius.all(Radius.circular(25)),
         gradient: defaultGradient(context),
       ),
       child: LayoutBuilder(
@@ -100,18 +99,19 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
                   top: 3.5,
                   bottom: 3.5,
                   curve: Curves.easeInOutQuart,
+                  duration: panelTransition,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
                     child: Container(
                       decoration: BoxDecoration(
                         color: colors.onPrimaryContainer,
-                        borderRadius: BorderRadius.all(Radius.circular(40)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(40)),
                       ),
                       height: 1,
                       width: 1,
                     ),
-                  ),
-                  duration: panelTransition),
+                  )),
               Positioned(
                 left: 0,
                 right: 0,
@@ -126,23 +126,21 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           hoverColor: Colors.transparent,
-                          icon: FaIcon(FontAwesomeIcons.barsProgress),
+                          icon: const FaIcon(FontAwesomeIcons.barsProgress),
                           onPressed: () {
                             setSelected(0);
                           }),
                     ),
                     Expanded(
-                        child: Container(
-                      child: IconButton(
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          color: animation1.value,
-                          icon: FaIcon(FontAwesomeIcons.solidSquare),
-                          onPressed: () {
-                            setSelected(1);
-                          }),
-                    )),
+                        child: IconButton(
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            color: animation1.value,
+                            icon: const FaIcon(FontAwesomeIcons.solidSquare),
+                            onPressed: () {
+                              setSelected(1);
+                            })),
                     Padding(
                       padding: const EdgeInsets.only(right: 10.0),
                       child: IconButton(
@@ -150,7 +148,7 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           hoverColor: Colors.transparent,
-                          icon: FaIcon(FontAwesomeIcons.bars),
+                          icon: const FaIcon(FontAwesomeIcons.bars),
                           onPressed: () {
                             setSelected(2);
                           }),
@@ -162,7 +160,7 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
           );
         },
       ),
-    ): SizedBox.shrink();
+    );
   }
 
   @override
@@ -170,20 +168,26 @@ class MenuBarState extends State<MenuBar> with TickerProviderStateMixin, AfterLa
     final colors = Theme.of(context).colorScheme;
     setState(() {
       controller0 = AnimationController(duration: panelTransition, vsync: this);
-      animation0 = (ColorTween(begin: colors.onPrimaryContainer, end: colors.primary).animate(controller0))
-        ..addListener(() {
-          setState(() {});
-        });
+      animation0 =
+          (ColorTween(begin: colors.onPrimaryContainer, end: colors.primary)
+              .animate(controller0))
+            ..addListener(() {
+              setState(() {});
+            });
       controller1 = AnimationController(duration: panelTransition, vsync: this);
-      animation1 = (ColorTween(begin: colors.onPrimaryContainer, end: colors.primary).animate(controller1))
-        ..addListener(() {
-          setState(() {});
-        });
+      animation1 =
+          (ColorTween(begin: colors.onPrimaryContainer, end: colors.primary)
+              .animate(controller1))
+            ..addListener(() {
+              setState(() {});
+            });
       controller2 = AnimationController(duration: panelTransition, vsync: this);
-      animation2 = (ColorTween(begin: colors.onPrimaryContainer, end: colors.primary).animate(controller2))
-        ..addListener(() {
-          setState(() {});
-        });
+      animation2 =
+          (ColorTween(begin: colors.onPrimaryContainer, end: colors.primary)
+              .animate(controller2))
+            ..addListener(() {
+              setState(() {});
+            });
       setIconColors();
     });
   }

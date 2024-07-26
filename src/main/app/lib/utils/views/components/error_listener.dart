@@ -16,7 +16,7 @@ class ErrorHandler<C extends Cubit<S>, S extends WithError>
   Widget build(BuildContext context) {
     return BlocListener<C, S>(
       listenWhen: (previous, current) =>
-      current.error != null && previous.error != current.error,
+          current.error != null && previous.error != current.error,
       listener: (context, state) {
         if (showAsSnack) {
           ErrorDialog.showSnack(context,

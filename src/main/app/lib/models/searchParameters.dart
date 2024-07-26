@@ -10,7 +10,11 @@ class SearchParameters {
   int minAmount, maxAmount;
   String note;
 
-  SearchParameters({required this.categories, required this.maxAmount, required this.minAmount, required this.note});
+  SearchParameters(
+      {required this.categories,
+      required this.maxAmount,
+      required this.minAmount,
+      required this.note});
 
   factory SearchParameters.fromJson(Map<String, dynamic> json) =>
       _$SearchParametersFromJson(json);

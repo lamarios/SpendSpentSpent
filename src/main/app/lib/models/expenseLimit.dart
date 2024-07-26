@@ -1,4 +1,3 @@
-import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'expenseLimit.g.dart';
@@ -9,7 +8,8 @@ class ExpenseLimits {
 
   ExpenseLimits({required this.years, required this.months});
 
-  factory ExpenseLimits.fromJson(Map<String, dynamic> json) => _$ExpenseLimitsFromJson(json);
+  factory ExpenseLimits.fromJson(Map<String, dynamic> json) =>
+      _$ExpenseLimitsFromJson(json);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated

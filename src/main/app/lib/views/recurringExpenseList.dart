@@ -2,17 +2,19 @@ import 'package:after_layout/after_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/components/dummies/dummyExpenses.dart';
-import 'package:spend_spent_spent/components/dummies/dummyRecurringExpenseList.dart';
 import 'package:spend_spent_spent/components/recurringExpenses/expenseList.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/models/recurringExpense.dart';
 
 class RecurringExpenseList extends StatefulWidget {
+  const RecurringExpenseList({super.key});
+
   @override
   RecurringExpenseListState createState() => RecurringExpenseListState();
 }
 
-class RecurringExpenseListState extends State<RecurringExpenseList> with AfterLayoutMixin<RecurringExpenseList> {
+class RecurringExpenseListState extends State<RecurringExpenseList>
+    with AfterLayoutMixin<RecurringExpenseList> {
   List<RecurringExpense>? expenses;
   Widget expensesWidget = DummyExpenses();
 
@@ -35,7 +37,10 @@ class RecurringExpenseListState extends State<RecurringExpenseList> with AfterLa
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Expanded(child: Container(child: AnimatedSwitcher(duration: panelTransition, child: expensesWidget))),
+        Expanded(
+            child: Container(
+                child: AnimatedSwitcher(
+                    duration: panelTransition, child: expensesWidget))),
       ],
     );
   }

@@ -7,9 +7,11 @@ import 'package:spend_spent_spent/globals.dart';
 class SettingsCategoryGridItem extends StatelessWidget {
   const SettingsCategoryGridItem({super.key});
 
-
-  void showAddCategory(BuildContext context){
-    Navigator.push(context, platformPageRoute(context: context, builder: (context) => CategorySettingsScreen()));
+  void showAddCategory(BuildContext context) {
+    Navigator.push(
+        context,
+        platformPageRoute(
+            context: context, builder: (context) => CategorySettingsScreen()));
   }
 
   @override
@@ -21,9 +23,10 @@ class SettingsCategoryGridItem extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
             borderRadius: defaultBorder,
-            border: Border.all(width: 3, color: colors.primary.withOpacity(0.5))),
+            border:
+                Border.all(width: 3, color: colors.primary.withOpacity(0.5))),
         child: FaIcon(
-          FontAwesomeIcons.cog,
+          FontAwesomeIcons.gear,
           color: colors.primary.withOpacity(0.5),
         ),
       ),

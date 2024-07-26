@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class DummyStats extends StatelessWidget {
+  const DummyStats({super.key});
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -24,7 +22,7 @@ class DummyStats extends StatelessWidget {
                   color: colors.surfaceContainer,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Text(
                 '0.00',
                 style: TextStyle(color: colors.surfaceContainer),
@@ -36,7 +34,9 @@ class DummyStats extends StatelessWidget {
             child: Container(
               alignment: Alignment.topLeft,
               height: 10,
-              decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: colors.surfaceContainer),
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  color: colors.surfaceContainer),
             ),
           )
         ],

@@ -1,19 +1,21 @@
 import 'package:after_layout/after_layout.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
-import 'package:spend_spent_spent/categories/models/category.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class Step1 extends StatefulWidget {
-  Function setCategory, setName;
-  Category? selected;
-  String name;
+  final Function setCategory, setName;
+  final Category? selected;
+  final String name;
 
-  Step1({required this.setCategory, this.selected, required this.setName, required this.name});
+  const Step1(
+      {super.key,
+      required this.setCategory,
+      this.selected,
+      required this.setName,
+      required this.name});
 
   @override
   Step1State createState() => Step1State();
@@ -65,12 +67,19 @@ class Step1State extends State<Step1> with AfterLayoutMixin {
                             child: AnimatedContainer(
                               decoration: BoxDecoration(
                                 borderRadius: defaultBorder,
-                                color: (widget.selected?.icon ?? '') != e.icon ? Colors.transparent : colors.primaryContainer,
+                                color: (widget.selected?.icon ?? '') != e.icon
+                                    ? Colors.transparent
+                                    : colors.primaryContainer,
                               ),
                               duration: panelTransition,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: getIcon(e.icon!, size: 30, color: (widget.selected?.icon ?? '') == e.icon ? colors.onPrimaryContainer : colors.primary),
+                                child: getIcon(e.icon!,
+                                    size: 30,
+                                    color:
+                                        (widget.selected?.icon ?? '') == e.icon
+                                            ? colors.onPrimaryContainer
+                                            : colors.primary),
                               ),
                             ),
                           ))

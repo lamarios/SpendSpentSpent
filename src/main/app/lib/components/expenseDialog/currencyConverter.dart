@@ -1,9 +1,7 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/currencyConversion.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
 
 const CURRENCIES = [
@@ -43,17 +41,24 @@ const CURRENCIES = [
 ];
 
 class CurrencyConverter extends StatefulWidget {
-  CurrencyConversion? currencyConversion;
-  String value, valueFrom;
-  Function valueToStr, setCurrencyConversion;
+  final CurrencyConversion? currencyConversion;
+  final String value, valueFrom;
+  final Function valueToStr, setCurrencyConversion;
 
-  CurrencyConverter({this.currencyConversion, required this.value, required this.valueFrom, required this.valueToStr, required this.setCurrencyConversion});
+  const CurrencyConverter(
+      {super.key,
+      this.currencyConversion,
+      required this.value,
+      required this.valueFrom,
+      required this.valueToStr,
+      required this.setCurrencyConversion});
 
   @override
   CurrencyConverterState createState() => CurrencyConverterState();
 }
 
-class CurrencyConverterState extends State<CurrencyConverter> with AfterLayoutMixin<CurrencyConverter> {
+class CurrencyConverterState extends State<CurrencyConverter>
+    with AfterLayoutMixin<CurrencyConverter> {
   String fromCurrency = CURRENCIES[0];
   String toCurrency = CURRENCIES[1];
 
@@ -77,7 +82,8 @@ class CurrencyConverterState extends State<CurrencyConverter> with AfterLayoutMi
 
   Future<void> setCurrency() async {
     var rate = await service.getCurrencyRate(fromCurrency, toCurrency);
-    var currency = CurrencyConversion(from: fromCurrency, to: toCurrency, rate: rate);
+    var currency =
+        CurrencyConversion(from: fromCurrency, to: toCurrency, rate: rate);
     widget.setCurrencyConversion(currency);
   }
 
@@ -101,7 +107,8 @@ class CurrencyConverterState extends State<CurrencyConverter> with AfterLayoutMi
                         value: fromCurrency,
                         onChanged: changeFromCurrency,
                         dropdownColor: colors.surface,
-                        items: CURRENCIES.map<DropdownMenuItem<String>>((String value) {
+                        items: CURRENCIES
+                            .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                               value: value,
                               child: Text(
@@ -109,7 +116,9 @@ class CurrencyConverterState extends State<CurrencyConverter> with AfterLayoutMi
                                 style: TextStyle(color: colors.onSurface),
                               ));
                         }).toList()),
-                    Text('${widget.valueToStr(widget.valueFrom)}', style: TextStyle(fontSize: 20, color: colors.onSurface)),
+                    Text('${widget.valueToStr(widget.valueFrom)}',
+                        style:
+                            TextStyle(fontSize: 20, color: colors.onSurface)),
                   ],
                 ),
               ),
@@ -121,7 +130,8 @@ class CurrencyConverterState extends State<CurrencyConverter> with AfterLayoutMi
                         value: toCurrency,
                         dropdownColor: colors.surface,
                         onChanged: changeToCurrency,
-                        items: CURRENCIES.map<DropdownMenuItem<String>>((String value) {
+                        items: CURRENCIES
+                            .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                               value: value,
                               child: Text(
@@ -129,7 +139,9 @@ class CurrencyConverterState extends State<CurrencyConverter> with AfterLayoutMi
                                 style: TextStyle(color: colors.onSurface),
                               ));
                         }).toList()),
-                    Text('${widget.valueToStr(widget.value)}', style: TextStyle(fontSize: 20, color: colors.onSurface)),
+                    Text('${widget.valueToStr(widget.value)}',
+                        style:
+                            TextStyle(fontSize: 20, color: colors.onSurface)),
                   ],
                 ),
               ),

@@ -1,14 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/components/expenseDialog/keypad.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class Step3 extends StatefulWidget {
-  Function setAmount;
-  String amount;
+  final Function setAmount;
+  final String amount;
 
-  Step3({required this.setAmount, required this.amount});
+  const Step3({super.key, required this.setAmount, required this.amount});
 
   @override
   Step3State createState() => Step3State();
@@ -31,7 +28,7 @@ class Step3State extends State<Step3> {
   }
 
   void removeNumber() {
-    if (widget.amount.length > 0) {
+    if (widget.amount.isNotEmpty) {
       String value = widget.amount.substring(0, widget.amount.length - 1);
       widget.setAmount(value);
     }
@@ -49,11 +46,13 @@ class Step3State extends State<Step3> {
                   alignment: Alignment.centerRight,
                   decoration: BoxDecoration(
                     color: colors.surface,
-                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    borderRadius: const BorderRadius.all(Radius.circular(25)),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Text(valueToStr(widget.amount), style: TextStyle(fontSize: 20, color: colors.onSurface)),
+                    child: Text(valueToStr(widget.amount),
+                        style:
+                            TextStyle(fontSize: 20, color: colors.onSurface)),
                   ))),
         ]),
         KeyPad(addNumber: addNumber, removeNumber: removeNumber)

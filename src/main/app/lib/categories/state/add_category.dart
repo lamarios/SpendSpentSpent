@@ -39,9 +39,7 @@ class AddCategoryCubit extends Cubit<AddCategoryState> {
     emit(state.copyWith(selected: s));
   }
 
-  saveNewCategory() {
-
-  }
+  saveNewCategory() {}
 }
 
 @freezed

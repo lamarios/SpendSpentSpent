@@ -25,7 +25,6 @@ const BROADCAST_LOGGED_IN = 'loggedIn',
 const TABLET = 768.0;
 const BIG_PHONE = 500;
 
-
 ButtonStyle flatButtonStyle = TextButton.styleFrom(
   foregroundColor: Colors.white,
   backgroundColor: Colors.blue[800],
@@ -58,5 +57,6 @@ String formatCurrency(double amount) {
 }
 
 void setStatusBarColor(Color color, Brightness text) {
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: color, statusBarIconBrightness: text));
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: color, statusBarIconBrightness: text));
 }

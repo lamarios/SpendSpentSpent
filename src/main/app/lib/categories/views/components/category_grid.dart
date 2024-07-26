@@ -7,7 +7,7 @@ import 'package:spend_spent_spent/categories/views/components/settings_category_
 import 'package:spend_spent_spent/globals.dart';
 
 class CategoryGrid extends StatelessWidget {
- final List<Category> categories;
+  final List<Category> categories;
 
   const CategoryGrid(this.categories);
 

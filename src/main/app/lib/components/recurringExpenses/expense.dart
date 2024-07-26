@@ -6,19 +6,18 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/recurringExpense.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/views/recurringExpenseView.dart';
 
 class Expense extends StatefulWidget {
-  RecurringExpense expense;
-  Function refreshExpenses;
-  Key? key;
+  final RecurringExpense expense;
+  final Function refreshExpenses;
 
-  Expense({this.key, required this.expense, required this.refreshExpenses});
+  const Expense(
+      {super.key, required this.expense, required this.refreshExpenses});
 
+  @override
   ExpenseState createState() => ExpenseState();
 }
 
@@ -26,7 +25,7 @@ class ExpenseState extends State<Expense> with AfterLayoutMixin {
   bool opened = false;
   bool showInfo = false;
 
-  Offset offset = Offset(-1, 0);
+  Offset offset = const Offset(-1, 0);
   double opacity = 0;
 
   toggle() {
@@ -63,7 +62,8 @@ class ExpenseState extends State<Expense> with AfterLayoutMixin {
     showModal(
         context: context,
         builder: (context) => Card(
-            margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 550, maxHeight: 950),
+            margin: getInsetsForMaxSize(MediaQuery.of(context),
+                maxWidth: 550, maxHeight: 950),
             child: RecurringExpenseView(
               widget.expense,
               refreshExpenses: widget.refreshExpenses,
@@ -83,19 +83,23 @@ class ExpenseState extends State<Expense> with AfterLayoutMixin {
             children: [
               Container(
                 alignment: Alignment.center,
-                decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: colors.surfaceBright),
+                decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(25)),
+                    color: colors.surfaceBright),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      getIcon(widget.expense.category.icon!, size: 20, color: colors.onSecondaryContainer),
+                      getIcon(widget.expense.category.icon!,
+                          size: 20, color: colors.onSecondaryContainer),
                       Visibility(
-                        visible: widget.expense.name.trim().length > 0,
+                        visible: widget.expense.name.trim().isNotEmpty,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
                             widget.expense.name.trim(),
-                            style: TextStyle(color: colors.onSecondaryContainer),
+                            style:
+                                TextStyle(color: colors.onSecondaryContainer),
                           ),
                         ),
                       ),
@@ -110,7 +114,8 @@ class ExpenseState extends State<Expense> with AfterLayoutMixin {
                             offset: offset,
                             child: Text(
                               formatCurrency(widget.expense.amount),
-                              style: TextStyle(color: colors.onSecondaryContainer),
+                              style:
+                                  TextStyle(color: colors.onSecondaryContainer),
                             ),
                           ),
                         ),
@@ -127,16 +132,16 @@ class ExpenseState extends State<Expense> with AfterLayoutMixin {
               Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(25)),
-                  color: colors.primaryContainer
-                ),
+                    borderRadius: const BorderRadius.all(Radius.circular(25)),
+                    color: colors.primaryContainer),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      getIcon(widget.expense.category.icon!, size: 20, color: colors.onPrimaryContainer),
+                      getIcon(widget.expense.category.icon!,
+                          size: 20, color: colors.onPrimaryContainer),
                       Visibility(
-                        visible: widget.expense.name.trim().length > 0,
+                        visible: widget.expense.name.trim().isNotEmpty,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(

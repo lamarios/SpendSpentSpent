@@ -1,15 +1,8 @@
-import 'dart:math';
-
-import 'package:after_layout/after_layout.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/expense.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 const double MAP_HEIGHT = 200;
 const double NOTE_HEIGHT = 30;
@@ -35,7 +28,6 @@ class OneExpense extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final colors = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: openContainer,
@@ -96,7 +88,7 @@ class OneExpense extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: FaIcon(
-                        FontAwesomeIcons.redo,
+                        FontAwesomeIcons.arrowRotateRight,
                         color: colors.onSecondaryContainer,
                         size: 15,
                       ),

@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/components/recurringExpenses/addExpense.dart';
 import 'package:spend_spent_spent/components/recurringExpenses/expense.dart';
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/recurringExpense.dart';
 
 class ExpenseList extends StatelessWidget {
-  List<RecurringExpense> expenses, daily = [], weekly = [], monthly = [], yearly = [];
-  Function refreshExpenses;
+  final List<RecurringExpense> expenses,
+      daily = [],
+      weekly = [],
+      monthly = [],
+      yearly = [];
+  final Function refreshExpenses;
 
-  ExpenseList({required this.expenses, required this.refreshExpenses}) {
+  ExpenseList(
+      {super.key, required this.expenses, required this.refreshExpenses}) {
     splitExpenses(this.expenses);
   }
 
@@ -30,13 +34,15 @@ class ExpenseList extends StatelessWidget {
           return;
       }
     });
-    print(' total: ${expenses.length} daily: ${daily.length}, weekly: ${weekly.length}, monthly: ${monthly.length}, yearly: ${yearly.length}');
+    print(
+        ' total: ${expenses.length} daily: ${daily.length}, weekly: ${weekly.length}, monthly: ${monthly.length}, yearly: ${yearly.length}');
   }
 
-  List<Widget> expensesFromSplit(ColorScheme colors, List<RecurringExpense> expenses, String title) {
+  List<Widget> expensesFromSplit(
+      ColorScheme colors, List<RecurringExpense> expenses, String title) {
     List<Widget> results = [];
 
-    if (expenses.length > 0) {
+    if (expenses.isNotEmpty) {
       results.add(Container(
         alignment: Alignment.center,
         child: Padding(
@@ -59,19 +65,25 @@ class ExpenseList extends StatelessWidget {
 
       results.add(Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Wrap(runSpacing: 10, spacing: 10, alignment: WrapAlignment.center, children: expensesWidget),
+        child: Wrap(
+            runSpacing: 10,
+            spacing: 10,
+            alignment: WrapAlignment.center,
+            children: expensesWidget),
       ));
 
-      double total = expenses.map((e) => e.amount).reduce((value, element) => value + element);
+      double total = expenses
+          .map((e) => e.amount)
+          .reduce((value, element) => value + element);
 
       results.add(Padding(
         padding: const EdgeInsets.only(bottom: 16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Total: '),
+            const Text('Total: '),
             Text(
-              '${formatCurrency(total)}',
+              formatCurrency(total),
               style: TextStyle(color: colors.primary),
             )
           ],

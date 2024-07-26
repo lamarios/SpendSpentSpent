@@ -35,11 +35,15 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
   }
 
   void setPage(int page) {
-    buttonCarouselController.animateToPage(page, duration: panelTransition, curve: Curves.easeInOutQuart);
+    buttonCarouselController.animateToPage(page,
+        duration: panelTransition, curve: Curves.easeInOutQuart);
   }
 
   void openSettings(context) {
-    Navigator.push(context, platformPageRoute(context: context, builder: (context) => SettingsScreen()));
+    Navigator.push(
+        context,
+        platformPageRoute(
+            context: context, builder: (context) => SettingsScreen()));
   }
 
   void onPageChanged(int page, CarouselPageChangedReason reason) {
@@ -47,7 +51,6 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
       this.page = page;
     });
   }
-
 
   double columnMaxWidth(MediaQueryData data) {
     if (isTablet(data)) {
@@ -79,7 +82,8 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
                   child: Column(
                     children: [
                       Expanded(
-                        child: FadeIn(duration: panelTransition, child: LeftColumnTab()),
+                        child: FadeIn(
+                            duration: panelTransition, child: LeftColumnTab()),
                       ),
                     ],
                   ),
@@ -91,7 +95,9 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
                   child: Column(
                     children: [
                       Expanded(
-                        child: FadeIn(duration: panelTransition, child: MiddleColumnTab()),
+                        child: FadeIn(
+                            duration: panelTransition,
+                            child: MiddleColumnTab()),
                       ),
                     ],
                   ),
@@ -103,13 +109,19 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
                   child: const Column(
                     children: [
                       Expanded(
-                        child: FadeIn(duration: panelTransition, child: RightColumnTab()),
+                        child: FadeIn(
+                            duration: panelTransition, child: RightColumnTab()),
                       ),
                     ],
                   ),
                 )
               ],
-              options: CarouselOptions(height: MediaQuery.of(context).size.height, enableInfiniteScroll: false, viewportFraction: 1, onPageChanged: onPageChanged, initialPage: 1),
+              options: CarouselOptions(
+                  height: MediaQuery.of(context).size.height,
+                  enableInfiniteScroll: false,
+                  viewportFraction: 1,
+                  onPageChanged: onPageChanged,
+                  initialPage: 1),
             ),
           ),
         ),
@@ -129,7 +141,7 @@ class _MainViewState extends State<MainView> with AfterLayoutMixin<MainView> {
             right: 10,
             child: IconButton(
               icon: FaIcon(
-                FontAwesomeIcons.cog,
+                FontAwesomeIcons.gear,
                 color: Theme.of(context).primaryColor,
               ),
               onPressed: () => openSettings(context),

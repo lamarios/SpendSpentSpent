@@ -33,7 +33,8 @@ class DummySearchCategories extends StatelessWidget {
                   child: Container(
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
-                      child: getIcon(c, color: colors.surfaceContainer, size: 20),
+                      child:
+                          getIcon(c, color: colors.surfaceContainer, size: 20),
                     ),
                   ),
                 );

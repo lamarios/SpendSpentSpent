@@ -1,32 +1,23 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/expense.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 
-class ExpenseView extends StatefulWidget {
-  Expense expense;
+class ExpenseView extends StatelessWidget {
+  final Expense expense;
 
-  ExpenseView(this.expense);
+  const ExpenseView(this.expense, {super.key});
 
-  @override
-  ExpenseViewState createState() => ExpenseViewState();
-}
-
-class ExpenseViewState extends State<ExpenseView> {
   bool hasLocation() {
-    return widget.expense.longitude != 0 && widget.expense.latitude != 0;
+    return expense.longitude != 0 && expense.latitude != 0;
   }
 
   bool hasNote() {
-    return (widget.expense.note?.length ?? 0) > 0;
+    return (expense.note?.length ?? 0) > 0;
   }
 
   showDeleteExpenseDialog(BuildContext context) {
@@ -34,8 +25,9 @@ class ExpenseViewState extends State<ExpenseView> {
     showPlatformDialog(
         context: context,
         builder: (_) => PlatformAlertDialog(
-              title: Text('Delete Expense ?'),
-              content: Text('This will only delete this expense, it is not recoverable.'),
+              title: const Text('Delete Expense ?'),
+              content: const Text(
+                  'This will only delete this expense, it is not recoverable.'),
               actions: <Widget>[
                 PlatformDialogAction(
                   child: PlatformText(
@@ -49,7 +41,7 @@ class ExpenseViewState extends State<ExpenseView> {
                 PlatformDialogAction(
                   child: PlatformText(
                     'Delete',
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.red),
                   ),
                   onPressed: () {
                     deleteExpense(context);
@@ -61,7 +53,7 @@ class ExpenseViewState extends State<ExpenseView> {
   }
 
   deleteExpense(BuildContext context) async {
-    await service.deleteExpense(widget.expense.id!);
+    await service.deleteExpense(expense.id!);
     Navigator.pop(context);
   }
 
@@ -69,15 +61,16 @@ class ExpenseViewState extends State<ExpenseView> {
     List<Widget> icons = [];
 
     for (int i = 0; i < 150; i++) {
-      icons.add(getIcon(widget.expense.category.icon!, color: colors.onSurface, size: 40));
+      icons.add(
+          getIcon(expense.category.icon!, color: colors.onSurface, size: 40));
     }
 
     return Opacity(
       opacity: 0.03,
       child: Wrap(
-        children: icons,
         spacing: 20,
         runSpacing: 20,
+        children: icons,
       ),
     );
   }
@@ -104,24 +97,32 @@ class ExpenseViewState extends State<ExpenseView> {
             right: 0,
             bottom: 0,
             child: Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: Colors.white),
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(25)),
+                  color: Colors.white),
               child: FlutterMap(
                 options: MapOptions(
                     initialZoom: 15,
-
-                    initialCenter: LatLng((widget.expense.latitude ?? 0) - 0.013, widget.expense.longitude ?? 0)),
+                    initialCenter: LatLng((expense.latitude ?? 0) - 0.013,
+                        expense.longitude ?? 0)),
                 children: [
-                  TileLayer(urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png", userAgentPackageName: 'com.spendspentspent.app', retinaMode: MediaQuery.of(context).devicePixelRatio > 1.0),
+                  TileLayer(
+                      urlTemplate:
+                          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      userAgentPackageName: 'com.spendspentspent.app',
+                      retinaMode:
+                          MediaQuery.of(context).devicePixelRatio > 1.0),
                   MarkerLayer(markers: [
                     Marker(
                         width: 40.0,
                         height: 40.0,
-                        point: new LatLng(widget.expense.latitude ?? 0, widget.expense.longitude ?? 0),
+                        point: new LatLng(
+                            expense.latitude ?? 0, expense.longitude ?? 0),
                         child: FaIcon(
-                              FontAwesomeIcons.mapMarkerAlt,
-                              color: colors.primary,
-                              size: 50,
-                            ))
+                          FontAwesomeIcons.locationDot,
+                          color: colors.primary,
+                          size: 50,
+                        ))
                   ])
                 ],
               ),
@@ -138,7 +139,7 @@ class ExpenseViewState extends State<ExpenseView> {
                   behavior: HitTestBehavior.translucent,
                   onTap: () => showDeleteExpenseDialog(context),
                   child: Container(
-                    child: FaIcon(
+                    child: const FaIcon(
                       FontAwesomeIcons.trash,
                       color: Colors.red,
                     ),
@@ -159,11 +160,15 @@ class ExpenseViewState extends State<ExpenseView> {
                     width: 30,
                     height: 30,
                     alignment: Alignment.center,
-                    decoration: BoxDecoration(color: hasLocation() ? colors.surfaceContainer : Colors.transparent, borderRadius: BorderRadius.circular(20)),
+                    decoration: BoxDecoration(
+                        color: hasLocation()
+                            ? colors.surfaceContainer
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(20)),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: FaIcon(
-                        FontAwesomeIcons.times,
+                        FontAwesomeIcons.xmark,
                         color: colors.onSurface,
                         size: 15,
                       ),
@@ -182,24 +187,33 @@ class ExpenseViewState extends State<ExpenseView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                child: getIcon(widget.expense.category.icon!, color: colors.onPrimaryContainer, size: 50),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: colors.primaryContainer),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: colors.primaryContainer),
                 width: 100,
                 alignment: Alignment.center,
                 height: 100,
+                child: getIcon(expense.category.icon!,
+                    color: colors.onPrimaryContainer, size: 50),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: defaultBorder,
-                    color: hasLocation() ? colors.surfaceContainer : Colors.transparent,
+                    color: hasLocation()
+                        ? colors.surfaceContainer
+                        : Colors.transparent,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0, vertical: 10),
                     child: Text(
-                      formatCurrency(widget.expense.amount),
-                      style: TextStyle(fontSize: 50, color: colors.onSurface, fontWeight: FontWeight.w300),
+                      formatCurrency(expense.amount),
+                      style: TextStyle(
+                          fontSize: 50,
+                          color: colors.onSurface,
+                          fontWeight: FontWeight.w300),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -211,10 +225,18 @@ class ExpenseViewState extends State<ExpenseView> {
                     padding: const EdgeInsets.only(bottom: 0.0),
                     child: Container(
                       width: 300,
-                      decoration: BoxDecoration(borderRadius: defaultBorder, color: colors.tertiaryContainer),
+                      decoration: BoxDecoration(
+                          borderRadius: defaultBorder,
+                          color: colors.tertiaryContainer),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
-                        child: Text(widget.expense.note ?? '', textAlign: TextAlign.center, style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300, color: colors.onTertiaryContainer)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30.0, vertical: 10),
+                        child: Text(expense.note ?? '',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w300,
+                                color: colors.onTertiaryContainer)),
                       ),
                     ),
                   )),

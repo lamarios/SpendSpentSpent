@@ -9,7 +9,9 @@ class DummyRecurringExpense extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         height: 40,
-        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: colors.surfaceContainer),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(25)),
+            color: colors.surfaceContainer),
       ),
     );
   }

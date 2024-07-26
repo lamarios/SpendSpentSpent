@@ -27,12 +27,10 @@ class ErrorDialog extends StatelessWidget {
             children: _buildError(context, error, trace))));
   }
 
-
   static List<Widget> _buildError(
       BuildContext context, dynamic error, StackTrace? trace) {
-
-      // we really don't know what's going on
-      return [Text('${error.toString()}')];
+    // we really don't know what's going on
+    return [Text('${error.toString()}')];
   }
 
   @override
@@ -40,35 +38,34 @@ class ErrorDialog extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return Dialog(
       child: Container(
-        child:  Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Error',
-                  style: textTheme.headlineSmall,
-                ),
-                const Gap(20),
-                Flexible(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ..._buildError(context, error, trace),
-                      ],
-                    ),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Error',
+                style: textTheme.headlineSmall,
+              ),
+              const Gap(20),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ..._buildError(context, error, trace),
+                    ],
                   ),
                 ),
-                const Gap(20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text('ok'))
-                  ],
-                )
-              ]),
-
+              ),
+              const Gap(20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text('ok'))
+                ],
+              )
+            ]),
       ),
     );
   }

@@ -26,7 +26,8 @@ class RecurringExpense {
       this.nextOccurrence,
       required this.typeParam});
 
-  factory RecurringExpense.fromJson(Map<String, dynamic> json) => _$RecurringExpenseFromJson(json);
+  factory RecurringExpense.fromJson(Map<String, dynamic> json) =>
+      _$RecurringExpenseFromJson(json);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated

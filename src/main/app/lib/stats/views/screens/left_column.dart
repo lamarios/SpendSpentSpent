@@ -77,8 +77,9 @@ class LeftColumnTabState extends State<LeftColumnTab> with AfterLayoutMixin {
               onSelect: switchTab,
             ),
           ),
-          Expanded(child: AnimatedSwitcher(duration: panelTransition,
-          child: statsWidget))
+          Expanded(
+              child: AnimatedSwitcher(
+                  duration: panelTransition, child: statsWidget))
         ],
       ),
     );

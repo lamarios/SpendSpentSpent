@@ -1,11 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'config.g.dart';
 
 @JsonSerializable()
 class Config {
-  bool allowSignup, canResetPassword, demoMode, hasSubscription, canConvertCurrency;
+  bool allowSignup,
+      canResetPassword,
+      demoMode,
+      hasSubscription,
+      canConvertCurrency;
   String announcement, convertCurrencyQuota;
   String? minAppVersion;
   int backendVersion;

@@ -50,7 +50,7 @@ class AddCategory extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: FaIcon(
-                            FontAwesomeIcons.search,
+                            FontAwesomeIcons.magnifyingGlass,
                             color: colors.onPrimaryContainer,
                             size: 15,
                           ),
@@ -88,55 +88,55 @@ class AddCategory extends StatelessWidget {
                           Categories(
                             label: 'Shopping',
                             categories: state.categories.shopping,
-                            onSelect: (selected) => onSelect(context, selected) ,
+                            onSelect: (selected) => onSelect(context, selected),
                             selected: state.selected,
                           ),
                           Categories(
                             label: 'Transports',
                             categories: state.categories.transports,
-                            onSelect: (selected) => onSelect(context, selected) ,
+                            onSelect: (selected) => onSelect(context, selected),
                             selected: state.selected,
                           ),
                           Categories(
                             label: 'Brands',
                             categories: state.categories.brands,
-                            onSelect: (selected) => onSelect(context, selected) ,
+                            onSelect: (selected) => onSelect(context, selected),
                             selected: state.selected,
                           ),
                           Categories(
                             label: 'Hobbies',
                             categories: state.categories.hobbies,
-                            onSelect: (selected) => onSelect(context, selected) ,
+                            onSelect: (selected) => onSelect(context, selected),
                             selected: state.selected,
                           ),
                           Categories(
                             label: 'Health',
                             categories: state.categories.health,
-                            onSelect: (selected) => onSelect(context, selected) ,
+                            onSelect: (selected) => onSelect(context, selected),
                             selected: state.selected,
                           ),
                           Categories(
                             label: 'Education',
                             categories: state.categories.education,
-                            onSelect: (selected) => onSelect(context, selected) ,
+                            onSelect: (selected) => onSelect(context, selected),
                             selected: state.selected,
                           ),
                           Categories(
                             label: 'Housing',
                             categories: state.categories.housing,
-                            onSelect: (selected) => onSelect(context, selected) ,
+                            onSelect: (selected) => onSelect(context, selected),
                             selected: state.selected,
                           ),
                           Categories(
                             label: 'Tech',
                             categories: state.categories.tech,
-                            onSelect: (selected) => onSelect(context, selected) ,
+                            onSelect: (selected) => onSelect(context, selected),
                             selected: state.selected,
                           ),
                           Categories(
                             label: 'Documents',
                             categories: state.categories.documents,
-                            onSelect: (selected) => onSelect(context, selected) ,
+                            onSelect: (selected) => onSelect(context, selected),
                             selected: state.selected,
                           ),
                         ],
@@ -166,7 +166,7 @@ class AddCategory extends StatelessWidget {
               child: IconButton(
                   onPressed: () => closeDialog(context),
                   icon: FaIcon(
-                    FontAwesomeIcons.times,
+                    FontAwesomeIcons.xmark,
                     color: colors.onSecondaryContainer,
                     size: 20,
                   )),

@@ -1,10 +1,9 @@
-import 'package:after_layout/after_layout.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:spend_spent_spent/utils/views/components/switcher.dart';
-import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/categories/views/components/category_list.dart';
-import 'package:spend_spent_spent/views/recurringExpenseList.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:spend_spent_spent/categories/views/components/category_list.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/utils/views/components/switcher.dart';
+import 'package:spend_spent_spent/views/recurringExpenseList.dart';
 
 @RoutePage()
 class MiddleColumnTab extends StatefulWidget {
@@ -13,16 +12,15 @@ class MiddleColumnTab extends StatefulWidget {
 }
 
 class MiddleColumnTabState extends State<MiddleColumnTab> {
-  Widget current = CategoryList();
+  Widget current = const CategoryList();
   int selected = 0;
 
   void switchTab(int selected) {
     setState(() {
       this.selected = selected;
-      current = selected == 0 ? CategoryList() : RecurringExpenseList();
+      current = selected == 0 ? const CategoryList() : RecurringExpenseList();
     });
   }
-
 
   @override
   Widget build(BuildContext context) {

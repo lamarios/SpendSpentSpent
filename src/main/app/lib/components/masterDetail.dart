@@ -4,12 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class MasterDetail extends StatefulWidget {
-  Widget master;
-  Key key;
+  final Widget master;
 
-  MasterDetail({required this.key, required this.master});
+  MasterDetail({super.key, required this.master});
 
-  late MasterDetailState state;
+  late final MasterDetailState state;
 
   setDetails(Widget details, String title, BuildContext context) {
     details = details;
@@ -26,7 +25,6 @@ class MasterDetailState extends State<MasterDetail> {
   Widget? detail;
 
   void changeDetails(BuildContext context, String title, Widget detail) {
-
     if (!isTablet(MediaQuery.of(context))) {
       Navigator.push(
           context,
@@ -48,7 +46,10 @@ class MasterDetailState extends State<MasterDetail> {
   Widget build(BuildContext context) {
     bool tablet = isTablet(MediaQuery.of(context));
     if (tablet) {
-      return Row(children: [Container(width: 300, child: widget.master), Expanded(child: detail ?? Container())]);
+      return Row(children: [
+        SizedBox(width: 300, child: widget.master),
+        Expanded(child: detail ?? Container())
+      ]);
     } else {
       return widget.master;
     }

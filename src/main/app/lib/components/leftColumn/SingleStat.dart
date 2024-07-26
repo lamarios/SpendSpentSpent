@@ -110,7 +110,8 @@ class SingleStatsState extends State<SingleStats> {
                     width: getBarWidth(context, constraints),
                     height: open ? openedHeight : 10,
                     decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         color: colors.primaryContainer),
                     child: Visibility(
                       visible: showGraph,

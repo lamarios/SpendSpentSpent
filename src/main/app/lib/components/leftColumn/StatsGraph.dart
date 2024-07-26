@@ -1,26 +1,26 @@
 import 'dart:math';
+
 import 'package:after_layout/after_layout.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_spent_spent/components/dummies/DummyFade.dart';
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
-import 'package:spend_spent_spent/models/expenseLimit.dart';
 import 'package:spend_spent_spent/models/graphDataPoint.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 import '../../utils/debouncer.dart';
 
 class StatsGraph extends StatefulWidget {
-  bool monthly;
-  int categoryId;
-  Function close;
+  final bool monthly;
+  final int categoryId;
+  final Function close;
 
-  StatsGraph({required this.monthly, required this.categoryId, required this.close});
+  const StatsGraph(
+      {super.key,
+      required this.monthly,
+      required this.categoryId,
+      required this.close});
 
   @override
   StatsGraphState createState() => StatsGraphState();
@@ -84,7 +84,8 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
   Future<void> getLimits() async {
     var expenseLimits = await service.getExpenseLimits();
     setState(() {
-      periodMax = max(periodMax, widget.monthly ? expenseLimits.months + 3 : expenseLimits.years + 3);
+      periodMax = max(periodMax,
+          widget.monthly ? expenseLimits.months + 3 : expenseLimits.years + 3);
     });
   }
 
@@ -141,7 +142,13 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                 return list.map((e) {
                   bool avg = e.bar.barWidth == AVG_BAR_WIDTH;
                   String text = avg ? "Avg: " : "";
-                  return LineTooltipItem(text + formatCurrency(e.y), TextStyle(color: avg ? Colors.white.withOpacity(0.7) : Colors.white, fontSize: avg ? 12 : 20));
+                  return LineTooltipItem(
+                      text + formatCurrency(e.y),
+                      TextStyle(
+                          color: avg
+                              ? Colors.white.withOpacity(0.7)
+                              : Colors.white,
+                          fontSize: avg ? 12 : 20));
                 }).toList();
               })),
       gridData: FlGridData(
@@ -162,7 +169,8 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
       ),
       titlesData: FlTitlesData(
         show: true,
-        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles:
+            const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         // rightTitles: SideTitles(showTitles: false),
         topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         // topTitles: SideTitles(showTitles: false),
@@ -179,7 +187,11 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
 
                   if (value == value.roundToDouble()) {
                     return Padding(
-                        padding: const EdgeInsets.only(top: 12), child: RotationTransition(turns: const AlwaysStoppedAnimation(-45 / 360), child: Text(graphDataPoints[value.toInt()].date, style: style)));
+                        padding: const EdgeInsets.only(top: 12),
+                        child: RotationTransition(
+                            turns: const AlwaysStoppedAnimation(-45 / 360),
+                            child: Text(graphDataPoints[value.toInt()].date,
+                                style: style)));
                   } else {
                     return const Text('');
                   }
@@ -197,7 +209,10 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                   return Text(formatCurrency(value), style: style);
                 })),
       ),
-      borderData: FlBorderData(show: true, border: Border.all(color: colors.onPrimaryContainer.withOpacity(0.3), width: 1)),
+      borderData: FlBorderData(
+          show: true,
+          border: Border.all(
+              color: colors.onPrimaryContainer.withOpacity(0.3), width: 1)),
       minX: 0,
       minY: this.minValue,
       maxY: this.maxValue,
@@ -269,7 +284,8 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                 child: AnimatedContainer(
                     duration: panelTransition,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15.0, vertical: 5),
                       child: FaIcon(
                         FontAwesomeIcons.xmark,
                         color: colors.onPrimaryContainer,
@@ -289,7 +305,11 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
             switchInCurve: Curves.easeInOutQuart,
             switchOutCurve: Curves.easeInOutQuart,
             child: loadingFirst
-                ? DummyFade(child: FaIcon(FontAwesomeIcons.chartLine, color: colors.onPrimaryContainer, size: 90, key: const Key('loading')))
+                ? DummyFade(
+                    child: FaIcon(FontAwesomeIcons.chartLine,
+                        color: colors.onPrimaryContainer,
+                        size: 90,
+                        key: const Key('loading')))
                 : Column(
                     children: [
                       Expanded(
@@ -303,7 +323,8 @@ class StatsGraphState extends State<StatsGraph> with AfterLayoutMixin {
                       )),
                       Container(
                         alignment: Alignment.center,
-                        child: Text(getLabel(), style: TextStyle(color: colors.onPrimaryContainer)),
+                        child: Text(getLabel(),
+                            style: TextStyle(color: colors.onPrimaryContainer)),
                       ),
                       Slider.adaptive(
                         min: 1,

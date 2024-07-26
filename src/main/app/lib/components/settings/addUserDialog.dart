@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:random_string/random_string.dart';
@@ -8,9 +7,9 @@ import 'package:spend_spent_spent/models/user.dart';
 import 'package:spend_spent_spent/utils/stringUtils.dart';
 
 class AddUserDialog extends StatefulWidget {
-  Function saveUser;
+  final Function saveUser;
 
-  AddUserDialog({required this.saveUser});
+  const AddUserDialog({super.key, required this.saveUser});
 
   @override
   AddUserDialogState createState() => AddUserDialogState();
@@ -35,12 +34,17 @@ class AddUserDialogState extends State<AddUserDialog> {
   }
 
   bool valid() {
-    return emailController.text.length > 0 && isValidEmail(emailController.text) && firstNameController.text.length > 0 && lastNameController.text.length > 0 && passwordController.text.length > 0;
+    return emailController.text.isNotEmpty &&
+        isValidEmail(emailController.text) &&
+        firstNameController.text.isNotEmpty &&
+        lastNameController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty;
   }
 
   void randomPassword() {
     var r = Random.secure();
-    passwordController.text = randomAlpha(16, provider: CoreRandomProvider.from(r));
+    passwordController.text =
+        randomAlpha(16, provider: CoreRandomProvider.from(r));
   }
 
   @override
@@ -50,7 +54,7 @@ class AddUserDialogState extends State<AddUserDialog> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Email'),
+          const Text('Email'),
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child: PlatformTextField(
@@ -58,7 +62,7 @@ class AddUserDialogState extends State<AddUserDialog> {
               controller: emailController,
             ),
           ),
-          Text('First name'),
+          const Text('First name'),
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child: PlatformTextField(
@@ -66,7 +70,7 @@ class AddUserDialogState extends State<AddUserDialog> {
               controller: firstNameController,
             ),
           ),
-          Text('Last name'),
+          const Text('Last name'),
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child: PlatformTextField(
@@ -74,7 +78,7 @@ class AddUserDialogState extends State<AddUserDialog> {
               controller: lastNameController,
             ),
           ),
-          Text('Password'),
+          const Text('Password'),
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child: PlatformTextField(
@@ -82,10 +86,10 @@ class AddUserDialogState extends State<AddUserDialog> {
             ),
           ),
           PlatformTextButton(
-            child: Text('Generate password'),
             onPressed: randomPassword,
+            child: const Text('Generate password'),
           ),
-          Spacer(),
+          const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

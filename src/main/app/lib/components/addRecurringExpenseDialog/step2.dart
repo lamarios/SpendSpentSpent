@@ -1,12 +1,21 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 import '../../globals.dart';
 
-const Map<int, String> TYPES = {0: 'Daily', 1: 'Weekly', 2: 'Monthly', 3: 'Yearly'};
-const Map<int, String> WEEKLY_PARAMS = {2: 'Monday', 3: 'Tuesday', 4: 'Wednesday', 5: 'Thursday', 6: 'Saturday', 1: 'Sunday'};
+const Map<int, String> TYPES = {
+  0: 'Daily',
+  1: 'Weekly',
+  2: 'Monthly',
+  3: 'Yearly'
+};
+const Map<int, String> WEEKLY_PARAMS = {
+  2: 'Monday',
+  3: 'Tuesday',
+  4: 'Wednesday',
+  5: 'Thursday',
+  6: 'Saturday',
+  1: 'Sunday'
+};
 const Map<int, String> MONTHLY_PARAMS = {
   1: '1',
   2: '2',
@@ -53,10 +62,15 @@ const Map<int, String> YEARLY_PARAMS = {
 };
 
 class Step2 extends StatefulWidget {
-  int? type, typeParam;
-  Function setType, setTypeParam;
+  final int? type, typeParam;
+  final Function setType, setTypeParam;
 
-  Step2({required this.setType, required this.setTypeParam, this.type, this.typeParam});
+  const Step2(
+      {super.key,
+      required this.setType,
+      required this.setTypeParam,
+      this.type,
+      this.typeParam});
 
   @override
   Step2State createState() => Step2State();
@@ -106,12 +120,19 @@ class Step2State extends State<Step2> {
                         child: AnimatedContainer(
                           decoration: BoxDecoration(
                             borderRadius: defaultBorder,
-                            color: (widget.type ?? -1) != index ? Colors.transparent: colors.primaryContainer,
+                            color: (widget.type ?? -1) != index
+                                ? Colors.transparent
+                                : colors.primaryContainer,
                           ),
                           duration: panelTransition,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(e, style: TextStyle(fontSize: 15, color: (widget.type ?? -1) == index ? colors.onPrimaryContainer : colors.primary)),
+                            child: Text(e,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: (widget.type ?? -1) == index
+                                        ? colors.onPrimaryContainer
+                                        : colors.primary)),
                           ),
                         ),
                       )))
@@ -134,12 +155,19 @@ class Step2State extends State<Step2> {
                           child: AnimatedContainer(
                             decoration: BoxDecoration(
                               borderRadius: defaultBorder,
-                              color: (widget.typeParam ?? -1) != index ? Colors.transparent : colors.primaryContainer,
+                              color: (widget.typeParam ?? -1) != index
+                                  ? Colors.transparent
+                                  : colors.primaryContainer,
                             ),
                             duration: panelTransition,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(e, style: TextStyle(fontSize: 15, color: (widget.typeParam ?? -1) == index ? colors.onPrimaryContainer : colors.primary)),
+                              child: Text(e,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: (widget.typeParam ?? -1) == index
+                                          ? colors.onPrimaryContainer
+                                          : colors.primary)),
                             ),
                           ),
                         )))

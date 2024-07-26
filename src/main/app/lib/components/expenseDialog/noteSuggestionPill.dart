@@ -5,21 +5,21 @@ import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 
 import '../../globals.dart';
-import '../../models/appColors.dart';
-import '../../utils/colorUtils.dart';
 
-class NoteSuggestionPill extends StatefulWidget{
-  String text;
-  Function tapSuggestion;
-  Key? key;
-  NoteSuggestionPill({this.key, required this.text, required this.tapSuggestion});
+class NoteSuggestionPill extends StatefulWidget {
+  final String text;
+  final Function tapSuggestion;
+
+  const NoteSuggestionPill(
+      {super.key, required this.text, required this.tapSuggestion});
 
   @override
   NoteSuggestionPillState createState() => NoteSuggestionPillState();
 }
 
-class NoteSuggestionPillState extends State<NoteSuggestionPill> with AfterLayoutMixin<NoteSuggestionPill>{
-  Offset offset = Offset(1, 0);
+class NoteSuggestionPillState extends State<NoteSuggestionPill>
+    with AfterLayoutMixin<NoteSuggestionPill> {
+  Offset offset = const Offset(1, 0);
   double opacity = 0;
 
   @override
@@ -65,5 +65,4 @@ class NoteSuggestionPillState extends State<NoteSuggestionPill> with AfterLayout
       ),
     );
   }
-
 }

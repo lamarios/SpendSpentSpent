@@ -18,7 +18,8 @@ class GraphDataPoint {
     );
   }
 
-  static Map<String, dynamic> toJson(GraphDataPoint instance) => <String, dynamic>{
+  static Map<String, dynamic> toJson(GraphDataPoint instance) =>
+      <String, dynamic>{
         'date': instance.date,
         'amount': instance.amount,
       };

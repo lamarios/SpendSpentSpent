@@ -1,7 +1,6 @@
 import 'dart:core';
 import 'dart:math';
 
-import 'package:after_layout/after_layout.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,15 +12,13 @@ import 'package:spend_spent_spent/login/state/login.dart';
 import 'package:spend_spent_spent/login/views/components/loginForm.dart';
 import 'package:spend_spent_spent/login/views/components/resetPassword.dart';
 import 'package:spend_spent_spent/login/views/components/signUp.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/router.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/views/components/error_listener.dart';
 
 class Login extends StatelessWidget {
-  Function onLoginSuccess;
+  final Function onLoginSuccess;
 
-  Login({required this.onLoginSuccess});
+  const Login({super.key, required this.onLoginSuccess});
 
   double getTopPadding(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -45,8 +42,8 @@ class Login extends StatelessWidget {
     }
 
     return BlocProvider(
-      create: (context) =>
-          LoginCubit(const LoginState(), context.read<CategoriesCubit>(), context.read<LastExpenseCubit>()),
+      create: (context) => LoginCubit(const LoginState(),
+          context.read<CategoriesCubit>(), context.read<LastExpenseCubit>()),
       child: ErrorHandler<LoginCubit, LoginState>(
         showAsSnack: true,
         child: BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
@@ -93,8 +90,8 @@ class Login extends StatelessWidget {
                                             final loggedIn = await cubit.logIn(
                                                 username, password);
                                             if (loggedIn && context.mounted) {
-                                              AutoRouter.of(context)
-                                                  .replaceAll([const HomeRoute()]);
+                                              AutoRouter.of(context).replaceAll(
+                                                  [const HomeRoute()]);
                                             }
                                           },
                                           showSignUp: () => cubit.signUp(true),

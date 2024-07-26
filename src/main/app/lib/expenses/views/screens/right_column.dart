@@ -2,7 +2,6 @@ import 'package:after_layout/after_layout.dart';
 import 'package:animations/animations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:fbroadcast_nullsafety/fbroadcast_nullsafety.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -10,11 +9,9 @@ import 'package:spend_spent_spent/components/dummies/dummyExpenses.dart';
 import 'package:spend_spent_spent/components/rightColumn/oneDay.dart';
 import 'package:spend_spent_spent/components/rightColumn/search.dart';
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/dayExpense.dart';
 import 'package:spend_spent_spent/models/expense.dart';
 import 'package:spend_spent_spent/models/searchParameters.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 
 import '../../../views/expenseView.dart';
@@ -68,11 +65,17 @@ class RightColumnTabState extends State<RightColumnTab> with AfterLayoutMixin {
   }
 
   void showExpense(Expense expense) {
-    showModal(context: context, builder: (context) => Card(margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 550, maxHeight: 950), child: ExpenseView(expense)));
+    showModal(
+        context: context,
+        builder: (context) => Card(
+            margin: getInsetsForMaxSize(MediaQuery.of(context),
+                maxWidth: 550, maxHeight: 950),
+            child: ExpenseView(expense)));
   }
 
   String convertDate(String date) {
-    return DateFormat('MMMM yyyy').format(DateFormat('yyyy-MM-dd').parse('$date-01'));
+    return DateFormat('MMMM yyyy')
+        .format(DateFormat('yyyy-MM-dd').parse('$date-01'));
   }
 
   getExpenses() async {
@@ -80,7 +83,9 @@ class RightColumnTabState extends State<RightColumnTab> with AfterLayoutMixin {
       expensesWidget = DummyExpenses();
     });
     var expenses = await service.getMonthExpenses(selected);
-    var total = expenses.values.map((e) => e.total).reduce((value, element) => value + element);
+    var total = expenses.values
+        .map((e) => e.total)
+        .reduce((value, element) => value + element);
     if (this.mounted) {
       setState(() {
         this.expenses = expenses;
@@ -112,7 +117,11 @@ class RightColumnTabState extends State<RightColumnTab> with AfterLayoutMixin {
     });
 
     var expenses = await service.search(params);
-    double total = expenses.values.length > 0 ? expenses.values.map((e) => e.total).reduce((value, element) => value + element) : 0;
+    double total = expenses.values.length > 0
+        ? expenses.values
+            .map((e) => e.total)
+            .reduce((value, element) => value + element)
+        : 0;
     if (this.mounted) {
       setState(() {
         this.expenses = expenses;
@@ -127,7 +136,8 @@ class RightColumnTabState extends State<RightColumnTab> with AfterLayoutMixin {
     return ListView.builder(
       itemCount: expenses.length,
       itemBuilder: (context, index) {
-        return OneDay(showExpense: showExpense, expense: expenses[expensesKeys[index]]!);
+        return OneDay(
+            showExpense: showExpense, expense: expenses[expensesKeys[index]]!);
       },
     );
   }
@@ -144,27 +154,30 @@ class RightColumnTabState extends State<RightColumnTab> with AfterLayoutMixin {
             children: [
               Expanded(
                   child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
                 child: AnimatedCrossFade(
                   sizeCurve: Curves.easeInOutQuad,
-
-                  crossFadeState: this.searchMode ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                  crossFadeState: this.searchMode
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
                   duration: panelTransition,
                   firstChild: Search(
                     search: this.search,
                   ),
                   secondChild: Container(
                     decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(25)),
-                      color: colors.primaryContainer
-                    ),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(25)),
+                        color: colors.primaryContainer),
                     child: DropdownButton<String>(
                       value: selected,
                       items: months
                           .map((e) => DropdownMenuItem(
                                 child: Text(
                                   convertDate(e),
-                                  style: TextStyle(color: colors.onSecondaryContainer),
+                                  style: TextStyle(
+                                      color: colors.onSecondaryContainer),
                                 ),
                                 value: e,
                               ))
@@ -181,19 +194,23 @@ class RightColumnTabState extends State<RightColumnTab> with AfterLayoutMixin {
                 ),
               )),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(25)),
-                    color: colors.primaryContainer
-                  ),
+                      borderRadius: const BorderRadius.all(Radius.circular(25)),
+                      color: colors.primaryContainer),
                   child: IconButton(
                       onPressed: switchSearch,
                       padding: EdgeInsets.zero,
                       visualDensity: VisualDensity.compact,
                       iconSize: 15,
                       splashRadius: 15,
-                      icon: FaIcon(this.searchMode ? FontAwesomeIcons.xmark : FontAwesomeIcons.magnifyingGlass, color: colors.onPrimaryContainer)),
+                      icon: FaIcon(
+                          this.searchMode
+                              ? FontAwesomeIcons.xmark
+                              : FontAwesomeIcons.magnifyingGlass,
+                          color: colors.onPrimaryContainer)),
                 ),
               )
             ],
@@ -214,7 +231,8 @@ class RightColumnTabState extends State<RightColumnTab> with AfterLayoutMixin {
             ),
           ),
           Expanded(
-            child: AnimatedSwitcher(duration: panelTransition, child: expensesWidget),
+            child: AnimatedSwitcher(
+                duration: panelTransition, child: expensesWidget),
           )
         ],
       ),
