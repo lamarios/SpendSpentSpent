@@ -25,7 +25,7 @@ class _CategoryListState extends State<CategoryList>
   }
 
   void dispose() {
-    FBroadcast.instance()?.unregister(this);
+    // FBroadcast.instance()?.unregister(this);
     super.dispose();
   }
 
@@ -42,8 +42,8 @@ class _CategoryListState extends State<CategoryList>
   @override
   void afterFirstLayout(BuildContext context) {
     loadCategories();
-    FBroadcast.instance()?.register(BROADCAST_REFRESH_CATEGORIES,
-        (context, somethingElse) => loadCategories());
+    // FBroadcast.instance()?.register(BROADCAST_REFRESH_CATEGORIES,
+    //     (context, somethingElse) => loadCategories());
   }
 
   @override

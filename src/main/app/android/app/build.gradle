@@ -1,3 +1,9 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 def ENV = System.getenv()
@@ -6,11 +12,6 @@ if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader ->
         localProperties.load(reader)
     }
-}
-
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
@@ -22,10 +23,6 @@ def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
-
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 def keyFile = ENV['ANDROID_KEY_FILE']
 if (keyFile == null) {
@@ -39,9 +36,21 @@ def buildNumber = flutterVersionCode.toInteger()
 if (ENV['DRONE_TAG'] != null) {
     buildNumber = ENV['DRONE_TAG'].toInteger()
 }
+/*
+if (ENV['DRONE_BUILD_NUMBER'] != null) {
+    buildNumber = ENV['DRONE_BUILD_NUMBER'].toInteger()
+}
 
-println keyFile
+def tag = ENV['DRONE_TAG']
+if(tag != null) {
+    flutterVersionName = tag
+}
+*/
 
+
+
+print flutterVersionName
+print ":"
 println buildNumber
 
 def keystoreProperties = new Properties()
@@ -51,7 +60,8 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
+
 
     lintOptions {
         checkReleaseBuilds false
@@ -64,7 +74,7 @@ android {
     defaultConfig {
         applicationId "com.spendspentspent.app"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode buildNumber
         versionName flutterVersionName
     }
@@ -86,8 +96,4 @@ android {
 
 flutter {
     source '../..'
-}
-
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

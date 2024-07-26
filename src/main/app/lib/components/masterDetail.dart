@@ -34,7 +34,7 @@ class MasterDetailState extends State<MasterDetail> {
               context: context,
               builder: (context) => PlatformScaffold(
                     appBar: PlatformAppBar(title: PlatformText(title)),
-                    backgroundColor: Theme.of(context).backgroundColor,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     body: detail,
                   )));
     } else {

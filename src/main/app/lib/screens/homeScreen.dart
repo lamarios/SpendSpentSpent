@@ -1,4 +1,5 @@
 import 'package:after_layout/after_layout.dart';
+import 'package:auto_route/annotations.dart';
 import 'package:fbroadcast_nullsafety/fbroadcast_nullsafety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:spend_spent_spent/utils/preferences.dart';
 import 'package:spend_spent_spent/views/login.dart';
 import 'package:spend_spent_spent/views/main.dart';
 
+@RoutePage()
 class HomeScreen extends StatefulWidget {
   HomeScreen() : super();
 
@@ -59,10 +61,12 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin<HomeScree
 
   @override
   Future<void> afterFirstLayout(BuildContext context) async {
+/*
     FBroadcast.instance().register(BROADCAST_LOGGED_OUT, (value, callback) {
       setState(() {
         this.homeWidget = getLogin();
       });
     });
+*/
   }
 }

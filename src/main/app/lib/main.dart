@@ -15,7 +15,7 @@ class SpendSpentSpent extends StatelessWidget {
     return ThemeData(
         primarySwatch: colors.materialColor,
         textTheme: Theme.of(context).textTheme.apply(bodyColor: colors.text, displayColor: colors.text),
-        backgroundColor: colors.background,
+        scaffoldBackgroundColor : colors.background,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: TextButton.styleFrom(
             padding: EdgeInsets.all(defaultPadding * 0.75),
@@ -48,7 +48,7 @@ class SpendSpentSpent extends StatelessWidget {
               darkTheme: ThemeData.dark().copyWith(
                   primaryColor: dark.main,
                   dialogBackgroundColor: dark.dialogBackground,
-                  backgroundColor: dark.background,
+                  scaffoldBackgroundColor: dark.background,
                   buttonTheme: ButtonThemeData(buttonColor: dark.mainDark, textTheme: ButtonTextTheme.primary),
                   textTheme: Theme.of(context).textTheme.apply(bodyColor: dark.text, displayColor: dark.text),
                   primaryTextTheme: Theme.of(context).primaryTextTheme.apply(bodyColor: dark.main, displayColor: dark.main),
@@ -79,7 +79,6 @@ class SpendSpentSpent extends StatelessWidget {
                       backgroundColor: dark.background,
                       accentColor: dark.main,
                       brightness: Brightness.dark,
-                      primaryColorDark: dark.gradientDark,
                       cardColor: dark.dialogBackground))),
           cupertino: (_, __) => CupertinoAppData(theme: CupertinoThemeData(primaryColor: materialTheme.primaryColor)),
         ),

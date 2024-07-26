@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:after_layout/after_layout.dart';
+import 'package:auto_route/annotations.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:fbroadcast_nullsafety/fbroadcast_nullsafety.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +14,7 @@ import 'package:spend_spent_spent/models/appColors.dart';
 import 'package:spend_spent_spent/models/category.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
 
+@RoutePage()
 class CategorySettingsScreen extends StatefulWidget {
   @override
   CategorySettingsScreenState createState() => CategorySettingsScreenState();
@@ -81,7 +83,7 @@ class CategorySettingsScreenState extends State<CategorySettingsScreen> with Aft
   Widget build(BuildContext context) {
     AppColors colors = get(context);
     return PlatformScaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: PlatformAppBar(
           title: PlatformText('Category Settings'),
           trailingActions: [],

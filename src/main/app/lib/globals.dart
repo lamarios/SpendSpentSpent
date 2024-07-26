@@ -27,7 +27,7 @@ const BIG_PHONE = 500;
 
 
 ButtonStyle flatButtonStyle = TextButton.styleFrom(
-  primary: Colors.white,
+  foregroundColor: Colors.white,
   backgroundColor: Colors.blue[800],
   padding: EdgeInsets.symmetric(vertical: 5.0),
   shape: const RoundedRectangleBorder(

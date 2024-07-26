@@ -106,7 +106,10 @@ class ExpenseViewState extends State<ExpenseView> {
             child: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: Colors.white),
               child: FlutterMap(
-                options: MapOptions(center: LatLng((widget.expense.latitude ?? 0) - 0.013, widget.expense.longitude ?? 0), zoom: 15),
+                options: MapOptions(
+                    initialZoom: 15,
+
+                    initialCenter: LatLng((widget.expense.latitude ?? 0) - 0.013, widget.expense.longitude ?? 0)),
                 children: [
                   TileLayer(urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png", userAgentPackageName: 'com.spendspentspent.app', retinaMode: MediaQuery.of(context).devicePixelRatio > 1.0),
                   MarkerLayer(markers: [
@@ -114,7 +117,7 @@ class ExpenseViewState extends State<ExpenseView> {
                         width: 40.0,
                         height: 40.0,
                         point: new LatLng(widget.expense.latitude ?? 0, widget.expense.longitude ?? 0),
-                        builder: (ctx) => FaIcon(
+                        child: FaIcon(
                               FontAwesomeIcons.mapMarkerAlt,
                               color: colors.main,
                               size: 50,
