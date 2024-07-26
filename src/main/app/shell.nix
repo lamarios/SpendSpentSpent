@@ -25,8 +25,8 @@ pkgs.mkShell {
   git submodule init
   git submodule update
 
-# echo "Setting up pre-commit hook"
-#  dart run tools/setup_git_hooks.dart
+  echo "Setting up pre-commit hook"
+  dart run tools/setup_git_hooks.dart
 
   "Adding flutter submodule to path"
   export PATH="./submodules/flutter/bin:$PATH"

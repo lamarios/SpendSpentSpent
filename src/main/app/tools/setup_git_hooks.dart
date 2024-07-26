@@ -7,8 +7,8 @@ Future<void> main() async {
     '''
 #!/bin/sh
 set -e
-exec ./submodules/flutter/bin/dart format --set-exit-if-changed ./lib
-exec ./submodules/flutter/bin/dart analyze ./lib
+exec ./src/main/app/submodules/flutter/bin/dart format --set-exit-if-changed ./lib
+exec ./src/main/app/submodules/flutter/bin/dart analyze ./lib
 ''',
   );
 
