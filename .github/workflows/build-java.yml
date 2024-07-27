@@ -86,4 +86,12 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/spendspentspent:latest
             ${{ secrets.DOCKER_USERNAME }}/spendspentspent:${{ env.TAG_NAME }}
-            
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GH_TOKEN }}
+          file: target/SpendSpentSpent-*.jar
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
+
