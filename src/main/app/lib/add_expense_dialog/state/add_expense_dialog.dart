@@ -177,7 +177,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     )));
     try {
       await service.addExpense(expense);
-      lastExpenseCubit.setLastExpense(DateTime.now().millisecondsSinceEpoch);
+      lastExpenseCubit.refresh();
     } catch (e, s) {
       emit(state.copyWith(error: e, stackTrace: s));
     }

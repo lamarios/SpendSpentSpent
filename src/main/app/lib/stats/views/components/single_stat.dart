@@ -86,7 +86,7 @@ class SingleStats extends StatelessWidget {
                           borderRadius:
                               const BorderRadius.all(Radius.circular(10)),
                           // gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.75], begin: Alignment.bottomCenter, end: Alignment.topRight),
-                          color: colors.surfaceContainer),
+                          color: colors.primaryContainer),
                       child: LayoutBuilder(
                         builder: (context, constraints) => AnimatedContainer(
                           duration: panelTransition,
@@ -96,7 +96,7 @@ class SingleStats extends StatelessWidget {
                           decoration: BoxDecoration(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(10)),
-                              color: colors.primaryContainer),
+                              color: colors.primary),
                           child: Visibility(
                             visible: state.showGraph,
                             child: FadeIn(

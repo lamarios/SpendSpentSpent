@@ -13,7 +13,7 @@ class AppSettingsCubit extends Cubit<AppSettingsState> {
   init() async {
     final materialYou = await Preferences.getBool(MATERIAL_YOU, false);
     emit(state.copyWith(materialYou: materialYou));
-    final blackBackground = await Preferences.getBool(MATERIAL_YOU, false);
+    final blackBackground = await Preferences.getBool(BLACK_BACKGROUND, false);
     emit(state.copyWith(blackBackground: blackBackground));
   }
 

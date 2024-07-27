@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
@@ -100,23 +101,27 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
   }
 
   Future<void> refreshSettings() async {
-    List<Settings> settings = await service.getAllSettings();
+    try {
+      List<Settings> settings = await service.getAllSettings();
 
-    setState(() {
-      for (var element in settings) {
-        switch (element.name) {
-          case MOTD:
-            motdController.text = element.value;
-            break;
-          case ALLOW_SIGNUP:
-            allowSignUp = element.value == "1";
-            break;
-          case DEMO_MODE:
-            demoMode = element.value == "1";
-            break;
+      setState(() {
+        for (var element in settings) {
+          switch (element.name) {
+            case MOTD:
+              motdController.text = element.value;
+              break;
+            case ALLOW_SIGNUP:
+              allowSignUp = element.value == "1";
+              break;
+            case DEMO_MODE:
+              demoMode = element.value == "1";
+              break;
+          }
         }
-      }
-    });
+      });
+    } catch (e) {
+      print("Can't get admin settings and it's ok");
+    }
   }
 
   setSetting(String label, String value, bool secret) async {
@@ -148,6 +153,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                 master: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: SettingsList(
+                    platform: DevicePlatform.android,
                     lightTheme: theme,
                     darkTheme: theme,
                     sections: [
@@ -250,7 +256,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                               ),
                             ]),
                       SettingsSection(title: const Text('Appearance'), tiles: [
-                        if (Platform.isAndroid)
+                        if (!kIsWeb && Platform.isAndroid)
                           SettingsTile.switchTile(
                             title: const Text('Material you colors'),
                             description: const Text(

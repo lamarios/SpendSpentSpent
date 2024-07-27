@@ -59,7 +59,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   init() async {
     categoriesCubit.reset();
-    lastExpenseCubit.setLastExpense(0);
+    lastExpenseCubit.refresh();
 
     Uri base = Uri.base;
     String server =

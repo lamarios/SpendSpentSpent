@@ -150,7 +150,7 @@ class AddExpense extends StatelessWidget {
                                   child: Container(
                                     decoration: BoxDecoration(
                                       borderRadius: defaultBorder,
-                                      color: colors.surface,
+                                      color: colors.secondaryContainer,
                                     ),
                                     child: Row(
                                       children: [
@@ -172,7 +172,7 @@ class AddExpense extends StatelessWidget {
                                                         style: TextStyle(
                                                             fontSize: 20,
                                                             color: colors
-                                                                .onSurface)),
+                                                                .onSecondaryContainer)),
                                                   ))),
                                         ),
                                         Visibility(
