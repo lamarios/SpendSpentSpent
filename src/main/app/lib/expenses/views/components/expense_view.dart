@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
@@ -52,6 +54,7 @@ class ExpenseView extends StatelessWidget {
 
   deleteExpense(BuildContext context) async {
     await service.deleteExpense(expense.id!);
+    context.read<LastExpenseCubit>().refresh();
     Navigator.pop(context);
   }
 

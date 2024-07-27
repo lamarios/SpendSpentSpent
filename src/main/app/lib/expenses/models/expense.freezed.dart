@@ -26,7 +26,7 @@ mixin _$Expense {
   double? get longitude => throw _privateConstructorUsedError;
   String? get note => throw _privateConstructorUsedError;
   int get type => throw _privateConstructorUsedError;
-  dynamic get timestamp => throw _privateConstructorUsedError;
+  int? get timestamp => throw _privateConstructorUsedError;
   bool get income => throw _privateConstructorUsedError;
   Category get category => throw _privateConstructorUsedError;
   int? get id => throw _privateConstructorUsedError;
@@ -48,7 +48,7 @@ abstract class $ExpenseCopyWith<$Res> {
       double? longitude,
       String? note,
       int type,
-      dynamic timestamp,
+      int? timestamp,
       bool income,
       Category category,
       int? id});
@@ -108,7 +108,7 @@ class _$ExpenseCopyWithImpl<$Res, $Val extends Expense>
       timestamp: freezed == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
-              as dynamic,
+              as int?,
       income: null == income
           ? _value.income
           : income // ignore: cast_nullable_to_non_nullable
@@ -147,7 +147,7 @@ abstract class _$$ExpenseImplCopyWith<$Res> implements $ExpenseCopyWith<$Res> {
       double? longitude,
       String? note,
       int type,
-      dynamic timestamp,
+      int? timestamp,
       bool income,
       Category category,
       int? id});
@@ -203,7 +203,10 @@ class __$$ExpenseImplCopyWithImpl<$Res>
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as int,
-      timestamp: freezed == timestamp ? _value.timestamp! : timestamp,
+      timestamp: freezed == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as int?,
       income: null == income
           ? _value.income
           : income // ignore: cast_nullable_to_non_nullable
@@ -252,7 +255,7 @@ class _$ExpenseImpl implements _Expense {
   @JsonKey()
   final int type;
   @override
-  final dynamic timestamp;
+  final int? timestamp;
   @override
   @JsonKey()
   final bool income;
@@ -279,7 +282,8 @@ class _$ExpenseImpl implements _Expense {
                 other.longitude == longitude) &&
             (identical(other.note, note) || other.note == note) &&
             (identical(other.type, type) || other.type == type) &&
-            const DeepCollectionEquality().equals(other.timestamp, timestamp) &&
+            (identical(other.timestamp, timestamp) ||
+                other.timestamp == timestamp) &&
             (identical(other.income, income) || other.income == income) &&
             (identical(other.category, category) ||
                 other.category == category) &&
@@ -288,18 +292,8 @@ class _$ExpenseImpl implements _Expense {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      date,
-      amount,
-      latitude,
-      longitude,
-      note,
-      type,
-      const DeepCollectionEquality().hash(timestamp),
-      income,
-      category,
-      id);
+  int get hashCode => Object.hash(runtimeType, date, amount, latitude,
+      longitude, note, type, timestamp, income, category, id);
 
   @JsonKey(ignore: true)
   @override
@@ -323,7 +317,7 @@ abstract class _Expense implements Expense {
       final double? longitude,
       final String? note,
       final int type,
-      final dynamic timestamp,
+      final int? timestamp,
       final bool income,
       required final Category category,
       final int? id}) = _$ExpenseImpl;
@@ -343,7 +337,7 @@ abstract class _Expense implements Expense {
   @override
   int get type;
   @override
-  dynamic get timestamp;
+  int? get timestamp;
   @override
   bool get income;
   @override

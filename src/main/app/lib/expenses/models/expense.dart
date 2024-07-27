@@ -15,7 +15,7 @@ class Expense with _$Expense {
     double? longitude,
     String? note,
     @Default(1) int type,
-    timestamp,
+    int? timestamp,
     @Default(false) bool income,
     required Category category,
     int? id,

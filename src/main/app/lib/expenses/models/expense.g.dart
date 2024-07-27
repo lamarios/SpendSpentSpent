@@ -14,7 +14,7 @@ _$ExpenseImpl _$$ExpenseImplFromJson(Map<String, dynamic> json) =>
       longitude: (json['longitude'] as num?)?.toDouble(),
       note: json['note'] as String?,
       type: (json['type'] as num?)?.toInt() ?? 1,
-      timestamp: json['timestamp'],
+      timestamp: (json['timestamp'] as num?)?.toInt(),
       income: json['income'] as bool? ?? false,
       category: Category.fromJson(json['category'] as Map<String, dynamic>),
       id: (json['id'] as num?)?.toInt(),

@@ -4,6 +4,8 @@ import 'package:gap/gap.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/router.dart';
 
+import '../../../globals.dart';
+
 @RoutePage()
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -16,7 +18,11 @@ class HomeScreen extends StatelessWidget {
       return Scaffold(
         body: SafeArea(
           bottom: false,
-          child: child,
+          child: Container(
+              alignment: Alignment.topCenter,
+              child: Container(
+                  constraints: const BoxConstraints(maxWidth: TABLET),
+                  child: child)),
         ),
         appBar: AppBar(
           title: Row(
