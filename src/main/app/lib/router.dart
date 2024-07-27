@@ -3,10 +3,11 @@ import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/categories/views/screens/category_settings.dart';
 import 'package:spend_spent_spent/home/views/screens/home.dart';
 import 'package:spend_spent_spent/login/views/screens/login_screen.dart';
-import 'package:spend_spent_spent/screens/settings.dart';
-import 'package:spend_spent_spent/views/leftColumn.dart';
-import 'package:spend_spent_spent/views/middleColumn.dart';
+import 'package:spend_spent_spent/settings/views/screens/settings.dart';
+import 'package:spend_spent_spent/home/views/screens/middle_column.dart';
 import 'package:spend_spent_spent/expenses/views/screens/right_column.dart';
+
+import 'stats/views/screens/left_column.dart';
 
 part 'router.gr.dart';
 

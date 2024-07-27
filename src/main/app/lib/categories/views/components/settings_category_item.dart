@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_spent_spent/categories/views/screens/category_settings.dart';
 import 'package:spend_spent_spent/globals.dart';
 
@@ -10,8 +8,8 @@ class SettingsCategoryGridItem extends StatelessWidget {
   void showAddCategory(BuildContext context) {
     Navigator.push(
         context,
-        platformPageRoute(
-            context: context, builder: (context) => CategorySettingsScreen()));
+        MaterialPageRoute(
+            builder: (context) => const CategorySettingsScreen()));
   }
 
   @override
@@ -25,8 +23,8 @@ class SettingsCategoryGridItem extends StatelessWidget {
             borderRadius: defaultBorder,
             border:
                 Border.all(width: 3, color: colors.primary.withOpacity(0.5))),
-        child: FaIcon(
-          FontAwesomeIcons.gear,
+        child: Icon(
+          Icons.settings,
           color: colors.primary.withOpacity(0.5),
         ),
       ),

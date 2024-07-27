@@ -1,16 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 void showAlertDialog(BuildContext context, String title, String text) {
-  showPlatformDialog(
+  showDialog(
       context: context,
-      builder: (BuildContext context) => PlatformAlertDialog(
+      builder: (BuildContext context) => AlertDialog(
             title: Text(title),
             content: Text(text),
             actions: <Widget>[
-              PlatformDialogAction(
+              TextButton(
                 onPressed: () => Navigator.pop(context, 'OK'),
                 child: const Text('OK'),
               ),
@@ -22,18 +21,18 @@ void showPromptDialog(BuildContext context, String title, String label,
     TextEditingController controller, Function onOk,
     {int? maxLines}) {
   final colors = Theme.of(context).colorScheme;
-  showPlatformDialog(
+  showDialog(
       context: context,
       builder: (BuildContext context) {
-        return PlatformAlertDialog(
+        return AlertDialog(
           title: Text(title),
-          content: PlatformTextField(
+          content: TextField(
             controller: controller,
             maxLines: maxLines,
             keyboardType: TextInputType.multiline,
           ),
           actions: <Widget>[
-            PlatformDialogAction(
+            TextButton(
               onPressed: () {
                 Navigator.pop(context, 'Cancel');
               },
@@ -42,7 +41,7 @@ void showPromptDialog(BuildContext context, String title, String label,
                 style: TextStyle(color: colors.secondary),
               ),
             ),
-            PlatformDialogAction(
+            TextButton(
               onPressed: () {
                 Navigator.pop(context, 'OK');
                 onOk();

@@ -39,6 +39,8 @@ abstract class $LoginStateCopyWith<$Res> {
       LoginPage page,
       dynamic error,
       StackTrace? stackTrace});
+
+  $ConfigCopyWith<$Res>? get config;
 }
 
 /// @nodoc
@@ -83,6 +85,18 @@ class _$LoginStateCopyWithImpl<$Res, $Val extends LoginState>
               as StackTrace?,
     ) as $Val);
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ConfigCopyWith<$Res>? get config {
+    if (_value.config == null) {
+      return null;
+    }
+
+    return $ConfigCopyWith<$Res>(_value.config!, (value) {
+      return _then(_value.copyWith(config: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -99,6 +113,9 @@ abstract class _$$LoginStateImplCopyWith<$Res>
       LoginPage page,
       dynamic error,
       StackTrace? stackTrace});
+
+  @override
+  $ConfigCopyWith<$Res>? get config;
 }
 
 /// @nodoc

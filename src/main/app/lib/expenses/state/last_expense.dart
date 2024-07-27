@@ -1,10 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spend_spent_spent/models/expense.dart';
 
-class LastExpenseCubit extends Cubit<Expense?> {
+class LastExpenseCubit extends Cubit<int> {
   LastExpenseCubit(super.initialState);
 
-  setLastExpense(Expense? expense) {
-    emit(expense);
+  setLastExpense(int time) {
+    emit(time);
   }
 }

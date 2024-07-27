@@ -1,0 +1,23 @@
+import 'package:json_annotation/json_annotation.dart';
+
+import '../../categories/models/category.dart';
+
+import 'dart:core';
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'search_parameters.g.dart';
+
+part 'search_parameters.freezed.dart';
+
+@freezed
+class SearchParameters with _$SearchParameters {
+  const factory SearchParameters(
+      {@Default([]) List<Category> categories,
+      required int minAmount,
+      required int maxAmount,
+      required String note}) = _SearchParameters;
+
+  factory SearchParameters.fromJson(Map<String, dynamic> json) =>
+      _$SearchParametersFromJson(json);
+}

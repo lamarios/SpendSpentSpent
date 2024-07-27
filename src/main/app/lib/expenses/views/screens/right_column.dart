@@ -1,73 +1,31 @@
-import 'package:after_layout/after_layout.dart';
 import 'package:animations/animations.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:fbroadcast_nullsafety/fbroadcast_nullsafety.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:spend_spent_spent/components/dummies/dummyExpenses.dart';
-import 'package:spend_spent_spent/components/rightColumn/oneDay.dart';
-import 'package:spend_spent_spent/components/rightColumn/search.dart';
+import 'package:spend_spent_spent/categories/state/categories.dart';
+import 'package:spend_spent_spent/expenses/models/day_expense.dart';
+import 'package:spend_spent_spent/expenses/models/expense.dart';
+import 'package:spend_spent_spent/expenses/state/expense_list.dart';
+import 'package:spend_spent_spent/expenses/state/last_expense.dart';
+import 'package:spend_spent_spent/expenses/views/components/one_day.dart';
+import 'package:spend_spent_spent/expenses/views/components/search.dart';
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/dayExpense.dart';
-import 'package:spend_spent_spent/models/expense.dart';
-import 'package:spend_spent_spent/models/searchParameters.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 
-import '../../../views/expenseView.dart';
+import '../../../utils/views/components/dummies/dummyExpenses.dart';
+import '../components/expense_view.dart';
 
 @RoutePage()
-class RightColumnTab extends StatefulWidget {
+class RightColumnTab extends StatelessWidget {
   const RightColumnTab({super.key});
 
-  @override
-  RightColumnTabState createState() => RightColumnTabState();
-}
-
-class RightColumnTabState extends State<RightColumnTab> with AfterLayoutMixin {
-  List<String> months = [];
-  String selected = '';
-  Map<String, DayExpense> expenses = {};
-  double total = 0;
-  Widget expensesWidget = DummyExpenses();
-  bool searchMode = false;
-
-  void getMonths() async {
-    List<String> months = await service.getExpensesMonths();
-    String now = DateFormat("yyyy-MM").format(DateTime.now());
-    int nowIndex = months.indexWhere((element) => element == now);
-    if (this.mounted) {
-      setState(() {
-        this.months = months;
-        if (months.length > 0 && selected == '' && nowIndex != -1) {
-          selected = months[nowIndex];
-        } else if (months.length > 0 && selected == '') {
-          selected = months[months.length - 1];
-        }
-        getExpenses();
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    FBroadcast.instance().unregister(this.context);
-    super.dispose();
-  }
-
-  void monthChanged(value) {
-    if (this.mounted) {
-      setState(() {
-        selected = value ?? '';
-        getExpenses();
-      });
-    }
-  }
-
-  void showExpense(Expense expense) {
+  void showExpense(BuildContext context, Expense expense) {
+    final colors = Theme.of(context).colorScheme;
     showModal(
         context: context,
         builder: (context) => Card(
+            color: colors.surface,
             margin: getInsetsForMaxSize(MediaQuery.of(context),
                 maxWidth: 550, maxHeight: 950),
             child: ExpenseView(expense)));
@@ -78,66 +36,14 @@ class RightColumnTabState extends State<RightColumnTab> with AfterLayoutMixin {
         .format(DateFormat('yyyy-MM-dd').parse('$date-01'));
   }
 
-  getExpenses() async {
-    setState(() {
-      expensesWidget = DummyExpenses();
-    });
-    var expenses = await service.getMonthExpenses(selected);
-    var total = expenses.values
-        .map((e) => e.total)
-        .reduce((value, element) => value + element);
-    if (this.mounted) {
-      setState(() {
-        this.expenses = expenses;
-        this.total = total;
-        expensesWidget = getExpensesWidget();
-      });
-    }
-  }
-
-  switchSearch() {
-    setState(() {
-      this.searchMode = !this.searchMode;
-    });
-
-    if (!this.searchMode) {
-      getExpenses();
-    } else {
-      setState(() {
-        this.expenses = <String, DayExpense>{};
-        this.total = 0;
-        expensesWidget = getExpensesWidget();
-      });
-    }
-  }
-
-  search(SearchParameters params) async {
-    setState(() {
-      expensesWidget = DummyExpenses();
-    });
-
-    var expenses = await service.search(params);
-    double total = expenses.values.length > 0
-        ? expenses.values
-            .map((e) => e.total)
-            .reduce((value, element) => value + element)
-        : 0;
-    if (this.mounted) {
-      setState(() {
-        this.expenses = expenses;
-        this.total = total;
-        expensesWidget = getExpensesWidget();
-      });
-    }
-  }
-
-  Widget getExpensesWidget() {
+  Widget getExpensesWidget(Map<String, DayExpense> expenses) {
     List<String> expensesKeys = expenses.keys.toList();
     return ListView.builder(
       itemCount: expenses.length,
       itemBuilder: (context, index) {
         return OneDay(
-            showExpense: showExpense, expense: expenses[expensesKeys[index]]!);
+            showExpense: (expense) => showExpense(context, expense),
+            expense: expenses[expensesKeys[index]]!);
       },
     );
   }
@@ -145,103 +51,127 @@ class RightColumnTabState extends State<RightColumnTab> with AfterLayoutMixin {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                  child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-                child: AnimatedCrossFade(
-                  sizeCurve: Curves.easeInOutQuad,
-                  crossFadeState: this.searchMode
-                      ? CrossFadeState.showFirst
-                      : CrossFadeState.showSecond,
-                  duration: panelTransition,
-                  firstChild: Search(
-                    search: this.search,
-                  ),
-                  secondChild: Container(
-                    decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(25)),
-                        color: colors.primaryContainer),
-                    child: DropdownButton<String>(
-                      value: selected,
-                      items: months
-                          .map((e) => DropdownMenuItem(
-                                child: Text(
-                                  convertDate(e),
-                                  style: TextStyle(
-                                      color: colors.onSecondaryContainer),
-                                ),
-                                value: e,
-                              ))
-                          .toList(),
-                      style: TextStyle(color: colors.onPrimaryContainer),
-                      isExpanded: true,
-                      iconEnabledColor: colors.onPrimaryContainer,
-                      underline: const SizedBox.shrink(),
-                      isDense: true,
-                      dropdownColor: colors.secondaryContainer,
-                      onChanged: monthChanged,
-                    ),
-                  ),
-                ),
-              )),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(25)),
-                      color: colors.primaryContainer),
-                  child: IconButton(
-                      onPressed: switchSearch,
-                      padding: EdgeInsets.zero,
-                      visualDensity: VisualDensity.compact,
-                      iconSize: 15,
-                      splashRadius: 15,
-                      icon: FaIcon(
-                          this.searchMode
-                              ? FontAwesomeIcons.xmark
-                              : FontAwesomeIcons.magnifyingGlass,
-                          color: colors.onPrimaryContainer)),
-                ),
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
+    return BlocProvider(
+      create: (context) => ExpenseListCubit(const ExpenseListState()),
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<LastExpenseCubit, int>(
+              listener: (context, state) =>
+                  context.read<ExpenseListCubit>().getMonths()),
+          BlocListener<CategoriesCubit, CategoriesState>(
+              listener: (context, state) =>
+                  context.read<ExpenseListCubit>().getMonths())
+        ],
+        child: BlocBuilder<ExpenseListCubit, ExpenseListState>(
+            builder: (context, state) {
+          final cubit = context.read<ExpenseListCubit>();
+
+          return Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
+            child: Column(
               children: [
-                const Text('Total:'),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 2),
+                      child: AnimatedCrossFade(
+                        sizeCurve: Curves.easeInOutQuad,
+                        crossFadeState: state.searchMode
+                            ? CrossFadeState.showFirst
+                            : CrossFadeState.showSecond,
+                        duration: panelTransition,
+                        firstChild: Search(
+                          search: cubit.search,
+                        ),
+                        secondChild: SizedBox(
+                          height: 38,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(25)),
+                                color: colors.secondaryContainer),
+                            child: DropdownButton<String>(
+                              value: state.selected,
+                              items: state.months
+                                  .map((e) => DropdownMenuItem(
+                                        value: e,
+                                        child: Text(
+                                          convertDate(e),
+                                          style: TextStyle(
+                                              color:
+                                                  colors.onSecondaryContainer),
+                                        ),
+                                      ))
+                                  .toList(),
+                              selectedItemBuilder: (context) => state.months
+                                  .map(
+                                    (e) => Center(child: Text(convertDate(e))),
+                                  )
+                                  .toList(),
+                              style:
+                                  TextStyle(color: colors.onPrimaryContainer),
+                              isExpanded: true,
+                              iconEnabledColor: colors.onPrimaryContainer,
+                              underline: const SizedBox.shrink(),
+                              dropdownColor: colors.secondaryContainer,
+                              onChanged: cubit.monthChanged,
+                              alignment: Alignment.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 2),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(25)),
+                            color: colors.secondaryContainer),
+                        child: IconButton(
+                            onPressed: cubit.switchSearch,
+                            padding: EdgeInsets.zero,
+                            visualDensity: VisualDensity.compact,
+                            iconSize: 15,
+                            splashRadius: 15,
+                            icon: Icon(
+                                state.searchMode ? Icons.clear : Icons.search,
+                                color: colors.onPrimaryContainer)),
+                      ),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      const Text('Total:'),
+                      Expanded(
+                          child: Container(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                formatCurrency(state.total),
+                                style: TextStyle(color: colors.primary),
+                              ))),
+                    ],
+                  ),
+                ),
                 Expanded(
-                    child: Container(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          formatCurrency(total),
-                          style: TextStyle(color: colors.primary),
-                        ))),
+                  child: AnimatedSwitcher(
+                      duration: panelTransition,
+                      child: state.loading
+                          ? const DummyExpenses()
+                          : getExpensesWidget(state.expenses)),
+                )
               ],
             ),
-          ),
-          Expanded(
-            child: AnimatedSwitcher(
-                duration: panelTransition, child: expensesWidget),
-          )
-        ],
+          );
+        }),
       ),
     );
-  }
-
-  @override
-  void afterFirstLayout(BuildContext context) {
-    getMonths();
-    // FBroadcast.instance().register(BROADCAST_REFRESH_EXPENSES, (context, somethingElse) => getExpenses());
   }
 }

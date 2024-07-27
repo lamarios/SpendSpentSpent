@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_spent_spent/categories/state/add_category.dart';
 import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/categories/views/components/add_category_dialog/categories.dart';
@@ -39,7 +38,7 @@ class AddCategory extends StatelessWidget {
         return Stack(
           children: [
             Container(
-              color: Theme.of(context).primaryColor,
+              color: colors.surfaceContainer,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -49,8 +48,8 @@ class AddCategory extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: FaIcon(
-                            FontAwesomeIcons.magnifyingGlass,
+                          child: Icon(
+                            Icons.search,
                             color: colors.onPrimaryContainer,
                             size: 15,
                           ),
@@ -165,8 +164,8 @@ class AddCategory extends StatelessWidget {
               top: 3,
               child: IconButton(
                   onPressed: () => closeDialog(context),
-                  icon: FaIcon(
-                    FontAwesomeIcons.xmark,
+                  icon: Icon(
+                    Icons.clear,
                     color: colors.onSecondaryContainer,
                     size: 20,
                   )),

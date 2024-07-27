@@ -144,5 +144,5 @@ InputDecoration getFieldDecoration(
       hintText: hint,
       hintStyle: TextStyle(color: colors.onSurface.withOpacity(0.3)),
       filled: true,
-      fillColor: colors.surfaceContainer);
+      fillColor: colors.secondaryContainer);
 }

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/login/views/components/login.dart';
 
@@ -19,15 +17,9 @@ class ResetPasswordState extends State<ResetPassword> {
 
   Future<void> resetPassword(BuildContext context) async {
     await service.resetPassword(widget.server, usernameController.text.trim());
-    await Fluttertoast.showToast(
-        msg:
-            "Reset password request sent successfully, check your email for instructions",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0);
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text(
+            "Reset password request sent successfully, check your email for instructions")));
 
     widget.onBack();
   }
@@ -49,23 +41,20 @@ class ResetPasswordState extends State<ResetPassword> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: PlatformTextField(
-              controller: usernameController,
-              autocorrect: false,
-              keyboardType: TextInputType.emailAddress,
-              material: (_, __) => MaterialTextFieldData(
-                  decoration:
-                      getFieldDecoration("Email", "user@example.org", colors)),
-            ),
+            child: TextField(
+                controller: usernameController,
+                autocorrect: false,
+                keyboardType: TextInputType.emailAddress,
+                decoration:
+                    getFieldDecoration("Email", "user@example.org", colors)),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
                 Expanded(
-                  child: PlatformElevatedButton(
+                  child: FilledButton.tonal(
                       onPressed: () => resetPassword(context),
-                      color: colors.secondaryContainer,
                       child: const Text('Reset password')),
                 ),
               ],

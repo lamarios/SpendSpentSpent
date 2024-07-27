@@ -1,76 +1,75 @@
 import 'dart:convert';
 
-import 'package:fbroadcast_nullsafety/fbroadcast_nullsafety.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:spend_spent_spent/categories/models/available_categories.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
-import 'package:spend_spent_spent/exceptions/BackendNeedUpgradeException.dart';
-import 'package:spend_spent_spent/exceptions/NeedUpgradeException.dart';
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/dayExpense.dart';
-import 'package:spend_spent_spent/models/expense.dart';
-import 'package:spend_spent_spent/models/graphDataPoint.dart';
-import 'package:spend_spent_spent/models/leftColumnStats.dart';
-import 'package:spend_spent_spent/models/paginatedResults.dart';
-import 'package:spend_spent_spent/models/pagination.dart';
-import 'package:spend_spent_spent/models/searchParameters.dart';
-import 'package:spend_spent_spent/models/settings.dart';
+import 'package:spend_spent_spent/expenses/models/day_expense.dart';
+import 'package:spend_spent_spent/expenses/models/expense.dart';
+import 'package:spend_spent_spent/stats/models/graph_data_point.dart';
+import 'package:spend_spent_spent/utils/models/paginatedResults.dart';
+import 'package:spend_spent_spent/expenses/models/search_parameters.dart';
+import 'package:spend_spent_spent/settings/models/settings.dart';
 
-import 'models/config.dart';
-import 'models/expenseLimit.dart';
-import 'models/recurringExpense.dart';
-import 'models/searchCategories.dart';
-import 'models/user.dart';
+import 'settings/models/config.dart';
+import 'expenses/models/expense_limits.dart';
+import 'expenses/models/search_categories.dart';
+import 'settings/models/user.dart';
+import 'recurring_expenses/models/recurring_expense.dart';
+import 'stats/models/left_column_stats.dart';
+import 'utils/models/exceptions/BackendNeedUpgradeException.dart';
+import 'utils/models/exceptions/NeedUpgradeException.dart';
+import 'utils/models/pagination.dart';
 import 'utils/preferences.dart';
 
 const API_ROOT = "{apiUrl}";
-const API_URL = API_ROOT + '/API';
+const API_URL = '$API_ROOT/API';
 
-const CATEGORY_ALL = API_URL + '/Category';
-const CATEGORY_AVAILABLE = API_URL + '/Category/Available';
-const CATEGORY_ADD = API_URL + '/Category';
-const CATEGORY_GET = API_URL + '/Category/ById/{0}';
-const CATEGORY_MERGE_CATEGORY = API_URL + '/Category/{0}';
-const CATEGORY_UPDATE_ALL = API_URL + '/Category';
-const CATEGORY_DELETE = API_URL + '/Category/{0}';
-const CATEGORY_SEARCH = API_URL + '/Category/search-icon';
-const CATEGORY_IS_USING_LEGACY = API_URL + "/Category/is-using-legacy";
-const CATEGORY_COUNT_EXPENSES = API_URL + "/Category/{0}/expenses/count";
-const EXPENSE_ADD = API_URL + '/Expense';
-const EXPENSE_BY_MONTH = API_URL + '/Expense/ByDay?month={0}';
-const EXPENSE_GET_MONTHS = API_URL + '/Expense/GetMonths';
-const EXPENSE_DELETE = API_URL + '/Expense/{0}';
-const EXPENSE_GET_NOTE_SUGGESTIONS = API_URL + '/Expense/suggest-notes';
-const EXPENSE_GET_LIMITS = API_URL + '/Expense/limits';
-const HISTORY_OVERALL_MONTH = API_URL + "/History/CurrentMonth";
-const HISTORY_OVERALL_YEAR = API_URL + "/History/CurrentYear";
-const HISTORY_YEARLY = API_URL + "/History/Yearly/{0}/{1}";
-const HISTORY_MONTHLY = API_URL + "/History/Monthly/{0}/{1}";
-const RECURRING_GET = API_URL + '/RecurringExpense';
-const RECURRING_ADD = API_URL + '/RecurringExpense';
-const RECURRING_DELETE = API_URL + '/RecurringExpense/{0}';
-const RECURRING_UPDATE = API_URL + '/RecurringExpense/{0}';
-const SESSION_LOGIN = API_ROOT + '/Login';
-const SESSION_SIGNUP = API_ROOT + '/SignUp';
-const SESSION_RESET_PASSWORD_REQUEST = API_ROOT + "/ResetPasswordRequest";
-const SESSION_RESET_PASSWORD = API_ROOT + "/ResetPassword";
-const SETTINGS_UPDATE = API_URL + '/Settings';
-const SETTINGS_ALL = API_URL + '/Settings';
-const SETTINGS_GET = API_URL + '/Settings/{0}';
-const MISC_VERSION = API_URL + '/Misc/version';
-const MISC_GET_CONFIG = API_ROOT + "/config";
-const USER_EDIT_PROFILE = API_URL + "/User";
-const USER_GET = API_URL + "/User?search={0}&page={1}&pageSize={2}";
-const USER_SET_ADMIN = API_URL + "/User/{0}/setAdmin/{1}";
-const USER_UPDATE_PASSWORD = API_URL + "/User/{0}/setPassword";
-const USER_ADD_USER = API_URL + "/User";
-const USER_DELETE_USER = API_URL + "/User/{0}";
-const CURRENCY_GET = API_URL + '/Currency/{0}/{1}';
-const CONFIG = API_ROOT + 'config';
-const SEARCH = API_URL + '/Search';
+const CATEGORY_ALL = '$API_URL/Category';
+const CATEGORY_AVAILABLE = '$API_URL/Category/Available';
+const CATEGORY_ADD = '$API_URL/Category';
+const CATEGORY_GET = '$API_URL/Category/ById/{0}';
+const CATEGORY_MERGE_CATEGORY = '$API_URL/Category/{0}';
+const CATEGORY_UPDATE_ALL = '$API_URL/Category';
+const CATEGORY_DELETE = '$API_URL/Category/{0}';
+const CATEGORY_SEARCH = '$API_URL/Category/search-icon';
+const CATEGORY_IS_USING_LEGACY = "$API_URL/Category/is-using-legacy";
+const CATEGORY_COUNT_EXPENSES = "$API_URL/Category/{0}/expenses/count";
+const EXPENSE_ADD = '$API_URL/Expense';
+const EXPENSE_BY_MONTH = '$API_URL/Expense/ByDay?month={0}';
+const EXPENSE_GET_MONTHS = '$API_URL/Expense/GetMonths';
+const EXPENSE_DELETE = '$API_URL/Expense/{0}';
+const EXPENSE_GET_NOTE_SUGGESTIONS = '$API_URL/Expense/suggest-notes';
+const EXPENSE_GET_LIMITS = '$API_URL/Expense/limits';
+const HISTORY_OVERALL_MONTH = "$API_URL/History/CurrentMonth";
+const HISTORY_OVERALL_YEAR = "$API_URL/History/CurrentYear";
+const HISTORY_YEARLY = "$API_URL/History/Yearly/{0}/{1}";
+const HISTORY_MONTHLY = "$API_URL/History/Monthly/{0}/{1}";
+const RECURRING_GET = '$API_URL/RecurringExpense';
+const RECURRING_ADD = '$API_URL/RecurringExpense';
+const RECURRING_DELETE = '$API_URL/RecurringExpense/{0}';
+const RECURRING_UPDATE = '$API_URL/RecurringExpense/{0}';
+const SESSION_LOGIN = '$API_ROOT/Login';
+const SESSION_SIGNUP = '$API_ROOT/SignUp';
+const SESSION_RESET_PASSWORD_REQUEST = "$API_ROOT/ResetPasswordRequest";
+const SESSION_RESET_PASSWORD = "$API_ROOT/ResetPassword";
+const SETTINGS_UPDATE = '$API_URL/Settings';
+const SETTINGS_ALL = '$API_URL/Settings';
+const SETTINGS_GET = '$API_URL/Settings/{0}';
+const MISC_VERSION = '$API_URL/Misc/version';
+const MISC_GET_CONFIG = "$API_ROOT/config";
+const USER_EDIT_PROFILE = "$API_URL/User";
+const USER_GET = "$API_URL/User?search={0}&page={1}&pageSize={2}";
+const USER_SET_ADMIN = "$API_URL/User/{0}/setAdmin/{1}";
+const USER_UPDATE_PASSWORD = "$API_URL/User/{0}/setPassword";
+const USER_ADD_USER = "$API_URL/User";
+const USER_DELETE_USER = "$API_URL/User/{0}";
+const CURRENCY_GET = '$API_URL/Currency/{0}/{1}';
+const CONFIG = '${API_ROOT}config';
+const SEARCH = '$API_URL/Search';
 
 const List<String> emptyList = [];
 
@@ -263,8 +262,6 @@ class Service {
     await Preferences.remove(Preferences.TOKEN);
     this.config = null;
     this.url = "";
-
-    FBroadcast.instance().broadcast(BROADCAST_LOGGED_OUT);
   }
 
   Future<List<RecurringExpense>> getRecurringExpenses() async {
@@ -324,8 +321,6 @@ class Service {
         await this.formatUrl(EXPENSE_DELETE, [id.toString()]),
         headers: headers);
     processResponse(response);
-
-    FBroadcast.instance().broadcast(BROADCAST_REFRESH_EXPENSES);
 
     return true;
   }
@@ -562,7 +557,7 @@ class Service {
 
   Future<SearchParameters> getSearchParameters(int? categoryId) async {
     String url =
-        '${SEARCH}${categoryId != null ? '?category_id=' + categoryId.toString() : ''}';
+        '${SEARCH}${categoryId != null ? '?category_id=$categoryId' : ''}';
     print(url);
     final response =
         await http.get(await this.formatUrl(url), headers: headers);

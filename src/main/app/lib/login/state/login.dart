@@ -1,23 +1,19 @@
 // This file is "main.dart"
-import 'dart:math';
-
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:spend_spent_spent/categories/state/categories.dart';
-import 'package:spend_spent_spent/exceptions/BackendNeedUpgradeException.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
+import 'package:spend_spent_spent/globals.dart' as globals;
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/login/models/login_page.dart';
-import 'package:spend_spent_spent/login/views/components/login.dart';
-import 'package:spend_spent_spent/models/config.dart';
-import 'package:spend_spent_spent/globals.dart' as globals;
+import 'package:spend_spent_spent/settings/models/config.dart';
+import 'package:spend_spent_spent/utils/models/exceptions/BackendNeedUpgradeException.dart';
+import 'package:spend_spent_spent/utils/models/exceptions/NeedUpgradeException.dart';
 import 'package:spend_spent_spent/utils/models/with_error.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
-
-import '../../exceptions/NeedUpgradeException.dart';
 
 part 'login.freezed.dart';
 
@@ -63,7 +59,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   init() async {
     categoriesCubit.reset();
-    lastExpenseCubit.setLastExpense(null);
+    lastExpenseCubit.setLastExpense(0);
 
     Uri base = Uri.base;
     String server =

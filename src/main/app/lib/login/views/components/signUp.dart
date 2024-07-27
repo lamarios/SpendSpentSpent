@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/login/views/components/login.dart';
-import 'package:spend_spent_spent/models/user.dart';
+import 'package:spend_spent_spent/settings/models/user.dart';
 import 'package:spend_spent_spent/utils/stringUtils.dart';
 
 class SignUp extends StatefulWidget {
@@ -70,14 +68,8 @@ class SignUpState extends State<SignUp> {
       return;
     }
 
-    await Fluttertoast.showToast(
-        msg: "Sign up successful, you can now log in",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0);
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Sign up successful, you can now log in")));
 
     widget.onBack();
   }
@@ -99,14 +91,12 @@ class SignUpState extends State<SignUp> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: PlatformTextField(
-              controller: usernameController,
-              autocorrect: false,
-              keyboardType: TextInputType.emailAddress,
-              material: (_, __) => MaterialTextFieldData(
-                  decoration:
-                      getFieldDecoration("Email", "user@example.org", colors)),
-            ),
+            child: TextField(
+                controller: usernameController,
+                autocorrect: false,
+                keyboardType: TextInputType.emailAddress,
+                decoration:
+                    getFieldDecoration("Email", "user@example.org", colors)),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
@@ -117,12 +107,10 @@ class SignUpState extends State<SignUp> {
           ),
           Padding(
               padding: const EdgeInsets.all(8.0),
-              child: PlatformTextField(
-                controller: passwordController,
-                obscureText: true,
-                material: (_, __) => MaterialTextFieldData(
-                    decoration: getFieldDecoration("Password", "", colors)),
-              )),
+              child: TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: getFieldDecoration("Password", "", colors))),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Container(
@@ -132,12 +120,10 @@ class SignUpState extends State<SignUp> {
           ),
           Padding(
               padding: const EdgeInsets.all(8.0),
-              child: PlatformTextField(
-                controller: repeatPasswordController,
-                obscureText: true,
-                material: (_, __) => MaterialTextFieldData(
-                    decoration: getFieldDecoration("Password", "", colors)),
-              )),
+              child: TextField(
+                  controller: repeatPasswordController,
+                  obscureText: true,
+                  decoration: getFieldDecoration("Password", "", colors))),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Container(
@@ -147,14 +133,12 @@ class SignUpState extends State<SignUp> {
           ),
           Padding(
               padding: const EdgeInsets.all(8.0),
-              child: PlatformTextField(
-                controller: firstNameController,
-                keyboardType: TextInputType.name,
-                autocorrect: false,
-                material: (_, __) => MaterialTextFieldData(
-                    decoration:
-                        getFieldDecoration("First name", "John", colors)),
-              )),
+              child: TextField(
+                  controller: firstNameController,
+                  keyboardType: TextInputType.name,
+                  autocorrect: false,
+                  decoration:
+                      getFieldDecoration("First name", "John", colors))),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Container(
@@ -164,13 +148,11 @@ class SignUpState extends State<SignUp> {
           ),
           Padding(
               padding: const EdgeInsets.all(8.0),
-              child: PlatformTextField(
-                controller: lastNameController,
-                keyboardType: TextInputType.name,
-                autocorrect: false,
-                material: (_, __) => MaterialTextFieldData(
-                    decoration: getFieldDecoration("Last name", "Doe", colors)),
-              )),
+              child: TextField(
+                  controller: lastNameController,
+                  keyboardType: TextInputType.name,
+                  autocorrect: false,
+                  decoration: getFieldDecoration("Last name", "Doe", colors))),
           Visibility(
             visible: error.isNotEmpty,
             child: Padding(
@@ -189,17 +171,16 @@ class SignUpState extends State<SignUp> {
             child: Row(
               children: [
                 Expanded(
-                  child: PlatformElevatedButton(
-                      color: colors.secondaryContainer,
+                  child: FilledButton.tonal(
                       onPressed: () => signup(context),
-                      child: Text('Sign up')),
+                      child: const Text('Sign up')),
                 ),
               ],
             ),
           ),
           TextButton(
               onPressed: () => widget.onBack(),
-              child: Text(
+              child: const Text(
                 'Back',
               ))
         ],

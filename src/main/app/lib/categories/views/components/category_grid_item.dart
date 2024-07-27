@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
-import 'package:spend_spent_spent/add_expense_dialog/views/components/addExpense.dart';
+import 'package:spend_spent_spent/add_expense_dialog/views/components/add_expense.dart';
 
 const double START_BORDER = 30;
 

@@ -3,11 +3,10 @@ import 'dart:math';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/login/views/components/login.dart';
-import 'package:spend_spent_spent/models/config.dart';
+import 'package:spend_spent_spent/settings/models/config.dart';
 
 class LoginForm extends StatefulWidget {
   final Function showSignUp, showResetPassword;
@@ -50,13 +49,13 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.all(50.0),
+                padding: const EdgeInsets.all(50.0),
                 child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       borderRadius: defaultBorder,
                     ),
                     child: Padding(
-                        padding: EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(20),
                         child: Column(
                           children: [
                             Padding(
@@ -79,17 +78,15 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                               visible: (kIsWeb && !kReleaseMode) || !kIsWeb,
                               child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: PlatformTextField(
-                                    showCursor: true,
-                                    controller: widget.urlController,
-                                    keyboardType: TextInputType.url,
-                                    autocorrect: false,
-                                    material: (_, __) => MaterialTextFieldData(
-                                        decoration: getFieldDecoration(
-                                            "",
-                                            "https://sss-server.example.com",
-                                            colors)),
-                                  )),
+                                  child: TextField(
+                                      showCursor: true,
+                                      controller: widget.urlController,
+                                      keyboardType: TextInputType.url,
+                                      autocorrect: false,
+                                      decoration: getFieldDecoration(
+                                          "",
+                                          "https://sss-server.example.com",
+                                          colors))),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
@@ -101,15 +98,13 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: PlatformTextField(
-                                controller: usernameController,
-                                keyboardType: TextInputType.emailAddress,
-                                autofillHints: [AutofillHints.username],
-                                autocorrect: false,
-                                material: (_, __) => MaterialTextFieldData(
-                                    decoration: getFieldDecoration(
-                                        "Email", "user@example.org", colors)),
-                              ),
+                              child: TextField(
+                                  controller: usernameController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  autofillHints: const [AutofillHints.username],
+                                  autocorrect: false,
+                                  decoration: getFieldDecoration(
+                                      "Email", "user@example.org", colors)),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
@@ -121,16 +116,16 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                             ),
                             Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: PlatformTextField(
-                                  controller: passwordController,
-                                  autofillHints: [AutofillHints.password],
-                                  obscureText: true,
-                                  material: (_, __) => MaterialTextFieldData(
-                                      decoration: getFieldDecoration(
-                                          "Password", "", colors)),
-                                )),
+                                child: TextField(
+                                    controller: passwordController,
+                                    autofillHints: const [
+                                      AutofillHints.password
+                                    ],
+                                    obscureText: true,
+                                    decoration: getFieldDecoration(
+                                        "Password", "", colors))),
                             Visibility(
-                              visible: widget.error.length > 0,
+                              visible: widget.error.isNotEmpty,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
@@ -152,7 +147,7 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                                         onPressed: () => widget.logIn(
                                             usernameController.text.trim(),
                                             passwordController.text.trim()),
-                                        child: Text('Log in')),
+                                        child: const Text('Log in')),
                                   ),
                                 ],
                               ),

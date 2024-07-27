@@ -4,16 +4,16 @@ import 'package:auto_route/annotations.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/categories/state/category_settings.dart';
-import 'package:spend_spent_spent/components/categorySettings/categoryEntry.dart';
+import 'package:spend_spent_spent/categories/views/components/category_entry.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/utils/views/components/error_listener.dart';
 
 @RoutePage()
 class CategorySettingsScreen extends StatelessWidget {
+  const CategorySettingsScreen({super.key});
+
   onListReorder(int oldListIndex, int newListIndex) {}
 
   @override
@@ -21,18 +21,18 @@ class CategorySettingsScreen extends StatelessWidget {
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          title: Text('Category Settings'),
+          title: const Text('Category Settings'),
         ),
         body: BlocProvider(
           create: (BuildContext context) => CategorySettingsCubit(
-              CategorySettingsState(), context.read<CategoriesCubit>()),
+              const CategorySettingsState(), context.read<CategoriesCubit>()),
           child: ErrorHandler<CategorySettingsCubit, CategorySettingsState>(
             child: BlocBuilder<CategorySettingsCubit, CategorySettingsState>(
                 builder: (context, state) {
               final cubit = context.read<CategorySettingsCubit>();
 
               return state.categories.isEmpty
-                  ? SizedBox.shrink()
+                  ? const SizedBox.shrink()
                   : Container(
                       alignment: Alignment.center,
                       child: AnimatedContainer(
@@ -42,15 +42,15 @@ class CategorySettingsScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             Padding(
-                              padding: EdgeInsets.all(10),
-                              child: PlatformText(
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
                                 'Drag and drop the categoryies to change its order in the grid, all changes (edit, delete, reorder) are only applied when the save button is pressed.',
-                                style: TextStyle(fontSize: 10),
+                                style: const TextStyle(fontSize: 10),
                               ),
                             ),
                             Expanded(
                               child: DragAndDropLists(
-                                itemDragHandle: DragHandle(
+                                itemDragHandle: const DragHandle(
                                   onLeft: true,
                                   child: Padding(
                                     padding: EdgeInsets.only(left: 10),
@@ -86,7 +86,7 @@ class CategorySettingsScreen extends StatelessWidget {
                                         await cubit.saveCategories();
                                         Navigator.of(context).pop();
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         'Save',
                                       ),
                                     ),
@@ -95,26 +95,26 @@ class CategorySettingsScreen extends StatelessWidget {
                               ],
                             ),
                             Visibility(
-                              visible: state.toDelete.length > 0,
+                              visible: state.toDelete.isNotEmpty,
                               child: Padding(
                                 padding: const EdgeInsets.only(
                                     left: 8.0, right: 8, bottom: 8),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: FaIcon(
-                                        FontAwesomeIcons.exclamationTriangle,
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.warning_amber,
                                         color: Colors.red,
                                         size: 15,
                                       ),
                                     ),
                                     Column(
                                       children: [
-                                        PlatformText(
+                                        Text(
                                             '${state.toDelete.length.toString()} categor${(state.toDelete.length == 1 ? 'y' : 'ies')} to delete.'),
-                                        PlatformText(
+                                        Text(
                                             '${state.expensesToDelete} expense${(state.expensesToDelete > 1 ? 's' : '')} to delete.'),
                                       ],
                                     ),

@@ -1,14 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/router.dart';
 
 @RoutePage()
 class HomeScreen extends StatelessWidget {
-  HomeScreen() : super();
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

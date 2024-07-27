@@ -18,19 +18,19 @@ abstract class _$AppRouter extends RootStackRouter {
     CategorySettingsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: CategorySettingsScreen(),
+        child: const CategorySettingsScreen(),
       );
     },
     HomeRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: HomeScreen(),
+        child: const HomeScreen(),
       );
     },
     LeftColumnRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: LeftColumnTab(),
+        child: const LeftColumnTab(),
       );
     },
     LoginRoute.name: (routeData) {
@@ -42,19 +42,19 @@ abstract class _$AppRouter extends RootStackRouter {
     MiddleColumnRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: MiddleColumnTab(),
+        child: const MiddleColumnTab(),
       );
     },
     RightColumnRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: RightColumnTab(),
+        child: const RightColumnTab(),
       );
     },
     SettingsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: SettingsScreen(),
+        child: const SettingsScreen(),
       );
     },
   };

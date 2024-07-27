@@ -1,3 +1,0 @@
-mixin Step {
-  bool isValid();
-}

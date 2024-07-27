@@ -1,18 +1,17 @@
-import 'package:after_layout/after_layout.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/models/appColors.dart';
-import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class Switcher extends StatelessWidget {
-  List<String> labels;
+  final List<String> labels;
 
-  int selected;
-  Function onSelect;
+  final int selected;
+  final Function onSelect;
 
-  Switcher(
-      {required this.labels, required this.selected, required this.onSelect});
+  const Switcher(
+      {super.key,
+      required this.labels,
+      required this.selected,
+      required this.onSelect});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +36,7 @@ class Switcher extends StatelessWidget {
                 curve: Curves.easeInOutQuart,
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                      borderRadius: const BorderRadius.all(Radius.circular(25)),
                       color: colors.secondaryContainer),
                 ),
               ),
