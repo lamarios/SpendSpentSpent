@@ -8,6 +8,8 @@ on:
     branches: [ master ]
     paths-ignore:
       - '**/README.md'
+    tags:
+      - '*'
   pull_request:
     branches: [ master ]
 
@@ -23,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ANDROID_KEY_FILE: /tmp/key.properties
+      JSON_KEY_FILE: /tmp/service-account.json
     #env:
     #  JAVA_VERSION: "11.0"
     #  FLUTTER_VERSION: "2.5.3"
@@ -38,12 +41,14 @@ jobs:
           nix_path: nixpkgs=channel:nixos-23.11
       - name: Decode and write keystore file
         run: echo ${{ secrets.ANDROID_KEYSTORE_BASE64 }} | base64 --decode > /tmp/keystore.jks
+      - name: Decode and write Service account file
+        run: echo ${{ secrets.GOOGLE_SERVICE_ACCOUNT }} | base64 --decode > /tmp/service-account.json
 
       - name: Create key.properties file
         run: |
-          echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> key.properties
-          echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> key.properties
-          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> key.properties
+          echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> /tmp/key.properties
+          echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> /tmp/key.properties
+          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> /tmp/key.properties
           echo "storeFile=/tmp/keystore.jks" >> /tmp/key.properties
       - run: set -e
       - name: Build app
@@ -55,6 +60,17 @@ jobs:
           ./submodules/flutter/bin/flutter config --no-analytics
           ./submodules/flutter/bin/flutter pub get
           ./submodules/flutter/bin/flutter build apk --split-per-abi
+          ./submodules/flutter/bin/flutter build appbundle
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0' # Adjust the Ruby version as needed
+      - name: Release app
+        working-directory: src/main/app/android
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          gem install fastlane
+          bundle exec fastlane release
       - name: Archive build artifacts
         uses: actions/upload-artifact@v3
         with:
