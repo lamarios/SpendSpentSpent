@@ -1,1 +1,0 @@
-class BackendNeedUpgradeException implements Exception{}

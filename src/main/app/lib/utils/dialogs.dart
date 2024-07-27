@@ -1,18 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-
-import 'colorUtils.dart';
 
 void showAlertDialog(BuildContext context, String title, String text) {
-  showPlatformDialog(
+  showDialog(
       context: context,
-      builder: (BuildContext context) => PlatformAlertDialog(
+      builder: (BuildContext context) => AlertDialog(
             title: Text(title),
             content: Text(text),
             actions: <Widget>[
-              PlatformDialogAction(
+              TextButton(
                 onPressed: () => Navigator.pop(context, 'OK'),
                 child: const Text('OK'),
               ),
@@ -20,29 +17,31 @@ void showAlertDialog(BuildContext context, String title, String text) {
           ));
 }
 
-void showPromptDialog(BuildContext context, String title, String label, TextEditingController controller, Function onOk, {int? maxLines}) {
-  final colors = get(context);
-  showPlatformDialog(
+void showPromptDialog(BuildContext context, String title, String label,
+    TextEditingController controller, Function onOk,
+    {int? maxLines}) {
+  final colors = Theme.of(context).colorScheme;
+  showDialog(
       context: context,
       builder: (BuildContext context) {
-        return PlatformAlertDialog(
+        return AlertDialog(
           title: Text(title),
-          content: PlatformTextField(
+          content: TextField(
             controller: controller,
             maxLines: maxLines,
             keyboardType: TextInputType.multiline,
           ),
           actions: <Widget>[
-            PlatformDialogAction(
+            TextButton(
               onPressed: () {
                 Navigator.pop(context, 'Cancel');
               },
               child: Text(
                 'Cancel',
-                style: TextStyle(color: colors.cancelText),
+                style: TextStyle(color: colors.secondary),
               ),
             ),
-            PlatformDialogAction(
+            TextButton(
               onPressed: () {
                 Navigator.pop(context, 'OK');
                 onOk();
@@ -54,8 +53,11 @@ void showPromptDialog(BuildContext context, String title, String label, TextEdit
       });
 }
 
-EdgeInsetsGeometry getInsetsForMaxSize(MediaQueryData data, {double? maxWidth, double? maxHeight}) {
-  var horizontal = max<double>(0, (data.size.width - (maxWidth ?? data.size.width)) / 2);
-  var vertical = max<double>(0, (data.size.height - (maxHeight ?? data.size.height)) / 2);
+EdgeInsetsGeometry getInsetsForMaxSize(MediaQueryData data,
+    {double? maxWidth, double? maxHeight}) {
+  var horizontal =
+      max<double>(0, (data.size.width - (maxWidth ?? data.size.width)) / 2);
+  var vertical =
+      max<double>(0, (data.size.height - (maxHeight ?? data.size.height)) / 2);
   return EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical);
 }
