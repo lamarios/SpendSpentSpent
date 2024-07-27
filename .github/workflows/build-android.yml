@@ -76,6 +76,7 @@ jobs:
         uses: maierj/fastlane-action@v3.1.0
         with:
             lane: 'deploy'
+            subdirectory: 'src/main/app/android'
       - name: Archive build artifacts
         uses: actions/upload-artifact@v3
         with:
