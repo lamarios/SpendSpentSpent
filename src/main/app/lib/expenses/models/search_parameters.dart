@@ -1,5 +1,3 @@
-import 'package:json_annotation/json_annotation.dart';
-
 import '../../categories/models/category.dart';
 
 import 'dart:core';

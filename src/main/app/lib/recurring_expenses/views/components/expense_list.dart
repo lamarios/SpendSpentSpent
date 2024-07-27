@@ -18,22 +18,22 @@ class ExpenseList extends StatelessWidget {
   }
 
   void splitExpenses(List<RecurringExpense> expenses) {
-    expenses.forEach((e) {
+    for (var e in expenses) {
       switch (e.type) {
         case 0:
           daily.add(e);
-          return;
+          continue;
         case 1:
           weekly.add(e);
-          return;
+          continue;
         case 2:
           monthly.add(e);
-          return;
+          continue;
         case 3:
           yearly.add(e);
-          return;
+          continue;
       }
-    });
+    }
     print(
         ' total: ${expenses.length} daily: ${daily.length}, weekly: ${weekly.length}, monthly: ${monthly.length}, yearly: ${yearly.length}');
   }

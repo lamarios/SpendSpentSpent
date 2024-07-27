@@ -21,7 +21,7 @@ class AddCategoryCubit extends Cubit<AddCategoryState> {
   void search() {
     EasyDebounce.debounce(
       'new-category-search',
-      Duration(milliseconds: 300),
+      const Duration(milliseconds: 300),
       () {
         service.searchAvailableCategories(searchController.text).then((value) {
           emit(state.copyWith(selected: '', categories: value));
@@ -46,6 +46,6 @@ class AddCategoryCubit extends Cubit<AddCategoryState> {
 class AddCategoryState with _$AddCategoryState {
   const factory AddCategoryState({
     @Default('') String selected,
-    @Default(const AvailableCategories()) AvailableCategories categories,
+    @Default(AvailableCategories()) AvailableCategories categories,
   }) = _AddCategoryState;
 }

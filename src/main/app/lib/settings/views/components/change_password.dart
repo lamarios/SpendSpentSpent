@@ -3,6 +3,8 @@ import 'package:spend_spent_spent/settings/models/user.dart';
 import 'package:flutter/material.dart';
 
 class ChangePassword extends StatefulWidget {
+  const ChangePassword({super.key});
+
   @override
   ChangePasswordState createState() => ChangePasswordState();
 }

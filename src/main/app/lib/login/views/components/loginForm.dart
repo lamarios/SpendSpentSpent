@@ -13,11 +13,13 @@ class LoginForm extends StatefulWidget {
   final Function(String username, String password) logIn;
   final Config? config;
   final TextEditingController urlController;
+  @override
   final Key key;
   final String error;
 
-  LoginForm(
-      {required this.showResetPassword,
+  const LoginForm(
+      {super.key,
+      required this.showResetPassword,
       required this.error,
       required this.key,
       this.config,

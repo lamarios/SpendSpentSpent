@@ -28,18 +28,18 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   getConfig() async {
-    print('${kIsWeb} ${Uri.base.scheme} ${Uri.base.host} ${Uri.base.port}');
+    print('$kIsWeb ${Uri.base.scheme} ${Uri.base.host} ${Uri.base.port}');
     try {
       print('getting config');
       Config c = await service.getServerConfig(urlController.text.trim());
       print('can register ? ${c.allowSignup}');
 
       emit(state.copyWith(config: c));
-    } on NeedUpgradeException catch (e) {
+    } on NeedUpgradeException {
       emit(state.copyWith(
           error:
               "Application needs update\nThe server requires a newer application version please upgrade"));
-    } on BackendNeedUpgradeException catch (e) {
+    } on BackendNeedUpgradeException {
       emit(state.copyWith(
           error:
               "Backend needs update\nThe backends is out dated and needs to be updated"));
@@ -78,7 +78,7 @@ class LoginCubit extends Cubit<LoginState> {
     getConfig();
     urlController.addListener(() {
       EasyDebounce.debounce(
-          'get-server-config', Duration(milliseconds: 500), getConfig);
+          'get-server-config', const Duration(milliseconds: 500), getConfig);
     });
   }
 

@@ -41,11 +41,11 @@ class CategorySettingsScreen extends StatelessWidget {
                         width: min(MediaQuery.of(context).size.width, TABLET),
                         child: Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10),
+                            const Padding(
+                              padding: EdgeInsets.all(10),
                               child: Text(
                                 'Drag and drop the categoryies to change its order in the grid, all changes (edit, delete, reorder) are only applied when the save button is pressed.',
-                                style: const TextStyle(fontSize: 10),
+                                style: TextStyle(fontSize: 10),
                               ),
                             ),
                             Expanded(

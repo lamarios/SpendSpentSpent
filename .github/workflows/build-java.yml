@@ -44,4 +44,15 @@ jobs:
           ./submodules/flutter/bin/flutter build web --release
           cp -R build/web ../resources/public
       # build backend
-      - run: mvn clean install -Dspring.main.allow-circular-references=true
+
+      - name: Extract tag name
+        id: extract_tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      - name: Set application version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          mvn versions:set -DnewVersion=${TAG_NAME}
+          mvn versions:commit
+      - name: Build Java app
+        run: mvn clean install -Dspring.main.allow-circular-references=true

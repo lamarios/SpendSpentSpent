@@ -30,7 +30,7 @@ class ErrorDialog extends StatelessWidget {
   static List<Widget> _buildError(
       BuildContext context, dynamic error, StackTrace? trace) {
     // we really don't know what's going on
-    return [Text('${error.toString()}')];
+    return [Text(error.toString())];
   }
 
   @override
@@ -62,7 +62,7 @@ class ErrorDialog extends StatelessWidget {
                 children: [
                   TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text('ok'))
+                      child: const Text('ok'))
                 ],
               )
             ]),

@@ -47,7 +47,7 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
 
       // tip: use resolver.redirect to have the redirected route
       // automatically removed from the stack when the resolver is completed
-      resolver.redirect(LoginRoute(), replace: true);
+      resolver.redirect(const LoginRoute(), replace: true);
     }
   }
 }

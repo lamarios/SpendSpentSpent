@@ -9,7 +9,7 @@ import 'package:spend_spent_spent/globals.dart';
 class CategoryGrid extends StatelessWidget {
   final List<Category> categories;
 
-  const CategoryGrid(this.categories);
+  const CategoryGrid(this.categories, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +25,9 @@ class CategoryGrid extends StatelessWidget {
         padding: const EdgeInsets.only(top: 20),
         itemBuilder: (BuildContext context, int index) {
           if (index == categories.length + 1) {
-            return SettingsCategoryGridItem();
+            return const SettingsCategoryGridItem();
           } else if (index == categories.length) {
-            return AddCategoryGridItem();
+            return const AddCategoryGridItem();
           } else {
             Category cat = categories[index];
             return CategoryGridItem(category: cat);

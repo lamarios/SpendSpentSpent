@@ -1,14 +1,11 @@
 library app.globals;
 
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/service.dart';
 
-Service service = new Service();
+Service service = Service();
 const MIN_BACKEND_VERSION = 67;
 
 const BorderRadius defaultBorder = BorderRadius.all(Radius.circular(15));
@@ -28,7 +25,7 @@ const BIG_PHONE = 500;
 ButtonStyle flatButtonStyle = TextButton.styleFrom(
   foregroundColor: Colors.white,
   backgroundColor: Colors.blue[800],
-  padding: EdgeInsets.symmetric(vertical: 5.0),
+  padding: const EdgeInsets.symmetric(vertical: 5.0),
   shape: const RoundedRectangleBorder(
     borderRadius: BorderRadius.all(Radius.circular(2.0)),
   ),

@@ -4,7 +4,7 @@ class DummyFade extends StatefulWidget {
   final Widget child;
   final bool? running;
 
-  const DummyFade({required this.child, this.running = true});
+  const DummyFade({super.key, required this.child, this.running = true});
 
   @override
   DummyFadeState createState() => DummyFadeState();

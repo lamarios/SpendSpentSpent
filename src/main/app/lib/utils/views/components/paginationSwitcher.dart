@@ -6,7 +6,10 @@ class PaginationSwitcher extends StatelessWidget {
   final Function previous, next;
 
   const PaginationSwitcher(
-      {required this.pagination, required this.previous, required this.next});
+      {super.key,
+      required this.pagination,
+      required this.previous,
+      required this.next});
 
   @override
   Widget build(BuildContext context) {

@@ -56,8 +56,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     emit(state.copyWith(useLocation: useLocation));
 
     if (useLocation) {
-      this
-          .getLocation()
+      getLocation()
           .timeout(const Duration(seconds: LOCATION_TIMEOUT),
               onTimeout: () => null)
           .then((loc) {
@@ -69,7 +68,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
   void addNumber(String i) {
     if (state.currencyConversion == null) {
       String tempValue = (state.value + i).replaceFirst(RegExp(r'^0+'), '');
-      this.getNoteSuggestions(tempValue);
+      getNoteSuggestions(tempValue);
       emit(state.copyWith(value: tempValue));
     } else {
       emit(state.copyWith(
@@ -84,7 +83,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     double fromDouble = double.parse(from);
     var newToValue = fromDouble * rate;
     var tmpValue = newToValue.floor().toString();
-    this.getNoteSuggestions(tmpValue);
+    getNoteSuggestions(tmpValue);
     emit(state.copyWith(value: tmpValue));
   }
 
@@ -103,8 +102,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     emit(state.copyWith(useLocation: location));
 
     if (state.useLocation) {
-      this
-          .getLocation()
+      getLocation()
           .timeout(const Duration(seconds: LOCATION_TIMEOUT),
               onTimeout: () => null)
           .then((loc) {
@@ -187,30 +185,30 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
 
   Future<LocationData?> getLocation() async {
     emit(state.copyWith(gettingLocation: true));
-    Location location = new Location();
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
+    Location location = Location();
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+    LocationData locationData;
 
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
         throw Exception('Location service not enabled');
       }
     }
 
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
         throw Exception('Location not allowed');
       }
     }
 
     try {
-      _locationData = await location.getLocation();
-      return _locationData;
+      locationData = await location.getLocation();
+      return locationData;
     } catch (e) {
       print(e);
       throw Exception("Couldn't get data");

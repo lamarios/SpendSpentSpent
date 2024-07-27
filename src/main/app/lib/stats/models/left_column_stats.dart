@@ -1,5 +1,4 @@
 import 'package:spend_spent_spent/categories/models/category.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 import 'dart:core';
 

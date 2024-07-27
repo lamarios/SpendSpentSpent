@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/login/views/components/login.dart';
@@ -14,7 +13,8 @@ class LoginScreen extends StatelessWidget {
       body: SafeArea(
         bottom: false,
         child: Login(
-            onLoginSuccess: () => AutoRouter.of(context).push(HomeRoute())),
+            onLoginSuccess: () =>
+                AutoRouter.of(context).push(const HomeRoute())),
       ),
     );
   }

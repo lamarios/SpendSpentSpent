@@ -16,7 +16,7 @@ class Preferences {
   static Future<String> get(String key, [defaultValue = ""]) async {
     final prefs = await SharedPreferences.getInstance();
     var value = prefs.getString(key);
-    return value == null || value.trim().length == 0 ? defaultValue : value;
+    return value == null || value.trim().isEmpty ? defaultValue : value;
   }
 
   static Future<void> setInt(String key, int value) async {
@@ -27,7 +27,7 @@ class Preferences {
   static Future<int> getInt(String key, [defaultValue = 0]) async {
     final prefs = await SharedPreferences.getInstance();
     var value = prefs.getInt(key);
-    return value == null ? defaultValue : value;
+    return value ?? defaultValue;
   }
 
   static Future<void> setBool(String key, bool value) async {
@@ -38,7 +38,7 @@ class Preferences {
   static Future<bool> getBool(String key, [defaultValue = false]) async {
     final prefs = await SharedPreferences.getInstance();
     var value = prefs.getBool(key);
-    return value == null ? defaultValue : value;
+    return value ?? defaultValue;
   }
 
   static Future<void> remove(String key) async {

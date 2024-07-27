@@ -10,6 +10,8 @@ import 'package:spend_spent_spent/settings/models/user.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 
 class ManageUsers extends StatefulWidget {
+  const ManageUsers({super.key});
+
   @override
   ManageUserState createState() => ManageUserState();
 }
@@ -190,13 +192,13 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
                       ),
                     ),
                     TextButton(
+                      style: const ButtonStyle(
+                          foregroundColor: WidgetStatePropertyAll(Colors.red)),
+                      onPressed: () => showDeleteUserDialog(context, e.id!),
                       child: const Text(
                         'Delete',
                         style: TextStyle(color: Colors.white),
                       ),
-                      style: const ButtonStyle(
-                          foregroundColor: WidgetStatePropertyAll(Colors.red)),
-                      onPressed: () => showDeleteUserDialog(context, e.id!),
                     )
                   ],
                 ),
@@ -254,14 +256,14 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
                             ),
                           ),
                           TextButton(
-                            child: const Text(
-                              'Delete',
-                            ),
                             style: const ButtonStyle(
                                 foregroundColor:
                                     WidgetStatePropertyAll(Colors.red)),
                             onPressed: () =>
                                 showDeleteUserDialog(context, e.id!),
+                            child: const Text(
+                              'Delete',
+                            ),
                           )
                         ],
                       ),
@@ -314,7 +316,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
   Future<void> afterFirstLayout(BuildContext context) async {
     User user = await service.getCurrentUser();
     setState(() {
-      this.currentUser = user;
+      currentUser = user;
     });
     getUsers();
   }

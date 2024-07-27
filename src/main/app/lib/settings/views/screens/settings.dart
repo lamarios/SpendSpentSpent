@@ -69,12 +69,12 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
 
   showPasswordChange(BuildContext context) {
     masterDetailKey.currentState!
-        .changeDetails(context, 'Change password', ChangePassword());
+        .changeDetails(context, 'Change password', const ChangePassword());
   }
 
   showManageUsers(BuildContext context) {
     masterDetailKey.currentState!
-        .changeDetails(context, 'Manage users', ManageUsers());
+        .changeDetails(context, 'Manage users', const ManageUsers());
   }
 
   setMotd() {
@@ -331,8 +331,8 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
 
     setState(() {
       this.packageInfo = packageInfo;
-      this.currentUser = user;
-      this.showChangePassword = user.isAdmin || !config.demoMode;
+      currentUser = user;
+      showChangePassword = user.isAdmin || !config.demoMode;
       loading = false;
     });
   }

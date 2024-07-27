@@ -114,7 +114,7 @@ class ExpenseView extends StatelessWidget {
                     Marker(
                         width: 40.0,
                         height: 40.0,
-                        point: new LatLng(
+                        point: LatLng(
                             expense.latitude ?? 0, expense.longitude ?? 0),
                         child: Icon(
                           Icons.location_on,
