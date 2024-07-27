@@ -70,11 +70,16 @@ jobs:
         with:
           ruby-version: '3.0'
           working-directory: src/main/app/android
-      - name: Release app
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: maierj/fastlane-action@v3.1.0
-        with:
-            lane: 'deploy'
+      - name: Install dependencies
+        working-directory: src/main/app/android
+        run: |
+          bundle install
+
+      - name: Run Fastlane to release
+        working-directory: src/main/app/android
+#        if: startsWith(github.ref, 'refs/tags/')
+        run: bundle exec fastlane deploy
+
       - name: Archive build artifacts
         uses: actions/upload-artifact@v3
         with:
