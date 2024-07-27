@@ -34,13 +34,12 @@ jobs:
       - uses: cachix/install-nix-action@v22
         with:
           nix_path: nixpkgs=channel:nixos-23.11
-        run: git submodule init
-      - run: git submodule update
       - run: set -e
       - name: Build app
         working-directory: src/main/app
         run: |
-          cd src/main/app
+          git submodule init
+          git submodule update
           ./submodules/flutter/bin/flutter doctor
           ./submodules/flutter/bin/flutter config --no-analytics
           ./submodules/flutter/bin/flutter pub get
