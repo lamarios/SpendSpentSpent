@@ -21,6 +21,8 @@ jobs:
     name: flutter analyze and build
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    env:
+      ANDROID_KEY_FILE: /tmp/key.properties
     #env:
     #  JAVA_VERSION: "11.0"
     #  FLUTTER_VERSION: "2.5.3"
@@ -34,6 +36,15 @@ jobs:
       - uses: cachix/install-nix-action@v22
         with:
           nix_path: nixpkgs=channel:nixos-23.11
+      - name: Decode and write keystore file
+        run: echo ${{ secrets.ANDROID_KEYSTORE_BASE64 }} | base64 --decode > /tmp/keystore.jks
+
+      - name: Create key.properties file
+        run: |
+          echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> key.properties
+          echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> key.properties
+          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> key.properties
+          echo "storeFile=/tmp/keystore.jks" >> /tmp/key.properties
       - run: set -e
       - name: Build app
         working-directory: src/main/app
@@ -43,8 +54,7 @@ jobs:
           ./submodules/flutter/bin/flutter doctor
           ./submodules/flutter/bin/flutter config --no-analytics
           ./submodules/flutter/bin/flutter pub get
-          ./submodules/flutter/bin/flutter pub run flutter_native_splash:create
-          ./submodules/flutter/bin/flutter build apk --profile --split-per-abi
+          ./submodules/flutter/bin/flutter build apk --split-per-abi
       - name: Archive build artifacts
         uses: actions/upload-artifact@v3
         with:
