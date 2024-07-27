@@ -68,13 +68,14 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.0' # Adjust the Ruby version as needed
+          ruby-version: '3.0'
+          bundler-cache: true
       - name: Release app
         working-directory: src/main/app/android
         if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          gem install fastlane
-          bundle exec fastlane release
+        uses: maierj/fastlane-action@v3.1.0
+        with:
+            lane: 'deploy'
       - name: Archive build artifacts
         uses: actions/upload-artifact@v3
         with:
