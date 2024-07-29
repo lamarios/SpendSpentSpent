@@ -3,15 +3,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
 import 'package:spend_spent_spent/expenses/state/expense_list.dart';
-import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/expenses/views/components/one_day.dart';
 import 'package:spend_spent_spent/expenses/views/components/search.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
+import 'package:spend_spent_spent/utils/views/components/data_change_monitor.dart';
 
 import '../../../utils/views/components/dummies/dummyExpenses.dart';
 import '../components/expense_view.dart';
@@ -53,15 +52,8 @@ class RightColumnTab extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     return BlocProvider(
       create: (context) => ExpenseListCubit(const ExpenseListState()),
-      child: MultiBlocListener(
-        listeners: [
-          BlocListener<LastExpenseCubit, int>(
-              listener: (context, state) =>
-                  context.read<ExpenseListCubit>().getMonths()),
-          BlocListener<CategoriesCubit, CategoriesState>(
-              listener: (context, state) =>
-                  context.read<ExpenseListCubit>().getMonths())
-        ],
+      child: DataChangeMonitor(
+        onChange: (context) => context.read<ExpenseListCubit>().getMonths(),
         child: BlocBuilder<ExpenseListCubit, ExpenseListState>(
             builder: (context, state) {
           final cubit = context.read<ExpenseListCubit>();

@@ -15,6 +15,12 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    CategoryListRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CategoryListTab(),
+      );
+    },
     CategorySettingsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -45,6 +51,18 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const MiddleColumnTab(),
       );
     },
+    MonthlyStatsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const MonthlyStatsTab(),
+      );
+    },
+    RecurringExpenseListRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RecurringExpenseListTab(),
+      );
+    },
     RightColumnRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -57,7 +75,27 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SettingsScreen(),
       );
     },
+    YearlyStatsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const YearlyStatsTab(),
+      );
+    },
   };
+}
+
+/// generated route for
+/// [CategoryListTab]
+class CategoryListRoute extends PageRouteInfo<void> {
+  const CategoryListRoute({List<PageRouteInfo>? children})
+      : super(
+          CategoryListRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CategoryListRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -131,6 +169,34 @@ class MiddleColumnRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [MonthlyStatsTab]
+class MonthlyStatsRoute extends PageRouteInfo<void> {
+  const MonthlyStatsRoute({List<PageRouteInfo>? children})
+      : super(
+          MonthlyStatsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'MonthlyStatsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [RecurringExpenseListTab]
+class RecurringExpenseListRoute extends PageRouteInfo<void> {
+  const RecurringExpenseListRoute({List<PageRouteInfo>? children})
+      : super(
+          RecurringExpenseListRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'RecurringExpenseListRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [RightColumnTab]
 class RightColumnRoute extends PageRouteInfo<void> {
   const RightColumnRoute({List<PageRouteInfo>? children})
@@ -154,6 +220,20 @@ class SettingsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'SettingsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [YearlyStatsTab]
+class YearlyStatsRoute extends PageRouteInfo<void> {
+  const YearlyStatsRoute({List<PageRouteInfo>? children})
+      : super(
+          YearlyStatsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'YearlyStatsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
