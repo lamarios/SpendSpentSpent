@@ -1,11 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spend_spent_spent/categories/views/components/category_list.dart';
-import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/home/states/middle_column.dart';
-import 'package:spend_spent_spent/recurring_expenses/views/components/recurring_expense_list.dart';
-import 'package:spend_spent_spent/utils/views/components/switcher.dart';
+import 'package:flutter/material.dart';
 
 @RoutePage()
 class MiddleColumnTab extends StatelessWidget {
@@ -13,34 +7,22 @@ class MiddleColumnTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MiddleColumnCubit(0),
-      child: BlocBuilder<MiddleColumnCubit, int>(builder: (context, selected) {
-        final cubit = context.read<MiddleColumnCubit>();
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Column(
+    return AutoTabsRouter.tabBar(
+        physics: const NeverScrollableScrollPhysics(),
+        builder: (context, child, controller) {
+          return Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Switcher(
-                    selected: selected,
-                    labels: const ['Normal', 'Recurring'],
-                    onSelect: cubit.setTab),
-              ),
+              TabBar(
+                  dividerHeight: 0,
+                  controller: controller,
+                  tabs: const [Tab(text: 'Normal'), Tab(text: ' Recurring')]),
               Expanded(
-                  child: AnimatedSwitcher(
-                      duration: panelTransition,
-                      switchInCurve: Curves.easeInOutQuart,
-                      switchOutCurve: Curves.easeInOutQuart,
-                      child: selected == 0
-                          ? const CategoryList()
-                          : const RecurringExpenseList()))
+                  child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: child,
+              ))
             ],
-          ),
-        );
-      }),
-    );
+          );
+        });
   }
 }

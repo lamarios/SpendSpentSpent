@@ -17,7 +17,6 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$StatsListState {
   bool get loading => throw _privateConstructorUsedError;
-  int get selected => throw _privateConstructorUsedError;
   List<LeftColumnStats> get stats => throw _privateConstructorUsedError;
   dynamic get error => throw _privateConstructorUsedError;
   StackTrace? get stackTrace => throw _privateConstructorUsedError;
@@ -35,7 +34,6 @@ abstract class $StatsListStateCopyWith<$Res> {
   @useResult
   $Res call(
       {bool loading,
-      int selected,
       List<LeftColumnStats> stats,
       dynamic error,
       StackTrace? stackTrace});
@@ -55,7 +53,6 @@ class _$StatsListStateCopyWithImpl<$Res, $Val extends StatsListState>
   @override
   $Res call({
     Object? loading = null,
-    Object? selected = null,
     Object? stats = null,
     Object? error = freezed,
     Object? stackTrace = freezed,
@@ -65,10 +62,6 @@ class _$StatsListStateCopyWithImpl<$Res, $Val extends StatsListState>
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
-      selected: null == selected
-          ? _value.selected
-          : selected // ignore: cast_nullable_to_non_nullable
-              as int,
       stats: null == stats
           ? _value.stats
           : stats // ignore: cast_nullable_to_non_nullable
@@ -95,7 +88,6 @@ abstract class _$$StatsListStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {bool loading,
-      int selected,
       List<LeftColumnStats> stats,
       dynamic error,
       StackTrace? stackTrace});
@@ -113,7 +105,6 @@ class __$$StatsListStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? loading = null,
-    Object? selected = null,
     Object? stats = null,
     Object? error = freezed,
     Object? stackTrace = freezed,
@@ -123,10 +114,6 @@ class __$$StatsListStateImplCopyWithImpl<$Res>
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
-      selected: null == selected
-          ? _value.selected
-          : selected // ignore: cast_nullable_to_non_nullable
-              as int,
       stats: null == stats
           ? _value._stats
           : stats // ignore: cast_nullable_to_non_nullable
@@ -148,7 +135,6 @@ class __$$StatsListStateImplCopyWithImpl<$Res>
 class _$StatsListStateImpl implements _StatsListState {
   const _$StatsListStateImpl(
       {this.loading = false,
-      this.selected = 0,
       final List<LeftColumnStats> stats = const [],
       this.error,
       this.stackTrace})
@@ -157,9 +143,6 @@ class _$StatsListStateImpl implements _StatsListState {
   @override
   @JsonKey()
   final bool loading;
-  @override
-  @JsonKey()
-  final int selected;
   final List<LeftColumnStats> _stats;
   @override
   @JsonKey()
@@ -176,7 +159,7 @@ class _$StatsListStateImpl implements _StatsListState {
 
   @override
   String toString() {
-    return 'StatsListState(loading: $loading, selected: $selected, stats: $stats, error: $error, stackTrace: $stackTrace)';
+    return 'StatsListState(loading: $loading, stats: $stats, error: $error, stackTrace: $stackTrace)';
   }
 
   @override
@@ -185,8 +168,6 @@ class _$StatsListStateImpl implements _StatsListState {
         (other.runtimeType == runtimeType &&
             other is _$StatsListStateImpl &&
             (identical(other.loading, loading) || other.loading == loading) &&
-            (identical(other.selected, selected) ||
-                other.selected == selected) &&
             const DeepCollectionEquality().equals(other._stats, _stats) &&
             const DeepCollectionEquality().equals(other.error, error) &&
             (identical(other.stackTrace, stackTrace) ||
@@ -197,7 +178,6 @@ class _$StatsListStateImpl implements _StatsListState {
   int get hashCode => Object.hash(
       runtimeType,
       loading,
-      selected,
       const DeepCollectionEquality().hash(_stats),
       const DeepCollectionEquality().hash(error),
       stackTrace);
@@ -213,15 +193,12 @@ class _$StatsListStateImpl implements _StatsListState {
 abstract class _StatsListState implements StatsListState, WithError {
   const factory _StatsListState(
       {final bool loading,
-      final int selected,
       final List<LeftColumnStats> stats,
       final dynamic error,
       final StackTrace? stackTrace}) = _$StatsListStateImpl;
 
   @override
   bool get loading;
-  @override
-  int get selected;
   @override
   List<LeftColumnStats> get stats;
   @override

@@ -55,18 +55,15 @@ class SingleStats extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: AnimatedRotation(
-                            turns: state.open ? 0.25 : 0,
-                            duration: panelTransition,
-                            curve: Curves.easeInOutQuart,
-                            child: Icon(
-                              Icons.chevron_right,
-                              size: 10,
-                              color: colors.onSurface,
-                            )),
-                      ),
+                      AnimatedRotation(
+                          turns: state.open ? 0.25 : 0,
+                          duration: panelTransition,
+                          curve: Curves.easeInOutQuart,
+                          child: Icon(
+                            Icons.chevron_right,
+                            size: 20,
+                            color: colors.onSurface,
+                          )),
                       Visibility(
                           visible: stats.category.id != -1,
                           child: getIcon(stats.category.icon!,
