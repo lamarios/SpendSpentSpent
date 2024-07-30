@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:spend_spent_spent/recurring_expenses/models/recurring_expense.dart';
 import 'package:spend_spent_spent/recurring_expenses/views/components/add_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/recurring_expenses/views/components/expense.dart';
+import 'package:spend_spent_spent/utils/extensions/list_insert_between.dart';
 
 class ExpenseList extends StatelessWidget {
   final List<RecurringExpense> expenses,
@@ -34,25 +36,39 @@ class ExpenseList extends StatelessWidget {
           continue;
       }
     }
+/*
     print(
         ' total: ${expenses.length} daily: ${daily.length}, weekly: ${weekly.length}, monthly: ${monthly.length}, yearly: ${yearly.length}');
+*/
   }
 
-  List<Widget> expensesFromSplit(
-      ColorScheme colors, List<RecurringExpense> expenses, String title) {
+  Widget? expensesFromSplit(
+      BuildContext context, List<RecurringExpense> expenses, String title) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     List<Widget> results = [];
 
     if (expenses.isNotEmpty) {
-      results.add(Container(
-        alignment: Alignment.center,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Text(
-            title,
-            style: TextStyle(color: colors.primary),
-          ),
+      double total = expenses
+          .map((e) => e.amount)
+          .reduce((value, element) => value + element);
+
+      results.add(Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(
+          title,
         ),
-      ));
+        const Gap(5),
+        const Icon(
+          Icons.arrow_forward,
+          size: 15,
+        ),
+        const Gap(5),
+        Text(
+          formatCurrency(total),
+          style: textTheme.bodyLarge?.copyWith(color: colors.primary),
+        )
+      ]));
 
       List<Widget> expensesWidget = [];
       for (var e in expenses) {
@@ -71,27 +87,10 @@ class ExpenseList extends StatelessWidget {
             alignment: WrapAlignment.center,
             children: expensesWidget),
       ));
-
-      double total = expenses
-          .map((e) => e.amount)
-          .reduce((value, element) => value + element);
-
-      results.add(Padding(
-        padding: const EdgeInsets.only(bottom: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Total: '),
-            Text(
-              formatCurrency(total),
-              style: TextStyle(color: colors.primary),
-            )
-          ],
-        ),
-      ));
+      return Column(children: results);
+    } else {
+      return null;
     }
-
-    return results;
   }
 
   @override
@@ -99,13 +98,36 @@ class ExpenseList extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     List<Widget> children = [];
 
-    children.addAll(expensesFromSplit(colors, daily, 'Daily'));
-    children.addAll(expensesFromSplit(colors, weekly, 'Weekly'));
-    children.addAll(expensesFromSplit(colors, monthly, 'Monthly'));
-    children.addAll(expensesFromSplit(colors, yearly, 'Yearly'));
+    var daily = expensesFromSplit(context, this.daily, 'Daily');
+    if (daily != null) {
+      children.add(daily);
+    }
+    var weekly = expensesFromSplit(context, this.weekly, 'Weekly');
+    if (weekly != null) {
+      children.add(weekly);
+    }
+    var monthly = expensesFromSplit(context, this.monthly, 'Monthly');
+    if (monthly != null) {
+      children.add(monthly);
+    }
+
+    var yearly = expensesFromSplit(context, this.yearly, 'Yearly');
+    if (yearly != null) {
+      children.add(yearly);
+    }
 
     children.add(AddExpense(
       refreshExpenses: refreshExpenses,
+    ));
+
+    children.addItemBetween(Container(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      alignment: Alignment.center,
+      child: Container(
+        height: 1,
+        width: 50,
+        color: colors.primaryContainer,
+      ),
     ));
 
     return ListView(

@@ -3,6 +3,7 @@ import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/recurring_expenses/models/recurring_expense.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
+import 'package:spend_spent_spent/utils/views/components/repeated_icons.dart';
 
 class RecurringExpenseView extends StatefulWidget {
   final RecurringExpense expense;
@@ -87,13 +88,11 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> {
     final colors = Theme.of(context).colorScheme;
     return Stack(
       children: [
-        Positioned(
-          top: -20,
-          left: -30,
-          right: -30,
-          bottom: -20,
-          child: getRepeatedIcon(colors),
-        ),
+        RepeatedIconsBackground(
+            icon: widget.expense.category.icon!,
+            color: colors.onSurface.withOpacity(0.05),
+            size: 40,
+            child: const SizedBox.shrink()),
         Positioned(
             bottom: 20,
             right: 20,

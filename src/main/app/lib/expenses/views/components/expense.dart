@@ -37,25 +37,25 @@ class OneExpense extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(25)),
-                color: colors.tertiaryContainer),
+                color: colors.primaryContainer),
             child: Row(
               children: [
                 Container(
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(25)),
-                      color: colors.primaryContainer),
+                      color: colors.primary),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
                         getIcon(expense.category.icon!,
-                            size: 20, color: colors.onPrimaryContainer),
+                            size: 20, color: colors.onPrimary),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
                             formatCurrency(expense.amount),
-                            style: TextStyle(color: colors.onPrimaryContainer),
+                            style: TextStyle(color: colors.onPrimary),
                           ),
                         ),
                       ],
@@ -68,7 +68,7 @@ class OneExpense extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Icon(
                         Icons.near_me,
-                        color: colors.onTertiaryContainer,
+                        color: colors.onPrimaryContainer,
                         size: 15,
                       ),
                     )),
@@ -78,7 +78,7 @@ class OneExpense extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Icon(
                         Icons.comment_outlined,
-                        color: colors.onTertiaryContainer,
+                        color: colors.onPrimaryContainer,
                         size: 15,
                       ),
                     )),
@@ -88,7 +88,7 @@ class OneExpense extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Icon(
                         Icons.refresh,
-                        color: colors.onTertiaryContainer,
+                        color: colors.onPrimaryContainer,
                         size: 15,
                       ),
                     )),
