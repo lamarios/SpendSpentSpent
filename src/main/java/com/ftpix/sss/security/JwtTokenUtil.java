@@ -6,6 +6,7 @@ import com.ftpix.sss.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,7 +61,7 @@ public class JwtTokenUtil implements Serializable, ApplicationContextAware {
     }
 
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(encodedSalt).parseClaimsJws(token).getBody();
+        return Jwts.parser().decryptWith(Keys.password(encodedSalt.toCharArray())).build().parseSignedClaims(token).getPayload();
     }
 
     private Boolean isTokenExpired(String token) {

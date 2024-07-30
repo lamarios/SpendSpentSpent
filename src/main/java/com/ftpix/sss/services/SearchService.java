@@ -2,7 +2,6 @@ package com.ftpix.sss.services;
 
 import com.ftpix.sss.dao.ExpenseDao;
 import com.ftpix.sss.models.*;
-import com.google.common.base.Strings;
 import org.jooq.Condition;
 import org.jooq.OrderField;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.jooq.impl.DSL.*;
 import static com.ftpix.sss.dsl.Tables.EXPENSE;
+import static org.jooq.impl.DSL.upper;
 
 @Service
 public class SearchService {
@@ -87,7 +86,7 @@ public class SearchService {
 
         //TODO: handle dates
 
-        if (!Strings.isNullOrEmpty(parameters.note())) {
+        if (parameters.note() == null && !parameters.note().trim().isEmpty()) {
             conditions.add(upper(EXPENSE.NOTE).like("%" + parameters.note().toUpperCase() + "%"));
         }
 

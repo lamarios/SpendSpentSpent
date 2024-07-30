@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteTargetsManager">
+    <targets>
+      <target name="amazoncorretto:17" type="docker" uuid="97760375-e689-414f-ac68-2a98d13ccfea">
+        <config>
+          <option name="targetPlatform">
+            <TargetPlatform />
+          </option>
+          <option name="buildImageConfig">
+            <BuildImageConfig>
+              <option name="dockerFile" value="Dockerfile" />
+            </BuildImageConfig>
+          </option>
+          <option name="buildNotPull" value="false" />
+          <option name="pullImageConfig">
+            <PullImageConfig>
+              <option name="tagToPull" value="amazoncorretto:17" />
+            </PullImageConfig>
+          </option>
+        </config>
+        <ContributedStateBase type="JavaLanguageRuntime">
+          <config>
+            <option name="agentFolder">
+              <VolumeState>
+                <option name="targetSpecificBits">
+                  <map>
+                    <entry key="mountAsVolume" value="false" />
+                  </map>
+                </option>
+              </VolumeState>
+            </option>
+            <option name="classpathFolder">
+              <VolumeState>
+                <option name="targetSpecificBits">
+                  <map>
+                    <entry key="mountAsVolume" value="false" />
+                  </map>
+                </option>
+              </VolumeState>
+            </option>
+            <option name="homePath" value="/usr/lib/jvm/java-17-amazon-corretto" />
+            <option name="javaVersionString" value="17.0.12" />
+          </config>
+        </ContributedStateBase>
+      </target>
+    </targets>
+  </component>
+</project>
