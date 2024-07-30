@@ -35,9 +35,20 @@ class RightColumnTab extends StatelessWidget {
         .format(DateFormat('yyyy-MM-dd').parse('$date-01'));
   }
 
-  Widget getExpensesWidget(Map<String, DayExpense> expenses) {
+  Widget getExpensesWidget(
+      BuildContext context, Map<String, DayExpense> expenses) {
+    final colors = Theme.of(context).colorScheme;
+
     List<String> expensesKeys = expenses.keys.toList();
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (context, index) => Container(
+        alignment: Alignment.center,
+        child: Container(
+          height: 1,
+          width: 50,
+          color: colors.primaryContainer,
+        ),
+      ),
       itemCount: expenses.length,
       itemBuilder: (context, index) {
         return OneDay(
@@ -50,6 +61,8 @@ class RightColumnTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return BlocProvider(
       create: (context) => ExpenseListCubit(const ExpenseListState()),
       child: DataChangeMonitor(
@@ -139,25 +152,20 @@ class RightColumnTab extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      const Text('Total:'),
-                      Expanded(
-                          child: Container(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                formatCurrency(state.total),
-                                style: TextStyle(color: colors.primary),
-                              ))),
-                    ],
-                  ),
+                  child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        formatCurrency(state.total),
+                        style: textTheme.headlineSmall
+                            ?.copyWith(color: colors.primary),
+                      )),
                 ),
                 Expanded(
                   child: AnimatedSwitcher(
                       duration: panelTransition,
                       child: state.loading
                           ? const DummyExpenses()
-                          : getExpensesWidget(state.expenses)),
+                          : getExpensesWidget(context, state.expenses)),
                 )
               ],
             ),

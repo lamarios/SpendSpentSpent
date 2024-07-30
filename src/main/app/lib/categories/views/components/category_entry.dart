@@ -1,17 +1,21 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:spend_spent_spent/categories/views/components/add_category.dart';
+import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 
 class CategoryEntry extends StatelessWidget {
   final Category category;
+  final int index;
   final Function(Category category, String newIcon) setIcon;
   final Function(Category category) delete;
 
   const CategoryEntry(
       {super.key,
+      required this.index,
       required this.setIcon,
       required this.category,
       required this.delete});
@@ -61,16 +65,40 @@ class CategoryEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
-        color: colors.primaryContainer,
+        color: colors.surfaceContainer,
         child: Padding(
-          padding:
-              const EdgeInsets.only(top: 8.0, left: 35, right: 8, bottom: 8),
+          padding: const EdgeInsets.all(8),
           child: Row(
             children: [
+              ReorderableDragStartListener(
+                  index: index, child: const Icon(Icons.drag_handle)),
+              const Gap(20),
               getIcon(category.icon!, color: colors.primary, size: 20),
+              const Gap(20),
+              FutureBuilder<int>(
+                future: service.countCategoryExpenses(category.id!),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    return Text(
+                      '${snapshot.data} expenses',
+                      style: textTheme.bodySmall,
+                    );
+                  } else {
+                    return const SizedBox(
+                      width: 10,
+                      height: 10,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 1,
+                      ),
+                    );
+                  }
+                },
+              ),
               const Spacer(),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,

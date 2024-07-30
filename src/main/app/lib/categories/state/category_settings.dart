@@ -15,9 +15,13 @@ class CategorySettingsCubit extends Cubit<CategorySettingsState> {
     emit(state.copyWith(categories: categoriesCubit.state.categories));
   }
 
-  onItemReorder(
-      int oldItemIndex, int oldListIndex, int newItemIndex, int newListIndex) {
+  onItemReorder(int oldItemIndex, int newItemIndex) {
     List<Category> categories = List.from(state.categories);
+
+    if (oldItemIndex < newItemIndex) {
+      newItemIndex -= 1;
+    }
+
     var movedItem = categories.removeAt(oldItemIndex);
     categories.insert(newItemIndex, movedItem);
     for (int i = 0; i < categories.length; i++) {

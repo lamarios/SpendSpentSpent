@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:auto_route/annotations.dart';
-import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spend_spent_spent/categories/state/categories.dart';
@@ -49,31 +48,19 @@ class CategorySettingsScreen extends StatelessWidget {
                               ),
                             ),
                             Expanded(
-                              child: DragAndDropLists(
-                                itemDragHandle: const DragHandle(
-                                  onLeft: true,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 10),
-                                    child: Icon(
-                                      Icons.menu,
-                                      color: Colors.blueGrey,
-                                      size: 15,
-                                    ),
-                                  ),
-                                ),
-                                children: [
-                                  DragAndDropList(
-                                      children: state.categories.map((e) {
-                                    return DragAndDropItem(
-                                        child: CategoryEntry(
+                              child: ReorderableListView.builder(
+                                buildDefaultDragHandles: false,
+                                onReorder: cubit.onItemReorder,
+                                itemCount: state.categories.length,
+                                itemBuilder: (context, index) {
+                                  final e = state.categories[index];
+                                  return CategoryEntry(
+                                      key: ValueKey(e.id),
                                       setIcon: cubit.updateCategoryIcon,
                                       delete: cubit.addToDelete,
                                       category: e,
-                                    ));
-                                  }).toList())
-                                ],
-                                onItemReorder: cubit.onItemReorder,
-                                onListReorder: onListReorder,
+                                      index: index);
+                                },
                               ),
                             ),
                             Row(

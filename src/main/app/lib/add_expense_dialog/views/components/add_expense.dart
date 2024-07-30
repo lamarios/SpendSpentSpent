@@ -11,6 +11,7 @@ import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/utils/views/components/dummies/DummyFade.dart';
+import 'package:spend_spent_spent/utils/views/components/repeated_icons.dart';
 
 const LOCATION_TIMEOUT = 10;
 
@@ -123,9 +124,15 @@ class AddExpense extends StatelessWidget {
                                           color: colors.primaryContainer,
                                           borderRadius: BorderRadius.vertical(
                                               top: defaultBorder.topLeft)),
-                                      child: Hero(
-                                          tag: category.icon!,
-                                          child: getIconHeader(context)),
+                                      child: RepeatedIconsBackground(
+                                        icon: category.icon!,
+                                        size: 40,
+                                        color: colors.onPrimaryContainer
+                                            .withOpacity(0.05),
+                                        child: Hero(
+                                            tag: category.icon!,
+                                            child: getIconHeader(context)),
+                                      ),
                                     ),
                                     Positioned(
                                       right: 10,

@@ -6,6 +6,7 @@ import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
+import 'package:spend_spent_spent/utils/views/components/repeated_icons.dart';
 
 class ExpenseView extends StatelessWidget {
   final Expense expense;
@@ -58,24 +59,6 @@ class ExpenseView extends StatelessWidget {
     Navigator.pop(context);
   }
 
-  Widget getRepeatedIcon(ColorScheme colors) {
-    List<Widget> icons = [];
-
-    for (int i = 0; i < 150; i++) {
-      icons.add(
-          getIcon(expense.category.icon!, color: colors.onSurface, size: 40));
-    }
-
-    return Opacity(
-      opacity: 0.03,
-      child: Wrap(
-        spacing: 20,
-        runSpacing: 20,
-        children: icons,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -83,13 +66,11 @@ class ExpenseView extends StatelessWidget {
       children: [
         Visibility(
             visible: !hasLocation(),
-            child: Positioned(
-              top: -20,
-              left: -30,
-              right: -30,
-              bottom: -20,
-              child: getRepeatedIcon(colors),
-            )),
+            child: RepeatedIconsBackground(
+                icon: expense.category.icon!,
+                color: colors.onSurface.withOpacity(0.05),
+                size: 40,
+                child: const SizedBox.shrink())),
         Visibility(
           visible: hasLocation(),
           child: Positioned(
