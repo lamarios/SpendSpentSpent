@@ -121,7 +121,7 @@ class ExpenseList extends StatelessWidget {
     ));
 
     children.addItemBetween(Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 16),
       alignment: Alignment.center,
       child: Container(
         height: 1,
