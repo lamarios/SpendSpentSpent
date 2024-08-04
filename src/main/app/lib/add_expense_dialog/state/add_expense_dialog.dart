@@ -222,7 +222,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
   }
 
   setNote(String note) {
-    emit(state.copyWith(noteSuggestions: [], expenseNote: note));
+    emit(state.copyWith(expenseNote: note));
   }
 
   enableCurrencyConversion(bool enable) {

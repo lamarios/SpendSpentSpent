@@ -5,7 +5,6 @@ import com.ftpix.sss.services.Encryption;
 import com.ftpix.sss.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +13,11 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import javax.xml.bind.DatatypeConverter;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +25,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtTokenUtil implements Serializable, ApplicationContextAware {
+    private final SecretKey key = Jwts.SIG.HS512.key().build();
 
     public static final long JWT_TOKEN_VALIDITY = 90 * 24 * 60 * 60;
     private static final long serialVersionUID = -2550185165626007488L;
@@ -33,7 +33,6 @@ public class JwtTokenUtil implements Serializable, ApplicationContextAware {
 
     @Value("${SALT}")
     private String salt;
-    private String encodedSalt;
 
     private final UserService userService;
 
@@ -60,7 +59,7 @@ public class JwtTokenUtil implements Serializable, ApplicationContextAware {
     }
 
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(encodedSalt).parseClaimsJws(token).getBody();
+        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
     }
 
     private Boolean isTokenExpired(String token) {
@@ -94,9 +93,10 @@ public class JwtTokenUtil implements Serializable, ApplicationContextAware {
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setIssuer("SpendSpentSpent")
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000)).signWith(SignatureAlgorithm.HS512, encodedSalt).compact();
+        return Jwts.builder()
+                .claims(claims).subject(subject).issuedAt(new Date(System.currentTimeMillis()))
+                .issuer("SpendSpentSpent")
+                .expiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000)).signWith(key).compact();
     }
 
     public Boolean canTokenBeRefreshed(String token) {
@@ -108,10 +108,6 @@ public class JwtTokenUtil implements Serializable, ApplicationContextAware {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    public void encodeSalt() {
-        encodedSalt = Base64.getEncoder().encodeToString(salt.getBytes());
-    }
-
     public String getSalt() {
         return salt;
     }
@@ -119,7 +115,6 @@ public class JwtTokenUtil implements Serializable, ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         final JwtTokenUtil bean = applicationContext.getBean(JwtTokenUtil.class);
-        bean.encodeSalt();
 
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");

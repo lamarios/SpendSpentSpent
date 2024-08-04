@@ -1,4 +1,4 @@
-FROM openjdk:17
+FROM amazoncorretto:21
 
 RUN mkdir /app && mkdir /config
 

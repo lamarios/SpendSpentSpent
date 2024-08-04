@@ -58,12 +58,12 @@ public class Config {
     @Bean
     public Mailer mailer() {
         MailerRegularBuilderImpl mailer;
-        if (smtpHost == null || smtpPort == 0 || smtpHost.trim().length() == 0) {
+        if (smtpHost == null || smtpPort == 0 || smtpHost.trim().isEmpty()) {
             return null;
         }
 
-        if (smtpUsername != null && smtpUsername.length() > 0) {
-            if (smtpPassword == null || smtpPassword.trim().length() == 0) {
+        if (smtpUsername != null && !smtpUsername.isEmpty()) {
+            if (smtpPassword == null || smtpPassword.trim().isEmpty()) {
                 mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort, smtpUsername);
             } else {
                 mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort, smtpUsername, smtpPassword);

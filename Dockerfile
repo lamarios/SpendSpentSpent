@@ -18,7 +18,7 @@ RUN mvn clean install -Dmaven.repo.local=./m2 -Dspring.main.allow-circular-refer
 
 
 
-FROM openjdk:17
+FROM amazoncorretto:21
 
 RUN mkdir /app && mkdir /config
 
