@@ -114,41 +114,43 @@ class ExpenseActions extends StatelessWidget {
               ],
             ),
           ),
-          AnimatedOpacity(
-              opacity: state.noteSuggestions.isNotEmpty ? 1 : 0,
-              duration: panelTransition ~/ 2,
-              child: Row(
-                children: [
-                  Expanded(
+          Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: defaultBorder,
+                      color: colors.surface,
+                    ),
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: defaultBorder,
-                          color: colors.surface,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SingleChildScrollView(
-                            physics: const BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: state.noteSuggestions
-                                  .map((e) => NoteSuggestionPill(
-                                      key: Key(e),
-                                      text: e,
-                                      tapSuggestion: (text) =>
-                                          tapSuggestion(context, text)))
-                                  .toList(),
-                            ),
-                          ),
+                      padding: const EdgeInsets.all(8.0),
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            if (state.expenseNote.isNotEmpty) state.expenseNote,
+                            ...state.noteSuggestions
+                                .where((e) => e != state.expenseNote)
+                          ]
+                              .map((e) => NoteSuggestionPill(
+                                  key: Key(e),
+                                  text: e,
+                                  current: state.expenseNote == e,
+                                  tapSuggestion: (text) =>
+                                      tapSuggestion(context, text)))
+                              .toList(),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ))
+                ),
+              ),
+            ],
+          )
         ],
       );
     });

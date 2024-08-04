@@ -3,10 +3,14 @@ import 'package:spend_spent_spent/globals.dart';
 
 class NoteSuggestionPill extends StatelessWidget {
   final String text;
+  final bool current;
   final Function(String text) tapSuggestion;
 
   const NoteSuggestionPill(
-      {super.key, required this.text, required this.tapSuggestion});
+      {super.key,
+      required this.text,
+      required this.tapSuggestion,
+      required this.current});
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +23,15 @@ class NoteSuggestionPill extends StatelessWidget {
         child: Container(
             decoration: BoxDecoration(
               borderRadius: defaultBorder,
-              color: colors.primaryContainer,
+              color: current ? colors.primary : colors.primaryContainer,
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 text,
-                style: TextStyle(color: colors.onPrimaryContainer),
+                style: TextStyle(
+                    color:
+                        current ? colors.onPrimary : colors.onPrimaryContainer),
               ),
             )),
       ),
