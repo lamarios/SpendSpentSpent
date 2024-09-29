@@ -24,7 +24,9 @@ mixin _$AddRecurringExpenseState {
   String get name => throw _privateConstructorUsedError;
   List<Category> get categories => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AddRecurringExpenseState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AddRecurringExpenseStateCopyWith<AddRecurringExpenseState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -58,6 +60,8 @@ class _$AddRecurringExpenseStateCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AddRecurringExpenseState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -101,6 +105,8 @@ class _$AddRecurringExpenseStateCopyWithImpl<$Res,
     ) as $Val);
   }
 
+  /// Create a copy of AddRecurringExpenseState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $CategoryCopyWith<$Res>? get category {
@@ -146,6 +152,8 @@ class __$$AddRecurringExpenseStateImplCopyWithImpl<$Res>
       $Res Function(_$AddRecurringExpenseStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AddRecurringExpenseState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -254,7 +262,9 @@ class _$AddRecurringExpenseStateImpl extends _AddRecurringExpenseState {
   int get hashCode => Object.hash(runtimeType, step, category, type, typeParam,
       amount, name, const DeepCollectionEquality().hash(_categories));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AddRecurringExpenseState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AddRecurringExpenseStateImplCopyWith<_$AddRecurringExpenseStateImpl>
@@ -287,8 +297,11 @@ abstract class _AddRecurringExpenseState extends AddRecurringExpenseState {
   String get name;
   @override
   List<Category> get categories;
+
+  /// Create a copy of AddRecurringExpenseState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AddRecurringExpenseStateImplCopyWith<_$AddRecurringExpenseStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

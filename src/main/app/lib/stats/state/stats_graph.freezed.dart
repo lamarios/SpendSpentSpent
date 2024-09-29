@@ -26,7 +26,9 @@ mixin _$StatsGraphState {
   List<GraphDataPoint> get graphDataPoints =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of StatsGraphState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $StatsGraphStateCopyWith<StatsGraphState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -58,6 +60,8 @@ class _$StatsGraphStateCopyWithImpl<$Res, $Val extends StatsGraphState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of StatsGraphState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -134,6 +138,8 @@ class __$$StatsGraphStateImplCopyWithImpl<$Res>
       _$StatsGraphStateImpl _value, $Res Function(_$StatsGraphStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of StatsGraphState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -296,7 +302,9 @@ class _$StatsGraphStateImpl implements _StatsGraphState {
       const DeepCollectionEquality().hash(_avgData),
       const DeepCollectionEquality().hash(_graphDataPoints));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of StatsGraphState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$StatsGraphStateImplCopyWith<_$StatsGraphStateImpl> get copyWith =>
@@ -331,8 +339,11 @@ abstract class _StatsGraphState implements StatsGraphState {
   List<FlSpot> get avgData;
   @override
   List<GraphDataPoint> get graphDataPoints;
+
+  /// Create a copy of StatsGraphState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$StatsGraphStateImplCopyWith<_$StatsGraphStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

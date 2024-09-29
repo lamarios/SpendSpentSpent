@@ -30,8 +30,12 @@ mixin _$AvailableCategories {
   List<String>? get tech => throw _privateConstructorUsedError;
   List<String>? get documents => throw _privateConstructorUsedError;
 
+  /// Serializes this AvailableCategories to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AvailableCategories
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AvailableCategoriesCopyWith<AvailableCategories> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -64,6 +68,8 @@ class _$AvailableCategoriesCopyWithImpl<$Res, $Val extends AvailableCategories>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AvailableCategories
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -146,6 +152,8 @@ class __$$AvailableCategoriesImplCopyWithImpl<$Res>
       $Res Function(_$AvailableCategoriesImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AvailableCategories
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -349,7 +357,7 @@ class _$AvailableCategoriesImpl implements _AvailableCategories {
                 .equals(other._documents, _documents));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -363,7 +371,9 @@ class _$AvailableCategoriesImpl implements _AvailableCategories {
       const DeepCollectionEquality().hash(_tech),
       const DeepCollectionEquality().hash(_documents));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AvailableCategories
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AvailableCategoriesImplCopyWith<_$AvailableCategoriesImpl> get copyWith =>
@@ -411,8 +421,11 @@ abstract class _AvailableCategories implements AvailableCategories {
   List<String>? get tech;
   @override
   List<String>? get documents;
+
+  /// Create a copy of AvailableCategories
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AvailableCategoriesImplCopyWith<_$AvailableCategoriesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -30,8 +30,12 @@ mixin _$Config {
   String? get minAppVersion => throw _privateConstructorUsedError;
   int get backendVersion => throw _privateConstructorUsedError;
 
+  /// Serializes this Config to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Config
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ConfigCopyWith<Config> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -62,6 +66,8 @@ class _$ConfigCopyWithImpl<$Res, $Val extends Config>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Config
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -143,6 +149,8 @@ class __$$ConfigImplCopyWithImpl<$Res>
       _$ConfigImpl _value, $Res Function(_$ConfigImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Config
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -263,7 +271,7 @@ class _$ConfigImpl implements _Config {
                 other.backendVersion == backendVersion));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -277,7 +285,9 @@ class _$ConfigImpl implements _Config {
       minAppVersion,
       backendVersion);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Config
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ConfigImplCopyWith<_$ConfigImpl> get copyWith =>
@@ -323,8 +333,11 @@ abstract class _Config implements Config {
   String? get minAppVersion;
   @override
   int get backendVersion;
+
+  /// Create a copy of Config
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ConfigImplCopyWith<_$ConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

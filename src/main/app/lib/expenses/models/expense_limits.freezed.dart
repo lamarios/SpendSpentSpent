@@ -23,8 +23,12 @@ mixin _$ExpenseLimits {
   int get years => throw _privateConstructorUsedError;
   int get months => throw _privateConstructorUsedError;
 
+  /// Serializes this ExpenseLimits to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ExpenseLimits
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExpenseLimitsCopyWith<ExpenseLimits> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -48,6 +52,8 @@ class _$ExpenseLimitsCopyWithImpl<$Res, $Val extends ExpenseLimits>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExpenseLimits
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -86,6 +92,8 @@ class __$$ExpenseLimitsImplCopyWithImpl<$Res>
       _$ExpenseLimitsImpl _value, $Res Function(_$ExpenseLimitsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ExpenseLimits
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -132,11 +140,13 @@ class _$ExpenseLimitsImpl implements _ExpenseLimits {
             (identical(other.months, months) || other.months == months));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, years, months);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExpenseLimits
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExpenseLimitsImplCopyWith<_$ExpenseLimitsImpl> get copyWith =>
@@ -162,8 +172,11 @@ abstract class _ExpenseLimits implements ExpenseLimits {
   int get years;
   @override
   int get months;
+
+  /// Create a copy of ExpenseLimits
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExpenseLimitsImplCopyWith<_$ExpenseLimitsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

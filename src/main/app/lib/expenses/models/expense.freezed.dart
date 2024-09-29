@@ -31,8 +31,12 @@ mixin _$Expense {
   Category get category => throw _privateConstructorUsedError;
   int? get id => throw _privateConstructorUsedError;
 
+  /// Serializes this Expense to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Expense
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExpenseCopyWith<Expense> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -66,6 +70,8 @@ class _$ExpenseCopyWithImpl<$Res, $Val extends Expense>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Expense
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -124,6 +130,8 @@ class _$ExpenseCopyWithImpl<$Res, $Val extends Expense>
     ) as $Val);
   }
 
+  /// Create a copy of Expense
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $CategoryCopyWith<$Res> get category {
@@ -164,6 +172,8 @@ class __$$ExpenseImplCopyWithImpl<$Res>
       _$ExpenseImpl _value, $Res Function(_$ExpenseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Expense
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -290,12 +300,14 @@ class _$ExpenseImpl implements _Expense {
             (identical(other.id, id) || other.id == id));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, date, amount, latitude,
       longitude, note, type, timestamp, income, category, id);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Expense
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExpenseImplCopyWith<_$ExpenseImpl> get copyWith =>
@@ -344,8 +356,11 @@ abstract class _Expense implements Expense {
   Category get category;
   @override
   int? get id;
+
+  /// Create a copy of Expense
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExpenseImplCopyWith<_$ExpenseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

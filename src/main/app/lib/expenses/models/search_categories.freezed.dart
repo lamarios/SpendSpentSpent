@@ -23,8 +23,12 @@ mixin _$SearchCategories {
   AvailableCategories get results => throw _privateConstructorUsedError;
   String get query => throw _privateConstructorUsedError;
 
+  /// Serializes this SearchCategories to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SearchCategories
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SearchCategoriesCopyWith<SearchCategories> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -50,6 +54,8 @@ class _$SearchCategoriesCopyWithImpl<$Res, $Val extends SearchCategories>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SearchCategories
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -68,6 +74,8 @@ class _$SearchCategoriesCopyWithImpl<$Res, $Val extends SearchCategories>
     ) as $Val);
   }
 
+  /// Create a copy of SearchCategories
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AvailableCategoriesCopyWith<$Res> get results {
@@ -99,6 +107,8 @@ class __$$SearchCategoriesImplCopyWithImpl<$Res>
       $Res Function(_$SearchCategoriesImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SearchCategories
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -145,11 +155,13 @@ class _$SearchCategoriesImpl implements _SearchCategories {
             (identical(other.query, query) || other.query == query));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, results, query);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SearchCategories
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SearchCategoriesImplCopyWith<_$SearchCategoriesImpl> get copyWith =>
@@ -176,8 +188,11 @@ abstract class _SearchCategories implements SearchCategories {
   AvailableCategories get results;
   @override
   String get query;
+
+  /// Create a copy of SearchCategories
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SearchCategoriesImplCopyWith<_$SearchCategoriesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

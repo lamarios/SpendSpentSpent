@@ -8,11 +8,9 @@ dependencies:
   after_layout: 1.2.0
   animations: 2.0.11
   auto_route: 8.3.0
-  carousel_slider: 4.2.1
-  cupertino_icons: any
   dynamic_color: 1.7.0
   easy_debounce: 2.0.3
-  fl_chart: 0.68.0
+  fl_chart: 0.69.0
   flutter:
     sdk: flutter
   flutter_animate: 4.5.0
@@ -29,14 +27,14 @@ dependencies:
   jwt_decoder: 2.0.1
   latlong2: 0.9.1
   location: 7.0.0
-  package_info_plus: 8.0.0
+  package_info_plus: 8.0.2
   random_string: 2.3.1
-  shared_preferences: 2.2.3
+  shared_preferences: 2.3.2
   tinycolor2: 3.0.1
 dev_dependencies:
   analyzer: any
   auto_route_generator: 8.1.0
-  build_runner: '^2.4.11'
+  build_runner: 2.4.12
   flutter_launcher_icons: '^0.13.1'
   flutter_lints: 4.0.0
   flutter_test:

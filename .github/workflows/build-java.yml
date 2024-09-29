@@ -43,6 +43,15 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract tag name
+        id: extract_tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      - name: Set build number
+        id: set_build_number
+        if: ${{ ! startsWith(github.ref, 'refs/tags/') }}
+        run: echo "TAG_NAME=1" >> $GITHUB_ENV
       # Build web app
       - name: build web
         working-directory: src/main/app
@@ -52,14 +61,10 @@ jobs:
           ./submodules/flutter/bin/flutter doctor
           ./submodules/flutter/bin/flutter pub get
           ./submodules/flutter/bin/flutter doctor
-          ./submodules/flutter/bin/flutter build web --release
+          ./submodules/flutter/bin/flutter build web --release --build-number ${{ env.TAG_NAME }}
           cp -R build/web ../resources/public
       # build backend
 
-      - name: Extract tag name
-        id: extract_tag
-        if: startsWith(github.ref, 'refs/tags/')
-        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
       - name: Set application version
         if: startsWith(github.ref, 'refs/tags/')
         run: |

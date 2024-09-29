@@ -19,7 +19,9 @@ mixin _$SingleStatsState {
   bool get open => throw _privateConstructorUsedError;
   bool get showGraph => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SingleStatsState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SingleStatsStateCopyWith<SingleStatsState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -43,6 +45,8 @@ class _$SingleStatsStateCopyWithImpl<$Res, $Val extends SingleStatsState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SingleStatsState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -81,6 +85,8 @@ class __$$SingleStatsStateImplCopyWithImpl<$Res>
       $Res Function(_$SingleStatsStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SingleStatsState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -130,7 +136,9 @@ class _$SingleStatsStateImpl implements _SingleStatsState {
   @override
   int get hashCode => Object.hash(runtimeType, open, showGraph);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SingleStatsState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SingleStatsStateImplCopyWith<_$SingleStatsStateImpl> get copyWith =>
@@ -146,8 +154,11 @@ abstract class _SingleStatsState implements SingleStatsState {
   bool get open;
   @override
   bool get showGraph;
+
+  /// Create a copy of SingleStatsState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SingleStatsStateImplCopyWith<_$SingleStatsStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
