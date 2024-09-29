@@ -26,8 +26,12 @@ mixin _$Pagination {
   int get pageSize => throw _privateConstructorUsedError;
   int get totalPages => throw _privateConstructorUsedError;
 
+  /// Serializes this Pagination to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Pagination
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PaginationCopyWith<Pagination> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -56,6 +60,8 @@ class _$PaginationCopyWithImpl<$Res, $Val extends Pagination>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Pagination
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -114,6 +120,8 @@ class __$$PaginationImplCopyWithImpl<$Res>
       _$PaginationImpl _value, $Res Function(_$PaginationImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Pagination
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -192,12 +200,14 @@ class _$PaginationImpl implements _Pagination {
                 other.totalPages == totalPages));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, page, total, currentPageCount, pageSize, totalPages);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Pagination
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PaginationImplCopyWith<_$PaginationImpl> get copyWith =>
@@ -232,8 +242,11 @@ abstract class _Pagination implements Pagination {
   int get pageSize;
   @override
   int get totalPages;
+
+  /// Create a copy of Pagination
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PaginationImplCopyWith<_$PaginationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

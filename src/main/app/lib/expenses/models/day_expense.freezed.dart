@@ -24,8 +24,12 @@ mixin _$DayExpense {
   double get total => throw _privateConstructorUsedError;
   List<Expense> get expenses => throw _privateConstructorUsedError;
 
+  /// Serializes this DayExpense to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of DayExpense
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $DayExpenseCopyWith<DayExpense> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -49,6 +53,8 @@ class _$DayExpenseCopyWithImpl<$Res, $Val extends DayExpense>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of DayExpense
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,6 +98,8 @@ class __$$DayExpenseImplCopyWithImpl<$Res>
       _$DayExpenseImpl _value, $Res Function(_$DayExpenseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of DayExpense
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -156,12 +164,14 @@ class _$DayExpenseImpl implements _DayExpense {
             const DeepCollectionEquality().equals(other._expenses, _expenses));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, date, total, const DeepCollectionEquality().hash(_expenses));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DayExpense
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$DayExpenseImplCopyWith<_$DayExpenseImpl> get copyWith =>
@@ -190,8 +200,11 @@ abstract class _DayExpense implements DayExpense {
   double get total;
   @override
   List<Expense> get expenses;
+
+  /// Create a copy of DayExpense
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DayExpenseImplCopyWith<_$DayExpenseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

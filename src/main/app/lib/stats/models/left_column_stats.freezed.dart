@@ -24,8 +24,12 @@ mixin _$LeftColumnStats {
   double get total => throw _privateConstructorUsedError;
   double get amount => throw _privateConstructorUsedError;
 
+  /// Serializes this LeftColumnStats to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of LeftColumnStats
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $LeftColumnStatsCopyWith<LeftColumnStats> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -51,6 +55,8 @@ class _$LeftColumnStatsCopyWithImpl<$Res, $Val extends LeftColumnStats>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of LeftColumnStats
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -74,6 +80,8 @@ class _$LeftColumnStatsCopyWithImpl<$Res, $Val extends LeftColumnStats>
     ) as $Val);
   }
 
+  /// Create a copy of LeftColumnStats
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $CategoryCopyWith<$Res> get category {
@@ -105,6 +113,8 @@ class __$$LeftColumnStatsImplCopyWithImpl<$Res>
       _$LeftColumnStatsImpl _value, $Res Function(_$LeftColumnStatsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of LeftColumnStats
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -161,11 +171,13 @@ class _$LeftColumnStatsImpl implements _LeftColumnStats {
             (identical(other.amount, amount) || other.amount == amount));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, category, total, amount);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of LeftColumnStats
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LeftColumnStatsImplCopyWith<_$LeftColumnStatsImpl> get copyWith =>
@@ -195,8 +207,11 @@ abstract class _LeftColumnStats implements LeftColumnStats {
   double get total;
   @override
   double get amount;
+
+  /// Create a copy of LeftColumnStats
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LeftColumnStatsImplCopyWith<_$LeftColumnStatsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

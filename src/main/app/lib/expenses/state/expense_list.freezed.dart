@@ -25,7 +25,9 @@ mixin _$ExpenseListState {
   dynamic get error => throw _privateConstructorUsedError;
   StackTrace? get stackTrace => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExpenseListState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExpenseListStateCopyWith<ExpenseListState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -57,6 +59,8 @@ class _$ExpenseListStateCopyWithImpl<$Res, $Val extends ExpenseListState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExpenseListState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -133,6 +137,8 @@ class __$$ExpenseListStateImplCopyWithImpl<$Res>
       $Res Function(_$ExpenseListStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ExpenseListState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -267,7 +273,9 @@ class _$ExpenseListStateImpl implements _ExpenseListState {
       const DeepCollectionEquality().hash(error),
       stackTrace);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExpenseListState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExpenseListStateImplCopyWith<_$ExpenseListStateImpl> get copyWith =>
@@ -302,8 +310,11 @@ abstract class _ExpenseListState implements ExpenseListState, WithError {
   dynamic get error;
   @override
   StackTrace? get stackTrace;
+
+  /// Create a copy of ExpenseListState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExpenseListStateImplCopyWith<_$ExpenseListStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

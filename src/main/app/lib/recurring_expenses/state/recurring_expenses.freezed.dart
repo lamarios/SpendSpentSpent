@@ -21,7 +21,9 @@ mixin _$RecurringExpensesState {
   StackTrace? get stackTrace => throw _privateConstructorUsedError;
   List<RecurringExpense> get expenses => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RecurringExpensesState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RecurringExpensesStateCopyWith<RecurringExpensesState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -50,6 +52,8 @@ class _$RecurringExpensesStateCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RecurringExpensesState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -105,6 +109,8 @@ class __$$RecurringExpensesStateImplCopyWithImpl<$Res>
       $Res Function(_$RecurringExpensesStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RecurringExpensesState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -185,7 +191,9 @@ class _$RecurringExpensesStateImpl implements _RecurringExpensesState {
       stackTrace,
       const DeepCollectionEquality().hash(_expenses));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RecurringExpensesState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RecurringExpensesStateImplCopyWith<_$RecurringExpensesStateImpl>
@@ -209,8 +217,11 @@ abstract class _RecurringExpensesState
   StackTrace? get stackTrace;
   @override
   List<RecurringExpense> get expenses;
+
+  /// Create a copy of RecurringExpensesState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RecurringExpensesStateImplCopyWith<_$RecurringExpensesStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

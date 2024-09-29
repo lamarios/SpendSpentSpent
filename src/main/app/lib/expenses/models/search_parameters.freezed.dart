@@ -25,8 +25,12 @@ mixin _$SearchParameters {
   int get maxAmount => throw _privateConstructorUsedError;
   String get note => throw _privateConstructorUsedError;
 
+  /// Serializes this SearchParameters to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SearchParameters
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SearchParametersCopyWith<SearchParameters> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -51,6 +55,8 @@ class _$SearchParametersCopyWithImpl<$Res, $Val extends SearchParameters>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SearchParameters
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -100,6 +106,8 @@ class __$$SearchParametersImplCopyWithImpl<$Res>
       $Res Function(_$SearchParametersImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SearchParameters
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -177,7 +185,7 @@ class _$SearchParametersImpl implements _SearchParameters {
             (identical(other.note, note) || other.note == note));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -186,7 +194,9 @@ class _$SearchParametersImpl implements _SearchParameters {
       maxAmount,
       note);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SearchParameters
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SearchParametersImplCopyWith<_$SearchParametersImpl> get copyWith =>
@@ -219,8 +229,11 @@ abstract class _SearchParameters implements SearchParameters {
   int get maxAmount;
   @override
   String get note;
+
+  /// Create a copy of SearchParameters
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SearchParametersImplCopyWith<_$SearchParametersImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

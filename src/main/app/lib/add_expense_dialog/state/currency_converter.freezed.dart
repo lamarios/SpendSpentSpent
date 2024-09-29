@@ -19,7 +19,9 @@ mixin _$CurrencyConverterState {
   String get fromCurrency => throw _privateConstructorUsedError;
   String get toCurrency => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CurrencyConverterState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CurrencyConverterStateCopyWith<CurrencyConverterState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -44,6 +46,8 @@ class _$CurrencyConverterStateCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CurrencyConverterState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -85,6 +89,8 @@ class __$$CurrencyConverterStateImplCopyWithImpl<$Res>
       $Res Function(_$CurrencyConverterStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CurrencyConverterState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -136,7 +142,9 @@ class _$CurrencyConverterStateImpl implements _CurrencyConverterState {
   @override
   int get hashCode => Object.hash(runtimeType, fromCurrency, toCurrency);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CurrencyConverterState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CurrencyConverterStateImplCopyWith<_$CurrencyConverterStateImpl>
@@ -153,8 +161,11 @@ abstract class _CurrencyConverterState implements CurrencyConverterState {
   String get fromCurrency;
   @override
   String get toCurrency;
+
+  /// Create a copy of CurrencyConverterState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CurrencyConverterStateImplCopyWith<_$CurrencyConverterStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

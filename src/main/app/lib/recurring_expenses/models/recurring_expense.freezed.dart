@@ -30,8 +30,12 @@ mixin _$RecurringExpense {
   int? get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
+  /// Serializes this RecurringExpense to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RecurringExpense
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RecurringExpenseCopyWith<RecurringExpense> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -66,6 +70,8 @@ class _$RecurringExpenseCopyWithImpl<$Res, $Val extends RecurringExpense>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RecurringExpense
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -119,6 +125,8 @@ class _$RecurringExpenseCopyWithImpl<$Res, $Val extends RecurringExpense>
     ) as $Val);
   }
 
+  /// Create a copy of RecurringExpense
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $CategoryCopyWith<$Res> get category {
@@ -159,6 +167,8 @@ class __$$RecurringExpenseImplCopyWithImpl<$Res>
       $Res Function(_$RecurringExpenseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RecurringExpense
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -276,12 +286,14 @@ class _$RecurringExpenseImpl implements _RecurringExpense {
             (identical(other.name, name) || other.name == name));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, nextOccurrence, lastOccurrence,
       amount, type, income, category, typeParam, id, name);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RecurringExpense
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RecurringExpenseImplCopyWith<_$RecurringExpenseImpl> get copyWith =>
@@ -329,8 +341,11 @@ abstract class _RecurringExpense implements RecurringExpense {
   int? get id;
   @override
   String get name;
+
+  /// Create a copy of RecurringExpense
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RecurringExpenseImplCopyWith<_$RecurringExpenseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

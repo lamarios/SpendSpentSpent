@@ -19,7 +19,9 @@ mixin _$AddCategoryState {
   String get selected => throw _privateConstructorUsedError;
   AvailableCategories get categories => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AddCategoryState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AddCategoryStateCopyWith<AddCategoryState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -45,6 +47,8 @@ class _$AddCategoryStateCopyWithImpl<$Res, $Val extends AddCategoryState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AddCategoryState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -63,6 +67,8 @@ class _$AddCategoryStateCopyWithImpl<$Res, $Val extends AddCategoryState>
     ) as $Val);
   }
 
+  /// Create a copy of AddCategoryState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AvailableCategoriesCopyWith<$Res> get categories {
@@ -94,6 +100,8 @@ class __$$AddCategoryStateImplCopyWithImpl<$Res>
       $Res Function(_$AddCategoryStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AddCategoryState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -145,7 +153,9 @@ class _$AddCategoryStateImpl implements _AddCategoryState {
   @override
   int get hashCode => Object.hash(runtimeType, selected, categories);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AddCategoryState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AddCategoryStateImplCopyWith<_$AddCategoryStateImpl> get copyWith =>
@@ -162,8 +172,11 @@ abstract class _AddCategoryState implements AddCategoryState {
   String get selected;
   @override
   AvailableCategories get categories;
+
+  /// Create a copy of AddCategoryState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AddCategoryStateImplCopyWith<_$AddCategoryStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
