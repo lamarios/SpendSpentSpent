@@ -43,6 +43,7 @@ const EXPENSE_BY_MONTH = '$API_URL/Expense/ByDay?month={0}';
 const EXPENSE_GET_MONTHS = '$API_URL/Expense/GetMonths';
 const EXPENSE_DELETE = '$API_URL/Expense/{0}';
 const EXPENSE_GET_NOTE_SUGGESTIONS = '$API_URL/Expense/suggest-notes';
+const EXPENSE_GET_NOTE_AUTOCOMPLETE = '$API_URL/Expense/notes-autocomplete';
 const EXPENSE_GET_LIMITS = '$API_URL/Expense/limits';
 const HISTORY_OVERALL_MONTH = "$API_URL/History/CurrentMonth";
 const HISTORY_OVERALL_YEAR = "$API_URL/History/CurrentYear";
@@ -232,6 +233,19 @@ class Service {
     final response = await http.post(
         await formatUrl(EXPENSE_GET_NOTE_SUGGESTIONS),
         body: jsonEncode(map),
+        headers: headers);
+
+    processResponse(response);
+    Map<String, dynamic> result = jsonDecode(response.body);
+    return result.map((key, value) {
+      return MapEntry(key, value as int);
+    });
+  }
+
+  Future<Map<String, int>> getNoteAutoComplete(String seed) async {
+    final response = await http.post(
+        await formatUrl(EXPENSE_GET_NOTE_AUTOCOMPLETE),
+        body: jsonEncode(seed),
         headers: headers);
 
     processResponse(response);

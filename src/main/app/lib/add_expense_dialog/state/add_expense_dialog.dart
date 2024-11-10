@@ -21,6 +21,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
   final Category category;
   final LastExpenseCubit lastExpenseCubit;
   final noteController = TextEditingController();
+  final suggestionController = ScrollController();
 
   AddExpenseDialogCubit(super.initialState,
       {required this.category, required this.lastExpenseCubit}) {
@@ -33,6 +34,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
   @override
   close() async {
     noteController.dispose();
+    suggestionController.dispose();
     super.close();
   }
 
@@ -223,6 +225,8 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
 
   setNote(String note) {
     emit(state.copyWith(expenseNote: note));
+    suggestionController.animateTo(0,
+        duration: animationDuration, curve: animationCurve);
   }
 
   enableCurrencyConversion(bool enable) {

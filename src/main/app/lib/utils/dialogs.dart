@@ -19,7 +19,7 @@ void showAlertDialog(BuildContext context, String title, String text) {
 
 void showPromptDialog(BuildContext context, String title, String label,
     TextEditingController controller, Function onOk,
-    {int? maxLines}) {
+    {int? maxLines, String Function(String seed)? getAutoComplete}) {
   final colors = Theme.of(context).colorScheme;
   showDialog(
       context: context,

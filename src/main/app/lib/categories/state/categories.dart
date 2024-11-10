@@ -12,8 +12,9 @@ class CategoriesCubit extends Cubit<CategoriesState> {
   }
 
   getCategories() async {
+    emit(state.copyWith(loading: true));
     final categories = await service.getCategories();
-    emit(state.copyWith(categories: categories));
+    emit(state.copyWith(categories: categories, loading: false));
   }
 
   void addCategory(String selected) async {
@@ -28,6 +29,7 @@ class CategoriesCubit extends Cubit<CategoriesState> {
 
 @freezed
 class CategoriesState with _$CategoriesState {
-  const factory CategoriesState({@Default([]) List<Category> categories}) =
-      _CategoriesState;
+  const factory CategoriesState(
+      {@Default(true) bool loading,
+      @Default([]) List<Category> categories}) = _CategoriesState;
 }

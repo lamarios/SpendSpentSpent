@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CategoriesState {
+  bool get loading => throw _privateConstructorUsedError;
   List<Category> get categories => throw _privateConstructorUsedError;
 
   /// Create a copy of CategoriesState
@@ -31,7 +32,7 @@ abstract class $CategoriesStateCopyWith<$Res> {
           CategoriesState value, $Res Function(CategoriesState) then) =
       _$CategoriesStateCopyWithImpl<$Res, CategoriesState>;
   @useResult
-  $Res call({List<Category> categories});
+  $Res call({bool loading, List<Category> categories});
 }
 
 /// @nodoc
@@ -49,9 +50,14 @@ class _$CategoriesStateCopyWithImpl<$Res, $Val extends CategoriesState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? loading = null,
     Object? categories = null,
   }) {
     return _then(_value.copyWith(
+      loading: null == loading
+          ? _value.loading
+          : loading // ignore: cast_nullable_to_non_nullable
+              as bool,
       categories: null == categories
           ? _value.categories
           : categories // ignore: cast_nullable_to_non_nullable
@@ -68,7 +74,7 @@ abstract class _$$CategoriesStateImplCopyWith<$Res>
       __$$CategoriesStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<Category> categories});
+  $Res call({bool loading, List<Category> categories});
 }
 
 /// @nodoc
@@ -84,9 +90,14 @@ class __$$CategoriesStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? loading = null,
     Object? categories = null,
   }) {
     return _then(_$CategoriesStateImpl(
+      loading: null == loading
+          ? _value.loading
+          : loading // ignore: cast_nullable_to_non_nullable
+              as bool,
       categories: null == categories
           ? _value._categories
           : categories // ignore: cast_nullable_to_non_nullable
@@ -98,9 +109,13 @@ class __$$CategoriesStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$CategoriesStateImpl implements _CategoriesState {
-  const _$CategoriesStateImpl({final List<Category> categories = const []})
+  const _$CategoriesStateImpl(
+      {this.loading = true, final List<Category> categories = const []})
       : _categories = categories;
 
+  @override
+  @JsonKey()
+  final bool loading;
   final List<Category> _categories;
   @override
   @JsonKey()
@@ -112,7 +127,7 @@ class _$CategoriesStateImpl implements _CategoriesState {
 
   @override
   String toString() {
-    return 'CategoriesState(categories: $categories)';
+    return 'CategoriesState(loading: $loading, categories: $categories)';
   }
 
   @override
@@ -120,13 +135,14 @@ class _$CategoriesStateImpl implements _CategoriesState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CategoriesStateImpl &&
+            (identical(other.loading, loading) || other.loading == loading) &&
             const DeepCollectionEquality()
                 .equals(other._categories, _categories));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_categories));
+      runtimeType, loading, const DeepCollectionEquality().hash(_categories));
 
   /// Create a copy of CategoriesState
   /// with the given fields replaced by the non-null parameter values.
@@ -139,9 +155,12 @@ class _$CategoriesStateImpl implements _CategoriesState {
 }
 
 abstract class _CategoriesState implements CategoriesState {
-  const factory _CategoriesState({final List<Category> categories}) =
-      _$CategoriesStateImpl;
+  const factory _CategoriesState(
+      {final bool loading,
+      final List<Category> categories}) = _$CategoriesStateImpl;
 
+  @override
+  bool get loading;
   @override
   List<Category> get categories;
 

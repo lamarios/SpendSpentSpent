@@ -17,7 +17,7 @@ class CategoryListTab extends StatelessWidget {
         builder: (context, state) {
       return AnimatedSwitcher(
           duration: panelTransition,
-          child: state.categories.isEmpty
+          child: state.loading
               ? const DummyGrid()
               : CategoryGrid(state.categories));
     });
