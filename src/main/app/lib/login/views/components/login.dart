@@ -58,46 +58,42 @@ class Login extends StatelessWidget {
                       alignment: Alignment.center,
                       child: AnimatedContainer(
                         width: width,
-                        height: height,
                         duration: panelTransition,
                         curve: Curves.easeInOutQuart,
                         decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.circular(tablet ? 20 : 0)),
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: EdgeInsets.only(bottom: bottom),
-                            child: AnimatedSwitcher(
-                              duration: panelTransition,
-                              child: state.page == LoginPage.signUp
-                                  ? SignUp(
-                                      key: ValueKey(state.page),
-                                      onBack: () => cubit.signUp(false),
-                                      server: cubit.urlController.text.trim())
-                                  : state.page == LoginPage.resetPassword
-                                      ? ResetPassword(
-                                          onBack: () =>
-                                              cubit.resetPassword(false),
-                                          server:
-                                              cubit.urlController.text.trim(),
-                                          key: ValueKey(state.page))
-                                      : LoginForm(
-                                          error: state.loginError,
-                                          key: const ValueKey(false),
-                                          urlController: cubit.urlController,
-                                          config: state.config,
-                                          logIn: (username, password) async {
-                                            final loggedIn = await cubit.logIn(
-                                                username, password);
-                                            if (loggedIn && context.mounted) {
-                                              AutoRouter.of(context).replaceAll(
-                                                  [const HomeRoute()]);
-                                            }
-                                          },
-                                          showSignUp: () => cubit.signUp(true),
-                                          showResetPassword: () =>
-                                              cubit.resetPassword(true)),
-                            ),
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: bottom),
+                          child: AnimatedSwitcher(
+                            duration: panelTransition,
+                            child: state.page == LoginPage.signUp
+                                ? SignUp(
+                                    key: ValueKey(state.page),
+                                    onBack: () => cubit.signUp(false),
+                                    server: cubit.urlController.text.trim())
+                                : state.page == LoginPage.resetPassword
+                                    ? ResetPassword(
+                                        onBack: () =>
+                                            cubit.resetPassword(false),
+                                        server: cubit.urlController.text.trim(),
+                                        key: ValueKey(state.page))
+                                    : LoginForm(
+                                        error: state.loginError,
+                                        key: const ValueKey(false),
+                                        urlController: cubit.urlController,
+                                        config: state.config,
+                                        logIn: (username, password) async {
+                                          final loggedIn = await cubit.logIn(
+                                              username, password);
+                                          if (loggedIn && context.mounted) {
+                                            AutoRouter.of(context).replaceAll(
+                                                [const HomeRoute()]);
+                                          }
+                                        },
+                                        showSignUp: () => cubit.signUp(true),
+                                        showResetPassword: () =>
+                                            cubit.resetPassword(true)),
                           ),
                         ),
                       ),
