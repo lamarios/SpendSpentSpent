@@ -51,11 +51,19 @@ public class ExpenseService {
                 .stream()
                 .filter(Objects::nonNull)
                 .map(String::trim)
-                .filter(s -> s.length() > 0)
+                .filter(s -> !s.isBlank())
                 .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
-
-
     }
+
+    public Map<String, Long> autoCompleteNote(User currentUser, String seed) {
+        return expenseDaoJooq.autoCompleteNote(currentUser, seed)
+                .stream()
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+    }
+
 
     public Map<String, DailyExpense> getByDay(String month, User user) throws Exception {
 

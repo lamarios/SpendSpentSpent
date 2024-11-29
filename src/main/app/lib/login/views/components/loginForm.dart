@@ -48,7 +48,7 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.all(50.0),
+                padding: const EdgeInsets.symmetric(horizontal: 50.0),
                 child: Container(
                     decoration: const BoxDecoration(
                       borderRadius: defaultBorder,

@@ -11,6 +11,8 @@ const MIN_BACKEND_VERSION = 67;
 const BorderRadius defaultBorder = BorderRadius.all(Radius.circular(15));
 const defaultPadding = 20.0;
 const panelTransition = Duration(milliseconds: 350);
+const animationDuration = Duration(milliseconds: 250);
+const animationCurve = Curves.easeInOutQuad;
 
 // broadcast message types
 const BROADCAST_LOGGED_IN = 'loggedIn',

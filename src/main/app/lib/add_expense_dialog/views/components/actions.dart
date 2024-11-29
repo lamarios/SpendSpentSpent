@@ -129,6 +129,7 @@ class ExpenseActions extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
+                        controller: cubit.suggestionController,
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [

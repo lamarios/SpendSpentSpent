@@ -161,4 +161,14 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
                 .and(EXPENSE.AMOUNT.le(maxExpense))
                 .fetch(EXPENSE.NOTE);
     }
+
+    public List<String> autoCompleteNote(User currentUser, String seed) {
+        Map<Long, Category> userCategories = getUserCategories(currentUser);
+
+        return dslContext.select(EXPENSE.NOTE)
+                .from(EXPENSE)
+                .where(EXPENSE.NOTE.like("%" + seed + "%"))
+                .and(EXPENSE.CATEGORY_ID.in(userCategories.keySet()))
+                .fetch(EXPENSE.NOTE);
+    }
 }

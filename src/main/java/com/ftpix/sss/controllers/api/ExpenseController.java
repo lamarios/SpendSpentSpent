@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -125,6 +126,18 @@ public class ExpenseController {
         final User currentUser = userService.getCurrentUser();
         return expenseService.suggestNotes(currentUser, expense);
     }
+
+    @PostMapping("/notes-autocomplete")
+    public Map<String, Long> noteAutoComplete(@RequestBody String text) throws SQLException {
+        if(text.isBlank()){
+            return new HashMap<>();
+        }
+
+        final User currentUser = userService.getCurrentUser();
+        return expenseService.autoCompleteNote(currentUser, text);
+    }
+
+
 
     @GetMapping("/limits")
     public ExpenseLimits getExpenseLimits() throws Exception {
