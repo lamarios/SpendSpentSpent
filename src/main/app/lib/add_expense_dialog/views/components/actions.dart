@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/add_expense_dialog/state/add_expense_dialog.dart';
+import 'package:spend_spent_spent/add_expense_dialog/views/components/expense_note_dialog.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/note_suggestion_pill.dart';
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/utils/views/components/dummies/DummyFade.dart';
 
 class ExpenseActions extends StatelessWidget {
@@ -30,16 +30,17 @@ class ExpenseActions extends StatelessWidget {
     cubit.enableCurrencyConversion(!cubit.state.showCurrencyConversion);
   }
 
-  void showNoteDialog(BuildContext context) {
+  void showNoteDialog(BuildContext context) async {
     final cubit = context.read<AddExpenseDialogCubit>();
-    showPromptDialog(context, 'Expense note', "Something about this expense",
-        cubit.noteController, () {});
+    final note = await ExpenseNoteDialog.show(context, cubit.state.expenseNote);
+    if (note != null) {
+      cubit.setNote(note);
+    }
   }
 
   void tapSuggestion(BuildContext context, String text) {
     final cubit = context.read<AddExpenseDialogCubit>();
     cubit.setNote(text);
-    cubit.noteController.text = text;
   }
 
   @override
@@ -95,7 +96,7 @@ class ExpenseActions extends StatelessWidget {
                       child: IconButton(
                           onPressed: () => showNoteDialog(context),
                           icon: Icon(Icons.comment_rounded,
-                              color: cubit.noteController.text.isNotEmpty
+                              color: state.expenseNote.isNotEmpty
                                   ? colors.primary
                                   : colors.onSurface))),
                 ),

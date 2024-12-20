@@ -16,7 +16,7 @@ import 'stats/views/screens/left_column.dart';
 part 'router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Screen|Tab,Route')
-class AppRouter extends _$AppRouter implements AutoRouteGuard {
+class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
         AutoRoute(page: HomeRoute.page, initial: true, children: [
@@ -39,6 +39,10 @@ class AppRouter extends _$AppRouter implements AutoRouteGuard {
       ];
 
   @override
+  late final List<AutoRouteGuard> guards = [
+    AutoRouteGuard.simple(onNavigation)
+  ];
+
   Future<void> onNavigation(
       NavigationResolver resolver, StackRouter router) async {
     bool needLogin = false;
