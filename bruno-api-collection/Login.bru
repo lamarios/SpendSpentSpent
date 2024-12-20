@@ -1,0 +1,23 @@
+meta {
+  name: Login
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API}}/Login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "{{USER}}",
+    "password": "{{PASSWORD}}"
+  }
+}
+
+script:post-response {
+  var body = res.getBody();
+    bru.setEnvVar("AUTH_TOKEN", body);
+}
