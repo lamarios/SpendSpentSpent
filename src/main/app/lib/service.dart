@@ -245,7 +245,7 @@ class Service {
   Future<Map<String, int>> getNoteAutoComplete(String seed) async {
     final response = await http.post(
         await formatUrl(EXPENSE_GET_NOTE_AUTOCOMPLETE),
-        body: jsonEncode(seed),
+        body: seed,
         headers: headers);
 
     processResponse(response);

@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.ftpix.sss.dsl.Tables.EXPENSE;
+import static org.jooq.impl.DSL.lower;
 
 @Component("expenseDaoJooq")
 public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> {
@@ -167,7 +168,7 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
 
         return dslContext.select(EXPENSE.NOTE)
                 .from(EXPENSE)
-                .where(EXPENSE.NOTE.like("%" + seed + "%"))
+                .where(lower(EXPENSE.NOTE).like("%" + seed.toLowerCase() + "%"))
                 .and(EXPENSE.CATEGORY_ID.in(userCategories.keySet()))
                 .fetch(EXPENSE.NOTE);
     }

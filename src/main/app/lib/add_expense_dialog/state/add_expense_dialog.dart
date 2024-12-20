@@ -20,20 +20,15 @@ part 'add_expense_dialog.freezed.dart';
 class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
   final Category category;
   final LastExpenseCubit lastExpenseCubit;
-  final noteController = TextEditingController();
   final suggestionController = ScrollController();
 
   AddExpenseDialogCubit(super.initialState,
       {required this.category, required this.lastExpenseCubit}) {
     init();
-    noteController.addListener(() {
-      setNote(noteController.text);
-    });
   }
 
   @override
   close() async {
-    noteController.dispose();
     suggestionController.dispose();
     super.close();
   }

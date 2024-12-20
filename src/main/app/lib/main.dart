@@ -1,6 +1,8 @@
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/router.dart';
@@ -9,6 +11,10 @@ import 'package:spend_spent_spent/settings/state/app_settings.dart';
 final _appRouter = AppRouter();
 
 void main() {
+  Logger.root.level = kDebugMode ? Level.ALL : Level.INFO;
+  Logger.root.onRecord.listen((record) {
+    print('${record.level.name}: ${record.time}: ${record.message}');
+  });
   runApp(const SpendSpentSpent());
 }
 
