@@ -3,13 +3,13 @@ package com.ftpix.sss.controllers.api;
 import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.TestContainerTest;
 import com.ftpix.sss.security.JwtAuthenticationController;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.BadCredentialsException;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @Import(TestConfig.class)
@@ -26,22 +26,17 @@ public class UserSessionControllerTest extends TestContainerTest {
         userCredentials.email = "test@example.org";
         assertNotNull(jwtAuthenticationController.generateAuthenticationToken(userCredentials));
 
-        try {
+        Assertions.assertThrows(BadCredentialsException.class, () -> {
             userCredentials.email = "wrong user";
             jwtAuthenticationController.generateAuthenticationToken(userCredentials);
-            fail();
-        } catch (BadCredentialsException e) {
-            e.printStackTrace();
-        }
+        });
 
-        try {
+
+        assertThrows(BadCredentialsException.class,() -> {
             userCredentials.email = "lamarios";
             userCredentials.password = "Wrong password";
             jwtAuthenticationController.generateAuthenticationToken(userCredentials);
-            fail();
-        } catch (BadCredentialsException e) {
-            e.printStackTrace();
-        }
+        });
 
     }
 
