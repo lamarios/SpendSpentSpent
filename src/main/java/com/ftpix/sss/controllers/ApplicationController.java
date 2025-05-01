@@ -6,21 +6,21 @@ import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.CurrencyStatus;
 import com.ftpix.sss.models.Settings;
 import com.ftpix.sss.services.CurrencyService;
+import com.ftpix.sss.services.DataExportImportService;
 import com.ftpix.sss.services.EmailService;
 import com.ftpix.sss.services.SettingsService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -32,7 +32,7 @@ import java.util.Optional;
 
 @Controller
 public class ApplicationController {
-    protected final Log logger = LogFactory.getLog(this.getClass());
+    private final static Logger logger = LogManager.getLogger();
 
     private final EmailService emailService;
 
@@ -42,12 +42,13 @@ public class ApplicationController {
     private final Configuration templateEngine;
     private final BuildProperties buildProperties;
     private final CurrencyService currencyService;
+    private final DataExportImportService dataExportImportService;
 
     public final static int MIN_APP_VERSION = 47;
     private final UserDao userDaoJooq;
 
     @Autowired
-    public ApplicationController(EmailService emailService, SettingsService settingsService, Configuration templateEngine, BuildProperties buildProperties, CurrencyService currencyService, UserDao userDaoJooq) {
+    public ApplicationController(EmailService emailService, SettingsService settingsService, Configuration templateEngine, BuildProperties buildProperties, CurrencyService currencyService, UserDao userDaoJooq, DataExportImportService dataExportImportService) {
         this.emailService = emailService;
         this.settingsService = settingsService;
 
@@ -55,8 +56,21 @@ public class ApplicationController {
         this.buildProperties = buildProperties;
         this.currencyService = currencyService;
         this.userDaoJooq = userDaoJooq;
+        this.dataExportImportService = dataExportImportService;
     }
 
+
+    @PostMapping("/import")
+    @ResponseStatus(code = HttpStatus.OK, reason = "OK")
+    public void importData(@RequestParam("file") MultipartFile file, @RequestHeader("Authorization") String importPassword) throws IOException {
+        try {
+            logger.info("Received file for import name: {},  {} bytes", file.getOriginalFilename(), file.getSize());
+            dataExportImportService.importData(file, importPassword);
+        } catch (Exception e) {
+            logger.error("Failed to import data", e);
+            throw e;
+        }
+    }
 
     /**
      * Returns few values that will be use by the login screen so it knows what to display
@@ -118,7 +132,9 @@ public class ApplicationController {
         }
 
 
-        results.put("demoMode", Optional.ofNullable(settingsService.getByName(Settings.DEMO_MODE)).map(s -> s.getValue().equalsIgnoreCase("1")).orElse(false));
+        results.put("demoMode", Optional.ofNullable(settingsService.getByName(Settings.DEMO_MODE))
+                .map(s -> s.getValue().equalsIgnoreCase("1"))
+                .orElse(false));
 
         return results;
     }

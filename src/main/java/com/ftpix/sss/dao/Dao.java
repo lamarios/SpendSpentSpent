@@ -101,5 +101,12 @@ public interface Dao<R extends UpdatableRecord<R>, M> {
         return r.update() == 1;
     }
 
+    default boolean importMany(List<M> objects) {
+        objects.forEach(m -> {
+            R r = setRecordData(getDsl().newRecord(getTable()), m);
+            r.insert();
+        });
+        return true;
+    }
 
 }

@@ -88,7 +88,6 @@ public class UserDao implements Dao<UserRecord, User> {
 
     @Override
     public User insert(User object) {
-        object.setId(UUID.randomUUID());
         return Dao.super.insert(object);
     }
 }

@@ -1,0 +1,19 @@
+meta {
+  name: Save setting
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API}}/API/Settings
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name":"currencyApiKey",
+    "value":"aaaa",
+    "secret": true
+  }
+}

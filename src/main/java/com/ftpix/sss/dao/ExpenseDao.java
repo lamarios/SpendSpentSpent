@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.ftpix.sss.dsl.Tables.EXPENSE;
@@ -56,6 +57,12 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
         return listeners;
     }
 
+    public List<Expense> queryForAll(List<Category> categories) {
+        var categoriesById = categories.stream().collect(Collectors.toMap(Category::getId, Function.identity()));
+        return dslContext.select().from(EXPENSE).fetch(r -> fromRecord((ExpenseRecord) r, categoriesById));
+    }
+
+
     /**
      * Gets available months of expenses
      *
@@ -89,7 +96,6 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
     @Override
     public Expense fromRecord(ExpenseRecord r, Map<Long, Category> categories) {
         try {
-            System.out.println(r.getDate());
             Expense e = new Expense();
             e.setId(r.getId());
             e.setCategory(categories.get(r.getCategoryId()));
