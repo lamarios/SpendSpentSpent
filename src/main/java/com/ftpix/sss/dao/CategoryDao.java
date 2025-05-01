@@ -77,6 +77,8 @@ public class CategoryDao implements UserCategoryBasedDao<CategoryRecord, Categor
         return r;
     }
 
+
+
     /**
      * Needs override because otherwise it will check if the category we try to insert already exists ?
      *

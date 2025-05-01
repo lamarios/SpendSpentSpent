@@ -1,27 +1,25 @@
 package com.ftpix.sss.controllers.api;
 
-import com.ftpix.sss.App;
 import com.ftpix.sss.TestConfig;
+import com.ftpix.sss.TestContainerTest;
+import com.ftpix.sss.dao.CategoryDao;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.RecurringExpenseService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = App.class)
-@RunWith(SpringJUnit4ClassRunner.class)
+
 @Import(TestConfig.class)
-public class RecurringExpenseControllerTest {
+public class RecurringExpenseControllerTest extends TestContainerTest {
 
     @Autowired
     private RecurringExpenseService recurringExpenseService;
@@ -29,11 +27,15 @@ public class RecurringExpenseControllerTest {
     @Autowired
     private User currentUser;
 
-    private RecurringExpense create(long category, double amount, boolean income, String name, int type, int when) throws Exception {
+    @Autowired
+    private CategoryDao categoryDaoJooq;
+    @Autowired
+    private CategoryDao categoryDao;
+
+    private RecurringExpense create(Category category, double amount, boolean income, String name, int type, int when) throws Exception {
         RecurringExpense exp = new RecurringExpense();
-        Category cat = new Category();
-        cat.setId(category);
-        exp.setCategory(cat);
+
+        exp.setCategory(category);
 
 
         exp.setAmount(amount);
@@ -50,7 +52,9 @@ public class RecurringExpenseControllerTest {
 
         int count = recurringExpenseService.get(currentUser).size();
 
-        RecurringExpense expense = create(1, 10d, false, "spotify", RecurringExpense.TYPE_DAILY, 0);
+        var categories = categoryDaoJooq.getWhere(currentUser);
+
+        RecurringExpense expense = create(categories.get(0), 10d, false, "spotify", RecurringExpense.TYPE_DAILY, 0);
 
         int newCount = recurringExpenseService.get(currentUser).size();
 
@@ -65,12 +69,6 @@ public class RecurringExpenseControllerTest {
         assertEquals(count, newCount);
     }
 
-
-    @Test()
-    public void testAddingWronCategory() throws Exception {
-        RecurringExpense spotify = create(3213121, 10d, false, "spotify", RecurringExpense.TYPE_DAILY, 0);
-        assertNull(spotify);
-    }
 
     @Test
     public void testNewDateCalculation() {

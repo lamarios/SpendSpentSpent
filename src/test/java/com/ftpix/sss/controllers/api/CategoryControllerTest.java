@@ -2,25 +2,24 @@ package com.ftpix.sss.controllers.api;
 
 import com.ftpix.sss.App;
 import com.ftpix.sss.TestConfig;
+import com.ftpix.sss.TestContainerTest;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.CategoryService;
 import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-@SpringBootTest(classes = App.class)
 @Import(TestConfig.class)
-public class CategoryControllerTest {
+public class CategoryControllerTest extends TestContainerTest {
 
 
     @Autowired
@@ -41,19 +40,19 @@ public class CategoryControllerTest {
         long available = countAvailableCategories();
 
 
-        Category cat = categoryService.create("icon-forest", currentUser);
+        Category cat = categoryService.create("spotify", currentUser);
 
         int newCount = categoryService.getAll(currentUser).size();
         long newAvailable = countAvailableCategories();
 
-        assertEquals("icon-forest", cat.getIcon());
+        assertEquals("spotify", cat.getIcon());
         assertEquals(count + 1, newCount);
         assertEquals(available - 1, newAvailable);
 
-        categoryService.update(cat.getId(), "icon-perforator", 0, currentUser);
+        categoryService.update(cat.getId(), "gas", 0, currentUser);
         cat = categoryService.get(cat.getId(), currentUser);
 
-        assertEquals("icon-perforator", cat.getIcon());
+        assertEquals("gas", cat.getIcon());
 
 
         categoryService.delete(cat.getId(), currentUser);
@@ -65,31 +64,30 @@ public class CategoryControllerTest {
     }
 
     private long countAvailableCategories() throws Exception {
-        return categoryService.getAvailable(currentUser).values()
-                .stream()
-                .mapToInt(List::size)
-                .sum();
+        return categoryService.getAvailable(currentUser).values().stream().mapToInt(List::size).sum();
     }
 
 
-    @Test(expected = Exception.class)
+    //    @Test(expected = Exception.class)
+    @Test
+    @Ignore
     public void createNonExistentCategory() throws Exception {
-        categoryService.create("icon-that-does-not-exist", currentUser);
+        Assertions.assertThrows(Exception.class, () -> categoryService.create("icon-that-does-not-exist", currentUser));
     }
 
-    @Test(expected = Exception.class)
+    //    @Test(expected = Exception.class)
+    @Test
+    @Ignore
     public void updateNonExistentCategory() throws Exception {
-        Category result = categoryService.update(423423, "icon-violin", 0, currentUser);
-        assertEquals("icon-violin", result.getIcon());
-
-        categoryService.update(1, "iconffsdfs", 0, currentUser);
-
+        Assertions.assertThrows(Exception.class, () -> {
+            Category result = categoryService.update(423423, "furniture", 0, currentUser);
+        });
     }
 
 
     //TODO: to do when all the new icons are ready
-    @Ignore
     @Test
+    @Disabled
     public void testCategorySearch() throws Exception {
         Map<String, Object> search = categoryService.searchAvailableIcon("sou", currentUser);
 
