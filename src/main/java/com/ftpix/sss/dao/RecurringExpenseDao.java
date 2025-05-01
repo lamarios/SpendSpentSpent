@@ -16,6 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.ftpix.sss.dsl.Tables.RECURRING_EXPENSE;
 
@@ -37,8 +39,10 @@ public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpens
             RecurringExpense e = new RecurringExpense();
             e.setId(r.getId());
             e.setType(r.getType());
-            e.setLastOccurrence(r.getLastOccurrence() != null && r.getLastOccurrence().length() > 0 ? df.parse(r.getLastOccurrence()) : null);
-            e.setNextOccurrence(r.getNextOccurrence() != null && r.getNextOccurrence().length() > 0 ? df.parse(r.getNextOccurrence()) : null);
+            e.setLastOccurrence(r.getLastOccurrence() != null && r.getLastOccurrence()
+                    .length() > 0 ? df.parse(r.getLastOccurrence()) : null);
+            e.setNextOccurrence(r.getNextOccurrence() != null && r.getNextOccurrence()
+                    .length() > 0 ? df.parse(r.getNextOccurrence()) : null);
             e.setTypeParam(r.getTypeParam());
             e.setIncome(r.getIncome() != null && r.getIncome().equals((byte) 1));
             e.setAmount(r.getAmount());
@@ -102,5 +106,12 @@ public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpens
 
     public boolean deleteById(User user, long id) {
         return deleteWhere(user, RECURRING_EXPENSE.ID.eq(id)) == 1;
+    }
+
+    public List<RecurringExpense> queryForAll(List<Category> categories) {
+        var categoriesById = categories.stream().collect(Collectors.toMap(Category::getId, Function.identity()));
+        return dslContext.select()
+                .from(RECURRING_EXPENSE)
+                .fetch(r -> fromRecord((RecurringExpenseRecord) r, categoriesById));
     }
 }

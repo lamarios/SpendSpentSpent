@@ -17,9 +17,14 @@ public class Constants {
             .map(s -> s.equalsIgnoreCase("1"))
             .orElse(false);
 
+    public final static boolean ALLOW_IMPORT = Optional.ofNullable(System.getenv("ALLOW_IMPORT"))
+            .map(s -> s.equalsIgnoreCase("1"))
+            .orElse(false);
+
     static {
         System.out.println("SpendSpentSpent config ====================");
         System.out.println("DB PATH= " + DB_PATH);
         System.out.println("ALLOW_SIGNUP = " + ALLOW_SIGNUP);
+        System.out.println("ALLOW_IMPORT = " + ALLOW_IMPORT);
     }
 }

@@ -161,4 +161,12 @@ public interface UserCategoryBasedDao<R extends UpdatableRecord<R>, M extends Ha
                 .stream().collect(Collectors.toMap(Category::getId, Function.identity()));
     }
 
+
+    default boolean importManyForUsers(List<M> objects) {
+        objects.forEach(m -> {
+            R r = setRecordData(getDsl().newRecord(getTable()), m);
+            r.insert();
+        });
+        return true;
+    }
 }
