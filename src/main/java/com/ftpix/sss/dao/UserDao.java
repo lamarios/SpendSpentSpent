@@ -54,8 +54,8 @@ public class UserDao implements Dao<UserRecord, User> {
         record.setFirstname(user.getFirstName());
         record.setLastname(user.getLastName());
         record.setSubscriptionexpirydate(user.getSubscriptionExpiryDate());
-        record.setShowannouncement((byte) (user.isShowAnnouncement() ? 1 : 0));
-        record.setIsadmin((byte) (user.isAdmin() ? 1 : 0));
+        record.setShowannouncement(user.isShowAnnouncement() ? 1 : 0);
+        record.setIsadmin(user.isAdmin() ? 1 : 0);
 
         return record;
     }
@@ -79,8 +79,8 @@ public class UserDao implements Dao<UserRecord, User> {
         u.setFirstName(r.getFirstname());
         u.setLastName(r.getLastname());
         u.setSubscriptionExpiryDate(r.getSubscriptionexpirydate());
-        u.setShowAnnouncement(r.getShowannouncement() != null && r.getShowannouncement().equals((byte) 1));
-        u.setAdmin(r.getIsadmin() != null && r.getIsadmin().equals((byte) 1));
+        u.setShowAnnouncement(r.getShowannouncement() != null && r.getShowannouncement().equals(1));
+        u.setAdmin(r.getIsadmin() != null && r.getIsadmin().equals(1));
 
 
         return u;

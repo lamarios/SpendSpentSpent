@@ -7,9 +7,6 @@ import com.ftpix.sss.dao.YearlyHistoryDao;
 import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.utils.DateUtils;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.Where;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jooq.Condition;
@@ -17,15 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.time.*;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.ftpix.sss.dsl.Tables.*;
+import static com.ftpix.sss.dsl.Tables.MONTHLY_HISTORY;
+import static com.ftpix.sss.dsl.Tables.YEARLY_HISTORY;
 
 @Service
 public class HistoryService {
@@ -37,7 +33,6 @@ public class HistoryService {
     private final DateTimeFormatter yearlyHistoryDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
     private final ExpenseService expenseService;
 
-    private final Dao<Expense, Long> expenseDao;
     private final ExpenseDao expenseDaoJooq;
     private final CategoryDao categoryDaoJooq;
     private final MonthlyHistoryDao monthlyHistoryDaoJooq;
@@ -78,10 +73,9 @@ public class HistoryService {
 
 
     @Autowired
-    public HistoryService(CategoryService categoryService, ExpenseService expenseService, Dao<Expense, Long> expenseDao, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq) {
+    public HistoryService(CategoryService categoryService, ExpenseService expenseService, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq) {
         this.categoryService = categoryService;
         this.expenseService = expenseService;
-        this.expenseDao = expenseDao;
         this.expenseDaoJooq = expenseDaoJooq;
         this.categoryDaoJooq = categoryDaoJooq;
         this.monthlyHistoryDaoJooq = monthlyHistoryDaoJooq;
@@ -195,7 +189,8 @@ public class HistoryService {
         if (userCategoriesId.isEmpty()) {
             return Collections.emptyList();
         }
-
+//TODO: Implement this
+/*
         Where<Expense, Long> categoryFilter = expenseDao.queryBuilder().where().in("category_id", userCategoriesId);
 
         if (category >= 0) {
@@ -217,6 +212,8 @@ public class HistoryService {
             LocalDateTime tmpDate = LocalDateTime.ofInstant(e.getDate().toInstant(), ZoneId.systemDefault());
             return tmpDate.getYear() == date.getYear() && tmpDate.getMonthValue() == date.getMonthValue();
         }).collect(Collectors.toList());
+*/
+        return new ArrayList<>();
     }
 
 

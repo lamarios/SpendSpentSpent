@@ -1,49 +1,34 @@
 package com.ftpix.sss.models;
 
 import com.ftpix.sss.dao.HasCategory;
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
 
-@DatabaseTable(tableName = "EXPENSE")
 public class Expense implements HasCategory {
 
     public static final int TYPE_NORMAL = 1, TYPE_RECURRENT = 2;
 
-    @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)
     private Long id;
 
-    @DatabaseField(columnName = "AMOUNT")
     private double amount;
 
-    @DatabaseField(columnName = "CATEGORY_ID", foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreignColumnName = "ID")
     private Category category;
 
 
-    @DatabaseField(columnName = "DATE", dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
     private Date date;
 
-    @DatabaseField(columnName = "TYPE")
     private int type = 1;
 
-    @DatabaseField(columnName = "INCOME", dataType = DataType.BOOLEAN_INTEGER)
     private boolean income = false;
 
-    @DatabaseField(columnName = "LATITUDE")
     private double latitude;
 
-    @DatabaseField(columnName = "LONGITUDE")
     private double longitude;
 
-    @DatabaseField(columnName = "NOTE", dataType = DataType.LONG_STRING)
     private String note;
 
-    @DatabaseField(columnName = "TIME", dataType = DataType.STRING, width = 5)
     private String time;
 
-    @DatabaseField(columnName = "TIMESTAMP")
     private long timestamp = System.currentTimeMillis();
 
 

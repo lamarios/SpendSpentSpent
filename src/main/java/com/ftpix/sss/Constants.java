@@ -12,7 +12,6 @@ public class Constants {
     public static final Optional<String> ANNOUNCEMENT_MESSAGE = Optional.ofNullable(System.getenv("ANNOUNCEMENT_MESSAGE"));
 
 
-    public final static String DB_PATH = Optional.ofNullable(System.getenv("DB_PATH")).orElse("./SSS");
     public final static boolean HAS_SUBSCRIPTIONS = Optional.ofNullable(System.getenv("HAS_SUBSCRIPTION"))
             .map(s -> s.equalsIgnoreCase("1"))
             .orElse(false);
@@ -23,7 +22,6 @@ public class Constants {
 
     static {
         System.out.println("SpendSpentSpent config ====================");
-        System.out.println("DB PATH= " + DB_PATH);
         System.out.println("ALLOW_SIGNUP = " + ALLOW_SIGNUP);
         System.out.println("ALLOW_IMPORT = " + ALLOW_IMPORT);
     }

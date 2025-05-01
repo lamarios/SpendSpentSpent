@@ -1,23 +1,20 @@
 package com.ftpix.sss.services;
 
 import com.ftpix.sss.dao.RecurringExpenseDao;
-import com.ftpix.sss.dsl.Tables;
-import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
-import com.j256.ormlite.dao.Dao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
-import static com.ftpix.sss.dsl.Tables.*;
+import static com.ftpix.sss.dsl.Tables.RECURRING_EXPENSE;
 
 @Service
 public class RecurringExpenseService {

@@ -2,10 +2,12 @@ package com.ftpix.sss.controllers.api;
 
 import com.ftpix.sss.App;
 import com.ftpix.sss.TestConfig;
+import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.services.ExpenseService;
 import com.ftpix.sss.services.HistoryService;
 import com.ftpix.sss.utils.TestService;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +45,10 @@ public class ExpenseControllerTest {
     private HistoryService historyService;
 
     @Autowired
-    private User currentUser;
+    private TestService testService;
 
     @Autowired
-    private TestService testService;
+    private User currentUser;
 
     private final static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -143,6 +145,7 @@ public class ExpenseControllerTest {
 
     @Test
     public void testHistoryRecordInsertion() throws Exception {
+
         User user = testService.create(UUID.randomUUID().toString() + "@test.com", false, "cat1", "cat2");
         System.out.println(user.getId());
         List<CategoryOverall> monthly = historyService.monthly(user);

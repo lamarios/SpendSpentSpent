@@ -2,7 +2,6 @@ package com.ftpix.sss.services;
 
 import com.ftpix.sss.dao.SettingsDao;
 import com.ftpix.sss.models.Settings;
-import com.j256.ormlite.dao.Dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -101,7 +101,7 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
             e.setCategory(categories.get(r.getCategoryId()));
             e.setType(r.getType());
             e.setAmount(r.getAmount());
-            e.setIncome(r.getIncome() != null && r.getIncome().equals((byte) 1));
+            e.setIncome(r.getIncome() != null && r.getIncome().equals(1));
             e.setDate(dateFormat.parse(r.getDate()));
             e.setLatitude(r.getLatitude());
             e.setLongitude(r.getLongitude());
@@ -117,11 +117,13 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
 
     @Override
     public ExpenseRecord setRecordData(ExpenseRecord r, Expense o) {
-        r.setId(o.getId());
+        if (o.getId() != null) {
+            r.setId(o.getId());
+        }
         r.setCategoryId(o.getCategory().getId());
         r.setType(o.getType());
         r.setAmount(o.getAmount());
-        r.setIncome((byte) (o.isIncome() ? 1 : 0));
+        r.setIncome(o.isIncome() ? 1 : 0);
         r.setDate(dateFormat.format(o.getDate()));
         r.setLatitude(o.getLatitude());
         r.setLongitude(o.getLongitude());

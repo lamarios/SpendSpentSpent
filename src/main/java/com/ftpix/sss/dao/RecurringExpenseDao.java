@@ -44,7 +44,7 @@ public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpens
             e.setNextOccurrence(r.getNextOccurrence() != null && r.getNextOccurrence()
                     .length() > 0 ? df.parse(r.getNextOccurrence()) : null);
             e.setTypeParam(r.getTypeParam());
-            e.setIncome(r.getIncome() != null && r.getIncome().equals((byte) 1));
+            e.setIncome(r.getIncome() != null && r.getIncome().equals(1));
             e.setAmount(r.getAmount());
             e.setName(r.getName());
             e.setCategory(categories.get(r.getCategoryId()));
@@ -77,7 +77,9 @@ public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpens
 
     @Override
     public RecurringExpenseRecord setRecordData(RecurringExpenseRecord r, RecurringExpense e) {
-        r.setId(e.getId());
+        if (e.getId() != null) {
+            r.setId(e.getId());
+        }
         r.setName(e.getName());
         r.setCategoryId(e.getCategory().getId());
         r.setType(e.getType());
@@ -85,7 +87,7 @@ public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpens
         r.setLastOccurrence(e.getLastOccurrence() != null ? df.format(e.getLastOccurrence()) : null);
         r.setNextOccurrence(e.getNextOccurrence() != null ? df.format(e.getNextOccurrence()) : null);
         r.setAmount(e.getAmount());
-        r.setIncome((byte) (e.isIncome() ? 1 : 0));
+        r.setIncome(e.isIncome() ? 1 : 0);
 
         return r;
     }
