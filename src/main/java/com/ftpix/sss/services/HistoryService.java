@@ -14,14 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.ftpix.sss.dsl.Tables.MONTHLY_HISTORY;
-import static com.ftpix.sss.dsl.Tables.YEARLY_HISTORY;
+import static com.ftpix.sss.dsl.Tables.*;
 
 @Service
 public class HistoryService {
@@ -85,6 +87,12 @@ public class HistoryService {
         this.categoryDaoJooq.addUserBasedListener(categoryDaoListener);
     }
 
+    /**
+     * Gets expense sum for each categories for the current year
+     * @param user
+     * @return
+     * @throws Exception
+     */
     public List<CategoryOverall> yearly(User user) throws Exception {
         List<CategoryOverall> result = new ArrayList<>();
 
@@ -131,6 +139,12 @@ public class HistoryService {
     }
 
 
+    /**
+     * Gets expense sum for each categories for the current month
+     * @param user
+     * @return
+     * @throws Exception
+     */
     public List<CategoryOverall> monthly(User user) throws Exception {
         List<CategoryOverall> result = new ArrayList<>();
 
@@ -146,9 +160,9 @@ public class HistoryService {
         LocalDate now = LocalDate.now();
         int date = (now.getYear() * 100) + now.getMonthValue();
 
-        List<MonthlyHistory> yearly = monthlyHistoryDaoJooq.getWhere(user, MONTHLY_HISTORY.DATE.eq(date));
-        Map<Long, MonthlyHistory> byCategory = yearly.stream().collect(Collectors.toMap(y -> y.getCategory().getId(), Function.identity()));
-        double total = yearly.stream().mapToDouble(MonthlyHistory::getTotal).sum();
+        List<MonthlyHistory> monthly = monthlyHistoryDaoJooq.getWhere(user, MONTHLY_HISTORY.DATE.eq(date));
+        Map<Long, MonthlyHistory> byCategory = monthly.stream().collect(Collectors.toMap(y -> y.getCategory().getId(), Function.identity()));
+        double total = monthly.stream().mapToDouble(MonthlyHistory::getTotal).sum();
 
         overall.setAmount(total);
         overall.setTotal(total);
@@ -175,47 +189,6 @@ public class HistoryService {
             return c;
         }).sorted(Comparator.comparing(CategoryOverall::getAmount).reversed().thenComparingLong(o -> o.getCategory().getId())).collect(Collectors.toList());
     }
-
-    /**
-     * Returns the expenses for a specific month
-     *
-     * @param category thhe category to query against
-     * @param date     the date where the eay and month will be extracted
-     * @return a list of expenses
-     * @throws SQLException
-     */
-    private List<Expense> getCategoryExpensesForMonth(long category, LocalDate date, User user) throws Exception {
-        final List<Long> userCategoriesId = categoryService.getUserCategoriesId(user);
-        if (userCategoriesId.isEmpty()) {
-            return Collections.emptyList();
-        }
-//TODO: Implement this
-/*
-        Where<Expense, Long> categoryFilter = expenseDao.queryBuilder().where().in("category_id", userCategoriesId);
-
-        if (category >= 0) {
-            categoryFilter = categoryFilter.and().eq("category_id", category);
-        }
-
-        LocalDate start = date.withDayOfMonth(1);
-        LocalDate end = date.withDayOfMonth(date.lengthOfMonth()).plusDays(1);
-        Date startDate = Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Date endDate = Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-        categoryFilter = categoryFilter.and().ge("date", startDate);
-        categoryFilter = categoryFilter.and().lt("date", endDate);
-
-        final QueryBuilder<Expense, Long> queryBuilder = expenseDao.queryBuilder();
-        queryBuilder.setWhere(categoryFilter);
-
-        return queryBuilder.query().stream().filter(e -> {
-            LocalDateTime tmpDate = LocalDateTime.ofInstant(e.getDate().toInstant(), ZoneId.systemDefault());
-            return tmpDate.getYear() == date.getYear() && tmpDate.getMonthValue() == date.getMonthValue();
-        }).collect(Collectors.toList());
-*/
-        return new ArrayList<>();
-    }
-
 
     public List<Map<String, Object>> getYearlyHistory(long categoryId, int count, User user) throws Exception {
         List<Map<String, Object>> result = new ArrayList<>();
