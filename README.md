@@ -25,7 +25,7 @@ SpendSpentSpent (SSS) is an easy to use self hosted expense tracker. The goal of
 | Name | Default | Required | Comments |
 | --- | --- | --- | --- |
 |SALT| (none) | **Yes** | Required for password hashing | 
-| DB_PATH | (none) | **Yes** | A full postgres [JDBC connection url](https://www.codejava.net/java-se/jdbc/jdbc-database-connection-url-for-common-databases) |
+| DB_PATH | (none) | **Yes** | A full postgres [JDBC connection url](https://www.codejava.net/java-se/jdbc/jdbc-database-connection-url-for-common-databases). Example: `jdbc:postgresql://localhost:5432/sss` |
 | DB_USER | (none) | **Yes** | | 
 | DB_PASSWORD | (none) | **Yes** |  | 
 | ALLOW_SIGNUP | 0 | No | 1 = allow signups, 0 = Do not allow signups |
@@ -68,10 +68,21 @@ With docker compose:
   ports:
    - "9001:9001"
   volumes:
-   - ./SpendSpentSpent/config:/config
    - /etc/localtime:/etc/localtime:ro
   environment:
    SALT: somerandomstring
+   DB_PATH: "jdbc:postgresql://postgres-sss:5432/sss"
+   DB_USER: "postgres"
+   DB_PASSWORD: "postgres"
+ postgres-sss:
+  container_name: postgres-sss
+  image: postgres:17
+  environment:
+   POSTGRES_PASSWORD: postgres
+   POSTGRES_USER: postgres
+   POSTGRES_DB: sss
+  volumes:
+   - ./sss/db:/var/lib/postgresql/data
 ```
 
 ## From the jar file
