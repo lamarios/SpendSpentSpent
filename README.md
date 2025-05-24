@@ -25,9 +25,9 @@ SpendSpentSpent (SSS) is an easy to use self hosted expense tracker. The goal of
 | Name | Default | Required | Comments |
 | --- | --- | --- | --- |
 |SALT| (none) | **Yes** | Required for password hashing | 
-| DB_PATH | ./SSS | No (Hardcoded in docker container, can't be changed) | Location of the DB file or a full [JDBC connection url](https://www.codejava.net/java-se/jdbc/jdbc-database-connection-url-for-common-databases) (H2DB and MySQL supported) |
-| DB_USER | (none) | No | db username if using JDBC url for connection | 
-| DB_PASS | (none) | No | db password if using JDBC url for connection | 
+| DB_PATH | (none) | **Yes** | A full postgres [JDBC connection url](https://www.codejava.net/java-se/jdbc/jdbc-database-connection-url-for-common-databases) |
+| DB_USER | (none) | **Yes** | db username if using JDBC url for connection | 
+| DB_PASSWORD | (none) | **Yes** | db password if using JDBC url for connection | 
 | ALLOW_SIGNUP | 0 | No | 1 = allow signups, 0 = Do not allow signups |
 | ANNOUNCEMENT_MESSAGE | (none) | No | Show a message on the login screen, ex: ANNOUNCEMENT_MESSAGE="Welcome to my SpendSpentSpent instance". See demo instance to see what it looks like |
 
@@ -79,7 +79,7 @@ With docker compose:
 You will need to have *Java 9* to be installed on your machine to be able to run SSS
 
 ```
- SALT=somerandomestring DB_PATH=/path/to/save/file  java -Dserver.port=9001 -jar /app/SpendSpentSpent.jar
+ SALT=somerandomestring DB_PATH=<jdbc url>  java -Dserver.port=9001 -jar /app/SpendSpentSpent.jar
 ```
 
 
