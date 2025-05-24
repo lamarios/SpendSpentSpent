@@ -9,6 +9,7 @@ import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart' as globals;
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/login/models/login_page.dart';
+import 'package:spend_spent_spent/oidc/states/oidc.dart';
 import 'package:spend_spent_spent/settings/models/config.dart';
 import 'package:spend_spent_spent/utils/models/exceptions/BackendNeedUpgradeException.dart';
 import 'package:spend_spent_spent/utils/models/exceptions/NeedUpgradeException.dart';
@@ -23,7 +24,10 @@ class LoginCubit extends Cubit<LoginState> {
   final CategoriesCubit categoriesCubit;
   final LastExpenseCubit lastExpenseCubit;
 
-  LoginCubit(super.initialState, this.categoriesCubit, this.lastExpenseCubit) {
+  final OidcCubit oidcCubit;
+
+  LoginCubit(super.initialState, this.categoriesCubit, this.lastExpenseCubit,
+      this.oidcCubit) {
     init();
   }
 
@@ -33,6 +37,10 @@ class LoginCubit extends Cubit<LoginState> {
       print('getting config');
       Config c = await service.getServerConfig(urlController.text.trim());
       print('can register ? ${c.allowSignup}');
+
+      if (c.oidc != null && c.oidcClientId != null) {
+        oidcCubit.setupClient(c.oidc!, c.oidcClientId!);
+      }
 
       emit(state.copyWith(config: c));
     } on NeedUpgradeException {

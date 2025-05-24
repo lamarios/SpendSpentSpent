@@ -130,6 +130,20 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
         return (Integer) get(7);
     }
 
+    /**
+     * Setter for <code>public.user.oidcsub</code>.
+     */
+    public void setOidcsub(String value) {
+        set(8, value);
+    }
+
+    /**
+     * Getter for <code>public.user.oidcsub</code>.
+     */
+    public String getOidcsub() {
+        return (String) get(8);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -153,7 +167,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
     /**
      * Create a detached, initialised UserRecord
      */
-    public UserRecord(String id, String email, String firstname, String password, String lastname, Long subscriptionexpirydate, Integer showannouncement, Integer isadmin) {
+    public UserRecord(String id, String email, String firstname, String password, String lastname, Long subscriptionexpirydate, Integer showannouncement, Integer isadmin, String oidcsub) {
         super(User.USER);
 
         setId(id);
@@ -164,6 +178,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
         setSubscriptionexpirydate(subscriptionexpirydate);
         setShowannouncement(showannouncement);
         setIsadmin(isadmin);
+        setOidcsub(oidcsub);
         resetTouchedOnNotNull();
     }
 }

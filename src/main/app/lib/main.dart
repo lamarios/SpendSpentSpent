@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
+import 'package:spend_spent_spent/oidc/states/oidc.dart';
 import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/settings/state/app_settings.dart';
 
@@ -34,6 +35,9 @@ class SpendSpentSpent extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => AppSettingsCubit(const AppSettingsState()),
+        ),
+        BlocProvider(
+          create: (context) => OidcCubit(const OidcState()),
         )
       ],
       child: DynamicColorBuilder(

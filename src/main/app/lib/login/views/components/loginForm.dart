@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/login/views/components/login.dart';
@@ -11,6 +12,8 @@ import 'package:spend_spent_spent/settings/models/config.dart';
 class LoginForm extends StatefulWidget {
   final Function showSignUp, showResetPassword;
   final Function(String username, String password) logIn;
+  final Function() loginWithSso;
+
   final Config? config;
   final TextEditingController urlController;
   final String error;
@@ -22,6 +25,7 @@ class LoginForm extends StatefulWidget {
       this.config,
       required this.showSignUp,
       required this.logIn,
+      required this.loginWithSso,
       required this.urlController});
 
   @override
@@ -151,6 +155,20 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                                 ],
                               ),
                             ),
+                            if (widget.config?.oidc != null &&
+                                widget.config?.oidcClientId != null)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Text("or"),
+                                    const Gap(8),
+                                    FilledButton.tonal(
+                                        onPressed: () => widget.loginWithSso(),
+                                        child: const Text('Log in with SSO')),
+                                  ],
+                                ),
+                              ),
                             Visibility(
                               visible: widget.config?.allowSignup ?? false,
                               child: TextButton(

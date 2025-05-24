@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:spend_spent_spent/settings/models/oidc_config.dart';
 
 part 'config.g.dart';
 
@@ -18,6 +19,9 @@ sealed class Config with _$Config {
     required String convertCurrencyQuota,
     String? minAppVersion,
     required int backendVersion,
+    OidcConfig? oidc,
+    String? oidcClientId,
+    String? oidcEmailClaim,
   }) = _Config;
 
   factory Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);

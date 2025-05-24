@@ -2,9 +2,11 @@ package com.ftpix.sss.security;
 
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.Encryption;
+import com.ftpix.sss.services.OIDCService;
 import com.ftpix.sss.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Jwks;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +20,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,10 +37,14 @@ public class JwtTokenUtil implements Serializable, ApplicationContextAware {
     @Value("${SALT}")
     private String salt;
 
+    private final OIDCService oidcService;
+
+
     private final UserService userService;
 
     @Autowired
-    public JwtTokenUtil(UserService userService) {
+    public JwtTokenUtil(OIDCService oidcService, UserService userService) {
+        this.oidcService = oidcService;
         this.userService = userService;
     }
 
@@ -59,7 +66,15 @@ public class JwtTokenUtil implements Serializable, ApplicationContextAware {
     }
 
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+        try {
+            return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+        } catch (Exception e) {
+            if (oidcService.getParser() != null) {
+                return oidcService.getParser().parseSignedClaims(token).getPayload();
+            } else {
+                throw e;
+            }
+        }
     }
 
     private Boolean isTokenExpired(String token) {
@@ -103,9 +118,10 @@ public class JwtTokenUtil implements Serializable, ApplicationContextAware {
         return (!isTokenExpired(token) || ignoreTokenExpiration(token));
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token, UserDetails userDetails) throws SQLException {
         final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        var user = userService.getByEmail(userDetails.getUsername());
+        return ((username.equals(userDetails.getUsername()) || username.equalsIgnoreCase(user.getOidcSub())) && !isTokenExpired(token));
     }
 
     public String getSalt() {

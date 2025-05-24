@@ -12,6 +12,7 @@ import 'package:spend_spent_spent/login/state/login.dart';
 import 'package:spend_spent_spent/login/views/components/loginForm.dart';
 import 'package:spend_spent_spent/login/views/components/resetPassword.dart';
 import 'package:spend_spent_spent/login/views/components/signUp.dart';
+import 'package:spend_spent_spent/oidc/states/oidc.dart';
 import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/utils/views/components/error_listener.dart';
 
@@ -40,8 +41,11 @@ class Login extends StatelessWidget {
     }
 
     return BlocProvider(
-      create: (context) => LoginCubit(const LoginState(),
-          context.read<CategoriesCubit>(), context.read<LastExpenseCubit>()),
+      create: (context) => LoginCubit(
+          const LoginState(),
+          context.read<CategoriesCubit>(),
+          context.read<LastExpenseCubit>(),
+          context.read<OidcCubit>()),
       child: ErrorHandler<LoginCubit, LoginState>(
         showAsSnack: true,
         child: BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
@@ -97,6 +101,19 @@ class Login extends StatelessWidget {
                                             .replaceAll([const HomeRoute()]);
                                       }
                                     },
+                                    loginWithSso: () async {
+                                      final loggedIn = await context
+                                          .read<OidcCubit>()
+                                          .login();
+                                      if (loggedIn) {
+                                        await service.setUrl(
+                                            cubit.urlController.text.trim());
+                                        if (context.mounted) {
+                                          AutoRouter.of(context)
+                                              .replaceAll([const HomeRoute()]);
+                                        }
+                                      }
+                                    },
                                     showSignUp: () => cubit.signUp(true),
                                     showResetPassword: () =>
                                         cubit.resetPassword(true)),
@@ -123,7 +140,7 @@ InputDecoration getFieldDecoration(
       enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: colors.surfaceContainer)),
       hintText: hint,
-      hintStyle: TextStyle(color: colors.onSurface.withOpacity(0.3)),
+      hintStyle: TextStyle(color: colors.onSurface.withValues(alpha: 0.3)),
       filled: true,
       fillColor: colors.secondaryContainer);
 }

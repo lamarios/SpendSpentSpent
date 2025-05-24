@@ -24,6 +24,9 @@ mixin _$Config {
   String get convertCurrencyQuota;
   String? get minAppVersion;
   int get backendVersion;
+  OidcConfig? get oidc;
+  String? get oidcClientId;
+  String? get oidcEmailClaim;
 
   /// Create a copy of Config
   /// with the given fields replaced by the non-null parameter values.
@@ -57,7 +60,12 @@ mixin _$Config {
             (identical(other.minAppVersion, minAppVersion) ||
                 other.minAppVersion == minAppVersion) &&
             (identical(other.backendVersion, backendVersion) ||
-                other.backendVersion == backendVersion));
+                other.backendVersion == backendVersion) &&
+            (identical(other.oidc, oidc) || other.oidc == oidc) &&
+            (identical(other.oidcClientId, oidcClientId) ||
+                other.oidcClientId == oidcClientId) &&
+            (identical(other.oidcEmailClaim, oidcEmailClaim) ||
+                other.oidcEmailClaim == oidcEmailClaim));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -72,11 +80,14 @@ mixin _$Config {
       announcement,
       convertCurrencyQuota,
       minAppVersion,
-      backendVersion);
+      backendVersion,
+      oidc,
+      oidcClientId,
+      oidcEmailClaim);
 
   @override
   String toString() {
-    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion)';
+    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc, oidcClientId: $oidcClientId, oidcEmailClaim: $oidcEmailClaim)';
   }
 }
 
@@ -94,7 +105,12 @@ abstract mixin class $ConfigCopyWith<$Res> {
       String announcement,
       String convertCurrencyQuota,
       String? minAppVersion,
-      int backendVersion});
+      int backendVersion,
+      OidcConfig? oidc,
+      String? oidcClientId,
+      String? oidcEmailClaim});
+
+  $OidcConfigCopyWith<$Res>? get oidc;
 }
 
 /// @nodoc
@@ -118,6 +134,9 @@ class _$ConfigCopyWithImpl<$Res> implements $ConfigCopyWith<$Res> {
     Object? convertCurrencyQuota = null,
     Object? minAppVersion = freezed,
     Object? backendVersion = null,
+    Object? oidc = freezed,
+    Object? oidcClientId = freezed,
+    Object? oidcEmailClaim = freezed,
   }) {
     return _then(_self.copyWith(
       allowSignup: null == allowSignup
@@ -156,7 +175,33 @@ class _$ConfigCopyWithImpl<$Res> implements $ConfigCopyWith<$Res> {
           ? _self.backendVersion
           : backendVersion // ignore: cast_nullable_to_non_nullable
               as int,
+      oidc: freezed == oidc
+          ? _self.oidc
+          : oidc // ignore: cast_nullable_to_non_nullable
+              as OidcConfig?,
+      oidcClientId: freezed == oidcClientId
+          ? _self.oidcClientId
+          : oidcClientId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      oidcEmailClaim: freezed == oidcEmailClaim
+          ? _self.oidcEmailClaim
+          : oidcEmailClaim // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
+  }
+
+  /// Create a copy of Config
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $OidcConfigCopyWith<$Res>? get oidc {
+    if (_self.oidc == null) {
+      return null;
+    }
+
+    return $OidcConfigCopyWith<$Res>(_self.oidc!, (value) {
+      return _then(_self.copyWith(oidc: value));
+    });
   }
 }
 
@@ -172,7 +217,10 @@ class _Config implements Config {
       required this.announcement,
       required this.convertCurrencyQuota,
       this.minAppVersion,
-      required this.backendVersion});
+      required this.backendVersion,
+      this.oidc,
+      this.oidcClientId,
+      this.oidcEmailClaim});
   factory _Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
 
   @override
@@ -193,6 +241,12 @@ class _Config implements Config {
   final String? minAppVersion;
   @override
   final int backendVersion;
+  @override
+  final OidcConfig? oidc;
+  @override
+  final String? oidcClientId;
+  @override
+  final String? oidcEmailClaim;
 
   /// Create a copy of Config
   /// with the given fields replaced by the non-null parameter values.
@@ -231,7 +285,12 @@ class _Config implements Config {
             (identical(other.minAppVersion, minAppVersion) ||
                 other.minAppVersion == minAppVersion) &&
             (identical(other.backendVersion, backendVersion) ||
-                other.backendVersion == backendVersion));
+                other.backendVersion == backendVersion) &&
+            (identical(other.oidc, oidc) || other.oidc == oidc) &&
+            (identical(other.oidcClientId, oidcClientId) ||
+                other.oidcClientId == oidcClientId) &&
+            (identical(other.oidcEmailClaim, oidcEmailClaim) ||
+                other.oidcEmailClaim == oidcEmailClaim));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -246,11 +305,14 @@ class _Config implements Config {
       announcement,
       convertCurrencyQuota,
       minAppVersion,
-      backendVersion);
+      backendVersion,
+      oidc,
+      oidcClientId,
+      oidcEmailClaim);
 
   @override
   String toString() {
-    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion)';
+    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc, oidcClientId: $oidcClientId, oidcEmailClaim: $oidcEmailClaim)';
   }
 }
 
@@ -269,7 +331,13 @@ abstract mixin class _$ConfigCopyWith<$Res> implements $ConfigCopyWith<$Res> {
       String announcement,
       String convertCurrencyQuota,
       String? minAppVersion,
-      int backendVersion});
+      int backendVersion,
+      OidcConfig? oidc,
+      String? oidcClientId,
+      String? oidcEmailClaim});
+
+  @override
+  $OidcConfigCopyWith<$Res>? get oidc;
 }
 
 /// @nodoc
@@ -293,6 +361,9 @@ class __$ConfigCopyWithImpl<$Res> implements _$ConfigCopyWith<$Res> {
     Object? convertCurrencyQuota = null,
     Object? minAppVersion = freezed,
     Object? backendVersion = null,
+    Object? oidc = freezed,
+    Object? oidcClientId = freezed,
+    Object? oidcEmailClaim = freezed,
   }) {
     return _then(_Config(
       allowSignup: null == allowSignup
@@ -331,7 +402,33 @@ class __$ConfigCopyWithImpl<$Res> implements _$ConfigCopyWith<$Res> {
           ? _self.backendVersion
           : backendVersion // ignore: cast_nullable_to_non_nullable
               as int,
+      oidc: freezed == oidc
+          ? _self.oidc
+          : oidc // ignore: cast_nullable_to_non_nullable
+              as OidcConfig?,
+      oidcClientId: freezed == oidcClientId
+          ? _self.oidcClientId
+          : oidcClientId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      oidcEmailClaim: freezed == oidcEmailClaim
+          ? _self.oidcEmailClaim
+          : oidcEmailClaim // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
+  }
+
+  /// Create a copy of Config
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $OidcConfigCopyWith<$Res>? get oidc {
+    if (_self.oidc == null) {
+      return null;
+    }
+
+    return $OidcConfigCopyWith<$Res>(_self.oidc!, (value) {
+      return _then(_self.copyWith(oidc: value));
+    });
   }
 }
 

@@ -69,7 +69,7 @@ public class User extends TableImpl<UserRecord> {
     /**
      * The column <code>public.user.password</code>.
      */
-    public final TableField<UserRecord, String> PASSWORD = createField(DSL.name("password"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<UserRecord, String> PASSWORD = createField(DSL.name("password"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>public.user.lastname</code>.
@@ -90,6 +90,11 @@ public class User extends TableImpl<UserRecord> {
      * The column <code>public.user.isadmin</code>.
      */
     public final TableField<UserRecord, Integer> ISADMIN = createField(DSL.name("isadmin"), SQLDataType.INTEGER, this, "");
+
+    /**
+     * The column <code>public.user.oidcsub</code>.
+     */
+    public final TableField<UserRecord, String> OIDCSUB = createField(DSL.name("oidcsub"), SQLDataType.CLOB, this, "");
 
     private User(Name alias, Table<UserRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);

@@ -1,0 +1,4 @@
+enum TokenType {
+  sso,
+  usernamePassword;
+}

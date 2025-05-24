@@ -84,6 +84,10 @@ public class UserService {
         return userDaoJooq.getOneWhere(USER.EMAIL.eq(email)).orElse(null);
     }
 
+    public User getByOidcSub(String sub) {
+        return userDaoJooq.getOneWhere(USER.OIDCSUB.eq(sub)).orElse(null);
+    }
+
     public User getCurrentUser() throws SQLException {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -97,7 +101,9 @@ public class UserService {
         if (search.trim().length() > 0) {
             String searchQuery = "%" + search.trim() + "%";
 
-            return userDaoJooq.getPaginatedWhere(page, pageSize, USER.EMAIL.like(searchQuery).or(USER.FIRSTNAME.like(searchQuery)).or(USER.LASTNAME.like(searchQuery)));
+            return userDaoJooq.getPaginatedWhere(page, pageSize, USER.EMAIL.like(searchQuery)
+                    .or(USER.FIRSTNAME.like(searchQuery))
+                    .or(USER.LASTNAME.like(searchQuery)));
         } else {
             return userDaoJooq.getPaginatedWhere(page, pageSize);
         }
@@ -112,10 +118,10 @@ public class UserService {
     }
 
     public User createUser(User user) throws Exception {
-        if (user.getFirstName() == null || user.getFirstName().length() == 0
-                || user.getLastName() == null || user.getLastName().length() == 0
-                || user.getEmail() == null || user.getEmail().length() == 0
-                || user.getPassword() == null || user.getPassword().length() == 0
+        if (user.getFirstName() == null || user.getFirstName().isEmpty()
+                || user.getLastName() == null || user.getLastName().isEmpty()
+                || user.getEmail() == null || user.getEmail().isEmpty()
+                || ((user.getPassword() == null || user.getPassword().isEmpty()) && user.getOidcSub() == null)
         ) {
             throw new Exception("All fields must be filled.");
         }
@@ -239,7 +245,8 @@ public class UserService {
     }
 
     public User updateUserProfile(User user, User newUserData) throws Exception {
-        if (newUserData.getFirstName() == null || newUserData.getFirstName().length() == 0 || newUserData.getLastName() == null || newUserData.getLastName().length() == 0) {
+        if (newUserData.getFirstName() == null || newUserData.getFirstName()
+                .length() == 0 || newUserData.getLastName() == null || newUserData.getLastName().length() == 0) {
             throw new Exception("first name and lat name can't be empty");
         }
 
@@ -249,11 +256,17 @@ public class UserService {
         final String value = settingsService.getByName(Settings.DEMO_MODE).getValue();
         boolean demo = value.equalsIgnoreCase("1");
 
-        if ((!demo || demo && user.isAdmin()) && newUserData.getPassword() != null && newUserData.getPassword().length() > 0) {
+        if ((!demo || demo && user.isAdmin()) && newUserData.getPassword() != null && newUserData.getPassword()
+                .length() > 0) {
             user.setPassword(hashUserCredentials(user.getEmail(), newUserData.getPassword()));
         }
 
         userDaoJooq.update(user);
+        return user;
+    }
+
+    public User updateUser(User user) {
+        var updated = userDaoJooq.update(user);
         return user;
     }
 }

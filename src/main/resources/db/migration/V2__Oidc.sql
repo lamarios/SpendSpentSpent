@@ -1,0 +1,3 @@
+ALTER TABLE "user"
+    ALTER COLUMN "password" DROP NOT NULL,
+    ADD COLUMN "oidcsub" TEXT NULL;
