@@ -26,8 +26,8 @@ SpendSpentSpent (SSS) is an easy to use self hosted expense tracker. The goal of
 | --- | --- | --- | --- |
 |SALT| (none) | **Yes** | Required for password hashing | 
 | DB_PATH | (none) | **Yes** | A full postgres [JDBC connection url](https://www.codejava.net/java-se/jdbc/jdbc-database-connection-url-for-common-databases) |
-| DB_USER | (none) | **Yes** | db username if using JDBC url for connection | 
-| DB_PASSWORD | (none) | **Yes** | db password if using JDBC url for connection | 
+| DB_USER | (none) | **Yes** | | 
+| DB_PASSWORD | (none) | **Yes** |  | 
 | ALLOW_SIGNUP | 0 | No | 1 = allow signups, 0 = Do not allow signups |
 | ANNOUNCEMENT_MESSAGE | (none) | No | Show a message on the login screen, ex: ANNOUNCEMENT_MESSAGE="Welcome to my SpendSpentSpent instance". See demo instance to see what it looks like |
 
