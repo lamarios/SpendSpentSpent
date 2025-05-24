@@ -25,13 +25,13 @@ import static java.util.stream.Collectors.toMap;
 public class OIDCService implements ApplicationContextAware {
     public static final String GIVEN_NAME_CLAIM = "given_name";
     public static final String FAMILY_NAME_CLAIM = "family_name";
-    @Value("${OIDC_DISCOVERY_URL}")
+    @Value("${OIDC_DISCOVERY_URL:}")
     private String oidcDiscoveryUrl;
 
-    @Value("${OIDC_AUTO_SIGNUP_USERS}")
+    @Value("${OIDC_AUTO_SIGNUP_USERS:0}")
     private boolean autoSignUpUsers;
 
-    @Value("${OIDC_CLIENT_ID}")
+    @Value("${OIDC_CLIENT_ID:}")
     private String clientId;
 
     @Value("${OIDC_EMAIL_CLAIM:email}")
@@ -63,7 +63,7 @@ public class OIDCService implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 
-        if (oidcDiscoveryUrl != null) {
+        if (oidcDiscoveryUrl != null && !oidcDiscoveryUrl.isBlank()) {
             GetRequest request = Unirest.get(oidcDiscoveryUrl);
             try {
                 var body = request.asString();
