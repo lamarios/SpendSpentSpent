@@ -125,9 +125,7 @@ public class ApplicationController {
         results.put("canConvertCurrency", currencyService.canUseCurrencyConversion());
 
         if (oidcService.getOidcDiscoveryUrl() != null) {
-            results.put("oidc", oidcService.getOidcWellKnown());
-            results.put("oidcClientId", oidcService.getClientId());
-            results.put("oidcEmailClaim", oidcService.getOidcEmailClaim());
+            results.put("oidc", oidcService.getOidcConfig());
         }
 
 

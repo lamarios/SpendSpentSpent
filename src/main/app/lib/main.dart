@@ -8,14 +8,36 @@ import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/oidc/states/oidc.dart';
 import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/settings/state/app_settings.dart';
+import 'package:spend_spent_spent/utils/preferences.dart';
+
+import 'globals.dart';
 
 final _appRouter = AppRouter();
 
-void main() {
+Future<void> main() async {
   Logger.root.level = kDebugMode ? Level.ALL : Level.INFO;
   Logger.root.onRecord.listen((record) {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  var oidcCubit = OidcCubit(const OidcState());
+  getIt.registerSingleton<OidcCubit>(oidcCubit);
+  // we check if we already are on  a server
+  var serverUrl = await Preferences.get(Preferences.SERVER_URL);
+  if (serverUrl.isNotEmpty) {
+    try {
+      service.setUrl(serverUrl);
+      var config = await service.getServerConfig(serverUrl);
+      if (config.oidc != null) {
+        await oidcCubit.setupClient(config.oidc!);
+      }
+    } catch (e) {
+      await Preferences.remove(Preferences.SERVER_URL);
+    }
+  }
+
   runApp(const SpendSpentSpent());
 }
 
@@ -37,7 +59,7 @@ class SpendSpentSpent extends StatelessWidget {
           create: (context) => AppSettingsCubit(const AppSettingsState()),
         ),
         BlocProvider(
-          create: (context) => OidcCubit(const OidcState()),
+          create: (context) => getIt<OidcCubit>(),
         )
       ],
       child: DynamicColorBuilder(

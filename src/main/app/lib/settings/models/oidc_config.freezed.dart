@@ -22,6 +22,9 @@ mixin _$OidcConfig {
   String get issuer;
   @JsonKey(name: "token_endpoint")
   String get tokenUrl;
+  String get clientId;
+  String get discoveryUrl;
+  String get name;
 
   /// Create a copy of OidcConfig
   /// with the given fields replaced by the non-null parameter values.
@@ -43,17 +46,22 @@ mixin _$OidcConfig {
             (identical(other.jwksUri, jwksUri) || other.jwksUri == jwksUri) &&
             (identical(other.issuer, issuer) || other.issuer == issuer) &&
             (identical(other.tokenUrl, tokenUrl) ||
-                other.tokenUrl == tokenUrl));
+                other.tokenUrl == tokenUrl) &&
+            (identical(other.clientId, clientId) ||
+                other.clientId == clientId) &&
+            (identical(other.discoveryUrl, discoveryUrl) ||
+                other.discoveryUrl == discoveryUrl) &&
+            (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, authorizationEndpoint, jwksUri, issuer, tokenUrl);
+  int get hashCode => Object.hash(runtimeType, authorizationEndpoint, jwksUri,
+      issuer, tokenUrl, clientId, discoveryUrl, name);
 
   @override
   String toString() {
-    return 'OidcConfig(authorizationEndpoint: $authorizationEndpoint, jwksUri: $jwksUri, issuer: $issuer, tokenUrl: $tokenUrl)';
+    return 'OidcConfig(authorizationEndpoint: $authorizationEndpoint, jwksUri: $jwksUri, issuer: $issuer, tokenUrl: $tokenUrl, clientId: $clientId, discoveryUrl: $discoveryUrl, name: $name)';
   }
 }
 
@@ -67,7 +75,10 @@ abstract mixin class $OidcConfigCopyWith<$Res> {
       {@JsonKey(name: "authorization_endpoint") String authorizationEndpoint,
       @JsonKey(name: "jwks_uri") String jwksUri,
       String issuer,
-      @JsonKey(name: "token_endpoint") String tokenUrl});
+      @JsonKey(name: "token_endpoint") String tokenUrl,
+      String clientId,
+      String discoveryUrl,
+      String name});
 }
 
 /// @nodoc
@@ -86,6 +97,9 @@ class _$OidcConfigCopyWithImpl<$Res> implements $OidcConfigCopyWith<$Res> {
     Object? jwksUri = null,
     Object? issuer = null,
     Object? tokenUrl = null,
+    Object? clientId = null,
+    Object? discoveryUrl = null,
+    Object? name = null,
   }) {
     return _then(_self.copyWith(
       authorizationEndpoint: null == authorizationEndpoint
@@ -104,6 +118,18 @@ class _$OidcConfigCopyWithImpl<$Res> implements $OidcConfigCopyWith<$Res> {
           ? _self.tokenUrl
           : tokenUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      clientId: null == clientId
+          ? _self.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
+              as String,
+      discoveryUrl: null == discoveryUrl
+          ? _self.discoveryUrl
+          : discoveryUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -116,7 +142,10 @@ class _OidcConfig implements OidcConfig {
       required this.authorizationEndpoint,
       @JsonKey(name: "jwks_uri") required this.jwksUri,
       required this.issuer,
-      @JsonKey(name: "token_endpoint") required this.tokenUrl});
+      @JsonKey(name: "token_endpoint") required this.tokenUrl,
+      required this.clientId,
+      required this.discoveryUrl,
+      required this.name});
   factory _OidcConfig.fromJson(Map<String, dynamic> json) =>
       _$OidcConfigFromJson(json);
 
@@ -131,6 +160,12 @@ class _OidcConfig implements OidcConfig {
   @override
   @JsonKey(name: "token_endpoint")
   final String tokenUrl;
+  @override
+  final String clientId;
+  @override
+  final String discoveryUrl;
+  @override
+  final String name;
 
   /// Create a copy of OidcConfig
   /// with the given fields replaced by the non-null parameter values.
@@ -157,17 +192,22 @@ class _OidcConfig implements OidcConfig {
             (identical(other.jwksUri, jwksUri) || other.jwksUri == jwksUri) &&
             (identical(other.issuer, issuer) || other.issuer == issuer) &&
             (identical(other.tokenUrl, tokenUrl) ||
-                other.tokenUrl == tokenUrl));
+                other.tokenUrl == tokenUrl) &&
+            (identical(other.clientId, clientId) ||
+                other.clientId == clientId) &&
+            (identical(other.discoveryUrl, discoveryUrl) ||
+                other.discoveryUrl == discoveryUrl) &&
+            (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, authorizationEndpoint, jwksUri, issuer, tokenUrl);
+  int get hashCode => Object.hash(runtimeType, authorizationEndpoint, jwksUri,
+      issuer, tokenUrl, clientId, discoveryUrl, name);
 
   @override
   String toString() {
-    return 'OidcConfig(authorizationEndpoint: $authorizationEndpoint, jwksUri: $jwksUri, issuer: $issuer, tokenUrl: $tokenUrl)';
+    return 'OidcConfig(authorizationEndpoint: $authorizationEndpoint, jwksUri: $jwksUri, issuer: $issuer, tokenUrl: $tokenUrl, clientId: $clientId, discoveryUrl: $discoveryUrl, name: $name)';
   }
 }
 
@@ -183,7 +223,10 @@ abstract mixin class _$OidcConfigCopyWith<$Res>
       {@JsonKey(name: "authorization_endpoint") String authorizationEndpoint,
       @JsonKey(name: "jwks_uri") String jwksUri,
       String issuer,
-      @JsonKey(name: "token_endpoint") String tokenUrl});
+      @JsonKey(name: "token_endpoint") String tokenUrl,
+      String clientId,
+      String discoveryUrl,
+      String name});
 }
 
 /// @nodoc
@@ -202,6 +245,9 @@ class __$OidcConfigCopyWithImpl<$Res> implements _$OidcConfigCopyWith<$Res> {
     Object? jwksUri = null,
     Object? issuer = null,
     Object? tokenUrl = null,
+    Object? clientId = null,
+    Object? discoveryUrl = null,
+    Object? name = null,
   }) {
     return _then(_OidcConfig(
       authorizationEndpoint: null == authorizationEndpoint
@@ -219,6 +265,18 @@ class __$OidcConfigCopyWithImpl<$Res> implements _$OidcConfigCopyWith<$Res> {
       tokenUrl: null == tokenUrl
           ? _self.tokenUrl
           : tokenUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+      clientId: null == clientId
+          ? _self.clientId
+          : clientId // ignore: cast_nullable_to_non_nullable
+              as String,
+      discoveryUrl: null == discoveryUrl
+          ? _self.discoveryUrl
+          : discoveryUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }

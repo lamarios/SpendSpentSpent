@@ -11,7 +11,10 @@ sealed class OidcConfig with _$OidcConfig {
       required String authorizationEndpoint,
       @JsonKey(name: "jwks_uri") required String jwksUri,
       required String issuer,
-      @JsonKey(name: "token_endpoint") required String tokenUrl}) = _OidcConfig;
+      @JsonKey(name: "token_endpoint") required String tokenUrl,
+      required String clientId,
+      required String discoveryUrl,
+      required String name}) = _OidcConfig;
 
   factory OidcConfig.fromJson(Map<String, Object?> json) =>
       _$OidcConfigFromJson(json);

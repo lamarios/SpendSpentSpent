@@ -7,8 +7,6 @@ class Preferences {
       FROM_CURRENCY = "from_currency",
       TO_CURRENCY = "to_currency",
       EXPENSE_LOCATION = "expense_location",
-      REFRESH_TOKEN = "refresh_token",
-      ID_TOKEN = "id_token",
       TOKEN_TYPE = "token_type";
 
   static Future<void> set(String key, String value) async {

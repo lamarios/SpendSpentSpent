@@ -82,6 +82,9 @@ android {
         targetSdkVersion 35
         versionCode buildNumber
         versionName flutterVersionName
+        manifestPlaceholders += [
+                'appAuthRedirectScheme': 'com.spendspentspent.app' // for oidc flutter dependency
+        ]
     }
 
     signingConfigs {

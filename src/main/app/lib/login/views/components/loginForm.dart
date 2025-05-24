@@ -155,8 +155,7 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                                 ],
                               ),
                             ),
-                            if (widget.config?.oidc != null &&
-                                widget.config?.oidcClientId != null)
+                            if (widget.config?.oidc != null)
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
@@ -165,7 +164,8 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                                     const Gap(8),
                                     FilledButton.tonal(
                                         onPressed: () => widget.loginWithSso(),
-                                        child: const Text('Log in with SSO')),
+                                        child: Text(
+                                            'Log in with ${widget.config?.oidc?.name}')),
                                   ],
                                 ),
                               ),

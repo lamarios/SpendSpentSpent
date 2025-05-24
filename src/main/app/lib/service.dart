@@ -9,6 +9,7 @@ import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
+import 'package:spend_spent_spent/oidc/states/oidc.dart';
 import 'package:spend_spent_spent/stats/models/graph_data_point.dart';
 import 'package:spend_spent_spent/utils/models/paginatedResults.dart';
 import 'package:spend_spent_spent/expenses/models/search_parameters.dart';
@@ -84,9 +85,8 @@ class Service {
   Future<Map<String, String>> get headers async {
     var headers = {'Content-Type': 'application/json'};
 
-    var token = await Preferences.get(Preferences.TOKEN);
-    if (token != "") {
-      token = token.replaceAll('"', '');
+    var token = await this.token;
+    if (token != null) {
       token = "Bearer $token";
       headers['Authorization'] = token;
     }
@@ -96,6 +96,23 @@ class Service {
     }
 
     return headers;
+  }
+
+  Future<String?> get token async {
+    var tokenType = await Preferences.get(Preferences.TOKEN_TYPE);
+    if (tokenType == TokenType.usernamePassword.name) {
+      var token = await Preferences.get(Preferences.TOKEN);
+      return token = token.replaceAll('"', '');
+    }
+
+    if (tokenType == TokenType.sso.name) {
+      String token = getIt<OidcCubit>().state.user?.token.accessToken ?? '';
+      if (token.isNotEmpty) {
+        return token;
+      }
+    }
+
+    return null;
   }
 
   int? appBuildVersion;
@@ -123,10 +140,16 @@ class Service {
 
   Future<bool> needLogin() async {
     try {
-      var token = await Preferences.get(Preferences.TOKEN);
+      var token = await this.token;
 
+      if (token == null) {
+        return true;
+      }
+
+      var tokenType = await Preferences.get(
+          Preferences.TOKEN_TYPE, TokenType.usernamePassword.name);
       bool expired = JwtDecoder.isExpired(token);
-      if (!expired) {
+      if (tokenType == TokenType.usernamePassword.name && !expired) {
         await setToken(token, TokenType.usernamePassword);
       }
       return expired;
@@ -292,6 +315,8 @@ class Service {
 
   Future<void> logout() async {
     await Preferences.remove(Preferences.TOKEN);
+    await Preferences.remove(Preferences.TOKEN_TYPE);
+    getIt<OidcCubit>().logout();
     config = null;
     url = "";
   }

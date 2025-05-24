@@ -38,8 +38,8 @@ class LoginCubit extends Cubit<LoginState> {
       Config c = await service.getServerConfig(urlController.text.trim());
       print('can register ? ${c.allowSignup}');
 
-      if (c.oidc != null && c.oidcClientId != null) {
-        oidcCubit.setupClient(c.oidc!, c.oidcClientId!);
+      if (c.oidc != null) {
+        await oidcCubit.setupClient(c.oidc!);
       }
 
       emit(state.copyWith(config: c));

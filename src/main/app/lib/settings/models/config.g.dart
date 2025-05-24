@@ -19,8 +19,6 @@ _Config _$ConfigFromJson(Map<String, dynamic> json) => _Config(
       oidc: json['oidc'] == null
           ? null
           : OidcConfig.fromJson(json['oidc'] as Map<String, dynamic>),
-      oidcClientId: json['oidcClientId'] as String?,
-      oidcEmailClaim: json['oidcEmailClaim'] as String?,
     );
 
 Map<String, dynamic> _$ConfigToJson(_Config instance) => <String, dynamic>{
@@ -34,6 +32,4 @@ Map<String, dynamic> _$ConfigToJson(_Config instance) => <String, dynamic>{
       'minAppVersion': instance.minAppVersion,
       'backendVersion': instance.backendVersion,
       'oidc': instance.oidc,
-      'oidcClientId': instance.oidcClientId,
-      'oidcEmailClaim': instance.oidcEmailClaim,
     };

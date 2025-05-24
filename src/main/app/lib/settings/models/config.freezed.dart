@@ -25,8 +25,6 @@ mixin _$Config {
   String? get minAppVersion;
   int get backendVersion;
   OidcConfig? get oidc;
-  String? get oidcClientId;
-  String? get oidcEmailClaim;
 
   /// Create a copy of Config
   /// with the given fields replaced by the non-null parameter values.
@@ -61,11 +59,7 @@ mixin _$Config {
                 other.minAppVersion == minAppVersion) &&
             (identical(other.backendVersion, backendVersion) ||
                 other.backendVersion == backendVersion) &&
-            (identical(other.oidc, oidc) || other.oidc == oidc) &&
-            (identical(other.oidcClientId, oidcClientId) ||
-                other.oidcClientId == oidcClientId) &&
-            (identical(other.oidcEmailClaim, oidcEmailClaim) ||
-                other.oidcEmailClaim == oidcEmailClaim));
+            (identical(other.oidc, oidc) || other.oidc == oidc));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -81,13 +75,11 @@ mixin _$Config {
       convertCurrencyQuota,
       minAppVersion,
       backendVersion,
-      oidc,
-      oidcClientId,
-      oidcEmailClaim);
+      oidc);
 
   @override
   String toString() {
-    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc, oidcClientId: $oidcClientId, oidcEmailClaim: $oidcEmailClaim)';
+    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc)';
   }
 }
 
@@ -106,9 +98,7 @@ abstract mixin class $ConfigCopyWith<$Res> {
       String convertCurrencyQuota,
       String? minAppVersion,
       int backendVersion,
-      OidcConfig? oidc,
-      String? oidcClientId,
-      String? oidcEmailClaim});
+      OidcConfig? oidc});
 
   $OidcConfigCopyWith<$Res>? get oidc;
 }
@@ -135,8 +125,6 @@ class _$ConfigCopyWithImpl<$Res> implements $ConfigCopyWith<$Res> {
     Object? minAppVersion = freezed,
     Object? backendVersion = null,
     Object? oidc = freezed,
-    Object? oidcClientId = freezed,
-    Object? oidcEmailClaim = freezed,
   }) {
     return _then(_self.copyWith(
       allowSignup: null == allowSignup
@@ -179,14 +167,6 @@ class _$ConfigCopyWithImpl<$Res> implements $ConfigCopyWith<$Res> {
           ? _self.oidc
           : oidc // ignore: cast_nullable_to_non_nullable
               as OidcConfig?,
-      oidcClientId: freezed == oidcClientId
-          ? _self.oidcClientId
-          : oidcClientId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      oidcEmailClaim: freezed == oidcEmailClaim
-          ? _self.oidcEmailClaim
-          : oidcEmailClaim // ignore: cast_nullable_to_non_nullable
-              as String?,
     ));
   }
 
@@ -218,9 +198,7 @@ class _Config implements Config {
       required this.convertCurrencyQuota,
       this.minAppVersion,
       required this.backendVersion,
-      this.oidc,
-      this.oidcClientId,
-      this.oidcEmailClaim});
+      this.oidc});
   factory _Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
 
   @override
@@ -243,10 +221,6 @@ class _Config implements Config {
   final int backendVersion;
   @override
   final OidcConfig? oidc;
-  @override
-  final String? oidcClientId;
-  @override
-  final String? oidcEmailClaim;
 
   /// Create a copy of Config
   /// with the given fields replaced by the non-null parameter values.
@@ -286,11 +260,7 @@ class _Config implements Config {
                 other.minAppVersion == minAppVersion) &&
             (identical(other.backendVersion, backendVersion) ||
                 other.backendVersion == backendVersion) &&
-            (identical(other.oidc, oidc) || other.oidc == oidc) &&
-            (identical(other.oidcClientId, oidcClientId) ||
-                other.oidcClientId == oidcClientId) &&
-            (identical(other.oidcEmailClaim, oidcEmailClaim) ||
-                other.oidcEmailClaim == oidcEmailClaim));
+            (identical(other.oidc, oidc) || other.oidc == oidc));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -306,13 +276,11 @@ class _Config implements Config {
       convertCurrencyQuota,
       minAppVersion,
       backendVersion,
-      oidc,
-      oidcClientId,
-      oidcEmailClaim);
+      oidc);
 
   @override
   String toString() {
-    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc, oidcClientId: $oidcClientId, oidcEmailClaim: $oidcEmailClaim)';
+    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc)';
   }
 }
 
@@ -332,9 +300,7 @@ abstract mixin class _$ConfigCopyWith<$Res> implements $ConfigCopyWith<$Res> {
       String convertCurrencyQuota,
       String? minAppVersion,
       int backendVersion,
-      OidcConfig? oidc,
-      String? oidcClientId,
-      String? oidcEmailClaim});
+      OidcConfig? oidc});
 
   @override
   $OidcConfigCopyWith<$Res>? get oidc;
@@ -362,8 +328,6 @@ class __$ConfigCopyWithImpl<$Res> implements _$ConfigCopyWith<$Res> {
     Object? minAppVersion = freezed,
     Object? backendVersion = null,
     Object? oidc = freezed,
-    Object? oidcClientId = freezed,
-    Object? oidcEmailClaim = freezed,
   }) {
     return _then(_Config(
       allowSignup: null == allowSignup
@@ -406,14 +370,6 @@ class __$ConfigCopyWithImpl<$Res> implements _$ConfigCopyWith<$Res> {
           ? _self.oidc
           : oidc // ignore: cast_nullable_to_non_nullable
               as OidcConfig?,
-      oidcClientId: freezed == oidcClientId
-          ? _self.oidcClientId
-          : oidcClientId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      oidcEmailClaim: freezed == oidcEmailClaim
-          ? _self.oidcEmailClaim
-          : oidcEmailClaim // ignore: cast_nullable_to_non_nullable
-              as String?,
     ));
   }
 

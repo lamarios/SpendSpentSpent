@@ -1,6 +1,6 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.models.OIDCWellKnown;
+import com.ftpix.sss.models.OIDCConfig;
 import com.ftpix.sss.models.User;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.Unirest;
@@ -31,12 +31,18 @@ public class OIDCService implements ApplicationContextAware {
     @Value("${OIDC_AUTO_SIGNUP_USERS}")
     private boolean autoSignUpUsers;
 
+    @Value("${OIDC_CLIENT_ID}")
+    private String clientId;
+
     @Value("${OIDC_EMAIL_CLAIM:email}")
     private String oidcEmailClaim;
 
+    @Value("${OIDC_NAME:SSO}")
+    private String oidcName;
+
     private JwtParser parser;
 
-    private OIDCWellKnown oidcWellKnown;
+    private OIDCConfig oidcConfig;
 
 
     private final UserService userService;
@@ -50,8 +56,8 @@ public class OIDCService implements ApplicationContextAware {
         return oidcDiscoveryUrl;
     }
 
-    public OIDCWellKnown getOidcWellKnown() {
-        return oidcWellKnown;
+    public OIDCConfig getOidcConfig() {
+        return oidcConfig;
     }
 
     @Override
@@ -63,9 +69,14 @@ public class OIDCService implements ApplicationContextAware {
                 var body = request.asString();
 
                 Gson gson = new Gson();
-                oidcWellKnown = gson.fromJson(body.getBody(), OIDCWellKnown.class);
+                oidcConfig = gson.fromJson(body.getBody(), OIDCConfig.class);
 
-                request = Unirest.get(oidcWellKnown.getJwksUri());
+                request = Unirest.get(oidcConfig.getJwksUri());
+
+                oidcConfig.setDiscoveryUrl(oidcDiscoveryUrl);
+                oidcConfig.setClientId(clientId);
+                oidcConfig.setEmailClaim(oidcEmailClaim);
+                oidcConfig.setName(oidcName);
 
                 var keyMap = Jwks.setParser()
                         .build()
@@ -105,7 +116,7 @@ public class OIDCService implements ApplicationContextAware {
         // if we don't get the info
         if (user == null) {
 
-            GetRequest request = Unirest.get(oidcWellKnown.getUserInfoUrl())
+            GetRequest request = Unirest.get(oidcConfig.getUserInfoUrl())
                     .header("Authorization", "Bearer " + accessToken);
             var body = request.asJson().getBody();
 

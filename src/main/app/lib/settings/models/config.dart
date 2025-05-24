@@ -20,8 +20,6 @@ sealed class Config with _$Config {
     String? minAppVersion,
     required int backendVersion,
     OidcConfig? oidc,
-    String? oidcClientId,
-    String? oidcEmailClaim,
   }) = _Config;
 
   factory Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);

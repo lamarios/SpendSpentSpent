@@ -14,10 +14,10 @@ part of 'oidc.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$OidcState {
+mixin _$OidcState implements DiagnosticableTreeMixin {
   String? get token;
   OidcConfig? get oidcConfig;
-  String? get clientId;
+  OidcUser? get user;
 
   /// Create a copy of OidcState
   /// with the given fields replaced by the non-null parameter values.
@@ -26,8 +26,14 @@ mixin _$OidcState {
   $OidcStateCopyWith<OidcState> get copyWith =>
       _$OidcStateCopyWithImpl<OidcState>(this as OidcState, _$identity);
 
-  /// Serializes this OidcState to a JSON map.
-  Map<String, dynamic> toJson();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+      ..add(DiagnosticsProperty('type', 'OidcState'))
+      ..add(DiagnosticsProperty('token', token))
+      ..add(DiagnosticsProperty('oidcConfig', oidcConfig))
+      ..add(DiagnosticsProperty('user', user));
+  }
 
   @override
   bool operator ==(Object other) {
@@ -37,17 +43,15 @@ mixin _$OidcState {
             (identical(other.token, token) || other.token == token) &&
             (identical(other.oidcConfig, oidcConfig) ||
                 other.oidcConfig == oidcConfig) &&
-            (identical(other.clientId, clientId) ||
-                other.clientId == clientId));
+            (identical(other.user, user) || other.user == user));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, token, oidcConfig, clientId);
+  int get hashCode => Object.hash(runtimeType, token, oidcConfig, user);
 
   @override
-  String toString() {
-    return 'OidcState(token: $token, oidcConfig: $oidcConfig, clientId: $clientId)';
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'OidcState(token: $token, oidcConfig: $oidcConfig, user: $user)';
   }
 }
 
@@ -56,7 +60,7 @@ abstract mixin class $OidcStateCopyWith<$Res> {
   factory $OidcStateCopyWith(OidcState value, $Res Function(OidcState) _then) =
       _$OidcStateCopyWithImpl;
   @useResult
-  $Res call({String? token, OidcConfig? oidcConfig, String? clientId});
+  $Res call({String? token, OidcConfig? oidcConfig, OidcUser? user});
 
   $OidcConfigCopyWith<$Res>? get oidcConfig;
 }
@@ -75,7 +79,7 @@ class _$OidcStateCopyWithImpl<$Res> implements $OidcStateCopyWith<$Res> {
   $Res call({
     Object? token = freezed,
     Object? oidcConfig = freezed,
-    Object? clientId = freezed,
+    Object? user = freezed,
   }) {
     return _then(_self.copyWith(
       token: freezed == token
@@ -86,10 +90,10 @@ class _$OidcStateCopyWithImpl<$Res> implements $OidcStateCopyWith<$Res> {
           ? _self.oidcConfig
           : oidcConfig // ignore: cast_nullable_to_non_nullable
               as OidcConfig?,
-      clientId: freezed == clientId
-          ? _self.clientId
-          : clientId // ignore: cast_nullable_to_non_nullable
-              as String?,
+      user: freezed == user
+          ? _self.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as OidcUser?,
     ));
   }
 
@@ -109,18 +113,16 @@ class _$OidcStateCopyWithImpl<$Res> implements $OidcStateCopyWith<$Res> {
 }
 
 /// @nodoc
-@JsonSerializable()
-class _OidcState implements OidcState {
-  const _OidcState({this.token, this.oidcConfig, this.clientId});
-  factory _OidcState.fromJson(Map<String, dynamic> json) =>
-      _$OidcStateFromJson(json);
+
+class _OidcState with DiagnosticableTreeMixin implements OidcState {
+  const _OidcState({this.token, this.oidcConfig, this.user});
 
   @override
   final String? token;
   @override
   final OidcConfig? oidcConfig;
   @override
-  final String? clientId;
+  final OidcUser? user;
 
   /// Create a copy of OidcState
   /// with the given fields replaced by the non-null parameter values.
@@ -131,10 +133,12 @@ class _OidcState implements OidcState {
       __$OidcStateCopyWithImpl<_OidcState>(this, _$identity);
 
   @override
-  Map<String, dynamic> toJson() {
-    return _$OidcStateToJson(
-      this,
-    );
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    properties
+      ..add(DiagnosticsProperty('type', 'OidcState'))
+      ..add(DiagnosticsProperty('token', token))
+      ..add(DiagnosticsProperty('oidcConfig', oidcConfig))
+      ..add(DiagnosticsProperty('user', user));
   }
 
   @override
@@ -145,17 +149,15 @@ class _OidcState implements OidcState {
             (identical(other.token, token) || other.token == token) &&
             (identical(other.oidcConfig, oidcConfig) ||
                 other.oidcConfig == oidcConfig) &&
-            (identical(other.clientId, clientId) ||
-                other.clientId == clientId));
+            (identical(other.user, user) || other.user == user));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, token, oidcConfig, clientId);
+  int get hashCode => Object.hash(runtimeType, token, oidcConfig, user);
 
   @override
-  String toString() {
-    return 'OidcState(token: $token, oidcConfig: $oidcConfig, clientId: $clientId)';
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'OidcState(token: $token, oidcConfig: $oidcConfig, user: $user)';
   }
 }
 
@@ -167,7 +169,7 @@ abstract mixin class _$OidcStateCopyWith<$Res>
       __$OidcStateCopyWithImpl;
   @override
   @useResult
-  $Res call({String? token, OidcConfig? oidcConfig, String? clientId});
+  $Res call({String? token, OidcConfig? oidcConfig, OidcUser? user});
 
   @override
   $OidcConfigCopyWith<$Res>? get oidcConfig;
@@ -187,7 +189,7 @@ class __$OidcStateCopyWithImpl<$Res> implements _$OidcStateCopyWith<$Res> {
   $Res call({
     Object? token = freezed,
     Object? oidcConfig = freezed,
-    Object? clientId = freezed,
+    Object? user = freezed,
   }) {
     return _then(_OidcState(
       token: freezed == token
@@ -198,10 +200,10 @@ class __$OidcStateCopyWithImpl<$Res> implements _$OidcStateCopyWith<$Res> {
           ? _self.oidcConfig
           : oidcConfig // ignore: cast_nullable_to_non_nullable
               as OidcConfig?,
-      clientId: freezed == clientId
-          ? _self.clientId
-          : clientId // ignore: cast_nullable_to_non_nullable
-              as String?,
+      user: freezed == user
+          ? _self.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as OidcUser?,
     ));
   }
 
