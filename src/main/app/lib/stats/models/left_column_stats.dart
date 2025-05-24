@@ -8,7 +8,8 @@ part 'left_column_stats.g.dart';
 
 part 'left_column_stats.freezed.dart';
 
-class LeftColumnStats with _$LeftColumnStats {
+@freezed
+sealed class LeftColumnStats with _$LeftColumnStats {
   const factory LeftColumnStats(
       {required Category category,
       required double total,
