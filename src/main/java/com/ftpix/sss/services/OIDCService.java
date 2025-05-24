@@ -17,10 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
-
-import java.lang.reflect.AccessibleObject;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -30,12 +27,6 @@ public class OIDCService implements ApplicationContextAware {
     public static final String FAMILY_NAME_CLAIM = "family_name";
     @Value("${OIDC_DISCOVERY_URL}")
     private String oidcDiscoveryUrl;
-
-    @Value("${OIDC_CLIENT_ID}")
-    private String clientId;
-
-    @Value("${OIDC_SECRET}")
-    private String secret;
 
     @Value("${OIDC_AUTO_SIGNUP_USERS}")
     private boolean autoSignUpUsers;
@@ -59,32 +50,8 @@ public class OIDCService implements ApplicationContextAware {
         return oidcDiscoveryUrl;
     }
 
-    public void setOidcDiscoveryUrl(String oidcDiscoveryUrl) {
-        this.oidcDiscoveryUrl = oidcDiscoveryUrl;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
     public OIDCWellKnown getOidcWellKnown() {
         return oidcWellKnown;
-    }
-
-    public void setOidcWellKnown(OIDCWellKnown oidcWellKnown) {
-        this.oidcWellKnown = oidcWellKnown;
     }
 
     @Override
