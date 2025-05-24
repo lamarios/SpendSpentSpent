@@ -3,6 +3,8 @@ package com.ftpix.sss.services;
 import com.ftpix.sss.dao.*;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.DataExport;
+import com.ftpix.sss.models.Expense;
+import com.ftpix.sss.models.RecurringExpense;
 import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -114,7 +116,7 @@ public class DataExportImportService {
 
         // if we have a h2 db file path, we save it in the same folder
         if (dbPath != null && !dbPath.startsWith("jdbc:")) {
-            return Path.of(dbPath).toAbsolutePath().getParent().toString()+"/";
+            return Path.of(dbPath).toAbsolutePath().getParent().toString() + "/";
         } else {
             return "./";
         }
@@ -182,6 +184,19 @@ public class DataExportImportService {
                 monthlyHistoryDaoJooq.importMany(export.getMonthlyHistories());
                 logger.info("Importing yearly history...");
                 yearlyHistoryDaoJooq.importMany(export.getYearlyHistories());
+
+                // since now we're using postgres, we need to set the auto increment properly
+                long maxCategory = export.getCategories().stream().mapToLong(Category::getId).max().orElse(1L);
+                long maxExpense = export.getExpenses().stream().mapToLong(Expense::getId).max().orElse(1L);
+                long maxRecurring = export.getRecurringExpenses()
+                        .stream()
+                        .mapToLong(RecurringExpense::getId)
+                        .max()
+                        .orElse(1L);
+                dslContext.alterSequence("category_id_seq").restartWith(maxCategory + 1).execute();
+                dslContext.alterSequence("expense_id_seq").restartWith(maxExpense + 1).execute();
+                dslContext.alterSequence("recurring_expense_id_seq").restartWith(maxRecurring + 1).execute();
+
             } else {
                 throw new InvalidParameterException("Invalid import password");
             }

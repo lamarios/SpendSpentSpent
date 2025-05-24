@@ -1,0 +1,18 @@
+meta {
+  name: Add Category
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API}}/API/Category
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "icon":"spotify",
+  
+  }
+}

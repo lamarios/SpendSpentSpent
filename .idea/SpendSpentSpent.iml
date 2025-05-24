@@ -257,6 +257,11 @@
       <excludeFolder url="file://$MODULE_DIR$/src/main/app/submodules/flutter/packages/integration_test/integration_test_macos/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/app/submodules/flutter/packages/integration_test/integration_test_macos/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/app/submodules/flutter/packages/integration_test/integration_test_macos/build" />
+      <excludeFolder url="file://$MODULE_DIR$/assets" />
+      <excludeFolder url="file://$MODULE_DIR$/bruno-api-collection" />
+      <excludeFolder url="file://$MODULE_DIR$/docker" />
+      <excludeFolder url="file://$MODULE_DIR$/docs" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/app" />
     </content>
   </component>
   <component name="TemplatesService">

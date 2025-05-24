@@ -23,6 +23,12 @@ jobs:
     name: Web and Java build
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    services:
+      docker:
+        image: docker:dind
+        options: --privileged --shm-size=2g
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock:ro
     #env:
     #  JAVA_VERSION: "11.0"
     #  FLUTTER_VERSION: "2.5.3"

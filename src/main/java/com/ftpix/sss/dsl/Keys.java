@@ -6,19 +6,19 @@ package com.ftpix.sss.dsl;
 
 import com.ftpix.sss.dsl.tables.Category;
 import com.ftpix.sss.dsl.tables.Expense;
+import com.ftpix.sss.dsl.tables.FlywaySchemaHistory;
 import com.ftpix.sss.dsl.tables.MonthlyHistory;
 import com.ftpix.sss.dsl.tables.RecurringExpense;
 import com.ftpix.sss.dsl.tables.ResetPassword;
-import com.ftpix.sss.dsl.tables.SchemaVersion;
 import com.ftpix.sss.dsl.tables.Settings;
 import com.ftpix.sss.dsl.tables.User;
 import com.ftpix.sss.dsl.tables.YearlyHistory;
 import com.ftpix.sss.dsl.tables.records.CategoryRecord;
 import com.ftpix.sss.dsl.tables.records.ExpenseRecord;
+import com.ftpix.sss.dsl.tables.records.FlywaySchemaHistoryRecord;
 import com.ftpix.sss.dsl.tables.records.MonthlyHistoryRecord;
 import com.ftpix.sss.dsl.tables.records.RecurringExpenseRecord;
 import com.ftpix.sss.dsl.tables.records.ResetPasswordRecord;
-import com.ftpix.sss.dsl.tables.records.SchemaVersionRecord;
 import com.ftpix.sss.dsl.tables.records.SettingsRecord;
 import com.ftpix.sss.dsl.tables.records.UserRecord;
 import com.ftpix.sss.dsl.tables.records.YearlyHistoryRecord;
@@ -30,25 +30,24 @@ import org.jooq.impl.Internal;
 
 
 /**
- * A class modelling foreign key relationships and constraints of tables in sss.
+ * A class modelling foreign key relationships and constraints of tables in
+ * public.
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class Keys {
 
     // -------------------------------------------------------------------------
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<CategoryRecord> KEY_CATEGORY_PRIMARY = Internal.createUniqueKey(Category.CATEGORY, DSL.name("KEY_CATEGORY_PRIMARY"), new TableField[] { Category.CATEGORY.ID }, true);
-    public static final UniqueKey<ExpenseRecord> KEY_EXPENSE_PRIMARY = Internal.createUniqueKey(Expense.EXPENSE, DSL.name("KEY_EXPENSE_PRIMARY"), new TableField[] { Expense.EXPENSE.ID }, true);
-    public static final UniqueKey<MonthlyHistoryRecord> KEY_MONTHLY_HISTORY_MONTHLY_HISTORY_UNIQUE_IDX = Internal.createUniqueKey(MonthlyHistory.MONTHLY_HISTORY, DSL.name("KEY_MONTHLY_HISTORY_monthly_history_unique_idx"), new TableField[] { MonthlyHistory.MONTHLY_HISTORY.CATEGORY_ID, MonthlyHistory.MONTHLY_HISTORY.DATE }, true);
-    public static final UniqueKey<MonthlyHistoryRecord> KEY_MONTHLY_HISTORY_PRIMARY = Internal.createUniqueKey(MonthlyHistory.MONTHLY_HISTORY, DSL.name("KEY_MONTHLY_HISTORY_PRIMARY"), new TableField[] { MonthlyHistory.MONTHLY_HISTORY.ID }, true);
-    public static final UniqueKey<RecurringExpenseRecord> KEY_RECURRING_EXPENSE_PRIMARY = Internal.createUniqueKey(RecurringExpense.RECURRING_EXPENSE, DSL.name("KEY_RECURRING_EXPENSE_PRIMARY"), new TableField[] { RecurringExpense.RECURRING_EXPENSE.ID }, true);
-    public static final UniqueKey<ResetPasswordRecord> KEY_RESET_PASSWORD_PRIMARY = Internal.createUniqueKey(ResetPassword.RESET_PASSWORD, DSL.name("KEY_RESET_PASSWORD_PRIMARY"), new TableField[] { ResetPassword.RESET_PASSWORD.ID }, true);
-    public static final UniqueKey<SchemaVersionRecord> KEY_SCHEMA_VERSION_PRIMARY = Internal.createUniqueKey(SchemaVersion.SCHEMA_VERSION, DSL.name("KEY_SCHEMA_VERSION_PRIMARY"), new TableField[] { SchemaVersion.SCHEMA_VERSION.CURRENT }, true);
-    public static final UniqueKey<SettingsRecord> KEY_SETTINGS_PRIMARY = Internal.createUniqueKey(Settings.SETTINGS, DSL.name("KEY_SETTINGS_PRIMARY"), new TableField[] { Settings.SETTINGS.NAME }, true);
-    public static final UniqueKey<UserRecord> KEY_USER_EMAIL = Internal.createUniqueKey(User.USER, DSL.name("KEY_USER_email"), new TableField[] { User.USER.EMAIL }, true);
-    public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = Internal.createUniqueKey(User.USER, DSL.name("KEY_USER_PRIMARY"), new TableField[] { User.USER.ID }, true);
-    public static final UniqueKey<YearlyHistoryRecord> KEY_YEARLY_HISTORY_PRIMARY = Internal.createUniqueKey(YearlyHistory.YEARLY_HISTORY, DSL.name("KEY_YEARLY_HISTORY_PRIMARY"), new TableField[] { YearlyHistory.YEARLY_HISTORY.ID }, true);
-    public static final UniqueKey<YearlyHistoryRecord> KEY_YEARLY_HISTORY_YEARLY_HISTORY_UNIQUE = Internal.createUniqueKey(YearlyHistory.YEARLY_HISTORY, DSL.name("KEY_YEARLY_HISTORY_yearly_history_unique"), new TableField[] { YearlyHistory.YEARLY_HISTORY.CATEGORY_ID, YearlyHistory.YEARLY_HISTORY.DATE }, true);
+    public static final UniqueKey<CategoryRecord> CATEGORY_PKEY = Internal.createUniqueKey(Category.CATEGORY, DSL.name("category_pkey"), new TableField[] { Category.CATEGORY.ID }, true);
+    public static final UniqueKey<ExpenseRecord> EXPENSE_PKEY = Internal.createUniqueKey(Expense.EXPENSE, DSL.name("expense_pkey"), new TableField[] { Expense.EXPENSE.ID }, true);
+    public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = Internal.createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, DSL.name("flyway_schema_history_pk"), new TableField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK }, true);
+    public static final UniqueKey<MonthlyHistoryRecord> MONTHLY_HISTORY_PKEY = Internal.createUniqueKey(MonthlyHistory.MONTHLY_HISTORY, DSL.name("monthly_history_pkey"), new TableField[] { MonthlyHistory.MONTHLY_HISTORY.ID }, true);
+    public static final UniqueKey<RecurringExpenseRecord> RECURRING_EXPENSE_PKEY = Internal.createUniqueKey(RecurringExpense.RECURRING_EXPENSE, DSL.name("recurring_expense_pkey"), new TableField[] { RecurringExpense.RECURRING_EXPENSE.ID }, true);
+    public static final UniqueKey<ResetPasswordRecord> RESET_PASSWORD_PKEY = Internal.createUniqueKey(ResetPassword.RESET_PASSWORD, DSL.name("reset_password_pkey"), new TableField[] { ResetPassword.RESET_PASSWORD.ID }, true);
+    public static final UniqueKey<SettingsRecord> SETTINGS_PKEY = Internal.createUniqueKey(Settings.SETTINGS, DSL.name("settings_pkey"), new TableField[] { Settings.SETTINGS.NAME }, true);
+    public static final UniqueKey<UserRecord> USER_EMAIL_KEY = Internal.createUniqueKey(User.USER, DSL.name("user_email_key"), new TableField[] { User.USER.EMAIL }, true);
+    public static final UniqueKey<UserRecord> USER_PKEY = Internal.createUniqueKey(User.USER, DSL.name("user_pkey"), new TableField[] { User.USER.ID }, true);
+    public static final UniqueKey<YearlyHistoryRecord> YEARLY_HISTORY_PKEY = Internal.createUniqueKey(YearlyHistory.YEARLY_HISTORY, DSL.name("yearly_history_pkey"), new TableField[] { YearlyHistory.YEARLY_HISTORY.ID }, true);
 }

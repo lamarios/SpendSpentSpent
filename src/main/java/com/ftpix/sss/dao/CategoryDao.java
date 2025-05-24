@@ -68,12 +68,16 @@ public class CategoryDao implements UserCategoryBasedDao<CategoryRecord, Categor
     @Override
     public CategoryRecord setRecordData(CategoryRecord r, Category o) {
         r.setIcon(o.getIcon());
-        r.setId(o.getId());
+        if(o.getId() != null) {
+            r.setId(o.getId());
+        }
         r.setUserId(o.getUser().getId().toString());
         r.setCategoryOrder(o.getCategoryOrder());
 
         return r;
     }
+
+
 
     /**
      * Needs override because otherwise it will check if the category we try to insert already exists ?

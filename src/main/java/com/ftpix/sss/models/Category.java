@@ -2,24 +2,16 @@ package com.ftpix.sss.models;
 
 import com.ftpix.sss.dao.HasCategory;
 import com.ftpix.sss.utils.JsonIgnore;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "CATEGORY")
 public class Category implements HasCategory {
 
-
-    @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)
     private Long id;
 
-    @DatabaseField(columnName = "ICON")
     private String icon;
 
-    @DatabaseField(columnName = "CATEGORY_ORDER")
     private int categoryOrder;
 
 
-    @DatabaseField(columnName = "USER_ID", foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreignColumnName = "ID")
     @JsonIgnore
     private User user;
 

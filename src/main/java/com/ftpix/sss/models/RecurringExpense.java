@@ -1,43 +1,30 @@
 package com.ftpix.sss.models;
 
 import com.ftpix.sss.dao.HasCategory;
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
 
-@DatabaseTable(tableName = "RECURRING_EXPENSE")
 public class RecurringExpense implements HasCategory {
 
     public static final int TYPE_DAILY = 0, TYPE_WEEKLY = 1, TYPE_MONTHLY = 2, TYPE_YEARLY = 3;
 
 
-    @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)
     private Long id;
 
-    @DatabaseField(columnName = "NAME")
     private String name;
 
-    @DatabaseField(columnName = "CATEGORY_ID", foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 1, foreignColumnName = "ID")
     private Category category;
 
-    @DatabaseField(columnName = "TYPE")
     private int type;
 
-    @DatabaseField(columnName = "TYPE_PARAM")
     private int typeParam;
 
-    @DatabaseField(columnName = "LAST_OCCURRENCE", dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
     private Date lastOccurrence;
 
-    @DatabaseField(columnName = "NEXT_OCCURRENCE", dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
     private Date nextOccurrence;
 
-    @DatabaseField(columnName = "AMOUNT")
     private double amount;
 
-    @DatabaseField(columnName = "INCOME", dataType = DataType.BOOLEAN_INTEGER)
     private boolean income = false;
 
     public Long getId() {

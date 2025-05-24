@@ -1,22 +1,14 @@
 package com.ftpix.sss.models;
 
 import com.ftpix.sss.services.Encryption;
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "SETTINGS")
 public class Settings {
     public static final String CURRENCY_API_KEY = "currencyApiKey", ALLOW_SIGNUP="allowSignUp", DEMO_MODE="demoMode", MOTD="motd";
 
-
-    @DatabaseField(columnName = "NAME", id = true)
     private String name;
 
-    @DatabaseField(columnName = "VALUE", dataType = DataType.LONG_STRING)
     private String value;
 
-    @DatabaseField(columnName = "SECRET", defaultValue = "false")
     private boolean secret;
 
 

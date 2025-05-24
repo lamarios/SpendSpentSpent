@@ -8,7 +8,6 @@ import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.EmailService;
 import com.ftpix.sss.services.RecurringExpenseService;
 import com.ftpix.sss.services.UserService;
-import com.j256.ormlite.dao.Dao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

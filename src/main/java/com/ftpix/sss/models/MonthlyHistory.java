@@ -2,25 +2,18 @@ package com.ftpix.sss.models;
 
 
 import com.ftpix.sss.dao.HasCategory;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.UUID;
 
-@DatabaseTable(tableName = "MONTHLY_HISTORY")
 public class MonthlyHistory implements HasCategory {
 
-    @DatabaseField(columnName = "ID", generatedId = true, allowGeneratedIdInsert = true)
     private UUID id = UUID.randomUUID();
 
-    @DatabaseField(columnName = "CATEGORY_ID", foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, foreignColumnName = "ID", uniqueIndexName = "monthly_history_unique_idx")
     private Category category;
 
-    @DatabaseField(columnName = "TOTAL")
     private double total;
 
     // date will be of format YYYYMM for easy comparison / sorting
-    @DatabaseField(columnName = "DATE", indexName = "monthly_history_date_idx", uniqueIndexName = "monthly_history_unique_idx")
     private int date;
 
     public UUID getId() {

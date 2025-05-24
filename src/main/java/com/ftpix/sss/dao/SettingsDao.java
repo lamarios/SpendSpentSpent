@@ -71,14 +71,14 @@ public class SettingsDao implements Dao<SettingsRecord, Settings> {
         Settings s = new Settings();
         s.setName(r.getName());
         s.setValue(r.getValue());
-        s.setSecret(r.getSecret() != null && r.getSecret().equals((byte) 1));
+        s.setSecret(r.getSecret() != null && r.getSecret().equals(1));
         return s;
     }
 
     @Override
     public SettingsRecord setRecordData(SettingsRecord r, Settings o) {
         r.setName(o.getName());
-        r.setSecret((byte) (o.isSecret() ? 1 : 0));
+        r.setSecret(o.isSecret());
         r.setValue(o.getValue());
         return r;
     }

@@ -11,6 +11,7 @@
     <properties>
         <automatioon.skip>true</automatioon.skip>
         <jooq.skip>true</jooq.skip>
+        <skipTest>true</skipTest>
     </properties>
 
     <!--
@@ -34,10 +35,27 @@
         <version>3.4.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>1.21.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -70,29 +88,10 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>3.0.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.junit.vintage/junit-vintage-engine -->
-        <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-            <version>5.9.0</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.11.0</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.j256.ormlite/ormlite-jdbc -->
-        <dependency>
-            <groupId>com.j256.ormlite</groupId>
-            <artifactId>ormlite-jdbc</artifactId>
-            <version>5.7</version>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.200</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
@@ -129,6 +128,26 @@
             <artifactId>unirest-java</artifactId>
             <version>1.4.9</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>1.21.0</version>
+            <scope>test</scope>
+        </dependency>
+
 
         <!--<dependency>-->
         <!--<groupId>me.xdrop</groupId>-->
@@ -174,13 +193,27 @@
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq</artifactId>
-            <version>3.15.5</version>
+            <version>3.20.3</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <version>9.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
         </dependency>
 
 
@@ -190,6 +223,21 @@
             <version>2.17.1</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- looks likes this is specific for intellij -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.11.0-M2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.11.0-M2</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- end of intellij specific -->
 
     </dependencies>
 
@@ -287,7 +335,7 @@
                            Import the others manually from your distribution -->
                 <groupId>org.jooq</groupId>
                 <artifactId>jooq-codegen-maven</artifactId>
-                <version>3.15.5</version>
+                <version>3.20.3</version>
 
                 <executions>
                     <execution>
@@ -296,24 +344,24 @@
                         <goals>
                             <goal>generate</goal>
                         </goals>
-                        <configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.15.0.xsd">
+                        <configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.20.3.xsd">
                             <skip>${jooq.skip}</skip>
                             <jdbc>
-                                <driver>com.mysql.cj.jdbc.Driver</driver>
-                                <url>jdbc:mysql://localhost:3306/sss?useSSL=false&amp;allowPublicKeyRetrieval=true</url>
-                                <user>root</user>
-                                <password>password</password>
+                                <driver>org.postgresql.Driver</driver>
+                                <url>jdbc:postgresql://localhost:5432/sss</url>
+                                <user>postgres</user>
+                                <password>postgres</password>
                             </jdbc>
 
                             <generator>
                                 <database>
                                     <!-- The database type. The format here is:
                                          org.jooq.meta.[database].[database]Database -->
-                                    <name>org.jooq.meta.mysql.MySQLDatabase</name>
+                                    <name>org.jooq.meta.postgres.PostgresDatabase</name>
 
                                     <!-- The database schema (or in the absence of schema support, in your RDBMS this
                                          can be the owner, user, database name) to be generated -->
-                                    <inputSchema>sss</inputSchema>
+                                    <inputSchema>public</inputSchema>
 
                                     <!-- All elements that are generated from your schema
                                          (A Java regular expression. Use the pipe to separate several expressions)

@@ -1,20 +1,17 @@
 package com.ftpix.sss.controllers.api;
 
-import com.ftpix.sss.App;
 import com.ftpix.sss.TestConfig;
+import com.ftpix.sss.TestContainerTest;
+import com.ftpix.sss.dao.CategoryDao;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.services.ExpenseService;
 import com.ftpix.sss.services.HistoryService;
 import com.ftpix.sss.utils.TestService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,12 +22,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = App.class)
-@RunWith(SpringJUnit4ClassRunner.class)
+
 @Import(TestConfig.class)
-public class ExpenseControllerTest {
+public class ExpenseControllerTest extends TestContainerTest {
 
     private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -43,19 +39,20 @@ public class ExpenseControllerTest {
     private HistoryService historyService;
 
     @Autowired
+    private TestService testService;
+
+    @Autowired
     private User currentUser;
 
     @Autowired
-    private TestService testService;
+    private CategoryDao categoryDaoJooq;
 
     private final static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
-    private Expense create(User user, double amount, long catId, String date, boolean income, int expenseType, long lat, long longitude, String note) throws Exception {
+    private Expense create(User user, double amount, Category cat, String date, boolean income, int expenseType, long lat, long longitude, String note) throws Exception {
         Expense exp = new Expense();
         exp.setAmount(amount);
-        Category cat = new Category();
-        cat.setId(catId);
 
         exp.setCategory(cat);
         try {
@@ -74,19 +71,24 @@ public class ExpenseControllerTest {
     }
 
     private Expense create(double amount, long catId, String date, boolean income, int expenseType, long lat, long longitude, String note) throws Exception {
-        return create(currentUser, amount, catId, date, income, expenseType, lat, longitude, note);
+
+        var cats = categoryDaoJooq.getWhere(currentUser);
+
+        return create(currentUser, amount, cats.stream().filter(category -> category.getId() == catId).findFirst().get(), date, income, expenseType, lat, longitude, note);
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void createNullCategoryExpense() throws Exception {
-
-        Expense exp = create(12d, 32131, "2012-10-10", false, Expense.TYPE_NORMAL, 0, 0, "");
+        Assertions.assertThrows(Exception.class, () -> {
+            Expense exp = create(12d, 32131, "2012-10-10", false, Expense.TYPE_NORMAL, 0, 0, "");
+        });
     }
 
-    @Test()
+    @Test
     public void testAddDeleteExpense() throws Exception {
 
-        Expense newExpense = create(10d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
+        var cats = categoryDaoJooq.getWhere(currentUser);
+        Expense newExpense = create(10d, cats.get(0).getId(), "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
 
         Expense fromController = expenseService.get(newExpense.getId(), currentUser);
 
@@ -106,8 +108,10 @@ public class ExpenseControllerTest {
     public void testAddWithTime() throws Exception {
         Date today = new Date();
 
-        Expense newExpense = create(10d, 1, df.format(today), false, Expense.TYPE_NORMAL, 0, 0, "");
-        Expense newExpense2 = create(10d, 1, "2012-03-21", false, Expense.TYPE_NORMAL, 0, 0, "");
+        var cats = categoryDaoJooq.getWhere(currentUser);
+
+        Expense newExpense = create(10d, cats.get(0).getId(), df.format(today), false, Expense.TYPE_NORMAL, 0, 0, "");
+        Expense newExpense2 = create(10d, cats.get(0).getId(), "2012-03-21", false, Expense.TYPE_NORMAL, 0, 0, "");
 
         String properTime = String.format("%02d", today.getHours()) + ":" + String.format("%02d", today.getMinutes());
 
@@ -119,11 +123,13 @@ public class ExpenseControllerTest {
 
     @Test
     public void testCategoryByDay() throws Exception {
-        create(10d, 1, "2012-12-02", false, Expense.TYPE_NORMAL, 0, 0, "");
-        create(20d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
-        create(30d, 1, "2012-12-23", false, Expense.TYPE_NORMAL, 0, 0, "");
-        create(40d, 1, "2012-10-24", false, Expense.TYPE_NORMAL, 0, 0, "");
-        create(50d, 1, "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
+        var cats = categoryDaoJooq.getWhere(currentUser);
+
+        create(10d, cats.get(0).getId(), "2012-12-02", false, Expense.TYPE_NORMAL, 0, 0, "");
+        create(20d, cats.get(0).getId(), "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
+        create(30d, cats.get(0).getId(), "2012-12-23", false, Expense.TYPE_NORMAL, 0, 0, "");
+        create(40d, cats.get(0).getId(), "2012-10-24", false, Expense.TYPE_NORMAL, 0, 0, "");
+        create(50d, cats.get(0).getId(), "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
 
 
         assertEquals(2, expenseService.getMonths(currentUser).size());
@@ -143,6 +149,7 @@ public class ExpenseControllerTest {
 
     @Test
     public void testHistoryRecordInsertion() throws Exception {
+
         User user = testService.create(UUID.randomUUID().toString() + "@test.com", false, "cat1", "cat2");
         System.out.println(user.getId());
         List<CategoryOverall> monthly = historyService.monthly(user);
@@ -150,15 +157,18 @@ public class ExpenseControllerTest {
         // We created the user with 2 categories, so we should have 3 here (including the "All" category)
         assertEquals(3, monthly.size());
         assertEquals(3, yearly.size());
-        assertTrue("All should be 0", monthly.stream().allMatch(c -> c.getTotal() == 0));
-        assertTrue("All should be 0", yearly.stream().allMatch(c -> c.getTotal() == 0));
+        assertTrue(monthly.stream().allMatch(c -> c.getTotal() == 0), "All should be 0");
+        assertTrue(yearly.stream().allMatch(c -> c.getTotal() == 0), "All should be 0");
 
 
         Category cat = monthly.stream().filter(c -> c.getCategory().getId() != -1).findFirst().get().getCategory();
 
         String now = LocalDate.now().format(dtf);
 
-        Expense created = create(user, 50d, cat.getId(), now, false, Expense.TYPE_NORMAL, 0, 0, "");
+
+        var cats = categoryDaoJooq.getWhere(user);
+
+        Expense created = create(user, 50d, cats.get(0), now, false, Expense.TYPE_NORMAL, 0, 0, "");
         monthly = historyService.monthly(user);
         yearly = historyService.yearly(user);
 

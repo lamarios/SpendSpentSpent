@@ -1,0 +1,22 @@
+meta {
+  name: Add expense
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{API}}/API/Expense
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "amount": 30,
+    "date":"2025-05-01",
+    "note":"test"
+    "category":{
+      "id":717
+    }
+  }
+}
