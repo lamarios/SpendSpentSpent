@@ -101,7 +101,7 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
 }
 
 @freezed
-class AddRecurringExpenseState with _$AddRecurringExpenseState {
+sealed class AddRecurringExpenseState with _$AddRecurringExpenseState {
   const factory AddRecurringExpenseState({
     @Default(0) int step,
     Category? category,

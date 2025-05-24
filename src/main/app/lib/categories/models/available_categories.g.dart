@@ -6,9 +6,8 @@ part of 'available_categories.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AvailableCategoriesImpl _$$AvailableCategoriesImplFromJson(
-        Map<String, dynamic> json) =>
-    _$AvailableCategoriesImpl(
+_AvailableCategories _$AvailableCategoriesFromJson(Map<String, dynamic> json) =>
+    _AvailableCategories(
       shopping: (json['shopping'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -46,8 +45,8 @@ _$AvailableCategoriesImpl _$$AvailableCategoriesImplFromJson(
           const [],
     );
 
-Map<String, dynamic> _$$AvailableCategoriesImplToJson(
-        _$AvailableCategoriesImpl instance) =>
+Map<String, dynamic> _$AvailableCategoriesToJson(
+        _AvailableCategories instance) =>
     <String, dynamic>{
       'shopping': instance.shopping,
       'transports': instance.transports,

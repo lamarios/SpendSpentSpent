@@ -34,7 +34,7 @@ pkgs.mkShell {
   echo "creating useful aliases..."
 
 
-  flutter config --jdk-dir ${pkgs.corretto17}/lib/corretto
+  flutter config --jdk-dir ${pkgs.corretto21}/lib/corretto
 
   echo -e "\nAll done 🎉 \nAvailable aliases:"
 

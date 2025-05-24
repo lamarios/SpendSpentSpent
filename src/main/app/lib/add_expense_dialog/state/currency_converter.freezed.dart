@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,130 +10,27 @@ part of 'currency_converter.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$CurrencyConverterState {
-  String get fromCurrency => throw _privateConstructorUsedError;
-  String get toCurrency => throw _privateConstructorUsedError;
+  String get fromCurrency;
+  String get toCurrency;
 
   /// Create a copy of CurrencyConverterState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $CurrencyConverterStateCopyWith<CurrencyConverterState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $CurrencyConverterStateCopyWith<$Res> {
-  factory $CurrencyConverterStateCopyWith(CurrencyConverterState value,
-          $Res Function(CurrencyConverterState) then) =
-      _$CurrencyConverterStateCopyWithImpl<$Res, CurrencyConverterState>;
-  @useResult
-  $Res call({String fromCurrency, String toCurrency});
-}
-
-/// @nodoc
-class _$CurrencyConverterStateCopyWithImpl<$Res,
-        $Val extends CurrencyConverterState>
-    implements $CurrencyConverterStateCopyWith<$Res> {
-  _$CurrencyConverterStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of CurrencyConverterState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? fromCurrency = null,
-    Object? toCurrency = null,
-  }) {
-    return _then(_value.copyWith(
-      fromCurrency: null == fromCurrency
-          ? _value.fromCurrency
-          : fromCurrency // ignore: cast_nullable_to_non_nullable
-              as String,
-      toCurrency: null == toCurrency
-          ? _value.toCurrency
-          : toCurrency // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$CurrencyConverterStateImplCopyWith<$Res>
-    implements $CurrencyConverterStateCopyWith<$Res> {
-  factory _$$CurrencyConverterStateImplCopyWith(
-          _$CurrencyConverterStateImpl value,
-          $Res Function(_$CurrencyConverterStateImpl) then) =
-      __$$CurrencyConverterStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String fromCurrency, String toCurrency});
-}
-
-/// @nodoc
-class __$$CurrencyConverterStateImplCopyWithImpl<$Res>
-    extends _$CurrencyConverterStateCopyWithImpl<$Res,
-        _$CurrencyConverterStateImpl>
-    implements _$$CurrencyConverterStateImplCopyWith<$Res> {
-  __$$CurrencyConverterStateImplCopyWithImpl(
-      _$CurrencyConverterStateImpl _value,
-      $Res Function(_$CurrencyConverterStateImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of CurrencyConverterState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? fromCurrency = null,
-    Object? toCurrency = null,
-  }) {
-    return _then(_$CurrencyConverterStateImpl(
-      fromCurrency: null == fromCurrency
-          ? _value.fromCurrency
-          : fromCurrency // ignore: cast_nullable_to_non_nullable
-              as String,
-      toCurrency: null == toCurrency
-          ? _value.toCurrency
-          : toCurrency // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$CurrencyConverterStateImpl implements _CurrencyConverterState {
-  const _$CurrencyConverterStateImpl(
-      {this.fromCurrency = "USD", this.toCurrency = "EUR"});
-
-  @override
-  @JsonKey()
-  final String fromCurrency;
-  @override
-  @JsonKey()
-  final String toCurrency;
-
-  @override
-  String toString() {
-    return 'CurrencyConverterState(fromCurrency: $fromCurrency, toCurrency: $toCurrency)';
-  }
+      _$CurrencyConverterStateCopyWithImpl<CurrencyConverterState>(
+          this as CurrencyConverterState, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$CurrencyConverterStateImpl &&
+            other is CurrencyConverterState &&
             (identical(other.fromCurrency, fromCurrency) ||
                 other.fromCurrency == fromCurrency) &&
             (identical(other.toCurrency, toCurrency) ||
@@ -142,30 +40,130 @@ class _$CurrencyConverterStateImpl implements _CurrencyConverterState {
   @override
   int get hashCode => Object.hash(runtimeType, fromCurrency, toCurrency);
 
+  @override
+  String toString() {
+    return 'CurrencyConverterState(fromCurrency: $fromCurrency, toCurrency: $toCurrency)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $CurrencyConverterStateCopyWith<$Res> {
+  factory $CurrencyConverterStateCopyWith(CurrencyConverterState value,
+          $Res Function(CurrencyConverterState) _then) =
+      _$CurrencyConverterStateCopyWithImpl;
+  @useResult
+  $Res call({String fromCurrency, String toCurrency});
+}
+
+/// @nodoc
+class _$CurrencyConverterStateCopyWithImpl<$Res>
+    implements $CurrencyConverterStateCopyWith<$Res> {
+  _$CurrencyConverterStateCopyWithImpl(this._self, this._then);
+
+  final CurrencyConverterState _self;
+  final $Res Function(CurrencyConverterState) _then;
+
   /// Create a copy of CurrencyConverterState
   /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? fromCurrency = null,
+    Object? toCurrency = null,
+  }) {
+    return _then(_self.copyWith(
+      fromCurrency: null == fromCurrency
+          ? _self.fromCurrency
+          : fromCurrency // ignore: cast_nullable_to_non_nullable
+              as String,
+      toCurrency: null == toCurrency
+          ? _self.toCurrency
+          : toCurrency // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _CurrencyConverterState implements CurrencyConverterState {
+  const _CurrencyConverterState(
+      {this.fromCurrency = "USD", this.toCurrency = "EUR"});
+
+  @override
+  @JsonKey()
+  final String fromCurrency;
+  @override
+  @JsonKey()
+  final String toCurrency;
+
+  /// Create a copy of CurrencyConverterState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$CurrencyConverterStateCopyWith<_CurrencyConverterState> get copyWith =>
+      __$CurrencyConverterStateCopyWithImpl<_CurrencyConverterState>(
+          this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _CurrencyConverterState &&
+            (identical(other.fromCurrency, fromCurrency) ||
+                other.fromCurrency == fromCurrency) &&
+            (identical(other.toCurrency, toCurrency) ||
+                other.toCurrency == toCurrency));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, fromCurrency, toCurrency);
+
+  @override
+  String toString() {
+    return 'CurrencyConverterState(fromCurrency: $fromCurrency, toCurrency: $toCurrency)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$CurrencyConverterStateCopyWith<$Res>
+    implements $CurrencyConverterStateCopyWith<$Res> {
+  factory _$CurrencyConverterStateCopyWith(_CurrencyConverterState value,
+          $Res Function(_CurrencyConverterState) _then) =
+      __$CurrencyConverterStateCopyWithImpl;
+  @override
+  @useResult
+  $Res call({String fromCurrency, String toCurrency});
+}
+
+/// @nodoc
+class __$CurrencyConverterStateCopyWithImpl<$Res>
+    implements _$CurrencyConverterStateCopyWith<$Res> {
+  __$CurrencyConverterStateCopyWithImpl(this._self, this._then);
+
+  final _CurrencyConverterState _self;
+  final $Res Function(_CurrencyConverterState) _then;
+
+  /// Create a copy of CurrencyConverterState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  _$$CurrencyConverterStateImplCopyWith<_$CurrencyConverterStateImpl>
-      get copyWith => __$$CurrencyConverterStateImplCopyWithImpl<
-          _$CurrencyConverterStateImpl>(this, _$identity);
+  $Res call({
+    Object? fromCurrency = null,
+    Object? toCurrency = null,
+  }) {
+    return _then(_CurrencyConverterState(
+      fromCurrency: null == fromCurrency
+          ? _self.fromCurrency
+          : fromCurrency // ignore: cast_nullable_to_non_nullable
+              as String,
+      toCurrency: null == toCurrency
+          ? _self.toCurrency
+          : toCurrency // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
-abstract class _CurrencyConverterState implements CurrencyConverterState {
-  const factory _CurrencyConverterState(
-      {final String fromCurrency,
-      final String toCurrency}) = _$CurrencyConverterStateImpl;
-
-  @override
-  String get fromCurrency;
-  @override
-  String get toCurrency;
-
-  /// Create a copy of CurrencyConverterState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CurrencyConverterStateImplCopyWith<_$CurrencyConverterStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
+// dart format on

@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,125 +10,27 @@ part of 'single_stats.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$SingleStatsState {
-  bool get open => throw _privateConstructorUsedError;
-  bool get showGraph => throw _privateConstructorUsedError;
+  bool get open;
+  bool get showGraph;
 
   /// Create a copy of SingleStatsState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $SingleStatsStateCopyWith<SingleStatsState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $SingleStatsStateCopyWith<$Res> {
-  factory $SingleStatsStateCopyWith(
-          SingleStatsState value, $Res Function(SingleStatsState) then) =
-      _$SingleStatsStateCopyWithImpl<$Res, SingleStatsState>;
-  @useResult
-  $Res call({bool open, bool showGraph});
-}
-
-/// @nodoc
-class _$SingleStatsStateCopyWithImpl<$Res, $Val extends SingleStatsState>
-    implements $SingleStatsStateCopyWith<$Res> {
-  _$SingleStatsStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of SingleStatsState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? open = null,
-    Object? showGraph = null,
-  }) {
-    return _then(_value.copyWith(
-      open: null == open
-          ? _value.open
-          : open // ignore: cast_nullable_to_non_nullable
-              as bool,
-      showGraph: null == showGraph
-          ? _value.showGraph
-          : showGraph // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$SingleStatsStateImplCopyWith<$Res>
-    implements $SingleStatsStateCopyWith<$Res> {
-  factory _$$SingleStatsStateImplCopyWith(_$SingleStatsStateImpl value,
-          $Res Function(_$SingleStatsStateImpl) then) =
-      __$$SingleStatsStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({bool open, bool showGraph});
-}
-
-/// @nodoc
-class __$$SingleStatsStateImplCopyWithImpl<$Res>
-    extends _$SingleStatsStateCopyWithImpl<$Res, _$SingleStatsStateImpl>
-    implements _$$SingleStatsStateImplCopyWith<$Res> {
-  __$$SingleStatsStateImplCopyWithImpl(_$SingleStatsStateImpl _value,
-      $Res Function(_$SingleStatsStateImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of SingleStatsState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? open = null,
-    Object? showGraph = null,
-  }) {
-    return _then(_$SingleStatsStateImpl(
-      open: null == open
-          ? _value.open
-          : open // ignore: cast_nullable_to_non_nullable
-              as bool,
-      showGraph: null == showGraph
-          ? _value.showGraph
-          : showGraph // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$SingleStatsStateImpl implements _SingleStatsState {
-  const _$SingleStatsStateImpl({this.open = false, this.showGraph = false});
-
-  @override
-  @JsonKey()
-  final bool open;
-  @override
-  @JsonKey()
-  final bool showGraph;
-
-  @override
-  String toString() {
-    return 'SingleStatsState(open: $open, showGraph: $showGraph)';
-  }
+      _$SingleStatsStateCopyWithImpl<SingleStatsState>(
+          this as SingleStatsState, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SingleStatsStateImpl &&
+            other is SingleStatsState &&
             (identical(other.open, open) || other.open == open) &&
             (identical(other.showGraph, showGraph) ||
                 other.showGraph == showGraph));
@@ -136,29 +39,127 @@ class _$SingleStatsStateImpl implements _SingleStatsState {
   @override
   int get hashCode => Object.hash(runtimeType, open, showGraph);
 
+  @override
+  String toString() {
+    return 'SingleStatsState(open: $open, showGraph: $showGraph)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $SingleStatsStateCopyWith<$Res> {
+  factory $SingleStatsStateCopyWith(
+          SingleStatsState value, $Res Function(SingleStatsState) _then) =
+      _$SingleStatsStateCopyWithImpl;
+  @useResult
+  $Res call({bool open, bool showGraph});
+}
+
+/// @nodoc
+class _$SingleStatsStateCopyWithImpl<$Res>
+    implements $SingleStatsStateCopyWith<$Res> {
+  _$SingleStatsStateCopyWithImpl(this._self, this._then);
+
+  final SingleStatsState _self;
+  final $Res Function(SingleStatsState) _then;
+
   /// Create a copy of SingleStatsState
   /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? open = null,
+    Object? showGraph = null,
+  }) {
+    return _then(_self.copyWith(
+      open: null == open
+          ? _self.open
+          : open // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showGraph: null == showGraph
+          ? _self.showGraph
+          : showGraph // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _SingleStatsState implements SingleStatsState {
+  const _SingleStatsState({this.open = false, this.showGraph = false});
+
+  @override
+  @JsonKey()
+  final bool open;
+  @override
+  @JsonKey()
+  final bool showGraph;
+
+  /// Create a copy of SingleStatsState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$SingleStatsStateCopyWith<_SingleStatsState> get copyWith =>
+      __$SingleStatsStateCopyWithImpl<_SingleStatsState>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _SingleStatsState &&
+            (identical(other.open, open) || other.open == open) &&
+            (identical(other.showGraph, showGraph) ||
+                other.showGraph == showGraph));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, open, showGraph);
+
+  @override
+  String toString() {
+    return 'SingleStatsState(open: $open, showGraph: $showGraph)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$SingleStatsStateCopyWith<$Res>
+    implements $SingleStatsStateCopyWith<$Res> {
+  factory _$SingleStatsStateCopyWith(
+          _SingleStatsState value, $Res Function(_SingleStatsState) _then) =
+      __$SingleStatsStateCopyWithImpl;
+  @override
+  @useResult
+  $Res call({bool open, bool showGraph});
+}
+
+/// @nodoc
+class __$SingleStatsStateCopyWithImpl<$Res>
+    implements _$SingleStatsStateCopyWith<$Res> {
+  __$SingleStatsStateCopyWithImpl(this._self, this._then);
+
+  final _SingleStatsState _self;
+  final $Res Function(_SingleStatsState) _then;
+
+  /// Create a copy of SingleStatsState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  _$$SingleStatsStateImplCopyWith<_$SingleStatsStateImpl> get copyWith =>
-      __$$SingleStatsStateImplCopyWithImpl<_$SingleStatsStateImpl>(
-          this, _$identity);
+  $Res call({
+    Object? open = null,
+    Object? showGraph = null,
+  }) {
+    return _then(_SingleStatsState(
+      open: null == open
+          ? _self.open
+          : open // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showGraph: null == showGraph
+          ? _self.showGraph
+          : showGraph // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
 }
 
-abstract class _SingleStatsState implements SingleStatsState {
-  const factory _SingleStatsState({final bool open, final bool showGraph}) =
-      _$SingleStatsStateImpl;
-
-  @override
-  bool get open;
-  @override
-  bool get showGraph;
-
-  /// Create a copy of SingleStatsState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SingleStatsStateImplCopyWith<_$SingleStatsStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

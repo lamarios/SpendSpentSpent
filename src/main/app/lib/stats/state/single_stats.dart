@@ -22,7 +22,7 @@ class SingleStatsCubit extends Cubit<SingleStatsState> {
 }
 
 @freezed
-class SingleStatsState with _$SingleStatsState {
+sealed class SingleStatsState with _$SingleStatsState {
   const factory SingleStatsState({
     @Default(false) bool open,
     @Default(false) bool showGraph,

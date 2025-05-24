@@ -74,7 +74,9 @@ class CategorySettingsCubit extends Cubit<CategorySettingsState> {
 }
 
 @freezed
-class CategorySettingsState with _$CategorySettingsState implements WithError {
+sealed class CategorySettingsState
+    with _$CategorySettingsState
+    implements WithError {
   @Implements<WithError>()
   const factory CategorySettingsState(
       {@Default([]) List<Category> categories,

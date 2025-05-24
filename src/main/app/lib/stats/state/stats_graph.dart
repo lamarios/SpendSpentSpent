@@ -89,7 +89,7 @@ class StatsGraphCubit extends Cubit<StatsGraphState> {
 }
 
 @freezed
-class StatsGraphState with _$StatsGraphState {
+sealed class StatsGraphState with _$StatsGraphState {
   const factory StatsGraphState(
       {@Default(10) int periodMax,
       @Default(true) bool loading,

@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,95 +10,60 @@ part of 'category_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$CategorySettingsState {
-  List<Category> get categories => throw _privateConstructorUsedError;
-  List<Category> get toDelete => throw _privateConstructorUsedError;
-  int get expensesToDelete => throw _privateConstructorUsedError;
-  dynamic get error => throw _privateConstructorUsedError;
-  StackTrace? get stackTrace => throw _privateConstructorUsedError;
+  List<Category> get categories;
+  List<Category> get toDelete;
+  int get expensesToDelete;
+  dynamic get error;
+  StackTrace? get stackTrace;
 
   /// Create a copy of CategorySettingsState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $CategorySettingsStateCopyWith<CategorySettingsState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $CategorySettingsStateCopyWith<$Res> {
-  factory $CategorySettingsStateCopyWith(CategorySettingsState value,
-          $Res Function(CategorySettingsState) then) =
-      _$CategorySettingsStateCopyWithImpl<$Res, CategorySettingsState>;
-  @useResult
-  $Res call(
-      {List<Category> categories,
-      List<Category> toDelete,
-      int expensesToDelete,
-      dynamic error,
-      StackTrace? stackTrace});
-}
-
-/// @nodoc
-class _$CategorySettingsStateCopyWithImpl<$Res,
-        $Val extends CategorySettingsState>
-    implements $CategorySettingsStateCopyWith<$Res> {
-  _$CategorySettingsStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of CategorySettingsState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $CategorySettingsStateCopyWith<CategorySettingsState> get copyWith =>
+      _$CategorySettingsStateCopyWithImpl<CategorySettingsState>(
+          this as CategorySettingsState, _$identity);
+
   @override
-  $Res call({
-    Object? categories = null,
-    Object? toDelete = null,
-    Object? expensesToDelete = null,
-    Object? error = freezed,
-    Object? stackTrace = freezed,
-  }) {
-    return _then(_value.copyWith(
-      categories: null == categories
-          ? _value.categories
-          : categories // ignore: cast_nullable_to_non_nullable
-              as List<Category>,
-      toDelete: null == toDelete
-          ? _value.toDelete
-          : toDelete // ignore: cast_nullable_to_non_nullable
-              as List<Category>,
-      expensesToDelete: null == expensesToDelete
-          ? _value.expensesToDelete
-          : expensesToDelete // ignore: cast_nullable_to_non_nullable
-              as int,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-      stackTrace: freezed == stackTrace
-          ? _value.stackTrace
-          : stackTrace // ignore: cast_nullable_to_non_nullable
-              as StackTrace?,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is CategorySettingsState &&
+            const DeepCollectionEquality()
+                .equals(other.categories, categories) &&
+            const DeepCollectionEquality().equals(other.toDelete, toDelete) &&
+            (identical(other.expensesToDelete, expensesToDelete) ||
+                other.expensesToDelete == expensesToDelete) &&
+            const DeepCollectionEquality().equals(other.error, error) &&
+            (identical(other.stackTrace, stackTrace) ||
+                other.stackTrace == stackTrace));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(categories),
+      const DeepCollectionEquality().hash(toDelete),
+      expensesToDelete,
+      const DeepCollectionEquality().hash(error),
+      stackTrace);
+
+  @override
+  String toString() {
+    return 'CategorySettingsState(categories: $categories, toDelete: $toDelete, expensesToDelete: $expensesToDelete, error: $error, stackTrace: $stackTrace)';
   }
 }
 
 /// @nodoc
-abstract class _$$CategorySettingsStateImplCopyWith<$Res>
-    implements $CategorySettingsStateCopyWith<$Res> {
-  factory _$$CategorySettingsStateImplCopyWith(
-          _$CategorySettingsStateImpl value,
-          $Res Function(_$CategorySettingsStateImpl) then) =
-      __$$CategorySettingsStateImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $CategorySettingsStateCopyWith<$Res> {
+  factory $CategorySettingsStateCopyWith(CategorySettingsState value,
+          $Res Function(CategorySettingsState) _then) =
+      _$CategorySettingsStateCopyWithImpl;
   @useResult
   $Res call(
       {List<Category> categories,
@@ -108,13 +74,12 @@ abstract class _$$CategorySettingsStateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$CategorySettingsStateImplCopyWithImpl<$Res>
-    extends _$CategorySettingsStateCopyWithImpl<$Res,
-        _$CategorySettingsStateImpl>
-    implements _$$CategorySettingsStateImplCopyWith<$Res> {
-  __$$CategorySettingsStateImplCopyWithImpl(_$CategorySettingsStateImpl _value,
-      $Res Function(_$CategorySettingsStateImpl) _then)
-      : super(_value, _then);
+class _$CategorySettingsStateCopyWithImpl<$Res>
+    implements $CategorySettingsStateCopyWith<$Res> {
+  _$CategorySettingsStateCopyWithImpl(this._self, this._then);
+
+  final CategorySettingsState _self;
+  final $Res Function(CategorySettingsState) _then;
 
   /// Create a copy of CategorySettingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -127,25 +92,25 @@ class __$$CategorySettingsStateImplCopyWithImpl<$Res>
     Object? error = freezed,
     Object? stackTrace = freezed,
   }) {
-    return _then(_$CategorySettingsStateImpl(
+    return _then(_self.copyWith(
       categories: null == categories
-          ? _value._categories
+          ? _self.categories
           : categories // ignore: cast_nullable_to_non_nullable
               as List<Category>,
       toDelete: null == toDelete
-          ? _value._toDelete
+          ? _self.toDelete
           : toDelete // ignore: cast_nullable_to_non_nullable
               as List<Category>,
       expensesToDelete: null == expensesToDelete
-          ? _value.expensesToDelete
+          ? _self.expensesToDelete
           : expensesToDelete // ignore: cast_nullable_to_non_nullable
               as int,
       error: freezed == error
-          ? _value.error
+          ? _self.error
           : error // ignore: cast_nullable_to_non_nullable
               as dynamic,
       stackTrace: freezed == stackTrace
-          ? _value.stackTrace
+          ? _self.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
               as StackTrace?,
     ));
@@ -154,8 +119,8 @@ class __$$CategorySettingsStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$CategorySettingsStateImpl implements _CategorySettingsState {
-  const _$CategorySettingsStateImpl(
+class _CategorySettingsState implements CategorySettingsState, WithError {
+  const _CategorySettingsState(
       {final List<Category> categories = const [],
       final List<Category> toDelete = const [],
       this.expensesToDelete = 0,
@@ -190,16 +155,20 @@ class _$CategorySettingsStateImpl implements _CategorySettingsState {
   @override
   final StackTrace? stackTrace;
 
+  /// Create a copy of CategorySettingsState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'CategorySettingsState(categories: $categories, toDelete: $toDelete, expensesToDelete: $expensesToDelete, error: $error, stackTrace: $stackTrace)';
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$CategorySettingsStateCopyWith<_CategorySettingsState> get copyWith =>
+      __$CategorySettingsStateCopyWithImpl<_CategorySettingsState>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$CategorySettingsStateImpl &&
+            other is _CategorySettingsState &&
             const DeepCollectionEquality()
                 .equals(other._categories, _categories) &&
             const DeepCollectionEquality().equals(other._toDelete, _toDelete) &&
@@ -219,40 +188,70 @@ class _$CategorySettingsStateImpl implements _CategorySettingsState {
       const DeepCollectionEquality().hash(error),
       stackTrace);
 
+  @override
+  String toString() {
+    return 'CategorySettingsState(categories: $categories, toDelete: $toDelete, expensesToDelete: $expensesToDelete, error: $error, stackTrace: $stackTrace)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$CategorySettingsStateCopyWith<$Res>
+    implements $CategorySettingsStateCopyWith<$Res> {
+  factory _$CategorySettingsStateCopyWith(_CategorySettingsState value,
+          $Res Function(_CategorySettingsState) _then) =
+      __$CategorySettingsStateCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {List<Category> categories,
+      List<Category> toDelete,
+      int expensesToDelete,
+      dynamic error,
+      StackTrace? stackTrace});
+}
+
+/// @nodoc
+class __$CategorySettingsStateCopyWithImpl<$Res>
+    implements _$CategorySettingsStateCopyWith<$Res> {
+  __$CategorySettingsStateCopyWithImpl(this._self, this._then);
+
+  final _CategorySettingsState _self;
+  final $Res Function(_CategorySettingsState) _then;
+
   /// Create a copy of CategorySettingsState
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$CategorySettingsStateImplCopyWith<_$CategorySettingsStateImpl>
-      get copyWith => __$$CategorySettingsStateImplCopyWithImpl<
-          _$CategorySettingsStateImpl>(this, _$identity);
+  $Res call({
+    Object? categories = null,
+    Object? toDelete = null,
+    Object? expensesToDelete = null,
+    Object? error = freezed,
+    Object? stackTrace = freezed,
+  }) {
+    return _then(_CategorySettingsState(
+      categories: null == categories
+          ? _self._categories
+          : categories // ignore: cast_nullable_to_non_nullable
+              as List<Category>,
+      toDelete: null == toDelete
+          ? _self._toDelete
+          : toDelete // ignore: cast_nullable_to_non_nullable
+              as List<Category>,
+      expensesToDelete: null == expensesToDelete
+          ? _self.expensesToDelete
+          : expensesToDelete // ignore: cast_nullable_to_non_nullable
+              as int,
+      error: freezed == error
+          ? _self.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      stackTrace: freezed == stackTrace
+          ? _self.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace?,
+    ));
+  }
 }
 
-abstract class _CategorySettingsState
-    implements CategorySettingsState, WithError {
-  const factory _CategorySettingsState(
-      {final List<Category> categories,
-      final List<Category> toDelete,
-      final int expensesToDelete,
-      final dynamic error,
-      final StackTrace? stackTrace}) = _$CategorySettingsStateImpl;
-
-  @override
-  List<Category> get categories;
-  @override
-  List<Category> get toDelete;
-  @override
-  int get expensesToDelete;
-  @override
-  dynamic get error;
-  @override
-  StackTrace? get stackTrace;
-
-  /// Create a copy of CategorySettingsState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CategorySettingsStateImplCopyWith<_$CategorySettingsStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
+// dart format on

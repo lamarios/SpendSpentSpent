@@ -60,7 +60,7 @@ class ExpenseNoteDialogCubit extends Cubit<ExpenseNoteDialogState> {
 }
 
 @freezed
-class ExpenseNoteDialogState with _$ExpenseNoteDialogState {
+sealed class ExpenseNoteDialogState with _$ExpenseNoteDialogState {
   const factory ExpenseNoteDialogState(
       {@Default(false) bool loading,
       @Default('') String note,

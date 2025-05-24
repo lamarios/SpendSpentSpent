@@ -6,7 +6,7 @@ part 'expense_limits.g.dart';
 part 'expense_limits.freezed.dart';
 
 @freezed
-class ExpenseLimits with _$ExpenseLimits {
+sealed class ExpenseLimits with _$ExpenseLimits {
   const factory ExpenseLimits({required int years, required int months}) =
       _ExpenseLimits;
 

@@ -30,7 +30,7 @@ class RecurringExpensesCubit extends Cubit<RecurringExpensesState> {
 }
 
 @freezed
-class RecurringExpensesState
+sealed class RecurringExpensesState
     with _$RecurringExpensesState
     implements WithError {
   @Implements<WithError>()

@@ -8,7 +8,6 @@ part 'left_column_stats.g.dart';
 
 part 'left_column_stats.freezed.dart';
 
-@freezed
 class LeftColumnStats with _$LeftColumnStats {
   const factory LeftColumnStats(
       {required Category category,

@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,91 +10,60 @@ part of 'expense_note_dialog.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$ExpenseNoteDialogState {
-  bool get loading => throw _privateConstructorUsedError;
-  String get note => throw _privateConstructorUsedError;
-  List<String> get suggestions => throw _privateConstructorUsedError;
+  bool get loading;
+  String get note;
+  List<String> get suggestions;
 
   /// Create a copy of ExpenseNoteDialogState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ExpenseNoteDialogStateCopyWith<ExpenseNoteDialogState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ExpenseNoteDialogStateCopyWith<$Res> {
-  factory $ExpenseNoteDialogStateCopyWith(ExpenseNoteDialogState value,
-          $Res Function(ExpenseNoteDialogState) then) =
-      _$ExpenseNoteDialogStateCopyWithImpl<$Res, ExpenseNoteDialogState>;
-  @useResult
-  $Res call({bool loading, String note, List<String> suggestions});
-}
-
-/// @nodoc
-class _$ExpenseNoteDialogStateCopyWithImpl<$Res,
-        $Val extends ExpenseNoteDialogState>
-    implements $ExpenseNoteDialogStateCopyWith<$Res> {
-  _$ExpenseNoteDialogStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of ExpenseNoteDialogState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $ExpenseNoteDialogStateCopyWith<ExpenseNoteDialogState> get copyWith =>
+      _$ExpenseNoteDialogStateCopyWithImpl<ExpenseNoteDialogState>(
+          this as ExpenseNoteDialogState, _$identity);
+
   @override
-  $Res call({
-    Object? loading = null,
-    Object? note = null,
-    Object? suggestions = null,
-  }) {
-    return _then(_value.copyWith(
-      loading: null == loading
-          ? _value.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      note: null == note
-          ? _value.note
-          : note // ignore: cast_nullable_to_non_nullable
-              as String,
-      suggestions: null == suggestions
-          ? _value.suggestions
-          : suggestions // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is ExpenseNoteDialogState &&
+            (identical(other.loading, loading) || other.loading == loading) &&
+            (identical(other.note, note) || other.note == note) &&
+            const DeepCollectionEquality()
+                .equals(other.suggestions, suggestions));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, loading, note,
+      const DeepCollectionEquality().hash(suggestions));
+
+  @override
+  String toString() {
+    return 'ExpenseNoteDialogState(loading: $loading, note: $note, suggestions: $suggestions)';
   }
 }
 
 /// @nodoc
-abstract class _$$ExpenseNoteDialogStateImplCopyWith<$Res>
-    implements $ExpenseNoteDialogStateCopyWith<$Res> {
-  factory _$$ExpenseNoteDialogStateImplCopyWith(
-          _$ExpenseNoteDialogStateImpl value,
-          $Res Function(_$ExpenseNoteDialogStateImpl) then) =
-      __$$ExpenseNoteDialogStateImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $ExpenseNoteDialogStateCopyWith<$Res> {
+  factory $ExpenseNoteDialogStateCopyWith(ExpenseNoteDialogState value,
+          $Res Function(ExpenseNoteDialogState) _then) =
+      _$ExpenseNoteDialogStateCopyWithImpl;
   @useResult
   $Res call({bool loading, String note, List<String> suggestions});
 }
 
 /// @nodoc
-class __$$ExpenseNoteDialogStateImplCopyWithImpl<$Res>
-    extends _$ExpenseNoteDialogStateCopyWithImpl<$Res,
-        _$ExpenseNoteDialogStateImpl>
-    implements _$$ExpenseNoteDialogStateImplCopyWith<$Res> {
-  __$$ExpenseNoteDialogStateImplCopyWithImpl(
-      _$ExpenseNoteDialogStateImpl _value,
-      $Res Function(_$ExpenseNoteDialogStateImpl) _then)
-      : super(_value, _then);
+class _$ExpenseNoteDialogStateCopyWithImpl<$Res>
+    implements $ExpenseNoteDialogStateCopyWith<$Res> {
+  _$ExpenseNoteDialogStateCopyWithImpl(this._self, this._then);
+
+  final ExpenseNoteDialogState _self;
+  final $Res Function(ExpenseNoteDialogState) _then;
 
   /// Create a copy of ExpenseNoteDialogState
   /// with the given fields replaced by the non-null parameter values.
@@ -104,17 +74,17 @@ class __$$ExpenseNoteDialogStateImplCopyWithImpl<$Res>
     Object? note = null,
     Object? suggestions = null,
   }) {
-    return _then(_$ExpenseNoteDialogStateImpl(
+    return _then(_self.copyWith(
       loading: null == loading
-          ? _value.loading
+          ? _self.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
       note: null == note
-          ? _value.note
+          ? _self.note
           : note // ignore: cast_nullable_to_non_nullable
               as String,
       suggestions: null == suggestions
-          ? _value._suggestions
+          ? _self.suggestions
           : suggestions // ignore: cast_nullable_to_non_nullable
               as List<String>,
     ));
@@ -123,8 +93,8 @@ class __$$ExpenseNoteDialogStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ExpenseNoteDialogStateImpl implements _ExpenseNoteDialogState {
-  const _$ExpenseNoteDialogStateImpl(
+class _ExpenseNoteDialogState implements ExpenseNoteDialogState {
+  const _ExpenseNoteDialogState(
       {this.loading = false,
       this.note = '',
       final List<String> suggestions = const []})
@@ -145,16 +115,20 @@ class _$ExpenseNoteDialogStateImpl implements _ExpenseNoteDialogState {
     return EqualUnmodifiableListView(_suggestions);
   }
 
+  /// Create a copy of ExpenseNoteDialogState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'ExpenseNoteDialogState(loading: $loading, note: $note, suggestions: $suggestions)';
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ExpenseNoteDialogStateCopyWith<_ExpenseNoteDialogState> get copyWith =>
+      __$ExpenseNoteDialogStateCopyWithImpl<_ExpenseNoteDialogState>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ExpenseNoteDialogStateImpl &&
+            other is _ExpenseNoteDialogState &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.note, note) || other.note == note) &&
             const DeepCollectionEquality()
@@ -165,33 +139,55 @@ class _$ExpenseNoteDialogStateImpl implements _ExpenseNoteDialogState {
   int get hashCode => Object.hash(runtimeType, loading, note,
       const DeepCollectionEquality().hash(_suggestions));
 
+  @override
+  String toString() {
+    return 'ExpenseNoteDialogState(loading: $loading, note: $note, suggestions: $suggestions)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$ExpenseNoteDialogStateCopyWith<$Res>
+    implements $ExpenseNoteDialogStateCopyWith<$Res> {
+  factory _$ExpenseNoteDialogStateCopyWith(_ExpenseNoteDialogState value,
+          $Res Function(_ExpenseNoteDialogState) _then) =
+      __$ExpenseNoteDialogStateCopyWithImpl;
+  @override
+  @useResult
+  $Res call({bool loading, String note, List<String> suggestions});
+}
+
+/// @nodoc
+class __$ExpenseNoteDialogStateCopyWithImpl<$Res>
+    implements _$ExpenseNoteDialogStateCopyWith<$Res> {
+  __$ExpenseNoteDialogStateCopyWithImpl(this._self, this._then);
+
+  final _ExpenseNoteDialogState _self;
+  final $Res Function(_ExpenseNoteDialogState) _then;
+
   /// Create a copy of ExpenseNoteDialogState
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ExpenseNoteDialogStateImplCopyWith<_$ExpenseNoteDialogStateImpl>
-      get copyWith => __$$ExpenseNoteDialogStateImplCopyWithImpl<
-          _$ExpenseNoteDialogStateImpl>(this, _$identity);
+  $Res call({
+    Object? loading = null,
+    Object? note = null,
+    Object? suggestions = null,
+  }) {
+    return _then(_ExpenseNoteDialogState(
+      loading: null == loading
+          ? _self.loading
+          : loading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      note: null == note
+          ? _self.note
+          : note // ignore: cast_nullable_to_non_nullable
+              as String,
+      suggestions: null == suggestions
+          ? _self._suggestions
+          : suggestions // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ));
+  }
 }
 
-abstract class _ExpenseNoteDialogState implements ExpenseNoteDialogState {
-  const factory _ExpenseNoteDialogState(
-      {final bool loading,
-      final String note,
-      final List<String> suggestions}) = _$ExpenseNoteDialogStateImpl;
-
-  @override
-  bool get loading;
-  @override
-  String get note;
-  @override
-  List<String> get suggestions;
-
-  /// Create a copy of ExpenseNoteDialogState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ExpenseNoteDialogStateImplCopyWith<_$ExpenseNoteDialogStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
+// dart format on

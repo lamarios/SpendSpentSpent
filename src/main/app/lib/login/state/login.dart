@@ -103,7 +103,7 @@ class LoginCubit extends Cubit<LoginState> {
 }
 
 @freezed
-class LoginState with _$LoginState implements WithError {
+sealed class LoginState with _$LoginState implements WithError {
   @Implements<WithError>()
   const factory LoginState(
       {Config? config,

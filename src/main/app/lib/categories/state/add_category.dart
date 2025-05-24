@@ -43,7 +43,7 @@ class AddCategoryCubit extends Cubit<AddCategoryState> {
 }
 
 @freezed
-class AddCategoryState with _$AddCategoryState {
+sealed class AddCategoryState with _$AddCategoryState {
   const factory AddCategoryState({
     @Default('') String selected,
     @Default(AvailableCategories()) AvailableCategories categories,

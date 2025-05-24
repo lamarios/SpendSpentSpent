@@ -79,7 +79,7 @@ class SearchCubit extends Cubit<SearchState> {
 }
 
 @freezed
-class SearchState with _$SearchState {
+sealed class SearchState with _$SearchState {
   const factory SearchState({
     @Default(
         SearchParameters(categories: [], maxAmount: 0, minAmount: 0, note: ""))

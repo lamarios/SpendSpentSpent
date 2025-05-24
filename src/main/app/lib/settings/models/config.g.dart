@@ -6,7 +6,7 @@ part of 'config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ConfigImpl _$$ConfigImplFromJson(Map<String, dynamic> json) => _$ConfigImpl(
+_Config _$ConfigFromJson(Map<String, dynamic> json) => _Config(
       allowSignup: json['allowSignup'] as bool,
       canResetPassword: json['canResetPassword'] as bool,
       demoMode: json['demoMode'] as bool,
@@ -18,8 +18,7 @@ _$ConfigImpl _$$ConfigImplFromJson(Map<String, dynamic> json) => _$ConfigImpl(
       backendVersion: (json['backendVersion'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$ConfigImplToJson(_$ConfigImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ConfigToJson(_Config instance) => <String, dynamic>{
       'allowSignup': instance.allowSignup,
       'canResetPassword': instance.canResetPassword,
       'demoMode': instance.demoMode,

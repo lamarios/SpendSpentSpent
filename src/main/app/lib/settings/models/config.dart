@@ -7,7 +7,7 @@ part 'config.g.dart';
 part 'config.freezed.dart';
 
 @freezed
-class Config with _$Config {
+sealed class Config with _$Config {
   const factory Config({
     required bool allowSignup,
     required bool canResetPassword,

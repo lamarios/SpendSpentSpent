@@ -6,9 +6,8 @@ part of 'search_parameters.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SearchParametersImpl _$$SearchParametersImplFromJson(
-        Map<String, dynamic> json) =>
-    _$SearchParametersImpl(
+_SearchParameters _$SearchParametersFromJson(Map<String, dynamic> json) =>
+    _SearchParameters(
       categories: (json['categories'] as List<dynamic>?)
               ?.map((e) => Category.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -18,8 +17,7 @@ _$SearchParametersImpl _$$SearchParametersImplFromJson(
       note: json['note'] as String,
     );
 
-Map<String, dynamic> _$$SearchParametersImplToJson(
-        _$SearchParametersImpl instance) =>
+Map<String, dynamic> _$SearchParametersToJson(_SearchParameters instance) =>
     <String, dynamic>{
       'categories': instance.categories,
       'minAmount': instance.minAmount,

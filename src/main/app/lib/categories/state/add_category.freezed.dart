@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,141 +10,27 @@ part of 'add_category.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AddCategoryState {
-  String get selected => throw _privateConstructorUsedError;
-  AvailableCategories get categories => throw _privateConstructorUsedError;
+  String get selected;
+  AvailableCategories get categories;
 
   /// Create a copy of AddCategoryState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $AddCategoryStateCopyWith<AddCategoryState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $AddCategoryStateCopyWith<$Res> {
-  factory $AddCategoryStateCopyWith(
-          AddCategoryState value, $Res Function(AddCategoryState) then) =
-      _$AddCategoryStateCopyWithImpl<$Res, AddCategoryState>;
-  @useResult
-  $Res call({String selected, AvailableCategories categories});
-
-  $AvailableCategoriesCopyWith<$Res> get categories;
-}
-
-/// @nodoc
-class _$AddCategoryStateCopyWithImpl<$Res, $Val extends AddCategoryState>
-    implements $AddCategoryStateCopyWith<$Res> {
-  _$AddCategoryStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of AddCategoryState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? selected = null,
-    Object? categories = null,
-  }) {
-    return _then(_value.copyWith(
-      selected: null == selected
-          ? _value.selected
-          : selected // ignore: cast_nullable_to_non_nullable
-              as String,
-      categories: null == categories
-          ? _value.categories
-          : categories // ignore: cast_nullable_to_non_nullable
-              as AvailableCategories,
-    ) as $Val);
-  }
-
-  /// Create a copy of AddCategoryState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $AvailableCategoriesCopyWith<$Res> get categories {
-    return $AvailableCategoriesCopyWith<$Res>(_value.categories, (value) {
-      return _then(_value.copyWith(categories: value) as $Val);
-    });
-  }
-}
-
-/// @nodoc
-abstract class _$$AddCategoryStateImplCopyWith<$Res>
-    implements $AddCategoryStateCopyWith<$Res> {
-  factory _$$AddCategoryStateImplCopyWith(_$AddCategoryStateImpl value,
-          $Res Function(_$AddCategoryStateImpl) then) =
-      __$$AddCategoryStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String selected, AvailableCategories categories});
-
-  @override
-  $AvailableCategoriesCopyWith<$Res> get categories;
-}
-
-/// @nodoc
-class __$$AddCategoryStateImplCopyWithImpl<$Res>
-    extends _$AddCategoryStateCopyWithImpl<$Res, _$AddCategoryStateImpl>
-    implements _$$AddCategoryStateImplCopyWith<$Res> {
-  __$$AddCategoryStateImplCopyWithImpl(_$AddCategoryStateImpl _value,
-      $Res Function(_$AddCategoryStateImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AddCategoryState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? selected = null,
-    Object? categories = null,
-  }) {
-    return _then(_$AddCategoryStateImpl(
-      selected: null == selected
-          ? _value.selected
-          : selected // ignore: cast_nullable_to_non_nullable
-              as String,
-      categories: null == categories
-          ? _value.categories
-          : categories // ignore: cast_nullable_to_non_nullable
-              as AvailableCategories,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$AddCategoryStateImpl implements _AddCategoryState {
-  const _$AddCategoryStateImpl(
-      {this.selected = '', this.categories = const AvailableCategories()});
-
-  @override
-  @JsonKey()
-  final String selected;
-  @override
-  @JsonKey()
-  final AvailableCategories categories;
-
-  @override
-  String toString() {
-    return 'AddCategoryState(selected: $selected, categories: $categories)';
-  }
+      _$AddCategoryStateCopyWithImpl<AddCategoryState>(
+          this as AddCategoryState, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AddCategoryStateImpl &&
+            other is AddCategoryState &&
             (identical(other.selected, selected) ||
                 other.selected == selected) &&
             (identical(other.categories, categories) ||
@@ -153,30 +40,154 @@ class _$AddCategoryStateImpl implements _AddCategoryState {
   @override
   int get hashCode => Object.hash(runtimeType, selected, categories);
 
+  @override
+  String toString() {
+    return 'AddCategoryState(selected: $selected, categories: $categories)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $AddCategoryStateCopyWith<$Res> {
+  factory $AddCategoryStateCopyWith(
+          AddCategoryState value, $Res Function(AddCategoryState) _then) =
+      _$AddCategoryStateCopyWithImpl;
+  @useResult
+  $Res call({String selected, AvailableCategories categories});
+
+  $AvailableCategoriesCopyWith<$Res> get categories;
+}
+
+/// @nodoc
+class _$AddCategoryStateCopyWithImpl<$Res>
+    implements $AddCategoryStateCopyWith<$Res> {
+  _$AddCategoryStateCopyWithImpl(this._self, this._then);
+
+  final AddCategoryState _self;
+  final $Res Function(AddCategoryState) _then;
+
   /// Create a copy of AddCategoryState
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? selected = null,
+    Object? categories = null,
+  }) {
+    return _then(_self.copyWith(
+      selected: null == selected
+          ? _self.selected
+          : selected // ignore: cast_nullable_to_non_nullable
+              as String,
+      categories: null == categories
+          ? _self.categories
+          : categories // ignore: cast_nullable_to_non_nullable
+              as AvailableCategories,
+    ));
+  }
+
+  /// Create a copy of AddCategoryState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  _$$AddCategoryStateImplCopyWith<_$AddCategoryStateImpl> get copyWith =>
-      __$$AddCategoryStateImplCopyWithImpl<_$AddCategoryStateImpl>(
-          this, _$identity);
+  $AvailableCategoriesCopyWith<$Res> get categories {
+    return $AvailableCategoriesCopyWith<$Res>(_self.categories, (value) {
+      return _then(_self.copyWith(categories: value));
+    });
+  }
 }
 
-abstract class _AddCategoryState implements AddCategoryState {
-  const factory _AddCategoryState(
-      {final String selected,
-      final AvailableCategories categories}) = _$AddCategoryStateImpl;
+/// @nodoc
+
+class _AddCategoryState implements AddCategoryState {
+  const _AddCategoryState(
+      {this.selected = '', this.categories = const AvailableCategories()});
 
   @override
-  String get selected;
+  @JsonKey()
+  final String selected;
   @override
-  AvailableCategories get categories;
+  @JsonKey()
+  final AvailableCategories categories;
 
   /// Create a copy of AddCategoryState
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AddCategoryStateImplCopyWith<_$AddCategoryStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  _$AddCategoryStateCopyWith<_AddCategoryState> get copyWith =>
+      __$AddCategoryStateCopyWithImpl<_AddCategoryState>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _AddCategoryState &&
+            (identical(other.selected, selected) ||
+                other.selected == selected) &&
+            (identical(other.categories, categories) ||
+                other.categories == categories));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, selected, categories);
+
+  @override
+  String toString() {
+    return 'AddCategoryState(selected: $selected, categories: $categories)';
+  }
 }
+
+/// @nodoc
+abstract mixin class _$AddCategoryStateCopyWith<$Res>
+    implements $AddCategoryStateCopyWith<$Res> {
+  factory _$AddCategoryStateCopyWith(
+          _AddCategoryState value, $Res Function(_AddCategoryState) _then) =
+      __$AddCategoryStateCopyWithImpl;
+  @override
+  @useResult
+  $Res call({String selected, AvailableCategories categories});
+
+  @override
+  $AvailableCategoriesCopyWith<$Res> get categories;
+}
+
+/// @nodoc
+class __$AddCategoryStateCopyWithImpl<$Res>
+    implements _$AddCategoryStateCopyWith<$Res> {
+  __$AddCategoryStateCopyWithImpl(this._self, this._then);
+
+  final _AddCategoryState _self;
+  final $Res Function(_AddCategoryState) _then;
+
+  /// Create a copy of AddCategoryState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? selected = null,
+    Object? categories = null,
+  }) {
+    return _then(_AddCategoryState(
+      selected: null == selected
+          ? _self.selected
+          : selected // ignore: cast_nullable_to_non_nullable
+              as String,
+      categories: null == categories
+          ? _self.categories
+          : categories // ignore: cast_nullable_to_non_nullable
+              as AvailableCategories,
+    ));
+  }
+
+  /// Create a copy of AddCategoryState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $AvailableCategoriesCopyWith<$Res> get categories {
+    return $AvailableCategoriesCopyWith<$Res>(_self.categories, (value) {
+      return _then(_self.copyWith(categories: value));
+    });
+  }
+}
+
+// dart format on

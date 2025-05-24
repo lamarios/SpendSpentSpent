@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,215 +10,34 @@ part of 'user.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-User _$UserFromJson(Map<String, dynamic> json) {
-  return _User.fromJson(json);
-}
 
 /// @nodoc
 mixin _$User {
-  String get email => throw _privateConstructorUsedError;
-  String get firstName => throw _privateConstructorUsedError;
-  String get lastName => throw _privateConstructorUsedError;
-  String? get id => throw _privateConstructorUsedError;
-  String? get password => throw _privateConstructorUsedError;
-  bool get isAdmin => throw _privateConstructorUsedError;
-  int? get subscriptionExpiry => throw _privateConstructorUsedError;
-
-  /// Serializes this User to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  String get email;
+  String get firstName;
+  String get lastName;
+  String? get id;
+  String? get password;
+  bool get isAdmin;
+  int? get subscriptionExpiry;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $UserCopyWith<User> get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $UserCopyWith<$Res> {
-  factory $UserCopyWith(User value, $Res Function(User) then) =
-      _$UserCopyWithImpl<$Res, User>;
-  @useResult
-  $Res call(
-      {String email,
-      String firstName,
-      String lastName,
-      String? id,
-      String? password,
-      bool isAdmin,
-      int? subscriptionExpiry});
-}
-
-/// @nodoc
-class _$UserCopyWithImpl<$Res, $Val extends User>
-    implements $UserCopyWith<$Res> {
-  _$UserCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of User
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? email = null,
-    Object? firstName = null,
-    Object? lastName = null,
-    Object? id = freezed,
-    Object? password = freezed,
-    Object? isAdmin = null,
-    Object? subscriptionExpiry = freezed,
-  }) {
-    return _then(_value.copyWith(
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      firstName: null == firstName
-          ? _value.firstName
-          : firstName // ignore: cast_nullable_to_non_nullable
-              as String,
-      lastName: null == lastName
-          ? _value.lastName
-          : lastName // ignore: cast_nullable_to_non_nullable
-              as String,
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String?,
-      password: freezed == password
-          ? _value.password
-          : password // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isAdmin: null == isAdmin
-          ? _value.isAdmin
-          : isAdmin // ignore: cast_nullable_to_non_nullable
-              as bool,
-      subscriptionExpiry: freezed == subscriptionExpiry
-          ? _value.subscriptionExpiry
-          : subscriptionExpiry // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ) as $Val);
-  }
-}
+  $UserCopyWith<User> get copyWith =>
+      _$UserCopyWithImpl<User>(this as User, _$identity);
 
-/// @nodoc
-abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
-  factory _$$UserImplCopyWith(
-          _$UserImpl value, $Res Function(_$UserImpl) then) =
-      __$$UserImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String email,
-      String firstName,
-      String lastName,
-      String? id,
-      String? password,
-      bool isAdmin,
-      int? subscriptionExpiry});
-}
-
-/// @nodoc
-class __$$UserImplCopyWithImpl<$Res>
-    extends _$UserCopyWithImpl<$Res, _$UserImpl>
-    implements _$$UserImplCopyWith<$Res> {
-  __$$UserImplCopyWithImpl(_$UserImpl _value, $Res Function(_$UserImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of User
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? email = null,
-    Object? firstName = null,
-    Object? lastName = null,
-    Object? id = freezed,
-    Object? password = freezed,
-    Object? isAdmin = null,
-    Object? subscriptionExpiry = freezed,
-  }) {
-    return _then(_$UserImpl(
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      firstName: null == firstName
-          ? _value.firstName
-          : firstName // ignore: cast_nullable_to_non_nullable
-              as String,
-      lastName: null == lastName
-          ? _value.lastName
-          : lastName // ignore: cast_nullable_to_non_nullable
-              as String,
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String?,
-      password: freezed == password
-          ? _value.password
-          : password // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isAdmin: null == isAdmin
-          ? _value.isAdmin
-          : isAdmin // ignore: cast_nullable_to_non_nullable
-              as bool,
-      subscriptionExpiry: freezed == subscriptionExpiry
-          ? _value.subscriptionExpiry
-          : subscriptionExpiry // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$UserImpl implements _User {
-  const _$UserImpl(
-      {required this.email,
-      required this.firstName,
-      required this.lastName,
-      this.id,
-      this.password,
-      required this.isAdmin,
-      this.subscriptionExpiry});
-
-  factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
-      _$$UserImplFromJson(json);
-
-  @override
-  final String email;
-  @override
-  final String firstName;
-  @override
-  final String lastName;
-  @override
-  final String? id;
-  @override
-  final String? password;
-  @override
-  final bool isAdmin;
-  @override
-  final int? subscriptionExpiry;
-
-  @override
-  String toString() {
-    return 'User(email: $email, firstName: $firstName, lastName: $lastName, id: $id, password: $password, isAdmin: $isAdmin, subscriptionExpiry: $subscriptionExpiry)';
-  }
+  /// Serializes this User to a JSON map.
+  Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UserImpl &&
+            other is User &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.firstName, firstName) ||
                 other.firstName == firstName) &&
@@ -236,53 +56,219 @@ class _$UserImpl implements _User {
   int get hashCode => Object.hash(runtimeType, email, firstName, lastName, id,
       password, isAdmin, subscriptionExpiry);
 
-  /// Create a copy of User
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$UserImplCopyWith<_$UserImpl> get copyWith =>
-      __$$UserImplCopyWithImpl<_$UserImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$UserImplToJson(
-      this,
-    );
+  String toString() {
+    return 'User(email: $email, firstName: $firstName, lastName: $lastName, id: $id, password: $password, isAdmin: $isAdmin, subscriptionExpiry: $subscriptionExpiry)';
   }
 }
 
-abstract class _User implements User {
-  const factory _User(
-      {required final String email,
-      required final String firstName,
-      required final String lastName,
-      final String? id,
-      final String? password,
-      required final bool isAdmin,
-      final int? subscriptionExpiry}) = _$UserImpl;
+/// @nodoc
+abstract mixin class $UserCopyWith<$Res> {
+  factory $UserCopyWith(User value, $Res Function(User) _then) =
+      _$UserCopyWithImpl;
+  @useResult
+  $Res call(
+      {String email,
+      String firstName,
+      String lastName,
+      String? id,
+      String? password,
+      bool isAdmin,
+      int? subscriptionExpiry});
+}
 
-  factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
+/// @nodoc
+class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
+  _$UserCopyWithImpl(this._self, this._then);
+
+  final User _self;
+  final $Res Function(User) _then;
+
+  /// Create a copy of User
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? email = null,
+    Object? firstName = null,
+    Object? lastName = null,
+    Object? id = freezed,
+    Object? password = freezed,
+    Object? isAdmin = null,
+    Object? subscriptionExpiry = freezed,
+  }) {
+    return _then(_self.copyWith(
+      email: null == email
+          ? _self.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      firstName: null == firstName
+          ? _self.firstName
+          : firstName // ignore: cast_nullable_to_non_nullable
+              as String,
+      lastName: null == lastName
+          ? _self.lastName
+          : lastName // ignore: cast_nullable_to_non_nullable
+              as String,
+      id: freezed == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      password: freezed == password
+          ? _self.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isAdmin: null == isAdmin
+          ? _self.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
+      subscriptionExpiry: freezed == subscriptionExpiry
+          ? _self.subscriptionExpiry
+          : subscriptionExpiry // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _User implements User {
+  const _User(
+      {required this.email,
+      required this.firstName,
+      required this.lastName,
+      this.id,
+      this.password,
+      required this.isAdmin,
+      this.subscriptionExpiry});
+  factory _User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   @override
-  String get email;
+  final String email;
   @override
-  String get firstName;
+  final String firstName;
   @override
-  String get lastName;
+  final String lastName;
   @override
-  String? get id;
+  final String? id;
   @override
-  String? get password;
+  final String? password;
   @override
-  bool get isAdmin;
+  final bool isAdmin;
   @override
-  int? get subscriptionExpiry;
+  final int? subscriptionExpiry;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$UserImplCopyWith<_$UserImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  _$UserCopyWith<_User> get copyWith =>
+      __$UserCopyWithImpl<_User>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$UserToJson(
+      this,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _User &&
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.firstName, firstName) ||
+                other.firstName == firstName) &&
+            (identical(other.lastName, lastName) ||
+                other.lastName == lastName) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.password, password) ||
+                other.password == password) &&
+            (identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin) &&
+            (identical(other.subscriptionExpiry, subscriptionExpiry) ||
+                other.subscriptionExpiry == subscriptionExpiry));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, email, firstName, lastName, id,
+      password, isAdmin, subscriptionExpiry);
+
+  @override
+  String toString() {
+    return 'User(email: $email, firstName: $firstName, lastName: $lastName, id: $id, password: $password, isAdmin: $isAdmin, subscriptionExpiry: $subscriptionExpiry)';
+  }
 }
+
+/// @nodoc
+abstract mixin class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
+  factory _$UserCopyWith(_User value, $Res Function(_User) _then) =
+      __$UserCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String email,
+      String firstName,
+      String lastName,
+      String? id,
+      String? password,
+      bool isAdmin,
+      int? subscriptionExpiry});
+}
+
+/// @nodoc
+class __$UserCopyWithImpl<$Res> implements _$UserCopyWith<$Res> {
+  __$UserCopyWithImpl(this._self, this._then);
+
+  final _User _self;
+  final $Res Function(_User) _then;
+
+  /// Create a copy of User
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? email = null,
+    Object? firstName = null,
+    Object? lastName = null,
+    Object? id = freezed,
+    Object? password = freezed,
+    Object? isAdmin = null,
+    Object? subscriptionExpiry = freezed,
+  }) {
+    return _then(_User(
+      email: null == email
+          ? _self.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      firstName: null == firstName
+          ? _self.firstName
+          : firstName // ignore: cast_nullable_to_non_nullable
+              as String,
+      lastName: null == lastName
+          ? _self.lastName
+          : lastName // ignore: cast_nullable_to_non_nullable
+              as String,
+      id: freezed == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      password: freezed == password
+          ? _self.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isAdmin: null == isAdmin
+          ? _self.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
+      subscriptionExpiry: freezed == subscriptionExpiry
+          ? _self.subscriptionExpiry
+          : subscriptionExpiry // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
+  }
+}
+
+// dart format on

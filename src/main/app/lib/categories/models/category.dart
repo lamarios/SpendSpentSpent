@@ -11,7 +11,7 @@ part 'category.g.dart';
 /// JSON serialization logic to be generated.
 
 @freezed
-class Category with _$Category {
+sealed class Category with _$Category {
   const factory Category(
       {String? icon,
       int? categoryOrder,

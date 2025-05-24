@@ -8,7 +8,7 @@ part 'search_categories.g.dart';
 part 'search_categories.freezed.dart';
 
 @freezed
-class SearchCategories with _$SearchCategories {
+sealed class SearchCategories with _$SearchCategories {
   const factory SearchCategories({
     required AvailableCategories results,
     required String query,

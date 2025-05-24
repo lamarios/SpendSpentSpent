@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,115 +10,70 @@ part of 'stats_graph.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$StatsGraphState {
-  int get periodMax => throw _privateConstructorUsedError;
-  bool get loading => throw _privateConstructorUsedError;
-  int get count => throw _privateConstructorUsedError;
-  double get minValue => throw _privateConstructorUsedError;
-  double get maxValue => throw _privateConstructorUsedError;
-  List<FlSpot> get graphData => throw _privateConstructorUsedError;
-  List<FlSpot> get avgData => throw _privateConstructorUsedError;
-  List<GraphDataPoint> get graphDataPoints =>
-      throw _privateConstructorUsedError;
+  int get periodMax;
+  bool get loading;
+  int get count;
+  double get minValue;
+  double get maxValue;
+  List<FlSpot> get graphData;
+  List<FlSpot> get avgData;
+  List<GraphDataPoint> get graphDataPoints;
 
   /// Create a copy of StatsGraphState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $StatsGraphStateCopyWith<StatsGraphState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $StatsGraphStateCopyWith<$Res> {
-  factory $StatsGraphStateCopyWith(
-          StatsGraphState value, $Res Function(StatsGraphState) then) =
-      _$StatsGraphStateCopyWithImpl<$Res, StatsGraphState>;
-  @useResult
-  $Res call(
-      {int periodMax,
-      bool loading,
-      int count,
-      double minValue,
-      double maxValue,
-      List<FlSpot> graphData,
-      List<FlSpot> avgData,
-      List<GraphDataPoint> graphDataPoints});
-}
-
-/// @nodoc
-class _$StatsGraphStateCopyWithImpl<$Res, $Val extends StatsGraphState>
-    implements $StatsGraphStateCopyWith<$Res> {
-  _$StatsGraphStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of StatsGraphState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $StatsGraphStateCopyWith<StatsGraphState> get copyWith =>
+      _$StatsGraphStateCopyWithImpl<StatsGraphState>(
+          this as StatsGraphState, _$identity);
+
   @override
-  $Res call({
-    Object? periodMax = null,
-    Object? loading = null,
-    Object? count = null,
-    Object? minValue = null,
-    Object? maxValue = null,
-    Object? graphData = null,
-    Object? avgData = null,
-    Object? graphDataPoints = null,
-  }) {
-    return _then(_value.copyWith(
-      periodMax: null == periodMax
-          ? _value.periodMax
-          : periodMax // ignore: cast_nullable_to_non_nullable
-              as int,
-      loading: null == loading
-          ? _value.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      count: null == count
-          ? _value.count
-          : count // ignore: cast_nullable_to_non_nullable
-              as int,
-      minValue: null == minValue
-          ? _value.minValue
-          : minValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      maxValue: null == maxValue
-          ? _value.maxValue
-          : maxValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      graphData: null == graphData
-          ? _value.graphData
-          : graphData // ignore: cast_nullable_to_non_nullable
-              as List<FlSpot>,
-      avgData: null == avgData
-          ? _value.avgData
-          : avgData // ignore: cast_nullable_to_non_nullable
-              as List<FlSpot>,
-      graphDataPoints: null == graphDataPoints
-          ? _value.graphDataPoints
-          : graphDataPoints // ignore: cast_nullable_to_non_nullable
-              as List<GraphDataPoint>,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is StatsGraphState &&
+            (identical(other.periodMax, periodMax) ||
+                other.periodMax == periodMax) &&
+            (identical(other.loading, loading) || other.loading == loading) &&
+            (identical(other.count, count) || other.count == count) &&
+            (identical(other.minValue, minValue) ||
+                other.minValue == minValue) &&
+            (identical(other.maxValue, maxValue) ||
+                other.maxValue == maxValue) &&
+            const DeepCollectionEquality().equals(other.graphData, graphData) &&
+            const DeepCollectionEquality().equals(other.avgData, avgData) &&
+            const DeepCollectionEquality()
+                .equals(other.graphDataPoints, graphDataPoints));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      periodMax,
+      loading,
+      count,
+      minValue,
+      maxValue,
+      const DeepCollectionEquality().hash(graphData),
+      const DeepCollectionEquality().hash(avgData),
+      const DeepCollectionEquality().hash(graphDataPoints));
+
+  @override
+  String toString() {
+    return 'StatsGraphState(periodMax: $periodMax, loading: $loading, count: $count, minValue: $minValue, maxValue: $maxValue, graphData: $graphData, avgData: $avgData, graphDataPoints: $graphDataPoints)';
   }
 }
 
 /// @nodoc
-abstract class _$$StatsGraphStateImplCopyWith<$Res>
-    implements $StatsGraphStateCopyWith<$Res> {
-  factory _$$StatsGraphStateImplCopyWith(_$StatsGraphStateImpl value,
-          $Res Function(_$StatsGraphStateImpl) then) =
-      __$$StatsGraphStateImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $StatsGraphStateCopyWith<$Res> {
+  factory $StatsGraphStateCopyWith(
+          StatsGraphState value, $Res Function(StatsGraphState) _then) =
+      _$StatsGraphStateCopyWithImpl;
   @useResult
   $Res call(
       {int periodMax,
@@ -131,12 +87,12 @@ abstract class _$$StatsGraphStateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$StatsGraphStateImplCopyWithImpl<$Res>
-    extends _$StatsGraphStateCopyWithImpl<$Res, _$StatsGraphStateImpl>
-    implements _$$StatsGraphStateImplCopyWith<$Res> {
-  __$$StatsGraphStateImplCopyWithImpl(
-      _$StatsGraphStateImpl _value, $Res Function(_$StatsGraphStateImpl) _then)
-      : super(_value, _then);
+class _$StatsGraphStateCopyWithImpl<$Res>
+    implements $StatsGraphStateCopyWith<$Res> {
+  _$StatsGraphStateCopyWithImpl(this._self, this._then);
+
+  final StatsGraphState _self;
+  final $Res Function(StatsGraphState) _then;
 
   /// Create a copy of StatsGraphState
   /// with the given fields replaced by the non-null parameter values.
@@ -152,37 +108,37 @@ class __$$StatsGraphStateImplCopyWithImpl<$Res>
     Object? avgData = null,
     Object? graphDataPoints = null,
   }) {
-    return _then(_$StatsGraphStateImpl(
+    return _then(_self.copyWith(
       periodMax: null == periodMax
-          ? _value.periodMax
+          ? _self.periodMax
           : periodMax // ignore: cast_nullable_to_non_nullable
               as int,
       loading: null == loading
-          ? _value.loading
+          ? _self.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
       count: null == count
-          ? _value.count
+          ? _self.count
           : count // ignore: cast_nullable_to_non_nullable
               as int,
       minValue: null == minValue
-          ? _value.minValue
+          ? _self.minValue
           : minValue // ignore: cast_nullable_to_non_nullable
               as double,
       maxValue: null == maxValue
-          ? _value.maxValue
+          ? _self.maxValue
           : maxValue // ignore: cast_nullable_to_non_nullable
               as double,
       graphData: null == graphData
-          ? _value._graphData
+          ? _self.graphData
           : graphData // ignore: cast_nullable_to_non_nullable
               as List<FlSpot>,
       avgData: null == avgData
-          ? _value._avgData
+          ? _self.avgData
           : avgData // ignore: cast_nullable_to_non_nullable
               as List<FlSpot>,
       graphDataPoints: null == graphDataPoints
-          ? _value._graphDataPoints
+          ? _self.graphDataPoints
           : graphDataPoints // ignore: cast_nullable_to_non_nullable
               as List<GraphDataPoint>,
     ));
@@ -191,8 +147,8 @@ class __$$StatsGraphStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$StatsGraphStateImpl implements _StatsGraphState {
-  const _$StatsGraphStateImpl(
+class _StatsGraphState implements StatsGraphState {
+  const _StatsGraphState(
       {this.periodMax = 10,
       this.loading = true,
       this.count = 5,
@@ -265,16 +221,19 @@ class _$StatsGraphStateImpl implements _StatsGraphState {
     return EqualUnmodifiableListView(_graphDataPoints);
   }
 
+  /// Create a copy of StatsGraphState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'StatsGraphState(periodMax: $periodMax, loading: $loading, count: $count, minValue: $minValue, maxValue: $maxValue, graphData: $graphData, avgData: $avgData, graphDataPoints: $graphDataPoints)';
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$StatsGraphStateCopyWith<_StatsGraphState> get copyWith =>
+      __$StatsGraphStateCopyWithImpl<_StatsGraphState>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$StatsGraphStateImpl &&
+            other is _StatsGraphState &&
             (identical(other.periodMax, periodMax) ||
                 other.periodMax == periodMax) &&
             (identical(other.loading, loading) || other.loading == loading) &&
@@ -302,48 +261,88 @@ class _$StatsGraphStateImpl implements _StatsGraphState {
       const DeepCollectionEquality().hash(_avgData),
       const DeepCollectionEquality().hash(_graphDataPoints));
 
+  @override
+  String toString() {
+    return 'StatsGraphState(periodMax: $periodMax, loading: $loading, count: $count, minValue: $minValue, maxValue: $maxValue, graphData: $graphData, avgData: $avgData, graphDataPoints: $graphDataPoints)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$StatsGraphStateCopyWith<$Res>
+    implements $StatsGraphStateCopyWith<$Res> {
+  factory _$StatsGraphStateCopyWith(
+          _StatsGraphState value, $Res Function(_StatsGraphState) _then) =
+      __$StatsGraphStateCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {int periodMax,
+      bool loading,
+      int count,
+      double minValue,
+      double maxValue,
+      List<FlSpot> graphData,
+      List<FlSpot> avgData,
+      List<GraphDataPoint> graphDataPoints});
+}
+
+/// @nodoc
+class __$StatsGraphStateCopyWithImpl<$Res>
+    implements _$StatsGraphStateCopyWith<$Res> {
+  __$StatsGraphStateCopyWithImpl(this._self, this._then);
+
+  final _StatsGraphState _self;
+  final $Res Function(_StatsGraphState) _then;
+
   /// Create a copy of StatsGraphState
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$StatsGraphStateImplCopyWith<_$StatsGraphStateImpl> get copyWith =>
-      __$$StatsGraphStateImplCopyWithImpl<_$StatsGraphStateImpl>(
-          this, _$identity);
+  $Res call({
+    Object? periodMax = null,
+    Object? loading = null,
+    Object? count = null,
+    Object? minValue = null,
+    Object? maxValue = null,
+    Object? graphData = null,
+    Object? avgData = null,
+    Object? graphDataPoints = null,
+  }) {
+    return _then(_StatsGraphState(
+      periodMax: null == periodMax
+          ? _self.periodMax
+          : periodMax // ignore: cast_nullable_to_non_nullable
+              as int,
+      loading: null == loading
+          ? _self.loading
+          : loading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      count: null == count
+          ? _self.count
+          : count // ignore: cast_nullable_to_non_nullable
+              as int,
+      minValue: null == minValue
+          ? _self.minValue
+          : minValue // ignore: cast_nullable_to_non_nullable
+              as double,
+      maxValue: null == maxValue
+          ? _self.maxValue
+          : maxValue // ignore: cast_nullable_to_non_nullable
+              as double,
+      graphData: null == graphData
+          ? _self._graphData
+          : graphData // ignore: cast_nullable_to_non_nullable
+              as List<FlSpot>,
+      avgData: null == avgData
+          ? _self._avgData
+          : avgData // ignore: cast_nullable_to_non_nullable
+              as List<FlSpot>,
+      graphDataPoints: null == graphDataPoints
+          ? _self._graphDataPoints
+          : graphDataPoints // ignore: cast_nullable_to_non_nullable
+              as List<GraphDataPoint>,
+    ));
+  }
 }
 
-abstract class _StatsGraphState implements StatsGraphState {
-  const factory _StatsGraphState(
-      {final int periodMax,
-      final bool loading,
-      final int count,
-      final double minValue,
-      final double maxValue,
-      final List<FlSpot> graphData,
-      final List<FlSpot> avgData,
-      final List<GraphDataPoint> graphDataPoints}) = _$StatsGraphStateImpl;
-
-  @override
-  int get periodMax;
-  @override
-  bool get loading;
-  @override
-  int get count;
-  @override
-  double get minValue;
-  @override
-  double get maxValue;
-  @override
-  List<FlSpot> get graphData;
-  @override
-  List<FlSpot> get avgData;
-  @override
-  List<GraphDataPoint> get graphDataPoints;
-
-  /// Create a copy of StatsGraphState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$StatsGraphStateImplCopyWith<_$StatsGraphStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

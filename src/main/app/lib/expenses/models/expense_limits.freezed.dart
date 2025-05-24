@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,133 +10,30 @@ part of 'expense_limits.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-ExpenseLimits _$ExpenseLimitsFromJson(Map<String, dynamic> json) {
-  return _ExpenseLimits.fromJson(json);
-}
 
 /// @nodoc
 mixin _$ExpenseLimits {
-  int get years => throw _privateConstructorUsedError;
-  int get months => throw _privateConstructorUsedError;
-
-  /// Serializes this ExpenseLimits to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  int get years;
+  int get months;
 
   /// Create a copy of ExpenseLimits
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $ExpenseLimitsCopyWith<ExpenseLimits> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+      _$ExpenseLimitsCopyWithImpl<ExpenseLimits>(
+          this as ExpenseLimits, _$identity);
 
-/// @nodoc
-abstract class $ExpenseLimitsCopyWith<$Res> {
-  factory $ExpenseLimitsCopyWith(
-          ExpenseLimits value, $Res Function(ExpenseLimits) then) =
-      _$ExpenseLimitsCopyWithImpl<$Res, ExpenseLimits>;
-  @useResult
-  $Res call({int years, int months});
-}
-
-/// @nodoc
-class _$ExpenseLimitsCopyWithImpl<$Res, $Val extends ExpenseLimits>
-    implements $ExpenseLimitsCopyWith<$Res> {
-  _$ExpenseLimitsCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of ExpenseLimits
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? years = null,
-    Object? months = null,
-  }) {
-    return _then(_value.copyWith(
-      years: null == years
-          ? _value.years
-          : years // ignore: cast_nullable_to_non_nullable
-              as int,
-      months: null == months
-          ? _value.months
-          : months // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$ExpenseLimitsImplCopyWith<$Res>
-    implements $ExpenseLimitsCopyWith<$Res> {
-  factory _$$ExpenseLimitsImplCopyWith(
-          _$ExpenseLimitsImpl value, $Res Function(_$ExpenseLimitsImpl) then) =
-      __$$ExpenseLimitsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({int years, int months});
-}
-
-/// @nodoc
-class __$$ExpenseLimitsImplCopyWithImpl<$Res>
-    extends _$ExpenseLimitsCopyWithImpl<$Res, _$ExpenseLimitsImpl>
-    implements _$$ExpenseLimitsImplCopyWith<$Res> {
-  __$$ExpenseLimitsImplCopyWithImpl(
-      _$ExpenseLimitsImpl _value, $Res Function(_$ExpenseLimitsImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of ExpenseLimits
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? years = null,
-    Object? months = null,
-  }) {
-    return _then(_$ExpenseLimitsImpl(
-      years: null == years
-          ? _value.years
-          : years // ignore: cast_nullable_to_non_nullable
-              as int,
-      months: null == months
-          ? _value.months
-          : months // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$ExpenseLimitsImpl implements _ExpenseLimits {
-  const _$ExpenseLimitsImpl({required this.years, required this.months});
-
-  factory _$ExpenseLimitsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ExpenseLimitsImplFromJson(json);
-
-  @override
-  final int years;
-  @override
-  final int months;
-
-  @override
-  String toString() {
-    return 'ExpenseLimits(years: $years, months: $months)';
-  }
+  /// Serializes this ExpenseLimits to a JSON map.
+  Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ExpenseLimitsImpl &&
+            other is ExpenseLimits &&
             (identical(other.years, years) || other.years == years) &&
             (identical(other.months, months) || other.months == months));
   }
@@ -144,39 +42,134 @@ class _$ExpenseLimitsImpl implements _ExpenseLimits {
   @override
   int get hashCode => Object.hash(runtimeType, years, months);
 
-  /// Create a copy of ExpenseLimits
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$ExpenseLimitsImplCopyWith<_$ExpenseLimitsImpl> get copyWith =>
-      __$$ExpenseLimitsImplCopyWithImpl<_$ExpenseLimitsImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ExpenseLimitsImplToJson(
-      this,
-    );
+  String toString() {
+    return 'ExpenseLimits(years: $years, months: $months)';
   }
 }
 
-abstract class _ExpenseLimits implements ExpenseLimits {
-  const factory _ExpenseLimits(
-      {required final int years,
-      required final int months}) = _$ExpenseLimitsImpl;
+/// @nodoc
+abstract mixin class $ExpenseLimitsCopyWith<$Res> {
+  factory $ExpenseLimitsCopyWith(
+          ExpenseLimits value, $Res Function(ExpenseLimits) _then) =
+      _$ExpenseLimitsCopyWithImpl;
+  @useResult
+  $Res call({int years, int months});
+}
 
-  factory _ExpenseLimits.fromJson(Map<String, dynamic> json) =
-      _$ExpenseLimitsImpl.fromJson;
+/// @nodoc
+class _$ExpenseLimitsCopyWithImpl<$Res>
+    implements $ExpenseLimitsCopyWith<$Res> {
+  _$ExpenseLimitsCopyWithImpl(this._self, this._then);
+
+  final ExpenseLimits _self;
+  final $Res Function(ExpenseLimits) _then;
+
+  /// Create a copy of ExpenseLimits
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? years = null,
+    Object? months = null,
+  }) {
+    return _then(_self.copyWith(
+      years: null == years
+          ? _self.years
+          : years // ignore: cast_nullable_to_non_nullable
+              as int,
+      months: null == months
+          ? _self.months
+          : months // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _ExpenseLimits implements ExpenseLimits {
+  const _ExpenseLimits({required this.years, required this.months});
+  factory _ExpenseLimits.fromJson(Map<String, dynamic> json) =>
+      _$ExpenseLimitsFromJson(json);
 
   @override
-  int get years;
+  final int years;
   @override
-  int get months;
+  final int months;
 
   /// Create a copy of ExpenseLimits
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ExpenseLimitsImplCopyWith<_$ExpenseLimitsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  _$ExpenseLimitsCopyWith<_ExpenseLimits> get copyWith =>
+      __$ExpenseLimitsCopyWithImpl<_ExpenseLimits>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$ExpenseLimitsToJson(
+      this,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _ExpenseLimits &&
+            (identical(other.years, years) || other.years == years) &&
+            (identical(other.months, months) || other.months == months));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, years, months);
+
+  @override
+  String toString() {
+    return 'ExpenseLimits(years: $years, months: $months)';
+  }
 }
+
+/// @nodoc
+abstract mixin class _$ExpenseLimitsCopyWith<$Res>
+    implements $ExpenseLimitsCopyWith<$Res> {
+  factory _$ExpenseLimitsCopyWith(
+          _ExpenseLimits value, $Res Function(_ExpenseLimits) _then) =
+      __$ExpenseLimitsCopyWithImpl;
+  @override
+  @useResult
+  $Res call({int years, int months});
+}
+
+/// @nodoc
+class __$ExpenseLimitsCopyWithImpl<$Res>
+    implements _$ExpenseLimitsCopyWith<$Res> {
+  __$ExpenseLimitsCopyWithImpl(this._self, this._then);
+
+  final _ExpenseLimits _self;
+  final $Res Function(_ExpenseLimits) _then;
+
+  /// Create a copy of ExpenseLimits
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? years = null,
+    Object? months = null,
+  }) {
+    return _then(_ExpenseLimits(
+      years: null == years
+          ? _self.years
+          : years // ignore: cast_nullable_to_non_nullable
+              as int,
+      months: null == months
+          ? _self.months
+          : months // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+// dart format on
