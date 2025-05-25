@@ -48,6 +48,9 @@ public class UserDao implements Dao<UserRecord, User> {
 
     @Override
     public UserRecord setRecordData(UserRecord record, User user) {
+        if (user.getId() == null) {
+            user.setId(UUID.randomUUID());
+        }
         record.setId(user.getId().toString());
         record.setPassword(user.getPassword());
         record.setEmail(user.getEmail());
