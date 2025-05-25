@@ -9,7 +9,7 @@ part 'search_parameters.g.dart';
 part 'search_parameters.freezed.dart';
 
 @freezed
-class SearchParameters with _$SearchParameters {
+sealed class SearchParameters with _$SearchParameters {
   const factory SearchParameters(
       {@Default([]) List<Category> categories,
       required int minAmount,

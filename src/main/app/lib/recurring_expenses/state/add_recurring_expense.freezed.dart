@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,33 +10,59 @@ part of 'add_recurring_expense.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AddRecurringExpenseState {
-  int get step => throw _privateConstructorUsedError;
-  Category? get category => throw _privateConstructorUsedError;
-  int? get type => throw _privateConstructorUsedError;
-  int? get typeParam => throw _privateConstructorUsedError;
-  String get amount => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  List<Category> get categories => throw _privateConstructorUsedError;
+  int get step;
+  Category? get category;
+  int? get type;
+  int? get typeParam;
+  String get amount;
+  String get name;
+  List<Category> get categories;
 
   /// Create a copy of AddRecurringExpenseState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $AddRecurringExpenseStateCopyWith<AddRecurringExpenseState> get copyWith =>
-      throw _privateConstructorUsedError;
+      _$AddRecurringExpenseStateCopyWithImpl<AddRecurringExpenseState>(
+          this as AddRecurringExpenseState, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is AddRecurringExpenseState &&
+            (identical(other.step, step) || other.step == step) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.typeParam, typeParam) ||
+                other.typeParam == typeParam) &&
+            (identical(other.amount, amount) || other.amount == amount) &&
+            (identical(other.name, name) || other.name == name) &&
+            const DeepCollectionEquality()
+                .equals(other.categories, categories));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, step, category, type, typeParam,
+      amount, name, const DeepCollectionEquality().hash(categories));
+
+  @override
+  String toString() {
+    return 'AddRecurringExpenseState(step: $step, category: $category, type: $type, typeParam: $typeParam, amount: $amount, name: $name, categories: $categories)';
+  }
 }
 
 /// @nodoc
-abstract class $AddRecurringExpenseStateCopyWith<$Res> {
+abstract mixin class $AddRecurringExpenseStateCopyWith<$Res> {
   factory $AddRecurringExpenseStateCopyWith(AddRecurringExpenseState value,
-          $Res Function(AddRecurringExpenseState) then) =
-      _$AddRecurringExpenseStateCopyWithImpl<$Res, AddRecurringExpenseState>;
+          $Res Function(AddRecurringExpenseState) _then) =
+      _$AddRecurringExpenseStateCopyWithImpl;
   @useResult
   $Res call(
       {int step,
@@ -50,15 +77,12 @@ abstract class $AddRecurringExpenseStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$AddRecurringExpenseStateCopyWithImpl<$Res,
-        $Val extends AddRecurringExpenseState>
+class _$AddRecurringExpenseStateCopyWithImpl<$Res>
     implements $AddRecurringExpenseStateCopyWith<$Res> {
-  _$AddRecurringExpenseStateCopyWithImpl(this._value, this._then);
+  _$AddRecurringExpenseStateCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final AddRecurringExpenseState _self;
+  final $Res Function(AddRecurringExpenseState) _then;
 
   /// Create a copy of AddRecurringExpenseState
   /// with the given fields replaced by the non-null parameter values.
@@ -73,36 +97,36 @@ class _$AddRecurringExpenseStateCopyWithImpl<$Res,
     Object? name = null,
     Object? categories = null,
   }) {
-    return _then(_value.copyWith(
+    return _then(_self.copyWith(
       step: null == step
-          ? _value.step
+          ? _self.step
           : step // ignore: cast_nullable_to_non_nullable
               as int,
       category: freezed == category
-          ? _value.category
+          ? _self.category
           : category // ignore: cast_nullable_to_non_nullable
               as Category?,
       type: freezed == type
-          ? _value.type
+          ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
               as int?,
       typeParam: freezed == typeParam
-          ? _value.typeParam
+          ? _self.typeParam
           : typeParam // ignore: cast_nullable_to_non_nullable
               as int?,
       amount: null == amount
-          ? _value.amount
+          ? _self.amount
           : amount // ignore: cast_nullable_to_non_nullable
               as String,
       name: null == name
-          ? _value.name
+          ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
       categories: null == categories
-          ? _value.categories
+          ? _self.categories
           : categories // ignore: cast_nullable_to_non_nullable
               as List<Category>,
-    ) as $Val);
+    ));
   }
 
   /// Create a copy of AddRecurringExpenseState
@@ -110,98 +134,20 @@ class _$AddRecurringExpenseStateCopyWithImpl<$Res,
   @override
   @pragma('vm:prefer-inline')
   $CategoryCopyWith<$Res>? get category {
-    if (_value.category == null) {
+    if (_self.category == null) {
       return null;
     }
 
-    return $CategoryCopyWith<$Res>(_value.category!, (value) {
-      return _then(_value.copyWith(category: value) as $Val);
+    return $CategoryCopyWith<$Res>(_self.category!, (value) {
+      return _then(_self.copyWith(category: value));
     });
   }
 }
 
 /// @nodoc
-abstract class _$$AddRecurringExpenseStateImplCopyWith<$Res>
-    implements $AddRecurringExpenseStateCopyWith<$Res> {
-  factory _$$AddRecurringExpenseStateImplCopyWith(
-          _$AddRecurringExpenseStateImpl value,
-          $Res Function(_$AddRecurringExpenseStateImpl) then) =
-      __$$AddRecurringExpenseStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {int step,
-      Category? category,
-      int? type,
-      int? typeParam,
-      String amount,
-      String name,
-      List<Category> categories});
 
-  @override
-  $CategoryCopyWith<$Res>? get category;
-}
-
-/// @nodoc
-class __$$AddRecurringExpenseStateImplCopyWithImpl<$Res>
-    extends _$AddRecurringExpenseStateCopyWithImpl<$Res,
-        _$AddRecurringExpenseStateImpl>
-    implements _$$AddRecurringExpenseStateImplCopyWith<$Res> {
-  __$$AddRecurringExpenseStateImplCopyWithImpl(
-      _$AddRecurringExpenseStateImpl _value,
-      $Res Function(_$AddRecurringExpenseStateImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AddRecurringExpenseState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? step = null,
-    Object? category = freezed,
-    Object? type = freezed,
-    Object? typeParam = freezed,
-    Object? amount = null,
-    Object? name = null,
-    Object? categories = null,
-  }) {
-    return _then(_$AddRecurringExpenseStateImpl(
-      step: null == step
-          ? _value.step
-          : step // ignore: cast_nullable_to_non_nullable
-              as int,
-      category: freezed == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as Category?,
-      type: freezed == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as int?,
-      typeParam: freezed == typeParam
-          ? _value.typeParam
-          : typeParam // ignore: cast_nullable_to_non_nullable
-              as int?,
-      amount: null == amount
-          ? _value.amount
-          : amount // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      categories: null == categories
-          ? _value._categories
-          : categories // ignore: cast_nullable_to_non_nullable
-              as List<Category>,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$AddRecurringExpenseStateImpl extends _AddRecurringExpenseState {
-  const _$AddRecurringExpenseStateImpl(
+class _AddRecurringExpenseState extends AddRecurringExpenseState {
+  const _AddRecurringExpenseState(
       {this.step = 0,
       this.category,
       this.type,
@@ -236,16 +182,20 @@ class _$AddRecurringExpenseStateImpl extends _AddRecurringExpenseState {
     return EqualUnmodifiableListView(_categories);
   }
 
+  /// Create a copy of AddRecurringExpenseState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'AddRecurringExpenseState(step: $step, category: $category, type: $type, typeParam: $typeParam, amount: $amount, name: $name, categories: $categories)';
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$AddRecurringExpenseStateCopyWith<_AddRecurringExpenseState> get copyWith =>
+      __$AddRecurringExpenseStateCopyWithImpl<_AddRecurringExpenseState>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AddRecurringExpenseStateImpl &&
+            other is _AddRecurringExpenseState &&
             (identical(other.step, step) || other.step == step) &&
             (identical(other.category, category) ||
                 other.category == category) &&
@@ -262,46 +212,99 @@ class _$AddRecurringExpenseStateImpl extends _AddRecurringExpenseState {
   int get hashCode => Object.hash(runtimeType, step, category, type, typeParam,
       amount, name, const DeepCollectionEquality().hash(_categories));
 
+  @override
+  String toString() {
+    return 'AddRecurringExpenseState(step: $step, category: $category, type: $type, typeParam: $typeParam, amount: $amount, name: $name, categories: $categories)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$AddRecurringExpenseStateCopyWith<$Res>
+    implements $AddRecurringExpenseStateCopyWith<$Res> {
+  factory _$AddRecurringExpenseStateCopyWith(_AddRecurringExpenseState value,
+          $Res Function(_AddRecurringExpenseState) _then) =
+      __$AddRecurringExpenseStateCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {int step,
+      Category? category,
+      int? type,
+      int? typeParam,
+      String amount,
+      String name,
+      List<Category> categories});
+
+  @override
+  $CategoryCopyWith<$Res>? get category;
+}
+
+/// @nodoc
+class __$AddRecurringExpenseStateCopyWithImpl<$Res>
+    implements _$AddRecurringExpenseStateCopyWith<$Res> {
+  __$AddRecurringExpenseStateCopyWithImpl(this._self, this._then);
+
+  final _AddRecurringExpenseState _self;
+  final $Res Function(_AddRecurringExpenseState) _then;
+
   /// Create a copy of AddRecurringExpenseState
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$AddRecurringExpenseStateImplCopyWith<_$AddRecurringExpenseStateImpl>
-      get copyWith => __$$AddRecurringExpenseStateImplCopyWithImpl<
-          _$AddRecurringExpenseStateImpl>(this, _$identity);
-}
-
-abstract class _AddRecurringExpenseState extends AddRecurringExpenseState {
-  const factory _AddRecurringExpenseState(
-      {final int step,
-      final Category? category,
-      final int? type,
-      final int? typeParam,
-      final String amount,
-      final String name,
-      final List<Category> categories}) = _$AddRecurringExpenseStateImpl;
-  const _AddRecurringExpenseState._() : super._();
-
-  @override
-  int get step;
-  @override
-  Category? get category;
-  @override
-  int? get type;
-  @override
-  int? get typeParam;
-  @override
-  String get amount;
-  @override
-  String get name;
-  @override
-  List<Category> get categories;
+  $Res call({
+    Object? step = null,
+    Object? category = freezed,
+    Object? type = freezed,
+    Object? typeParam = freezed,
+    Object? amount = null,
+    Object? name = null,
+    Object? categories = null,
+  }) {
+    return _then(_AddRecurringExpenseState(
+      step: null == step
+          ? _self.step
+          : step // ignore: cast_nullable_to_non_nullable
+              as int,
+      category: freezed == category
+          ? _self.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as Category?,
+      type: freezed == type
+          ? _self.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as int?,
+      typeParam: freezed == typeParam
+          ? _self.typeParam
+          : typeParam // ignore: cast_nullable_to_non_nullable
+              as int?,
+      amount: null == amount
+          ? _self.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      categories: null == categories
+          ? _self._categories
+          : categories // ignore: cast_nullable_to_non_nullable
+              as List<Category>,
+    ));
+  }
 
   /// Create a copy of AddRecurringExpenseState
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AddRecurringExpenseStateImplCopyWith<_$AddRecurringExpenseStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $CategoryCopyWith<$Res>? get category {
+    if (_self.category == null) {
+      return null;
+    }
+
+    return $CategoryCopyWith<$Res>(_self.category!, (value) {
+      return _then(_self.copyWith(category: value));
+    });
+  }
 }
+
+// dart format on

@@ -6,7 +6,7 @@ part 'available_categories.g.dart';
 part 'available_categories.freezed.dart';
 
 @freezed
-class AvailableCategories with _$AvailableCategories {
+sealed class AvailableCategories with _$AvailableCategories {
   const factory AvailableCategories({
     @Default([]) List<String>? shopping,
     @Default([]) List<String>? transports,

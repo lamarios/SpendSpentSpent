@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,146 +10,30 @@ part of 'settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-Settings _$SettingsFromJson(Map<String, dynamic> json) {
-  return _Settings.fromJson(json);
-}
 
 /// @nodoc
 mixin _$Settings {
-  String get name => throw _privateConstructorUsedError;
-  String get value => throw _privateConstructorUsedError;
-  bool get secret => throw _privateConstructorUsedError;
-
-  /// Serializes this Settings to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  String get name;
+  String get value;
+  bool get secret;
 
   /// Create a copy of Settings
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $SettingsCopyWith<Settings> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+      _$SettingsCopyWithImpl<Settings>(this as Settings, _$identity);
 
-/// @nodoc
-abstract class $SettingsCopyWith<$Res> {
-  factory $SettingsCopyWith(Settings value, $Res Function(Settings) then) =
-      _$SettingsCopyWithImpl<$Res, Settings>;
-  @useResult
-  $Res call({String name, String value, bool secret});
-}
-
-/// @nodoc
-class _$SettingsCopyWithImpl<$Res, $Val extends Settings>
-    implements $SettingsCopyWith<$Res> {
-  _$SettingsCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of Settings
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? value = null,
-    Object? secret = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-      secret: null == secret
-          ? _value.secret
-          : secret // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$SettingsImplCopyWith<$Res>
-    implements $SettingsCopyWith<$Res> {
-  factory _$$SettingsImplCopyWith(
-          _$SettingsImpl value, $Res Function(_$SettingsImpl) then) =
-      __$$SettingsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, String value, bool secret});
-}
-
-/// @nodoc
-class __$$SettingsImplCopyWithImpl<$Res>
-    extends _$SettingsCopyWithImpl<$Res, _$SettingsImpl>
-    implements _$$SettingsImplCopyWith<$Res> {
-  __$$SettingsImplCopyWithImpl(
-      _$SettingsImpl _value, $Res Function(_$SettingsImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of Settings
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? value = null,
-    Object? secret = null,
-  }) {
-    return _then(_$SettingsImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-      secret: null == secret
-          ? _value.secret
-          : secret // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$SettingsImpl implements _Settings {
-  const _$SettingsImpl(
-      {required this.name, required this.value, required this.secret});
-
-  factory _$SettingsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SettingsImplFromJson(json);
-
-  @override
-  final String name;
-  @override
-  final String value;
-  @override
-  final bool secret;
-
-  @override
-  String toString() {
-    return 'Settings(name: $name, value: $value, secret: $secret)';
-  }
+  /// Serializes this Settings to a JSON map.
+  Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SettingsImpl &&
+            other is Settings &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.secret, secret) || other.secret == secret));
@@ -158,42 +43,144 @@ class _$SettingsImpl implements _Settings {
   @override
   int get hashCode => Object.hash(runtimeType, name, value, secret);
 
-  /// Create a copy of Settings
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$SettingsImplCopyWith<_$SettingsImpl> get copyWith =>
-      __$$SettingsImplCopyWithImpl<_$SettingsImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$SettingsImplToJson(
-      this,
-    );
+  String toString() {
+    return 'Settings(name: $name, value: $value, secret: $secret)';
   }
 }
 
-abstract class _Settings implements Settings {
-  const factory _Settings(
-      {required final String name,
-      required final String value,
-      required final bool secret}) = _$SettingsImpl;
+/// @nodoc
+abstract mixin class $SettingsCopyWith<$Res> {
+  factory $SettingsCopyWith(Settings value, $Res Function(Settings) _then) =
+      _$SettingsCopyWithImpl;
+  @useResult
+  $Res call({String name, String value, bool secret});
+}
 
-  factory _Settings.fromJson(Map<String, dynamic> json) =
-      _$SettingsImpl.fromJson;
+/// @nodoc
+class _$SettingsCopyWithImpl<$Res> implements $SettingsCopyWith<$Res> {
+  _$SettingsCopyWithImpl(this._self, this._then);
+
+  final Settings _self;
+  final $Res Function(Settings) _then;
+
+  /// Create a copy of Settings
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? value = null,
+    Object? secret = null,
+  }) {
+    return _then(_self.copyWith(
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: null == value
+          ? _self.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+      secret: null == secret
+          ? _self.secret
+          : secret // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _Settings implements Settings {
+  const _Settings(
+      {required this.name, required this.value, required this.secret});
+  factory _Settings.fromJson(Map<String, dynamic> json) =>
+      _$SettingsFromJson(json);
 
   @override
-  String get name;
+  final String name;
   @override
-  String get value;
+  final String value;
   @override
-  bool get secret;
+  final bool secret;
 
   /// Create a copy of Settings
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SettingsImplCopyWith<_$SettingsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  _$SettingsCopyWith<_Settings> get copyWith =>
+      __$SettingsCopyWithImpl<_Settings>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$SettingsToJson(
+      this,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _Settings &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.value, value) || other.value == value) &&
+            (identical(other.secret, secret) || other.secret == secret));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, value, secret);
+
+  @override
+  String toString() {
+    return 'Settings(name: $name, value: $value, secret: $secret)';
+  }
 }
+
+/// @nodoc
+abstract mixin class _$SettingsCopyWith<$Res>
+    implements $SettingsCopyWith<$Res> {
+  factory _$SettingsCopyWith(_Settings value, $Res Function(_Settings) _then) =
+      __$SettingsCopyWithImpl;
+  @override
+  @useResult
+  $Res call({String name, String value, bool secret});
+}
+
+/// @nodoc
+class __$SettingsCopyWithImpl<$Res> implements _$SettingsCopyWith<$Res> {
+  __$SettingsCopyWithImpl(this._self, this._then);
+
+  final _Settings _self;
+  final $Res Function(_Settings) _then;
+
+  /// Create a copy of Settings
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? name = null,
+    Object? value = null,
+    Object? secret = null,
+  }) {
+    return _then(_Settings(
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      value: null == value
+          ? _self.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+      secret: null == secret
+          ? _self.secret
+          : secret // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+// dart format on

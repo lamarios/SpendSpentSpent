@@ -232,7 +232,9 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
 }
 
 @freezed
-class AddExpenseDialogState with _$AddExpenseDialogState implements WithError {
+sealed class AddExpenseDialogState
+    with _$AddExpenseDialogState
+    implements WithError {
   @Implements<WithError>()
   const factory AddExpenseDialogState({
     @Default("") String value,

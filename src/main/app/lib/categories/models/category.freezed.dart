@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,161 +10,31 @@ part of 'category.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-Category _$CategoryFromJson(Map<String, dynamic> json) {
-  return _Category.fromJson(json);
-}
 
 /// @nodoc
 mixin _$Category {
-  String? get icon => throw _privateConstructorUsedError;
-  int? get categoryOrder => throw _privateConstructorUsedError;
-  int? get id => throw _privateConstructorUsedError;
-  double? get percentageOfMonthly => throw _privateConstructorUsedError;
-
-  /// Serializes this Category to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  String? get icon;
+  int? get categoryOrder;
+  int? get id;
+  double? get percentageOfMonthly;
 
   /// Create a copy of Category
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $CategoryCopyWith<Category> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+      _$CategoryCopyWithImpl<Category>(this as Category, _$identity);
 
-/// @nodoc
-abstract class $CategoryCopyWith<$Res> {
-  factory $CategoryCopyWith(Category value, $Res Function(Category) then) =
-      _$CategoryCopyWithImpl<$Res, Category>;
-  @useResult
-  $Res call(
-      {String? icon, int? categoryOrder, int? id, double? percentageOfMonthly});
-}
-
-/// @nodoc
-class _$CategoryCopyWithImpl<$Res, $Val extends Category>
-    implements $CategoryCopyWith<$Res> {
-  _$CategoryCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of Category
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? icon = freezed,
-    Object? categoryOrder = freezed,
-    Object? id = freezed,
-    Object? percentageOfMonthly = freezed,
-  }) {
-    return _then(_value.copyWith(
-      icon: freezed == icon
-          ? _value.icon
-          : icon // ignore: cast_nullable_to_non_nullable
-              as String?,
-      categoryOrder: freezed == categoryOrder
-          ? _value.categoryOrder
-          : categoryOrder // ignore: cast_nullable_to_non_nullable
-              as int?,
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      percentageOfMonthly: freezed == percentageOfMonthly
-          ? _value.percentageOfMonthly
-          : percentageOfMonthly // ignore: cast_nullable_to_non_nullable
-              as double?,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$CategoryImplCopyWith<$Res>
-    implements $CategoryCopyWith<$Res> {
-  factory _$$CategoryImplCopyWith(
-          _$CategoryImpl value, $Res Function(_$CategoryImpl) then) =
-      __$$CategoryImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String? icon, int? categoryOrder, int? id, double? percentageOfMonthly});
-}
-
-/// @nodoc
-class __$$CategoryImplCopyWithImpl<$Res>
-    extends _$CategoryCopyWithImpl<$Res, _$CategoryImpl>
-    implements _$$CategoryImplCopyWith<$Res> {
-  __$$CategoryImplCopyWithImpl(
-      _$CategoryImpl _value, $Res Function(_$CategoryImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of Category
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? icon = freezed,
-    Object? categoryOrder = freezed,
-    Object? id = freezed,
-    Object? percentageOfMonthly = freezed,
-  }) {
-    return _then(_$CategoryImpl(
-      icon: freezed == icon
-          ? _value.icon
-          : icon // ignore: cast_nullable_to_non_nullable
-              as String?,
-      categoryOrder: freezed == categoryOrder
-          ? _value.categoryOrder
-          : categoryOrder // ignore: cast_nullable_to_non_nullable
-              as int?,
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      percentageOfMonthly: freezed == percentageOfMonthly
-          ? _value.percentageOfMonthly
-          : percentageOfMonthly // ignore: cast_nullable_to_non_nullable
-              as double?,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$CategoryImpl implements _Category {
-  const _$CategoryImpl(
-      {this.icon, this.categoryOrder, this.id, this.percentageOfMonthly});
-
-  factory _$CategoryImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CategoryImplFromJson(json);
-
-  @override
-  final String? icon;
-  @override
-  final int? categoryOrder;
-  @override
-  final int? id;
-  @override
-  final double? percentageOfMonthly;
-
-  @override
-  String toString() {
-    return 'Category(icon: $icon, categoryOrder: $categoryOrder, id: $id, percentageOfMonthly: $percentageOfMonthly)';
-  }
+  /// Serializes this Category to a JSON map.
+  Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$CategoryImpl &&
+            other is Category &&
             (identical(other.icon, icon) || other.icon == icon) &&
             (identical(other.categoryOrder, categoryOrder) ||
                 other.categoryOrder == categoryOrder) &&
@@ -177,45 +48,162 @@ class _$CategoryImpl implements _Category {
   int get hashCode =>
       Object.hash(runtimeType, icon, categoryOrder, id, percentageOfMonthly);
 
-  /// Create a copy of Category
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$CategoryImplCopyWith<_$CategoryImpl> get copyWith =>
-      __$$CategoryImplCopyWithImpl<_$CategoryImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$CategoryImplToJson(
-      this,
-    );
+  String toString() {
+    return 'Category(icon: $icon, categoryOrder: $categoryOrder, id: $id, percentageOfMonthly: $percentageOfMonthly)';
   }
 }
 
-abstract class _Category implements Category {
-  const factory _Category(
-      {final String? icon,
-      final int? categoryOrder,
-      final int? id,
-      final double? percentageOfMonthly}) = _$CategoryImpl;
+/// @nodoc
+abstract mixin class $CategoryCopyWith<$Res> {
+  factory $CategoryCopyWith(Category value, $Res Function(Category) _then) =
+      _$CategoryCopyWithImpl;
+  @useResult
+  $Res call(
+      {String? icon, int? categoryOrder, int? id, double? percentageOfMonthly});
+}
 
-  factory _Category.fromJson(Map<String, dynamic> json) =
-      _$CategoryImpl.fromJson;
+/// @nodoc
+class _$CategoryCopyWithImpl<$Res> implements $CategoryCopyWith<$Res> {
+  _$CategoryCopyWithImpl(this._self, this._then);
+
+  final Category _self;
+  final $Res Function(Category) _then;
+
+  /// Create a copy of Category
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? icon = freezed,
+    Object? categoryOrder = freezed,
+    Object? id = freezed,
+    Object? percentageOfMonthly = freezed,
+  }) {
+    return _then(_self.copyWith(
+      icon: freezed == icon
+          ? _self.icon
+          : icon // ignore: cast_nullable_to_non_nullable
+              as String?,
+      categoryOrder: freezed == categoryOrder
+          ? _self.categoryOrder
+          : categoryOrder // ignore: cast_nullable_to_non_nullable
+              as int?,
+      id: freezed == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      percentageOfMonthly: freezed == percentageOfMonthly
+          ? _self.percentageOfMonthly
+          : percentageOfMonthly // ignore: cast_nullable_to_non_nullable
+              as double?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _Category implements Category {
+  const _Category(
+      {this.icon, this.categoryOrder, this.id, this.percentageOfMonthly});
+  factory _Category.fromJson(Map<String, dynamic> json) =>
+      _$CategoryFromJson(json);
 
   @override
-  String? get icon;
+  final String? icon;
   @override
-  int? get categoryOrder;
+  final int? categoryOrder;
   @override
-  int? get id;
+  final int? id;
   @override
-  double? get percentageOfMonthly;
+  final double? percentageOfMonthly;
 
   /// Create a copy of Category
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CategoryImplCopyWith<_$CategoryImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  _$CategoryCopyWith<_Category> get copyWith =>
+      __$CategoryCopyWithImpl<_Category>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$CategoryToJson(
+      this,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _Category &&
+            (identical(other.icon, icon) || other.icon == icon) &&
+            (identical(other.categoryOrder, categoryOrder) ||
+                other.categoryOrder == categoryOrder) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.percentageOfMonthly, percentageOfMonthly) ||
+                other.percentageOfMonthly == percentageOfMonthly));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, icon, categoryOrder, id, percentageOfMonthly);
+
+  @override
+  String toString() {
+    return 'Category(icon: $icon, categoryOrder: $categoryOrder, id: $id, percentageOfMonthly: $percentageOfMonthly)';
+  }
 }
+
+/// @nodoc
+abstract mixin class _$CategoryCopyWith<$Res>
+    implements $CategoryCopyWith<$Res> {
+  factory _$CategoryCopyWith(_Category value, $Res Function(_Category) _then) =
+      __$CategoryCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String? icon, int? categoryOrder, int? id, double? percentageOfMonthly});
+}
+
+/// @nodoc
+class __$CategoryCopyWithImpl<$Res> implements _$CategoryCopyWith<$Res> {
+  __$CategoryCopyWithImpl(this._self, this._then);
+
+  final _Category _self;
+  final $Res Function(_Category) _then;
+
+  /// Create a copy of Category
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? icon = freezed,
+    Object? categoryOrder = freezed,
+    Object? id = freezed,
+    Object? percentageOfMonthly = freezed,
+  }) {
+    return _then(_Category(
+      icon: freezed == icon
+          ? _self.icon
+          : icon // ignore: cast_nullable_to_non_nullable
+              as String?,
+      categoryOrder: freezed == categoryOrder
+          ? _self.categoryOrder
+          : categoryOrder // ignore: cast_nullable_to_non_nullable
+              as int?,
+      id: freezed == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      percentageOfMonthly: freezed == percentageOfMonthly
+          ? _self.percentageOfMonthly
+          : percentageOfMonthly // ignore: cast_nullable_to_non_nullable
+              as double?,
+    ));
+  }
+}
+
+// dart format on

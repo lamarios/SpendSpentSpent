@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,42 +10,68 @@ part of 'recurring_expense.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-RecurringExpense _$RecurringExpenseFromJson(Map<String, dynamic> json) {
-  return _RecurringExpense.fromJson(json);
-}
 
 /// @nodoc
 mixin _$RecurringExpense {
-  String? get nextOccurrence => throw _privateConstructorUsedError;
-  String? get lastOccurrence => throw _privateConstructorUsedError;
-  double get amount => throw _privateConstructorUsedError;
-  int get type => throw _privateConstructorUsedError;
-  bool get income => throw _privateConstructorUsedError;
-  Category get category => throw _privateConstructorUsedError;
-  int get typeParam => throw _privateConstructorUsedError;
-  int? get id => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-
-  /// Serializes this RecurringExpense to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  String? get nextOccurrence;
+  String? get lastOccurrence;
+  double get amount;
+  int get type;
+  bool get income;
+  Category get category;
+  int get typeParam;
+  int? get id;
+  String get name;
 
   /// Create a copy of RecurringExpense
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $RecurringExpenseCopyWith<RecurringExpense> get copyWith =>
-      throw _privateConstructorUsedError;
+      _$RecurringExpenseCopyWithImpl<RecurringExpense>(
+          this as RecurringExpense, _$identity);
+
+  /// Serializes this RecurringExpense to a JSON map.
+  Map<String, dynamic> toJson();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is RecurringExpense &&
+            (identical(other.nextOccurrence, nextOccurrence) ||
+                other.nextOccurrence == nextOccurrence) &&
+            (identical(other.lastOccurrence, lastOccurrence) ||
+                other.lastOccurrence == lastOccurrence) &&
+            (identical(other.amount, amount) || other.amount == amount) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.income, income) || other.income == income) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
+            (identical(other.typeParam, typeParam) ||
+                other.typeParam == typeParam) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, nextOccurrence, lastOccurrence,
+      amount, type, income, category, typeParam, id, name);
+
+  @override
+  String toString() {
+    return 'RecurringExpense(nextOccurrence: $nextOccurrence, lastOccurrence: $lastOccurrence, amount: $amount, type: $type, income: $income, category: $category, typeParam: $typeParam, id: $id, name: $name)';
+  }
 }
 
 /// @nodoc
-abstract class $RecurringExpenseCopyWith<$Res> {
+abstract mixin class $RecurringExpenseCopyWith<$Res> {
   factory $RecurringExpenseCopyWith(
-          RecurringExpense value, $Res Function(RecurringExpense) then) =
-      _$RecurringExpenseCopyWithImpl<$Res, RecurringExpense>;
+          RecurringExpense value, $Res Function(RecurringExpense) _then) =
+      _$RecurringExpenseCopyWithImpl;
   @useResult
   $Res call(
       {String? nextOccurrence,
@@ -61,14 +88,12 @@ abstract class $RecurringExpenseCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$RecurringExpenseCopyWithImpl<$Res, $Val extends RecurringExpense>
+class _$RecurringExpenseCopyWithImpl<$Res>
     implements $RecurringExpenseCopyWith<$Res> {
-  _$RecurringExpenseCopyWithImpl(this._value, this._then);
+  _$RecurringExpenseCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final RecurringExpense _self;
+  final $Res Function(RecurringExpense) _then;
 
   /// Create a copy of RecurringExpense
   /// with the given fields replaced by the non-null parameter values.
@@ -85,44 +110,44 @@ class _$RecurringExpenseCopyWithImpl<$Res, $Val extends RecurringExpense>
     Object? id = freezed,
     Object? name = null,
   }) {
-    return _then(_value.copyWith(
+    return _then(_self.copyWith(
       nextOccurrence: freezed == nextOccurrence
-          ? _value.nextOccurrence
+          ? _self.nextOccurrence
           : nextOccurrence // ignore: cast_nullable_to_non_nullable
               as String?,
       lastOccurrence: freezed == lastOccurrence
-          ? _value.lastOccurrence
+          ? _self.lastOccurrence
           : lastOccurrence // ignore: cast_nullable_to_non_nullable
               as String?,
       amount: null == amount
-          ? _value.amount
+          ? _self.amount
           : amount // ignore: cast_nullable_to_non_nullable
               as double,
       type: null == type
-          ? _value.type
+          ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
               as int,
       income: null == income
-          ? _value.income
+          ? _self.income
           : income // ignore: cast_nullable_to_non_nullable
               as bool,
       category: null == category
-          ? _value.category
+          ? _self.category
           : category // ignore: cast_nullable_to_non_nullable
               as Category,
       typeParam: null == typeParam
-          ? _value.typeParam
+          ? _self.typeParam
           : typeParam // ignore: cast_nullable_to_non_nullable
               as int,
       id: freezed == id
-          ? _value.id
+          ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as int?,
       name: null == name
-          ? _value.name
+          ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-    ) as $Val);
+    ));
   }
 
   /// Create a copy of RecurringExpense
@@ -130,103 +155,16 @@ class _$RecurringExpenseCopyWithImpl<$Res, $Val extends RecurringExpense>
   @override
   @pragma('vm:prefer-inline')
   $CategoryCopyWith<$Res> get category {
-    return $CategoryCopyWith<$Res>(_value.category, (value) {
-      return _then(_value.copyWith(category: value) as $Val);
+    return $CategoryCopyWith<$Res>(_self.category, (value) {
+      return _then(_self.copyWith(category: value));
     });
   }
 }
 
 /// @nodoc
-abstract class _$$RecurringExpenseImplCopyWith<$Res>
-    implements $RecurringExpenseCopyWith<$Res> {
-  factory _$$RecurringExpenseImplCopyWith(_$RecurringExpenseImpl value,
-          $Res Function(_$RecurringExpenseImpl) then) =
-      __$$RecurringExpenseImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String? nextOccurrence,
-      String? lastOccurrence,
-      double amount,
-      int type,
-      bool income,
-      Category category,
-      int typeParam,
-      int? id,
-      String name});
-
-  @override
-  $CategoryCopyWith<$Res> get category;
-}
-
-/// @nodoc
-class __$$RecurringExpenseImplCopyWithImpl<$Res>
-    extends _$RecurringExpenseCopyWithImpl<$Res, _$RecurringExpenseImpl>
-    implements _$$RecurringExpenseImplCopyWith<$Res> {
-  __$$RecurringExpenseImplCopyWithImpl(_$RecurringExpenseImpl _value,
-      $Res Function(_$RecurringExpenseImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of RecurringExpense
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? nextOccurrence = freezed,
-    Object? lastOccurrence = freezed,
-    Object? amount = null,
-    Object? type = null,
-    Object? income = null,
-    Object? category = null,
-    Object? typeParam = null,
-    Object? id = freezed,
-    Object? name = null,
-  }) {
-    return _then(_$RecurringExpenseImpl(
-      nextOccurrence: freezed == nextOccurrence
-          ? _value.nextOccurrence
-          : nextOccurrence // ignore: cast_nullable_to_non_nullable
-              as String?,
-      lastOccurrence: freezed == lastOccurrence
-          ? _value.lastOccurrence
-          : lastOccurrence // ignore: cast_nullable_to_non_nullable
-              as String?,
-      amount: null == amount
-          ? _value.amount
-          : amount // ignore: cast_nullable_to_non_nullable
-              as double,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as int,
-      income: null == income
-          ? _value.income
-          : income // ignore: cast_nullable_to_non_nullable
-              as bool,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as Category,
-      typeParam: null == typeParam
-          ? _value.typeParam
-          : typeParam // ignore: cast_nullable_to_non_nullable
-              as int,
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
 @JsonSerializable()
-class _$RecurringExpenseImpl implements _RecurringExpense {
-  const _$RecurringExpenseImpl(
+class _RecurringExpense implements RecurringExpense {
+  const _RecurringExpense(
       {this.nextOccurrence,
       this.lastOccurrence,
       required this.amount,
@@ -236,9 +174,8 @@ class _$RecurringExpenseImpl implements _RecurringExpense {
       required this.typeParam,
       this.id,
       required this.name});
-
-  factory _$RecurringExpenseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$RecurringExpenseImplFromJson(json);
+  factory _RecurringExpense.fromJson(Map<String, dynamic> json) =>
+      _$RecurringExpenseFromJson(json);
 
   @override
   final String? nextOccurrence;
@@ -261,16 +198,26 @@ class _$RecurringExpenseImpl implements _RecurringExpense {
   @override
   final String name;
 
+  /// Create a copy of RecurringExpense
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'RecurringExpense(nextOccurrence: $nextOccurrence, lastOccurrence: $lastOccurrence, amount: $amount, type: $type, income: $income, category: $category, typeParam: $typeParam, id: $id, name: $name)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$RecurringExpenseCopyWith<_RecurringExpense> get copyWith =>
+      __$RecurringExpenseCopyWithImpl<_RecurringExpense>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$RecurringExpenseToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RecurringExpenseImpl &&
+            other is _RecurringExpense &&
             (identical(other.nextOccurrence, nextOccurrence) ||
                 other.nextOccurrence == nextOccurrence) &&
             (identical(other.lastOccurrence, lastOccurrence) ||
@@ -291,61 +238,107 @@ class _$RecurringExpenseImpl implements _RecurringExpense {
   int get hashCode => Object.hash(runtimeType, nextOccurrence, lastOccurrence,
       amount, type, income, category, typeParam, id, name);
 
-  /// Create a copy of RecurringExpense
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$RecurringExpenseImplCopyWith<_$RecurringExpenseImpl> get copyWith =>
-      __$$RecurringExpenseImplCopyWithImpl<_$RecurringExpenseImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$RecurringExpenseImplToJson(
-      this,
-    );
+  String toString() {
+    return 'RecurringExpense(nextOccurrence: $nextOccurrence, lastOccurrence: $lastOccurrence, amount: $amount, type: $type, income: $income, category: $category, typeParam: $typeParam, id: $id, name: $name)';
   }
 }
 
-abstract class _RecurringExpense implements RecurringExpense {
-  const factory _RecurringExpense(
-      {final String? nextOccurrence,
-      final String? lastOccurrence,
-      required final double amount,
-      final int type,
-      final bool income,
-      required final Category category,
-      required final int typeParam,
-      final int? id,
-      required final String name}) = _$RecurringExpenseImpl;
+/// @nodoc
+abstract mixin class _$RecurringExpenseCopyWith<$Res>
+    implements $RecurringExpenseCopyWith<$Res> {
+  factory _$RecurringExpenseCopyWith(
+          _RecurringExpense value, $Res Function(_RecurringExpense) _then) =
+      __$RecurringExpenseCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String? nextOccurrence,
+      String? lastOccurrence,
+      double amount,
+      int type,
+      bool income,
+      Category category,
+      int typeParam,
+      int? id,
+      String name});
 
-  factory _RecurringExpense.fromJson(Map<String, dynamic> json) =
-      _$RecurringExpenseImpl.fromJson;
+  @override
+  $CategoryCopyWith<$Res> get category;
+}
 
-  @override
-  String? get nextOccurrence;
-  @override
-  String? get lastOccurrence;
-  @override
-  double get amount;
-  @override
-  int get type;
-  @override
-  bool get income;
-  @override
-  Category get category;
-  @override
-  int get typeParam;
-  @override
-  int? get id;
-  @override
-  String get name;
+/// @nodoc
+class __$RecurringExpenseCopyWithImpl<$Res>
+    implements _$RecurringExpenseCopyWith<$Res> {
+  __$RecurringExpenseCopyWithImpl(this._self, this._then);
+
+  final _RecurringExpense _self;
+  final $Res Function(_RecurringExpense) _then;
 
   /// Create a copy of RecurringExpense
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$RecurringExpenseImplCopyWith<_$RecurringExpenseImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? nextOccurrence = freezed,
+    Object? lastOccurrence = freezed,
+    Object? amount = null,
+    Object? type = null,
+    Object? income = null,
+    Object? category = null,
+    Object? typeParam = null,
+    Object? id = freezed,
+    Object? name = null,
+  }) {
+    return _then(_RecurringExpense(
+      nextOccurrence: freezed == nextOccurrence
+          ? _self.nextOccurrence
+          : nextOccurrence // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastOccurrence: freezed == lastOccurrence
+          ? _self.lastOccurrence
+          : lastOccurrence // ignore: cast_nullable_to_non_nullable
+              as String?,
+      amount: null == amount
+          ? _self.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as double,
+      type: null == type
+          ? _self.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as int,
+      income: null == income
+          ? _self.income
+          : income // ignore: cast_nullable_to_non_nullable
+              as bool,
+      category: null == category
+          ? _self.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as Category,
+      typeParam: null == typeParam
+          ? _self.typeParam
+          : typeParam // ignore: cast_nullable_to_non_nullable
+              as int,
+      id: freezed == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+
+  /// Create a copy of RecurringExpense
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CategoryCopyWith<$Res> get category {
+    return $CategoryCopyWith<$Res>(_self.category, (value) {
+      return _then(_self.copyWith(category: value));
+    });
+  }
 }
+
+// dart format on

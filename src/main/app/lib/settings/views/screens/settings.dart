@@ -327,8 +327,8 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     setState(() {
       loading = true;
     });
-    User user = await service.getCurrentUser();
     Config config = await service.getServerConfig(service.url);
+    User user = await service.getCurrentUser();
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     refreshSettings();

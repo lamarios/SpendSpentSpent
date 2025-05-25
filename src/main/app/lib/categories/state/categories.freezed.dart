@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,81 +10,58 @@ part of 'categories.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$CategoriesState {
-  bool get loading => throw _privateConstructorUsedError;
-  List<Category> get categories => throw _privateConstructorUsedError;
+  bool get loading;
+  List<Category> get categories;
 
   /// Create a copy of CategoriesState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $CategoriesStateCopyWith<CategoriesState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $CategoriesStateCopyWith<$Res> {
-  factory $CategoriesStateCopyWith(
-          CategoriesState value, $Res Function(CategoriesState) then) =
-      _$CategoriesStateCopyWithImpl<$Res, CategoriesState>;
-  @useResult
-  $Res call({bool loading, List<Category> categories});
-}
-
-/// @nodoc
-class _$CategoriesStateCopyWithImpl<$Res, $Val extends CategoriesState>
-    implements $CategoriesStateCopyWith<$Res> {
-  _$CategoriesStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of CategoriesState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $CategoriesStateCopyWith<CategoriesState> get copyWith =>
+      _$CategoriesStateCopyWithImpl<CategoriesState>(
+          this as CategoriesState, _$identity);
+
   @override
-  $Res call({
-    Object? loading = null,
-    Object? categories = null,
-  }) {
-    return _then(_value.copyWith(
-      loading: null == loading
-          ? _value.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      categories: null == categories
-          ? _value.categories
-          : categories // ignore: cast_nullable_to_non_nullable
-              as List<Category>,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is CategoriesState &&
+            (identical(other.loading, loading) || other.loading == loading) &&
+            const DeepCollectionEquality()
+                .equals(other.categories, categories));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, loading, const DeepCollectionEquality().hash(categories));
+
+  @override
+  String toString() {
+    return 'CategoriesState(loading: $loading, categories: $categories)';
   }
 }
 
 /// @nodoc
-abstract class _$$CategoriesStateImplCopyWith<$Res>
-    implements $CategoriesStateCopyWith<$Res> {
-  factory _$$CategoriesStateImplCopyWith(_$CategoriesStateImpl value,
-          $Res Function(_$CategoriesStateImpl) then) =
-      __$$CategoriesStateImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $CategoriesStateCopyWith<$Res> {
+  factory $CategoriesStateCopyWith(
+          CategoriesState value, $Res Function(CategoriesState) _then) =
+      _$CategoriesStateCopyWithImpl;
   @useResult
   $Res call({bool loading, List<Category> categories});
 }
 
 /// @nodoc
-class __$$CategoriesStateImplCopyWithImpl<$Res>
-    extends _$CategoriesStateCopyWithImpl<$Res, _$CategoriesStateImpl>
-    implements _$$CategoriesStateImplCopyWith<$Res> {
-  __$$CategoriesStateImplCopyWithImpl(
-      _$CategoriesStateImpl _value, $Res Function(_$CategoriesStateImpl) _then)
-      : super(_value, _then);
+class _$CategoriesStateCopyWithImpl<$Res>
+    implements $CategoriesStateCopyWith<$Res> {
+  _$CategoriesStateCopyWithImpl(this._self, this._then);
+
+  final CategoriesState _self;
+  final $Res Function(CategoriesState) _then;
 
   /// Create a copy of CategoriesState
   /// with the given fields replaced by the non-null parameter values.
@@ -93,13 +71,13 @@ class __$$CategoriesStateImplCopyWithImpl<$Res>
     Object? loading = null,
     Object? categories = null,
   }) {
-    return _then(_$CategoriesStateImpl(
+    return _then(_self.copyWith(
       loading: null == loading
-          ? _value.loading
+          ? _self.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
       categories: null == categories
-          ? _value._categories
+          ? _self.categories
           : categories // ignore: cast_nullable_to_non_nullable
               as List<Category>,
     ));
@@ -108,8 +86,8 @@ class __$$CategoriesStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$CategoriesStateImpl implements _CategoriesState {
-  const _$CategoriesStateImpl(
+class _CategoriesState implements CategoriesState {
+  const _CategoriesState(
       {this.loading = true, final List<Category> categories = const []})
       : _categories = categories;
 
@@ -125,16 +103,19 @@ class _$CategoriesStateImpl implements _CategoriesState {
     return EqualUnmodifiableListView(_categories);
   }
 
+  /// Create a copy of CategoriesState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'CategoriesState(loading: $loading, categories: $categories)';
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$CategoriesStateCopyWith<_CategoriesState> get copyWith =>
+      __$CategoriesStateCopyWithImpl<_CategoriesState>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$CategoriesStateImpl &&
+            other is _CategoriesState &&
             (identical(other.loading, loading) || other.loading == loading) &&
             const DeepCollectionEquality()
                 .equals(other._categories, _categories));
@@ -144,30 +125,50 @@ class _$CategoriesStateImpl implements _CategoriesState {
   int get hashCode => Object.hash(
       runtimeType, loading, const DeepCollectionEquality().hash(_categories));
 
+  @override
+  String toString() {
+    return 'CategoriesState(loading: $loading, categories: $categories)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$CategoriesStateCopyWith<$Res>
+    implements $CategoriesStateCopyWith<$Res> {
+  factory _$CategoriesStateCopyWith(
+          _CategoriesState value, $Res Function(_CategoriesState) _then) =
+      __$CategoriesStateCopyWithImpl;
+  @override
+  @useResult
+  $Res call({bool loading, List<Category> categories});
+}
+
+/// @nodoc
+class __$CategoriesStateCopyWithImpl<$Res>
+    implements _$CategoriesStateCopyWith<$Res> {
+  __$CategoriesStateCopyWithImpl(this._self, this._then);
+
+  final _CategoriesState _self;
+  final $Res Function(_CategoriesState) _then;
+
   /// Create a copy of CategoriesState
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$CategoriesStateImplCopyWith<_$CategoriesStateImpl> get copyWith =>
-      __$$CategoriesStateImplCopyWithImpl<_$CategoriesStateImpl>(
-          this, _$identity);
+  $Res call({
+    Object? loading = null,
+    Object? categories = null,
+  }) {
+    return _then(_CategoriesState(
+      loading: null == loading
+          ? _self.loading
+          : loading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      categories: null == categories
+          ? _self._categories
+          : categories // ignore: cast_nullable_to_non_nullable
+              as List<Category>,
+    ));
+  }
 }
 
-abstract class _CategoriesState implements CategoriesState {
-  const factory _CategoriesState(
-      {final bool loading,
-      final List<Category> categories}) = _$CategoriesStateImpl;
-
-  @override
-  bool get loading;
-  @override
-  List<Category> get categories;
-
-  /// Create a copy of CategoriesState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CategoriesStateImplCopyWith<_$CategoriesStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

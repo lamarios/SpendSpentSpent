@@ -48,7 +48,7 @@ class CurrencyConverterCubit extends Cubit<CurrencyConverterState> {
 }
 
 @freezed
-class CurrencyConverterState with _$CurrencyConverterState {
+sealed class CurrencyConverterState with _$CurrencyConverterState {
   const factory CurrencyConverterState({
     @Default("USD") String fromCurrency,
     @Default("EUR") String toCurrency,

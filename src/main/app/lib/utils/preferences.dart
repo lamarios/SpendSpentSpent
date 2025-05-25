@@ -6,7 +6,8 @@ class Preferences {
       CURRENT_PAGE = 'current_page',
       FROM_CURRENCY = "from_currency",
       TO_CURRENCY = "to_currency",
-      EXPENSE_LOCATION = "expense_location";
+      EXPENSE_LOCATION = "expense_location",
+      TOKEN_TYPE = "token_type";
 
   static Future<void> set(String key, String value) async {
     final prefs = await SharedPreferences.getInstance();

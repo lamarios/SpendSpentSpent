@@ -6,7 +6,7 @@ part 'recurring_expense.freezed.dart';
 part 'recurring_expense.g.dart';
 
 @freezed
-class RecurringExpense with _$RecurringExpense {
+sealed class RecurringExpense with _$RecurringExpense {
   const factory RecurringExpense({
     String? nextOccurrence,
     String? lastOccurrence,

@@ -2,11 +2,13 @@ library app.globals;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/service.dart';
 
 Service service = Service();
 const MIN_BACKEND_VERSION = 67;
+final getIt = GetIt.instance;
 
 const BorderRadius defaultBorder = BorderRadius.all(Radius.circular(15));
 const defaultPadding = 20.0;

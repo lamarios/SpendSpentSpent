@@ -96,7 +96,7 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
 }
 
 @freezed
-class ExpenseListState with _$ExpenseListState implements WithError {
+sealed class ExpenseListState with _$ExpenseListState implements WithError {
   @Implements<WithError>()
   const factory ExpenseListState(
       {@Default([]) List<String> months,

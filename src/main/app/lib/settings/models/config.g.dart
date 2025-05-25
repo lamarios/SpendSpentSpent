@@ -6,7 +6,7 @@ part of 'config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ConfigImpl _$$ConfigImplFromJson(Map<String, dynamic> json) => _$ConfigImpl(
+_Config _$ConfigFromJson(Map<String, dynamic> json) => _Config(
       allowSignup: json['allowSignup'] as bool,
       canResetPassword: json['canResetPassword'] as bool,
       demoMode: json['demoMode'] as bool,
@@ -16,10 +16,12 @@ _$ConfigImpl _$$ConfigImplFromJson(Map<String, dynamic> json) => _$ConfigImpl(
       convertCurrencyQuota: json['convertCurrencyQuota'] as String,
       minAppVersion: json['minAppVersion'] as String?,
       backendVersion: (json['backendVersion'] as num).toInt(),
+      oidc: json['oidc'] == null
+          ? null
+          : OidcConfig.fromJson(json['oidc'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$ConfigImplToJson(_$ConfigImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ConfigToJson(_Config instance) => <String, dynamic>{
       'allowSignup': instance.allowSignup,
       'canResetPassword': instance.canResetPassword,
       'demoMode': instance.demoMode,
@@ -29,4 +31,5 @@ Map<String, dynamic> _$$ConfigImplToJson(_$ConfigImpl instance) =>
       'convertCurrencyQuota': instance.convertCurrencyQuota,
       'minAppVersion': instance.minAppVersion,
       'backendVersion': instance.backendVersion,
+      'oidc': instance.oidc,
     };

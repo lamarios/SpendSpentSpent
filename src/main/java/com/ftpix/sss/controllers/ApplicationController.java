@@ -5,10 +5,7 @@ import com.ftpix.sss.Constants;
 import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.CurrencyStatus;
 import com.ftpix.sss.models.Settings;
-import com.ftpix.sss.services.CurrencyService;
-import com.ftpix.sss.services.DataExportImportService;
-import com.ftpix.sss.services.EmailService;
-import com.ftpix.sss.services.SettingsService;
+import com.ftpix.sss.services.*;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -47,8 +44,10 @@ public class ApplicationController {
     public final static int MIN_APP_VERSION = 47;
     private final UserDao userDaoJooq;
 
+    private final OIDCService oidcService;
+
     @Autowired
-    public ApplicationController(EmailService emailService, SettingsService settingsService, Configuration templateEngine, BuildProperties buildProperties, CurrencyService currencyService, UserDao userDaoJooq, DataExportImportService dataExportImportService) {
+    public ApplicationController(EmailService emailService, SettingsService settingsService, Configuration templateEngine, BuildProperties buildProperties, CurrencyService currencyService, UserDao userDaoJooq, DataExportImportService dataExportImportService, OIDCService oidcService) {
         this.emailService = emailService;
         this.settingsService = settingsService;
 
@@ -57,6 +56,7 @@ public class ApplicationController {
         this.currencyService = currencyService;
         this.userDaoJooq = userDaoJooq;
         this.dataExportImportService = dataExportImportService;
+        this.oidcService = oidcService;
     }
 
 
@@ -123,6 +123,11 @@ public class ApplicationController {
         results.put("minAppVersion", Integer.toString(MIN_APP_VERSION));
 
         results.put("canConvertCurrency", currencyService.canUseCurrencyConversion());
+
+        if (oidcService.getOidcDiscoveryUrl() != null) {
+            results.put("oidc", oidcService.getOidcConfig());
+        }
+
 
         try {
             CurrencyStatus currencyStatus = currencyService.getQuota();

@@ -14,6 +14,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
+
 @RestController
 @RequestMapping("/API/User")
 @Api(tags = {"Users"})
@@ -79,6 +81,11 @@ public class UserController {
         // deleting all the data
         return userService.deleteUser(userId, currentUser);
 
+    }
+
+    @GetMapping("/current")
+    public User getcurrentUser() throws SQLException {
+        return userService.getCurrentUser();
     }
 
 }

@@ -238,7 +238,6 @@
             <scope>test</scope>
         </dependency>
         <!-- end of intellij specific -->
-
     </dependencies>
 
     <build>

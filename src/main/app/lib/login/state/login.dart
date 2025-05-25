@@ -8,6 +8,8 @@ import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart' as globals;
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/identity/states/oidc.dart';
+import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/login/models/login_page.dart';
 import 'package:spend_spent_spent/settings/models/config.dart';
 import 'package:spend_spent_spent/utils/models/exceptions/BackendNeedUpgradeException.dart';
@@ -23,8 +25,18 @@ class LoginCubit extends Cubit<LoginState> {
   final CategoriesCubit categoriesCubit;
   final LastExpenseCubit lastExpenseCubit;
 
-  LoginCubit(super.initialState, this.categoriesCubit, this.lastExpenseCubit) {
+  final OidcCubit oidcCubit;
+  final UsernamePasswordCubit usernamePasswordCubit;
+
+  LoginCubit(super.initialState, this.categoriesCubit, this.lastExpenseCubit,
+      this.oidcCubit, this.usernamePasswordCubit) {
     init();
+  }
+
+  @override
+  close() async {
+    urlController.dispose();
+    super.close();
   }
 
   getConfig() async {
@@ -33,6 +45,10 @@ class LoginCubit extends Cubit<LoginState> {
       print('getting config');
       Config c = await service.getServerConfig(urlController.text.trim());
       print('can register ? ${c.allowSignup}');
+
+      if (c.oidc != null) {
+        await oidcCubit.setupClient(c.oidc!);
+      }
 
       emit(state.copyWith(config: c));
     } on NeedUpgradeException {
@@ -67,12 +83,11 @@ class LoginCubit extends Cubit<LoginState> {
     if (kIsWeb) {
       server = '${base.scheme}://${base.host}';
 
-      if (base.port != 80 || base.port != 443) {
+      if (base.port != 80 && base.port != 443) {
         server += ':${base.port}';
       }
     }
 
-    print('server: $server');
     urlController.text = server;
 
     getConfig();
@@ -87,13 +102,13 @@ class LoginCubit extends Cubit<LoginState> {
 
     try {
       await globals.service.setUrl(urlController.text.trim());
-      var loggedIn = await globals.service.login(username, password);
+      var token = await globals.service.login(username, password);
 
       emit(state.copyWith(loginError: ''));
-      if (loggedIn) {
-        categoriesCubit.getCategories();
-      }
-      return loggedIn;
+
+      usernamePasswordCubit.setToken(token);
+
+      return true;
     } catch (e) {
       emit(state.copyWith(
           loginError: e.toString().replaceFirst("Exception: ", '')));
@@ -103,7 +118,7 @@ class LoginCubit extends Cubit<LoginState> {
 }
 
 @freezed
-class LoginState with _$LoginState implements WithError {
+sealed class LoginState with _$LoginState implements WithError {
   @Implements<WithError>()
   const factory LoginState(
       {Config? config,

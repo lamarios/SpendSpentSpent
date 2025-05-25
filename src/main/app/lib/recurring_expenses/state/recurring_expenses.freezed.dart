@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,88 +10,55 @@ part of 'recurring_expenses.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$RecurringExpensesState {
-  bool get loading => throw _privateConstructorUsedError;
-  dynamic get error => throw _privateConstructorUsedError;
-  StackTrace? get stackTrace => throw _privateConstructorUsedError;
-  List<RecurringExpense> get expenses => throw _privateConstructorUsedError;
+  bool get loading;
+  dynamic get error;
+  StackTrace? get stackTrace;
+  List<RecurringExpense> get expenses;
 
   /// Create a copy of RecurringExpensesState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $RecurringExpensesStateCopyWith<RecurringExpensesState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $RecurringExpensesStateCopyWith<$Res> {
-  factory $RecurringExpensesStateCopyWith(RecurringExpensesState value,
-          $Res Function(RecurringExpensesState) then) =
-      _$RecurringExpensesStateCopyWithImpl<$Res, RecurringExpensesState>;
-  @useResult
-  $Res call(
-      {bool loading,
-      dynamic error,
-      StackTrace? stackTrace,
-      List<RecurringExpense> expenses});
-}
-
-/// @nodoc
-class _$RecurringExpensesStateCopyWithImpl<$Res,
-        $Val extends RecurringExpensesState>
-    implements $RecurringExpensesStateCopyWith<$Res> {
-  _$RecurringExpensesStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of RecurringExpensesState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $RecurringExpensesStateCopyWith<RecurringExpensesState> get copyWith =>
+      _$RecurringExpensesStateCopyWithImpl<RecurringExpensesState>(
+          this as RecurringExpensesState, _$identity);
+
   @override
-  $Res call({
-    Object? loading = null,
-    Object? error = freezed,
-    Object? stackTrace = freezed,
-    Object? expenses = null,
-  }) {
-    return _then(_value.copyWith(
-      loading: null == loading
-          ? _value.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-      stackTrace: freezed == stackTrace
-          ? _value.stackTrace
-          : stackTrace // ignore: cast_nullable_to_non_nullable
-              as StackTrace?,
-      expenses: null == expenses
-          ? _value.expenses
-          : expenses // ignore: cast_nullable_to_non_nullable
-              as List<RecurringExpense>,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is RecurringExpensesState &&
+            (identical(other.loading, loading) || other.loading == loading) &&
+            const DeepCollectionEquality().equals(other.error, error) &&
+            (identical(other.stackTrace, stackTrace) ||
+                other.stackTrace == stackTrace) &&
+            const DeepCollectionEquality().equals(other.expenses, expenses));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      loading,
+      const DeepCollectionEquality().hash(error),
+      stackTrace,
+      const DeepCollectionEquality().hash(expenses));
+
+  @override
+  String toString() {
+    return 'RecurringExpensesState(loading: $loading, error: $error, stackTrace: $stackTrace, expenses: $expenses)';
   }
 }
 
 /// @nodoc
-abstract class _$$RecurringExpensesStateImplCopyWith<$Res>
-    implements $RecurringExpensesStateCopyWith<$Res> {
-  factory _$$RecurringExpensesStateImplCopyWith(
-          _$RecurringExpensesStateImpl value,
-          $Res Function(_$RecurringExpensesStateImpl) then) =
-      __$$RecurringExpensesStateImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $RecurringExpensesStateCopyWith<$Res> {
+  factory $RecurringExpensesStateCopyWith(RecurringExpensesState value,
+          $Res Function(RecurringExpensesState) _then) =
+      _$RecurringExpensesStateCopyWithImpl;
   @useResult
   $Res call(
       {bool loading,
@@ -100,14 +68,12 @@ abstract class _$$RecurringExpensesStateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$RecurringExpensesStateImplCopyWithImpl<$Res>
-    extends _$RecurringExpensesStateCopyWithImpl<$Res,
-        _$RecurringExpensesStateImpl>
-    implements _$$RecurringExpensesStateImplCopyWith<$Res> {
-  __$$RecurringExpensesStateImplCopyWithImpl(
-      _$RecurringExpensesStateImpl _value,
-      $Res Function(_$RecurringExpensesStateImpl) _then)
-      : super(_value, _then);
+class _$RecurringExpensesStateCopyWithImpl<$Res>
+    implements $RecurringExpensesStateCopyWith<$Res> {
+  _$RecurringExpensesStateCopyWithImpl(this._self, this._then);
+
+  final RecurringExpensesState _self;
+  final $Res Function(RecurringExpensesState) _then;
 
   /// Create a copy of RecurringExpensesState
   /// with the given fields replaced by the non-null parameter values.
@@ -119,21 +85,21 @@ class __$$RecurringExpensesStateImplCopyWithImpl<$Res>
     Object? stackTrace = freezed,
     Object? expenses = null,
   }) {
-    return _then(_$RecurringExpensesStateImpl(
+    return _then(_self.copyWith(
       loading: null == loading
-          ? _value.loading
+          ? _self.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
       error: freezed == error
-          ? _value.error
+          ? _self.error
           : error // ignore: cast_nullable_to_non_nullable
               as dynamic,
       stackTrace: freezed == stackTrace
-          ? _value.stackTrace
+          ? _self.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
               as StackTrace?,
       expenses: null == expenses
-          ? _value._expenses
+          ? _self.expenses
           : expenses // ignore: cast_nullable_to_non_nullable
               as List<RecurringExpense>,
     ));
@@ -142,8 +108,8 @@ class __$$RecurringExpensesStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RecurringExpensesStateImpl implements _RecurringExpensesState {
-  const _$RecurringExpensesStateImpl(
+class _RecurringExpensesState implements RecurringExpensesState, WithError {
+  const _RecurringExpensesState(
       {this.loading = false,
       this.error,
       this.stackTrace,
@@ -166,16 +132,20 @@ class _$RecurringExpensesStateImpl implements _RecurringExpensesState {
     return EqualUnmodifiableListView(_expenses);
   }
 
+  /// Create a copy of RecurringExpensesState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'RecurringExpensesState(loading: $loading, error: $error, stackTrace: $stackTrace, expenses: $expenses)';
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$RecurringExpensesStateCopyWith<_RecurringExpensesState> get copyWith =>
+      __$RecurringExpensesStateCopyWithImpl<_RecurringExpensesState>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RecurringExpensesStateImpl &&
+            other is _RecurringExpensesState &&
             (identical(other.loading, loading) || other.loading == loading) &&
             const DeepCollectionEquality().equals(other.error, error) &&
             (identical(other.stackTrace, stackTrace) ||
@@ -191,37 +161,64 @@ class _$RecurringExpensesStateImpl implements _RecurringExpensesState {
       stackTrace,
       const DeepCollectionEquality().hash(_expenses));
 
+  @override
+  String toString() {
+    return 'RecurringExpensesState(loading: $loading, error: $error, stackTrace: $stackTrace, expenses: $expenses)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$RecurringExpensesStateCopyWith<$Res>
+    implements $RecurringExpensesStateCopyWith<$Res> {
+  factory _$RecurringExpensesStateCopyWith(_RecurringExpensesState value,
+          $Res Function(_RecurringExpensesState) _then) =
+      __$RecurringExpensesStateCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {bool loading,
+      dynamic error,
+      StackTrace? stackTrace,
+      List<RecurringExpense> expenses});
+}
+
+/// @nodoc
+class __$RecurringExpensesStateCopyWithImpl<$Res>
+    implements _$RecurringExpensesStateCopyWith<$Res> {
+  __$RecurringExpensesStateCopyWithImpl(this._self, this._then);
+
+  final _RecurringExpensesState _self;
+  final $Res Function(_RecurringExpensesState) _then;
+
   /// Create a copy of RecurringExpensesState
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$RecurringExpensesStateImplCopyWith<_$RecurringExpensesStateImpl>
-      get copyWith => __$$RecurringExpensesStateImplCopyWithImpl<
-          _$RecurringExpensesStateImpl>(this, _$identity);
+  $Res call({
+    Object? loading = null,
+    Object? error = freezed,
+    Object? stackTrace = freezed,
+    Object? expenses = null,
+  }) {
+    return _then(_RecurringExpensesState(
+      loading: null == loading
+          ? _self.loading
+          : loading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      error: freezed == error
+          ? _self.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      stackTrace: freezed == stackTrace
+          ? _self.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace?,
+      expenses: null == expenses
+          ? _self._expenses
+          : expenses // ignore: cast_nullable_to_non_nullable
+              as List<RecurringExpense>,
+    ));
+  }
 }
 
-abstract class _RecurringExpensesState
-    implements RecurringExpensesState, WithError {
-  const factory _RecurringExpensesState(
-      {final bool loading,
-      final dynamic error,
-      final StackTrace? stackTrace,
-      final List<RecurringExpense> expenses}) = _$RecurringExpensesStateImpl;
-
-  @override
-  bool get loading;
-  @override
-  dynamic get error;
-  @override
-  StackTrace? get stackTrace;
-  @override
-  List<RecurringExpense> get expenses;
-
-  /// Create a copy of RecurringExpensesState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$RecurringExpensesStateImplCopyWith<_$RecurringExpensesStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
+// dart format on

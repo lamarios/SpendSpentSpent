@@ -8,7 +8,7 @@ part 'day_expense.g.dart';
 part 'day_expense.freezed.dart';
 
 @freezed
-class DayExpense with _$DayExpense {
+sealed class DayExpense with _$DayExpense {
   const factory DayExpense(
       {required String date,
       required double total,

@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,128 +10,74 @@ part of 'available_categories.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-AvailableCategories _$AvailableCategoriesFromJson(Map<String, dynamic> json) {
-  return _AvailableCategories.fromJson(json);
-}
 
 /// @nodoc
 mixin _$AvailableCategories {
-  List<String>? get shopping => throw _privateConstructorUsedError;
-  List<String>? get transports => throw _privateConstructorUsedError;
-  List<String>? get brands => throw _privateConstructorUsedError;
-  List<String>? get hobbies => throw _privateConstructorUsedError;
-  List<String>? get health => throw _privateConstructorUsedError;
-  List<String>? get education => throw _privateConstructorUsedError;
-  List<String>? get housing => throw _privateConstructorUsedError;
-  List<String>? get tech => throw _privateConstructorUsedError;
-  List<String>? get documents => throw _privateConstructorUsedError;
-
-  /// Serializes this AvailableCategories to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  List<String>? get shopping;
+  List<String>? get transports;
+  List<String>? get brands;
+  List<String>? get hobbies;
+  List<String>? get health;
+  List<String>? get education;
+  List<String>? get housing;
+  List<String>? get tech;
+  List<String>? get documents;
 
   /// Create a copy of AvailableCategories
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $AvailableCategoriesCopyWith<AvailableCategories> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $AvailableCategoriesCopyWith<$Res> {
-  factory $AvailableCategoriesCopyWith(
-          AvailableCategories value, $Res Function(AvailableCategories) then) =
-      _$AvailableCategoriesCopyWithImpl<$Res, AvailableCategories>;
-  @useResult
-  $Res call(
-      {List<String>? shopping,
-      List<String>? transports,
-      List<String>? brands,
-      List<String>? hobbies,
-      List<String>? health,
-      List<String>? education,
-      List<String>? housing,
-      List<String>? tech,
-      List<String>? documents});
-}
-
-/// @nodoc
-class _$AvailableCategoriesCopyWithImpl<$Res, $Val extends AvailableCategories>
-    implements $AvailableCategoriesCopyWith<$Res> {
-  _$AvailableCategoriesCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of AvailableCategories
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $AvailableCategoriesCopyWith<AvailableCategories> get copyWith =>
+      _$AvailableCategoriesCopyWithImpl<AvailableCategories>(
+          this as AvailableCategories, _$identity);
+
+  /// Serializes this AvailableCategories to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? shopping = freezed,
-    Object? transports = freezed,
-    Object? brands = freezed,
-    Object? hobbies = freezed,
-    Object? health = freezed,
-    Object? education = freezed,
-    Object? housing = freezed,
-    Object? tech = freezed,
-    Object? documents = freezed,
-  }) {
-    return _then(_value.copyWith(
-      shopping: freezed == shopping
-          ? _value.shopping
-          : shopping // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      transports: freezed == transports
-          ? _value.transports
-          : transports // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      brands: freezed == brands
-          ? _value.brands
-          : brands // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      hobbies: freezed == hobbies
-          ? _value.hobbies
-          : hobbies // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      health: freezed == health
-          ? _value.health
-          : health // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      education: freezed == education
-          ? _value.education
-          : education // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      housing: freezed == housing
-          ? _value.housing
-          : housing // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      tech: freezed == tech
-          ? _value.tech
-          : tech // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      documents: freezed == documents
-          ? _value.documents
-          : documents // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is AvailableCategories &&
+            const DeepCollectionEquality().equals(other.shopping, shopping) &&
+            const DeepCollectionEquality()
+                .equals(other.transports, transports) &&
+            const DeepCollectionEquality().equals(other.brands, brands) &&
+            const DeepCollectionEquality().equals(other.hobbies, hobbies) &&
+            const DeepCollectionEquality().equals(other.health, health) &&
+            const DeepCollectionEquality().equals(other.education, education) &&
+            const DeepCollectionEquality().equals(other.housing, housing) &&
+            const DeepCollectionEquality().equals(other.tech, tech) &&
+            const DeepCollectionEquality().equals(other.documents, documents));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(shopping),
+      const DeepCollectionEquality().hash(transports),
+      const DeepCollectionEquality().hash(brands),
+      const DeepCollectionEquality().hash(hobbies),
+      const DeepCollectionEquality().hash(health),
+      const DeepCollectionEquality().hash(education),
+      const DeepCollectionEquality().hash(housing),
+      const DeepCollectionEquality().hash(tech),
+      const DeepCollectionEquality().hash(documents));
+
+  @override
+  String toString() {
+    return 'AvailableCategories(shopping: $shopping, transports: $transports, brands: $brands, hobbies: $hobbies, health: $health, education: $education, housing: $housing, tech: $tech, documents: $documents)';
   }
 }
 
 /// @nodoc
-abstract class _$$AvailableCategoriesImplCopyWith<$Res>
-    implements $AvailableCategoriesCopyWith<$Res> {
-  factory _$$AvailableCategoriesImplCopyWith(_$AvailableCategoriesImpl value,
-          $Res Function(_$AvailableCategoriesImpl) then) =
-      __$$AvailableCategoriesImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $AvailableCategoriesCopyWith<$Res> {
+  factory $AvailableCategoriesCopyWith(
+          AvailableCategories value, $Res Function(AvailableCategories) _then) =
+      _$AvailableCategoriesCopyWithImpl;
   @useResult
   $Res call(
       {List<String>? shopping,
@@ -145,12 +92,12 @@ abstract class _$$AvailableCategoriesImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$AvailableCategoriesImplCopyWithImpl<$Res>
-    extends _$AvailableCategoriesCopyWithImpl<$Res, _$AvailableCategoriesImpl>
-    implements _$$AvailableCategoriesImplCopyWith<$Res> {
-  __$$AvailableCategoriesImplCopyWithImpl(_$AvailableCategoriesImpl _value,
-      $Res Function(_$AvailableCategoriesImpl) _then)
-      : super(_value, _then);
+class _$AvailableCategoriesCopyWithImpl<$Res>
+    implements $AvailableCategoriesCopyWith<$Res> {
+  _$AvailableCategoriesCopyWithImpl(this._self, this._then);
+
+  final AvailableCategories _self;
+  final $Res Function(AvailableCategories) _then;
 
   /// Create a copy of AvailableCategories
   /// with the given fields replaced by the non-null parameter values.
@@ -167,41 +114,41 @@ class __$$AvailableCategoriesImplCopyWithImpl<$Res>
     Object? tech = freezed,
     Object? documents = freezed,
   }) {
-    return _then(_$AvailableCategoriesImpl(
+    return _then(_self.copyWith(
       shopping: freezed == shopping
-          ? _value._shopping
+          ? _self.shopping
           : shopping // ignore: cast_nullable_to_non_nullable
               as List<String>?,
       transports: freezed == transports
-          ? _value._transports
+          ? _self.transports
           : transports // ignore: cast_nullable_to_non_nullable
               as List<String>?,
       brands: freezed == brands
-          ? _value._brands
+          ? _self.brands
           : brands // ignore: cast_nullable_to_non_nullable
               as List<String>?,
       hobbies: freezed == hobbies
-          ? _value._hobbies
+          ? _self.hobbies
           : hobbies // ignore: cast_nullable_to_non_nullable
               as List<String>?,
       health: freezed == health
-          ? _value._health
+          ? _self.health
           : health // ignore: cast_nullable_to_non_nullable
               as List<String>?,
       education: freezed == education
-          ? _value._education
+          ? _self.education
           : education // ignore: cast_nullable_to_non_nullable
               as List<String>?,
       housing: freezed == housing
-          ? _value._housing
+          ? _self.housing
           : housing // ignore: cast_nullable_to_non_nullable
               as List<String>?,
       tech: freezed == tech
-          ? _value._tech
+          ? _self.tech
           : tech // ignore: cast_nullable_to_non_nullable
               as List<String>?,
       documents: freezed == documents
-          ? _value._documents
+          ? _self.documents
           : documents // ignore: cast_nullable_to_non_nullable
               as List<String>?,
     ));
@@ -210,8 +157,8 @@ class __$$AvailableCategoriesImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$AvailableCategoriesImpl implements _AvailableCategories {
-  const _$AvailableCategoriesImpl(
+class _AvailableCategories implements AvailableCategories {
+  const _AvailableCategories(
       {final List<String>? shopping = const [],
       final List<String>? transports = const [],
       final List<String>? brands = const [],
@@ -230,9 +177,8 @@ class _$AvailableCategoriesImpl implements _AvailableCategories {
         _housing = housing,
         _tech = tech,
         _documents = documents;
-
-  factory _$AvailableCategoriesImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AvailableCategoriesImplFromJson(json);
+  factory _AvailableCategories.fromJson(Map<String, dynamic> json) =>
+      _$AvailableCategoriesFromJson(json);
 
   final List<String>? _shopping;
   @override
@@ -333,16 +279,27 @@ class _$AvailableCategoriesImpl implements _AvailableCategories {
     return EqualUnmodifiableListView(value);
   }
 
+  /// Create a copy of AvailableCategories
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'AvailableCategories(shopping: $shopping, transports: $transports, brands: $brands, hobbies: $hobbies, health: $health, education: $education, housing: $housing, tech: $tech, documents: $documents)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$AvailableCategoriesCopyWith<_AvailableCategories> get copyWith =>
+      __$AvailableCategoriesCopyWithImpl<_AvailableCategories>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$AvailableCategoriesToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AvailableCategoriesImpl &&
+            other is _AvailableCategories &&
             const DeepCollectionEquality().equals(other._shopping, _shopping) &&
             const DeepCollectionEquality()
                 .equals(other._transports, _transports) &&
@@ -371,61 +328,94 @@ class _$AvailableCategoriesImpl implements _AvailableCategories {
       const DeepCollectionEquality().hash(_tech),
       const DeepCollectionEquality().hash(_documents));
 
-  /// Create a copy of AvailableCategories
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$AvailableCategoriesImplCopyWith<_$AvailableCategoriesImpl> get copyWith =>
-      __$$AvailableCategoriesImplCopyWithImpl<_$AvailableCategoriesImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AvailableCategoriesImplToJson(
-      this,
-    );
+  String toString() {
+    return 'AvailableCategories(shopping: $shopping, transports: $transports, brands: $brands, hobbies: $hobbies, health: $health, education: $education, housing: $housing, tech: $tech, documents: $documents)';
   }
 }
 
-abstract class _AvailableCategories implements AvailableCategories {
-  const factory _AvailableCategories(
-      {final List<String>? shopping,
-      final List<String>? transports,
-      final List<String>? brands,
-      final List<String>? hobbies,
-      final List<String>? health,
-      final List<String>? education,
-      final List<String>? housing,
-      final List<String>? tech,
-      final List<String>? documents}) = _$AvailableCategoriesImpl;
+/// @nodoc
+abstract mixin class _$AvailableCategoriesCopyWith<$Res>
+    implements $AvailableCategoriesCopyWith<$Res> {
+  factory _$AvailableCategoriesCopyWith(_AvailableCategories value,
+          $Res Function(_AvailableCategories) _then) =
+      __$AvailableCategoriesCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {List<String>? shopping,
+      List<String>? transports,
+      List<String>? brands,
+      List<String>? hobbies,
+      List<String>? health,
+      List<String>? education,
+      List<String>? housing,
+      List<String>? tech,
+      List<String>? documents});
+}
 
-  factory _AvailableCategories.fromJson(Map<String, dynamic> json) =
-      _$AvailableCategoriesImpl.fromJson;
+/// @nodoc
+class __$AvailableCategoriesCopyWithImpl<$Res>
+    implements _$AvailableCategoriesCopyWith<$Res> {
+  __$AvailableCategoriesCopyWithImpl(this._self, this._then);
 
-  @override
-  List<String>? get shopping;
-  @override
-  List<String>? get transports;
-  @override
-  List<String>? get brands;
-  @override
-  List<String>? get hobbies;
-  @override
-  List<String>? get health;
-  @override
-  List<String>? get education;
-  @override
-  List<String>? get housing;
-  @override
-  List<String>? get tech;
-  @override
-  List<String>? get documents;
+  final _AvailableCategories _self;
+  final $Res Function(_AvailableCategories) _then;
 
   /// Create a copy of AvailableCategories
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AvailableCategoriesImplCopyWith<_$AvailableCategoriesImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? shopping = freezed,
+    Object? transports = freezed,
+    Object? brands = freezed,
+    Object? hobbies = freezed,
+    Object? health = freezed,
+    Object? education = freezed,
+    Object? housing = freezed,
+    Object? tech = freezed,
+    Object? documents = freezed,
+  }) {
+    return _then(_AvailableCategories(
+      shopping: freezed == shopping
+          ? _self._shopping
+          : shopping // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      transports: freezed == transports
+          ? _self._transports
+          : transports // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      brands: freezed == brands
+          ? _self._brands
+          : brands // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      hobbies: freezed == hobbies
+          ? _self._hobbies
+          : hobbies // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      health: freezed == health
+          ? _self._health
+          : health // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      education: freezed == education
+          ? _self._education
+          : education // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      housing: freezed == housing
+          ? _self._housing
+          : housing // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      tech: freezed == tech
+          ? _self._tech
+          : tech // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      documents: freezed == documents
+          ? _self._documents
+          : documents // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+    ));
+  }
 }
+
+// dart format on

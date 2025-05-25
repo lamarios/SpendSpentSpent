@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,114 +10,69 @@ part of 'expense_list.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$ExpenseListState {
-  List<String> get months => throw _privateConstructorUsedError;
-  String get selected => throw _privateConstructorUsedError;
-  double get total => throw _privateConstructorUsedError;
-  bool get loading => throw _privateConstructorUsedError;
-  bool get searchMode => throw _privateConstructorUsedError;
-  Map<String, DayExpense> get expenses => throw _privateConstructorUsedError;
-  dynamic get error => throw _privateConstructorUsedError;
-  StackTrace? get stackTrace => throw _privateConstructorUsedError;
+  List<String> get months;
+  String get selected;
+  double get total;
+  bool get loading;
+  bool get searchMode;
+  Map<String, DayExpense> get expenses;
+  dynamic get error;
+  StackTrace? get stackTrace;
 
   /// Create a copy of ExpenseListState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ExpenseListStateCopyWith<ExpenseListState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ExpenseListStateCopyWith<$Res> {
-  factory $ExpenseListStateCopyWith(
-          ExpenseListState value, $Res Function(ExpenseListState) then) =
-      _$ExpenseListStateCopyWithImpl<$Res, ExpenseListState>;
-  @useResult
-  $Res call(
-      {List<String> months,
-      String selected,
-      double total,
-      bool loading,
-      bool searchMode,
-      Map<String, DayExpense> expenses,
-      dynamic error,
-      StackTrace? stackTrace});
-}
-
-/// @nodoc
-class _$ExpenseListStateCopyWithImpl<$Res, $Val extends ExpenseListState>
-    implements $ExpenseListStateCopyWith<$Res> {
-  _$ExpenseListStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of ExpenseListState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $ExpenseListStateCopyWith<ExpenseListState> get copyWith =>
+      _$ExpenseListStateCopyWithImpl<ExpenseListState>(
+          this as ExpenseListState, _$identity);
+
   @override
-  $Res call({
-    Object? months = null,
-    Object? selected = null,
-    Object? total = null,
-    Object? loading = null,
-    Object? searchMode = null,
-    Object? expenses = null,
-    Object? error = freezed,
-    Object? stackTrace = freezed,
-  }) {
-    return _then(_value.copyWith(
-      months: null == months
-          ? _value.months
-          : months // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      selected: null == selected
-          ? _value.selected
-          : selected // ignore: cast_nullable_to_non_nullable
-              as String,
-      total: null == total
-          ? _value.total
-          : total // ignore: cast_nullable_to_non_nullable
-              as double,
-      loading: null == loading
-          ? _value.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      searchMode: null == searchMode
-          ? _value.searchMode
-          : searchMode // ignore: cast_nullable_to_non_nullable
-              as bool,
-      expenses: null == expenses
-          ? _value.expenses
-          : expenses // ignore: cast_nullable_to_non_nullable
-              as Map<String, DayExpense>,
-      error: freezed == error
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-      stackTrace: freezed == stackTrace
-          ? _value.stackTrace
-          : stackTrace // ignore: cast_nullable_to_non_nullable
-              as StackTrace?,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is ExpenseListState &&
+            const DeepCollectionEquality().equals(other.months, months) &&
+            (identical(other.selected, selected) ||
+                other.selected == selected) &&
+            (identical(other.total, total) || other.total == total) &&
+            (identical(other.loading, loading) || other.loading == loading) &&
+            (identical(other.searchMode, searchMode) ||
+                other.searchMode == searchMode) &&
+            const DeepCollectionEquality().equals(other.expenses, expenses) &&
+            const DeepCollectionEquality().equals(other.error, error) &&
+            (identical(other.stackTrace, stackTrace) ||
+                other.stackTrace == stackTrace));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(months),
+      selected,
+      total,
+      loading,
+      searchMode,
+      const DeepCollectionEquality().hash(expenses),
+      const DeepCollectionEquality().hash(error),
+      stackTrace);
+
+  @override
+  String toString() {
+    return 'ExpenseListState(months: $months, selected: $selected, total: $total, loading: $loading, searchMode: $searchMode, expenses: $expenses, error: $error, stackTrace: $stackTrace)';
   }
 }
 
 /// @nodoc
-abstract class _$$ExpenseListStateImplCopyWith<$Res>
-    implements $ExpenseListStateCopyWith<$Res> {
-  factory _$$ExpenseListStateImplCopyWith(_$ExpenseListStateImpl value,
-          $Res Function(_$ExpenseListStateImpl) then) =
-      __$$ExpenseListStateImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $ExpenseListStateCopyWith<$Res> {
+  factory $ExpenseListStateCopyWith(
+          ExpenseListState value, $Res Function(ExpenseListState) _then) =
+      _$ExpenseListStateCopyWithImpl;
   @useResult
   $Res call(
       {List<String> months,
@@ -130,12 +86,12 @@ abstract class _$$ExpenseListStateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$ExpenseListStateImplCopyWithImpl<$Res>
-    extends _$ExpenseListStateCopyWithImpl<$Res, _$ExpenseListStateImpl>
-    implements _$$ExpenseListStateImplCopyWith<$Res> {
-  __$$ExpenseListStateImplCopyWithImpl(_$ExpenseListStateImpl _value,
-      $Res Function(_$ExpenseListStateImpl) _then)
-      : super(_value, _then);
+class _$ExpenseListStateCopyWithImpl<$Res>
+    implements $ExpenseListStateCopyWith<$Res> {
+  _$ExpenseListStateCopyWithImpl(this._self, this._then);
+
+  final ExpenseListState _self;
+  final $Res Function(ExpenseListState) _then;
 
   /// Create a copy of ExpenseListState
   /// with the given fields replaced by the non-null parameter values.
@@ -151,37 +107,37 @@ class __$$ExpenseListStateImplCopyWithImpl<$Res>
     Object? error = freezed,
     Object? stackTrace = freezed,
   }) {
-    return _then(_$ExpenseListStateImpl(
+    return _then(_self.copyWith(
       months: null == months
-          ? _value._months
+          ? _self.months
           : months // ignore: cast_nullable_to_non_nullable
               as List<String>,
       selected: null == selected
-          ? _value.selected
+          ? _self.selected
           : selected // ignore: cast_nullable_to_non_nullable
               as String,
       total: null == total
-          ? _value.total
+          ? _self.total
           : total // ignore: cast_nullable_to_non_nullable
               as double,
       loading: null == loading
-          ? _value.loading
+          ? _self.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
       searchMode: null == searchMode
-          ? _value.searchMode
+          ? _self.searchMode
           : searchMode // ignore: cast_nullable_to_non_nullable
               as bool,
       expenses: null == expenses
-          ? _value._expenses
+          ? _self.expenses
           : expenses // ignore: cast_nullable_to_non_nullable
               as Map<String, DayExpense>,
       error: freezed == error
-          ? _value.error
+          ? _self.error
           : error // ignore: cast_nullable_to_non_nullable
               as dynamic,
       stackTrace: freezed == stackTrace
-          ? _value.stackTrace
+          ? _self.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
               as StackTrace?,
     ));
@@ -190,8 +146,8 @@ class __$$ExpenseListStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ExpenseListStateImpl implements _ExpenseListState {
-  const _$ExpenseListStateImpl(
+class _ExpenseListState implements ExpenseListState, WithError {
+  const _ExpenseListState(
       {final List<String> months = const [],
       this.selected = '',
       this.total = 0,
@@ -238,16 +194,19 @@ class _$ExpenseListStateImpl implements _ExpenseListState {
   @override
   final StackTrace? stackTrace;
 
+  /// Create a copy of ExpenseListState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'ExpenseListState(months: $months, selected: $selected, total: $total, loading: $loading, searchMode: $searchMode, expenses: $expenses, error: $error, stackTrace: $stackTrace)';
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ExpenseListStateCopyWith<_ExpenseListState> get copyWith =>
+      __$ExpenseListStateCopyWithImpl<_ExpenseListState>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ExpenseListStateImpl &&
+            other is _ExpenseListState &&
             const DeepCollectionEquality().equals(other._months, _months) &&
             (identical(other.selected, selected) ||
                 other.selected == selected) &&
@@ -273,48 +232,88 @@ class _$ExpenseListStateImpl implements _ExpenseListState {
       const DeepCollectionEquality().hash(error),
       stackTrace);
 
+  @override
+  String toString() {
+    return 'ExpenseListState(months: $months, selected: $selected, total: $total, loading: $loading, searchMode: $searchMode, expenses: $expenses, error: $error, stackTrace: $stackTrace)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$ExpenseListStateCopyWith<$Res>
+    implements $ExpenseListStateCopyWith<$Res> {
+  factory _$ExpenseListStateCopyWith(
+          _ExpenseListState value, $Res Function(_ExpenseListState) _then) =
+      __$ExpenseListStateCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {List<String> months,
+      String selected,
+      double total,
+      bool loading,
+      bool searchMode,
+      Map<String, DayExpense> expenses,
+      dynamic error,
+      StackTrace? stackTrace});
+}
+
+/// @nodoc
+class __$ExpenseListStateCopyWithImpl<$Res>
+    implements _$ExpenseListStateCopyWith<$Res> {
+  __$ExpenseListStateCopyWithImpl(this._self, this._then);
+
+  final _ExpenseListState _self;
+  final $Res Function(_ExpenseListState) _then;
+
   /// Create a copy of ExpenseListState
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ExpenseListStateImplCopyWith<_$ExpenseListStateImpl> get copyWith =>
-      __$$ExpenseListStateImplCopyWithImpl<_$ExpenseListStateImpl>(
-          this, _$identity);
+  $Res call({
+    Object? months = null,
+    Object? selected = null,
+    Object? total = null,
+    Object? loading = null,
+    Object? searchMode = null,
+    Object? expenses = null,
+    Object? error = freezed,
+    Object? stackTrace = freezed,
+  }) {
+    return _then(_ExpenseListState(
+      months: null == months
+          ? _self._months
+          : months // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      selected: null == selected
+          ? _self.selected
+          : selected // ignore: cast_nullable_to_non_nullable
+              as String,
+      total: null == total
+          ? _self.total
+          : total // ignore: cast_nullable_to_non_nullable
+              as double,
+      loading: null == loading
+          ? _self.loading
+          : loading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      searchMode: null == searchMode
+          ? _self.searchMode
+          : searchMode // ignore: cast_nullable_to_non_nullable
+              as bool,
+      expenses: null == expenses
+          ? _self._expenses
+          : expenses // ignore: cast_nullable_to_non_nullable
+              as Map<String, DayExpense>,
+      error: freezed == error
+          ? _self.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      stackTrace: freezed == stackTrace
+          ? _self.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace?,
+    ));
+  }
 }
 
-abstract class _ExpenseListState implements ExpenseListState, WithError {
-  const factory _ExpenseListState(
-      {final List<String> months,
-      final String selected,
-      final double total,
-      final bool loading,
-      final bool searchMode,
-      final Map<String, DayExpense> expenses,
-      final dynamic error,
-      final StackTrace? stackTrace}) = _$ExpenseListStateImpl;
-
-  @override
-  List<String> get months;
-  @override
-  String get selected;
-  @override
-  double get total;
-  @override
-  bool get loading;
-  @override
-  bool get searchMode;
-  @override
-  Map<String, DayExpense> get expenses;
-  @override
-  dynamic get error;
-  @override
-  StackTrace? get stackTrace;
-
-  /// Create a copy of ExpenseListState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ExpenseListStateImplCopyWith<_$ExpenseListStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

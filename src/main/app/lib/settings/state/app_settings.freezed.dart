@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,126 +10,27 @@ part of 'app_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AppSettingsState {
-  bool get materialYou => throw _privateConstructorUsedError;
-  bool get blackBackground => throw _privateConstructorUsedError;
+  bool get materialYou;
+  bool get blackBackground;
 
   /// Create a copy of AppSettingsState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $AppSettingsStateCopyWith<AppSettingsState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $AppSettingsStateCopyWith<$Res> {
-  factory $AppSettingsStateCopyWith(
-          AppSettingsState value, $Res Function(AppSettingsState) then) =
-      _$AppSettingsStateCopyWithImpl<$Res, AppSettingsState>;
-  @useResult
-  $Res call({bool materialYou, bool blackBackground});
-}
-
-/// @nodoc
-class _$AppSettingsStateCopyWithImpl<$Res, $Val extends AppSettingsState>
-    implements $AppSettingsStateCopyWith<$Res> {
-  _$AppSettingsStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of AppSettingsState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? materialYou = null,
-    Object? blackBackground = null,
-  }) {
-    return _then(_value.copyWith(
-      materialYou: null == materialYou
-          ? _value.materialYou
-          : materialYou // ignore: cast_nullable_to_non_nullable
-              as bool,
-      blackBackground: null == blackBackground
-          ? _value.blackBackground
-          : blackBackground // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$AppSettingsStateImplCopyWith<$Res>
-    implements $AppSettingsStateCopyWith<$Res> {
-  factory _$$AppSettingsStateImplCopyWith(_$AppSettingsStateImpl value,
-          $Res Function(_$AppSettingsStateImpl) then) =
-      __$$AppSettingsStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({bool materialYou, bool blackBackground});
-}
-
-/// @nodoc
-class __$$AppSettingsStateImplCopyWithImpl<$Res>
-    extends _$AppSettingsStateCopyWithImpl<$Res, _$AppSettingsStateImpl>
-    implements _$$AppSettingsStateImplCopyWith<$Res> {
-  __$$AppSettingsStateImplCopyWithImpl(_$AppSettingsStateImpl _value,
-      $Res Function(_$AppSettingsStateImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AppSettingsState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? materialYou = null,
-    Object? blackBackground = null,
-  }) {
-    return _then(_$AppSettingsStateImpl(
-      materialYou: null == materialYou
-          ? _value.materialYou
-          : materialYou // ignore: cast_nullable_to_non_nullable
-              as bool,
-      blackBackground: null == blackBackground
-          ? _value.blackBackground
-          : blackBackground // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$AppSettingsStateImpl implements _AppSettingsState {
-  const _$AppSettingsStateImpl(
-      {this.materialYou = false, this.blackBackground = false});
-
-  @override
-  @JsonKey()
-  final bool materialYou;
-  @override
-  @JsonKey()
-  final bool blackBackground;
-
-  @override
-  String toString() {
-    return 'AppSettingsState(materialYou: $materialYou, blackBackground: $blackBackground)';
-  }
+      _$AppSettingsStateCopyWithImpl<AppSettingsState>(
+          this as AppSettingsState, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AppSettingsStateImpl &&
+            other is AppSettingsState &&
             (identical(other.materialYou, materialYou) ||
                 other.materialYou == materialYou) &&
             (identical(other.blackBackground, blackBackground) ||
@@ -138,30 +40,129 @@ class _$AppSettingsStateImpl implements _AppSettingsState {
   @override
   int get hashCode => Object.hash(runtimeType, materialYou, blackBackground);
 
+  @override
+  String toString() {
+    return 'AppSettingsState(materialYou: $materialYou, blackBackground: $blackBackground)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $AppSettingsStateCopyWith<$Res> {
+  factory $AppSettingsStateCopyWith(
+          AppSettingsState value, $Res Function(AppSettingsState) _then) =
+      _$AppSettingsStateCopyWithImpl;
+  @useResult
+  $Res call({bool materialYou, bool blackBackground});
+}
+
+/// @nodoc
+class _$AppSettingsStateCopyWithImpl<$Res>
+    implements $AppSettingsStateCopyWith<$Res> {
+  _$AppSettingsStateCopyWithImpl(this._self, this._then);
+
+  final AppSettingsState _self;
+  final $Res Function(AppSettingsState) _then;
+
   /// Create a copy of AppSettingsState
   /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? materialYou = null,
+    Object? blackBackground = null,
+  }) {
+    return _then(_self.copyWith(
+      materialYou: null == materialYou
+          ? _self.materialYou
+          : materialYou // ignore: cast_nullable_to_non_nullable
+              as bool,
+      blackBackground: null == blackBackground
+          ? _self.blackBackground
+          : blackBackground // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _AppSettingsState implements AppSettingsState {
+  const _AppSettingsState(
+      {this.materialYou = false, this.blackBackground = false});
+
+  @override
+  @JsonKey()
+  final bool materialYou;
+  @override
+  @JsonKey()
+  final bool blackBackground;
+
+  /// Create a copy of AppSettingsState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$AppSettingsStateCopyWith<_AppSettingsState> get copyWith =>
+      __$AppSettingsStateCopyWithImpl<_AppSettingsState>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _AppSettingsState &&
+            (identical(other.materialYou, materialYou) ||
+                other.materialYou == materialYou) &&
+            (identical(other.blackBackground, blackBackground) ||
+                other.blackBackground == blackBackground));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, materialYou, blackBackground);
+
+  @override
+  String toString() {
+    return 'AppSettingsState(materialYou: $materialYou, blackBackground: $blackBackground)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$AppSettingsStateCopyWith<$Res>
+    implements $AppSettingsStateCopyWith<$Res> {
+  factory _$AppSettingsStateCopyWith(
+          _AppSettingsState value, $Res Function(_AppSettingsState) _then) =
+      __$AppSettingsStateCopyWithImpl;
+  @override
+  @useResult
+  $Res call({bool materialYou, bool blackBackground});
+}
+
+/// @nodoc
+class __$AppSettingsStateCopyWithImpl<$Res>
+    implements _$AppSettingsStateCopyWith<$Res> {
+  __$AppSettingsStateCopyWithImpl(this._self, this._then);
+
+  final _AppSettingsState _self;
+  final $Res Function(_AppSettingsState) _then;
+
+  /// Create a copy of AppSettingsState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  _$$AppSettingsStateImplCopyWith<_$AppSettingsStateImpl> get copyWith =>
-      __$$AppSettingsStateImplCopyWithImpl<_$AppSettingsStateImpl>(
-          this, _$identity);
+  $Res call({
+    Object? materialYou = null,
+    Object? blackBackground = null,
+  }) {
+    return _then(_AppSettingsState(
+      materialYou: null == materialYou
+          ? _self.materialYou
+          : materialYou // ignore: cast_nullable_to_non_nullable
+              as bool,
+      blackBackground: null == blackBackground
+          ? _self.blackBackground
+          : blackBackground // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
 }
 
-abstract class _AppSettingsState implements AppSettingsState {
-  const factory _AppSettingsState(
-      {final bool materialYou,
-      final bool blackBackground}) = _$AppSettingsStateImpl;
-
-  @override
-  bool get materialYou;
-  @override
-  bool get blackBackground;
-
-  /// Create a copy of AppSettingsState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AppSettingsStateImplCopyWith<_$AppSettingsStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

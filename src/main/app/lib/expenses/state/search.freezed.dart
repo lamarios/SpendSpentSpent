@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,29 +10,47 @@ part of 'search.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$SearchState {
-  SearchParameters get searchParametersBounds =>
-      throw _privateConstructorUsedError;
-  SearchParameters get searchParameters => throw _privateConstructorUsedError;
+  SearchParameters get searchParametersBounds;
+  SearchParameters get searchParameters;
 
   /// Create a copy of SearchState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $SearchStateCopyWith<SearchState> get copyWith =>
-      throw _privateConstructorUsedError;
+      _$SearchStateCopyWithImpl<SearchState>(this as SearchState, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is SearchState &&
+            (identical(other.searchParametersBounds, searchParametersBounds) ||
+                other.searchParametersBounds == searchParametersBounds) &&
+            (identical(other.searchParameters, searchParameters) ||
+                other.searchParameters == searchParameters));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, searchParametersBounds, searchParameters);
+
+  @override
+  String toString() {
+    return 'SearchState(searchParametersBounds: $searchParametersBounds, searchParameters: $searchParameters)';
+  }
 }
 
 /// @nodoc
-abstract class $SearchStateCopyWith<$Res> {
+abstract mixin class $SearchStateCopyWith<$Res> {
   factory $SearchStateCopyWith(
-          SearchState value, $Res Function(SearchState) then) =
-      _$SearchStateCopyWithImpl<$Res, SearchState>;
+          SearchState value, $Res Function(SearchState) _then) =
+      _$SearchStateCopyWithImpl;
   @useResult
   $Res call(
       {SearchParameters searchParametersBounds,
@@ -42,14 +61,11 @@ abstract class $SearchStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$SearchStateCopyWithImpl<$Res, $Val extends SearchState>
-    implements $SearchStateCopyWith<$Res> {
-  _$SearchStateCopyWithImpl(this._value, this._then);
+class _$SearchStateCopyWithImpl<$Res> implements $SearchStateCopyWith<$Res> {
+  _$SearchStateCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final SearchState _self;
+  final $Res Function(SearchState) _then;
 
   /// Create a copy of SearchState
   /// with the given fields replaced by the non-null parameter values.
@@ -59,16 +75,16 @@ class _$SearchStateCopyWithImpl<$Res, $Val extends SearchState>
     Object? searchParametersBounds = null,
     Object? searchParameters = null,
   }) {
-    return _then(_value.copyWith(
+    return _then(_self.copyWith(
       searchParametersBounds: null == searchParametersBounds
-          ? _value.searchParametersBounds
+          ? _self.searchParametersBounds
           : searchParametersBounds // ignore: cast_nullable_to_non_nullable
               as SearchParameters,
       searchParameters: null == searchParameters
-          ? _value.searchParameters
+          ? _self.searchParameters
           : searchParameters // ignore: cast_nullable_to_non_nullable
               as SearchParameters,
-    ) as $Val);
+    ));
   }
 
   /// Create a copy of SearchState
@@ -76,9 +92,9 @@ class _$SearchStateCopyWithImpl<$Res, $Val extends SearchState>
   @override
   @pragma('vm:prefer-inline')
   $SearchParametersCopyWith<$Res> get searchParametersBounds {
-    return $SearchParametersCopyWith<$Res>(_value.searchParametersBounds,
+    return $SearchParametersCopyWith<$Res>(_self.searchParametersBounds,
         (value) {
-      return _then(_value.copyWith(searchParametersBounds: value) as $Val);
+      return _then(_self.copyWith(searchParametersBounds: value));
     });
   }
 
@@ -87,63 +103,16 @@ class _$SearchStateCopyWithImpl<$Res, $Val extends SearchState>
   @override
   @pragma('vm:prefer-inline')
   $SearchParametersCopyWith<$Res> get searchParameters {
-    return $SearchParametersCopyWith<$Res>(_value.searchParameters, (value) {
-      return _then(_value.copyWith(searchParameters: value) as $Val);
+    return $SearchParametersCopyWith<$Res>(_self.searchParameters, (value) {
+      return _then(_self.copyWith(searchParameters: value));
     });
   }
 }
 
 /// @nodoc
-abstract class _$$SearchStateImplCopyWith<$Res>
-    implements $SearchStateCopyWith<$Res> {
-  factory _$$SearchStateImplCopyWith(
-          _$SearchStateImpl value, $Res Function(_$SearchStateImpl) then) =
-      __$$SearchStateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {SearchParameters searchParametersBounds,
-      SearchParameters searchParameters});
 
-  @override
-  $SearchParametersCopyWith<$Res> get searchParametersBounds;
-  @override
-  $SearchParametersCopyWith<$Res> get searchParameters;
-}
-
-/// @nodoc
-class __$$SearchStateImplCopyWithImpl<$Res>
-    extends _$SearchStateCopyWithImpl<$Res, _$SearchStateImpl>
-    implements _$$SearchStateImplCopyWith<$Res> {
-  __$$SearchStateImplCopyWithImpl(
-      _$SearchStateImpl _value, $Res Function(_$SearchStateImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of SearchState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? searchParametersBounds = null,
-    Object? searchParameters = null,
-  }) {
-    return _then(_$SearchStateImpl(
-      searchParametersBounds: null == searchParametersBounds
-          ? _value.searchParametersBounds
-          : searchParametersBounds // ignore: cast_nullable_to_non_nullable
-              as SearchParameters,
-      searchParameters: null == searchParameters
-          ? _value.searchParameters
-          : searchParameters // ignore: cast_nullable_to_non_nullable
-              as SearchParameters,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$SearchStateImpl implements _SearchState {
-  const _$SearchStateImpl(
+class _SearchState implements SearchState {
+  const _SearchState(
       {this.searchParametersBounds = const SearchParameters(
           categories: [], maxAmount: 0, minAmount: 0, note: ""),
       this.searchParameters = const SearchParameters(
@@ -156,16 +125,19 @@ class _$SearchStateImpl implements _SearchState {
   @JsonKey()
   final SearchParameters searchParameters;
 
+  /// Create a copy of SearchState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'SearchState(searchParametersBounds: $searchParametersBounds, searchParameters: $searchParameters)';
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$SearchStateCopyWith<_SearchState> get copyWith =>
+      __$SearchStateCopyWithImpl<_SearchState>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchStateImpl &&
+            other is _SearchState &&
             (identical(other.searchParametersBounds, searchParametersBounds) ||
                 other.searchParametersBounds == searchParametersBounds) &&
             (identical(other.searchParameters, searchParameters) ||
@@ -176,29 +148,77 @@ class _$SearchStateImpl implements _SearchState {
   int get hashCode =>
       Object.hash(runtimeType, searchParametersBounds, searchParameters);
 
+  @override
+  String toString() {
+    return 'SearchState(searchParametersBounds: $searchParametersBounds, searchParameters: $searchParameters)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$SearchStateCopyWith<$Res>
+    implements $SearchStateCopyWith<$Res> {
+  factory _$SearchStateCopyWith(
+          _SearchState value, $Res Function(_SearchState) _then) =
+      __$SearchStateCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {SearchParameters searchParametersBounds,
+      SearchParameters searchParameters});
+
+  @override
+  $SearchParametersCopyWith<$Res> get searchParametersBounds;
+  @override
+  $SearchParametersCopyWith<$Res> get searchParameters;
+}
+
+/// @nodoc
+class __$SearchStateCopyWithImpl<$Res> implements _$SearchStateCopyWith<$Res> {
+  __$SearchStateCopyWithImpl(this._self, this._then);
+
+  final _SearchState _self;
+  final $Res Function(_SearchState) _then;
+
   /// Create a copy of SearchState
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$SearchStateImplCopyWith<_$SearchStateImpl> get copyWith =>
-      __$$SearchStateImplCopyWithImpl<_$SearchStateImpl>(this, _$identity);
-}
-
-abstract class _SearchState implements SearchState {
-  const factory _SearchState(
-      {final SearchParameters searchParametersBounds,
-      final SearchParameters searchParameters}) = _$SearchStateImpl;
-
-  @override
-  SearchParameters get searchParametersBounds;
-  @override
-  SearchParameters get searchParameters;
+  $Res call({
+    Object? searchParametersBounds = null,
+    Object? searchParameters = null,
+  }) {
+    return _then(_SearchState(
+      searchParametersBounds: null == searchParametersBounds
+          ? _self.searchParametersBounds
+          : searchParametersBounds // ignore: cast_nullable_to_non_nullable
+              as SearchParameters,
+      searchParameters: null == searchParameters
+          ? _self.searchParameters
+          : searchParameters // ignore: cast_nullable_to_non_nullable
+              as SearchParameters,
+    ));
+  }
 
   /// Create a copy of SearchState
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SearchStateImplCopyWith<_$SearchStateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $SearchParametersCopyWith<$Res> get searchParametersBounds {
+    return $SearchParametersCopyWith<$Res>(_self.searchParametersBounds,
+        (value) {
+      return _then(_self.copyWith(searchParametersBounds: value));
+    });
+  }
+
+  /// Create a copy of SearchState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $SearchParametersCopyWith<$Res> get searchParameters {
+    return $SearchParametersCopyWith<$Res>(_self.searchParameters, (value) {
+      return _then(_self.copyWith(searchParameters: value));
+    });
+  }
 }
+
+// dart format on

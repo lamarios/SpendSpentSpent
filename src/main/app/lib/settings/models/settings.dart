@@ -7,7 +7,7 @@ part 'settings.g.dart';
 part 'settings.freezed.dart';
 
 @freezed
-class Settings with _$Settings {
+sealed class Settings with _$Settings {
   const factory Settings(
       {required String name,
       required String value,

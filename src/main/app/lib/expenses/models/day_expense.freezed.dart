@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,94 +10,61 @@ part of 'day_expense.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-DayExpense _$DayExpenseFromJson(Map<String, dynamic> json) {
-  return _DayExpense.fromJson(json);
-}
 
 /// @nodoc
 mixin _$DayExpense {
-  String get date => throw _privateConstructorUsedError;
-  double get total => throw _privateConstructorUsedError;
-  List<Expense> get expenses => throw _privateConstructorUsedError;
-
-  /// Serializes this DayExpense to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  String get date;
+  double get total;
+  List<Expense> get expenses;
 
   /// Create a copy of DayExpense
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $DayExpenseCopyWith<DayExpense> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $DayExpenseCopyWith<$Res> {
-  factory $DayExpenseCopyWith(
-          DayExpense value, $Res Function(DayExpense) then) =
-      _$DayExpenseCopyWithImpl<$Res, DayExpense>;
-  @useResult
-  $Res call({String date, double total, List<Expense> expenses});
-}
-
-/// @nodoc
-class _$DayExpenseCopyWithImpl<$Res, $Val extends DayExpense>
-    implements $DayExpenseCopyWith<$Res> {
-  _$DayExpenseCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of DayExpense
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $DayExpenseCopyWith<DayExpense> get copyWith =>
+      _$DayExpenseCopyWithImpl<DayExpense>(this as DayExpense, _$identity);
+
+  /// Serializes this DayExpense to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? date = null,
-    Object? total = null,
-    Object? expenses = null,
-  }) {
-    return _then(_value.copyWith(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as String,
-      total: null == total
-          ? _value.total
-          : total // ignore: cast_nullable_to_non_nullable
-              as double,
-      expenses: null == expenses
-          ? _value.expenses
-          : expenses // ignore: cast_nullable_to_non_nullable
-              as List<Expense>,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is DayExpense &&
+            (identical(other.date, date) || other.date == date) &&
+            (identical(other.total, total) || other.total == total) &&
+            const DeepCollectionEquality().equals(other.expenses, expenses));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, date, total, const DeepCollectionEquality().hash(expenses));
+
+  @override
+  String toString() {
+    return 'DayExpense(date: $date, total: $total, expenses: $expenses)';
   }
 }
 
 /// @nodoc
-abstract class _$$DayExpenseImplCopyWith<$Res>
-    implements $DayExpenseCopyWith<$Res> {
-  factory _$$DayExpenseImplCopyWith(
-          _$DayExpenseImpl value, $Res Function(_$DayExpenseImpl) then) =
-      __$$DayExpenseImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $DayExpenseCopyWith<$Res> {
+  factory $DayExpenseCopyWith(
+          DayExpense value, $Res Function(DayExpense) _then) =
+      _$DayExpenseCopyWithImpl;
   @useResult
   $Res call({String date, double total, List<Expense> expenses});
 }
 
 /// @nodoc
-class __$$DayExpenseImplCopyWithImpl<$Res>
-    extends _$DayExpenseCopyWithImpl<$Res, _$DayExpenseImpl>
-    implements _$$DayExpenseImplCopyWith<$Res> {
-  __$$DayExpenseImplCopyWithImpl(
-      _$DayExpenseImpl _value, $Res Function(_$DayExpenseImpl) _then)
-      : super(_value, _then);
+class _$DayExpenseCopyWithImpl<$Res> implements $DayExpenseCopyWith<$Res> {
+  _$DayExpenseCopyWithImpl(this._self, this._then);
+
+  final DayExpense _self;
+  final $Res Function(DayExpense) _then;
 
   /// Create a copy of DayExpense
   /// with the given fields replaced by the non-null parameter values.
@@ -107,17 +75,17 @@ class __$$DayExpenseImplCopyWithImpl<$Res>
     Object? total = null,
     Object? expenses = null,
   }) {
-    return _then(_$DayExpenseImpl(
+    return _then(_self.copyWith(
       date: null == date
-          ? _value.date
+          ? _self.date
           : date // ignore: cast_nullable_to_non_nullable
               as String,
       total: null == total
-          ? _value.total
+          ? _self.total
           : total // ignore: cast_nullable_to_non_nullable
               as double,
       expenses: null == expenses
-          ? _value._expenses
+          ? _self.expenses
           : expenses // ignore: cast_nullable_to_non_nullable
               as List<Expense>,
     ));
@@ -126,15 +94,14 @@ class __$$DayExpenseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$DayExpenseImpl implements _DayExpense {
-  const _$DayExpenseImpl(
+class _DayExpense implements DayExpense {
+  const _DayExpense(
       {required this.date,
       required this.total,
       final List<Expense> expenses = const []})
       : _expenses = expenses;
-
-  factory _$DayExpenseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DayExpenseImplFromJson(json);
+  factory _DayExpense.fromJson(Map<String, dynamic> json) =>
+      _$DayExpenseFromJson(json);
 
   @override
   final String date;
@@ -149,16 +116,26 @@ class _$DayExpenseImpl implements _DayExpense {
     return EqualUnmodifiableListView(_expenses);
   }
 
+  /// Create a copy of DayExpense
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'DayExpense(date: $date, total: $total, expenses: $expenses)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$DayExpenseCopyWith<_DayExpense> get copyWith =>
+      __$DayExpenseCopyWithImpl<_DayExpense>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$DayExpenseToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DayExpenseImpl &&
+            other is _DayExpense &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.total, total) || other.total == total) &&
             const DeepCollectionEquality().equals(other._expenses, _expenses));
@@ -169,42 +146,54 @@ class _$DayExpenseImpl implements _DayExpense {
   int get hashCode => Object.hash(
       runtimeType, date, total, const DeepCollectionEquality().hash(_expenses));
 
-  /// Create a copy of DayExpense
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$DayExpenseImplCopyWith<_$DayExpenseImpl> get copyWith =>
-      __$$DayExpenseImplCopyWithImpl<_$DayExpenseImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$DayExpenseImplToJson(
-      this,
-    );
+  String toString() {
+    return 'DayExpense(date: $date, total: $total, expenses: $expenses)';
   }
 }
 
-abstract class _DayExpense implements DayExpense {
-  const factory _DayExpense(
-      {required final String date,
-      required final double total,
-      final List<Expense> expenses}) = _$DayExpenseImpl;
+/// @nodoc
+abstract mixin class _$DayExpenseCopyWith<$Res>
+    implements $DayExpenseCopyWith<$Res> {
+  factory _$DayExpenseCopyWith(
+          _DayExpense value, $Res Function(_DayExpense) _then) =
+      __$DayExpenseCopyWithImpl;
+  @override
+  @useResult
+  $Res call({String date, double total, List<Expense> expenses});
+}
 
-  factory _DayExpense.fromJson(Map<String, dynamic> json) =
-      _$DayExpenseImpl.fromJson;
+/// @nodoc
+class __$DayExpenseCopyWithImpl<$Res> implements _$DayExpenseCopyWith<$Res> {
+  __$DayExpenseCopyWithImpl(this._self, this._then);
 
-  @override
-  String get date;
-  @override
-  double get total;
-  @override
-  List<Expense> get expenses;
+  final _DayExpense _self;
+  final $Res Function(_DayExpense) _then;
 
   /// Create a copy of DayExpense
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$DayExpenseImplCopyWith<_$DayExpenseImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? date = null,
+    Object? total = null,
+    Object? expenses = null,
+  }) {
+    return _then(_DayExpense(
+      date: null == date
+          ? _self.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String,
+      total: null == total
+          ? _self.total
+          : total // ignore: cast_nullable_to_non_nullable
+              as double,
+      expenses: null == expenses
+          ? _self._expenses
+          : expenses // ignore: cast_nullable_to_non_nullable
+              as List<Expense>,
+    ));
+  }
 }
+
+// dart format on

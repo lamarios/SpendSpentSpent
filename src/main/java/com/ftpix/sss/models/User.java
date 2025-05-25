@@ -21,6 +21,8 @@ public class User {
     private boolean showAnnouncement = false;
     private boolean isAdmin = false;
 
+    private String oidcSub;
+
     //    @DatabaseField(columnName = "TIMECREATED")
     private long timeCreated = System.currentTimeMillis();
 
@@ -95,5 +97,13 @@ public class User {
 
     public void setTimeCreated(long timeCreated) {
         this.timeCreated = timeCreated;
+    }
+
+    public String getOidcSub() {
+        return oidcSub;
+    }
+
+    public void setOidcSub(String oidcSub) {
+        this.oidcSub = oidcSub;
     }
 }

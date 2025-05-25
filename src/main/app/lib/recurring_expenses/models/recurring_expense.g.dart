@@ -6,9 +6,8 @@ part of 'recurring_expense.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$RecurringExpenseImpl _$$RecurringExpenseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$RecurringExpenseImpl(
+_RecurringExpense _$RecurringExpenseFromJson(Map<String, dynamic> json) =>
+    _RecurringExpense(
       nextOccurrence: json['nextOccurrence'] as String?,
       lastOccurrence: json['lastOccurrence'] as String?,
       amount: (json['amount'] as num).toDouble(),
@@ -20,8 +19,7 @@ _$RecurringExpenseImpl _$$RecurringExpenseImplFromJson(
       name: json['name'] as String,
     );
 
-Map<String, dynamic> _$$RecurringExpenseImplToJson(
-        _$RecurringExpenseImpl instance) =>
+Map<String, dynamic> _$RecurringExpenseToJson(_RecurringExpense instance) =>
     <String, dynamic>{
       'nextOccurrence': instance.nextOccurrence,
       'lastOccurrence': instance.lastOccurrence,

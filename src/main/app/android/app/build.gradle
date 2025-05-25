@@ -57,8 +57,16 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 34
+    compileSdkVersion 35
 
+    compileOptions {
+        sourceCompatibility 21
+        targetCompatibility 21
+    }
+
+    kotlinOptions {
+        jvmTarget = "21"
+    }
 
     lintOptions {
         checkReleaseBuilds false
@@ -70,10 +78,13 @@ android {
 
     defaultConfig {
         applicationId "com.spendspentspent.app"
-        minSdkVersion 21
-        targetSdkVersion 34
+        minSdkVersion 23
+        targetSdkVersion 35
         versionCode buildNumber
         versionName flutterVersionName
+        manifestPlaceholders += [
+                'appAuthRedirectScheme': 'com.spendspentspent.app' // for oidc flutter dependency
+        ]
     }
 
     signingConfigs {
@@ -89,6 +100,7 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    namespace 'com.spendspentspent.app'
 }
 
 flutter {

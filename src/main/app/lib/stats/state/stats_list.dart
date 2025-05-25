@@ -37,7 +37,7 @@ class StatsListCubit extends Cubit<StatsListState> {
 }
 
 @freezed
-class StatsListState with _$StatsListState implements WithError {
+sealed class StatsListState with _$StatsListState implements WithError {
   @Implements<WithError>()
   const factory StatsListState({
     @Default(false) bool loading,

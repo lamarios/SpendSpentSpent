@@ -6,16 +6,14 @@ part of 'left_column_stats.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$LeftColumnStatsImpl _$$LeftColumnStatsImplFromJson(
-        Map<String, dynamic> json) =>
-    _$LeftColumnStatsImpl(
+_LeftColumnStats _$LeftColumnStatsFromJson(Map<String, dynamic> json) =>
+    _LeftColumnStats(
       category: Category.fromJson(json['category'] as Map<String, dynamic>),
       total: (json['total'] as num).toDouble(),
       amount: (json['amount'] as num).toDouble(),
     );
 
-Map<String, dynamic> _$$LeftColumnStatsImplToJson(
-        _$LeftColumnStatsImpl instance) =>
+Map<String, dynamic> _$LeftColumnStatsToJson(_LeftColumnStats instance) =>
     <String, dynamic>{
       'category': instance.category,
       'total': instance.total,

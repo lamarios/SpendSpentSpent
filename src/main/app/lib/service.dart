@@ -9,11 +9,14 @@ import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
+import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/stats/models/graph_data_point.dart';
 import 'package:spend_spent_spent/utils/models/paginatedResults.dart';
 import 'package:spend_spent_spent/expenses/models/search_parameters.dart';
 import 'package:spend_spent_spent/settings/models/settings.dart';
+import 'package:spend_spent_spent/utils/models/token_type.dart';
 
+import 'identity/states/oidc.dart';
 import 'settings/models/config.dart';
 import 'expenses/models/expense_limits.dart';
 import 'expenses/models/search_categories.dart';
@@ -64,6 +67,7 @@ const MISC_VERSION = '$API_URL/Misc/version';
 const MISC_GET_CONFIG = "$API_ROOT/config";
 const USER_EDIT_PROFILE = "$API_URL/User";
 const USER_GET = "$API_URL/User?search={0}&page={1}&pageSize={2}";
+const USER_CURRENT = "$API_URL/User/current";
 const USER_SET_ADMIN = "$API_URL/User/{0}/setAdmin/{1}";
 const USER_UPDATE_PASSWORD = "$API_URL/User/{0}/setPassword";
 const USER_ADD_USER = "$API_URL/User";
@@ -77,15 +81,43 @@ const List<String> emptyList = [];
 class Service {
   String url = "";
 
-  Map<String, String> headers = {};
+  String? version;
+
+  Future<Map<String, String>> get headers async {
+    var headers = {'Content-Type': 'application/json'};
+
+    var token = await this.token;
+    if (token != null) {
+      token = "Bearer $token";
+      headers['Authorization'] = token;
+    }
+
+    if (version != null) {
+      headers['x-version'] = version!;
+    }
+
+    return headers;
+  }
+
+  Future<String?> get token async {
+    var tokenType = await Preferences.get(Preferences.TOKEN_TYPE);
+
+    if (tokenType == TokenType.usernamePassword.name) {
+      return getIt<UsernamePasswordCubit>().state.token;
+    }
+
+    if (tokenType == TokenType.sso.name) {
+      return getIt<OidcCubit>().state.user?.token.accessToken;
+    }
+
+    return null;
+  }
+
   int? appBuildVersion;
 
   Config? config;
 
-  Service([url]) {
-    headers.update("Content-Type", (value) => "application/json",
-        ifAbsent: () => "application/json");
-  }
+  Service([url]);
 
   Future<void> setUrl(String url) async {
     await Preferences.set(Preferences.SERVER_URL, url);
@@ -97,8 +129,7 @@ class Service {
     if (appBuildVersion == null) {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       appBuildVersion = int.parse(packageInfo.buildNumber);
-      headers.update("x-version", (value) => appBuildVersion!.toString(),
-          ifAbsent: () => appBuildVersion!.toString());
+      version = appBuildVersion!.toString();
       return appBuildVersion!;
     } else {
       return appBuildVersion!;
@@ -107,13 +138,13 @@ class Service {
 
   Future<bool> needLogin() async {
     try {
-      var token = await Preferences.get(Preferences.TOKEN);
+      var token = await this.token;
 
-      bool expired = JwtDecoder.isExpired(token);
-      if (!expired) {
-        await setToken(token);
+      if (token == null) {
+        return true;
       }
-      return expired;
+
+      return JwtDecoder.isExpired(token);
     } catch (e) {
       return true;
     }
@@ -147,39 +178,27 @@ class Service {
     return Uri.parse(url);
   }
 
-  Future<bool> setToken(String token) async {
-    await Preferences.set(Preferences.TOKEN, token);
-    token = token.replaceAll('"', '');
-    token = "Bearer $token";
-
-    headers.update("Authorization", (value) => token, ifAbsent: () => token);
-
-    return true;
-  }
-
   /// Logs in to the server
-  Future<bool> login(String username, String password) async {
+  Future<String> login(String username, String password) async {
     Map<String, String> creds = {};
     creds.putIfAbsent("email", () => username);
     creds.putIfAbsent("password", () => password);
 
     final response = await http.post(await formatUrl(SESSION_LOGIN),
-        body: jsonEncode(creds), headers: headers);
+        body: jsonEncode(creds), headers: await headers);
 
     if (response.body == '"Invalid username or password"') {
       throw Exception("Invalid email/password combination");
     } else if (response.statusCode == 200) {
-      final tokenSet = await setToken(response.body);
-      await getServerConfig(url);
-      return tokenSet;
+      return response.body.replaceAll('"', '');
     } else {
       throw Exception("Error while connecting to server");
     }
   }
 
   Future<AvailableCategories> getAvailableCategories() async {
-    final response =
-        await http.get(await formatUrl(CATEGORY_AVAILABLE), headers: headers);
+    final response = await http.get(await formatUrl(CATEGORY_AVAILABLE),
+        headers: await headers);
 
     processResponse(response);
     return AvailableCategories.fromJson(jsonDecode(response.body));
@@ -191,7 +210,7 @@ class Service {
     }
 
     final response = await http.post(await formatUrl(CATEGORY_SEARCH),
-        body: '"$search"', headers: headers);
+        body: '"$search"', headers: await headers);
 
     processResponse(response);
     return SearchCategories.fromJson(jsonDecode(response.body)).results;
@@ -203,7 +222,7 @@ class Service {
     data.putIfAbsent('order', () => 0);
 
     final response = await http.post(await formatUrl(CATEGORY_ADD),
-        body: jsonEncode(data), headers: headers);
+        body: jsonEncode(data), headers: await headers);
 
     processResponse(response);
     return true;
@@ -213,15 +232,15 @@ class Service {
     Map map = expense.toJson();
 
     final response = await http.post(await formatUrl(EXPENSE_ADD),
-        body: jsonEncode(map), headers: headers);
+        body: jsonEncode(map), headers: await headers);
 
     processResponse(response);
     return Expense.fromJson(jsonDecode(response.body));
   }
 
   Future<ExpenseLimits> getExpenseLimits() async {
-    final response =
-        await http.get(await formatUrl(EXPENSE_GET_LIMITS), headers: headers);
+    final response = await http.get(await formatUrl(EXPENSE_GET_LIMITS),
+        headers: await headers);
 
     processResponse(response);
     return ExpenseLimits.fromJson(jsonDecode(response.body));
@@ -233,7 +252,7 @@ class Service {
     final response = await http.post(
         await formatUrl(EXPENSE_GET_NOTE_SUGGESTIONS),
         body: jsonEncode(map),
-        headers: headers);
+        headers: await headers);
 
     processResponse(response);
     Map<String, dynamic> result = jsonDecode(response.body);
@@ -246,7 +265,7 @@ class Service {
     final response = await http.post(
         await formatUrl(EXPENSE_GET_NOTE_AUTOCOMPLETE),
         body: seed,
-        headers: headers);
+        headers: await headers);
 
     processResponse(response);
     Map<String, dynamic> result = jsonDecode(response.body);
@@ -257,7 +276,7 @@ class Service {
 
   Future<List<Category>> getCategories() async {
     final response =
-        await http.get(await formatUrl(CATEGORY_ALL), headers: headers);
+        await http.get(await formatUrl(CATEGORY_ALL), headers: await headers);
 
     processResponse(response);
     Iterable i = jsonDecode(response.body);
@@ -266,21 +285,20 @@ class Service {
 
   Future<double> getCurrencyRate(String from, String to) async {
     final response = await http.get(await formatUrl(CURRENCY_GET, [from, to]),
-        headers: headers);
+        headers: await headers);
 
     processResponse(response);
     return double.parse(response.body);
   }
 
   Future<void> logout() async {
-    await Preferences.remove(Preferences.TOKEN);
-    config = null;
-    url = "";
+    await getIt<UsernamePasswordCubit>().logout();
+    await getIt<OidcCubit>().logout();
   }
 
   Future<List<RecurringExpense>> getRecurringExpenses() async {
     final response =
-        await http.get(await formatUrl(RECURRING_GET), headers: headers);
+        await http.get(await formatUrl(RECURRING_GET), headers: await headers);
 
     processResponse(response);
     Iterable i = jsonDecode(response.body);
@@ -291,7 +309,7 @@ class Service {
   Future<bool> updateRecurringExpense(RecurringExpense expense) async {
     final response = await http.post(
         await formatUrl(RECURRING_UPDATE, [expense.id.toString()]),
-        headers: headers,
+        headers: await headers,
         body: jsonEncode(expense));
     processResponse(response);
     return true;
@@ -300,22 +318,22 @@ class Service {
   Future<bool> deleteRecurringExpense(int id) async {
     final response = await http.delete(
         await formatUrl(RECURRING_DELETE, [id.toString()]),
-        headers: headers);
+        headers: await headers);
     processResponse(response);
     return true;
   }
 
   Future<bool> addRecurringExpense(RecurringExpense expense) async {
     final response = await http.post(await formatUrl(RECURRING_ADD),
-        headers: headers, body: jsonEncode(expense));
+        headers: await headers, body: jsonEncode(expense));
 
     processResponse(response);
     return true;
   }
 
   Future<List<String>> getExpensesMonths() async {
-    final response =
-        await http.get(await formatUrl(EXPENSE_GET_MONTHS), headers: headers);
+    final response = await http.get(await formatUrl(EXPENSE_GET_MONTHS),
+        headers: await headers);
     processResponse(response);
     Iterable i = jsonDecode(response.body);
     return List<String>.from(i.map((e) => e as String));
@@ -323,7 +341,7 @@ class Service {
 
   Future<Map<String, DayExpense>> getMonthExpenses(String month) async {
     final response = await http.get(await formatUrl(EXPENSE_BY_MONTH, [month]),
-        headers: headers);
+        headers: await headers);
     processResponse(response);
     Map<String, dynamic> map = jsonDecode(response.body);
 
@@ -333,7 +351,7 @@ class Service {
   Future<bool> deleteExpense(int id) async {
     final response = await http.delete(
         await formatUrl(EXPENSE_DELETE, [id.toString()]),
-        headers: headers);
+        headers: await headers);
     processResponse(response);
 
     return true;
@@ -341,7 +359,7 @@ class Service {
 
   Future<List<LeftColumnStats>> getMonthStats() async {
     final response = await http.get(await formatUrl(HISTORY_OVERALL_MONTH),
-        headers: headers);
+        headers: await headers);
 
     processResponse(response);
 
@@ -351,8 +369,8 @@ class Service {
   }
 
   Future<List<LeftColumnStats>> getYearStats() async {
-    final response =
-        await http.get(await formatUrl(HISTORY_OVERALL_YEAR), headers: headers);
+    final response = await http.get(await formatUrl(HISTORY_OVERALL_YEAR),
+        headers: await headers);
 
     processResponse(response);
 
@@ -365,7 +383,7 @@ class Service {
     final response = await http.get(
         await formatUrl(
             HISTORY_MONTHLY, [categoryId.toString(), count.toString()]),
-        headers: headers);
+        headers: await headers);
 
     processResponse(response);
     Iterable i = jsonDecode(response.body);
@@ -376,7 +394,7 @@ class Service {
     final response = await http.get(
         await formatUrl(
             HISTORY_YEARLY, [categoryId.toString(), count.toString()]),
-        headers: headers);
+        headers: await headers);
 
     processResponse(response);
     Iterable i = jsonDecode(response.body);
@@ -385,7 +403,7 @@ class Service {
 
   Future<bool> saveAllCategories(List<Category> categories) async {
     final response = await http.put(await formatUrl(CATEGORY_UPDATE_ALL),
-        headers: headers, body: jsonEncode(categories));
+        headers: await headers, body: jsonEncode(categories));
 
     processResponse(response);
     return true;
@@ -395,31 +413,33 @@ class Service {
     print('id $id');
     final response = await http.delete(
         await formatUrl(CATEGORY_DELETE, [id.toString()]),
-        headers: headers);
+        headers: await headers);
 
     processResponse(response);
     return true;
   }
 
   Future<User> getCurrentUser() async {
-    var token = await Preferences.get(Preferences.TOKEN);
+    final response =
+        await http.get(await formatUrl(USER_CURRENT), headers: await headers);
 
-    Map<String, dynamic> map = JwtDecoder.decode(token);
-
-    User user = User.fromJson(map['user']);
-
-    return user;
+    processResponse(response);
+    Map<String, dynamic> json = jsonDecode(response.body);
+    return User.fromJson(json);
   }
 
   Future<bool> saveUser(User user) async {
     final response = await http.post(await formatUrl(USER_EDIT_PROFILE),
-        body: jsonEncode(user), headers: headers);
+        body: jsonEncode(user), headers: await headers);
 
     processResponse(response);
 
     String newToken = response.body;
 
-    setToken(newToken);
+    if (await Preferences.get(Preferences.TOKEN_TYPE) ==
+        TokenType.usernamePassword.name) {
+      getIt<UsernamePasswordCubit>().setToken(newToken);
+    }
 
     return true;
   }
@@ -429,7 +449,7 @@ class Service {
     final response = await http.get(
         await formatUrl(
             USER_GET, [search ?? '', page.toString(), pageSize.toString()]),
-        headers: headers);
+        headers: await headers);
 
     processResponse(response);
     print(response.body);
@@ -445,7 +465,7 @@ class Service {
 
   Future<User> createUser(User user) async {
     final response = await http.put(await formatUrl(USER_ADD_USER),
-        body: jsonEncode(user), headers: headers);
+        body: jsonEncode(user), headers: await headers);
 
     processResponse(response);
 
@@ -454,7 +474,7 @@ class Service {
 
   Future<bool> deleteUser(String id) async {
     final response = await http.delete(await formatUrl(USER_DELETE_USER, [id]),
-        headers: headers);
+        headers: await headers);
 
     processResponse(response);
 
@@ -464,7 +484,7 @@ class Service {
   Future<bool> setUserAdmin(String id, bool admin) async {
     final response = await http.get(
         await formatUrl(USER_SET_ADMIN, [id, admin.toString()]),
-        headers: headers);
+        headers: await headers);
 
     processResponse(response);
     return true;
@@ -474,7 +494,7 @@ class Service {
     final response = await http.post(
         await formatUrl(USER_UPDATE_PASSWORD, [id]),
         body: '"$password"',
-        headers: headers);
+        headers: await headers);
     processResponse(response);
     return true;
   }
@@ -482,7 +502,7 @@ class Service {
   Future<int> countCategoryExpenses(int id) async {
     final response = await http.get(
         await formatUrl(CATEGORY_COUNT_EXPENSES, [id.toString()]),
-        headers: headers);
+        headers: await headers);
     processResponse(response);
 
     return int.parse(response.body);
@@ -490,7 +510,7 @@ class Service {
 
   Future<List<Settings>> getAllSettings() async {
     final response =
-        await http.get(await formatUrl(SETTINGS_ALL), headers: headers);
+        await http.get(await formatUrl(SETTINGS_ALL), headers: await headers);
 
     processResponse(response);
     Iterable i = jsonDecode(response.body);
@@ -499,7 +519,7 @@ class Service {
 
   Future<bool> setSettings(Settings settings) async {
     final response = await http.post(await formatUrl(SETTINGS_UPDATE),
-        body: jsonEncode(settings), headers: headers);
+        body: jsonEncode(settings), headers: await headers);
 
     processResponse(response);
 
@@ -573,7 +593,8 @@ class Service {
     String url =
         '$SEARCH${categoryId != null ? '?category_id=$categoryId' : ''}';
     print(url);
-    final response = await http.get(await formatUrl(url), headers: headers);
+    final response =
+        await http.get(await formatUrl(url), headers: await headers);
     processResponse(response);
     Map<String, dynamic> map = jsonDecode(response.body);
 
@@ -582,7 +603,7 @@ class Service {
 
   Future<Map<String, DayExpense>> search(SearchParameters params) async {
     final response = await http.post(await formatUrl(SEARCH),
-        body: jsonEncode(params), headers: headers);
+        body: jsonEncode(params), headers: await headers);
     processResponse(response);
     Map<String, dynamic> map = jsonDecode(response.body);
 

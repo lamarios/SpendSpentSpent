@@ -7,7 +7,7 @@ part 'expense.freezed.dart';
 part 'expense.g.dart';
 
 @freezed
-class Expense with _$Expense {
+sealed class Expense with _$Expense {
   const factory Expense({
     required String date,
     required double amount,

@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,125 +10,83 @@ part of 'config.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-Config _$ConfigFromJson(Map<String, dynamic> json) {
-  return _Config.fromJson(json);
-}
 
 /// @nodoc
 mixin _$Config {
-  bool get allowSignup => throw _privateConstructorUsedError;
-  bool get canResetPassword => throw _privateConstructorUsedError;
-  bool get demoMode => throw _privateConstructorUsedError;
-  bool get hasSubscription => throw _privateConstructorUsedError;
-  bool get canConvertCurrency => throw _privateConstructorUsedError;
-  String get announcement => throw _privateConstructorUsedError;
-  String get convertCurrencyQuota => throw _privateConstructorUsedError;
-  String? get minAppVersion => throw _privateConstructorUsedError;
-  int get backendVersion => throw _privateConstructorUsedError;
-
-  /// Serializes this Config to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  bool get allowSignup;
+  bool get canResetPassword;
+  bool get demoMode;
+  bool get hasSubscription;
+  bool get canConvertCurrency;
+  String get announcement;
+  String get convertCurrencyQuota;
+  String? get minAppVersion;
+  int get backendVersion;
+  OidcConfig? get oidc;
 
   /// Create a copy of Config
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ConfigCopyWith<Config> get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ConfigCopyWith<$Res> {
-  factory $ConfigCopyWith(Config value, $Res Function(Config) then) =
-      _$ConfigCopyWithImpl<$Res, Config>;
-  @useResult
-  $Res call(
-      {bool allowSignup,
-      bool canResetPassword,
-      bool demoMode,
-      bool hasSubscription,
-      bool canConvertCurrency,
-      String announcement,
-      String convertCurrencyQuota,
-      String? minAppVersion,
-      int backendVersion});
-}
-
-/// @nodoc
-class _$ConfigCopyWithImpl<$Res, $Val extends Config>
-    implements $ConfigCopyWith<$Res> {
-  _$ConfigCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of Config
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $ConfigCopyWith<Config> get copyWith =>
+      _$ConfigCopyWithImpl<Config>(this as Config, _$identity);
+
+  /// Serializes this Config to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? allowSignup = null,
-    Object? canResetPassword = null,
-    Object? demoMode = null,
-    Object? hasSubscription = null,
-    Object? canConvertCurrency = null,
-    Object? announcement = null,
-    Object? convertCurrencyQuota = null,
-    Object? minAppVersion = freezed,
-    Object? backendVersion = null,
-  }) {
-    return _then(_value.copyWith(
-      allowSignup: null == allowSignup
-          ? _value.allowSignup
-          : allowSignup // ignore: cast_nullable_to_non_nullable
-              as bool,
-      canResetPassword: null == canResetPassword
-          ? _value.canResetPassword
-          : canResetPassword // ignore: cast_nullable_to_non_nullable
-              as bool,
-      demoMode: null == demoMode
-          ? _value.demoMode
-          : demoMode // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasSubscription: null == hasSubscription
-          ? _value.hasSubscription
-          : hasSubscription // ignore: cast_nullable_to_non_nullable
-              as bool,
-      canConvertCurrency: null == canConvertCurrency
-          ? _value.canConvertCurrency
-          : canConvertCurrency // ignore: cast_nullable_to_non_nullable
-              as bool,
-      announcement: null == announcement
-          ? _value.announcement
-          : announcement // ignore: cast_nullable_to_non_nullable
-              as String,
-      convertCurrencyQuota: null == convertCurrencyQuota
-          ? _value.convertCurrencyQuota
-          : convertCurrencyQuota // ignore: cast_nullable_to_non_nullable
-              as String,
-      minAppVersion: freezed == minAppVersion
-          ? _value.minAppVersion
-          : minAppVersion // ignore: cast_nullable_to_non_nullable
-              as String?,
-      backendVersion: null == backendVersion
-          ? _value.backendVersion
-          : backendVersion // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is Config &&
+            (identical(other.allowSignup, allowSignup) ||
+                other.allowSignup == allowSignup) &&
+            (identical(other.canResetPassword, canResetPassword) ||
+                other.canResetPassword == canResetPassword) &&
+            (identical(other.demoMode, demoMode) ||
+                other.demoMode == demoMode) &&
+            (identical(other.hasSubscription, hasSubscription) ||
+                other.hasSubscription == hasSubscription) &&
+            (identical(other.canConvertCurrency, canConvertCurrency) ||
+                other.canConvertCurrency == canConvertCurrency) &&
+            (identical(other.announcement, announcement) ||
+                other.announcement == announcement) &&
+            (identical(other.convertCurrencyQuota, convertCurrencyQuota) ||
+                other.convertCurrencyQuota == convertCurrencyQuota) &&
+            (identical(other.minAppVersion, minAppVersion) ||
+                other.minAppVersion == minAppVersion) &&
+            (identical(other.backendVersion, backendVersion) ||
+                other.backendVersion == backendVersion) &&
+            (identical(other.oidc, oidc) || other.oidc == oidc));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      allowSignup,
+      canResetPassword,
+      demoMode,
+      hasSubscription,
+      canConvertCurrency,
+      announcement,
+      convertCurrencyQuota,
+      minAppVersion,
+      backendVersion,
+      oidc);
+
+  @override
+  String toString() {
+    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc)';
   }
 }
 
 /// @nodoc
-abstract class _$$ConfigImplCopyWith<$Res> implements $ConfigCopyWith<$Res> {
-  factory _$$ConfigImplCopyWith(
-          _$ConfigImpl value, $Res Function(_$ConfigImpl) then) =
-      __$$ConfigImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $ConfigCopyWith<$Res> {
+  factory $ConfigCopyWith(Config value, $Res Function(Config) _then) =
+      _$ConfigCopyWithImpl;
   @useResult
   $Res call(
       {bool allowSignup,
@@ -138,16 +97,18 @@ abstract class _$$ConfigImplCopyWith<$Res> implements $ConfigCopyWith<$Res> {
       String announcement,
       String convertCurrencyQuota,
       String? minAppVersion,
-      int backendVersion});
+      int backendVersion,
+      OidcConfig? oidc});
+
+  $OidcConfigCopyWith<$Res>? get oidc;
 }
 
 /// @nodoc
-class __$$ConfigImplCopyWithImpl<$Res>
-    extends _$ConfigCopyWithImpl<$Res, _$ConfigImpl>
-    implements _$$ConfigImplCopyWith<$Res> {
-  __$$ConfigImplCopyWithImpl(
-      _$ConfigImpl _value, $Res Function(_$ConfigImpl) _then)
-      : super(_value, _then);
+class _$ConfigCopyWithImpl<$Res> implements $ConfigCopyWith<$Res> {
+  _$ConfigCopyWithImpl(this._self, this._then);
+
+  final Config _self;
+  final $Res Function(Config) _then;
 
   /// Create a copy of Config
   /// with the given fields replaced by the non-null parameter values.
@@ -163,52 +124,71 @@ class __$$ConfigImplCopyWithImpl<$Res>
     Object? convertCurrencyQuota = null,
     Object? minAppVersion = freezed,
     Object? backendVersion = null,
+    Object? oidc = freezed,
   }) {
-    return _then(_$ConfigImpl(
+    return _then(_self.copyWith(
       allowSignup: null == allowSignup
-          ? _value.allowSignup
+          ? _self.allowSignup
           : allowSignup // ignore: cast_nullable_to_non_nullable
               as bool,
       canResetPassword: null == canResetPassword
-          ? _value.canResetPassword
+          ? _self.canResetPassword
           : canResetPassword // ignore: cast_nullable_to_non_nullable
               as bool,
       demoMode: null == demoMode
-          ? _value.demoMode
+          ? _self.demoMode
           : demoMode // ignore: cast_nullable_to_non_nullable
               as bool,
       hasSubscription: null == hasSubscription
-          ? _value.hasSubscription
+          ? _self.hasSubscription
           : hasSubscription // ignore: cast_nullable_to_non_nullable
               as bool,
       canConvertCurrency: null == canConvertCurrency
-          ? _value.canConvertCurrency
+          ? _self.canConvertCurrency
           : canConvertCurrency // ignore: cast_nullable_to_non_nullable
               as bool,
       announcement: null == announcement
-          ? _value.announcement
+          ? _self.announcement
           : announcement // ignore: cast_nullable_to_non_nullable
               as String,
       convertCurrencyQuota: null == convertCurrencyQuota
-          ? _value.convertCurrencyQuota
+          ? _self.convertCurrencyQuota
           : convertCurrencyQuota // ignore: cast_nullable_to_non_nullable
               as String,
       minAppVersion: freezed == minAppVersion
-          ? _value.minAppVersion
+          ? _self.minAppVersion
           : minAppVersion // ignore: cast_nullable_to_non_nullable
               as String?,
       backendVersion: null == backendVersion
-          ? _value.backendVersion
+          ? _self.backendVersion
           : backendVersion // ignore: cast_nullable_to_non_nullable
               as int,
+      oidc: freezed == oidc
+          ? _self.oidc
+          : oidc // ignore: cast_nullable_to_non_nullable
+              as OidcConfig?,
     ));
+  }
+
+  /// Create a copy of Config
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $OidcConfigCopyWith<$Res>? get oidc {
+    if (_self.oidc == null) {
+      return null;
+    }
+
+    return $OidcConfigCopyWith<$Res>(_self.oidc!, (value) {
+      return _then(_self.copyWith(oidc: value));
+    });
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$ConfigImpl implements _Config {
-  const _$ConfigImpl(
+class _Config implements Config {
+  const _Config(
       {required this.allowSignup,
       required this.canResetPassword,
       required this.demoMode,
@@ -217,10 +197,9 @@ class _$ConfigImpl implements _Config {
       required this.announcement,
       required this.convertCurrencyQuota,
       this.minAppVersion,
-      required this.backendVersion});
-
-  factory _$ConfigImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ConfigImplFromJson(json);
+      required this.backendVersion,
+      this.oidc});
+  factory _Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
 
   @override
   final bool allowSignup;
@@ -240,17 +219,29 @@ class _$ConfigImpl implements _Config {
   final String? minAppVersion;
   @override
   final int backendVersion;
+  @override
+  final OidcConfig? oidc;
+
+  /// Create a copy of Config
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ConfigCopyWith<_Config> get copyWith =>
+      __$ConfigCopyWithImpl<_Config>(this, _$identity);
 
   @override
-  String toString() {
-    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion)';
+  Map<String, dynamic> toJson() {
+    return _$ConfigToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ConfigImpl &&
+            other is _Config &&
             (identical(other.allowSignup, allowSignup) ||
                 other.allowSignup == allowSignup) &&
             (identical(other.canResetPassword, canResetPassword) ||
@@ -268,7 +259,8 @@ class _$ConfigImpl implements _Config {
             (identical(other.minAppVersion, minAppVersion) ||
                 other.minAppVersion == minAppVersion) &&
             (identical(other.backendVersion, backendVersion) ||
-                other.backendVersion == backendVersion));
+                other.backendVersion == backendVersion) &&
+            (identical(other.oidc, oidc) || other.oidc == oidc));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -283,61 +275,117 @@ class _$ConfigImpl implements _Config {
       announcement,
       convertCurrencyQuota,
       minAppVersion,
-      backendVersion);
-
-  /// Create a copy of Config
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ConfigImplCopyWith<_$ConfigImpl> get copyWith =>
-      __$$ConfigImplCopyWithImpl<_$ConfigImpl>(this, _$identity);
+      backendVersion,
+      oidc);
 
   @override
-  Map<String, dynamic> toJson() {
-    return _$$ConfigImplToJson(
-      this,
-    );
+  String toString() {
+    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc)';
   }
 }
 
-abstract class _Config implements Config {
-  const factory _Config(
-      {required final bool allowSignup,
-      required final bool canResetPassword,
-      required final bool demoMode,
-      required final bool hasSubscription,
-      required final bool canConvertCurrency,
-      required final String announcement,
-      required final String convertCurrencyQuota,
-      final String? minAppVersion,
-      required final int backendVersion}) = _$ConfigImpl;
+/// @nodoc
+abstract mixin class _$ConfigCopyWith<$Res> implements $ConfigCopyWith<$Res> {
+  factory _$ConfigCopyWith(_Config value, $Res Function(_Config) _then) =
+      __$ConfigCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {bool allowSignup,
+      bool canResetPassword,
+      bool demoMode,
+      bool hasSubscription,
+      bool canConvertCurrency,
+      String announcement,
+      String convertCurrencyQuota,
+      String? minAppVersion,
+      int backendVersion,
+      OidcConfig? oidc});
 
-  factory _Config.fromJson(Map<String, dynamic> json) = _$ConfigImpl.fromJson;
+  @override
+  $OidcConfigCopyWith<$Res>? get oidc;
+}
 
-  @override
-  bool get allowSignup;
-  @override
-  bool get canResetPassword;
-  @override
-  bool get demoMode;
-  @override
-  bool get hasSubscription;
-  @override
-  bool get canConvertCurrency;
-  @override
-  String get announcement;
-  @override
-  String get convertCurrencyQuota;
-  @override
-  String? get minAppVersion;
-  @override
-  int get backendVersion;
+/// @nodoc
+class __$ConfigCopyWithImpl<$Res> implements _$ConfigCopyWith<$Res> {
+  __$ConfigCopyWithImpl(this._self, this._then);
+
+  final _Config _self;
+  final $Res Function(_Config) _then;
 
   /// Create a copy of Config
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ConfigImplCopyWith<_$ConfigImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? allowSignup = null,
+    Object? canResetPassword = null,
+    Object? demoMode = null,
+    Object? hasSubscription = null,
+    Object? canConvertCurrency = null,
+    Object? announcement = null,
+    Object? convertCurrencyQuota = null,
+    Object? minAppVersion = freezed,
+    Object? backendVersion = null,
+    Object? oidc = freezed,
+  }) {
+    return _then(_Config(
+      allowSignup: null == allowSignup
+          ? _self.allowSignup
+          : allowSignup // ignore: cast_nullable_to_non_nullable
+              as bool,
+      canResetPassword: null == canResetPassword
+          ? _self.canResetPassword
+          : canResetPassword // ignore: cast_nullable_to_non_nullable
+              as bool,
+      demoMode: null == demoMode
+          ? _self.demoMode
+          : demoMode // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hasSubscription: null == hasSubscription
+          ? _self.hasSubscription
+          : hasSubscription // ignore: cast_nullable_to_non_nullable
+              as bool,
+      canConvertCurrency: null == canConvertCurrency
+          ? _self.canConvertCurrency
+          : canConvertCurrency // ignore: cast_nullable_to_non_nullable
+              as bool,
+      announcement: null == announcement
+          ? _self.announcement
+          : announcement // ignore: cast_nullable_to_non_nullable
+              as String,
+      convertCurrencyQuota: null == convertCurrencyQuota
+          ? _self.convertCurrencyQuota
+          : convertCurrencyQuota // ignore: cast_nullable_to_non_nullable
+              as String,
+      minAppVersion: freezed == minAppVersion
+          ? _self.minAppVersion
+          : minAppVersion // ignore: cast_nullable_to_non_nullable
+              as String?,
+      backendVersion: null == backendVersion
+          ? _self.backendVersion
+          : backendVersion // ignore: cast_nullable_to_non_nullable
+              as int,
+      oidc: freezed == oidc
+          ? _self.oidc
+          : oidc // ignore: cast_nullable_to_non_nullable
+              as OidcConfig?,
+    ));
+  }
+
+  /// Create a copy of Config
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $OidcConfigCopyWith<$Res>? get oidc {
+    if (_self.oidc == null) {
+      return null;
+    }
+
+    return $OidcConfigCopyWith<$Res>(_self.oidc!, (value) {
+      return _then(_self.copyWith(oidc: value));
+    });
+  }
 }
+
+// dart format on
