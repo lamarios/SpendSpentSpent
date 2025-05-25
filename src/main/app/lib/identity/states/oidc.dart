@@ -50,8 +50,8 @@ class OidcCubit extends Cubit<OidcState> {
 
   String get token => '';
 
-  logout() {
-    manager?.forgetUser();
+  logout() async {
+    await manager?.forgetUser();
     emit(state.copyWith(user: null));
   }
 

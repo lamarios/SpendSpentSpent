@@ -130,6 +130,7 @@ public class OIDCService implements ApplicationContextAware {
                     return userService.updateUser(user);
                 } else if (autoSignUpUsers) {
                     user = new User();
+                    user.setOidcSub(sub);
                     user.setEmail(object.getString(oidcEmailClaim));
                     user.setFirstName(object.has(GIVEN_NAME_CLAIM) && !object.getString(GIVEN_NAME_CLAIM)
                             .isEmpty() ? object.getString(GIVEN_NAME_CLAIM) : "New");
@@ -137,7 +138,7 @@ public class OIDCService implements ApplicationContextAware {
                             .isEmpty() ? object.getString(FAMILY_NAME_CLAIM) : "User");
 
 
-                    userService.createUser(user);
+                    return userService.createUser(user);
                 } else {
                     throw new Exception();
                 }
@@ -146,7 +147,6 @@ public class OIDCService implements ApplicationContextAware {
                 throw new Exception();
             }
 
-            throw new Exception();
         } else {
             return user;
         }

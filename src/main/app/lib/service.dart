@@ -9,13 +9,14 @@ import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
-import 'package:spend_spent_spent/oidc/states/oidc.dart';
+import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/stats/models/graph_data_point.dart';
 import 'package:spend_spent_spent/utils/models/paginatedResults.dart';
 import 'package:spend_spent_spent/expenses/models/search_parameters.dart';
 import 'package:spend_spent_spent/settings/models/settings.dart';
 import 'package:spend_spent_spent/utils/models/token_type.dart';
 
+import 'identity/states/oidc.dart';
 import 'settings/models/config.dart';
 import 'expenses/models/expense_limits.dart';
 import 'expenses/models/search_categories.dart';
@@ -100,16 +101,13 @@ class Service {
 
   Future<String?> get token async {
     var tokenType = await Preferences.get(Preferences.TOKEN_TYPE);
+
     if (tokenType == TokenType.usernamePassword.name) {
-      var token = await Preferences.get(Preferences.TOKEN);
-      return token = token.replaceAll('"', '');
+      return getIt<UsernamePasswordCubit>().state.token;
     }
 
     if (tokenType == TokenType.sso.name) {
-      String token = getIt<OidcCubit>().state.user?.token.accessToken ?? '';
-      if (token.isNotEmpty) {
-        return token;
-      }
+      return getIt<OidcCubit>().state.user?.token.accessToken;
     }
 
     return null;
@@ -146,13 +144,7 @@ class Service {
         return true;
       }
 
-      var tokenType = await Preferences.get(
-          Preferences.TOKEN_TYPE, TokenType.usernamePassword.name);
-      bool expired = JwtDecoder.isExpired(token);
-      if (tokenType == TokenType.usernamePassword.name && !expired) {
-        await setToken(token, TokenType.usernamePassword);
-      }
-      return expired;
+      return JwtDecoder.isExpired(token);
     } catch (e) {
       return true;
     }
@@ -186,19 +178,8 @@ class Service {
     return Uri.parse(url);
   }
 
-  Future<bool> setToken(String token, TokenType type) async {
-    await Preferences.set(Preferences.TOKEN, token);
-    await Preferences.set(Preferences.TOKEN_TYPE, type.name);
-    token = token.replaceAll('"', '');
-    token = "Bearer $token";
-
-    // headers.update("Authorization", (value) => token, ifAbsent: () => token);
-
-    return true;
-  }
-
   /// Logs in to the server
-  Future<bool> login(String username, String password) async {
+  Future<String> login(String username, String password) async {
     Map<String, String> creds = {};
     creds.putIfAbsent("email", () => username);
     creds.putIfAbsent("password", () => password);
@@ -209,10 +190,7 @@ class Service {
     if (response.body == '"Invalid username or password"') {
       throw Exception("Invalid email/password combination");
     } else if (response.statusCode == 200) {
-      final tokenSet =
-          await setToken(response.body, TokenType.usernamePassword);
-      await getServerConfig(url);
-      return tokenSet;
+      return response.body.replaceAll('"', '');
     } else {
       throw Exception("Error while connecting to server");
     }
@@ -314,11 +292,8 @@ class Service {
   }
 
   Future<void> logout() async {
-    await Preferences.remove(Preferences.TOKEN);
-    await Preferences.remove(Preferences.TOKEN_TYPE);
-    getIt<OidcCubit>().logout();
-    config = null;
-    url = "";
+    await getIt<UsernamePasswordCubit>().logout();
+    await getIt<OidcCubit>().logout();
   }
 
   Future<List<RecurringExpense>> getRecurringExpenses() async {
@@ -463,7 +438,7 @@ class Service {
 
     if (await Preferences.get(Preferences.TOKEN_TYPE) ==
         TokenType.usernamePassword.name) {
-      setToken(newToken, TokenType.usernamePassword);
+      getIt<UsernamePasswordCubit>().setToken(newToken);
     }
 
     return true;
