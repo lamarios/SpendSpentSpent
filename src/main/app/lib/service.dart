@@ -107,7 +107,7 @@ class Service {
     }
 
     if (tokenType == TokenType.sso.name) {
-      return getIt<OidcCubit>().state.user?.token.accessToken;
+      return getIt<OidcCubit>().token;
     }
 
     return null;

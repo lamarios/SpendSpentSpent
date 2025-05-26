@@ -48,7 +48,7 @@ class OidcCubit extends Cubit<OidcState> {
     }
   }
 
-  String get token => '';
+  String? get token => manager?.currentUser?.token.accessToken;
 
   logout() async {
     await manager?.forgetUser();
@@ -96,8 +96,23 @@ class OidcCubit extends Cubit<OidcState> {
 
       await manager?.init();
 
-      final currentUser = manager?.currentUser;
-      _log.info("We have a user ? ${currentUser != null}");
+      var currentUser = manager?.currentUser;
+      _log.fine("We have a user ? ${currentUser != null}");
+      if (currentUser != null) {
+        try {
+          _log.fine("Refreshing token after reloading the app");
+          var refreshed = await manager?.refreshToken();
+          if (refreshed == null) {
+            _log.fine("Token could not be refreshed");
+          } else {
+            currentUser = manager?.currentUser;
+            _log.fine(
+                "New token expiry at: ${manager?.currentUser?.token.expiresIn?.inHours}");
+          }
+        } catch (e) {
+          _log.fine("Couldn't refresh token");
+        }
+      }
       emit(state.copyWith(user: manager?.currentUser));
     } catch (e) {
       _log.severe(e);
@@ -109,7 +124,6 @@ class OidcCubit extends Cubit<OidcState> {
 @freezed
 sealed class OidcState with _$OidcState {
   const factory OidcState({
-    String? token,
     OidcConfig? oidcConfig,
     OidcUser? user,
   }) = _OidcState;

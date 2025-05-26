@@ -15,7 +15,6 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$OidcState implements DiagnosticableTreeMixin {
-  String? get token;
   OidcConfig? get oidcConfig;
   OidcUser? get user;
 
@@ -30,7 +29,6 @@ mixin _$OidcState implements DiagnosticableTreeMixin {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('type', 'OidcState'))
-      ..add(DiagnosticsProperty('token', token))
       ..add(DiagnosticsProperty('oidcConfig', oidcConfig))
       ..add(DiagnosticsProperty('user', user));
   }
@@ -40,18 +38,17 @@ mixin _$OidcState implements DiagnosticableTreeMixin {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is OidcState &&
-            (identical(other.token, token) || other.token == token) &&
             (identical(other.oidcConfig, oidcConfig) ||
                 other.oidcConfig == oidcConfig) &&
             (identical(other.user, user) || other.user == user));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, token, oidcConfig, user);
+  int get hashCode => Object.hash(runtimeType, oidcConfig, user);
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'OidcState(token: $token, oidcConfig: $oidcConfig, user: $user)';
+    return 'OidcState(oidcConfig: $oidcConfig, user: $user)';
   }
 }
 
@@ -60,7 +57,7 @@ abstract mixin class $OidcStateCopyWith<$Res> {
   factory $OidcStateCopyWith(OidcState value, $Res Function(OidcState) _then) =
       _$OidcStateCopyWithImpl;
   @useResult
-  $Res call({String? token, OidcConfig? oidcConfig, OidcUser? user});
+  $Res call({OidcConfig? oidcConfig, OidcUser? user});
 
   $OidcConfigCopyWith<$Res>? get oidcConfig;
 }
@@ -77,15 +74,10 @@ class _$OidcStateCopyWithImpl<$Res> implements $OidcStateCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? token = freezed,
     Object? oidcConfig = freezed,
     Object? user = freezed,
   }) {
     return _then(_self.copyWith(
-      token: freezed == token
-          ? _self.token
-          : token // ignore: cast_nullable_to_non_nullable
-              as String?,
       oidcConfig: freezed == oidcConfig
           ? _self.oidcConfig
           : oidcConfig // ignore: cast_nullable_to_non_nullable
@@ -115,10 +107,8 @@ class _$OidcStateCopyWithImpl<$Res> implements $OidcStateCopyWith<$Res> {
 /// @nodoc
 
 class _OidcState with DiagnosticableTreeMixin implements OidcState {
-  const _OidcState({this.token, this.oidcConfig, this.user});
+  const _OidcState({this.oidcConfig, this.user});
 
-  @override
-  final String? token;
   @override
   final OidcConfig? oidcConfig;
   @override
@@ -136,7 +126,6 @@ class _OidcState with DiagnosticableTreeMixin implements OidcState {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
       ..add(DiagnosticsProperty('type', 'OidcState'))
-      ..add(DiagnosticsProperty('token', token))
       ..add(DiagnosticsProperty('oidcConfig', oidcConfig))
       ..add(DiagnosticsProperty('user', user));
   }
@@ -146,18 +135,17 @@ class _OidcState with DiagnosticableTreeMixin implements OidcState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _OidcState &&
-            (identical(other.token, token) || other.token == token) &&
             (identical(other.oidcConfig, oidcConfig) ||
                 other.oidcConfig == oidcConfig) &&
             (identical(other.user, user) || other.user == user));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, token, oidcConfig, user);
+  int get hashCode => Object.hash(runtimeType, oidcConfig, user);
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'OidcState(token: $token, oidcConfig: $oidcConfig, user: $user)';
+    return 'OidcState(oidcConfig: $oidcConfig, user: $user)';
   }
 }
 
@@ -169,7 +157,7 @@ abstract mixin class _$OidcStateCopyWith<$Res>
       __$OidcStateCopyWithImpl;
   @override
   @useResult
-  $Res call({String? token, OidcConfig? oidcConfig, OidcUser? user});
+  $Res call({OidcConfig? oidcConfig, OidcUser? user});
 
   @override
   $OidcConfigCopyWith<$Res>? get oidcConfig;
@@ -187,15 +175,10 @@ class __$OidcStateCopyWithImpl<$Res> implements _$OidcStateCopyWith<$Res> {
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? token = freezed,
     Object? oidcConfig = freezed,
     Object? user = freezed,
   }) {
     return _then(_OidcState(
-      token: freezed == token
-          ? _self.token
-          : token // ignore: cast_nullable_to_non_nullable
-              as String?,
       oidcConfig: freezed == oidcConfig
           ? _self.oidcConfig
           : oidcConfig // ignore: cast_nullable_to_non_nullable
