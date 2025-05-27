@@ -4,6 +4,7 @@ import com.ftpix.sss.models.PaginatedResults;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.security.JwtTokenUtil;
 import com.ftpix.sss.security.JwtUserDetailsService;
+import com.ftpix.sss.services.OIDCService;
 import com.ftpix.sss.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -25,6 +26,7 @@ public class UserController {
     private final UserService userService;
     private final JwtTokenUtil jwtTokenUtil;
     private final JwtUserDetailsService jwtUserDetailsService;
+
 
     @Autowired
     public UserController(UserService userService, JwtTokenUtil jwtTokenUtil, JwtUserDetailsService jwtUserDetailsService) {

@@ -16,7 +16,6 @@ import 'package:spend_spent_spent/expenses/models/search_parameters.dart';
 import 'package:spend_spent_spent/settings/models/settings.dart';
 import 'package:spend_spent_spent/utils/models/token_type.dart';
 
-import 'identity/states/oidc.dart';
 import 'settings/models/config.dart';
 import 'expenses/models/expense_limits.dart';
 import 'expenses/models/search_categories.dart';
@@ -57,6 +56,7 @@ const RECURRING_ADD = '$API_URL/RecurringExpense';
 const RECURRING_DELETE = '$API_URL/RecurringExpense/{0}';
 const RECURRING_UPDATE = '$API_URL/RecurringExpense/{0}';
 const SESSION_LOGIN = '$API_ROOT/Login';
+const SESSION_OIDC_LOGIN = '$API_ROOT/OidcLogin';
 const SESSION_SIGNUP = '$API_ROOT/SignUp';
 const SESSION_RESET_PASSWORD_REQUEST = "$API_ROOT/ResetPasswordRequest";
 const SESSION_RESET_PASSWORD = "$API_ROOT/ResetPassword";
@@ -104,10 +104,6 @@ class Service {
 
     if (tokenType == TokenType.usernamePassword.name) {
       return getIt<UsernamePasswordCubit>().state.token;
-    }
-
-    if (tokenType == TokenType.sso.name) {
-      return getIt<OidcCubit>().token;
     }
 
     return null;
@@ -176,6 +172,20 @@ class Service {
 
     print("Calling $url");
     return Uri.parse(url);
+  }
+
+  Future<String> loginWithOidcToken(String token) async {
+    final response = await http.get(await formatUrl(SESSION_OIDC_LOGIN),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+        });
+
+    if (response.statusCode == 200) {
+      return response.body.replaceAll('"', '');
+    } else {
+      throw Exception("Error while connecting to server");
+    }
   }
 
   /// Logs in to the server
@@ -293,7 +303,6 @@ class Service {
 
   Future<void> logout() async {
     await getIt<UsernamePasswordCubit>().logout();
-    await getIt<OidcCubit>().logout();
   }
 
   Future<List<RecurringExpense>> getRecurringExpenses() async {

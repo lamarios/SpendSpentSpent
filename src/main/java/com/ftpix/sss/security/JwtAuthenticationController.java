@@ -2,26 +2,28 @@ package com.ftpix.sss.security;
 
 import com.ftpix.sss.controllers.api.UserSessionController;
 import com.ftpix.sss.models.User;
+import com.ftpix.sss.services.OIDCService;
 import com.ftpix.sss.services.UserService;
+import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
 @RestController
-@Api(tags = { "Login" })
+@Api(tags = {"Login"})
 public class JwtAuthenticationController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OIDCService oidcService;
 
 
     @Autowired
@@ -29,6 +31,25 @@ public class JwtAuthenticationController {
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
 
+
+    @RequestMapping(value = "/OidcLogin", method = RequestMethod.GET)
+    @ApiOperation(value = "Logs into the system, will return a JWT token to pass to other requests as a bearer token via the Authorization header")
+    public String loginWithOidcToken(@RequestHeader("Authorization") String authorizationHeader) throws Exception {
+        String token = authorizationHeader.replaceAll("Bearer ", "");
+        Claims claims = oidcService.getParser()
+                .parseSignedClaims(token)
+                .getPayload();
+        var subject = claims.getSubject();
+
+        // handle user
+        var user = jwtUserDetailsService.loadUserByUsername(subject, token);
+        if (user != null) {
+            return jwtTokenUtil.generateToken(user);
+        } else {
+            return null;
+        }
+
+    }
 
     @RequestMapping(value = "/Login", method = RequestMethod.POST)
     @ApiOperation(value = "Logs into the system, will return a JWT token to pass to other requests as a bearer token via the Authorization header")
