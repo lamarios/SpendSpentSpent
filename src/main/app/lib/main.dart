@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
-import 'package:spend_spent_spent/identity/states/oidc.dart';
 import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/settings/state/app_settings.dart';
@@ -29,18 +28,12 @@ Future<void> main() async {
   var userPassCubit = UsernamePasswordCubit(UsernamePasswordState(
       token: existingToken.isNotEmpty ? existingToken : null));
 
-  var oidcCubit = OidcCubit(const OidcState());
-  getIt.registerSingleton<OidcCubit>(oidcCubit);
   getIt.registerSingleton<UsernamePasswordCubit>(userPassCubit);
   // we check if we already are on  a server
   var serverUrl = await Preferences.get(Preferences.SERVER_URL);
   if (serverUrl.isNotEmpty) {
     try {
       service.setUrl(serverUrl);
-      var config = await service.getServerConfig(serverUrl);
-      if (config.oidc != null) {
-        await oidcCubit.setupClient(config.oidc!);
-      }
     } catch (e) {
       await Preferences.remove(Preferences.SERVER_URL);
     }
@@ -69,9 +62,6 @@ class SpendSpentSpent extends StatelessWidget {
         BlocProvider(
           create: (context) => getIt<UsernamePasswordCubit>(),
         ),
-        BlocProvider(
-          create: (context) => getIt<OidcCubit>(),
-        )
       ],
       child: DynamicColorBuilder(
           builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:spend_spent_spent/settings/models/oidc_config.dart';
 import 'package:spend_spent_spent/utils/models/token_type.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
 
@@ -29,5 +30,8 @@ class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
 
 @freezed
 sealed class UsernamePasswordState with _$UsernamePasswordState {
-  const factory UsernamePasswordState({String? token}) = _UsernamePasswordState;
+  const factory UsernamePasswordState({
+    String? token,
+    OidcConfig? oidcConfig,
+  }) = _UsernamePasswordState;
 }

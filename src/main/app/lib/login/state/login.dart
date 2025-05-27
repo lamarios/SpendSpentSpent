@@ -8,8 +8,8 @@ import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart' as globals;
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/identity/states/oidc.dart';
 import 'package:spend_spent_spent/identity/states/username_password.dart';
+import 'package:spend_spent_spent/identity/utils/oidc.dart';
 import 'package:spend_spent_spent/login/models/login_page.dart';
 import 'package:spend_spent_spent/settings/models/config.dart';
 import 'package:spend_spent_spent/utils/models/exceptions/BackendNeedUpgradeException.dart';
@@ -25,11 +25,10 @@ class LoginCubit extends Cubit<LoginState> {
   final CategoriesCubit categoriesCubit;
   final LastExpenseCubit lastExpenseCubit;
 
-  final OidcCubit oidcCubit;
   final UsernamePasswordCubit usernamePasswordCubit;
 
   LoginCubit(super.initialState, this.categoriesCubit, this.lastExpenseCubit,
-      this.oidcCubit, this.usernamePasswordCubit) {
+      this.usernamePasswordCubit) {
     init();
   }
 
@@ -45,10 +44,6 @@ class LoginCubit extends Cubit<LoginState> {
       print('getting config');
       Config c = await service.getServerConfig(urlController.text.trim());
       print('can register ? ${c.allowSignup}');
-
-      if (c.oidc != null) {
-        await oidcCubit.setupClient(c.oidc!);
-      }
 
       emit(state.copyWith(config: c));
     } on NeedUpgradeException {
@@ -109,6 +104,32 @@ class LoginCubit extends Cubit<LoginState> {
       usernamePasswordCubit.setToken(token);
 
       return true;
+    } catch (e) {
+      emit(state.copyWith(
+          loginError: e.toString().replaceFirst("Exception: ", '')));
+      return false;
+    }
+  }
+
+  Future<bool> logInWithOidc() async {
+    emit(state.copyWith(loginError: ''));
+
+    try {
+      await globals.service.setUrl(urlController.text.trim());
+      if (state.config?.oidc != null) {
+        final accessToken = await oidcLogin(state.config!.oidc!);
+
+        if (accessToken != null) {
+          final token = await service.loginWithOidcToken(accessToken);
+
+          emit(state.copyWith(loginError: ''));
+
+          usernamePasswordCubit.setToken(token);
+
+          return true;
+        }
+      }
+      return false;
     } catch (e) {
       emit(state.copyWith(
           loginError: e.toString().replaceFirst("Exception: ", '')));

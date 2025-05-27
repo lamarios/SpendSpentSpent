@@ -1,13 +1,11 @@
 import 'dart:core';
 import 'dart:math';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/identity/states/oidc.dart';
 import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/identity/views/components/login_handler.dart';
 import 'package:spend_spent_spent/login/models/login_page.dart';
@@ -15,7 +13,6 @@ import 'package:spend_spent_spent/login/state/login.dart';
 import 'package:spend_spent_spent/login/views/components/loginForm.dart';
 import 'package:spend_spent_spent/login/views/components/resetPassword.dart';
 import 'package:spend_spent_spent/login/views/components/signUp.dart';
-import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/utils/views/components/error_listener.dart';
 
 class Login extends StatelessWidget {
@@ -47,7 +44,6 @@ class Login extends StatelessWidget {
           const LoginState(),
           context.read<CategoriesCubit>(),
           context.read<LastExpenseCubit>(),
-          context.read<OidcCubit>(),
           context.read<UsernamePasswordCubit>()),
       child: ErrorHandler<LoginCubit, LoginState>(
         showAsSnack: true,
@@ -99,15 +95,10 @@ class Login extends StatelessWidget {
                                       urlController: cubit.urlController,
                                       config: state.config,
                                       logIn: (username, password) async {
-                                        final loggedIn = await cubit.logIn(
-                                            username, password);
-                                        if (loggedIn && context.mounted) {
-                                          AutoRouter.of(context)
-                                              .replaceAll([const HomeRoute()]);
-                                        }
+                                        await cubit.logIn(username, password);
                                       },
                                       loginWithSso: () async {
-                                        await context.read<OidcCubit>().login();
+                                        await cubit.logInWithOidc();
                                       },
                                       showSignUp: () => cubit.signUp(true),
                                       showResetPassword: () =>

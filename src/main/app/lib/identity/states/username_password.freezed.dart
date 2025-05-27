@@ -16,6 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UsernamePasswordState {
   String? get token;
+  OidcConfig? get oidcConfig;
 
   /// Create a copy of UsernamePasswordState
   /// with the given fields replaced by the non-null parameter values.
@@ -30,15 +31,17 @@ mixin _$UsernamePasswordState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is UsernamePasswordState &&
-            (identical(other.token, token) || other.token == token));
+            (identical(other.token, token) || other.token == token) &&
+            (identical(other.oidcConfig, oidcConfig) ||
+                other.oidcConfig == oidcConfig));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, token);
+  int get hashCode => Object.hash(runtimeType, token, oidcConfig);
 
   @override
   String toString() {
-    return 'UsernamePasswordState(token: $token)';
+    return 'UsernamePasswordState(token: $token, oidcConfig: $oidcConfig)';
   }
 }
 
@@ -48,7 +51,9 @@ abstract mixin class $UsernamePasswordStateCopyWith<$Res> {
           $Res Function(UsernamePasswordState) _then) =
       _$UsernamePasswordStateCopyWithImpl;
   @useResult
-  $Res call({String? token});
+  $Res call({String? token, OidcConfig? oidcConfig});
+
+  $OidcConfigCopyWith<$Res>? get oidcConfig;
 }
 
 /// @nodoc
@@ -65,23 +70,44 @@ class _$UsernamePasswordStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? token = freezed,
+    Object? oidcConfig = freezed,
   }) {
     return _then(_self.copyWith(
       token: freezed == token
           ? _self.token
           : token // ignore: cast_nullable_to_non_nullable
               as String?,
+      oidcConfig: freezed == oidcConfig
+          ? _self.oidcConfig
+          : oidcConfig // ignore: cast_nullable_to_non_nullable
+              as OidcConfig?,
     ));
+  }
+
+  /// Create a copy of UsernamePasswordState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $OidcConfigCopyWith<$Res>? get oidcConfig {
+    if (_self.oidcConfig == null) {
+      return null;
+    }
+
+    return $OidcConfigCopyWith<$Res>(_self.oidcConfig!, (value) {
+      return _then(_self.copyWith(oidcConfig: value));
+    });
   }
 }
 
 /// @nodoc
 
 class _UsernamePasswordState implements UsernamePasswordState {
-  const _UsernamePasswordState({this.token});
+  const _UsernamePasswordState({this.token, this.oidcConfig});
 
   @override
   final String? token;
+  @override
+  final OidcConfig? oidcConfig;
 
   /// Create a copy of UsernamePasswordState
   /// with the given fields replaced by the non-null parameter values.
@@ -97,15 +123,17 @@ class _UsernamePasswordState implements UsernamePasswordState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _UsernamePasswordState &&
-            (identical(other.token, token) || other.token == token));
+            (identical(other.token, token) || other.token == token) &&
+            (identical(other.oidcConfig, oidcConfig) ||
+                other.oidcConfig == oidcConfig));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, token);
+  int get hashCode => Object.hash(runtimeType, token, oidcConfig);
 
   @override
   String toString() {
-    return 'UsernamePasswordState(token: $token)';
+    return 'UsernamePasswordState(token: $token, oidcConfig: $oidcConfig)';
   }
 }
 
@@ -117,7 +145,10 @@ abstract mixin class _$UsernamePasswordStateCopyWith<$Res>
       __$UsernamePasswordStateCopyWithImpl;
   @override
   @useResult
-  $Res call({String? token});
+  $Res call({String? token, OidcConfig? oidcConfig});
+
+  @override
+  $OidcConfigCopyWith<$Res>? get oidcConfig;
 }
 
 /// @nodoc
@@ -134,13 +165,32 @@ class __$UsernamePasswordStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   $Res call({
     Object? token = freezed,
+    Object? oidcConfig = freezed,
   }) {
     return _then(_UsernamePasswordState(
       token: freezed == token
           ? _self.token
           : token // ignore: cast_nullable_to_non_nullable
               as String?,
+      oidcConfig: freezed == oidcConfig
+          ? _self.oidcConfig
+          : oidcConfig // ignore: cast_nullable_to_non_nullable
+              as OidcConfig?,
     ));
+  }
+
+  /// Create a copy of UsernamePasswordState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $OidcConfigCopyWith<$Res>? get oidcConfig {
+    if (_self.oidcConfig == null) {
+      return null;
+    }
+
+    return $OidcConfigCopyWith<$Res>(_self.oidcConfig!, (value) {
+      return _then(_self.copyWith(oidcConfig: value));
+    });
   }
 }
 
