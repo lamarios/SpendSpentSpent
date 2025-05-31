@@ -85,8 +85,7 @@ public class SearchService {
         }
 
         //TODO: handle dates
-
-        if (parameters.note() == null && !parameters.note().trim().isEmpty()) {
+        if (parameters.note() != null && !parameters.note().trim().isEmpty()) {
             conditions.add(upper(EXPENSE.NOTE).like("%" + parameters.note().toUpperCase() + "%"));
         }
 

@@ -1,10 +1,8 @@
 package com.ftpix.sss.dao;
 
-import com.ftpix.sss.dsl.Tables;
 import com.ftpix.sss.dsl.tables.records.SettingsRecord;
 import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.Settings;
-import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.OrderField;
 import org.jooq.impl.TableImpl;
@@ -14,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ftpix.sss.dsl.Tables.*;
+import static com.ftpix.sss.dsl.Tables.SETTINGS;
 
 @Component("settingsDaoJooq")
 public class SettingsDao implements Dao<SettingsRecord, Settings> {
@@ -71,7 +69,7 @@ public class SettingsDao implements Dao<SettingsRecord, Settings> {
         Settings s = new Settings();
         s.setName(r.getName());
         s.setValue(r.getValue());
-        s.setSecret(r.getSecret() != null && r.getSecret().equals(1));
+        s.setSecret(r.getSecret());
         return s;
     }
 

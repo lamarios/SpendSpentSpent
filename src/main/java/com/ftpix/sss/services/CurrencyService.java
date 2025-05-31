@@ -11,6 +11,8 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.logging.log4j.util.Strings;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,10 @@ import java.util.concurrent.TimeUnit;
 public class CurrencyService {
     private final SettingsService settingsService;
     private static final String BASE_CURRENCY = "USD";
-    private final LoadingCache<String, Map<String, CurrencyValue>> currencyCache = Caffeine.newBuilder().expireAfterWrite(24, TimeUnit.HOURS).build(this::getCurrency);
+    private final LoadingCache<String, Map<String, CurrencyValue>> currencyCache = Caffeine.newBuilder()
+            .expireAfterWrite(24, TimeUnit.HOURS)
+            .build(this::getCurrency);
+    protected final Log log = LogFactory.getLog(this.getClass());
 
     @Autowired
     public CurrencyService(SettingsService settingsService) {
@@ -40,6 +45,7 @@ public class CurrencyService {
 
             return stringCurrencyValueMap != null && !stringCurrencyValueMap.isEmpty();
         } catch (Exception e) {
+            log.error("Error while getting currency", e);
             return false;
         }
     }
@@ -61,7 +67,7 @@ public class CurrencyService {
 
         double fromToUsd = currencies.get(from).getValue();
         double toToUsd = currencies.get(to).getValue();
-        Double percentage = toToUsd / fromToUsd;
+        double percentage = toToUsd / fromToUsd;
 
 
         return Math.ceil(percentage * 100) / 100;
@@ -73,15 +79,18 @@ public class CurrencyService {
             throw new InvalidParameterException("currency api key is required");
         }
 
-        GetRequest request = Unirest.get("https://api.currencyapi.com/v3/latest?apikey=" + apiKey.getRealValue()).header("accept", "application/json").header("content-type", "application/json");
+
+        var decryptedKey = apiKey.getRealValue();
+        GetRequest request = Unirest.get("https://api.currencyapi.com/v3/latest?apikey=" + decryptedKey)
+                .header("accept", "application/json")
+                .header("content-type", "application/json");
 
 
         final JsonNode body = request.asJson().getBody();
         final JSONObject data = body.getObject().getJSONObject("data");
         Type currencyType = new TypeToken<Map<String, CurrencyValue>>() {
         }.getType();
-        Map<String, CurrencyValue> currencies = new Gson().fromJson(data.toString(0), currencyType);
-        return currencies;
+        return new Gson().fromJson(data.toString(0), currencyType);
 
     }
 
@@ -91,7 +100,9 @@ public class CurrencyService {
             throw new InvalidParameterException("currency api key is required");
         }
 
-        GetRequest request = Unirest.get("https://api.currencyapi.com/v3/status?apikey=" + apiKey.getRealValue()).header("accept", "application/json").header("content-type", "application/json");
+        GetRequest request = Unirest.get("https://api.currencyapi.com/v3/status?apikey=" + apiKey.getRealValue())
+                .header("accept", "application/json")
+                .header("content-type", "application/json");
 
 
         final JsonNode body = request.asJson().getBody();
