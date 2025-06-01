@@ -38,7 +38,7 @@ class StatsGraph extends StatelessWidget {
                       text + formatCurrency(e.y),
                       TextStyle(
                           color: avg
-                              ? Colors.white.withOpacity(0.7)
+                              ? Colors.white.withValues(alpha: 0.7)
                               : Colors.white,
                           fontSize: avg ? 12 : 20));
                 }).toList();
@@ -48,13 +48,13 @@ class StatsGraph extends StatelessWidget {
         drawVerticalLine: true,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: colors.onPrimary.withOpacity(0.075),
+            color: colors.onPrimary.withValues(alpha: 0.075),
             strokeWidth: 1,
           );
         },
         getDrawingVerticalLine: (value) {
           return FlLine(
-            color: colors.onPrimary.withOpacity(0.075),
+            color: colors.onPrimary.withValues(alpha: 0.075),
             strokeWidth: 1,
           );
         },
@@ -104,8 +104,8 @@ class StatsGraph extends StatelessWidget {
       ),
       borderData: FlBorderData(
           show: true,
-          border:
-              Border.all(color: colors.onPrimary.withOpacity(0.3), width: 1)),
+          border: Border.all(
+              color: colors.onPrimary.withValues(alpha: 0.3), width: 1)),
       minX: 0,
       minY: state.minValue,
       maxY: state.maxValue,
@@ -114,7 +114,7 @@ class StatsGraph extends StatelessWidget {
           isStrokeJoinRound: true,
           spots: state.avgData,
           isCurved: false,
-          color: colors.onPrimary.withOpacity(0.5),
+          color: colors.onPrimary.withValues(alpha: 0.5),
           barWidth: AVG_BAR_WIDTH,
           isStrokeCapRound: true,
           dotData: const FlDotData(
@@ -122,7 +122,7 @@ class StatsGraph extends StatelessWidget {
           ),
           belowBarData: BarAreaData(
             show: false,
-            color: colors.onPrimary.withOpacity(0.2),
+            color: colors.onPrimary.withValues(alpha: 0.2),
           ),
         ),
         LineChartBarData(
@@ -136,7 +136,7 @@ class StatsGraph extends StatelessWidget {
           ),
           belowBarData: BarAreaData(
             show: true,
-            color: colors.onPrimary.withOpacity(0.2),
+            color: colors.onPrimary.withValues(alpha: 0.2),
           ),
         ),
       ],
@@ -204,8 +204,8 @@ class StatsGraph extends StatelessWidget {
                   return ScaleTransition(scale: animation, child: child);
                 },
                 duration: panelTransition,
-                switchInCurve: Curves.easeInOutQuart,
-                switchOutCurve: Curves.easeInOutQuart,
+                switchInCurve: Curves.easeInOutQuint,
+                switchOutCurve: Curves.easeInOutQuint,
                 child: state.loading
                     ? DummyFade(
                         child: Icon(Icons.ssid_chart,
