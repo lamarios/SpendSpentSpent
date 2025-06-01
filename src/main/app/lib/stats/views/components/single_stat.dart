@@ -37,8 +37,8 @@ class SingleStats extends StatelessWidget {
       child: BlocConsumer<SingleStatsCubit, SingleStatsState>(
         listener: (BuildContext context, SingleStatsState state) {
           Scrollable.ensureVisible(context,
-              curve: Curves.easeInOutQuart,
-              duration: panelTransition,
+              curve: Curves.easeInOutQuint,
+              duration: panelTransition * 2,
               alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd);
         },
         listenWhen: (previous, current) =>
@@ -58,7 +58,7 @@ class SingleStats extends StatelessWidget {
                       AnimatedRotation(
                           turns: state.open ? 0.25 : 0,
                           duration: panelTransition,
-                          curve: Curves.easeInOutQuart,
+                          curve: Curves.easeInOutQuint,
                           child: Icon(
                             Icons.chevron_right,
                             size: 20,
@@ -76,7 +76,7 @@ class SingleStats extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 2.0),
                     child: AnimatedContainer(
                       duration: panelTransition,
-                      curve: Curves.easeInOutQuart,
+                      curve: Curves.easeInOutQuint,
                       alignment: Alignment.topLeft,
                       height: state.open ? openedHeight : 10,
                       decoration: BoxDecoration(
@@ -87,7 +87,7 @@ class SingleStats extends StatelessWidget {
                       child: LayoutBuilder(
                         builder: (context, constraints) => AnimatedContainer(
                           duration: panelTransition,
-                          curve: Curves.easeInOutQuart,
+                          curve: Curves.easeInOutQuint,
                           width: getBarWidth(context, constraints),
                           height: state.open ? openedHeight : 10,
                           decoration: BoxDecoration(
