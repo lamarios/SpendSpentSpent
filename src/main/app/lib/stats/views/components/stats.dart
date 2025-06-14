@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/stats/state/stats_list.dart';
 import 'package:spend_spent_spent/stats/views/components/single_stat.dart';
 import 'package:spend_spent_spent/utils/views/components/data_change_monitor.dart';
@@ -32,11 +33,17 @@ class StatsView extends StatelessWidget {
                           scrollDirection: Axis.vertical,
                           itemCount: state.stats.length,
                           itemBuilder: (context, index) {
-                            return SingleStats(
-                              key: Key(
-                                  state.stats[index].category.id.toString()),
-                              stats: state.stats[index],
-                              monthly: monthly,
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: index == state.stats.length - 1
+                                      ? bottomPadding
+                                      : 0),
+                              child: SingleStats(
+                                key: Key(
+                                    state.stats[index].category.id.toString()),
+                                stats: state.stats[index],
+                                monthly: monthly,
+                              ),
                             );
                           },
                         )),
