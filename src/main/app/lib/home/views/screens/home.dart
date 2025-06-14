@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/identity/views/components/logout_handler.dart';
 import 'package:spend_spent_spent/router.dart';
@@ -14,6 +15,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final menuWidth = 250;
+    final menuMargin = (screenWidth - menuWidth) / 2;
+
     return LogoutHandler(
       child: AutoTabsRouter.pageView(
           curve: Curves.easeInOutQuad,
@@ -23,11 +28,29 @@ class HomeScreen extends StatelessWidget {
             return Scaffold(
               body: SafeArea(
                 bottom: false,
-                child: Container(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                        constraints: const BoxConstraints(maxWidth: TABLET),
-                        child: child)),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Container(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                              constraints:
+                                  const BoxConstraints(maxWidth: TABLET),
+                              child: child)),
+                    ),
+                    Positioned(
+                        left: menuMargin,
+                        right: menuMargin,
+                        bottom: 36,
+                        child: SizedBox(
+                            height: 50,
+                            child: Center(
+                                child: MainMenu(
+                              tabsRouter: tabsRouter,
+                              selectedIndex: tabsRouter.activeIndex,
+                            ))))
+                  ],
+                ),
               ),
               appBar: AppBar(
                 title: Row(
@@ -44,6 +67,7 @@ class HomeScreen extends StatelessWidget {
                       icon: const Icon(Icons.settings))
                 ],
               ),
+/*
               bottomNavigationBar: NavigationBar(
                 selectedIndex: tabsRouter.activeIndex,
                 onDestinationSelected: (value) =>
@@ -57,6 +81,7 @@ class HomeScreen extends StatelessWidget {
                       icon: Icon(Icons.list), label: 'detail'),
                 ],
               ),
+*/
             );
           }),
     );

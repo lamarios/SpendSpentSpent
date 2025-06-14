@@ -20,7 +20,7 @@ class MiddleColumnTab extends StatelessWidget {
                   child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: child,
-              ))
+              )),
             ],
           );
         });
