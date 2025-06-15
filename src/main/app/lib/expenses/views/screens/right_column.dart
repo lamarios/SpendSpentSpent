@@ -8,6 +8,7 @@ import 'package:spend_spent_spent/expenses/state/expense_list.dart';
 import 'package:spend_spent_spent/expenses/views/components/one_day.dart';
 import 'package:spend_spent_spent/expenses/views/components/search.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/utils/views/components/data_change_monitor.dart';
 
 import '../../../utils/views/components/dummies/dummyExpenses.dart';
@@ -98,9 +99,13 @@ class RightColumnTab extends StatelessWidget {
       ),
       itemCount: expenses.length,
       itemBuilder: (context, index) {
-        return OneDay(
-            showExpense: (expense) => showExpense(context, expense),
-            expense: expenses[expensesKeys[index]]!);
+        return Padding(
+          padding: EdgeInsets.only(
+              bottom: index == expenses.length - 1 ? bottomPadding : 0),
+          child: OneDay(
+              showExpense: (expense) => showExpense(context, expense),
+              expense: expenses[expensesKeys[index]]!),
+        );
       },
     );
   }
@@ -213,7 +218,7 @@ class RightColumnTab extends StatelessWidget {
                       child: state.loading
                           ? const DummyExpenses()
                           : getExpensesWidget(context, state.expenses)),
-                )
+                ),
               ],
             ),
           );

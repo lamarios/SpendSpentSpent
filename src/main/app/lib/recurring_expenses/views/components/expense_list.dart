@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/recurring_expenses/models/recurring_expense.dart';
 import 'package:spend_spent_spent/recurring_expenses/views/components/add_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
@@ -129,6 +130,8 @@ class ExpenseList extends StatelessWidget {
         color: colors.primaryContainer,
       ),
     ));
+
+    children.add(Gap(bottomPadding));
 
     return ListView(
       children: children,
