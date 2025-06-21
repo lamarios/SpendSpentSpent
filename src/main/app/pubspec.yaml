@@ -1,5 +1,5 @@
 name: 'spend_spent_spent'
-version: '2.3.4+93'
+version: '2.3.5+93'
 publish_to: none
 environment:
   sdk: '>=3.0.0 <4.0.0'
