@@ -5,6 +5,7 @@ import 'package:spend_spent_spent/expenses/views/components/expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
+import 'package:spend_spent_spent/utils/views/components/expense_separator.dart';
 
 class OneDay extends StatelessWidget {
   final DayExpense expense;
@@ -20,9 +21,6 @@ class OneDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
     double total = expense.expenses
         .map((e) => e.amount)
         .reduce((value, element) => value + element);
@@ -30,27 +28,10 @@ class OneDay extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: Column(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('${displayDate()}'),
-            const Gap(5),
-            const Icon(
-              Icons.arrow_forward,
-              size: 15,
-            ),
-            const Gap(5),
-            Text(
-              formatCurrency(total),
-              style: textTheme.bodyLarge?.copyWith(color: colors.primary),
-            )
-          ],
-        ),
+        ExpenseSeparator(texts: [displayDate(), formatCurrency(total)]),
         const Gap(10),
-        Wrap(
-            runSpacing: 10,
+        Column(
             spacing: 10,
-            alignment: WrapAlignment.center,
             children: expense.expenses
                 .map(
                   (e) => OneExpense(
@@ -59,21 +40,6 @@ class OneDay extends StatelessWidget {
                       showExpense: showExpense),
                 )
                 .toList()),
-        const Gap(10),
-/*
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Total: ',
-            ),
-            Text(
-              formatCurrency(total),
-              style: TextStyle(color: colors.primary),
-            ),
-          ],
-        )
-*/
       ]),
     );
   }

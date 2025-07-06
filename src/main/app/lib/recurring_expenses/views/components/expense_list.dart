@@ -6,6 +6,7 @@ import 'package:spend_spent_spent/recurring_expenses/views/components/add_expens
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/recurring_expenses/views/components/expense.dart';
 import 'package:spend_spent_spent/utils/extensions/list_insert_between.dart';
+import 'package:spend_spent_spent/utils/views/components/expense_separator.dart';
 
 class ExpenseList extends StatelessWidget {
   final List<RecurringExpense> expenses,
@@ -45,9 +46,6 @@ class ExpenseList extends StatelessWidget {
 
   Widget? expensesFromSplit(
       BuildContext context, List<RecurringExpense> expenses, String title) {
-    final colors = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
     List<Widget> results = [];
 
     if (expenses.isNotEmpty) {
@@ -55,21 +53,7 @@ class ExpenseList extends StatelessWidget {
           .map((e) => e.amount)
           .reduce((value, element) => value + element);
 
-      results.add(Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(
-          title,
-        ),
-        const Gap(5),
-        const Icon(
-          Icons.arrow_forward,
-          size: 15,
-        ),
-        const Gap(5),
-        Text(
-          formatCurrency(total),
-          style: textTheme.bodyLarge?.copyWith(color: colors.primary),
-        )
-      ]));
+      results.add(ExpenseSeparator(texts: [title, formatCurrency(total)]));
 
       List<Widget> expensesWidget = [];
       for (var e in expenses) {
@@ -82,11 +66,7 @@ class ExpenseList extends StatelessWidget {
 
       results.add(Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Wrap(
-            runSpacing: 10,
-            spacing: 10,
-            alignment: WrapAlignment.center,
-            children: expensesWidget),
+        child: Column(children: expensesWidget),
       ));
       return Column(children: results);
     } else {
@@ -96,7 +76,6 @@ class ExpenseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     List<Widget> children = [];
 
     var daily = expensesFromSplit(context, this.daily, 'Daily');
@@ -121,15 +100,7 @@ class ExpenseList extends StatelessWidget {
       refreshExpenses: refreshExpenses,
     ));
 
-    children.addItemBetween(Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      alignment: Alignment.center,
-      child: Container(
-        height: 1,
-        width: 50,
-        color: colors.primaryContainer,
-      ),
-    ));
+    children.addItemBetween(Gap(24));
 
     children.add(Gap(bottomPadding));
 

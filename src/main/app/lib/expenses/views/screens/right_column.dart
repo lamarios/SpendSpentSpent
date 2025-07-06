@@ -7,6 +7,7 @@ import 'package:spend_spent_spent/expenses/models/expense.dart';
 import 'package:spend_spent_spent/expenses/state/expense_list.dart';
 import 'package:spend_spent_spent/expenses/views/components/one_day.dart';
 import 'package:spend_spent_spent/expenses/views/components/search.dart';
+import 'package:spend_spent_spent/expenses/views/components/stylized_amount.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/utils/views/components/data_change_monitor.dart';
@@ -85,18 +86,8 @@ class RightColumnTab extends StatelessWidget {
 
   Widget getExpensesWidget(
       BuildContext context, Map<String, DayExpense> expenses) {
-    final colors = Theme.of(context).colorScheme;
-
     List<String> expensesKeys = expenses.keys.toList();
-    return ListView.separated(
-      separatorBuilder: (context, index) => Container(
-        alignment: Alignment.center,
-        child: Container(
-          height: 1,
-          width: 50,
-          color: colors.primaryContainer,
-        ),
-      ),
+    return ListView.builder(
       itemCount: expenses.length,
       itemBuilder: (context, index) {
         return Padding(
@@ -128,8 +119,11 @@ class RightColumnTab extends StatelessWidget {
             child: Column(
               children: [
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(
+                      width: 50,
+                    ),
                     Expanded(
                         child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -144,60 +138,64 @@ class RightColumnTab extends StatelessWidget {
                           search: cubit.search,
                         ),
                         secondChild: SizedBox(
-                          height: 38,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(25)),
-                                color: colors.secondaryContainer),
-                            child: DropdownButton<String>(
-                              value: state.selected,
-                              items: state.months
-                                  .map((e) => DropdownMenuItem(
-                                        value: e,
-                                        child: Text(
-                                          convertDate(e),
-                                          style: TextStyle(
-                                              color:
-                                                  colors.onSecondaryContainer),
-                                        ),
-                                      ))
-                                  .toList(),
-                              selectedItemBuilder: (context) => state.months
-                                  .map(
-                                    (e) => Center(child: Text(convertDate(e))),
-                                  )
-                                  .toList(),
-                              style:
-                                  TextStyle(color: colors.onPrimaryContainer),
-                              isExpanded: true,
-                              iconEnabledColor: colors.onPrimaryContainer,
-                              underline: const SizedBox.shrink(),
-                              dropdownColor: colors.secondaryContainer,
-                              onChanged: cubit.monthChanged,
-                              alignment: Alignment.center,
-                            ),
+                          height: 48,
+                          child: Column(
+                            children: [
+                              DropdownButton<String>(
+                                value: state.selected,
+                                items: state.months
+                                    .map((e) => DropdownMenuItem(
+                                          value: e,
+                                          child: Text(
+                                            convertDate(e),
+                                            style: TextStyle(
+                                                color: colors
+                                                    .onSecondaryContainer),
+                                          ),
+                                        ))
+                                    .toList(),
+                                selectedItemBuilder: (context) => state.months
+                                    .map(
+                                      (e) => Center(
+                                          child: Text(
+                                        convertDate(e),
+                                        style: textTheme.bodyLarge,
+                                      )),
+                                    )
+                                    .toList(),
+                                style:
+                                    TextStyle(color: colors.onPrimaryContainer),
+                                isExpanded: true,
+                                iconEnabledColor: colors.onPrimaryContainer,
+                                underline: const SizedBox.shrink(),
+                                dropdownColor: colors.secondaryContainer,
+                                onChanged: cubit.monthChanged,
+                                alignment: Alignment.center,
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     )),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 2),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(25)),
-                            color: colors.secondaryContainer),
-                        child: IconButton(
-                            onPressed: cubit.switchSearch,
-                            padding: EdgeInsets.zero,
-                            visualDensity: VisualDensity.compact,
-                            iconSize: 15,
-                            splashRadius: 15,
-                            icon: Icon(
-                                state.searchMode ? Icons.clear : Icons.search,
-                                color: colors.onPrimaryContainer)),
+                    SizedBox(
+                      width: 50,
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(left: 8, right: 8.0, top: 8),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: colors.secondaryContainer),
+                          child: IconButton(
+                              onPressed: cubit.switchSearch,
+                              padding: EdgeInsets.zero,
+                              visualDensity: VisualDensity.compact,
+                              iconSize: 15,
+                              splashRadius: 15,
+                              icon: Icon(
+                                  state.searchMode ? Icons.clear : Icons.search,
+                                  color: colors.onPrimaryContainer)),
+                        ),
                       ),
                     )
                   ],
@@ -205,12 +203,12 @@ class RightColumnTab extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                        formatCurrency(state.total),
-                        style: textTheme.headlineSmall
-                            ?.copyWith(color: colors.primary),
-                      )),
+                    alignment: Alignment.center,
+                    child: StylizedAmount(
+                      amount: state.total,
+                      size: 50,
+                    ),
+                  ),
                 ),
                 Expanded(
                   child: AnimatedSwitcher(
