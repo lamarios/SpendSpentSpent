@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/recurring_expenses/models/recurring_expense.dart';
@@ -52,46 +53,38 @@ class Expense extends StatelessWidget {
           Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(25)),
-                color: colors.primaryContainer),
-            child: Row(
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(25)),
-                      color: colors.primary),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        getIcon(expense.category.icon!,
-                            size: 20, color: colors.onPrimary),
-                        Visibility(
-                          visible: expense.name.trim().isNotEmpty,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(
-                              expense.name.trim(),
-                              style: TextStyle(color: colors.onPrimary),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: Text(
-                    formatCurrency(expense.amount),
-                    style: TextStyle(color: colors.onPrimaryContainer),
-                  ),
-                ),
-              ],
+                shape: BoxShape.circle, color: colors.primaryContainer),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: getIcon(expense.category.icon!,
+                  size: 20, color: colors.onPrimaryContainer),
             ),
           ),
+          Gap(16),
+          Expanded(
+            child: Visibility(
+              visible: expense.name.trim().isNotEmpty,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                spacing: 2,
+                children: [
+                  Text(
+                    expense.name.trim(),
+                  ),
+                  Text(
+                    'Next: ${expense.nextOccurrence ?? ''}',
+                    style: TextStyle(
+                        color: colors.onSurface.withValues(alpha: 0.5)),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Text(
+            formatCurrency(expense.amount),
+            style: TextStyle(color: colors.onSurface),
+          )
         ],
       ),
     );

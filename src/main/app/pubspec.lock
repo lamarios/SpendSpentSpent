@@ -403,6 +403,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
+  flutter_localizations:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_map:
     dependency: "direct main"
     description:
@@ -781,6 +786,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  month_year_picker:
+    dependency: "direct main"
+    description:
+      name: month_year_picker
+      sha256: "0990a698061ce4f421ba4f2163895dae5ea88a2f2ff09294f0d77d7c9e6c0491"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0+1"
   nested:
     dependency: transitive
     description:
@@ -1555,5 +1568,5 @@ packages:
     source: hosted
     version: "2.0.0"
 sdks:
-  dart: ">=3.7.0 <4.0.0"
-  flutter: ">=3.27.4"
+  dart: ">=3.8.0 <4.0.0"
+  flutter: ">=3.32.0"

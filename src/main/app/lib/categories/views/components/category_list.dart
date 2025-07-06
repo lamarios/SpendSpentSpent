@@ -15,11 +15,14 @@ class CategoryListTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CategoriesCubit, CategoriesState>(
         builder: (context, state) {
-      return AnimatedSwitcher(
-          duration: panelTransition,
-          child: state.loading
-              ? const DummyGrid()
-              : CategoryGrid(state.categories));
+      return Align(
+        alignment: Alignment.topCenter,
+        child: AnimatedSwitcher(
+            duration: panelTransition,
+            child: state.loading
+                ? const DummyGrid()
+                : CategoryGrid(state.categories)),
+      );
     });
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
-import 'package:spend_spent_spent/stats/models/left_column_stats.dart';
-import 'package:spend_spent_spent/stats/views/components/stats_graph.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/stats/models/left_column_stats.dart';
 import 'package:spend_spent_spent/stats/state/single_stats.dart';
+import 'package:spend_spent_spent/stats/views/components/stats_graph.dart';
 
 class SingleStats extends StatelessWidget {
   final LeftColumnStats stats;
@@ -91,9 +91,12 @@ class SingleStats extends StatelessWidget {
                           width: getBarWidth(context, constraints),
                           height: state.open ? openedHeight : 10,
                           decoration: BoxDecoration(
+                              // border: Border.all(color:  state.ocolors.onPrimaryContainer, width: 1),
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(10)),
-                              color: colors.primary),
+                              color: state.open
+                                  ? colors.onPrimaryContainer
+                                  : colors.onPrimaryContainer),
                           child: Visibility(
                             visible: state.showGraph,
                             child: FadeIn(
