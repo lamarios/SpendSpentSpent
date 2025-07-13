@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/settings/state/app_settings.dart';
 import 'package:spend_spent_spent/stats/models/left_column_stats.dart';
 import 'package:spend_spent_spent/stats/state/single_stats.dart';
 import 'package:spend_spent_spent/stats/views/components/stats_graph.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class SingleStats extends StatelessWidget {
   final LeftColumnStats stats;
@@ -31,6 +33,7 @@ class SingleStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+
     // TODO: implement build
     return BlocProvider(
       create: (context) => SingleStatsCubit(const SingleStatsState()),
@@ -45,6 +48,15 @@ class SingleStats extends StatelessWidget {
             previous.showGraph != current.showGraph,
         builder: (context, state) {
           final cubit = context.read<SingleStatsCubit>();
+
+          final isMaterialYou = context.select((AppSettingsCubit c) =>
+              !c.state.blackBackground && c.state.materialYou);
+
+          final openedBackgroundColor = isMaterialYou
+              ? MediaQuery.platformBrightnessOf(context) == Brightness.dark
+                  ? brighten(colors.surfaceContainerHigh, 0.1)
+                  : colors.onInverseSurface
+              : colors.surfaceContainerHigh;
 
           return Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
@@ -83,7 +95,9 @@ class SingleStats extends StatelessWidget {
                           borderRadius:
                               const BorderRadius.all(Radius.circular(10)),
                           // gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.75], begin: Alignment.bottomCenter, end: Alignment.topRight),
-                          color: colors.primaryContainer),
+                          color: state.open
+                              ? colors.surface
+                              : colors.primaryContainer),
                       child: LayoutBuilder(
                         builder: (context, constraints) => AnimatedContainer(
                           duration: panelTransition,
@@ -92,10 +106,11 @@ class SingleStats extends StatelessWidget {
                           height: state.open ? openedHeight : 10,
                           decoration: BoxDecoration(
                               // border: Border.all(color:  state.ocolors.onPrimaryContainer, width: 1),
+                              // border: Border.all(color: colors.surfaceContainerHighest, width: state.open ? 5: 0),
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(10)),
                               color: state.open
-                                  ? colors.onPrimaryContainer
+                                  ? openedBackgroundColor
                                   : colors.onPrimaryContainer),
                           child: Visibility(
                             visible: state.showGraph,

@@ -14,9 +14,10 @@ class SingleStatsCubit extends Cubit<SingleStatsState> {
   }
 
   openContainer() {
-    emit(state.copyWith(open: true));
+    final newState = !state.open;
+    emit(state.copyWith(open: newState));
     Future.delayed(panelTransition, () {
-      emit(state.copyWith(showGraph: true));
+      emit(state.copyWith(showGraph: newState));
     });
   }
 }

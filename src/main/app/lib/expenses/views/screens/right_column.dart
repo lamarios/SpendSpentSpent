@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
-import 'package:spend_spent_spent/expenses/models/expense.dart';
 import 'package:spend_spent_spent/expenses/state/expense_list.dart';
+import 'package:spend_spent_spent/expenses/views/components/expense_menu.dart';
 import 'package:spend_spent_spent/expenses/views/components/one_day.dart';
 import 'package:spend_spent_spent/expenses/views/components/search.dart';
 import 'package:spend_spent_spent/expenses/views/components/stylized_amount.dart';
@@ -13,71 +13,10 @@ import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/utils/views/components/data_change_monitor.dart';
 
 import '../../../utils/views/components/dummies/dummyExpenses.dart';
-import '../components/expense_view.dart';
 
 @RoutePage()
 class RightColumnTab extends StatelessWidget {
   const RightColumnTab({super.key});
-
-  void showExpense(BuildContext context, Expense expense) {
-    final colors = Theme.of(context).colorScheme;
-
-    var duration = Duration(milliseconds: 750);
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        opaque: false,
-        barrierDismissible: true,
-        barrierColor: Colors.black54,
-        transitionDuration: duration,
-        reverseTransitionDuration: duration,
-        pageBuilder: (context, animation, secondaryAnimation) => ClipRRect(
-          borderRadius: BorderRadius.circular(36),
-          child: Material(
-            type: MaterialType.card,
-            child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(36),
-                  color: colors.surface,
-                ),
-                child: ExpenseView(expense)),
-          ),
-        ),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          final curvedAnimation = CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeInOutQuint, // 👈 custom curve here
-          );
-          return SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, 1),
-              end: Offset.zero,
-            ).animate(curvedAnimation),
-            child: child,
-          );
-        },
-      ),
-    );
-
-/*
-    showModal(
-        context: context,
-        builder: (context) => Padding(
-              padding: const EdgeInsets.all(36.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(36),
-                child: Material(
-                  type: MaterialType.card,
-                  child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(36),
-                        color: colors.surface,
-                      ),
-                      child: ExpenseView(expense)),
-                ),
-              ),
-            ));
-*/
-  }
 
   String convertDate(String date) {
     return DateFormat('MMMM yyyy')
@@ -94,7 +33,7 @@ class RightColumnTab extends StatelessWidget {
           padding: EdgeInsets.only(
               bottom: index == expenses.length - 1 ? bottomPadding : 0),
           child: OneDay(
-              showExpense: (expense) => showExpense(context, expense),
+              showExpense: (expense) => ExpenseMenu.showSheet(context, expense),
               expense: expenses[expensesKeys[index]]!),
         );
       },

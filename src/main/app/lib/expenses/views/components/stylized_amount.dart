@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spend_spent_spent/globals.dart';
 
 class StylizedAmount extends StatelessWidget {
   final double amount;
@@ -10,18 +11,22 @@ class StylizedAmount extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colors = Theme.of(context).colorScheme;
-    final int rootAmount = amount.floor();
-    final int remainder = ((amount * 100) % 100).toInt();
+    final formattedAmount = formatCurrency(amount);
+
+    final String rootAmount =
+        formattedAmount.substring(0, formattedAmount.length - 3);
+    final String remainder = formattedAmount.substring(
+        formattedAmount.length - 3, formattedAmount.length);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '$rootAmount',
+          rootAmount,
           style: textTheme.bodyLarge
               ?.copyWith(color: colors.onSurface, fontSize: size, height: 0),
         ),
-        Text('.$remainder',
+        Text(remainder,
             style: textTheme.bodyLarge?.copyWith(
                 color: colors.onSurface.withValues(
                   alpha: 0.5,
