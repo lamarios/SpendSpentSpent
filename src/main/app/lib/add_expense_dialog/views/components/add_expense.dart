@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spend_spent_spent/add_expense_dialog/state/add_expense_dialog.dart';
@@ -58,18 +59,20 @@ class AddExpense extends StatelessWidget {
           builder: (context, state) {
         final cubit = context.read<AddExpenseDialogCubit>();
 
+        var isWeb = foundation.kIsWeb;
         return Container(
           alignment: Alignment.center,
-          color: colors.surface.withOpacity(0),
+          color: colors.surface.withValues(alpha: 0),
           padding: const EdgeInsets.all(0),
           child: Container(
-            constraints: const BoxConstraints(maxWidth: 350),
+            constraints: isWeb ? const BoxConstraints(maxWidth: 350) : null,
             decoration: const BoxDecoration(
               borderRadius: defaultBorder,
             ),
             child: LayoutBuilder(builder: (context, constraints) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   AnimatedSwitcher(
                     duration: panelTransition,
@@ -86,7 +89,9 @@ class AddExpense extends StatelessWidget {
                             width: 150,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                                color: colors.primaryContainer,
+                                color: isWeb
+                                    ? colors.primaryContainer
+                                    : Colors.transparent,
                                 borderRadius: defaultBorder),
                             child: Hero(
                                 tag: category.icon!,
@@ -128,28 +133,30 @@ class AddExpense extends StatelessWidget {
                                         icon: category.icon!,
                                         size: 40,
                                         color: colors.onPrimaryContainer
-                                            .withOpacity(0.05),
+                                            .withValues(alpha: 0.05),
                                         child: Hero(
                                             tag: category.icon!,
                                             child: getIconHeader(context)),
                                       ),
                                     ),
-                                    Positioned(
-                                      right: 10,
-                                      top: 10,
-                                      child: AnimatedOpacity(
-                                        duration: panelTransition,
-                                        opacity: state.saving ? 0 : 1,
-                                        child: IconButton(
-                                            onPressed: () =>
-                                                Navigator.of(context).pop(),
-                                            icon: Icon(
-                                              Icons.clear,
-                                              color: colors.onPrimaryContainer,
-                                              size: 20,
-                                            )),
+                                    if (isWeb)
+                                      Positioned(
+                                        right: 10,
+                                        top: 10,
+                                        child: AnimatedOpacity(
+                                          duration: panelTransition,
+                                          opacity: state.saving ? 0 : 1,
+                                          child: IconButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              icon: Icon(
+                                                Icons.clear,
+                                                color:
+                                                    colors.onPrimaryContainer,
+                                                size: 20,
+                                              )),
+                                        ),
                                       ),
-                                    ),
                                   ],
                                 ),
                                 Padding(

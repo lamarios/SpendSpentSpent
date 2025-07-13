@@ -48,13 +48,13 @@ class StatsGraph extends StatelessWidget {
         drawVerticalLine: true,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: colors.onPrimary.withValues(alpha: 0.075),
+            color: colors.onSurface.withValues(alpha: 0.075),
             strokeWidth: 1,
           );
         },
         getDrawingVerticalLine: (value) {
           return FlLine(
-            color: colors.onPrimary.withValues(alpha: 0.075),
+            color: colors.onSurface.withValues(alpha: 0.075),
             strokeWidth: 1,
           );
         },
@@ -72,7 +72,7 @@ class StatsGraph extends StatelessWidget {
                 reservedSize: 35,
                 getTitlesWidget: (value, meta) {
                   var style = TextStyle(
-                    color: colors.onPrimary,
+                    color: colors.onSurface,
                     fontWeight: FontWeight.bold,
                     fontSize: 10,
                   );
@@ -95,7 +95,7 @@ class StatsGraph extends StatelessWidget {
                 reservedSize: 50,
                 getTitlesWidget: (value, meta) {
                   var style = TextStyle(
-                    color: colors.onPrimary,
+                    color: colors.onSurface,
                     fontWeight: FontWeight.bold,
                     fontSize: 10,
                   );
@@ -105,7 +105,7 @@ class StatsGraph extends StatelessWidget {
       borderData: FlBorderData(
           show: true,
           border: Border.all(
-              color: colors.onPrimary.withValues(alpha: 0.3), width: 1)),
+              color: colors.onSurface.withValues(alpha: 0.3), width: 1)),
       minX: 0,
       minY: state.minValue,
       maxY: state.maxValue,
@@ -114,7 +114,7 @@ class StatsGraph extends StatelessWidget {
           isStrokeJoinRound: true,
           spots: state.avgData,
           isCurved: false,
-          color: colors.onPrimary.withValues(alpha: 0.5),
+          color: colors.onSurface.withValues(alpha: 0.5),
           barWidth: AVG_BAR_WIDTH,
           isStrokeCapRound: true,
           dotData: const FlDotData(
@@ -122,13 +122,13 @@ class StatsGraph extends StatelessWidget {
           ),
           belowBarData: BarAreaData(
             show: false,
-            color: colors.onPrimary.withValues(alpha: 0.2),
+            color: colors.onSurface.withValues(alpha: 0.2),
           ),
         ),
         LineChartBarData(
           spots: state.graphData,
           isCurved: false,
-          color: colors.onPrimary,
+          color: colors.onSurface,
           barWidth: 2,
           isStrokeCapRound: true,
           dotData: const FlDotData(
@@ -136,7 +136,7 @@ class StatsGraph extends StatelessWidget {
           ),
           belowBarData: BarAreaData(
             show: true,
-            color: colors.onPrimary.withValues(alpha: 0.2),
+            color: colors.onSurface.withValues(alpha: 0.2),
           ),
         ),
       ],
@@ -190,7 +190,7 @@ class StatsGraph extends StatelessWidget {
                               horizontal: 15.0, vertical: 5),
                           child: Icon(
                             Icons.clear,
-                            color: colors.onPrimary,
+                            color: colors.onSurface,
                             size: 20,
                           ),
                         )),
@@ -209,7 +209,7 @@ class StatsGraph extends StatelessWidget {
                 child: state.loading
                     ? DummyFade(
                         child: Icon(Icons.ssid_chart,
-                            color: colors.onPrimary,
+                            color: colors.onSurface,
                             size: 90,
                             key: const Key('loading')))
                     : Column(
@@ -225,7 +225,7 @@ class StatsGraph extends StatelessWidget {
                           Container(
                             alignment: Alignment.center,
                             child: Text(getLabel(context),
-                                style: TextStyle(color: colors.onPrimary)),
+                                style: TextStyle(color: colors.onSurface)),
                           ),
                           Slider.adaptive(
                             min: 1,
@@ -233,7 +233,7 @@ class StatsGraph extends StatelessWidget {
                             divisions: state.periodMax - 1,
                             onChangeEnd: (p0) => cubit.changeCount(p0.toInt()),
                             value: state.count.toDouble(),
-                            activeColor: colors.onPrimary,
+                            activeColor: colors.onSurface,
                             inactiveColor: colors.secondaryContainer,
                             thumbColor: colors.primary.lighten(10),
                             onChanged: (double double) =>
