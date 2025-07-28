@@ -59,7 +59,7 @@ https://your.sss-domain.com/redirect.html
 | OIDC_DISCOVERY_URL     | (none)  | **Yes**  | The discovery URL of your OIDC provider https://id.example.com/.well-known/openid-configuration |
 | OIDC_CLIENT_ID         | (none)  | **Yes**  | Your OIDC client id                                                                             |
 | OIDC_AUTO_SIGNUP_USERS | false   | No       | Whether to automatically sign up unknown users                                                  |
-| OIDC_NANA              | SSO     | no       | Name of your provider to display on the UI                                                      |
+| OIDC_NAME              | SSO     | no       | Name of your provider to display on the UI                                                      |
 
 ## Docker
 
