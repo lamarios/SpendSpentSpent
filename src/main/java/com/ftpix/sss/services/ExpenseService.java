@@ -197,6 +197,9 @@ public class ExpenseService {
                 .stream()
                 .mapToDouble(Expense::getAmount)
                 .sum();
+        if(previousSum == 0){
+            return 0;
+        }
 
         return currentSum / previousSum;
     }
