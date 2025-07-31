@@ -3,12 +3,15 @@ import 'dart:core';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
+import 'package:logging/logging.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/expenses/models/search_parameters.dart';
 import 'package:spend_spent_spent/utils/models/with_error.dart';
 
 part 'expense_list.freezed.dart';
+
+final _log = Logger('ExpenseListCubit');
 
 class ExpenseListCubit extends Cubit<ExpenseListState> {
   ExpenseListCubit(super.initialState) {
@@ -30,6 +33,7 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
       emit(state.copyWith(months: months, selected: selected));
 
       getExpenses();
+      getDiff();
     }
   }
 
@@ -37,7 +41,32 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
     if (!isClosed) {
       emit(state.copyWith(selected: value ?? ''));
       getExpenses();
+      getDiff();
     }
+  }
+
+  Future<void> getDiff() async {
+    var now = DateTime.now();
+    var yyyyMMddFormat = DateFormat('yyyy-MM-dd');
+    var yyyyMMFormat = DateFormat('yyyy-MM');
+    var compareTo = yyyyMMFormat.format(now).compareTo(state.selected);
+    late String compareDate;
+    if (compareTo > 0) {
+      _log.fine('selected before now: $compareTo');
+      // we go to 31, so we always compare full month regardless if the month is 31 days or less
+      compareDate = '${state.selected}-31';
+    } else if (compareTo < 0) {
+      _log.fine('we are in the future, skipping');
+      emit(state.copyWith(diffWithPreviousPeriod: null));
+      return;
+    } else {
+      compareDate = yyyyMMddFormat.format(now);
+      _log.fine('selected is now: $compareTo');
+    }
+
+    var diff = await service.getDiffWithPreviousPeriod(compareDate);
+    _log.fine('Comparing data up until $compareDate, diff: $diff');
+    emit(state.copyWith(diffWithPreviousPeriod: diff));
   }
 
   getExpenses() async {
@@ -63,8 +92,10 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
 
     if (!state.searchMode) {
       getExpenses();
+      getDiff();
     } else {
-      emit(state.copyWith(expenses: {}, total: 0));
+      emit(
+          state.copyWith(expenses: {}, total: 0, diffWithPreviousPeriod: null));
 /*
       setState(() {
         this.expenses = <String, DayExpense>{};
@@ -104,6 +135,7 @@ sealed class ExpenseListState with _$ExpenseListState implements WithError {
       @Default(0) double total,
       @Default(false) bool loading,
       @Default(false) bool searchMode,
+      double? diffWithPreviousPeriod,
       @Default({}) Map<String, DayExpense> expenses,
       dynamic error,
       StackTrace? stackTrace}) = _ExpenseListState;

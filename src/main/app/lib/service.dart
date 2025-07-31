@@ -47,6 +47,7 @@ const EXPENSE_DELETE = '$API_URL/Expense/{0}';
 const EXPENSE_GET_NOTE_SUGGESTIONS = '$API_URL/Expense/suggest-notes';
 const EXPENSE_GET_NOTE_AUTOCOMPLETE = '$API_URL/Expense/notes-autocomplete';
 const EXPENSE_GET_LIMITS = '$API_URL/Expense/limits';
+const EXPENSE_DIFF_WITH_PREVIOUS_PERIOD = '$API_URL/Expense/diff/{0}';
 const HISTORY_OVERALL_MONTH = "$API_URL/History/CurrentMonth";
 const HISTORY_OVERALL_YEAR = "$API_URL/History/CurrentYear";
 const HISTORY_YEARLY = "$API_URL/History/Yearly/{0}/{1}";
@@ -355,6 +356,14 @@ class Service {
     Map<String, dynamic> map = jsonDecode(response.body);
 
     return map.map((key, value) => MapEntry(key, DayExpense.fromJson(value)));
+  }
+
+  Future<double> getDiffWithPreviousPeriod(String currentTime) async {
+    final response = await http.get(
+        await formatUrl(EXPENSE_DIFF_WITH_PREVIOUS_PERIOD, [currentTime]),
+        headers: await headers);
+    processResponse(response);
+    return double.parse(response.body);
   }
 
   Future<bool> deleteExpense(int id) async {

@@ -29,13 +29,11 @@ public class ExpenseController {
     protected final Log logger = LogFactory.getLog(this.getClass());
     private final UserService userService;
     private final ExpenseService expenseService;
-    private final HistoryService historyService;
 
     @Autowired
-    public ExpenseController(UserService userService, ExpenseService expenseService, HistoryService historyService) {
+    public ExpenseController(UserService userService, ExpenseService expenseService) {
         this.userService = userService;
         this.expenseService = expenseService;
-        this.historyService = historyService;
     }
 
     /**
@@ -129,7 +127,7 @@ public class ExpenseController {
 
     @PostMapping("/notes-autocomplete")
     public Map<String, Long> noteAutoComplete(@RequestBody String text) throws SQLException {
-        if(text.isBlank()){
+        if (text.isBlank()) {
             return new HashMap<>();
         }
 
@@ -138,10 +136,16 @@ public class ExpenseController {
     }
 
 
-
     @GetMapping("/limits")
     public ExpenseLimits getExpenseLimits() throws Exception {
         final User currentUser = userService.getCurrentUser();
         return expenseService.getLimits(currentUser);
+    }
+
+    @GetMapping("/diff/{current-day}")
+    public double getDiffWithPreviousPeriod(@PathVariable("current-day") String currentDay) throws SQLException {
+        var currentUser = userService.getCurrentUser();
+        return expenseService.diffWithPreviousPeriod(currentUser, currentDay);
+
     }
 }
