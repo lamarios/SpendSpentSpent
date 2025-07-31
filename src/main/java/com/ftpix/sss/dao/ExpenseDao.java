@@ -102,7 +102,8 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
             e.setType(r.getType());
             e.setAmount(r.getAmount());
             e.setIncome(r.getIncome() != null && r.getIncome().equals(1));
-            e.setDate(dateFormat.parse(r.getDate()));
+            var date = r.getDate();
+            e.setDate(dateFormat.parse(date));
             e.setLatitude(r.getLatitude());
             e.setLongitude(r.getLongitude());
             e.setTime(r.getTime());
@@ -179,5 +180,19 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
                 .where(lower(EXPENSE.NOTE).like("%" + seed.toLowerCase() + "%"))
                 .and(EXPENSE.CATEGORY_ID.in(userCategories.keySet()))
                 .fetch(EXPENSE.NOTE);
+    }
+
+    public List<Expense> getFromTo(User user, String from, String to, boolean includeRecurring) {
+
+        Map<Long, Category> userCategories = getUserCategories(user);
+
+        var query = dslContext.select().from(EXPENSE).where(EXPENSE.DATE.between(from, to));
+
+        if (!includeRecurring) {
+            query = query.and(EXPENSE.TYPE.ne(Expense.TYPE_RECURRENT));
+        }
+
+        return query.fetch(r -> fromRecord((ExpenseRecord) r, userCategories));
+
     }
 }

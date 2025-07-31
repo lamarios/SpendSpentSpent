@@ -24,7 +24,8 @@ const ALLOW_SIGNUP = "allowSignUp",
     MOTD = "motd",
     MATERIAL_YOU = "material-you",
     BLACK_BACKGROUND = "black-background",
-    CURRENCY_API_KEY = "currencyApiKey";
+    CURRENCY_API_KEY = "currencyApiKey",
+    INCLUDE_RECURRING_IN_DIFF = "includeRecurringInDiff";
 
 settingsTheme(ColorScheme colorScheme) => SettingsThemeData(
     settingsSectionBackground: colorScheme.surface,

@@ -3,7 +3,7 @@ package com.ftpix.sss.models;
 import com.ftpix.sss.services.Encryption;
 
 public class Settings {
-    public static final String CURRENCY_API_KEY = "currencyApiKey", ALLOW_SIGNUP="allowSignUp", DEMO_MODE="demoMode", MOTD="motd";
+    public static final String CURRENCY_API_KEY = "currencyApiKey", ALLOW_SIGNUP = "allowSignUp", DEMO_MODE = "demoMode", MOTD = "motd", INCLUDE_RECURRING_IN_DIFF = "includeRecurringInDiff";
 
     private String name;
 
@@ -11,6 +11,13 @@ public class Settings {
 
     private boolean secret;
 
+    public Settings(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    public Settings() {
+    }
 
     public String getName() {
         return name;

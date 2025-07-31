@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/expenses/state/expense_list.dart';
+import 'package:spend_spent_spent/expenses/views/components/diff_with_previous_period.dart';
 import 'package:spend_spent_spent/expenses/views/components/expense_menu.dart';
 import 'package:spend_spent_spent/expenses/views/components/one_day.dart';
 import 'package:spend_spent_spent/expenses/views/components/search.dart';
@@ -140,12 +142,23 @@ class RightColumnTab extends StatelessWidget {
                   ],
                 ),
                 Padding(
+                  key: ValueKey(state.selected),
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     alignment: Alignment.center,
-                    child: StylizedAmount(
-                      amount: state.total,
-                      size: 50,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        StylizedAmount(
+                          amount: state.total,
+                          size: 50,
+                        ),
+                        if (!state.searchMode) ...[
+                          Gap(4),
+                          DiffWithPreviousPeriod(
+                              diff: state.diffWithPreviousPeriod)
+                        ]
+                      ],
                     ),
                   ),
                 ),

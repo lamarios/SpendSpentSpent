@@ -9,6 +9,7 @@ import org.jooq.OrderField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.InvalidParameterException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ public class ExpenseService {
     public static final String DATE = "date";
     private static final String CATEGORY_ID = "CATEGORY_ID";
     public final CategoryService categoryService;
+    public final SettingsService settingsService;
     protected final Log logger = LogFactory.getLog(this.getClass());
     private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private final SimpleDateFormat monthOnly = new SimpleDateFormat("yyyy-MM");
@@ -30,8 +32,9 @@ public class ExpenseService {
     private final ExpenseDao expenseDaoJooq;
 
     @Autowired
-    public ExpenseService(CategoryService categoryService, ExpenseDao expenseDaoJooq) {
+    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ExpenseDao expenseDaoJooq) {
         this.categoryService = categoryService;
+        this.settingsService = settingsService;
         this.expenseDaoJooq = expenseDaoJooq;
     }
 
@@ -146,6 +149,59 @@ public class ExpenseService {
 
     public List<Expense> getForDateLikeAndCategory(User user, String date, Category category) throws SQLException {
         return expenseDaoJooq.getWhere(user, EXPENSE.DATE.like(date + "%"), EXPENSE.CATEGORY_ID.eq(category.getId()));
+    }
+
+    /**
+     * this method show the amount of money that was spent in the last month within the same period
+     * ex: we're currently the 10 of july, this should retrieve the amount spent in june from the first to the 10th of june
+     *
+     * @param user
+     * @param userCurrentDay current date in yyyy-MM-dd format this should be sent by the front end as it might not always be at the same day of the server
+     * @return
+     */
+    public double diffWithPreviousPeriod(User user, String userCurrentDay) throws SQLException {
+        // find starting point, it should be the beginning of the userCurrentDay month - 1
+        var split = userCurrentDay.split("-");
+        if (split.length != 3) {
+            throw new InvalidParameterException("dates shoud be yyyy-MM-dd format");
+        }
+
+
+        boolean includeRecurring = Optional.ofNullable(settingsService.getByName(Settings.INCLUDE_RECURRING_IN_DIFF))
+                .map(settings -> settings.getValue().equalsIgnoreCase("1"))
+                .orElse(true);
+
+        int year = Integer.parseInt(split[0]);
+        int month = Integer.parseInt(split[1]);
+        int day = Integer.parseInt(split[2]);
+
+        String start = "%02d-%02d-%02d".formatted(year, month, 1);
+        String end = userCurrentDay;
+        var currentSum = expenseDaoJooq.getFromTo(user, start, end, includeRecurring)
+                .stream()
+                .mapToDouble(Expense::getAmount)
+                .sum();
+
+        if (split[1].equalsIgnoreCase("01")) {
+            year--;
+            month = 12;
+        } else {
+            month--;
+        }
+
+        start = "%02d-%02d-%02d".formatted(year, month, 1);
+        end = "%02d-%02d-%02d".formatted(year, month, day);
+
+
+        var previousSum = expenseDaoJooq.getFromTo(user, start, end, includeRecurring)
+                .stream()
+                .mapToDouble(Expense::getAmount)
+                .sum();
+        if(previousSum == 0){
+            return 0;
+        }
+
+        return currentSum / previousSum;
     }
 
 }

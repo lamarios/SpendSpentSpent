@@ -6,6 +6,7 @@ import com.ftpix.sss.dao.CategoryDao;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.services.ExpenseService;
 import com.ftpix.sss.services.HistoryService;
+import com.ftpix.sss.services.SettingsService;
 import com.ftpix.sss.utils.TestService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,8 @@ public class ExpenseControllerTest extends TestContainerTest {
 
     @Autowired
     private HistoryService historyService;
+    @Autowired
+    private SettingsService settingsService;
 
     @Autowired
     private TestService testService;
@@ -74,7 +77,10 @@ public class ExpenseControllerTest extends TestContainerTest {
 
         var cats = categoryDaoJooq.getWhere(currentUser);
 
-        return create(currentUser, amount, cats.stream().filter(category -> category.getId() == catId).findFirst().get(), date, income, expenseType, lat, longitude, note);
+        return create(currentUser, amount, cats.stream()
+                .filter(category -> category.getId() == catId)
+                .findFirst()
+                .get(), date, income, expenseType, lat, longitude, note);
     }
 
     @Test
@@ -185,6 +191,27 @@ public class ExpenseControllerTest extends TestContainerTest {
         assertEquals(0d, getForCatId(yearly, cat.getId()).getTotal(), DELTA);
         assertEquals(0d, getForCatId(monthly, -1).getTotal(), DELTA);
         assertEquals(0d, getForCatId(yearly, -1).getTotal(), DELTA);
+
+    }
+
+    @Test
+    public void testDiffWithPreviousPeriod() throws Exception {
+        var cats = categoryDaoJooq.getWhere(currentUser);
+
+        create(10d, cats.get(0).getId(), "2025-01-12", false, Expense.TYPE_NORMAL, 0, 0, "");
+        create(20d, cats.get(0).getId(), "2024-12-15", false, Expense.TYPE_NORMAL, 0, 0, "");
+        create(20d, cats.get(0).getId(), "2024-12-15", false, Expense.TYPE_RECURRENT, 0, 0, "");
+        // the next 2 should be excluded of the range from the old expenses
+        create(20d, cats.get(0).getId(), "2024-12-16", false, Expense.TYPE_NORMAL, 0, 0, "");
+        create(20d, cats.get(0).getId(), "2024-11-30", false, Expense.TYPE_NORMAL, 0, 0, "");
+
+        var diff = expenseService.diffWithPreviousPeriod(currentUser, "2025-01-15");
+        assertEquals(0.25, diff);
+
+        // now we exclude recurring expenses
+        settingsService.save(new Settings(Settings.INCLUDE_RECURRING_IN_DIFF, "0"));
+        diff = expenseService.diffWithPreviousPeriod(currentUser, "2025-01-15");
+        assertEquals(0.5, diff);
 
     }
 

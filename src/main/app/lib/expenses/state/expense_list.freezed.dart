@@ -20,6 +20,7 @@ mixin _$ExpenseListState {
   double get total;
   bool get loading;
   bool get searchMode;
+  double? get diffWithPreviousPeriod;
   Map<String, DayExpense> get expenses;
   dynamic get error;
   StackTrace? get stackTrace;
@@ -44,6 +45,8 @@ mixin _$ExpenseListState {
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.searchMode, searchMode) ||
                 other.searchMode == searchMode) &&
+            (identical(other.diffWithPreviousPeriod, diffWithPreviousPeriod) ||
+                other.diffWithPreviousPeriod == diffWithPreviousPeriod) &&
             const DeepCollectionEquality().equals(other.expenses, expenses) &&
             const DeepCollectionEquality().equals(other.error, error) &&
             (identical(other.stackTrace, stackTrace) ||
@@ -58,13 +61,14 @@ mixin _$ExpenseListState {
       total,
       loading,
       searchMode,
+      diffWithPreviousPeriod,
       const DeepCollectionEquality().hash(expenses),
       const DeepCollectionEquality().hash(error),
       stackTrace);
 
   @override
   String toString() {
-    return 'ExpenseListState(months: $months, selected: $selected, total: $total, loading: $loading, searchMode: $searchMode, expenses: $expenses, error: $error, stackTrace: $stackTrace)';
+    return 'ExpenseListState(months: $months, selected: $selected, total: $total, loading: $loading, searchMode: $searchMode, diffWithPreviousPeriod: $diffWithPreviousPeriod, expenses: $expenses, error: $error, stackTrace: $stackTrace)';
   }
 }
 
@@ -80,6 +84,7 @@ abstract mixin class $ExpenseListStateCopyWith<$Res> {
       double total,
       bool loading,
       bool searchMode,
+      double? diffWithPreviousPeriod,
       Map<String, DayExpense> expenses,
       dynamic error,
       StackTrace? stackTrace});
@@ -103,6 +108,7 @@ class _$ExpenseListStateCopyWithImpl<$Res>
     Object? total = null,
     Object? loading = null,
     Object? searchMode = null,
+    Object? diffWithPreviousPeriod = freezed,
     Object? expenses = null,
     Object? error = freezed,
     Object? stackTrace = freezed,
@@ -128,6 +134,10 @@ class _$ExpenseListStateCopyWithImpl<$Res>
           ? _self.searchMode
           : searchMode // ignore: cast_nullable_to_non_nullable
               as bool,
+      diffWithPreviousPeriod: freezed == diffWithPreviousPeriod
+          ? _self.diffWithPreviousPeriod
+          : diffWithPreviousPeriod // ignore: cast_nullable_to_non_nullable
+              as double?,
       expenses: null == expenses
           ? _self.expenses
           : expenses // ignore: cast_nullable_to_non_nullable
@@ -153,6 +163,7 @@ class _ExpenseListState implements ExpenseListState, WithError {
       this.total = 0,
       this.loading = false,
       this.searchMode = false,
+      this.diffWithPreviousPeriod,
       final Map<String, DayExpense> expenses = const {},
       this.error,
       this.stackTrace})
@@ -180,6 +191,8 @@ class _ExpenseListState implements ExpenseListState, WithError {
   @override
   @JsonKey()
   final bool searchMode;
+  @override
+  final double? diffWithPreviousPeriod;
   final Map<String, DayExpense> _expenses;
   @override
   @JsonKey()
@@ -214,6 +227,8 @@ class _ExpenseListState implements ExpenseListState, WithError {
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.searchMode, searchMode) ||
                 other.searchMode == searchMode) &&
+            (identical(other.diffWithPreviousPeriod, diffWithPreviousPeriod) ||
+                other.diffWithPreviousPeriod == diffWithPreviousPeriod) &&
             const DeepCollectionEquality().equals(other._expenses, _expenses) &&
             const DeepCollectionEquality().equals(other.error, error) &&
             (identical(other.stackTrace, stackTrace) ||
@@ -228,13 +243,14 @@ class _ExpenseListState implements ExpenseListState, WithError {
       total,
       loading,
       searchMode,
+      diffWithPreviousPeriod,
       const DeepCollectionEquality().hash(_expenses),
       const DeepCollectionEquality().hash(error),
       stackTrace);
 
   @override
   String toString() {
-    return 'ExpenseListState(months: $months, selected: $selected, total: $total, loading: $loading, searchMode: $searchMode, expenses: $expenses, error: $error, stackTrace: $stackTrace)';
+    return 'ExpenseListState(months: $months, selected: $selected, total: $total, loading: $loading, searchMode: $searchMode, diffWithPreviousPeriod: $diffWithPreviousPeriod, expenses: $expenses, error: $error, stackTrace: $stackTrace)';
   }
 }
 
@@ -252,6 +268,7 @@ abstract mixin class _$ExpenseListStateCopyWith<$Res>
       double total,
       bool loading,
       bool searchMode,
+      double? diffWithPreviousPeriod,
       Map<String, DayExpense> expenses,
       dynamic error,
       StackTrace? stackTrace});
@@ -275,6 +292,7 @@ class __$ExpenseListStateCopyWithImpl<$Res>
     Object? total = null,
     Object? loading = null,
     Object? searchMode = null,
+    Object? diffWithPreviousPeriod = freezed,
     Object? expenses = null,
     Object? error = freezed,
     Object? stackTrace = freezed,
@@ -300,6 +318,10 @@ class __$ExpenseListStateCopyWithImpl<$Res>
           ? _self.searchMode
           : searchMode // ignore: cast_nullable_to_non_nullable
               as bool,
+      diffWithPreviousPeriod: freezed == diffWithPreviousPeriod
+          ? _self.diffWithPreviousPeriod
+          : diffWithPreviousPeriod // ignore: cast_nullable_to_non_nullable
+              as double?,
       expenses: null == expenses
           ? _self._expenses
           : expenses // ignore: cast_nullable_to_non_nullable
