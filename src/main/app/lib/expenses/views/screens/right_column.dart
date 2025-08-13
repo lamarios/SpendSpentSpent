@@ -156,7 +156,9 @@ class RightColumnTab extends StatelessWidget {
                         if (!state.searchMode) ...[
                           Gap(4),
                           DiffWithPreviousPeriod(
-                              diff: state.diffWithPreviousPeriod)
+                            diff: state.diffWithPreviousPeriod,
+                            currentMonth: state.selected,
+                          )
                         ]
                       ],
                     ),

@@ -70,12 +70,9 @@ class SpendSpentSpent extends StatelessWidget {
           ColorScheme lightColorScheme;
           ColorScheme darkColorScheme;
 
-          print('hello ${state.materialYou} ');
-
           if (state.materialYou &&
               lightDynamic != null &&
               darkDynamic != null) {
-            print(' ??? ');
             lightColorScheme = lightDynamic;
             darkColorScheme = darkDynamic;
           } else {
