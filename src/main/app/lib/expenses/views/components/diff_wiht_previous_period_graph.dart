@@ -37,6 +37,15 @@ class DiffWithPreviousPeriodGraph extends StatelessWidget {
                 includeRecurring: includeRecurring)),
         child: BlocBuilder<DiffWithPreviousMonthGraphCubit,
             DiffWithPreviousMonthGraphState>(builder: (context, state) {
+          if (state.spots.length < 2 ||
+              state.spots[0].isEmpty ||
+              state.spots[1].isEmpty) {
+            return SizedBox.shrink();
+          }
+
+          final currentSpots = state.spots.first;
+          final previousSpots = state.spots.last;
+
           return AnimatedSwitcher(
             duration: animationDuration,
             child: state.loading
@@ -52,16 +61,12 @@ class DiffWithPreviousPeriodGraph extends StatelessWidget {
                               baselineX: 1,
                               baselineY: 0,
                               maxY: max(
-                                      state
-                                          .spots
-                                          .first[state.spots.first.length - 1]
-                                          .y,
-                                      state
-                                          .spots
-                                          .last[state.spots.last.length - 1]
+                                      currentSpots[currentSpots.length - 1].y,
+                                      previousSpots[previousSpots.length - 1]
                                           .y) *
                                   1.1,
-                              minY: 0,
+                              minY: min(currentSpots[0].y, previousSpots[0].y) *
+                                  0.9,
                               lineTouchData: LineTouchData(
                                   touchTooltipData: LineTouchTooltipData(
                                       fitInsideHorizontally: true,

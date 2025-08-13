@@ -13,6 +13,10 @@ class DiffWithPreviousPeriodSettings extends StatelessWidget {
 
   const DiffWithPreviousPeriodSettings({super.key, required this.month});
 
+  bool _isSamePeriod(DateTime period1, DateTime period2) {
+    return period1.year == period2.year && period1.month == period2.month;
+  }
+
   static Future<void> showModalSheet(BuildContext context,
       {required String month}) async {
     await showModalBottomSheet(
@@ -34,7 +38,7 @@ class DiffWithPreviousPeriodSettings extends StatelessWidget {
 
     var start =
         DateTime(currentPeriod.year, currentPeriod.month, currentPeriod.day);
-    if (now.month == currentPeriod.month) {
+    if (_isSamePeriod(currentPeriod, now)) {
       return DateTimeRange(start: start, end: now);
     } else {
       return DateTimeRange(
@@ -45,7 +49,7 @@ class DiffWithPreviousPeriodSettings extends StatelessWidget {
   DateTimeRange _getPreviousPeriod(DateTimeRange currentPeriod) {
     final now = DateTime.now();
     final start = _getPreviousMonth(currentPeriod.start).copyWith(day: 1);
-    if (currentPeriod.start.month == now.month) {
+    if (_isSamePeriod(currentPeriod.start, now)) {
       return DateTimeRange(
           start: start, end: start.copyWith(day: currentPeriod.end.day));
     } else {
