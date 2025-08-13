@@ -6,8 +6,10 @@ import 'package:spend_spent_spent/expenses/views/components/diff_with_previous_p
 
 class DiffWithPreviousPeriod extends StatelessWidget {
   final double? diff;
+  final String currentMonth;
 
-  const DiffWithPreviousPeriod({super.key, this.diff});
+  const DiffWithPreviousPeriod(
+      {super.key, this.diff, required this.currentMonth});
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +23,9 @@ class DiffWithPreviousPeriod extends StatelessWidget {
               ? Colors.red
               : null;
       return InkWell(
-        onTap: () =>
-            DiffWithPreviousPeriodSettings.showModalSheet(context).then(
+        onTap: () => DiffWithPreviousPeriodSettings.showModalSheet(context,
+                month: currentMonth)
+            .then(
           (value) {
             if (context.mounted) {
               context.read<ExpenseListCubit>().getDiff();
