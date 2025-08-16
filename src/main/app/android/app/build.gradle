@@ -57,7 +57,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 35
+    compileSdkVersion 36
 
     compileOptions {
         sourceCompatibility 21
@@ -78,8 +78,8 @@ android {
 
     defaultConfig {
         applicationId "com.spendspentspent.app"
-        minSdkVersion 23
-        targetSdkVersion 35
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion 36
         versionCode buildNumber
         versionName flutterVersionName
         manifestPlaceholders += [
