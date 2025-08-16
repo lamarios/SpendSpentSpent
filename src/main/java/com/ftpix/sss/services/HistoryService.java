@@ -29,7 +29,6 @@ import static com.ftpix.sss.dsl.Tables.*;
 public class HistoryService {
     protected final Log logger = LogFactory.getLog(this.getClass());
     private final CategoryService categoryService;
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final DateTimeFormatter historyDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMM");
     private final DateTimeFormatter monthlyHistoryDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
     private final DateTimeFormatter yearlyHistoryDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
@@ -89,6 +88,7 @@ public class HistoryService {
 
     /**
      * Gets expense sum for each categories for the current year
+     *
      * @param user
      * @return
      * @throws Exception
@@ -109,7 +109,8 @@ public class HistoryService {
         int year = now.getYear();
 
         List<YearlyHistory> yearly = yearlyHistoryDaoJooq.getWhere(user, YEARLY_HISTORY.DATE.eq(year));
-        Map<Long, YearlyHistory> byCategory = yearly.stream().collect(Collectors.toMap(y -> y.getCategory().getId(), Function.identity()));
+        Map<Long, YearlyHistory> byCategory = yearly.stream()
+                .collect(Collectors.toMap(y -> y.getCategory().getId(), Function.identity()));
         double total = yearly.stream().mapToDouble(YearlyHistory::getTotal).sum();
 
         overall.setAmount(total);
@@ -132,15 +133,21 @@ public class HistoryService {
         result.add(overall);
 
 
-        return result.stream().map(c -> {
-            c.setTotal(overall.getTotal());
-            return c;
-        }).sorted(Comparator.comparing(CategoryOverall::getAmount).reversed().thenComparingLong(o -> o.getCategory().getId())).collect(Collectors.toList());
+        return result.stream()
+                .map(c -> {
+                    c.setTotal(overall.getTotal());
+                    return c;
+                })
+                .sorted(Comparator.comparing(CategoryOverall::getAmount)
+                        .reversed()
+                        .thenComparingLong(o -> o.getCategory().getId()))
+                .collect(Collectors.toList());
     }
 
 
     /**
      * Gets expense sum for each categories for the current month
+     *
      * @param user
      * @return
      * @throws Exception
@@ -161,7 +168,8 @@ public class HistoryService {
         int date = (now.getYear() * 100) + now.getMonthValue();
 
         List<MonthlyHistory> monthly = monthlyHistoryDaoJooq.getWhere(user, MONTHLY_HISTORY.DATE.eq(date));
-        Map<Long, MonthlyHistory> byCategory = monthly.stream().collect(Collectors.toMap(y -> y.getCategory().getId(), Function.identity()));
+        Map<Long, MonthlyHistory> byCategory = monthly.stream()
+                .collect(Collectors.toMap(y -> y.getCategory().getId(), Function.identity()));
         double total = monthly.stream().mapToDouble(MonthlyHistory::getTotal).sum();
 
         overall.setAmount(total);
@@ -184,10 +192,15 @@ public class HistoryService {
         result.add(overall);
 
 
-        return result.stream().map(c -> {
-            c.setTotal(overall.getTotal());
-            return c;
-        }).sorted(Comparator.comparing(CategoryOverall::getAmount).reversed().thenComparingLong(o -> o.getCategory().getId())).collect(Collectors.toList());
+        return result.stream()
+                .map(c -> {
+                    c.setTotal(overall.getTotal());
+                    return c;
+                })
+                .sorted(Comparator.comparing(CategoryOverall::getAmount)
+                        .reversed()
+                        .thenComparingLong(o -> o.getCategory().getId()))
+                .collect(Collectors.toList());
     }
 
     public List<Map<String, Object>> getYearlyHistory(long categoryId, int count, User user) throws Exception {
@@ -257,7 +270,10 @@ public class HistoryService {
             expensesForMonth.put("date", year + "-" + String.format("%02d", month));
 
             if (history.containsKey(dateInt)) {
-                expensesForMonth.put("amount", history.get(dateInt).stream().mapToDouble(MonthlyHistory::getTotal).sum());
+                expensesForMonth.put("amount", history.get(dateInt)
+                        .stream()
+                        .mapToDouble(MonthlyHistory::getTotal)
+                        .sum());
             } else {
                 expensesForMonth.put("amount", 0);
             }
@@ -270,7 +286,7 @@ public class HistoryService {
 
     public void cacheForExpense(User user, Expense expense) throws SQLException {
         logger.info("History for expense " + expense.getId() + " of category " + expense.getCategory().getId());
-        LocalDate localDate = DateUtils.convertToLocalDateViaInstant(expense.getDate());
+        LocalDate localDate = expense.getDate();
         String date = localDate.format(historyDateTimeFormatter);
 
         cacheForCategory(user, Integer.parseInt(date), expense.getCategory());

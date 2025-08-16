@@ -24,13 +24,9 @@ import springfox.documentation.spring.web.json.Json;
 import springfox.documentation.spring.web.plugins.Docket;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 @Configuration
@@ -75,7 +71,9 @@ public class Config {
 
         mailer = mailer.withTransportStrategy(transportStrategy);
 
-        mailer = mailer.clearEmailAddressCriteria().async().withEmailAddressCriteria(EmailAddressCriteria.RFC_COMPLIANT);
+        mailer = mailer.clearEmailAddressCriteria()
+                .async()
+                .withEmailAddressCriteria(EmailAddressCriteria.RFC_COMPLIANT);
         return mailer.buildMailer();
     }
 
@@ -83,19 +81,7 @@ public class Config {
     public Gson gson() {
         GsonBuilder builder = new GsonBuilder();
         builder.serializeSpecialFloatingPointValues();
-        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-            final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-            @Override
-            public Date deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
-                    throws JsonParseException {
-                try {
-                    return df.parse(json.getAsString());
-                } catch (ParseException e) {
-                    return null;
-                }
-            }
-        });
+        builder.registerTypeAdapter(LocalDate.class, new LocalDateGsonAdapter());
 
         builder.registerTypeAdapter(User.class, new UserSerializer());
         builder.registerTypeAdapter(Settings.class, new SettingsDeserializer());

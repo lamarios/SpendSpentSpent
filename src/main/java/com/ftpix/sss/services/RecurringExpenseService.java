@@ -1,14 +1,22 @@
 package com.ftpix.sss.services;
 
+import com.ftpix.sss.Constants;
 import com.ftpix.sss.dao.RecurringExpenseDao;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
+import net.bytebuddy.asm.Advice;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalField;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -21,7 +29,6 @@ public class RecurringExpenseService {
     private final static Logger logger = LogManager.getLogger();
     private final CategoryService categoryService;
     private final RecurringExpenseDao recurringExpenseDaoJooq;
-    private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
     public RecurringExpenseService(CategoryService categoryService, RecurringExpenseDao recurringExpenseDaoJooq) {
@@ -35,48 +42,64 @@ public class RecurringExpenseService {
      * @param expense the expense we want to check.
      * @return when is the new payment due.
      */
-    public Date calculateNextDate(RecurringExpense expense) {
-        int calendarField;
-        Calendar cal = new GregorianCalendar();
-        Calendar today = new GregorianCalendar();
+    public LocalDate calculateNextDate(RecurringExpense expense) {
+        ChronoField calendarField;
+        ChronoUnit calendarUnit;
+        LocalDate cal = LocalDate.now();
+        LocalDate today = LocalDate.now();
+//        Calendar cal = new GregorianCalendar();
+//        Calendar today = new GregorianCalendar();
         switch (expense.getType()) {
             case RecurringExpense.TYPE_DAILY:
                 logger.info("Daily");
-                calendarField = Calendar.DAY_OF_MONTH;
+//                calendarField = Calendar.DAY_OF_MONTH;
+                calendarField = ChronoField.DAY_OF_MONTH;
+                calendarUnit = ChronoUnit.DAYS;
                 break;
             case RecurringExpense.TYPE_MONTHLY:
                 logger.info("Monthly");
-                calendarField = Calendar.MONTH;
-                cal.set(Calendar.DAY_OF_MONTH, expense.getTypeParam());
+//                calendarField = Calendar.MONTH;
+                calendarField = ChronoField.MONTH_OF_YEAR;
+                calendarUnit = ChronoUnit.MONTHS;
+                cal = cal.withDayOfMonth(expense.getTypeParam());
+//                cal.set(Calendar.DAY_OF_MONTH, expense.getTypeParam());
                 break;
             case RecurringExpense.TYPE_WEEKLY:
                 logger.info("Weekly");
-                calendarField = Calendar.WEEK_OF_YEAR;
-                cal.set(Calendar.DAY_OF_WEEK, expense.getTypeParam());
+//                calendarField = Calendar.WEEK_OF_YEAR;
+//                cal.set(Calendar.DAY_OF_WEEK, expense.getTypeParam());
+                // we migrated from gregorian calendar which starts the week on sunday, LocalDate starts on monday
+                DayOfWeek dow = DayOfWeek.of(((expense.getTypeParam() + 5) % 7) + 1);
+                cal = cal.with(ChronoField.DAY_OF_WEEK, dow.getValue());
+                calendarField = ChronoField.ALIGNED_WEEK_OF_YEAR;
+                calendarUnit = ChronoUnit.WEEKS;
                 break;
             case RecurringExpense.TYPE_YEARLY:
             default:
                 logger.info("Yearly");
-                calendarField = Calendar.YEAR;
-                cal.set(Calendar.MONTH, expense.getTypeParam());
+//                calendarField = Calendar.YEAR;
+//                cal.set(Calendar.MONTH, expense.getTypeParam());
+                calendarField = ChronoField.YEAR;
+                calendarUnit = ChronoUnit.YEARS;
+                cal = cal.withMonth(expense.getTypeParam());
         }
 
-        logger.info("Calculated date[{}]", cal.getTime());
+        logger.info("Calculated date[{}]", cal.toString());
 
         // We don't have a date
         if (expense.getLastOccurrence() == null) {
 
             logger.info("No date, must be new recurring expense: let's check if the set date is already past");
-            logger.info("Comparing today[{}] and the set up date[{}]", today.getTime(), cal.getTime());
+            logger.info("Comparing today[{}] and the set up date[{}]", today, cal);
 
-            if (today.after(cal)) {
-                cal.add(calendarField, 1);
-                logger.info("The calculated date is expired, adding the extra time, new date[{}]", cal.getTime());
+            if (today.isAfter(cal)) {
+                cal = cal.with(calendarField, 1);
+                logger.info("The calculated date is expired, adding the extra time, new date[{}]", cal);
 
                 // Handling special cases
                 switch (expense.getType()) {
                     case RecurringExpense.TYPE_YEARLY:
-                        cal.set(Calendar.DAY_OF_MONTH, 1);
+                        cal = cal.withDayOfMonth(1);
                         break;
                 }
 
@@ -84,30 +107,32 @@ public class RecurringExpenseService {
                 // Handling special cases
                 switch (expense.getType()) {
                     case RecurringExpense.TYPE_YEARLY:
-                        if (today.get(Calendar.MONTH) < cal.get(Calendar.MONTH)) {
-                            cal.set(Calendar.DAY_OF_MONTH, 1);
+                        if (today.getMonth().getValue() < cal.getMonth().getValue()) {
+                            cal = cal.withDayOfMonth(1);
                         }
                         break;
                 }
 
             }
 
-            return cal.getTime();
+            return cal;
 
         } else {
             logger.info("We already have a preceding payment, just handling the special cases");
-            GregorianCalendar last = new GregorianCalendar();
-            last.setTime(expense.getLastOccurrence());
-            last.add(calendarField, 1);
+//            GregorianCalendar last = new GregorianCalendar();
+//            last.setTime(expense.getLastOccurrence());
+//            last.add(calendarField, 1);
+            LocalDate last = expense.getLastOccurrence();
+            last = last.plus(1, calendarUnit);
 
             // Handling special cases
             switch (expense.getType()) {
                 case RecurringExpense.TYPE_YEARLY:
-                    cal.set(Calendar.DAY_OF_MONTH, 1);
+                    cal = cal.withDayOfMonth(1);
                     break;
             }
 
-            return last.getTime();
+            return last;
         }
 
     }
@@ -134,7 +159,7 @@ public class RecurringExpenseService {
 
 
     public List<RecurringExpense> getToProcessForUser(User user) throws Exception {
-        return recurringExpenseDaoJooq.getWhere(user, RECURRING_EXPENSE.NEXT_OCCURRENCE.le(df.format(new Date())));
+        return recurringExpenseDaoJooq.getWhere(user, RECURRING_EXPENSE.NEXT_OCCURRENCE.le(Constants.dateFormatter.format(LocalDate.now())));
     }
 
     public boolean update(RecurringExpense expense, User user) throws Exception {

@@ -40,7 +40,12 @@ class DiffWithPreviousPeriodGraph extends StatelessWidget {
           if (state.spots.length < 2 ||
               state.spots[0].isEmpty ||
               state.spots[1].isEmpty) {
-            return SizedBox.shrink();
+            return SizedBox(
+              height: _graphHeight,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
           }
 
           final currentSpots = state.spots.first;
@@ -52,86 +57,91 @@ class DiffWithPreviousPeriodGraph extends StatelessWidget {
                 ? SizedBox(
                     height: _graphHeight,
                     child: Center(child: CircularProgressIndicator()))
-                : Column(
-                    children: [
-                      SizedBox(
-                        height: _graphHeight,
-                        child: LineChart(
-                          LineChartData(
-                              baselineX: 1,
-                              baselineY: 0,
-                              maxY: max(
-                                      currentSpots[currentSpots.length - 1].y,
-                                      previousSpots[previousSpots.length - 1]
-                                          .y) *
-                                  1.1,
-                              minY: min(currentSpots[0].y, previousSpots[0].y) *
-                                  0.9,
-                              lineTouchData: LineTouchData(
-                                  touchTooltipData: LineTouchTooltipData(
-                                      fitInsideHorizontally: true,
-                                      fitInsideVertically: true,
-                                      getTooltipColor: (touchedSpot) =>
-                                          colors.secondaryContainer,
-                                      getTooltipItems: (list) {
-                                        return list.map((e) {
-                                          final date = e.barIndex == 0
-                                              ? currentPeriod.start
-                                                  .copyWith(day: e.x.toInt())
-                                              : previousPeriod.start
-                                                  .copyWith(day: e.x.toInt());
+                : SizedBox(
+                    height: _graphHeight,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: LineChart(
+                            LineChartData(
+                                baselineX: 1,
+                                baselineY: 0,
+                                maxY: max(
+                                        currentSpots[currentSpots.length - 1].y,
+                                        previousSpots[previousSpots.length - 1]
+                                            .y) *
+                                    1.1,
+                                minY:
+                                    min(currentSpots[0].y, previousSpots[0].y) *
+                                        0.9,
+                                lineTouchData: LineTouchData(
+                                    touchTooltipData: LineTouchTooltipData(
+                                        fitInsideHorizontally: true,
+                                        fitInsideVertically: true,
+                                        getTooltipColor: (touchedSpot) =>
+                                            colors.secondaryContainer,
+                                        getTooltipItems: (list) {
+                                          return list.map((e) {
+                                            final date = e.barIndex == 0
+                                                ? currentPeriod.start
+                                                    .copyWith(day: e.x.toInt())
+                                                : previousPeriod.start
+                                                    .copyWith(day: e.x.toInt());
 
-                                          return LineTooltipItem(
-                                              '${_df.format(date)}: ${formatCurrency(e.y)}',
-                                              textTheme.bodySmall!.copyWith(
-                                                  color:
-                                                      lineColors[e.barIndex]));
-                                        }).toList();
-                                      })),
-                              titlesData: FlTitlesData(
-                                rightTitles: const AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false)),
-                                // rightTitles: SideTitles(showTitles: false),
-                                topTitles: const AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false)),
-                                leftTitles: AxisTitles(
-                                    sideTitles: SideTitles(
-                                        showTitles: true,
-                                        reservedSize: 50,
-                                        getTitlesWidget: (value, meta) {
-                                          var style = TextStyle(
-                                            color: colors.onSurface,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 10,
-                                          );
-                                          return Text(formatCurrency(value),
-                                              style: style);
+                                            return LineTooltipItem(
+                                                '${_df.format(date)}: ${formatCurrency(e.y)}',
+                                                textTheme.bodySmall!.copyWith(
+                                                    color: lineColors[
+                                                        e.barIndex]));
+                                          }).toList();
                                         })),
-                              ),
-                              lineBarsData: state.spots.indexed
-                                  .map<LineChartBarData>(
-                                      (s) => LineChartBarData(
-                                            isStrokeJoinRound: true,
-                                            spots: s.$2,
-                                            isCurved: false,
-                                            color: lineColors[s.$1],
-                                            isStrokeCapRound: true,
-                                            dotData: const FlDotData(
-                                              show: false,
-                                            ),
-                                            belowBarData: BarAreaData(
-                                              show: false,
-                                              color: colors.onSurface
-                                                  .withValues(alpha: 0.2),
-                                            ),
-                                          ))
-                                  .toList()),
+                                titlesData: FlTitlesData(
+                                  rightTitles: const AxisTitles(
+                                      sideTitles:
+                                          SideTitles(showTitles: false)),
+                                  // rightTitles: SideTitles(showTitles: false),
+                                  topTitles: const AxisTitles(
+                                      sideTitles:
+                                          SideTitles(showTitles: false)),
+                                  leftTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                          showTitles: true,
+                                          reservedSize: 50,
+                                          getTitlesWidget: (value, meta) {
+                                            var style = TextStyle(
+                                              color: colors.onSurface,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 10,
+                                            );
+                                            return Text(formatCurrency(value),
+                                                style: style);
+                                          })),
+                                ),
+                                lineBarsData: state.spots.indexed
+                                    .map<LineChartBarData>(
+                                        (s) => LineChartBarData(
+                                              isStrokeJoinRound: true,
+                                              spots: s.$2,
+                                              isCurved: false,
+                                              color: lineColors[s.$1],
+                                              isStrokeCapRound: true,
+                                              dotData: const FlDotData(
+                                                show: false,
+                                              ),
+                                              belowBarData: BarAreaData(
+                                                show: false,
+                                                color: colors.onSurface
+                                                    .withValues(alpha: 0.2),
+                                              ),
+                                            ))
+                                    .toList()),
+                          ),
                         ),
-                      ),
-                      _Legend(range: currentPeriod, color: lineColors[0]),
-                      Gap(4),
-                      _Legend(range: previousPeriod, color: lineColors[1]),
-                    ],
+                        _Legend(range: currentPeriod, color: lineColors[0]),
+                        Gap(4),
+                        _Legend(range: previousPeriod, color: lineColors[1]),
+                      ],
+                    ),
                   ),
           );
         }));

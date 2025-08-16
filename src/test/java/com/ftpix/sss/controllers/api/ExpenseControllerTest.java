@@ -1,5 +1,6 @@
 package com.ftpix.sss.controllers.api;
 
+import com.ftpix.sss.Constants;
 import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.TestContainerTest;
 import com.ftpix.sss.dao.CategoryDao;
@@ -17,19 +18,20 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.ftpix.sss.Constants.dateFormatter;
 import static org.junit.jupiter.api.Assertions.*;
 
 
 @Import(TestConfig.class)
 public class ExpenseControllerTest extends TestContainerTest {
 
-    private final static DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     private static final double DELTA = 1e-15;
 
@@ -50,7 +52,6 @@ public class ExpenseControllerTest extends TestContainerTest {
     @Autowired
     private CategoryDao categoryDaoJooq;
 
-    private final static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
     private Expense create(User user, double amount, Category cat, String date, boolean income, int expenseType, long lat, long longitude, String note) throws Exception {
@@ -58,11 +59,7 @@ public class ExpenseControllerTest extends TestContainerTest {
         exp.setAmount(amount);
 
         exp.setCategory(cat);
-        try {
-            exp.setDate(df.parse(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        exp.setDate(LocalDate.parse(date, dateFormatter));
 
         exp.setIncome(income);
         exp.setType(expenseType);
@@ -112,14 +109,14 @@ public class ExpenseControllerTest extends TestContainerTest {
 
     @Test
     public void testAddWithTime() throws Exception {
-        Date today = new Date();
+        LocalDateTime today = LocalDateTime.now();
 
         var cats = categoryDaoJooq.getWhere(currentUser);
 
-        Expense newExpense = create(10d, cats.get(0).getId(), df.format(today), false, Expense.TYPE_NORMAL, 0, 0, "");
+        Expense newExpense = create(10d, cats.get(0).getId(), dateFormatter.format(today), false, Expense.TYPE_NORMAL, 0, 0, "");
         Expense newExpense2 = create(10d, cats.get(0).getId(), "2012-03-21", false, Expense.TYPE_NORMAL, 0, 0, "");
 
-        String properTime = String.format("%02d", today.getHours()) + ":" + String.format("%02d", today.getMinutes());
+        String properTime = String.format("%02d", today.getHour()) + ":" + String.format("%02d", today.getMinute());
 
         assertEquals(properTime, newExpense.getTime());
         assertNull(newExpense2.getTime());
@@ -169,7 +166,7 @@ public class ExpenseControllerTest extends TestContainerTest {
 
         Category cat = monthly.stream().filter(c -> c.getCategory().getId() != -1).findFirst().get().getCategory();
 
-        String now = LocalDate.now().format(dtf);
+        String now = LocalDate.now().format(dateFormatter);
 
 
         var cats = categoryDaoJooq.getWhere(user);

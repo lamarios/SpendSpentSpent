@@ -1,5 +1,6 @@
 package com.ftpix.sss.dao;
 
+import com.ftpix.sss.Constants;
 import com.ftpix.sss.dsl.tables.records.RecurringExpenseRecord;
 import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.Category;
@@ -13,17 +14,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.ftpix.sss.Constants.dateFormatter;
 import static com.ftpix.sss.dsl.Tables.RECURRING_EXPENSE;
 
 @Component("recurringExpenseDaoJooq")
 public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpenseRecord, RecurringExpense> {
-    private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private final DSLContext dslContext;
     private final List<DaoUserListener<RecurringExpense>> listeners = new ArrayList<>();
 
@@ -39,10 +42,8 @@ public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpens
             RecurringExpense e = new RecurringExpense();
             e.setId(r.getId());
             e.setType(r.getType());
-            e.setLastOccurrence(r.getLastOccurrence() != null && r.getLastOccurrence()
-                    .length() > 0 ? df.parse(r.getLastOccurrence()) : null);
-            e.setNextOccurrence(r.getNextOccurrence() != null && r.getNextOccurrence()
-                    .length() > 0 ? df.parse(r.getNextOccurrence()) : null);
+            e.setLastOccurrence(r.getLastOccurrence() != null && !r.getLastOccurrence().isEmpty() ? LocalDate.parse(r.getLastOccurrence(), dateFormatter) : null);
+            e.setNextOccurrence(r.getNextOccurrence() != null && !r.getNextOccurrence().isEmpty() ? LocalDate.parse(r.getNextOccurrence(), dateFormatter) : null);
             e.setTypeParam(r.getTypeParam());
             e.setIncome(r.getIncome() != null && r.getIncome().equals(1));
             e.setAmount(r.getAmount());
@@ -84,8 +85,8 @@ public class RecurringExpenseDao implements UserCategoryBasedDao<RecurringExpens
         r.setCategoryId(e.getCategory().getId());
         r.setType(e.getType());
         r.setTypeParam(e.getTypeParam());
-        r.setLastOccurrence(e.getLastOccurrence() != null ? df.format(e.getLastOccurrence()) : null);
-        r.setNextOccurrence(e.getNextOccurrence() != null ? df.format(e.getNextOccurrence()) : null);
+        r.setLastOccurrence(e.getLastOccurrence() != null ? dateFormatter.format(e.getLastOccurrence()) : null);
+        r.setNextOccurrence(e.getNextOccurrence() != null ? dateFormatter.format(e.getNextOccurrence()) : null);
         r.setAmount(e.getAmount());
         r.setIncome(e.isIncome() ? 1 : 0);
 

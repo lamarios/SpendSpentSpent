@@ -1,8 +1,12 @@
 package com.ftpix.sss;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 public class Constants {
+
+    public final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public final static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     public static final String JSON = "application/json";
     public static final boolean ALLOW_SIGNUP = Optional.ofNullable(System.getenv("ALLOW_SIGNUP"))
