@@ -2,6 +2,7 @@ package com.ftpix.sss.models;
 
 import com.ftpix.sss.dao.HasCategory;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class RecurringExpense implements HasCategory {
@@ -19,9 +20,9 @@ public class RecurringExpense implements HasCategory {
 
     private int typeParam;
 
-    private Date lastOccurrence;
+    private LocalDate lastOccurrence;
 
-    private Date nextOccurrence;
+    private LocalDate nextOccurrence;
 
     private double amount;
 
@@ -67,19 +68,19 @@ public class RecurringExpense implements HasCategory {
         this.typeParam = typeParam;
     }
 
-    public Date getLastOccurrence() {
+    public LocalDate getLastOccurrence() {
         return lastOccurrence;
     }
 
-    public void setLastOccurrence(Date lastOccurrence) {
+    public void setLastOccurrence(LocalDate lastOccurrence) {
         this.lastOccurrence = lastOccurrence;
     }
 
-    public Date getNextOccurrence() {
+    public LocalDate getNextOccurrence() {
         return nextOccurrence;
     }
 
-    public void setNextOccurrence(Date nextOccurrence) {
+    public void setNextOccurrence(LocalDate nextOccurrence) {
         this.nextOccurrence = nextOccurrence;
     }
 

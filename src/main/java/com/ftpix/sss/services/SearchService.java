@@ -1,5 +1,6 @@
 package com.ftpix.sss.services;
 
+import com.ftpix.sss.Constants;
 import com.ftpix.sss.dao.ExpenseDao;
 import com.ftpix.sss.models.*;
 import org.jooq.Condition;
@@ -9,9 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.ftpix.sss.Constants.dateFormatter;
 import static com.ftpix.sss.dsl.Tables.EXPENSE;
 import static org.jooq.impl.DSL.upper;
 
@@ -19,7 +22,6 @@ import static org.jooq.impl.DSL.upper;
 public class SearchService {
     private final CategoryService categoryService;
     private final ExpenseDao expenseDao;
-    private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
     public SearchService(CategoryService categoryService, ExpenseDao expenseDao) {
@@ -52,19 +54,19 @@ public class SearchService {
                 .findFirst()
                 .orElse(0);
 
-        Date minDate = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.DATE.asc()})
+        LocalDate minDate = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.DATE.asc()})
                 .getData()
                 .stream()
                 .map(Expense::getDate)
                 .findFirst()
-                .orElse(new Date());
+                .orElse(LocalDate.now());
 
-        Date maxDate = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.DATE.desc()})
+        LocalDate maxDate = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.DATE.desc()})
                 .getData()
                 .stream()
                 .map(Expense::getDate)
                 .findFirst()
-                .orElse(new Date());
+                .orElse(LocalDate.now());
 
         return new SearchParameters(categories, minAmount, maxAmount, minDate, maxDate, "");
     }
@@ -91,7 +93,7 @@ public class SearchService {
 
         Map<String, List<Expense>> grouped = expenseDao.getWhere(currentUser, new OrderField[]{EXPENSE.DATE.desc()}, conditions.toArray(new Condition[0]))
                 .stream()
-                .collect(Collectors.groupingBy(expense -> df.format(expense.getDate())));
+                .collect(Collectors.groupingBy(expense -> dateFormatter.format(expense.getDate())));
 
         Map<String, DailyExpense> result = new TreeMap<>(Collections.reverseOrder());
 

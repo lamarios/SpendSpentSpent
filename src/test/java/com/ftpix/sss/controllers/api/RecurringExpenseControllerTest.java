@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -76,49 +77,43 @@ public class RecurringExpenseControllerTest extends TestContainerTest {
         RecurringExpense expense = new RecurringExpense();
         expense.setType(RecurringExpense.TYPE_DAILY);
 
-        GregorianCalendar today = new GregorianCalendar();
+        LocalDate today = LocalDate.now();
 
-        GregorianCalendar newDate = new GregorianCalendar();
-        newDate.setTime(recurringExpenseService.calculateNextDate(expense));
+        LocalDate newDate;
+        newDate = recurringExpenseService.calculateNextDate(expense);
 
         System.out.println(today);
         System.out.println(newDate);
 
-        assertEquals(today.get(Calendar.YEAR), newDate.get(Calendar.YEAR));
-        assertEquals(today.get(Calendar.MONTH), newDate.get(Calendar.MONTH));
-        assertEquals(today.get(Calendar.DAY_OF_MONTH), newDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(today.getYear(), newDate.getYear());
+        assertEquals(today.getMonth(), newDate.getMonth());
+        assertEquals(today.getDayOfMonth(), newDate.getDayOfMonth());
 
         //Check monthly of non passed date yet
-        GregorianCalendar lastPaymentDate = new GregorianCalendar();
-        lastPaymentDate.add(Calendar.YEAR, 1);
-        lastPaymentDate.set(Calendar.MONTH, 3);
-        lastPaymentDate.set(Calendar.DAY_OF_MONTH, 1);
+        LocalDate lastPaymentDate = LocalDate.of(1,3,1);
 
         expense.setType(RecurringExpense.TYPE_MONTHLY);
         expense.setTypeParam(1);
-        expense.setLastOccurrence(lastPaymentDate.getTime());
+        expense.setLastOccurrence(lastPaymentDate);
 
-        newDate.setTime(recurringExpenseService.calculateNextDate(expense));
+        newDate = recurringExpenseService.calculateNextDate(expense);
 
-        assertEquals(lastPaymentDate.get(Calendar.YEAR), newDate.get(Calendar.YEAR));
-        assertEquals(lastPaymentDate.get(Calendar.MONTH) + 1, newDate.get(Calendar.MONTH));
-        assertEquals(lastPaymentDate.get(Calendar.DAY_OF_MONTH), newDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(lastPaymentDate.getYear(), newDate.getYear());
+        assertEquals(lastPaymentDate.getMonth().getValue() + 1, newDate.getMonth().getValue());
+        assertEquals(lastPaymentDate.getDayOfMonth(), newDate.getDayOfMonth());
 
         //Check yearly of non passed date yet
-        lastPaymentDate = new GregorianCalendar();
-        lastPaymentDate.add(Calendar.YEAR, 1);
-        lastPaymentDate.set(Calendar.MONTH, 3);
-        lastPaymentDate.set(Calendar.DAY_OF_MONTH, 1);
+        lastPaymentDate = LocalDate.of(1,3,1);
 
         expense.setType(RecurringExpense.TYPE_YEARLY);
         expense.setTypeParam(3);
-        expense.setLastOccurrence(lastPaymentDate.getTime());
+        expense.setLastOccurrence(lastPaymentDate);
 
-        newDate.setTime(recurringExpenseService.calculateNextDate(expense));
+        newDate = recurringExpenseService.calculateNextDate(expense);
 
-        assertEquals(lastPaymentDate.get(Calendar.YEAR) + 1, newDate.get(Calendar.YEAR));
-        assertEquals(lastPaymentDate.get(Calendar.MONTH), newDate.get(Calendar.MONTH));
-        assertEquals(lastPaymentDate.get(Calendar.DAY_OF_MONTH), newDate.get(Calendar.DAY_OF_MONTH));
+        assertEquals(lastPaymentDate.getYear() + 1, newDate.getYear());
+        assertEquals(lastPaymentDate.getMonth(), newDate.getMonth());
+        assertEquals(lastPaymentDate.getDayOfMonth(), newDate.getDayOfMonth());
     }
 
 

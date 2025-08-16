@@ -1,5 +1,6 @@
 package com.ftpix.sss.services;
 
+import com.ftpix.sss.Constants;
 import com.ftpix.sss.dao.ExpenseDao;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.utils.DateUtils;
@@ -13,6 +14,7 @@ import java.security.InvalidParameterException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,7 +28,6 @@ public class ExpenseService {
     public final CategoryService categoryService;
     public final SettingsService settingsService;
     protected final Log logger = LogFactory.getLog(this.getClass());
-    private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private final SimpleDateFormat monthOnly = new SimpleDateFormat("yyyy-MM");
 
     private final ExpenseDao expenseDaoJooq;
@@ -73,7 +74,7 @@ public class ExpenseService {
 
         Map<String, List<Expense>> grouped = expenseDaoJooq.getWhere(user, EXPENSE.DATE.like(month + "%"))
                 .stream()
-                .collect(Collectors.groupingBy(expense -> df.format(expense.getDate())));
+                .collect(Collectors.groupingBy(expense -> Constants.dateFormatter.format(expense.getDate())));
 
         Map<String, DailyExpense> result = new TreeMap<>(Collections.reverseOrder());
 
@@ -96,16 +97,16 @@ public class ExpenseService {
             expense.setCategory(category);
         }
 
-        Date now = new Date();
+        LocalDateTime now = LocalDateTime.now();
 
         if (expense.getDate() == null) {
-            expense.setDate(now);
+            expense.setDate(now.toLocalDate());
         }
-        Date expenseDate = expense.getDate();
+        LocalDate expenseDate = expense.getDate();
 
         // if the expense is today, we set the time as now
-        if (expenseDate.getMonth() == now.getMonth() && expenseDate.getYear() == now.getYear() && expenseDate.getDate() == now.getDate()) {
-            expense.setTime(String.format("%02d", now.getHours()) + ":" + String.format("%02d", now.getMinutes()));
+        if (expenseDate.getMonth() == now.getMonth() && expenseDate.getYear() == now.getYear() && expenseDate.getDayOfMonth() == now.getDayOfMonth()) {
+            expense.setTime(String.format("%02d", now.getHour()) + ":" + String.format("%02d", now.getMinute()));
         }
 
 
@@ -134,7 +135,7 @@ public class ExpenseService {
             return new ExpenseLimits(0, 0);
         }
         Expense exp = data.getData().get(0);
-        LocalDate localDate = DateUtils.convertToLocalDateViaInstant(exp.getDate());
+        LocalDate localDate = exp.getDate();
         Period diff = Period.between(localDate, LocalDate.now());
         return new ExpenseLimits(diff.getYears(), (int) diff.toTotalMonths());
     }
@@ -197,7 +198,7 @@ public class ExpenseService {
                 .stream()
                 .mapToDouble(Expense::getAmount)
                 .sum();
-        if(previousSum == 0){
+        if (previousSum == 0) {
             return 0;
         }
 

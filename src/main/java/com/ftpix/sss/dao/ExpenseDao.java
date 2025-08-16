@@ -6,7 +6,10 @@ import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
 import org.apache.commons.lang.ArrayUtils;
-import org.jooq.*;
+import org.jooq.Condition;
+import org.jooq.DSLContext;
+import org.jooq.Field;
+import org.jooq.OrderField;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultDSLContext;
 import org.jooq.impl.TableImpl;
@@ -14,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.ftpix.sss.Constants.dateFormatter;
 import static com.ftpix.sss.dsl.Tables.EXPENSE;
 import static org.jooq.impl.DSL.lower;
 
@@ -31,10 +33,6 @@ import static org.jooq.impl.DSL.lower;
 public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> {
 
     private final DefaultDSLContext dslContext;
-    private final DateTimeFormatter date = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-    private final DateTimeFormatter time = DateTimeFormatter.ofPattern("HH:mm");
 
     private final List<DaoUserListener<Expense>> listeners = new ArrayList<>();
 
@@ -95,24 +93,20 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
 
     @Override
     public Expense fromRecord(ExpenseRecord r, Map<Long, Category> categories) {
-        try {
-            Expense e = new Expense();
-            e.setId(r.getId());
-            e.setCategory(categories.get(r.getCategoryId()));
-            e.setType(r.getType());
-            e.setAmount(r.getAmount());
-            e.setIncome(r.getIncome() != null && r.getIncome().equals(1));
-            var date = r.getDate();
-            e.setDate(dateFormat.parse(date));
-            e.setLatitude(r.getLatitude());
-            e.setLongitude(r.getLongitude());
-            e.setTime(r.getTime());
-            e.setTimestamp(r.getTimestamp());
-            e.setNote(r.getNote());
-            return e;
-        } catch (ParseException ex) {
-            throw new RuntimeException(ex);
-        }
+        Expense e = new Expense();
+        e.setId(r.getId());
+        e.setCategory(categories.get(r.getCategoryId()));
+        e.setType(r.getType());
+        e.setAmount(r.getAmount());
+        e.setIncome(r.getIncome() != null && r.getIncome().equals(1));
+        var date = r.getDate();
+        e.setDate(LocalDate.parse(date, dateFormatter));
+        e.setLatitude(r.getLatitude());
+        e.setLongitude(r.getLongitude());
+        e.setTime(r.getTime());
+        e.setTimestamp(r.getTimestamp());
+        e.setNote(r.getNote());
+        return e;
 
     }
 
@@ -125,7 +119,7 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
         r.setType(o.getType());
         r.setAmount(o.getAmount());
         r.setIncome(o.isIncome() ? 1 : 0);
-        r.setDate(dateFormat.format(o.getDate()));
+        r.setDate(dateFormatter.format(o.getDate()));
         r.setLatitude(o.getLatitude());
         r.setLongitude(o.getLongitude());
         r.setTime(o.getTime());

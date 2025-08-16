@@ -5,6 +5,7 @@ import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.DataExport;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.RecurringExpense;
+import com.ftpix.sss.utils.LocalDateGsonAdapter;
 import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,15 +17,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.InvalidParameterException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -71,24 +68,7 @@ public class DataExportImportService {
 
         GsonBuilder builder = new GsonBuilder();
         builder.serializeSpecialFloatingPointValues();
-        builder.registerTypeAdapter(Date.class, (JsonSerializer<Date>) (date, type, jsonSerializationContext) -> {
-
-            final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            return new JsonPrimitive(df.format(date));
-        });
-        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-            final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-            @Override
-            public Date deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
-                    throws JsonParseException {
-                try {
-                    return df.parse(json.getAsString());
-                } catch (ParseException e) {
-                    return null;
-                }
-            }
-        });
+        builder.registerTypeAdapter(LocalDate.class, new LocalDateGsonAdapter());
 
         this.gson = builder.create();
 

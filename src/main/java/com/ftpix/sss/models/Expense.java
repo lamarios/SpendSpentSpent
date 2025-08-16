@@ -2,6 +2,7 @@ package com.ftpix.sss.models;
 
 import com.ftpix.sss.dao.HasCategory;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Expense implements HasCategory {
@@ -15,7 +16,7 @@ public class Expense implements HasCategory {
     private Category category;
 
 
-    private Date date;
+    private LocalDate date;
 
     private int type = 1;
 
@@ -48,11 +49,11 @@ public class Expense implements HasCategory {
         this.amount = amount;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
