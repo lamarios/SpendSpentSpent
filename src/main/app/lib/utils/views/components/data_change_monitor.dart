@@ -9,24 +9,28 @@ class DataChangeMonitor extends StatelessWidget {
   final bool monitorExpenses;
   final bool monitorCategories;
 
-  const DataChangeMonitor(
-      {super.key,
-      required this.child,
-      required this.onChange,
-      this.monitorCategories = true,
-      this.monitorExpenses = true});
+  const DataChangeMonitor({
+    super.key,
+    required this.child,
+    required this.onChange,
+    this.monitorCategories = true,
+    this.monitorExpenses = true,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(listeners: [
-      if (monitorExpenses)
-        BlocListener<CategoriesCubit, CategoriesState>(
-          listener: (context, state) => onChange(context),
-        ),
-      if (monitorCategories)
-        BlocListener<LastExpenseCubit, int>(
-          listener: (context, state) => onChange(context),
-        )
-    ], child: child);
+    return MultiBlocListener(
+      listeners: [
+        if (monitorExpenses)
+          BlocListener<CategoriesCubit, CategoriesState>(
+            listener: (context, state) => onChange(context),
+          ),
+        if (monitorCategories)
+          BlocListener<LastExpenseCubit, int>(
+            listener: (context, state) => onChange(context),
+          ),
+      ],
+      child: child,
+    );
   }
 }

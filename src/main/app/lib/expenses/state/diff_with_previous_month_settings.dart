@@ -17,16 +17,20 @@ class DiffWithPreviousMonthSettingsCubit
     var setting = (await service.getAllSettings())
         .where((s) => s.name == INCLUDE_RECURRING_IN_DIFF)
         .firstOrNull;
-    emit(state.copyWith(
-        includeRecurringExpenses: (setting?.value ?? "1") == "1"));
+    emit(
+      state.copyWith(includeRecurringExpenses: (setting?.value ?? "1") == "1"),
+    );
   }
 
   Future<void> setIncludeRecurringExpenses(bool include) async {
     emit(state.copyWith(includeRecurringExpenses: include));
-    service.setSettings(Settings(
+    service.setSettings(
+      Settings(
         name: INCLUDE_RECURRING_IN_DIFF,
         value: include ? "1" : "0",
-        secret: false));
+        secret: false,
+      ),
+    );
   }
 }
 
@@ -35,8 +39,9 @@ sealed class DiffWithPreviousMonthSettingsState
     with _$DiffWithPreviousMonthSettingsState
     implements WithError {
   @Implements<WithError>()
-  const factory DiffWithPreviousMonthSettingsState(
-      {@Default(true) bool includeRecurringExpenses,
-      dynamic error,
-      StackTrace? stackTrace}) = _DiffWithPreviousMonthSettingsState;
+  const factory DiffWithPreviousMonthSettingsState({
+    @Default(true) bool includeRecurringExpenses,
+    dynamic error,
+    StackTrace? stackTrace,
+  }) = _DiffWithPreviousMonthSettingsState;
 }

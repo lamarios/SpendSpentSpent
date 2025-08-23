@@ -20,15 +20,22 @@ class SearchCubit extends Cubit<SearchState> {
   }
 
   updateRange(RangeValues range) {
-    emit(state.copyWith.searchParameters(
-        minAmount: range.start.floor(), maxAmount: range.end.ceil()));
+    emit(
+      state.copyWith.searchParameters(
+        minAmount: range.start.floor(),
+        maxAmount: range.end.ceil(),
+      ),
+    );
 
     triggerSearch();
   }
 
   triggerSearch() {
-    EasyDebounce.debounce('expense-search', const Duration(milliseconds: 500),
-        () => search(state.searchParameters));
+    EasyDebounce.debounce(
+      'expense-search',
+      const Duration(milliseconds: 500),
+      () => search(state.searchParameters),
+    );
   }
 
   setNote() {
@@ -63,17 +70,22 @@ class SearchCubit extends Cubit<SearchState> {
     }
 
     service.getSearchParameters(categoryId).then((value) {
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           searchParameters: SearchParameters(
-              categories: state.searchParameters.categories,
-              maxAmount: value.maxAmount,
-              minAmount: value.minAmount,
-              note: state.searchParameters.note),
+            categories: state.searchParameters.categories,
+            maxAmount: value.maxAmount,
+            minAmount: value.minAmount,
+            note: state.searchParameters.note,
+          ),
           searchParametersBounds: SearchParameters(
-              categories: value.categories,
-              maxAmount: value.maxAmount,
-              minAmount: value.minAmount,
-              note: "")));
+            categories: value.categories,
+            maxAmount: value.maxAmount,
+            minAmount: value.minAmount,
+            note: "",
+          ),
+        ),
+      );
     });
   }
 }
@@ -82,10 +94,12 @@ class SearchCubit extends Cubit<SearchState> {
 sealed class SearchState with _$SearchState {
   const factory SearchState({
     @Default(
-        SearchParameters(categories: [], maxAmount: 0, minAmount: 0, note: ""))
+      SearchParameters(categories: [], maxAmount: 0, minAmount: 0, note: ""),
+    )
     SearchParameters searchParametersBounds,
     @Default(
-        SearchParameters(categories: [], maxAmount: 0, minAmount: 0, note: ""))
+      SearchParameters(categories: [], maxAmount: 0, minAmount: 0, note: ""),
+    )
     SearchParameters searchParameters,
   }) = _SearchState;
 }

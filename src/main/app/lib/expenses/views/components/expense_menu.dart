@@ -23,11 +23,7 @@ class ExpenseMenu extends StatelessWidget {
       builder: (context) {
         return SafeArea(
           bottom: true,
-          child: Wrap(
-            children: [
-              ExpenseMenu(expense: expense),
-            ],
-          ),
+          child: Wrap(children: [ExpenseMenu(expense: expense)]),
         );
       },
     );
@@ -36,33 +32,29 @@ class ExpenseMenu extends StatelessWidget {
   showDeleteExpenseDialog(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              title: const Text('Delete Expense ?'),
-              content: const Text(
-                  'This will only delete this expense, it is not recoverable.'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(color: colors.secondary),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: const Text(
-                    'Delete',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  onPressed: () {
-                    deleteExpense(context);
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ));
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Delete Expense ?'),
+        content: const Text(
+          'This will only delete this expense, it is not recoverable.',
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancel', style: TextStyle(color: colors.secondary)),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            onPressed: () {
+              deleteExpense(context);
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   deleteExpense(BuildContext context) async {
@@ -86,49 +78,59 @@ class ExpenseMenu extends StatelessWidget {
           if (hasMap) ...[
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: LayoutBuilder(builder: (context, constraints) {
-                return SizedBox(
-                  width: min(700, constraints.maxWidth),
-                  height: min(500, constraints.maxHeight),
-                  child: FlutterMap(
-                    options: MapOptions(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SizedBox(
+                    width: min(700, constraints.maxWidth),
+                    height: min(500, constraints.maxHeight),
+                    child: FlutterMap(
+                      options: MapOptions(
                         initialZoom: 15,
                         initialCenter: LatLng(
-                            (expense.latitude ?? 0), expense.longitude ?? 0)),
-                    children: [
-                      TileLayer(
-                        urlTemplate:
-                            "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                        userAgentPackageName: 'com.spendspentspent.app',
+                          (expense.latitude ?? 0),
+                          expense.longitude ?? 0,
+                        ),
                       ),
-                      MarkerLayer(markers: [
-                        Marker(
-                            width: 40.0,
-                            height: 40.0,
-                            point: LatLng(
-                                expense.latitude ?? 0, expense.longitude ?? 0),
-                            child: Icon(
-                              Icons.location_on,
-                              color: colors.primary,
-                              size: 50,
-                            ))
-                      ]),
-                    ],
-                  ),
-                );
-              }),
+                      children: [
+                        TileLayer(
+                          urlTemplate:
+                              "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                          userAgentPackageName: 'com.spendspentspent.app',
+                        ),
+                        MarkerLayer(
+                          markers: [
+                            Marker(
+                              width: 40.0,
+                              height: 40.0,
+                              point: LatLng(
+                                expense.latitude ?? 0,
+                                expense.longitude ?? 0,
+                              ),
+                              child: Icon(
+                                Icons.location_on,
+                                color: colors.primary,
+                                size: 50,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
-            Gap(20)
+            Gap(20),
           ],
           FilledButton.tonalIcon(
-              icon: Icon(Icons.delete),
-              style: ButtonStyle(
-                  backgroundColor:
-                      WidgetStatePropertyAll(colors.errorContainer),
-                  foregroundColor:
-                      WidgetStatePropertyAll(colors.onErrorContainer)),
-              onPressed: () => showDeleteExpenseDialog(context),
-              label: Text('Delete expense'))
+            icon: Icon(Icons.delete),
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(colors.errorContainer),
+              foregroundColor: WidgetStatePropertyAll(colors.onErrorContainer),
+            ),
+            onPressed: () => showDeleteExpenseDialog(context),
+            label: Text('Delete expense'),
+          ),
         ],
       ),
     );

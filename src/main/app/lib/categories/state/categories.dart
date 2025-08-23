@@ -29,7 +29,8 @@ class CategoriesCubit extends Cubit<CategoriesState> {
 
 @freezed
 sealed class CategoriesState with _$CategoriesState {
-  const factory CategoriesState(
-      {@Default(true) bool loading,
-      @Default([]) List<Category> categories}) = _CategoriesState;
+  const factory CategoriesState({
+    @Default(true) bool loading,
+    @Default([]) List<Category> categories,
+  }) = _CategoriesState;
 }

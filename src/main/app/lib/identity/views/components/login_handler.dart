@@ -10,23 +10,29 @@ class LoginHandler extends StatelessWidget {
   final Widget child;
   final TextEditingController urlController;
 
-  const LoginHandler(
-      {super.key, required this.child, required this.urlController});
+  const LoginHandler({
+    super.key,
+    required this.child,
+    required this.urlController,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(listeners: [
-      BlocListener<UsernamePasswordCubit, UsernamePasswordState>(
-        listenWhen: (previous, current) =>
-            previous.token != current.token && current.token != null,
-        listener: (context, state) async {
-          await service.setUrl(urlController.text.trim());
-          if (context.mounted) {
-            context.read<CategoriesCubit>().getCategories();
-            AutoRouter.of(context).replaceAll([const HomeRoute()]);
-          }
-        },
-      )
-    ], child: child);
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<UsernamePasswordCubit, UsernamePasswordState>(
+          listenWhen: (previous, current) =>
+              previous.token != current.token && current.token != null,
+          listener: (context, state) async {
+            await service.setUrl(urlController.text.trim());
+            if (context.mounted) {
+              context.read<CategoriesCubit>().getCategories();
+              AutoRouter.of(context).replaceAll([const HomeRoute()]);
+            }
+          },
+        ),
+      ],
+      child: child,
+    );
   }
 }

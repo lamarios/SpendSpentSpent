@@ -10,10 +10,11 @@ part 'left_column_stats.freezed.dart';
 
 @freezed
 sealed class LeftColumnStats with _$LeftColumnStats {
-  const factory LeftColumnStats(
-      {required Category category,
-      required double total,
-      required double amount}) = _LeftColumnStats;
+  const factory LeftColumnStats({
+    required Category category,
+    required double total,
+    required double amount,
+  }) = _LeftColumnStats;
 
   factory LeftColumnStats.fromJson(Map<String, dynamic> json) =>
       _$LeftColumnStatsFromJson(json);

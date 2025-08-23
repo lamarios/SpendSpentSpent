@@ -14,9 +14,7 @@ class ExpenseNoteDialogCubit extends Cubit<ExpenseNoteDialogState> {
 
   ExpenseNoteDialogCubit(super.initialState) {
     controller = TextEditingController(text: state.note);
-    controller.addListener(
-      () => setNote(controller.text),
-    );
+    controller.addListener(() => setNote(controller.text));
   }
 
   selectSuggestion(String note) {
@@ -61,8 +59,9 @@ class ExpenseNoteDialogCubit extends Cubit<ExpenseNoteDialogState> {
 
 @freezed
 sealed class ExpenseNoteDialogState with _$ExpenseNoteDialogState {
-  const factory ExpenseNoteDialogState(
-      {@Default(false) bool loading,
-      @Default('') String note,
-      @Default([]) List<String> suggestions}) = _ExpenseNoteDialogState;
+  const factory ExpenseNoteDialogState({
+    @Default(false) bool loading,
+    @Default('') String note,
+    @Default([]) List<String> suggestions,
+  }) = _ExpenseNoteDialogState;
 }

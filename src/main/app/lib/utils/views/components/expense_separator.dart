@@ -15,18 +15,21 @@ class ExpenseSeparator extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Expanded(
-            child: Divider(
-          color: dividerColor,
-        )),
+        Gap(16),
+        Expanded(child: Divider(color: dividerColor)),
         Gap(16),
         Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            spacing: 4,
-            children: texts
-                .map((t) => Text(t,
-                    style: textTheme.bodySmall?.copyWith(color: dividerColor)))
-                .toList()),
+          crossAxisAlignment: CrossAxisAlignment.end,
+          spacing: 4,
+          children: texts
+              .map(
+                (t) => Text(
+                  t,
+                  style: textTheme.bodySmall?.copyWith(color: dividerColor),
+                ),
+              )
+              .toList(),
+        ),
       ],
     );
   }

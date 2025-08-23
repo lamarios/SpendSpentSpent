@@ -32,7 +32,8 @@ class AppSettingsCubit extends Cubit<AppSettingsState> {
 
 @freezed
 sealed class AppSettingsState with _$AppSettingsState {
-  const factory AppSettingsState(
-      {@Default(false) bool materialYou,
-      @Default(false) bool blackBackground}) = _AppSettingsState;
+  const factory AppSettingsState({
+    @Default(false) bool materialYou,
+    @Default(false) bool blackBackground,
+  }) = _AppSettingsState;
 }

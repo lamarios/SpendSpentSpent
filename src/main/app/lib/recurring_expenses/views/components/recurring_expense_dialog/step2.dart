@@ -5,7 +5,7 @@ const Map<int, String> TYPES = {
   0: 'Daily',
   1: 'Weekly',
   2: 'Monthly',
-  3: 'Yearly'
+  3: 'Yearly',
 };
 const Map<int, String> WEEKLY_PARAMS = {
   2: 'Monday',
@@ -13,7 +13,7 @@ const Map<int, String> WEEKLY_PARAMS = {
   4: 'Wednesday',
   5: 'Thursday',
   6: 'Saturday',
-  1: 'Sunday'
+  1: 'Sunday',
 };
 const Map<int, String> MONTHLY_PARAMS = {
   1: '1',
@@ -64,19 +64,20 @@ class Step2 extends StatelessWidget {
   final int? type, typeParam;
   final Function setType, setTypeParam;
 
-  const Step2(
-      {super.key,
-      required this.setType,
-      required this.setTypeParam,
-      this.type,
-      this.typeParam});
+  const Step2({
+    super.key,
+    required this.setType,
+    required this.setTypeParam,
+    this.type,
+    this.typeParam,
+  });
 
   Map<int, String> get typeParams => switch (type) {
-        1 => WEEKLY_PARAMS,
-        2 => MONTHLY_PARAMS,
-        3 => YEARLY_PARAMS,
-        _ => {},
-      };
+    1 => WEEKLY_PARAMS,
+    2 => MONTHLY_PARAMS,
+    3 => YEARLY_PARAMS,
+    _ => {},
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +92,8 @@ class Step2 extends StatelessWidget {
               spacing: 8.0,
               runSpacing: 4,
               children: TYPES
-                  .map((index, e) => MapEntry(
+                  .map(
+                    (index, e) => MapEntry(
                       index,
                       GestureDetector(
                         onTap: () => setType(index),
@@ -105,15 +107,20 @@ class Step2 extends StatelessWidget {
                           duration: panelTransition,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(e,
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: (type ?? -1) == index
-                                        ? colors.onPrimaryContainer
-                                        : colors.primary)),
+                            child: Text(
+                              e,
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: (type ?? -1) == index
+                                    ? colors.onPrimaryContainer
+                                    : colors.primary,
+                              ),
+                            ),
                           ),
                         ),
-                      )))
+                      ),
+                    ),
+                  )
                   .values
                   .toList(),
             ),
@@ -126,7 +133,8 @@ class Step2 extends StatelessWidget {
                 spacing: 8.0,
                 runSpacing: 4,
                 children: typeParams
-                    .map((index, e) => MapEntry(
+                    .map(
+                      (index, e) => MapEntry(
                         index,
                         GestureDetector(
                           onTap: () => setTypeParam(index),
@@ -140,20 +148,25 @@ class Step2 extends StatelessWidget {
                             duration: panelTransition,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(e,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: (typeParam ?? -1) == index
-                                          ? colors.onPrimaryContainer
-                                          : colors.primary)),
+                              child: Text(
+                                e,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: (typeParam ?? -1) == index
+                                      ? colors.onPrimaryContainer
+                                      : colors.primary,
+                                ),
+                              ),
                             ),
                           ),
-                        )))
+                        ),
+                      ),
+                    )
                     .values
                     .toList(),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

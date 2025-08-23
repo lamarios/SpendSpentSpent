@@ -30,8 +30,11 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
 
   getUsers() async {
     print('getting users');
-    PaginatedResults<User> users =
-        await service.getUsers(searchController.text, page, pageSize);
+    PaginatedResults<User> users = await service.getUsers(
+      searchController.text,
+      page,
+      pageSize,
+    );
     setState(() {
       this.users = users;
     });
@@ -44,13 +47,16 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
 
   changeUserPassword(User user) {
     showModal(
-        context: context,
-        builder: (context) => Card(
-            margin: getInsetsForMaxSize(MediaQuery.of(context),
-                maxWidth: 350, maxHeight: 250),
-            child: ChangePasswordDialog(
-              userId: user.id!,
-            )));
+      context: context,
+      builder: (context) => Card(
+        margin: getInsetsForMaxSize(
+          MediaQuery.of(context),
+          maxWidth: 350,
+          maxHeight: 250,
+        ),
+        child: ChangePasswordDialog(userId: user.id!),
+      ),
+    );
   }
 
   previous() {
@@ -79,43 +85,43 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
 
   addUser(BuildContext context) {
     showModal(
-        context: context,
-        builder: (context) => Card(
-            margin: getInsetsForMaxSize(MediaQuery.of(context),
-                maxWidth: 350, maxHeight: 600),
-            child: AddUserDialog(
-              saveUser: saveUser,
-            )));
+      context: context,
+      builder: (context) => Card(
+        margin: getInsetsForMaxSize(
+          MediaQuery.of(context),
+          maxWidth: 350,
+          maxHeight: 600,
+        ),
+        child: AddUserDialog(saveUser: saveUser),
+      ),
+    );
   }
 
   showDeleteUserDialog(BuildContext context, String id) {
     showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              title: const Text('Delete user ?'),
-              content: const Text(
-                  'This will delete the user and all its expenses, it is not recoverable.'),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text(
-                    'Cancel',
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: const Text(
-                    'Delete',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  onPressed: () {
-                    deleteUser(id);
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ));
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Delete user ?'),
+        content: const Text(
+          'This will delete the user and all its expenses, it is not recoverable.',
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            onPressed: () {
+              deleteUser(id);
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   deleteUser(String id) async {
@@ -127,154 +133,177 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
     final colors = Theme.of(context).colorScheme;
     if (isTablet(MediaQuery.of(context))) {
       List<TableRow> rows = [
-        const TableRow(children: [
-          TableCell(
+        const TableRow(
+          children: [
+            TableCell(
               child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Email',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          )),
-          TableCell(
-              child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text('Name', style: TextStyle(fontWeight: FontWeight.bold)),
-          )),
-          TableCell(
-              child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text('Admin', style: TextStyle(fontWeight: FontWeight.bold)),
-          )),
-          TableCell(
-              child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child:
-                Text('Actions', style: TextStyle(fontWeight: FontWeight.bold)),
-          )),
-        ])
-      ];
-
-      rows.addAll((users?.data ?? []).map((e) {
-        bool isCurrentUser = (currentUser?.id ?? -1) == e.id;
-        return TableRow(children: [
-          TableCell(
-              child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(e.email),
-          )),
-          TableCell(
-              child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('${e.firstName} ${e.lastName}'),
-          )),
-          TableCell(
-              child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Switch(
-                value: e.isAdmin,
-                onChanged: !isCurrentUser
-                    ? (value) => toggleUserAdmin(e, value)
-                    : null),
-          )),
-          Visibility(
-            visible: !isCurrentUser,
-            child: TableCell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10.0),
-                      child: TextButton(
-                        child: const Text('Change password'),
-                        onPressed: () => changeUserPassword(e),
-                      ),
-                    ),
-                    TextButton(
-                      style: const ButtonStyle(
-                          foregroundColor: WidgetStatePropertyAll(Colors.red)),
-                      onPressed: () => showDeleteUserDialog(context, e.id!),
-                      child: const Text(
-                        'Delete',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )
-                  ],
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Email',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             ),
-          )
-        ]);
-      }).toList());
+            TableCell(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Name',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            TableCell(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Admin',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            TableCell(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Actions',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ];
 
-      return Table(
-        border: TableBorder.all(),
-        children: rows,
+      rows.addAll(
+        (users?.data ?? []).map((e) {
+          bool isCurrentUser = (currentUser?.id ?? -1) == e.id;
+          return TableRow(
+            children: [
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(e.email),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('${e.firstName} ${e.lastName}'),
+                ),
+              ),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Switch(
+                    value: e.isAdmin,
+                    onChanged: !isCurrentUser
+                        ? (value) => toggleUserAdmin(e, value)
+                        : null,
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: !isCurrentUser,
+                child: TableCell(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: TextButton(
+                            child: const Text('Change password'),
+                            onPressed: () => changeUserPassword(e),
+                          ),
+                        ),
+                        TextButton(
+                          style: const ButtonStyle(
+                            foregroundColor: WidgetStatePropertyAll(Colors.red),
+                          ),
+                          onPressed: () => showDeleteUserDialog(context, e.id!),
+                          child: const Text(
+                            'Delete',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }).toList(),
       );
+
+      return Table(border: TableBorder.all(), children: rows);
     } else {
       return Expanded(
-          child: ListView(
-        children: (users?.data ?? []).map((e) {
-          bool isCurrentUser = (currentUser?.id ?? -1) == e.id;
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              decoration: BoxDecoration(
+        child: ListView(
+          children: (users?.data ?? []).map((e) {
+            bool isCurrentUser = (currentUser?.id ?? -1) == e.id;
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
                   color: colors.surfaceContainer,
-                  borderRadius: BorderRadius.circular(5)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  key: Key(e.id.toString()),
-                  children: [
-                    Text(
-                      '${e.firstName} ${e.lastName}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(e.email),
-                    Row(
-                      children: [
-                        const Expanded(child: Text('Admin')),
-                        Switch(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    key: Key(e.id.toString()),
+                    children: [
+                      Text(
+                        '${e.firstName} ${e.lastName}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(e.email),
+                      Row(
+                        children: [
+                          const Expanded(child: Text('Admin')),
+                          Switch(
                             value: e.isAdmin,
                             onChanged: !isCurrentUser
                                 ? (value) => toggleUserAdmin(e, value)
-                                : null),
-                      ],
-                    ),
-                    Visibility(
-                      visible: !isCurrentUser,
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10.0),
-                            child: TextButton(
-                              child: const Text('Change password'),
-                              onPressed: () => changeUserPassword(e),
-                            ),
+                                : null,
                           ),
-                          TextButton(
-                            style: const ButtonStyle(
-                                foregroundColor:
-                                    WidgetStatePropertyAll(Colors.red)),
-                            onPressed: () =>
-                                showDeleteUserDialog(context, e.id!),
-                            child: const Text(
-                              'Delete',
-                            ),
-                          )
                         ],
                       ),
-                    )
-                  ],
+                      Visibility(
+                        visible: !isCurrentUser,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: TextButton(
+                                child: const Text('Change password'),
+                                onPressed: () => changeUserPassword(e),
+                              ),
+                            ),
+                            TextButton(
+                              style: const ButtonStyle(
+                                foregroundColor: WidgetStatePropertyAll(
+                                  Colors.red,
+                                ),
+                              ),
+                              onPressed: () =>
+                                  showDeleteUserDialog(context, e.id!),
+                              child: const Text('Delete'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }).toList(),
-      ));
+            );
+          }).toList(),
+        ),
+      );
     }
   }
 
@@ -290,23 +319,23 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
           ),
           getUserWidget(context),
           Visibility(
-              visible: users != null,
-              child: users != null
-                  ? PaginationSwitcher(
-                      pagination: users!.pagination,
-                      previous: previous,
-                      next: next)
-                  : const SizedBox.shrink()),
+            visible: users != null,
+            child: users != null
+                ? PaginationSwitcher(
+                    pagination: users!.pagination,
+                    previous: previous,
+                    next: next,
+                  )
+                : const SizedBox.shrink(),
+          ),
           Row(
             children: [
               FilledButton.tonal(
                 onPressed: () => addUser(context),
-                child: const Text(
-                  'Add user',
-                ),
-              )
+                child: const Text('Add user'),
+              ),
             ],
-          )
+          ),
         ],
       ),
     );

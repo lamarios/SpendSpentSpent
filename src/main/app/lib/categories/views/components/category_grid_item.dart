@@ -16,20 +16,23 @@ class CategoryGridItem extends StatelessWidget {
   showDialog(BuildContext context) {
     if (foundation.kIsWeb) {
       showModal(
-          context: context,
-          builder: (context) => Card(
-              color: Colors.white.withValues(alpha: 0),
-              margin: EdgeInsets.zero,
-              child: AddExpense(category: category)));
+        context: context,
+        builder: (context) => Card(
+          color: Colors.white.withValues(alpha: 0),
+          margin: EdgeInsets.zero,
+          child: AddExpense(category: category),
+        ),
+      );
     } else {
       showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          builder: (context) => Wrap(
-                children: [
-                  SafeArea(bottom: true, child: AddExpense(category: category)),
-                ],
-              ));
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => Wrap(
+          children: [
+            SafeArea(bottom: true, child: AddExpense(category: category)),
+          ],
+        ),
+      );
     }
   }
 
@@ -41,13 +44,19 @@ class CategoryGridItem extends StatelessWidget {
       child: AnimatedContainer(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            borderRadius: defaultBorder, color: colors.primaryContainer),
+          borderRadius: defaultBorder,
+          color: colors.primaryContainer,
+        ),
         duration: panelTransition,
         curve: Curves.easeInOutQuart,
         child: Hero(
-            tag: category.icon!,
-            child: getIcon(category.icon!,
-                size: 40, color: colors.onPrimaryContainer)),
+          tag: category.icon!,
+          child: getIcon(
+            category.icon!,
+            size: 40,
+            color: colors.onPrimaryContainer,
+          ),
+        ),
       ),
     );
   }

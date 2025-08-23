@@ -22,8 +22,11 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
   final LastExpenseCubit lastExpenseCubit;
   final suggestionController = ScrollController();
 
-  AddExpenseDialogCubit(super.initialState,
-      {required this.category, required this.lastExpenseCubit}) {
+  AddExpenseDialogCubit(
+    super.initialState, {
+    required this.category,
+    required this.lastExpenseCubit,
+  }) {
     init();
   }
 
@@ -35,17 +38,22 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
 
   void getNoteSuggestions(String value) {
     EasyDebounce.debounce(
-        'new-expense-note-suggestions', const Duration(milliseconds: 500),
-        () async {
-      final suggestions = await service.getNoteSuggestions(Expense(
-          amount: double.parse(valueToStr(value)),
-          date: '2022-01-23',
-          category: category));
-      List<String> results = suggestions.keys.toList(growable: false);
-      results.sort((a, b) => suggestions[b]!.compareTo(suggestions[a]!));
+      'new-expense-note-suggestions',
+      const Duration(milliseconds: 500),
+      () async {
+        final suggestions = await service.getNoteSuggestions(
+          Expense(
+            amount: double.parse(valueToStr(value)),
+            date: '2022-01-23',
+            category: category,
+          ),
+        );
+        List<String> results = suggestions.keys.toList(growable: false);
+        results.sort((a, b) => suggestions[b]!.compareTo(suggestions[a]!));
 
-      emit(state.copyWith(noteSuggestions: results));
-    });
+        emit(state.copyWith(noteSuggestions: results));
+      },
+    );
   }
 
   init() async {
@@ -54,11 +62,13 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
 
     if (useLocation) {
       getLocation()
-          .timeout(const Duration(seconds: LOCATION_TIMEOUT),
-              onTimeout: () => null)
+          .timeout(
+            const Duration(seconds: LOCATION_TIMEOUT),
+            onTimeout: () => null,
+          )
           .then((loc) {
-        emit(state.copyWith(location: loc));
-      });
+            emit(state.copyWith(location: loc));
+          });
     }
   }
 
@@ -68,8 +78,11 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       getNoteSuggestions(tempValue);
       emit(state.copyWith(value: tempValue));
     } else {
-      emit(state.copyWith(
-          valueFrom: (state.valueFrom + i).replaceFirst(RegExp(r'^0+'), '')));
+      emit(
+        state.copyWith(
+          valueFrom: (state.valueFrom + i).replaceFirst(RegExp(r'^0+'), ''),
+        ),
+      );
       calculateRateConversion();
     }
   }
@@ -100,11 +113,13 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
 
     if (state.useLocation) {
       getLocation()
-          .timeout(const Duration(seconds: LOCATION_TIMEOUT),
-              onTimeout: () => null)
+          .timeout(
+            const Duration(seconds: LOCATION_TIMEOUT),
+            onTimeout: () => null,
+          )
           .then((loc) {
-        emit(state.copyWith(location: loc));
-      });
+            emit(state.copyWith(location: loc));
+          });
     }
   }
 
@@ -115,8 +130,11 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       emit(state.copyWith(value: tempValue));
     }
     if (state.valueFrom.isNotEmpty) {
-      emit(state.copyWith(
-          valueFrom: state.valueFrom.substring(0, state.valueFrom.length - 1)));
+      emit(
+        state.copyWith(
+          valueFrom: state.valueFrom.substring(0, state.valueFrom.length - 1),
+        ),
+      );
     }
   }
 
@@ -141,23 +159,27 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       note +=
           '${state.currencyConversion?.from} ${valueToStr(state.valueFrom)} -> ${state.currencyConversion?.to}';
     }
-    var expense =
-        Expense(amount: amount, category: category, date: date, note: note);
+    var expense = Expense(
+      amount: amount,
+      category: category,
+      date: date,
+      note: note,
+    );
 
     //checking location\
     if (state.useLocation) {
-      emit(state.copyWith(
-          savingIcon: Icon(Icons.near_me,
-              color: iconColor, size: iconHeight, key: const Key('location'))));
       try {
-        LocationData? locationData = state.location ??
+        LocationData? locationData =
+            state.location ??
             await getLocation().timeout(
-                const Duration(seconds: LOCATION_TIMEOUT),
-                onTimeout: () => null);
+              const Duration(seconds: LOCATION_TIMEOUT),
+              onTimeout: () => null,
+            );
         if (locationData != null) {
           expense = expense.copyWith(
-              latitude: locationData.latitude,
-              longitude: locationData.longitude);
+            latitude: locationData.latitude,
+            longitude: locationData.longitude,
+          );
         }
       } catch (e, s) {
         emit(state.copyWith(error: e, stackTrace: s));
@@ -165,13 +187,6 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       }
     }
 
-    emit(state.copyWith(
-        savingIcon: Icon(
-      Icons.cloud_upload,
-      color: iconColor,
-      size: iconHeight,
-      key: const Key('upload'),
-    )));
     try {
       await service.addExpense(expense);
       lastExpenseCubit.refresh();
@@ -220,14 +235,20 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
 
   setNote(String note) {
     emit(state.copyWith(expenseNote: note));
-    suggestionController.animateTo(0,
-        duration: animationDuration, curve: animationCurve);
+    suggestionController.animateTo(
+      0,
+      duration: animationDuration,
+      curve: animationCurve,
+    );
   }
 
   enableCurrencyConversion(bool enable) {
-    emit(state.copyWith(
+    emit(
+      state.copyWith(
         showCurrencyConversion: enable,
-        currencyConversion: enable ? state.currencyConversion : null));
+        currencyConversion: enable ? state.currencyConversion : null,
+      ),
+    );
   }
 }
 
@@ -246,7 +267,6 @@ sealed class AddExpenseDialogState
     CurrencyConversion? currencyConversion,
     @Default(false) bool showCurrencyConversion,
     @Default(false) bool saving,
-    Widget? savingIcon,
     @Default([]) List<String> noteSuggestions,
     LocationData? location,
     dynamic error,

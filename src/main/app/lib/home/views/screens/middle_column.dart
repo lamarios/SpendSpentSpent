@@ -8,21 +8,27 @@ class MiddleColumnTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AutoTabsRouter.tabBar(
-        physics: const NeverScrollableScrollPhysics(),
-        builder: (context, child, controller) {
-          return Column(
-            children: [
-              TabBar(
-                  dividerHeight: 0,
-                  controller: controller,
-                  tabs: const [Tab(text: 'Normal'), Tab(text: ' Recurring')]),
-              Expanded(
-                  child: Padding(
+      physics: const NeverScrollableScrollPhysics(),
+      builder: (context, child, controller) {
+        return Column(
+          children: [
+            TabBar(
+              dividerHeight: 0,
+              controller: controller,
+              tabs: const [
+                Tab(text: 'Normal'),
+                Tab(text: ' Recurring'),
+              ],
+            ),
+            Expanded(
+              child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: child,
-              )),
-            ],
-          );
-        });
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

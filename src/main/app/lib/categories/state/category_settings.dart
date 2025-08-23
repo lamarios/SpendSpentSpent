@@ -50,10 +50,13 @@ class CategorySettingsCubit extends Cubit<CategorySettingsState> {
     int index = categories.indexWhere((element) => element.id == category.id);
     categories.removeAt(index);
 
-    emit(state.copyWith(
+    emit(
+      state.copyWith(
         toDelete: toDelete,
         categories: categories,
-        expensesToDelete: state.expensesToDelete + expenses));
+        expensesToDelete: state.expensesToDelete + expenses,
+      ),
+    );
 
     emit(state.copyWith(categories: categories));
   }
@@ -78,10 +81,11 @@ sealed class CategorySettingsState
     with _$CategorySettingsState
     implements WithError {
   @Implements<WithError>()
-  const factory CategorySettingsState(
-      {@Default([]) List<Category> categories,
-      @Default([]) List<Category> toDelete,
-      @Default(0) int expensesToDelete,
-      dynamic error,
-      StackTrace? stackTrace}) = _CategorySettingsState;
+  const factory CategorySettingsState({
+    @Default([]) List<Category> categories,
+    @Default([]) List<Category> toDelete,
+    @Default(0) int expensesToDelete,
+    dynamic error,
+    StackTrace? stackTrace,
+  }) = _CategorySettingsState;
 }

@@ -12,13 +12,18 @@ class AddCategoryGridItem extends StatelessWidget {
   void showAddCategory(BuildContext context) {
     final cubit = context.read<CategoriesCubit>();
     showModal(
-        context: context,
-        builder: (ctx) => Card(
-            margin: getInsetsForMaxSize(MediaQuery.of(ctx),
-                maxWidth: 350, maxHeight: 500),
-            child: AddCategory(
-              onSelected: (selected) => cubit.addCategory(selected),
-            )));
+      context: context,
+      builder: (ctx) => Card(
+        margin: getInsetsForMaxSize(
+          MediaQuery.of(ctx),
+          maxWidth: 350,
+          maxHeight: 500,
+        ),
+        child: AddCategory(
+          onSelected: (selected) => cubit.addCategory(selected),
+        ),
+      ),
+    );
   }
 
   @override
@@ -29,13 +34,10 @@ class AddCategoryGridItem extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            borderRadius: defaultBorder,
-            border:
-                Border.all(width: 3, color: colors.primary.withOpacity(0.5))),
-        child: Icon(
-          Icons.add,
-          color: colors.primary.withOpacity(0.5),
+          borderRadius: defaultBorder,
+          border: Border.all(width: 3, color: colors.primary.withOpacity(0.5)),
         ),
+        child: Icon(Icons.add, color: colors.primary.withOpacity(0.5)),
       ),
     );
   }

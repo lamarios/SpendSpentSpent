@@ -39,23 +39,27 @@ class SingleStats extends StatelessWidget {
       create: (context) => SingleStatsCubit(const SingleStatsState()),
       child: BlocConsumer<SingleStatsCubit, SingleStatsState>(
         listener: (BuildContext context, SingleStatsState state) {
-          Scrollable.ensureVisible(context,
-              curve: Curves.easeInOutQuint,
-              duration: panelTransition * 2,
-              alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd);
+          Scrollable.ensureVisible(
+            context,
+            curve: Curves.easeInOutQuint,
+            duration: panelTransition * 2,
+            alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+          );
         },
         listenWhen: (previous, current) =>
             previous.showGraph != current.showGraph,
         builder: (context, state) {
           final cubit = context.read<SingleStatsCubit>();
 
-          final isMaterialYou = context.select((AppSettingsCubit c) =>
-              !c.state.blackBackground && c.state.materialYou);
+          final isMaterialYou = context.select(
+            (AppSettingsCubit c) =>
+                !c.state.blackBackground && c.state.materialYou,
+          );
 
           final openedBackgroundColor = isMaterialYou
               ? MediaQuery.platformBrightnessOf(context) == Brightness.dark
-                  ? brighten(colors.surfaceContainerHigh, 0.1)
-                  : colors.onInverseSurface
+                    ? brighten(colors.surfaceContainerHigh, 0.1)
+                    : colors.onInverseSurface
               : colors.surfaceContainerHigh;
 
           return Padding(
@@ -68,18 +72,23 @@ class SingleStats extends StatelessWidget {
                   Row(
                     children: [
                       AnimatedRotation(
-                          turns: state.open ? 0.25 : 0,
-                          duration: panelTransition,
-                          curve: Curves.easeInOutQuint,
-                          child: Icon(
-                            Icons.chevron_right,
-                            size: 20,
-                            color: colors.onSurface,
-                          )),
+                        turns: state.open ? 0.25 : 0,
+                        duration: panelTransition,
+                        curve: Curves.easeInOutQuint,
+                        child: Icon(
+                          Icons.chevron_right,
+                          size: 20,
+                          color: colors.onSurface,
+                        ),
+                      ),
                       Visibility(
-                          visible: stats.category.id != -1,
-                          child: getIcon(stats.category.icon!,
-                              color: colors.primary, size: 20)),
+                        visible: stats.category.id != -1,
+                        child: getIcon(
+                          stats.category.icon!,
+                          color: colors.primary,
+                          size: 20,
+                        ),
+                      ),
                       const Spacer(),
                       Text(formatCurrency(stats.amount)),
                     ],
@@ -92,12 +101,14 @@ class SingleStats extends StatelessWidget {
                       alignment: Alignment.topLeft,
                       height: state.open ? openedHeight : 10,
                       decoration: BoxDecoration(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                          // gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.75], begin: Alignment.bottomCenter, end: Alignment.topRight),
-                          color: state.open
-                              ? colors.surface
-                              : colors.primaryContainer),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        // gradient: LinearGradient(colors: [Colors.blueAccent, Colors.blue], stops: [0, 0.75], begin: Alignment.bottomCenter, end: Alignment.topRight),
+                        color: state.open
+                            ? colors.surface
+                            : colors.primaryContainer,
+                      ),
                       child: LayoutBuilder(
                         builder: (context, constraints) => AnimatedContainer(
                           duration: panelTransition,
@@ -105,27 +116,30 @@ class SingleStats extends StatelessWidget {
                           width: getBarWidth(context, constraints),
                           height: state.open ? openedHeight : 10,
                           decoration: BoxDecoration(
-                              // border: Border.all(color:  state.ocolors.onPrimaryContainer, width: 1),
-                              // border: Border.all(color: colors.surfaceContainerHighest, width: state.open ? 5: 0),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                              color: state.open
-                                  ? openedBackgroundColor
-                                  : colors.onPrimaryContainer),
+                            // border: Border.all(color:  state.ocolors.onPrimaryContainer, width: 1),
+                            // border: Border.all(color: colors.surfaceContainerHighest, width: state.open ? 5: 0),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            color: state.open
+                                ? openedBackgroundColor
+                                : colors.onPrimaryContainer,
+                          ),
                           child: Visibility(
                             visible: state.showGraph,
                             child: FadeIn(
                               duration: panelTransition,
                               child: StatsGraph(
-                                  categoryId: stats.category.id!,
-                                  monthly: monthly,
-                                  close: cubit.closeContainer),
+                                categoryId: stats.category.id!,
+                                monthly: monthly,
+                                close: cubit.closeContainer,
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/icons.dart';
@@ -21,37 +22,47 @@ class HomeScreen extends StatelessWidget {
 
     return LogoutHandler(
       child: AutoTabsRouter.pageView(
-          curve: Curves.easeInOutQuad,
-          homeIndex: 1,
-          builder: (context, child, _) {
-            final tabsRouter = AutoTabsRouter.of(context);
-            return Scaffold(
-              body: SafeArea(
-                bottom: false,
-                child: Stack(
-                  children: [
-                    Positioned.fill(
+        curve: Curves.easeInOutQuad,
+        homeIndex: 1,
+        builder: (context, child, _) {
+          final tabsRouter = AutoTabsRouter.of(context);
+          return Scaffold(
+            floatingActionButton: IconButton(
+              onPressed: () =>
+                  AutoRouter.of(context).push(const SettingsRoute()),
+              icon: const Icon(Icons.settings),
+            ),
+            body: SafeArea(
+              bottom: false,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Container(
+                      alignment: Alignment.topCenter,
                       child: Container(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                              constraints:
-                                  const BoxConstraints(maxWidth: TABLET),
-                              child: child)),
+                        constraints: const BoxConstraints(maxWidth: TABLET),
+                        child: child,
+                      ),
                     ),
-                    Positioned(
-                        left: menuMargin,
-                        right: menuMargin,
-                        bottom: 36,
-                        child: SizedBox(
-                            height: 50,
-                            child: Center(
-                                child: MainMenu(
-                              tabsRouter: tabsRouter,
-                              selectedIndex: tabsRouter.activeIndex,
-                            ))))
-                  ],
-                ),
+                  ),
+                  Positioned(
+                    left: menuMargin,
+                    right: menuMargin,
+                    bottom: 36,
+                    child: SizedBox(
+                      height: 50,
+                      child: Center(
+                        child: MainMenu(
+                          tabsRouter: tabsRouter,
+                          selectedIndex: tabsRouter.activeIndex,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
+            ),
+            /*
               appBar: AppBar(
                 title: Row(
                   children: [
@@ -67,7 +78,8 @@ class HomeScreen extends StatelessWidget {
                       icon: const Icon(Icons.settings))
                 ],
               ),
-/*
+*/
+            /*
               bottomNavigationBar: NavigationBar(
                 selectedIndex: tabsRouter.activeIndex,
                 onDestinationSelected: (value) =>
@@ -82,8 +94,9 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
 */
-            );
-          }),
+          );
+        },
+      ),
     );
   }
 }

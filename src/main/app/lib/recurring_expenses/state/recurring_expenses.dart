@@ -34,9 +34,10 @@ sealed class RecurringExpensesState
     with _$RecurringExpensesState
     implements WithError {
   @Implements<WithError>()
-  const factory RecurringExpensesState(
-      {@Default(false) bool loading,
-      dynamic error,
-      StackTrace? stackTrace,
-      @Default([]) List<RecurringExpense> expenses}) = _RecurringExpensesState;
+  const factory RecurringExpensesState({
+    @Default(false) bool loading,
+    dynamic error,
+    StackTrace? stackTrace,
+    @Default([]) List<RecurringExpense> expenses,
+  }) = _RecurringExpensesState;
 }

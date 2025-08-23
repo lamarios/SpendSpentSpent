@@ -18,16 +18,16 @@ class CategorySettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        appBar: AppBar(
-          title: const Text('Category Settings'),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(title: const Text('Category Settings')),
+      body: BlocProvider(
+        create: (BuildContext context) => CategorySettingsCubit(
+          const CategorySettingsState(),
+          context.read<CategoriesCubit>(),
         ),
-        body: BlocProvider(
-          create: (BuildContext context) => CategorySettingsCubit(
-              const CategorySettingsState(), context.read<CategoriesCubit>()),
-          child: ErrorHandler<CategorySettingsCubit, CategorySettingsState>(
-            child: BlocBuilder<CategorySettingsCubit, CategorySettingsState>(
-                builder: (context, state) {
+        child: ErrorHandler<CategorySettingsCubit, CategorySettingsState>(
+          child: BlocBuilder<CategorySettingsCubit, CategorySettingsState>(
+            builder: (context, state) {
               final cubit = context.read<CategorySettingsCubit>();
 
               return state.categories.isEmpty
@@ -55,11 +55,12 @@ class CategorySettingsScreen extends StatelessWidget {
                                 itemBuilder: (context, index) {
                                   final e = state.categories[index];
                                   return CategoryEntry(
-                                      key: ValueKey(e.id),
-                                      setIcon: cubit.updateCategoryIcon,
-                                      delete: cubit.addToDelete,
-                                      category: e,
-                                      index: index);
+                                    key: ValueKey(e.id),
+                                    setIcon: cubit.updateCategoryIcon,
+                                    delete: cubit.addToDelete,
+                                    category: e,
+                                    index: index,
+                                  );
                                 },
                               ),
                             ),
@@ -73,9 +74,7 @@ class CategorySettingsScreen extends StatelessWidget {
                                         await cubit.saveCategories();
                                         Navigator.of(context).pop();
                                       },
-                                      child: const Text(
-                                        'Save',
-                                      ),
+                                      child: const Text('Save'),
                                     ),
                                   ),
                                 ),
@@ -85,7 +84,10 @@ class CategorySettingsScreen extends StatelessWidget {
                               visible: state.toDelete.isNotEmpty,
                               child: Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 8.0, right: 8, bottom: 8),
+                                  left: 8.0,
+                                  right: 8,
+                                  bottom: 8,
+                                ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -100,21 +102,25 @@ class CategorySettingsScreen extends StatelessWidget {
                                     Column(
                                       children: [
                                         Text(
-                                            '${state.toDelete.length.toString()} categor${(state.toDelete.length == 1 ? 'y' : 'ies')} to delete.'),
+                                          '${state.toDelete.length.toString()} categor${(state.toDelete.length == 1 ? 'y' : 'ies')} to delete.',
+                                        ),
                                         Text(
-                                            '${state.expensesToDelete} expense${(state.expensesToDelete > 1 ? 's' : '')} to delete.'),
+                                          '${state.expensesToDelete} expense${(state.expensesToDelete > 1 ? 's' : '')} to delete.',
+                                        ),
                                       ],
                                     ),
                                   ],
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
                     );
-            }),
+            },
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

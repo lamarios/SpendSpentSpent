@@ -20,25 +20,26 @@ class CategoryGrid extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: bottomPadding),
         child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: columns,
-              mainAxisSpacing: 15,
-              crossAxisSpacing: 15,
-            ),
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: categories.length + 2,
-            padding: const EdgeInsets.only(top: 20),
-            itemBuilder: (BuildContext context, int index) {
-              if (index == categories.length + 1) {
-                return const SettingsCategoryGridItem();
-              } else if (index == categories.length) {
-                return const AddCategoryGridItem();
-              } else {
-                Category cat = categories[index];
-                return CategoryGridItem(category: cat);
-              }
-            }),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: columns,
+            mainAxisSpacing: 15,
+            crossAxisSpacing: 15,
+          ),
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: categories.length + 2,
+          padding: const EdgeInsets.only(top: 20),
+          itemBuilder: (BuildContext context, int index) {
+            if (index == categories.length + 1) {
+              return const SettingsCategoryGridItem();
+            } else if (index == categories.length) {
+              return const AddCategoryGridItem();
+            } else {
+              Category cat = categories[index];
+              return CategoryGridItem(category: cat);
+            }
+          },
+        ),
       ),
     );
   }

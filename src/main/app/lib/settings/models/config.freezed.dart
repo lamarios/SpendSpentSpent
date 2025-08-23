@@ -14,593 +14,309 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$Config {
-  bool get allowSignup;
-  bool get canResetPassword;
-  bool get demoMode;
-  bool get hasSubscription;
-  bool get canConvertCurrency;
-  String get announcement;
-  String get convertCurrencyQuota;
-  String? get minAppVersion;
-  int get backendVersion;
-  OidcConfig? get oidc;
 
-  /// Create a copy of Config
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $ConfigCopyWith<Config> get copyWith =>
-      _$ConfigCopyWithImpl<Config>(this as Config, _$identity);
+ bool get allowSignup; bool get canResetPassword; bool get demoMode; bool get hasSubscription; bool get canConvertCurrency; String get announcement; String get convertCurrencyQuota; String? get minAppVersion; int get backendVersion; OidcConfig? get oidc;
+/// Create a copy of Config
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ConfigCopyWith<Config> get copyWith => _$ConfigCopyWithImpl<Config>(this as Config, _$identity);
 
   /// Serializes this Config to a JSON map.
   Map<String, dynamic> toJson();
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is Config &&
-            (identical(other.allowSignup, allowSignup) ||
-                other.allowSignup == allowSignup) &&
-            (identical(other.canResetPassword, canResetPassword) ||
-                other.canResetPassword == canResetPassword) &&
-            (identical(other.demoMode, demoMode) ||
-                other.demoMode == demoMode) &&
-            (identical(other.hasSubscription, hasSubscription) ||
-                other.hasSubscription == hasSubscription) &&
-            (identical(other.canConvertCurrency, canConvertCurrency) ||
-                other.canConvertCurrency == canConvertCurrency) &&
-            (identical(other.announcement, announcement) ||
-                other.announcement == announcement) &&
-            (identical(other.convertCurrencyQuota, convertCurrencyQuota) ||
-                other.convertCurrencyQuota == convertCurrencyQuota) &&
-            (identical(other.minAppVersion, minAppVersion) ||
-                other.minAppVersion == minAppVersion) &&
-            (identical(other.backendVersion, backendVersion) ||
-                other.backendVersion == backendVersion) &&
-            (identical(other.oidc, oidc) || other.oidc == oidc));
-  }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      allowSignup,
-      canResetPassword,
-      demoMode,
-      hasSubscription,
-      canConvertCurrency,
-      announcement,
-      convertCurrencyQuota,
-      minAppVersion,
-      backendVersion,
-      oidc);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Config&&(identical(other.allowSignup, allowSignup) || other.allowSignup == allowSignup)&&(identical(other.canResetPassword, canResetPassword) || other.canResetPassword == canResetPassword)&&(identical(other.demoMode, demoMode) || other.demoMode == demoMode)&&(identical(other.hasSubscription, hasSubscription) || other.hasSubscription == hasSubscription)&&(identical(other.canConvertCurrency, canConvertCurrency) || other.canConvertCurrency == canConvertCurrency)&&(identical(other.announcement, announcement) || other.announcement == announcement)&&(identical(other.convertCurrencyQuota, convertCurrencyQuota) || other.convertCurrencyQuota == convertCurrencyQuota)&&(identical(other.minAppVersion, minAppVersion) || other.minAppVersion == minAppVersion)&&(identical(other.backendVersion, backendVersion) || other.backendVersion == backendVersion)&&(identical(other.oidc, oidc) || other.oidc == oidc));
+}
 
-  @override
-  String toString() {
-    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc)';
-  }
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,allowSignup,canResetPassword,demoMode,hasSubscription,canConvertCurrency,announcement,convertCurrencyQuota,minAppVersion,backendVersion,oidc);
+
+@override
+String toString() {
+  return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class $ConfigCopyWith<$Res> {
-  factory $ConfigCopyWith(Config value, $Res Function(Config) _then) =
-      _$ConfigCopyWithImpl;
-  @useResult
-  $Res call(
-      {bool allowSignup,
-      bool canResetPassword,
-      bool demoMode,
-      bool hasSubscription,
-      bool canConvertCurrency,
-      String announcement,
-      String convertCurrencyQuota,
-      String? minAppVersion,
-      int backendVersion,
-      OidcConfig? oidc});
+abstract mixin class $ConfigCopyWith<$Res>  {
+  factory $ConfigCopyWith(Config value, $Res Function(Config) _then) = _$ConfigCopyWithImpl;
+@useResult
+$Res call({
+ bool allowSignup, bool canResetPassword, bool demoMode, bool hasSubscription, bool canConvertCurrency, String announcement, String convertCurrencyQuota, String? minAppVersion, int backendVersion, OidcConfig? oidc
+});
 
-  $OidcConfigCopyWith<$Res>? get oidc;
+
+$OidcConfigCopyWith<$Res>? get oidc;
+
 }
-
 /// @nodoc
-class _$ConfigCopyWithImpl<$Res> implements $ConfigCopyWith<$Res> {
+class _$ConfigCopyWithImpl<$Res>
+    implements $ConfigCopyWith<$Res> {
   _$ConfigCopyWithImpl(this._self, this._then);
 
   final Config _self;
   final $Res Function(Config) _then;
 
-  /// Create a copy of Config
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? allowSignup = null,
-    Object? canResetPassword = null,
-    Object? demoMode = null,
-    Object? hasSubscription = null,
-    Object? canConvertCurrency = null,
-    Object? announcement = null,
-    Object? convertCurrencyQuota = null,
-    Object? minAppVersion = freezed,
-    Object? backendVersion = null,
-    Object? oidc = freezed,
-  }) {
-    return _then(_self.copyWith(
-      allowSignup: null == allowSignup
-          ? _self.allowSignup
-          : allowSignup // ignore: cast_nullable_to_non_nullable
-              as bool,
-      canResetPassword: null == canResetPassword
-          ? _self.canResetPassword
-          : canResetPassword // ignore: cast_nullable_to_non_nullable
-              as bool,
-      demoMode: null == demoMode
-          ? _self.demoMode
-          : demoMode // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasSubscription: null == hasSubscription
-          ? _self.hasSubscription
-          : hasSubscription // ignore: cast_nullable_to_non_nullable
-              as bool,
-      canConvertCurrency: null == canConvertCurrency
-          ? _self.canConvertCurrency
-          : canConvertCurrency // ignore: cast_nullable_to_non_nullable
-              as bool,
-      announcement: null == announcement
-          ? _self.announcement
-          : announcement // ignore: cast_nullable_to_non_nullable
-              as String,
-      convertCurrencyQuota: null == convertCurrencyQuota
-          ? _self.convertCurrencyQuota
-          : convertCurrencyQuota // ignore: cast_nullable_to_non_nullable
-              as String,
-      minAppVersion: freezed == minAppVersion
-          ? _self.minAppVersion
-          : minAppVersion // ignore: cast_nullable_to_non_nullable
-              as String?,
-      backendVersion: null == backendVersion
-          ? _self.backendVersion
-          : backendVersion // ignore: cast_nullable_to_non_nullable
-              as int,
-      oidc: freezed == oidc
-          ? _self.oidc
-          : oidc // ignore: cast_nullable_to_non_nullable
-              as OidcConfig?,
-    ));
-  }
-
-  /// Create a copy of Config
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $OidcConfigCopyWith<$Res>? get oidc {
-    if (_self.oidc == null) {
-      return null;
-    }
-
-    return $OidcConfigCopyWith<$Res>(_self.oidc!, (value) {
-      return _then(_self.copyWith(oidc: value));
-    });
-  }
+/// Create a copy of Config
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? allowSignup = null,Object? canResetPassword = null,Object? demoMode = null,Object? hasSubscription = null,Object? canConvertCurrency = null,Object? announcement = null,Object? convertCurrencyQuota = null,Object? minAppVersion = freezed,Object? backendVersion = null,Object? oidc = freezed,}) {
+  return _then(_self.copyWith(
+allowSignup: null == allowSignup ? _self.allowSignup : allowSignup // ignore: cast_nullable_to_non_nullable
+as bool,canResetPassword: null == canResetPassword ? _self.canResetPassword : canResetPassword // ignore: cast_nullable_to_non_nullable
+as bool,demoMode: null == demoMode ? _self.demoMode : demoMode // ignore: cast_nullable_to_non_nullable
+as bool,hasSubscription: null == hasSubscription ? _self.hasSubscription : hasSubscription // ignore: cast_nullable_to_non_nullable
+as bool,canConvertCurrency: null == canConvertCurrency ? _self.canConvertCurrency : canConvertCurrency // ignore: cast_nullable_to_non_nullable
+as bool,announcement: null == announcement ? _self.announcement : announcement // ignore: cast_nullable_to_non_nullable
+as String,convertCurrencyQuota: null == convertCurrencyQuota ? _self.convertCurrencyQuota : convertCurrencyQuota // ignore: cast_nullable_to_non_nullable
+as String,minAppVersion: freezed == minAppVersion ? _self.minAppVersion : minAppVersion // ignore: cast_nullable_to_non_nullable
+as String?,backendVersion: null == backendVersion ? _self.backendVersion : backendVersion // ignore: cast_nullable_to_non_nullable
+as int,oidc: freezed == oidc ? _self.oidc : oidc // ignore: cast_nullable_to_non_nullable
+as OidcConfig?,
+  ));
 }
+/// Create a copy of Config
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$OidcConfigCopyWith<$Res>? get oidc {
+    if (_self.oidc == null) {
+    return null;
+  }
+
+  return $OidcConfigCopyWith<$Res>(_self.oidc!, (value) {
+    return _then(_self.copyWith(oidc: value));
+  });
+}
+}
+
 
 /// Adds pattern-matching-related methods to [Config].
 extension ConfigPatterns on Config {
-  /// A variant of `map` that fallback to returning `orElse`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_Config value)? $default, {
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _Config() when $default != null:
-        return $default(_that);
-      case _:
-        return orElse();
-    }
-  }
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Config value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Config() when $default != null:
+return $default(_that);case _:
+  return orElse();
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// Callbacks receives the raw object, upcasted.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case final Subclass2 value:
-  ///     return ...;
-  /// }
-  /// ```
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_Config value) $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _Config():
-        return $default(_that);
-    }
-  }
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Config value)  $default,){
+final _that = this;
+switch (_that) {
+case _Config():
+return $default(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  /// A variant of `map` that fallback to returning `null`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Config value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Config() when $default != null:
+return $default(_that);case _:
+  return null;
 
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_Config value)? $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _Config() when $default != null:
-        return $default(_that);
-      case _:
-        return null;
-    }
-  }
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// A variant of `when` that fallback to an `orElse` callback.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  int backendVersion,  OidcConfig? oidc)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Config() when $default != null:
+return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.hasSubscription,_that.canConvertCurrency,_that.announcement,_that.convertCurrencyQuota,_that.minAppVersion,_that.backendVersion,_that.oidc);case _:
+  return orElse();
 
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            bool allowSignup,
-            bool canResetPassword,
-            bool demoMode,
-            bool hasSubscription,
-            bool canConvertCurrency,
-            String announcement,
-            String convertCurrencyQuota,
-            String? minAppVersion,
-            int backendVersion,
-            OidcConfig? oidc)?
-        $default, {
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _Config() when $default != null:
-        return $default(
-            _that.allowSignup,
-            _that.canResetPassword,
-            _that.demoMode,
-            _that.hasSubscription,
-            _that.canConvertCurrency,
-            _that.announcement,
-            _that.convertCurrencyQuota,
-            _that.minAppVersion,
-            _that.backendVersion,
-            _that.oidc);
-      case _:
-        return orElse();
-    }
-  }
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// As opposed to `map`, this offers destructuring.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case Subclass2(:final field2):
-  ///     return ...;
-  /// }
-  /// ```
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  int backendVersion,  OidcConfig? oidc)  $default,) {final _that = this;
+switch (_that) {
+case _Config():
+return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.hasSubscription,_that.canConvertCurrency,_that.announcement,_that.convertCurrencyQuota,_that.minAppVersion,_that.backendVersion,_that.oidc);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(
-            bool allowSignup,
-            bool canResetPassword,
-            bool demoMode,
-            bool hasSubscription,
-            bool canConvertCurrency,
-            String announcement,
-            String convertCurrencyQuota,
-            String? minAppVersion,
-            int backendVersion,
-            OidcConfig? oidc)
-        $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _Config():
-        return $default(
-            _that.allowSignup,
-            _that.canResetPassword,
-            _that.demoMode,
-            _that.hasSubscription,
-            _that.canConvertCurrency,
-            _that.announcement,
-            _that.convertCurrencyQuota,
-            _that.minAppVersion,
-            _that.backendVersion,
-            _that.oidc);
-    }
-  }
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  int backendVersion,  OidcConfig? oidc)?  $default,) {final _that = this;
+switch (_that) {
+case _Config() when $default != null:
+return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.hasSubscription,_that.canConvertCurrency,_that.announcement,_that.convertCurrencyQuota,_that.minAppVersion,_that.backendVersion,_that.oidc);case _:
+  return null;
 
-  /// A variant of `when` that fallback to returning `null`
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+}
+}
 
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            bool allowSignup,
-            bool canResetPassword,
-            bool demoMode,
-            bool hasSubscription,
-            bool canConvertCurrency,
-            String announcement,
-            String convertCurrencyQuota,
-            String? minAppVersion,
-            int backendVersion,
-            OidcConfig? oidc)?
-        $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _Config() when $default != null:
-        return $default(
-            _that.allowSignup,
-            _that.canResetPassword,
-            _that.demoMode,
-            _that.hasSubscription,
-            _that.canConvertCurrency,
-            _that.announcement,
-            _that.convertCurrencyQuota,
-            _that.minAppVersion,
-            _that.backendVersion,
-            _that.oidc);
-      case _:
-        return null;
-    }
-  }
 }
 
 /// @nodoc
 @JsonSerializable()
+
 class _Config implements Config {
-  const _Config(
-      {required this.allowSignup,
-      required this.canResetPassword,
-      required this.demoMode,
-      required this.hasSubscription,
-      required this.canConvertCurrency,
-      required this.announcement,
-      required this.convertCurrencyQuota,
-      this.minAppVersion,
-      required this.backendVersion,
-      this.oidc});
+  const _Config({required this.allowSignup, required this.canResetPassword, required this.demoMode, required this.hasSubscription, required this.canConvertCurrency, required this.announcement, required this.convertCurrencyQuota, this.minAppVersion, required this.backendVersion, this.oidc});
   factory _Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
 
-  @override
-  final bool allowSignup;
-  @override
-  final bool canResetPassword;
-  @override
-  final bool demoMode;
-  @override
-  final bool hasSubscription;
-  @override
-  final bool canConvertCurrency;
-  @override
-  final String announcement;
-  @override
-  final String convertCurrencyQuota;
-  @override
-  final String? minAppVersion;
-  @override
-  final int backendVersion;
-  @override
-  final OidcConfig? oidc;
+@override final  bool allowSignup;
+@override final  bool canResetPassword;
+@override final  bool demoMode;
+@override final  bool hasSubscription;
+@override final  bool canConvertCurrency;
+@override final  String announcement;
+@override final  String convertCurrencyQuota;
+@override final  String? minAppVersion;
+@override final  int backendVersion;
+@override final  OidcConfig? oidc;
 
-  /// Create a copy of Config
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  _$ConfigCopyWith<_Config> get copyWith =>
-      __$ConfigCopyWithImpl<_Config>(this, _$identity);
+/// Create a copy of Config
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ConfigCopyWith<_Config> get copyWith => __$ConfigCopyWithImpl<_Config>(this, _$identity);
 
-  @override
-  Map<String, dynamic> toJson() {
-    return _$ConfigToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$ConfigToJson(this, );
+}
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _Config &&
-            (identical(other.allowSignup, allowSignup) ||
-                other.allowSignup == allowSignup) &&
-            (identical(other.canResetPassword, canResetPassword) ||
-                other.canResetPassword == canResetPassword) &&
-            (identical(other.demoMode, demoMode) ||
-                other.demoMode == demoMode) &&
-            (identical(other.hasSubscription, hasSubscription) ||
-                other.hasSubscription == hasSubscription) &&
-            (identical(other.canConvertCurrency, canConvertCurrency) ||
-                other.canConvertCurrency == canConvertCurrency) &&
-            (identical(other.announcement, announcement) ||
-                other.announcement == announcement) &&
-            (identical(other.convertCurrencyQuota, convertCurrencyQuota) ||
-                other.convertCurrencyQuota == convertCurrencyQuota) &&
-            (identical(other.minAppVersion, minAppVersion) ||
-                other.minAppVersion == minAppVersion) &&
-            (identical(other.backendVersion, backendVersion) ||
-                other.backendVersion == backendVersion) &&
-            (identical(other.oidc, oidc) || other.oidc == oidc));
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Config&&(identical(other.allowSignup, allowSignup) || other.allowSignup == allowSignup)&&(identical(other.canResetPassword, canResetPassword) || other.canResetPassword == canResetPassword)&&(identical(other.demoMode, demoMode) || other.demoMode == demoMode)&&(identical(other.hasSubscription, hasSubscription) || other.hasSubscription == hasSubscription)&&(identical(other.canConvertCurrency, canConvertCurrency) || other.canConvertCurrency == canConvertCurrency)&&(identical(other.announcement, announcement) || other.announcement == announcement)&&(identical(other.convertCurrencyQuota, convertCurrencyQuota) || other.convertCurrencyQuota == convertCurrencyQuota)&&(identical(other.minAppVersion, minAppVersion) || other.minAppVersion == minAppVersion)&&(identical(other.backendVersion, backendVersion) || other.backendVersion == backendVersion)&&(identical(other.oidc, oidc) || other.oidc == oidc));
+}
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      allowSignup,
-      canResetPassword,
-      demoMode,
-      hasSubscription,
-      canConvertCurrency,
-      announcement,
-      convertCurrencyQuota,
-      minAppVersion,
-      backendVersion,
-      oidc);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,allowSignup,canResetPassword,demoMode,hasSubscription,canConvertCurrency,announcement,convertCurrencyQuota,minAppVersion,backendVersion,oidc);
 
-  @override
-  String toString() {
-    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc)';
-  }
+@override
+String toString() {
+  return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc)';
+}
+
+
 }
 
 /// @nodoc
 abstract mixin class _$ConfigCopyWith<$Res> implements $ConfigCopyWith<$Res> {
-  factory _$ConfigCopyWith(_Config value, $Res Function(_Config) _then) =
-      __$ConfigCopyWithImpl;
-  @override
-  @useResult
-  $Res call(
-      {bool allowSignup,
-      bool canResetPassword,
-      bool demoMode,
-      bool hasSubscription,
-      bool canConvertCurrency,
-      String announcement,
-      String convertCurrencyQuota,
-      String? minAppVersion,
-      int backendVersion,
-      OidcConfig? oidc});
+  factory _$ConfigCopyWith(_Config value, $Res Function(_Config) _then) = __$ConfigCopyWithImpl;
+@override @useResult
+$Res call({
+ bool allowSignup, bool canResetPassword, bool demoMode, bool hasSubscription, bool canConvertCurrency, String announcement, String convertCurrencyQuota, String? minAppVersion, int backendVersion, OidcConfig? oidc
+});
 
-  @override
-  $OidcConfigCopyWith<$Res>? get oidc;
+
+@override $OidcConfigCopyWith<$Res>? get oidc;
+
 }
-
 /// @nodoc
-class __$ConfigCopyWithImpl<$Res> implements _$ConfigCopyWith<$Res> {
+class __$ConfigCopyWithImpl<$Res>
+    implements _$ConfigCopyWith<$Res> {
   __$ConfigCopyWithImpl(this._self, this._then);
 
   final _Config _self;
   final $Res Function(_Config) _then;
 
-  /// Create a copy of Config
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? allowSignup = null,
-    Object? canResetPassword = null,
-    Object? demoMode = null,
-    Object? hasSubscription = null,
-    Object? canConvertCurrency = null,
-    Object? announcement = null,
-    Object? convertCurrencyQuota = null,
-    Object? minAppVersion = freezed,
-    Object? backendVersion = null,
-    Object? oidc = freezed,
-  }) {
-    return _then(_Config(
-      allowSignup: null == allowSignup
-          ? _self.allowSignup
-          : allowSignup // ignore: cast_nullable_to_non_nullable
-              as bool,
-      canResetPassword: null == canResetPassword
-          ? _self.canResetPassword
-          : canResetPassword // ignore: cast_nullable_to_non_nullable
-              as bool,
-      demoMode: null == demoMode
-          ? _self.demoMode
-          : demoMode // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasSubscription: null == hasSubscription
-          ? _self.hasSubscription
-          : hasSubscription // ignore: cast_nullable_to_non_nullable
-              as bool,
-      canConvertCurrency: null == canConvertCurrency
-          ? _self.canConvertCurrency
-          : canConvertCurrency // ignore: cast_nullable_to_non_nullable
-              as bool,
-      announcement: null == announcement
-          ? _self.announcement
-          : announcement // ignore: cast_nullable_to_non_nullable
-              as String,
-      convertCurrencyQuota: null == convertCurrencyQuota
-          ? _self.convertCurrencyQuota
-          : convertCurrencyQuota // ignore: cast_nullable_to_non_nullable
-              as String,
-      minAppVersion: freezed == minAppVersion
-          ? _self.minAppVersion
-          : minAppVersion // ignore: cast_nullable_to_non_nullable
-              as String?,
-      backendVersion: null == backendVersion
-          ? _self.backendVersion
-          : backendVersion // ignore: cast_nullable_to_non_nullable
-              as int,
-      oidc: freezed == oidc
-          ? _self.oidc
-          : oidc // ignore: cast_nullable_to_non_nullable
-              as OidcConfig?,
-    ));
-  }
+/// Create a copy of Config
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? allowSignup = null,Object? canResetPassword = null,Object? demoMode = null,Object? hasSubscription = null,Object? canConvertCurrency = null,Object? announcement = null,Object? convertCurrencyQuota = null,Object? minAppVersion = freezed,Object? backendVersion = null,Object? oidc = freezed,}) {
+  return _then(_Config(
+allowSignup: null == allowSignup ? _self.allowSignup : allowSignup // ignore: cast_nullable_to_non_nullable
+as bool,canResetPassword: null == canResetPassword ? _self.canResetPassword : canResetPassword // ignore: cast_nullable_to_non_nullable
+as bool,demoMode: null == demoMode ? _self.demoMode : demoMode // ignore: cast_nullable_to_non_nullable
+as bool,hasSubscription: null == hasSubscription ? _self.hasSubscription : hasSubscription // ignore: cast_nullable_to_non_nullable
+as bool,canConvertCurrency: null == canConvertCurrency ? _self.canConvertCurrency : canConvertCurrency // ignore: cast_nullable_to_non_nullable
+as bool,announcement: null == announcement ? _self.announcement : announcement // ignore: cast_nullable_to_non_nullable
+as String,convertCurrencyQuota: null == convertCurrencyQuota ? _self.convertCurrencyQuota : convertCurrencyQuota // ignore: cast_nullable_to_non_nullable
+as String,minAppVersion: freezed == minAppVersion ? _self.minAppVersion : minAppVersion // ignore: cast_nullable_to_non_nullable
+as String?,backendVersion: null == backendVersion ? _self.backendVersion : backendVersion // ignore: cast_nullable_to_non_nullable
+as int,oidc: freezed == oidc ? _self.oidc : oidc // ignore: cast_nullable_to_non_nullable
+as OidcConfig?,
+  ));
+}
 
-  /// Create a copy of Config
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $OidcConfigCopyWith<$Res>? get oidc {
+/// Create a copy of Config
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$OidcConfigCopyWith<$Res>? get oidc {
     if (_self.oidc == null) {
-      return null;
-    }
-
-    return $OidcConfigCopyWith<$Res>(_self.oidc!, (value) {
-      return _then(_self.copyWith(oidc: value));
-    });
+    return null;
   }
+
+  return $OidcConfigCopyWith<$Res>(_self.oidc!, (value) {
+    return _then(_self.copyWith(oidc: value));
+  });
+}
 }
 
 // dart format on

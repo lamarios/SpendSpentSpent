@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
+import 'package:gap/gap.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/settings/models/config.dart';
@@ -17,6 +18,7 @@ import 'package:spend_spent_spent/settings/views/components/change_password.dart
 import 'package:spend_spent_spent/settings/views/components/edit_profile.dart';
 import 'package:spend_spent_spent/settings/views/components/manageUsers.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
+import 'package:material_loading_indicator/loading_indicator.dart';
 import 'package:spend_spent_spent/utils/views/components/masterDetail.dart';
 
 const ALLOW_SIGNUP = "allowSignUp",
@@ -28,13 +30,14 @@ const ALLOW_SIGNUP = "allowSignUp",
     INCLUDE_RECURRING_IN_DIFF = "includeRecurringInDiff";
 
 settingsTheme(ColorScheme colorScheme) => SettingsThemeData(
-    settingsSectionBackground: colorScheme.surface,
-    settingsListBackground: colorScheme.surface,
-    titleTextColor: colorScheme.primary,
-    dividerColor: colorScheme.onSurface,
-    tileDescriptionTextColor: colorScheme.secondary,
-    leadingIconsColor: colorScheme.secondary,
-    tileHighlightColor: colorScheme.secondaryContainer);
+  settingsSectionBackground: colorScheme.surface,
+  settingsListBackground: colorScheme.surface,
+  titleTextColor: colorScheme.primary,
+  dividerColor: colorScheme.onSurface,
+  tileDescriptionTextColor: colorScheme.secondary,
+  leadingIconsColor: colorScheme.secondary,
+  tileHighlightColor: colorScheme.secondaryContainer,
+);
 
 @RoutePage()
 class SettingsScreen extends StatefulWidget {
@@ -70,13 +73,19 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
   }
 
   showPasswordChange(BuildContext context) {
-    masterDetailKey.currentState!
-        .changeDetails(context, 'Change password', const ChangePassword());
+    masterDetailKey.currentState!.changeDetails(
+      context,
+      'Change password',
+      const ChangePassword(),
+    );
   }
 
   showManageUsers(BuildContext context) {
-    masterDetailKey.currentState!
-        .changeDetails(context, 'Manage users', const ManageUsers());
+    masterDetailKey.currentState!.changeDetails(
+      context,
+      'Manage users',
+      const ManageUsers(),
+    );
   }
 
   setMotd() {
@@ -86,19 +95,23 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
   }
 
   setCurrencyApiKey() {
-    showPromptDialog(context, 'currencyapi.com api key', "", currencyapiKey,
-        () {
-      setSetting(CURRENCY_API_KEY, currencyapiKey.text.trim(), true);
-    });
+    showPromptDialog(
+      context,
+      'currencyapi.com api key',
+      "",
+      currencyapiKey,
+      () {
+        setSetting(CURRENCY_API_KEY, currencyapiKey.text.trim(), true);
+      },
+    );
   }
 
   showEditProfile(BuildContext context) {
     masterDetailKey.currentState!.changeDetails(
-        context,
-        'Edit profile',
-        EditProfile(
-          onProfileSaved: refreshProfile,
-        ));
+      context,
+      'Edit profile',
+      EditProfile(onProfileSaved: refreshProfile),
+    );
   }
 
   Future<void> refreshSettings() async {
@@ -139,67 +152,78 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     const iconSize = 15.0;
 
     return BlocBuilder<AppSettingsCubit, AppSettingsState>(
-        builder: (context, state) {
-      final cubit = context.read<AppSettingsCubit>();
-      return Scaffold(
-        appBar: AppBar(title: const Text('Settings')),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        // body: Visibility(visible: masterDetail != null, child: masterDetail ?? Container()),
-        body: loading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : MasterDetail(
-                key: masterDetailKey,
-                master: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: SettingsList(
-                    platform: DevicePlatform.android,
-                    lightTheme: theme,
-                    darkTheme: theme,
-                    sections: [
-                      SettingsSection(
-                        title: Text(
-                          '${currentUser?.firstName ?? ""} ${currentUser?.lastName ?? ""}',
-                          style: TextStyle(
-                              color: colors.primary,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        tiles: [
-                          if (showChangePassword) ...[
-                            SettingsTile(
-                              title: const Text('Edit profile'),
-                              leading: const Icon(
-                                Icons.person,
-                                size: iconSize,
-                              ),
-                              onPressed: showEditProfile,
-                            ),
-                            SettingsTile(
-                              title: const Text('Change password'),
-                              leading: const Icon(
-                                Icons.key,
-                                size: iconSize,
-                              ),
-                              onPressed: showPasswordChange,
-                            )
-                          ],
-                          SettingsTile(
-                            title: const Text('Logout'),
-                            leading: const Icon(
-                              Icons.logout,
-                              size: iconSize,
-                            ),
-                            onPressed: logOut,
-                          )
-                        ],
+      builder: (context, state) {
+        final cubit = context.read<AppSettingsCubit>();
+        return Scaffold(
+          appBar: AppBar(title: const Text('Settings')),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          // body: Visibility(visible: masterDetail != null, child: masterDetail ?? Container()),
+          body: loading
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Center(child: LoadingIndicator()),
+                    Gap(24),
+                    Center(
+                      child: FilledButton.tonalIcon(
+                        onPressed: () => logOut(context),
+                        icon: Icon(Icons.logout),
+                        label: Text('Logout'),
                       ),
-                      if (currentUser?.isAdmin ?? false)
+                    ),
+                  ],
+                )
+              : MasterDetail(
+                  key: masterDetailKey,
+                  master: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: SettingsList(
+                      platform: DevicePlatform.android,
+                      lightTheme: theme,
+                      darkTheme: theme,
+                      sections: [
                         SettingsSection(
-                            title: Text('Admin',
-                                style: TextStyle(
-                                    color: colors.primary,
-                                    fontWeight: FontWeight.bold)),
+                          title: Text(
+                            '${currentUser?.firstName ?? ""} ${currentUser?.lastName ?? ""}',
+                            style: TextStyle(
+                              color: colors.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          tiles: [
+                            if (showChangePassword) ...[
+                              SettingsTile(
+                                title: const Text('Edit profile'),
+                                leading: const Icon(
+                                  Icons.person,
+                                  size: iconSize,
+                                ),
+                                onPressed: showEditProfile,
+                              ),
+                              SettingsTile(
+                                title: const Text('Change password'),
+                                leading: const Icon(Icons.key, size: iconSize),
+                                onPressed: showPasswordChange,
+                              ),
+                            ],
+                            SettingsTile(
+                              title: const Text('Logout'),
+                              leading: const Icon(Icons.logout, size: iconSize),
+                              onPressed: logOut,
+                            ),
+                          ],
+                        ),
+                        if (currentUser?.isAdmin ?? false)
+                          SettingsSection(
+                            title: Text(
+                              'Admin',
+                              style: TextStyle(
+                                color: colors.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             tiles: [
                               SettingsTile(
                                 title: const Text('Manage users'),
@@ -211,11 +235,11 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                               ),
                               SettingsTile(
                                 title: const Text('Currencyapi.com api key'),
-                                description: Text((service
-                                            .config?.canConvertCurrency ??
-                                        false)
-                                    ? '${service.config?.convertCurrencyQuota ?? ''} remaining api calls \nthis month'
-                                    : 'No api key set'),
+                                description: Text(
+                                  (service.config?.canConvertCurrency ?? false)
+                                      ? '${service.config?.convertCurrencyQuota ?? ''} remaining api calls \nthis month'
+                                      : 'No api key set',
+                                ),
                                 leading: const Icon(
                                   Icons.attach_money,
                                   size: iconSize,
@@ -233,94 +257,111 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                               ),
                               SettingsTile.switchTile(
                                 title: const Text('Allow registration'),
-                                leading: const Icon(
-                                  Icons.key,
-                                  size: iconSize,
-                                ),
+                                leading: const Icon(Icons.key, size: iconSize),
                                 initialValue: allowSignUp,
                                 onToggle: (bool value) => setSetting(
-                                    ALLOW_SIGNUP, value ? "1" : "0", false),
+                                  ALLOW_SIGNUP,
+                                  value ? "1" : "0",
+                                  false,
+                                ),
                                 // onPressed: showEditProfile,
                               ),
                               SettingsTile.switchTile(
                                 title: const Text('Demo mode'),
                                 description: const Text(
-                                    'Non-admin accounts cannot edit their profiles or change their passwords'),
-                                leading: const Icon(
-                                  Icons.lock,
-                                  size: iconSize,
+                                  'Non-admin accounts cannot edit their profiles or change their passwords',
                                 ),
+                                leading: const Icon(Icons.lock, size: iconSize),
                                 initialValue: demoMode,
                                 onToggle: (bool value) => setSetting(
-                                    MATERIAL_YOU, value ? "1" : "0", false),
+                                  MATERIAL_YOU,
+                                  value ? "1" : "0",
+                                  false,
+                                ),
                                 // onPressed: showEditProfile,
                               ),
-                            ]),
-                      SettingsSection(title: const Text('Appearance'), tiles: [
-                        if (!kIsWeb && Platform.isAndroid)
-                          SettingsTile.switchTile(
-                            title: const Text('Material you colors'),
-                            description: const Text(
-                                'Follow Material You colors, Android only'),
-                            leading: const Icon(
-                              Icons.color_lens_outlined,
-                              size: iconSize,
-                            ),
-                            initialValue: state.materialYou,
-                            onToggle: (bool value) =>
-                                cubit.setMaterialYou(value),
+                            ],
                           ),
-                        SettingsTile.switchTile(
-                          title: const Text('Black background'),
-                          description: const Text(
-                              'Pure black background for dark theme'),
-                          leading: const Icon(
-                            Icons.color_lens_outlined,
-                            size: iconSize,
-                          ),
-                          initialValue: state.blackBackground,
-                          onToggle: (bool value) =>
-                              cubit.setBlackBackground(value),
-                        )
-                      ]),
-                      if (packageInfo != null)
                         SettingsSection(
-                          title: Text('App info',
-                              style: TextStyle(
-                                  color: colors.primary,
-                                  fontWeight: FontWeight.bold)),
+                          title: const Text('Appearance'),
                           tiles: [
-                            SettingsTile(
-                              title: Text(
-                                  'Version: ${packageInfo?.version ?? 'n/a'}'),
-                              description: Text(
-                                  'Build: ${packageInfo?.buildNumber ?? 'n/a'}'),
-                              leading: const Icon(Icons.info),
-                              // onPressed: showEditProfile,
+                            if (!kIsWeb && Platform.isAndroid)
+                              SettingsTile.switchTile(
+                                title: const Text('Material you colors'),
+                                description: const Text(
+                                  'Follow Material You colors, Android only',
+                                ),
+                                leading: const Icon(
+                                  Icons.color_lens_outlined,
+                                  size: iconSize,
+                                ),
+                                initialValue: state.materialYou,
+                                onToggle: (bool value) =>
+                                    cubit.setMaterialYou(value),
+                              ),
+                            SettingsTile.switchTile(
+                              title: const Text('Black background'),
+                              description: const Text(
+                                'Pure black background for dark theme',
+                              ),
+                              leading: const Icon(
+                                Icons.color_lens_outlined,
+                                size: iconSize,
+                              ),
+                              initialValue: state.blackBackground,
+                              onToggle: (bool value) =>
+                                  cubit.setBlackBackground(value),
                             ),
                           ],
                         ),
-                      if (config?.backendVersion != null)
-                        SettingsSection(
-                          title: Text('Backend info',
+                        if (packageInfo != null)
+                          SettingsSection(
+                            title: Text(
+                              'App info',
                               style: TextStyle(
-                                  color: colors.primary,
-                                  fontWeight: FontWeight.bold)),
-                          tiles: [
-                            SettingsTile(
-                              title: Text(
-                                  'Version: ${config?.backendVersion.toString() ?? 'n/a'}'),
-                              leading: const Icon(Icons.dns),
-                              // onPressed: showEditProfile,
+                                color: colors.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ],
-                        )
-                    ],
+                            tiles: [
+                              SettingsTile(
+                                title: Text(
+                                  'Version: ${packageInfo?.version ?? 'n/a'}',
+                                ),
+                                description: Text(
+                                  'Build: ${packageInfo?.buildNumber ?? 'n/a'}',
+                                ),
+                                leading: const Icon(Icons.info),
+                                // onPressed: showEditProfile,
+                              ),
+                            ],
+                          ),
+                        if (config?.backendVersion != null)
+                          SettingsSection(
+                            title: Text(
+                              'Backend info',
+                              style: TextStyle(
+                                color: colors.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            tiles: [
+                              SettingsTile(
+                                title: Text(
+                                  'Version: ${config?.backendVersion.toString() ?? 'n/a'}',
+                                ),
+                                leading: const Icon(Icons.dns),
+                                // onPressed: showEditProfile,
+                              ),
+                            ],
+                          ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-      );
-    });
+        );
+      },
+    );
   }
 
   @override

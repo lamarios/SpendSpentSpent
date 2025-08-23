@@ -95,8 +95,9 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
       getDiff();
     } else {
       emit(
-          state.copyWith(expenses: {}, total: 0, diffWithPreviousPeriod: null));
-/*
+        state.copyWith(expenses: {}, total: 0, diffWithPreviousPeriod: null),
+      );
+      /*
       setState(() {
         this.expenses = <String, DayExpense>{};
         this.total = 0;
@@ -112,8 +113,8 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
       var expenses = await service.search(params);
       double total = expenses.values.isNotEmpty
           ? expenses.values
-              .map((e) => e.total)
-              .reduce((value, element) => value + element)
+                .map((e) => e.total)
+                .reduce((value, element) => value + element)
           : 0;
       if (!isClosed) {
         emit(state.copyWith(expenses: expenses, total: total));
@@ -129,14 +130,15 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
 @freezed
 sealed class ExpenseListState with _$ExpenseListState implements WithError {
   @Implements<WithError>()
-  const factory ExpenseListState(
-      {@Default([]) List<String> months,
-      @Default('') String selected,
-      @Default(0) double total,
-      @Default(false) bool loading,
-      @Default(false) bool searchMode,
-      double? diffWithPreviousPeriod,
-      @Default({}) Map<String, DayExpense> expenses,
-      dynamic error,
-      StackTrace? stackTrace}) = _ExpenseListState;
+  const factory ExpenseListState({
+    @Default([]) List<String> months,
+    @Default('') String selected,
+    @Default(0) double total,
+    @Default(false) bool loading,
+    @Default(false) bool searchMode,
+    double? diffWithPreviousPeriod,
+    @Default({}) Map<String, DayExpense> expenses,
+    dynamic error,
+    StackTrace? stackTrace,
+  }) = _ExpenseListState;
 }

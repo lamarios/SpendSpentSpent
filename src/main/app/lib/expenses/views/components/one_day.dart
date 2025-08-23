@@ -15,8 +15,9 @@ class OneDay extends StatelessWidget {
   const OneDay({super.key, required this.expense, required this.showExpense});
 
   displayDate() {
-    return DateFormat.yMMMMd('en_US')
-        .format(DateFormat('yyyy-MM-dd').parse(expense.date));
+    return DateFormat.yMMMMd(
+      'en_US',
+    ).format(DateFormat('yyyy-MM-dd').parse(expense.date));
   }
 
   @override
@@ -27,20 +28,24 @@ class OneDay extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15),
-      child: Column(children: [
-        ExpenseSeparator(texts: [displayDate(), formatCurrency(total)]),
-        const Gap(10),
-        Column(
+      child: Column(
+        children: [
+          ExpenseSeparator(texts: [displayDate(), formatCurrency(total)]),
+          const Gap(10),
+          Column(
             spacing: 10,
             children: expense.expenses
                 .map(
                   (e) => OneExpense(
-                      key: Key(e.id.toString()),
-                      expense: e,
-                      showExpense: showExpense),
+                    key: Key(e.id.toString()),
+                    expense: e,
+                    showExpense: showExpense,
+                  ),
                 )
-                .toList()),
-      ]),
+                .toList(),
+          ),
+        ],
+      ),
     );
   }
 }
