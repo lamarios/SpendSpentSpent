@@ -50,10 +50,12 @@ Map<String, String> iconMap = const {
   'phone': '\u0075',
   'internet': '\u0076',
   'games': '\u0077',
-  'computer': '\u0078'
+  'computer': '\u0078',
 };
 
 Text getIcon(String icon, {double size = 10, Color color = Colors.white}) {
-  return Text(iconMap[icon] ?? 'Icon not found',
-      style: TextStyle(color: color, fontSize: size, fontFamily: 'Icons'));
+  return Text(
+    iconMap[icon] ?? 'Icon not found',
+    style: TextStyle(color: color, fontSize: size, fontFamily: 'Icons'),
+  );
 }

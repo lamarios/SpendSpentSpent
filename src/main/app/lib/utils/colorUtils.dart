@@ -59,10 +59,11 @@ AppColors get(BuildContext context) {
 LinearGradient defaultGradient(BuildContext context) {
   final colors = Theme.of(context).colorScheme;
   return LinearGradient(
-      colors: [colors.primary.darken(10), colors.primary],
-      stops: const [0, 0.5],
-      begin: Alignment.bottomCenter,
-      end: Alignment.topRight);
+    colors: [colors.primary.darken(10), colors.primary],
+    stops: const [0, 0.5],
+    begin: Alignment.bottomCenter,
+    end: Alignment.topRight,
+  );
 }
 
 Color darken(Color color, [double amount = .1]) {

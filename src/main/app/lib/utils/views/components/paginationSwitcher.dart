@@ -5,20 +5,23 @@ class PaginationSwitcher extends StatelessWidget {
   final Pagination pagination;
   final Function previous, next;
 
-  const PaginationSwitcher(
-      {super.key,
-      required this.pagination,
-      required this.previous,
-      required this.next});
+  const PaginationSwitcher({
+    super.key,
+    required this.pagination,
+    required this.previous,
+    required this.next,
+  });
 
   @override
   Widget build(BuildContext context) {
-    bool hasNext = pagination.totalPages > 1 &&
+    bool hasNext =
+        pagination.totalPages > 1 &&
         pagination.page < pagination.totalPages - 1;
     bool hasPrevious = pagination.totalPages > 1 && pagination.page > 0;
 
     print(
-        'total pages: ${pagination.totalPages}, page ${pagination.page} hasNext $hasNext');
+      'total pages: ${pagination.totalPages}, page ${pagination.page} hasNext $hasNext',
+    );
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -33,8 +36,9 @@ class PaginationSwitcher extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-                alignment: Alignment.center,
-                child: Text('${pagination.page + 1}/${pagination.totalPages}')),
+              alignment: Alignment.center,
+              child: Text('${pagination.page + 1}/${pagination.totalPages}'),
+            ),
           ),
           GestureDetector(
             behavior: HitTestBehavior.translucent,
@@ -43,7 +47,7 @@ class PaginationSwitcher extends StatelessWidget {
               Icons.chevron_right,
               color: hasNext ? Theme.of(context).primaryColor : Colors.grey,
             ),
-          )
+          ),
         ],
       ),
     );

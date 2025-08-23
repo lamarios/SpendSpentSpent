@@ -2,6 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:material_loading_indicator/loading_indicator.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:spend_spent_spent/categories/state/category_entry.dart';
 import 'package:spend_spent_spent/categories/views/components/add_category.dart';
@@ -14,22 +15,29 @@ class CategoryEntry extends StatelessWidget {
   final Function(Category category, String newIcon) setIcon;
   final Function(Category category) delete;
 
-  const CategoryEntry(
-      {super.key,
-      required this.index,
-      required this.setIcon,
-      required this.category,
-      required this.delete});
+  const CategoryEntry({
+    super.key,
+    required this.index,
+    required this.setIcon,
+    required this.category,
+    required this.delete,
+  });
 
   editIcon(BuildContext context) {
     showModal(
-        context: context,
-        builder: (context) => Card(
-            margin: getInsetsForMaxSize(MediaQuery.of(context),
-                maxWidth: 350, maxHeight: 600),
-            child: AddCategory(
-                onSelected: (newIcon) => setIcon(category, newIcon),
-                buttonLabel: 'Choose new Icon')));
+      context: context,
+      builder: (context) => Card(
+        margin: getInsetsForMaxSize(
+          MediaQuery.of(context),
+          maxWidth: 350,
+          maxHeight: 600,
+        ),
+        child: AddCategory(
+          onSelected: (newIcon) => setIcon(category, newIcon),
+          buttonLabel: 'Choose new Icon',
+        ),
+      ),
+    );
   }
 
   deleteIcon(BuildContext context) {
@@ -39,20 +47,15 @@ class CategoryEntry extends StatelessWidget {
       builder: (_) => AlertDialog(
         title: const Text('Delete category'),
         content: const Text(
-            'The category will only be deleted when you press the save button, this will delete all related expenses.'),
+          'The category will only be deleted when you press the save button, this will delete all related expenses.',
+        ),
         actions: <Widget>[
           TextButton(
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: colors.secondary),
-            ),
+            child: Text('Cancel', style: TextStyle(color: colors.secondary)),
             onPressed: () => Navigator.of(context).pop(),
           ),
           TextButton(
-            child: const Text(
-              'Delete',
-              style: TextStyle(color: Colors.red),
-            ),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
             onPressed: () {
               delete(category);
               Navigator.of(context).pop();
@@ -77,7 +80,9 @@ class CategoryEntry extends StatelessWidget {
           child: Row(
             children: [
               ReorderableDragStartListener(
-                  index: index, child: const Icon(Icons.drag_handle)),
+                index: index,
+                child: const Icon(Icons.drag_handle),
+              ),
               const Gap(20),
               getIcon(category.icon!, color: colors.primary, size: 20),
               const Gap(20),
@@ -93,12 +98,10 @@ class CategoryEntry extends StatelessWidget {
                               style: textTheme.bodySmall,
                             );
                     } else {
-                      return const SizedBox(
+                      return SizedBox(
                         width: 10,
                         height: 10,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 1,
-                        ),
+                        child: LoadingIndicator(),
                       );
                     }
                   },
@@ -110,10 +113,7 @@ class CategoryEntry extends StatelessWidget {
                 onTap: () => editIcon(context),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Icon(
-                    Icons.edit,
-                    size: 15,
-                  ),
+                  child: Icon(Icons.edit, size: 15),
                 ),
               ),
               GestureDetector(
@@ -121,13 +121,9 @@ class CategoryEntry extends StatelessWidget {
                 onTap: () => deleteIcon(context),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Icon(
-                    Icons.delete,
-                    size: 15,
-                    color: Colors.red,
-                  ),
+                  child: Icon(Icons.delete, size: 15, color: Colors.red),
                 ),
-              )
+              ),
             ],
           ),
         ),

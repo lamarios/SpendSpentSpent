@@ -11,8 +11,11 @@ class Expense extends StatelessWidget {
   final RecurringExpense expense;
   final Function() refreshExpenses;
 
-  const Expense(
-      {super.key, required this.expense, required this.refreshExpenses});
+  const Expense({
+    super.key,
+    required this.expense,
+    required this.refreshExpenses,
+  });
 
   getType(int type) {
     switch (type) {
@@ -30,15 +33,17 @@ class Expense extends StatelessWidget {
   openContainer(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     showModal(
-        context: context,
-        builder: (context) => Card(
-            color: colors.surface,
-            margin: getInsetsForMaxSize(MediaQuery.of(context),
-                maxWidth: 550, maxHeight: 950),
-            child: RecurringExpenseView(
-              expense,
-              refreshExpenses: refreshExpenses,
-            )));
+      context: context,
+      builder: (context) => Card(
+        color: colors.surface,
+        margin: getInsetsForMaxSize(
+          MediaQuery.of(context),
+          maxWidth: 550,
+          maxHeight: 950,
+        ),
+        child: RecurringExpenseView(expense, refreshExpenses: refreshExpenses),
+      ),
+    );
   }
 
   @override
@@ -47,17 +52,23 @@ class Expense extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () => openContainer(context),
+      behavior: HitTestBehavior.opaque,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                shape: BoxShape.circle, color: colors.primaryContainer),
+              shape: BoxShape.circle,
+              color: colors.primaryContainer,
+            ),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
-              child: getIcon(expense.category.icon!,
-                  size: 20, color: colors.onPrimaryContainer),
+              child: getIcon(
+                expense.category.icon!,
+                size: 20,
+                color: colors.onPrimaryContainer,
+              ),
             ),
           ),
           Gap(16),
@@ -69,14 +80,13 @@ class Expense extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 spacing: 2,
                 children: [
-                  Text(
-                    expense.name.trim(),
-                  ),
+                  Text(expense.name.trim()),
                   Text(
                     'Next: ${expense.nextOccurrence ?? ''}',
                     style: TextStyle(
-                        color: colors.onSurface.withValues(alpha: 0.5)),
-                  )
+                      color: colors.onSurface.withValues(alpha: 0.5),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -84,7 +94,7 @@ class Expense extends StatelessWidget {
           Text(
             formatCurrency(expense.amount),
             style: TextStyle(color: colors.onSurface),
-          )
+          ),
         ],
       ),
     );

@@ -1,4 +1,1 @@
-enum TokenType {
-  sso,
-  usernamePassword;
-}
+enum TokenType { sso, usernamePassword }

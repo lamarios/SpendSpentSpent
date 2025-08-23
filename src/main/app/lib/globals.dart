@@ -58,6 +58,7 @@ String formatCurrency(double amount) {
 }
 
 void setStatusBarColor(Color color, Brightness text) {
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: color, statusBarIconBrightness: text));
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(statusBarColor: color, statusBarIconBrightness: text),
+  );
 }

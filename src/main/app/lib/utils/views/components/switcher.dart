@@ -7,11 +7,12 @@ class Switcher extends StatelessWidget {
   final int selected;
   final Function onSelect;
 
-  const Switcher(
-      {super.key,
-      required this.labels,
-      required this.selected,
-      required this.onSelect});
+  const Switcher({
+    super.key,
+    required this.labels,
+    required this.selected,
+    required this.onSelect,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,8 @@ class Switcher extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final left = (constraints.maxWidth / labels.length) * selected;
-          final right = constraints.maxWidth -
+          final right =
+              constraints.maxWidth -
               ((constraints.maxWidth / labels.length) * selected) -
               constraints.maxWidth / labels.length;
           return Stack(
@@ -36,31 +38,38 @@ class Switcher extends StatelessWidget {
                 curve: Curves.easeInOutQuart,
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(25)),
-                      color: colors.secondaryContainer),
+                    borderRadius: const BorderRadius.all(Radius.circular(25)),
+                    color: colors.secondaryContainer,
+                  ),
                 ),
               ),
               Row(
                 children: labels
                     .asMap()
-                    .map((i, e) => MapEntry(
+                    .map(
+                      (i, e) => MapEntry(
                         i,
                         GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            onTap: () => onSelect(i),
-                            child: Container(
-                                width: constraints.maxWidth / labels.length,
-                                alignment: Alignment.center,
-                                child: Text(
-                                  e,
-                                  style: TextStyle(
-                                      color: selected == i
-                                          ? colors.onSecondaryContainer
-                                          : colors.primary),
-                                )))))
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () => onSelect(i),
+                          child: Container(
+                            width: constraints.maxWidth / labels.length,
+                            alignment: Alignment.center,
+                            child: Text(
+                              e,
+                              style: TextStyle(
+                                color: selected == i
+                                    ? colors.onSecondaryContainer
+                                    : colors.primary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
                     .values
                     .toList(),
-              )
+              ),
             ],
           );
         },
@@ -68,7 +77,7 @@ class Switcher extends StatelessWidget {
     );
   }
 
-/*
+  /*
   @override
   void afterFirstLayout(BuildContext context) {
     final colors = Theme.of(context).colorScheme;

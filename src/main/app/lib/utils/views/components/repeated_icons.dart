@@ -8,12 +8,13 @@ class RepeatedIconsBackground extends StatelessWidget {
   final double size;
   final Widget child;
 
-  const RepeatedIconsBackground(
-      {super.key,
-      required this.icon,
-      required this.color,
-      required this.size,
-      required this.child});
+  const RepeatedIconsBackground({
+    super.key,
+    required this.icon,
+    required this.color,
+    required this.size,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,26 +26,25 @@ class RepeatedIconsBackground extends StatelessWidget {
         List<Widget> patternWidgets = [];
         for (double y = startPoint; y < constraints.maxHeight; y += distance) {
           for (double x = startPoint; x < constraints.maxWidth; x += distance) {
-            patternWidgets.add(Positioned(
-              left: x,
-              top: y,
-              child: getIcon(icon, size: size, color: color)
-                  .animate(
-                    onPlay: (controller) => controller.repeat(),
-                  )
-                  .move(
+            patternWidgets.add(
+              Positioned(
+                left: x,
+                top: y,
+                child: getIcon(icon, size: size, color: color)
+                    .animate(onPlay: (controller) => controller.repeat())
+                    .move(
                       duration: const Duration(seconds: 20),
-                      end: Offset(distance, distance)),
-            ));
+                      end: Offset(distance, distance),
+                    ),
+              ),
+            );
           }
         }
 
         return Stack(
           children: [
             ...patternWidgets,
-            Center(
-              child: child,
-            ),
+            Center(child: child),
           ],
         );
       },

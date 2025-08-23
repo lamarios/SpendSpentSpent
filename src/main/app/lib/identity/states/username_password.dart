@@ -13,7 +13,9 @@ class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
     if (token != null) {
       await Preferences.set(Preferences.TOKEN, token);
       await Preferences.set(
-          Preferences.TOKEN_TYPE, TokenType.usernamePassword.name);
+        Preferences.TOKEN_TYPE,
+        TokenType.usernamePassword.name,
+      );
 
       emit(state.copyWith(token: token));
     } else {
@@ -30,8 +32,6 @@ class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
 
 @freezed
 sealed class UsernamePasswordState with _$UsernamePasswordState {
-  const factory UsernamePasswordState({
-    String? token,
-    OidcConfig? oidcConfig,
-  }) = _UsernamePasswordState;
+  const factory UsernamePasswordState({String? token, OidcConfig? oidcConfig}) =
+      _UsernamePasswordState;
 }

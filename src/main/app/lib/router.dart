@@ -19,32 +19,42 @@ part 'router.gr.dart';
 class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(page: HomeRoute.page, initial: true, children: [
-          AutoRoute(page: LeftColumnRoute.page, children: [
-            AutoRoute(
-              page: MonthlyStatsRoute.page,
-              initial: true,
-            ),
-            AutoRoute(page: YearlyStatsRoute.page)
-          ]),
-          AutoRoute(page: MiddleColumnRoute.page, initial: true, children: [
+    AutoRoute(
+      page: HomeRoute.page,
+      initial: true,
+      children: [
+        AutoRoute(
+          page: LeftColumnRoute.page,
+          children: [
+            AutoRoute(page: MonthlyStatsRoute.page, initial: true),
+            AutoRoute(page: YearlyStatsRoute.page),
+          ],
+        ),
+        AutoRoute(
+          page: MiddleColumnRoute.page,
+          initial: true,
+          children: [
             AutoRoute(page: CategoryListRoute.page, initial: true),
-            AutoRoute(page: RecurringExpenseListRoute.page)
-          ]),
-          AutoRoute(page: RightColumnRoute.page)
-        ]),
-        AutoRoute(page: CategorySettingsRoute.page),
-        AutoRoute(page: SettingsRoute.page),
-        AutoRoute(page: LoginRoute.page)
-      ];
+            AutoRoute(page: RecurringExpenseListRoute.page),
+          ],
+        ),
+        AutoRoute(page: RightColumnRoute.page),
+      ],
+    ),
+    AutoRoute(page: CategorySettingsRoute.page),
+    AutoRoute(page: SettingsRoute.page),
+    AutoRoute(page: LoginRoute.page),
+  ];
 
   @override
   late final List<AutoRouteGuard> guards = [
-    AutoRouteGuard.simple(onNavigation)
+    AutoRouteGuard.simple(onNavigation),
   ];
 
   Future<void> onNavigation(
-      NavigationResolver resolver, StackRouter router) async {
+    NavigationResolver resolver,
+    StackRouter router,
+  ) async {
     bool needLogin = false;
     try {
       final url = await service.getUrl();

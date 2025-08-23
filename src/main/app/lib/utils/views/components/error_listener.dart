@@ -9,8 +9,11 @@ class ErrorHandler<C extends Cubit<S>, S extends WithError>
   final bool showAsSnack;
   final Widget child;
 
-  const ErrorHandler(
-      {super.key, this.showAsSnack = false, required this.child});
+  const ErrorHandler({
+    super.key,
+    this.showAsSnack = false,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +22,17 @@ class ErrorHandler<C extends Cubit<S>, S extends WithError>
           current.error != null && previous.error != current.error,
       listener: (context, state) {
         if (showAsSnack) {
-          ErrorDialog.showSnack(context,
-              error: state.error, trace: state.stackTrace);
+          ErrorDialog.showSnack(
+            context,
+            error: state.error,
+            trace: state.stackTrace,
+          );
         } else {
-          ErrorDialog.show(context,
-              error: state.error, trace: state.stackTrace);
+          ErrorDialog.show(
+            context,
+            error: state.error,
+            trace: state.stackTrace,
+          );
         }
       },
       child: child,

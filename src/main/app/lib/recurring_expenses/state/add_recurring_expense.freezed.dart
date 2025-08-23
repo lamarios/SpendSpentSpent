@@ -11,70 +11,47 @@ part of 'add_recurring_expense.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$AddRecurringExpenseState {
-  int get step;
-  Category? get category;
-  int? get type;
-  int? get typeParam;
-  String get amount;
-  String get name;
-  List<Category> get categories;
 
-  /// Create a copy of AddRecurringExpenseState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $AddRecurringExpenseStateCopyWith<AddRecurringExpenseState> get copyWith =>
-      _$AddRecurringExpenseStateCopyWithImpl<AddRecurringExpenseState>(
-          this as AddRecurringExpenseState, _$identity);
+ int get step; Category? get category; int? get type; int? get typeParam; String get amount; String get name; List<Category> get categories;
+/// Create a copy of AddRecurringExpenseState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AddRecurringExpenseStateCopyWith<AddRecurringExpenseState> get copyWith => _$AddRecurringExpenseStateCopyWithImpl<AddRecurringExpenseState>(this as AddRecurringExpenseState, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is AddRecurringExpenseState &&
-            (identical(other.step, step) || other.step == step) &&
-            (identical(other.category, category) ||
-                other.category == category) &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.typeParam, typeParam) ||
-                other.typeParam == typeParam) &&
-            (identical(other.amount, amount) || other.amount == amount) &&
-            (identical(other.name, name) || other.name == name) &&
-            const DeepCollectionEquality()
-                .equals(other.categories, categories));
-  }
 
-  @override
-  int get hashCode => Object.hash(runtimeType, step, category, type, typeParam,
-      amount, name, const DeepCollectionEquality().hash(categories));
 
-  @override
-  String toString() {
-    return 'AddRecurringExpenseState(step: $step, category: $category, type: $type, typeParam: $typeParam, amount: $amount, name: $name, categories: $categories)';
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddRecurringExpenseState&&(identical(other.step, step) || other.step == step)&&(identical(other.category, category) || other.category == category)&&(identical(other.type, type) || other.type == type)&&(identical(other.typeParam, typeParam) || other.typeParam == typeParam)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.categories, categories));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,step,category,type,typeParam,amount,name,const DeepCollectionEquality().hash(categories));
+
+@override
+String toString() {
+  return 'AddRecurringExpenseState(step: $step, category: $category, type: $type, typeParam: $typeParam, amount: $amount, name: $name, categories: $categories)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class $AddRecurringExpenseStateCopyWith<$Res> {
-  factory $AddRecurringExpenseStateCopyWith(AddRecurringExpenseState value,
-          $Res Function(AddRecurringExpenseState) _then) =
-      _$AddRecurringExpenseStateCopyWithImpl;
-  @useResult
-  $Res call(
-      {int step,
-      Category? category,
-      int? type,
-      int? typeParam,
-      String amount,
-      String name,
-      List<Category> categories});
+abstract mixin class $AddRecurringExpenseStateCopyWith<$Res>  {
+  factory $AddRecurringExpenseStateCopyWith(AddRecurringExpenseState value, $Res Function(AddRecurringExpenseState) _then) = _$AddRecurringExpenseStateCopyWithImpl;
+@useResult
+$Res call({
+ int step, Category? category, int? type, int? typeParam, String amount, String name, List<Category> categories
+});
 
-  $CategoryCopyWith<$Res>? get category;
+
+$CategoryCopyWith<$Res>? get category;
+
 }
-
 /// @nodoc
 class _$AddRecurringExpenseStateCopyWithImpl<$Res>
     implements $AddRecurringExpenseStateCopyWith<$Res> {
@@ -83,323 +60,218 @@ class _$AddRecurringExpenseStateCopyWithImpl<$Res>
   final AddRecurringExpenseState _self;
   final $Res Function(AddRecurringExpenseState) _then;
 
-  /// Create a copy of AddRecurringExpenseState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? step = null,
-    Object? category = freezed,
-    Object? type = freezed,
-    Object? typeParam = freezed,
-    Object? amount = null,
-    Object? name = null,
-    Object? categories = null,
-  }) {
-    return _then(_self.copyWith(
-      step: null == step
-          ? _self.step
-          : step // ignore: cast_nullable_to_non_nullable
-              as int,
-      category: freezed == category
-          ? _self.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as Category?,
-      type: freezed == type
-          ? _self.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as int?,
-      typeParam: freezed == typeParam
-          ? _self.typeParam
-          : typeParam // ignore: cast_nullable_to_non_nullable
-              as int?,
-      amount: null == amount
-          ? _self.amount
-          : amount // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _self.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      categories: null == categories
-          ? _self.categories
-          : categories // ignore: cast_nullable_to_non_nullable
-              as List<Category>,
-    ));
-  }
-
-  /// Create a copy of AddRecurringExpenseState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $CategoryCopyWith<$Res>? get category {
-    if (_self.category == null) {
-      return null;
-    }
-
-    return $CategoryCopyWith<$Res>(_self.category!, (value) {
-      return _then(_self.copyWith(category: value));
-    });
-  }
+/// Create a copy of AddRecurringExpenseState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? step = null,Object? category = freezed,Object? type = freezed,Object? typeParam = freezed,Object? amount = null,Object? name = null,Object? categories = null,}) {
+  return _then(_self.copyWith(
+step: null == step ? _self.step : step // ignore: cast_nullable_to_non_nullable
+as int,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as Category?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as int?,typeParam: freezed == typeParam ? _self.typeParam : typeParam // ignore: cast_nullable_to_non_nullable
+as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,categories: null == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
+as List<Category>,
+  ));
 }
+/// Create a copy of AddRecurringExpenseState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CategoryCopyWith<$Res>? get category {
+    if (_self.category == null) {
+    return null;
+  }
+
+  return $CategoryCopyWith<$Res>(_self.category!, (value) {
+    return _then(_self.copyWith(category: value));
+  });
+}
+}
+
 
 /// Adds pattern-matching-related methods to [AddRecurringExpenseState].
 extension AddRecurringExpenseStatePatterns on AddRecurringExpenseState {
-  /// A variant of `map` that fallback to returning `orElse`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_AddRecurringExpenseState value)? $default, {
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _AddRecurringExpenseState() when $default != null:
-        return $default(_that);
-      case _:
-        return orElse();
-    }
-  }
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AddRecurringExpenseState value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AddRecurringExpenseState() when $default != null:
+return $default(_that);case _:
+  return orElse();
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// Callbacks receives the raw object, upcasted.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case final Subclass2 value:
-  ///     return ...;
-  /// }
-  /// ```
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_AddRecurringExpenseState value) $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _AddRecurringExpenseState():
-        return $default(_that);
-    }
-  }
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AddRecurringExpenseState value)  $default,){
+final _that = this;
+switch (_that) {
+case _AddRecurringExpenseState():
+return $default(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  /// A variant of `map` that fallback to returning `null`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AddRecurringExpenseState value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AddRecurringExpenseState() when $default != null:
+return $default(_that);case _:
+  return null;
 
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_AddRecurringExpenseState value)? $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _AddRecurringExpenseState() when $default != null:
-        return $default(_that);
-      case _:
-        return null;
-    }
-  }
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// A variant of `when` that fallback to an `orElse` callback.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int step,  Category? category,  int? type,  int? typeParam,  String amount,  String name,  List<Category> categories)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _AddRecurringExpenseState() when $default != null:
+return $default(_that.step,_that.category,_that.type,_that.typeParam,_that.amount,_that.name,_that.categories);case _:
+  return orElse();
 
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(int step, Category? category, int? type, int? typeParam,
-            String amount, String name, List<Category> categories)?
-        $default, {
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _AddRecurringExpenseState() when $default != null:
-        return $default(_that.step, _that.category, _that.type, _that.typeParam,
-            _that.amount, _that.name, _that.categories);
-      case _:
-        return orElse();
-    }
-  }
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// As opposed to `map`, this offers destructuring.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case Subclass2(:final field2):
-  ///     return ...;
-  /// }
-  /// ```
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int step,  Category? category,  int? type,  int? typeParam,  String amount,  String name,  List<Category> categories)  $default,) {final _that = this;
+switch (_that) {
+case _AddRecurringExpenseState():
+return $default(_that.step,_that.category,_that.type,_that.typeParam,_that.amount,_that.name,_that.categories);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(int step, Category? category, int? type, int? typeParam,
-            String amount, String name, List<Category> categories)
-        $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _AddRecurringExpenseState():
-        return $default(_that.step, _that.category, _that.type, _that.typeParam,
-            _that.amount, _that.name, _that.categories);
-    }
-  }
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int step,  Category? category,  int? type,  int? typeParam,  String amount,  String name,  List<Category> categories)?  $default,) {final _that = this;
+switch (_that) {
+case _AddRecurringExpenseState() when $default != null:
+return $default(_that.step,_that.category,_that.type,_that.typeParam,_that.amount,_that.name,_that.categories);case _:
+  return null;
 
-  /// A variant of `when` that fallback to returning `null`
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+}
+}
 
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(int step, Category? category, int? type, int? typeParam,
-            String amount, String name, List<Category> categories)?
-        $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _AddRecurringExpenseState() when $default != null:
-        return $default(_that.step, _that.category, _that.type, _that.typeParam,
-            _that.amount, _that.name, _that.categories);
-      case _:
-        return null;
-    }
-  }
 }
 
 /// @nodoc
+
 
 class _AddRecurringExpenseState extends AddRecurringExpenseState {
-  const _AddRecurringExpenseState(
-      {this.step = 0,
-      this.category,
-      this.type,
-      this.typeParam,
-      this.amount = '',
-      this.name = '',
-      final List<Category> categories = const []})
-      : _categories = categories,
-        super._();
+  const _AddRecurringExpenseState({this.step = 0, this.category, this.type, this.typeParam, this.amount = '', this.name = '', final  List<Category> categories = const []}): _categories = categories,super._();
+  
 
-  @override
-  @JsonKey()
-  final int step;
-  @override
-  final Category? category;
-  @override
-  final int? type;
-  @override
-  final int? typeParam;
-  @override
-  @JsonKey()
-  final String amount;
-  @override
-  @JsonKey()
-  final String name;
-  final List<Category> _categories;
-  @override
-  @JsonKey()
-  List<Category> get categories {
-    if (_categories is EqualUnmodifiableListView) return _categories;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_categories);
-  }
+@override@JsonKey() final  int step;
+@override final  Category? category;
+@override final  int? type;
+@override final  int? typeParam;
+@override@JsonKey() final  String amount;
+@override@JsonKey() final  String name;
+ final  List<Category> _categories;
+@override@JsonKey() List<Category> get categories {
+  if (_categories is EqualUnmodifiableListView) return _categories;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_categories);
+}
 
-  /// Create a copy of AddRecurringExpenseState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  _$AddRecurringExpenseStateCopyWith<_AddRecurringExpenseState> get copyWith =>
-      __$AddRecurringExpenseStateCopyWithImpl<_AddRecurringExpenseState>(
-          this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _AddRecurringExpenseState &&
-            (identical(other.step, step) || other.step == step) &&
-            (identical(other.category, category) ||
-                other.category == category) &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.typeParam, typeParam) ||
-                other.typeParam == typeParam) &&
-            (identical(other.amount, amount) || other.amount == amount) &&
-            (identical(other.name, name) || other.name == name) &&
-            const DeepCollectionEquality()
-                .equals(other._categories, _categories));
-  }
+/// Create a copy of AddRecurringExpenseState
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AddRecurringExpenseStateCopyWith<_AddRecurringExpenseState> get copyWith => __$AddRecurringExpenseStateCopyWithImpl<_AddRecurringExpenseState>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(runtimeType, step, category, type, typeParam,
-      amount, name, const DeepCollectionEquality().hash(_categories));
 
-  @override
-  String toString() {
-    return 'AddRecurringExpenseState(step: $step, category: $category, type: $type, typeParam: $typeParam, amount: $amount, name: $name, categories: $categories)';
-  }
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddRecurringExpenseState&&(identical(other.step, step) || other.step == step)&&(identical(other.category, category) || other.category == category)&&(identical(other.type, type) || other.type == type)&&(identical(other.typeParam, typeParam) || other.typeParam == typeParam)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other._categories, _categories));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,step,category,type,typeParam,amount,name,const DeepCollectionEquality().hash(_categories));
+
+@override
+String toString() {
+  return 'AddRecurringExpenseState(step: $step, category: $category, type: $type, typeParam: $typeParam, amount: $amount, name: $name, categories: $categories)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class _$AddRecurringExpenseStateCopyWith<$Res>
-    implements $AddRecurringExpenseStateCopyWith<$Res> {
-  factory _$AddRecurringExpenseStateCopyWith(_AddRecurringExpenseState value,
-          $Res Function(_AddRecurringExpenseState) _then) =
-      __$AddRecurringExpenseStateCopyWithImpl;
-  @override
-  @useResult
-  $Res call(
-      {int step,
-      Category? category,
-      int? type,
-      int? typeParam,
-      String amount,
-      String name,
-      List<Category> categories});
+abstract mixin class _$AddRecurringExpenseStateCopyWith<$Res> implements $AddRecurringExpenseStateCopyWith<$Res> {
+  factory _$AddRecurringExpenseStateCopyWith(_AddRecurringExpenseState value, $Res Function(_AddRecurringExpenseState) _then) = __$AddRecurringExpenseStateCopyWithImpl;
+@override @useResult
+$Res call({
+ int step, Category? category, int? type, int? typeParam, String amount, String name, List<Category> categories
+});
 
-  @override
-  $CategoryCopyWith<$Res>? get category;
+
+@override $CategoryCopyWith<$Res>? get category;
+
 }
-
 /// @nodoc
 class __$AddRecurringExpenseStateCopyWithImpl<$Res>
     implements _$AddRecurringExpenseStateCopyWith<$Res> {
@@ -408,64 +280,34 @@ class __$AddRecurringExpenseStateCopyWithImpl<$Res>
   final _AddRecurringExpenseState _self;
   final $Res Function(_AddRecurringExpenseState) _then;
 
-  /// Create a copy of AddRecurringExpenseState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? step = null,
-    Object? category = freezed,
-    Object? type = freezed,
-    Object? typeParam = freezed,
-    Object? amount = null,
-    Object? name = null,
-    Object? categories = null,
-  }) {
-    return _then(_AddRecurringExpenseState(
-      step: null == step
-          ? _self.step
-          : step // ignore: cast_nullable_to_non_nullable
-              as int,
-      category: freezed == category
-          ? _self.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as Category?,
-      type: freezed == type
-          ? _self.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as int?,
-      typeParam: freezed == typeParam
-          ? _self.typeParam
-          : typeParam // ignore: cast_nullable_to_non_nullable
-              as int?,
-      amount: null == amount
-          ? _self.amount
-          : amount // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _self.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      categories: null == categories
-          ? _self._categories
-          : categories // ignore: cast_nullable_to_non_nullable
-              as List<Category>,
-    ));
-  }
+/// Create a copy of AddRecurringExpenseState
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? step = null,Object? category = freezed,Object? type = freezed,Object? typeParam = freezed,Object? amount = null,Object? name = null,Object? categories = null,}) {
+  return _then(_AddRecurringExpenseState(
+step: null == step ? _self.step : step // ignore: cast_nullable_to_non_nullable
+as int,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as Category?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as int?,typeParam: freezed == typeParam ? _self.typeParam : typeParam // ignore: cast_nullable_to_non_nullable
+as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,categories: null == categories ? _self._categories : categories // ignore: cast_nullable_to_non_nullable
+as List<Category>,
+  ));
+}
 
-  /// Create a copy of AddRecurringExpenseState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $CategoryCopyWith<$Res>? get category {
+/// Create a copy of AddRecurringExpenseState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CategoryCopyWith<$Res>? get category {
     if (_self.category == null) {
-      return null;
-    }
-
-    return $CategoryCopyWith<$Res>(_self.category!, (value) {
-      return _then(_self.copyWith(category: value));
-    });
+    return null;
   }
+
+  return $CategoryCopyWith<$Res>(_self.category!, (value) {
+    return _then(_self.copyWith(category: value));
+  });
+}
 }
 
 // dart format on

@@ -13,7 +13,4 @@ _ExpenseLimits _$ExpenseLimitsFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$ExpenseLimitsToJson(_ExpenseLimits instance) =>
-    <String, dynamic>{
-      'years': instance.years,
-      'months': instance.months,
-    };
+    <String, dynamic>{'years': instance.years, 'months': instance.months};

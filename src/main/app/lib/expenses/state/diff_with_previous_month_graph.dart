@@ -25,9 +25,12 @@ class DiffWithPreviousMonthGraphCubit
     final previousPeriodFuture = getPeriodData(state.previousPeriod);
 
     if (!isClosed) {
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           spots: [await currentPeriodFuture, await previousPeriodFuture],
-          loading: false));
+          loading: false,
+        ),
+      );
     }
   }
 
@@ -46,13 +49,16 @@ class DiffWithPreviousMonthGraphCubit
       var dayTotal = (dayExpenses?.expenses ?? [])
           .where((e) => state.includeRecurring ? true : e.type == 1)
           .fold<double>(
-              0, (previousValue, element) => previousValue + element.amount);
+            0,
+            (previousValue, element) => previousValue + element.amount,
+          );
       currentAmount += dayTotal;
 
       result.add(FlSpot(date.day.toDouble(), currentAmount));
 
       _log.fine(
-          'Total expense for date: ${format}: $dayTotal, accumulated: $currentAmount, include recurring ? ${state.includeRecurring}');
+        'Total expense for date: ${format}: $dayTotal, accumulated: $currentAmount, include recurring ? ${state.includeRecurring}',
+      );
 
       currentDay++;
     }
@@ -64,11 +70,11 @@ class DiffWithPreviousMonthGraphCubit
 @freezed
 sealed class DiffWithPreviousMonthGraphState
     with _$DiffWithPreviousMonthGraphState {
-  const factory DiffWithPreviousMonthGraphState(
-          {@Default(true) bool loading,
-          required bool includeRecurring,
-          required DateTimeRange currentPeriod,
-          @Default([]) List<List<FlSpot>> spots,
-          required DateTimeRange previousPeriod}) =
-      _DiffWithPreviousMonthGraphState;
+  const factory DiffWithPreviousMonthGraphState({
+    @Default(true) bool loading,
+    required bool includeRecurring,
+    required DateTimeRange currentPeriod,
+    @Default([]) List<List<FlSpot>> spots,
+    required DateTimeRange previousPeriod,
+  }) = _DiffWithPreviousMonthGraphState;
 }

@@ -33,12 +33,13 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
         typeParam != null &&
         doubleAmount > 0) {
       RecurringExpense expense = RecurringExpense(
-          category: state.category!,
-          amount: doubleAmount,
-          income: false,
-          name: state.name,
-          typeParam: typeParam,
-          type: state.type!);
+        category: state.category!,
+        amount: doubleAmount,
+        income: false,
+        name: state.name,
+        typeParam: typeParam,
+        type: state.type!,
+      );
       await service.addRecurringExpense(expense);
     } else {
       print('Missing parameters');
@@ -52,7 +53,7 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
 
   setCategory(Category category) {
     emit(state.copyWith(category: category));
-/*
+    /*
     setState(() {
       this.category = category;
       setStepWidget(step);
@@ -66,7 +67,7 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
 
   setType(int type) {
     emit(state.copyWith(type: type, typeParam: null));
-/*
+    /*
     setState(() {
       this.type = type;
       this.typeParam = null;
@@ -77,7 +78,7 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
 
   setTypeParam(int typeParam) {
     emit(state.copyWith(typeParam: typeParam));
-/*
+    /*
     setState(() {
       this.typeParam = typeParam;
       setStepWidget(step);
@@ -87,7 +88,7 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
 
   setAmount(String amount) {
     emit(state.copyWith(amount: amount));
-/*
+    /*
     setState(() {
       this.amount = amount;
       setStepWidget(step);
@@ -115,9 +116,9 @@ sealed class AddRecurringExpenseState with _$AddRecurringExpenseState {
   const AddRecurringExpenseState._();
 
   bool get stepValid => switch (step) {
-        0 => category != null,
-        1 => (type != null && typeParam != null) || (type == 0),
-        2 => amount.isNotEmpty,
-        _ => false
-      };
+    0 => category != null,
+    1 => (type != null && typeParam != null) || (type == 0),
+    2 => amount.isNotEmpty,
+    _ => false,
+  };
 }

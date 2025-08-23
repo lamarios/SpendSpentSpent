@@ -10,12 +10,13 @@ class Step1 extends StatelessWidget {
   final Category? selected;
   final String name;
 
-  const Step1(
-      {super.key,
-      required this.setCategory,
-      this.selected,
-      required this.setName,
-      required this.name});
+  const Step1({
+    super.key,
+    required this.setCategory,
+    this.selected,
+    required this.setName,
+    required this.name,
+  });
 
   onSelect(Category e) {
     setCategory(e);
@@ -24,28 +25,28 @@ class Step1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return Builder(builder: (context) {
-      final cubit = context.read<AddRecurringExpenseCubit>();
+    return Builder(
+      builder: (context) {
+        final cubit = context.read<AddRecurringExpenseCubit>();
 
-      final categories = context
-          .select((AddRecurringExpenseCubit value) => cubit.state.categories);
+        final categories = context.select(
+          (AddRecurringExpenseCubit value) => cubit.state.categories,
+        );
 
-      return Container(
-        alignment: Alignment.topCenter,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: cubit.nameController,
-                keyboardType: TextInputType.text,
-                autocorrect: false,
-                decoration: const InputDecoration(
-                  hintText: 'A name maybe ?',
+        return Container(
+          alignment: Alignment.topCenter,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: cubit.nameController,
+                  keyboardType: TextInputType.text,
+                  autocorrect: false,
+                  decoration: const InputDecoration(hintText: 'A name maybe ?'),
                 ),
               ),
-            ),
-            Padding(
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
@@ -54,32 +55,38 @@ class Step1 extends StatelessWidget {
                     spacing: 8.0,
                     runSpacing: 4,
                     children: categories
-                        .map((e) => GestureDetector(
-                              onTap: () => onSelect(e),
-                              child: AnimatedContainer(
-                                decoration: BoxDecoration(
-                                  borderRadius: defaultBorder,
-                                  color: (selected?.icon ?? '') != e.icon
-                                      ? Colors.transparent
-                                      : colors.primaryContainer,
-                                ),
-                                duration: panelTransition,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: getIcon(e.icon!,
-                                      size: 30,
-                                      color: (selected?.icon ?? '') == e.icon
-                                          ? colors.onPrimaryContainer
-                                          : colors.primary),
+                        .map(
+                          (e) => GestureDetector(
+                            onTap: () => onSelect(e),
+                            child: AnimatedContainer(
+                              decoration: BoxDecoration(
+                                borderRadius: defaultBorder,
+                                color: (selected?.icon ?? '') != e.icon
+                                    ? Colors.transparent
+                                    : colors.primaryContainer,
+                              ),
+                              duration: panelTransition,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: getIcon(
+                                  e.icon!,
+                                  size: 30,
+                                  color: (selected?.icon ?? '') == e.icon
+                                      ? colors.onPrimaryContainer
+                                      : colors.primary,
                                 ),
                               ),
-                            ))
+                            ),
+                          ),
+                        )
                         .toList(),
                   ),
-                )),
-          ],
-        ),
-      );
-    });
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

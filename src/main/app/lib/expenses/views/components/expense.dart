@@ -11,8 +11,11 @@ class OneExpense extends StatelessWidget {
   final Expense expense;
   final Function(Expense expense) showExpense;
 
-  const OneExpense(
-      {super.key, required this.showExpense, required this.expense});
+  const OneExpense({
+    super.key,
+    required this.showExpense,
+    required this.expense,
+  });
 
   openContainer() {
     showExpense(expense);
@@ -37,11 +40,16 @@ class OneExpense extends StatelessWidget {
           Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                shape: BoxShape.circle, color: colors.primaryContainer),
+              shape: BoxShape.circle,
+              color: colors.primaryContainer,
+            ),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
-              child: getIcon(expense.category.icon!,
-                  size: 20, color: colors.onPrimaryContainer),
+              child: getIcon(
+                expense.category.icon!,
+                size: 20,
+                color: colors.onPrimaryContainer,
+              ),
             ),
           ),
           Gap(16),
@@ -51,36 +59,39 @@ class OneExpense extends StatelessWidget {
             spacing: 2,
             children: [
               Visibility(
-                  visible: hasNote(),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(expense.note ?? ''),
-                  )),
+                visible: hasNote(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(expense.note ?? ''),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Visibility(
-                      visible: hasLocation(),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Icon(
-                          Icons.near_me,
-                          color: colors.onSurface.withValues(alpha: 0.5),
-                          size: 15,
-                        ),
-                      )),
+                    visible: hasLocation(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Icon(
+                        Icons.near_me,
+                        color: colors.onSurface.withValues(alpha: 0.5),
+                        size: 15,
+                      ),
+                    ),
+                  ),
                   Visibility(
-                      visible: expense.type == 2,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Icon(
-                          Icons.refresh,
-                          color: colors.onSurface.withValues(alpha: 0.5),
-                          size: 15,
-                        ),
-                      )),
+                    visible: expense.type == 2,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Icon(
+                        Icons.refresh,
+                        color: colors.onSurface.withValues(alpha: 0.5),
+                        size: 15,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],

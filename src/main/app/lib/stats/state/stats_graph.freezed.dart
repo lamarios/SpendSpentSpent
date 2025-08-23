@@ -11,80 +11,47 @@ part of 'stats_graph.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$StatsGraphState {
-  int get periodMax;
-  bool get loading;
-  int get count;
-  double get minValue;
-  double get maxValue;
-  List<FlSpot> get graphData;
-  List<FlSpot> get avgData;
-  List<GraphDataPoint> get graphDataPoints;
 
-  /// Create a copy of StatsGraphState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $StatsGraphStateCopyWith<StatsGraphState> get copyWith =>
-      _$StatsGraphStateCopyWithImpl<StatsGraphState>(
-          this as StatsGraphState, _$identity);
+ int get periodMax; bool get loading; int get count; double get minValue; double get maxValue; List<FlSpot> get graphData; List<FlSpot> get avgData; List<GraphDataPoint> get graphDataPoints;
+/// Create a copy of StatsGraphState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$StatsGraphStateCopyWith<StatsGraphState> get copyWith => _$StatsGraphStateCopyWithImpl<StatsGraphState>(this as StatsGraphState, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is StatsGraphState &&
-            (identical(other.periodMax, periodMax) ||
-                other.periodMax == periodMax) &&
-            (identical(other.loading, loading) || other.loading == loading) &&
-            (identical(other.count, count) || other.count == count) &&
-            (identical(other.minValue, minValue) ||
-                other.minValue == minValue) &&
-            (identical(other.maxValue, maxValue) ||
-                other.maxValue == maxValue) &&
-            const DeepCollectionEquality().equals(other.graphData, graphData) &&
-            const DeepCollectionEquality().equals(other.avgData, avgData) &&
-            const DeepCollectionEquality()
-                .equals(other.graphDataPoints, graphDataPoints));
-  }
 
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      periodMax,
-      loading,
-      count,
-      minValue,
-      maxValue,
-      const DeepCollectionEquality().hash(graphData),
-      const DeepCollectionEquality().hash(avgData),
-      const DeepCollectionEquality().hash(graphDataPoints));
 
-  @override
-  String toString() {
-    return 'StatsGraphState(periodMax: $periodMax, loading: $loading, count: $count, minValue: $minValue, maxValue: $maxValue, graphData: $graphData, avgData: $avgData, graphDataPoints: $graphDataPoints)';
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatsGraphState&&(identical(other.periodMax, periodMax) || other.periodMax == periodMax)&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.count, count) || other.count == count)&&(identical(other.minValue, minValue) || other.minValue == minValue)&&(identical(other.maxValue, maxValue) || other.maxValue == maxValue)&&const DeepCollectionEquality().equals(other.graphData, graphData)&&const DeepCollectionEquality().equals(other.avgData, avgData)&&const DeepCollectionEquality().equals(other.graphDataPoints, graphDataPoints));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,periodMax,loading,count,minValue,maxValue,const DeepCollectionEquality().hash(graphData),const DeepCollectionEquality().hash(avgData),const DeepCollectionEquality().hash(graphDataPoints));
+
+@override
+String toString() {
+  return 'StatsGraphState(periodMax: $periodMax, loading: $loading, count: $count, minValue: $minValue, maxValue: $maxValue, graphData: $graphData, avgData: $avgData, graphDataPoints: $graphDataPoints)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class $StatsGraphStateCopyWith<$Res> {
-  factory $StatsGraphStateCopyWith(
-          StatsGraphState value, $Res Function(StatsGraphState) _then) =
-      _$StatsGraphStateCopyWithImpl;
-  @useResult
-  $Res call(
-      {int periodMax,
-      bool loading,
-      int count,
-      double minValue,
-      double maxValue,
-      List<FlSpot> graphData,
-      List<FlSpot> avgData,
-      List<GraphDataPoint> graphDataPoints});
-}
+abstract mixin class $StatsGraphStateCopyWith<$Res>  {
+  factory $StatsGraphStateCopyWith(StatsGraphState value, $Res Function(StatsGraphState) _then) = _$StatsGraphStateCopyWithImpl;
+@useResult
+$Res call({
+ int periodMax, bool loading, int count, double minValue, double maxValue, List<FlSpot> graphData, List<FlSpot> avgData, List<GraphDataPoint> graphDataPoints
+});
 
+
+
+
+}
 /// @nodoc
 class _$StatsGraphStateCopyWithImpl<$Res>
     implements $StatsGraphStateCopyWith<$Res> {
@@ -93,402 +60,220 @@ class _$StatsGraphStateCopyWithImpl<$Res>
   final StatsGraphState _self;
   final $Res Function(StatsGraphState) _then;
 
-  /// Create a copy of StatsGraphState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? periodMax = null,
-    Object? loading = null,
-    Object? count = null,
-    Object? minValue = null,
-    Object? maxValue = null,
-    Object? graphData = null,
-    Object? avgData = null,
-    Object? graphDataPoints = null,
-  }) {
-    return _then(_self.copyWith(
-      periodMax: null == periodMax
-          ? _self.periodMax
-          : periodMax // ignore: cast_nullable_to_non_nullable
-              as int,
-      loading: null == loading
-          ? _self.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      count: null == count
-          ? _self.count
-          : count // ignore: cast_nullable_to_non_nullable
-              as int,
-      minValue: null == minValue
-          ? _self.minValue
-          : minValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      maxValue: null == maxValue
-          ? _self.maxValue
-          : maxValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      graphData: null == graphData
-          ? _self.graphData
-          : graphData // ignore: cast_nullable_to_non_nullable
-              as List<FlSpot>,
-      avgData: null == avgData
-          ? _self.avgData
-          : avgData // ignore: cast_nullable_to_non_nullable
-              as List<FlSpot>,
-      graphDataPoints: null == graphDataPoints
-          ? _self.graphDataPoints
-          : graphDataPoints // ignore: cast_nullable_to_non_nullable
-              as List<GraphDataPoint>,
-    ));
-  }
+/// Create a copy of StatsGraphState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? periodMax = null,Object? loading = null,Object? count = null,Object? minValue = null,Object? maxValue = null,Object? graphData = null,Object? avgData = null,Object? graphDataPoints = null,}) {
+  return _then(_self.copyWith(
+periodMax: null == periodMax ? _self.periodMax : periodMax // ignore: cast_nullable_to_non_nullable
+as int,loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
+as bool,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,minValue: null == minValue ? _self.minValue : minValue // ignore: cast_nullable_to_non_nullable
+as double,maxValue: null == maxValue ? _self.maxValue : maxValue // ignore: cast_nullable_to_non_nullable
+as double,graphData: null == graphData ? _self.graphData : graphData // ignore: cast_nullable_to_non_nullable
+as List<FlSpot>,avgData: null == avgData ? _self.avgData : avgData // ignore: cast_nullable_to_non_nullable
+as List<FlSpot>,graphDataPoints: null == graphDataPoints ? _self.graphDataPoints : graphDataPoints // ignore: cast_nullable_to_non_nullable
+as List<GraphDataPoint>,
+  ));
 }
+
+}
+
 
 /// Adds pattern-matching-related methods to [StatsGraphState].
 extension StatsGraphStatePatterns on StatsGraphState {
-  /// A variant of `map` that fallback to returning `orElse`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_StatsGraphState value)? $default, {
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _StatsGraphState() when $default != null:
-        return $default(_that);
-      case _:
-        return orElse();
-    }
-  }
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StatsGraphState value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _StatsGraphState() when $default != null:
+return $default(_that);case _:
+  return orElse();
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// Callbacks receives the raw object, upcasted.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case final Subclass2 value:
-  ///     return ...;
-  /// }
-  /// ```
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_StatsGraphState value) $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _StatsGraphState():
-        return $default(_that);
-    }
-  }
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StatsGraphState value)  $default,){
+final _that = this;
+switch (_that) {
+case _StatsGraphState():
+return $default(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  /// A variant of `map` that fallback to returning `null`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StatsGraphState value)?  $default,){
+final _that = this;
+switch (_that) {
+case _StatsGraphState() when $default != null:
+return $default(_that);case _:
+  return null;
 
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_StatsGraphState value)? $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _StatsGraphState() when $default != null:
-        return $default(_that);
-      case _:
-        return null;
-    }
-  }
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// A variant of `when` that fallback to an `orElse` callback.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int periodMax,  bool loading,  int count,  double minValue,  double maxValue,  List<FlSpot> graphData,  List<FlSpot> avgData,  List<GraphDataPoint> graphDataPoints)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _StatsGraphState() when $default != null:
+return $default(_that.periodMax,_that.loading,_that.count,_that.minValue,_that.maxValue,_that.graphData,_that.avgData,_that.graphDataPoints);case _:
+  return orElse();
 
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            int periodMax,
-            bool loading,
-            int count,
-            double minValue,
-            double maxValue,
-            List<FlSpot> graphData,
-            List<FlSpot> avgData,
-            List<GraphDataPoint> graphDataPoints)?
-        $default, {
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _StatsGraphState() when $default != null:
-        return $default(
-            _that.periodMax,
-            _that.loading,
-            _that.count,
-            _that.minValue,
-            _that.maxValue,
-            _that.graphData,
-            _that.avgData,
-            _that.graphDataPoints);
-      case _:
-        return orElse();
-    }
-  }
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// As opposed to `map`, this offers destructuring.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case Subclass2(:final field2):
-  ///     return ...;
-  /// }
-  /// ```
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int periodMax,  bool loading,  int count,  double minValue,  double maxValue,  List<FlSpot> graphData,  List<FlSpot> avgData,  List<GraphDataPoint> graphDataPoints)  $default,) {final _that = this;
+switch (_that) {
+case _StatsGraphState():
+return $default(_that.periodMax,_that.loading,_that.count,_that.minValue,_that.maxValue,_that.graphData,_that.avgData,_that.graphDataPoints);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(
-            int periodMax,
-            bool loading,
-            int count,
-            double minValue,
-            double maxValue,
-            List<FlSpot> graphData,
-            List<FlSpot> avgData,
-            List<GraphDataPoint> graphDataPoints)
-        $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _StatsGraphState():
-        return $default(
-            _that.periodMax,
-            _that.loading,
-            _that.count,
-            _that.minValue,
-            _that.maxValue,
-            _that.graphData,
-            _that.avgData,
-            _that.graphDataPoints);
-    }
-  }
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int periodMax,  bool loading,  int count,  double minValue,  double maxValue,  List<FlSpot> graphData,  List<FlSpot> avgData,  List<GraphDataPoint> graphDataPoints)?  $default,) {final _that = this;
+switch (_that) {
+case _StatsGraphState() when $default != null:
+return $default(_that.periodMax,_that.loading,_that.count,_that.minValue,_that.maxValue,_that.graphData,_that.avgData,_that.graphDataPoints);case _:
+  return null;
 
-  /// A variant of `when` that fallback to returning `null`
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+}
+}
 
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            int periodMax,
-            bool loading,
-            int count,
-            double minValue,
-            double maxValue,
-            List<FlSpot> graphData,
-            List<FlSpot> avgData,
-            List<GraphDataPoint> graphDataPoints)?
-        $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _StatsGraphState() when $default != null:
-        return $default(
-            _that.periodMax,
-            _that.loading,
-            _that.count,
-            _that.minValue,
-            _that.maxValue,
-            _that.graphData,
-            _that.avgData,
-            _that.graphDataPoints);
-      case _:
-        return null;
-    }
-  }
 }
 
 /// @nodoc
+
 
 class _StatsGraphState implements StatsGraphState {
-  const _StatsGraphState(
-      {this.periodMax = 10,
-      this.loading = true,
-      this.count = 5,
-      this.minValue = 0,
-      this.maxValue = 0,
-      final List<FlSpot> graphData = const [
-        FlSpot(0, 0),
-        FlSpot(1, 0),
-        FlSpot(2, 0),
-        FlSpot(3, 0),
-        FlSpot(4, 0)
-      ],
-      final List<FlSpot> avgData = const [
-        FlSpot(0, 0),
-        FlSpot(1, 0),
-        FlSpot(2, 0),
-        FlSpot(3, 0),
-        FlSpot(4, 0)
-      ],
-      final List<GraphDataPoint> graphDataPoints = const [
-        GraphDataPoint(date: '2021', amount: 0),
-        GraphDataPoint(date: '2020', amount: 0),
-        GraphDataPoint(date: '2019', amount: 0),
-        GraphDataPoint(date: '2018', amount: 0),
-        GraphDataPoint(date: '2017', amount: 0)
-      ]})
-      : _graphData = graphData,
-        _avgData = avgData,
-        _graphDataPoints = graphDataPoints;
+  const _StatsGraphState({this.periodMax = 10, this.loading = true, this.count = 5, this.minValue = 0, this.maxValue = 0, final  List<FlSpot> graphData = const [FlSpot(0, 0), FlSpot(1, 0), FlSpot(2, 0), FlSpot(3, 0), FlSpot(4, 0)], final  List<FlSpot> avgData = const [FlSpot(0, 0), FlSpot(1, 0), FlSpot(2, 0), FlSpot(3, 0), FlSpot(4, 0)], final  List<GraphDataPoint> graphDataPoints = const [GraphDataPoint(date: '2021', amount: 0), GraphDataPoint(date: '2020', amount: 0), GraphDataPoint(date: '2019', amount: 0), GraphDataPoint(date: '2018', amount: 0), GraphDataPoint(date: '2017', amount: 0)]}): _graphData = graphData,_avgData = avgData,_graphDataPoints = graphDataPoints;
+  
 
-  @override
-  @JsonKey()
-  final int periodMax;
-  @override
-  @JsonKey()
-  final bool loading;
-  @override
-  @JsonKey()
-  final int count;
-  @override
-  @JsonKey()
-  final double minValue;
-  @override
-  @JsonKey()
-  final double maxValue;
-  final List<FlSpot> _graphData;
-  @override
-  @JsonKey()
-  List<FlSpot> get graphData {
-    if (_graphData is EqualUnmodifiableListView) return _graphData;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_graphData);
-  }
+@override@JsonKey() final  int periodMax;
+@override@JsonKey() final  bool loading;
+@override@JsonKey() final  int count;
+@override@JsonKey() final  double minValue;
+@override@JsonKey() final  double maxValue;
+ final  List<FlSpot> _graphData;
+@override@JsonKey() List<FlSpot> get graphData {
+  if (_graphData is EqualUnmodifiableListView) return _graphData;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_graphData);
+}
 
-  final List<FlSpot> _avgData;
-  @override
-  @JsonKey()
-  List<FlSpot> get avgData {
-    if (_avgData is EqualUnmodifiableListView) return _avgData;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_avgData);
-  }
+ final  List<FlSpot> _avgData;
+@override@JsonKey() List<FlSpot> get avgData {
+  if (_avgData is EqualUnmodifiableListView) return _avgData;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_avgData);
+}
 
-  final List<GraphDataPoint> _graphDataPoints;
-  @override
-  @JsonKey()
-  List<GraphDataPoint> get graphDataPoints {
-    if (_graphDataPoints is EqualUnmodifiableListView) return _graphDataPoints;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_graphDataPoints);
-  }
+ final  List<GraphDataPoint> _graphDataPoints;
+@override@JsonKey() List<GraphDataPoint> get graphDataPoints {
+  if (_graphDataPoints is EqualUnmodifiableListView) return _graphDataPoints;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_graphDataPoints);
+}
 
-  /// Create a copy of StatsGraphState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  _$StatsGraphStateCopyWith<_StatsGraphState> get copyWith =>
-      __$StatsGraphStateCopyWithImpl<_StatsGraphState>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _StatsGraphState &&
-            (identical(other.periodMax, periodMax) ||
-                other.periodMax == periodMax) &&
-            (identical(other.loading, loading) || other.loading == loading) &&
-            (identical(other.count, count) || other.count == count) &&
-            (identical(other.minValue, minValue) ||
-                other.minValue == minValue) &&
-            (identical(other.maxValue, maxValue) ||
-                other.maxValue == maxValue) &&
-            const DeepCollectionEquality()
-                .equals(other._graphData, _graphData) &&
-            const DeepCollectionEquality().equals(other._avgData, _avgData) &&
-            const DeepCollectionEquality()
-                .equals(other._graphDataPoints, _graphDataPoints));
-  }
+/// Create a copy of StatsGraphState
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$StatsGraphStateCopyWith<_StatsGraphState> get copyWith => __$StatsGraphStateCopyWithImpl<_StatsGraphState>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      periodMax,
-      loading,
-      count,
-      minValue,
-      maxValue,
-      const DeepCollectionEquality().hash(_graphData),
-      const DeepCollectionEquality().hash(_avgData),
-      const DeepCollectionEquality().hash(_graphDataPoints));
 
-  @override
-  String toString() {
-    return 'StatsGraphState(periodMax: $periodMax, loading: $loading, count: $count, minValue: $minValue, maxValue: $maxValue, graphData: $graphData, avgData: $avgData, graphDataPoints: $graphDataPoints)';
-  }
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatsGraphState&&(identical(other.periodMax, periodMax) || other.periodMax == periodMax)&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.count, count) || other.count == count)&&(identical(other.minValue, minValue) || other.minValue == minValue)&&(identical(other.maxValue, maxValue) || other.maxValue == maxValue)&&const DeepCollectionEquality().equals(other._graphData, _graphData)&&const DeepCollectionEquality().equals(other._avgData, _avgData)&&const DeepCollectionEquality().equals(other._graphDataPoints, _graphDataPoints));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,periodMax,loading,count,minValue,maxValue,const DeepCollectionEquality().hash(_graphData),const DeepCollectionEquality().hash(_avgData),const DeepCollectionEquality().hash(_graphDataPoints));
+
+@override
+String toString() {
+  return 'StatsGraphState(periodMax: $periodMax, loading: $loading, count: $count, minValue: $minValue, maxValue: $maxValue, graphData: $graphData, avgData: $avgData, graphDataPoints: $graphDataPoints)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class _$StatsGraphStateCopyWith<$Res>
-    implements $StatsGraphStateCopyWith<$Res> {
-  factory _$StatsGraphStateCopyWith(
-          _StatsGraphState value, $Res Function(_StatsGraphState) _then) =
-      __$StatsGraphStateCopyWithImpl;
-  @override
-  @useResult
-  $Res call(
-      {int periodMax,
-      bool loading,
-      int count,
-      double minValue,
-      double maxValue,
-      List<FlSpot> graphData,
-      List<FlSpot> avgData,
-      List<GraphDataPoint> graphDataPoints});
-}
+abstract mixin class _$StatsGraphStateCopyWith<$Res> implements $StatsGraphStateCopyWith<$Res> {
+  factory _$StatsGraphStateCopyWith(_StatsGraphState value, $Res Function(_StatsGraphState) _then) = __$StatsGraphStateCopyWithImpl;
+@override @useResult
+$Res call({
+ int periodMax, bool loading, int count, double minValue, double maxValue, List<FlSpot> graphData, List<FlSpot> avgData, List<GraphDataPoint> graphDataPoints
+});
 
+
+
+
+}
 /// @nodoc
 class __$StatsGraphStateCopyWithImpl<$Res>
     implements _$StatsGraphStateCopyWith<$Res> {
@@ -497,55 +282,23 @@ class __$StatsGraphStateCopyWithImpl<$Res>
   final _StatsGraphState _self;
   final $Res Function(_StatsGraphState) _then;
 
-  /// Create a copy of StatsGraphState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? periodMax = null,
-    Object? loading = null,
-    Object? count = null,
-    Object? minValue = null,
-    Object? maxValue = null,
-    Object? graphData = null,
-    Object? avgData = null,
-    Object? graphDataPoints = null,
-  }) {
-    return _then(_StatsGraphState(
-      periodMax: null == periodMax
-          ? _self.periodMax
-          : periodMax // ignore: cast_nullable_to_non_nullable
-              as int,
-      loading: null == loading
-          ? _self.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      count: null == count
-          ? _self.count
-          : count // ignore: cast_nullable_to_non_nullable
-              as int,
-      minValue: null == minValue
-          ? _self.minValue
-          : minValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      maxValue: null == maxValue
-          ? _self.maxValue
-          : maxValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      graphData: null == graphData
-          ? _self._graphData
-          : graphData // ignore: cast_nullable_to_non_nullable
-              as List<FlSpot>,
-      avgData: null == avgData
-          ? _self._avgData
-          : avgData // ignore: cast_nullable_to_non_nullable
-              as List<FlSpot>,
-      graphDataPoints: null == graphDataPoints
-          ? _self._graphDataPoints
-          : graphDataPoints // ignore: cast_nullable_to_non_nullable
-              as List<GraphDataPoint>,
-    ));
-  }
+/// Create a copy of StatsGraphState
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? periodMax = null,Object? loading = null,Object? count = null,Object? minValue = null,Object? maxValue = null,Object? graphData = null,Object? avgData = null,Object? graphDataPoints = null,}) {
+  return _then(_StatsGraphState(
+periodMax: null == periodMax ? _self.periodMax : periodMax // ignore: cast_nullable_to_non_nullable
+as int,loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
+as bool,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,minValue: null == minValue ? _self.minValue : minValue // ignore: cast_nullable_to_non_nullable
+as double,maxValue: null == maxValue ? _self.maxValue : maxValue // ignore: cast_nullable_to_non_nullable
+as double,graphData: null == graphData ? _self._graphData : graphData // ignore: cast_nullable_to_non_nullable
+as List<FlSpot>,avgData: null == avgData ? _self._avgData : avgData // ignore: cast_nullable_to_non_nullable
+as List<FlSpot>,graphDataPoints: null == graphDataPoints ? _self._graphDataPoints : graphDataPoints // ignore: cast_nullable_to_non_nullable
+as List<GraphDataPoint>,
+  ));
+}
+
+
 }
 
 // dart format on

@@ -37,7 +37,7 @@ const CURRENCIES = [
   "THB",
   "TRY",
   "USD",
-  "ZAR"
+  "ZAR",
 ];
 
 class CurrencyConverter extends StatelessWidget {
@@ -46,13 +46,14 @@ class CurrencyConverter extends StatelessWidget {
   final Function(String from) valueToStr;
   final Function(CurrencyConversion conversion) setCurrencyConversion;
 
-  const CurrencyConverter(
-      {super.key,
-      this.currencyConversion,
-      required this.value,
-      required this.valueFrom,
-      required this.valueToStr,
-      required this.setCurrencyConversion});
+  const CurrencyConverter({
+    super.key,
+    this.currencyConversion,
+    required this.value,
+    required this.valueFrom,
+    required this.valueToStr,
+    required this.setCurrencyConversion,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -60,15 +61,19 @@ class CurrencyConverter extends StatelessWidget {
 
     return BlocProvider(
       create: (BuildContext context) => CurrencyConverterCubit(
-          const CurrencyConverterState(), setCurrencyConversion),
+        const CurrencyConverterState(),
+        setCurrencyConversion,
+      ),
       child: BlocBuilder<CurrencyConverterCubit, CurrencyConverterState>(
-          builder: (context, state) {
-        final cubit = context.read<CurrencyConverterCubit>();
+        builder: (context, state) {
+          final cubit = context.read<CurrencyConverterCubit>();
 
-        return Container(
+          return Container(
             height: 70,
             decoration: BoxDecoration(
-                color: colors.secondaryContainer, borderRadius: defaultBorder),
+              color: colors.secondaryContainer,
+              borderRadius: defaultBorder,
+            ),
             alignment: Alignment.centerRight,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -79,23 +84,30 @@ class CurrencyConverter extends StatelessWidget {
                     child: Row(
                       children: [
                         DropdownButton(
-                            value: state.fromCurrency,
-                            onChanged: cubit.changeFromCurrency,
-                            dropdownColor: colors.secondaryContainer,
-                            items: CURRENCIES
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(
-                                    value,
-                                    style: TextStyle(
-                                        color: colors.onSecondaryContainer),
-                                  ));
-                            }).toList()),
-                        Text('${valueToStr(valueFrom)}',
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: colors.onSecondaryContainer)),
+                          value: state.fromCurrency,
+                          onChanged: cubit.changeFromCurrency,
+                          dropdownColor: colors.secondaryContainer,
+                          items: CURRENCIES.map<DropdownMenuItem<String>>((
+                            String value,
+                          ) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                  color: colors.onSecondaryContainer,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        Text(
+                          '${valueToStr(valueFrom)}',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: colors.onSecondaryContainer,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -104,30 +116,39 @@ class CurrencyConverter extends StatelessWidget {
                     child: Row(
                       children: [
                         DropdownButton(
-                            value: state.toCurrency,
-                            dropdownColor: colors.secondaryContainer,
-                            onChanged: cubit.changeToCurrency,
-                            items: CURRENCIES
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(
-                                    value,
-                                    style: TextStyle(
-                                        color: colors.onSecondaryContainer),
-                                  ));
-                            }).toList()),
-                        Text('${valueToStr(value)}',
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: colors.onSecondaryContainer)),
+                          value: state.toCurrency,
+                          dropdownColor: colors.secondaryContainer,
+                          onChanged: cubit.changeToCurrency,
+                          items: CURRENCIES.map<DropdownMenuItem<String>>((
+                            String value,
+                          ) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                  color: colors.onSecondaryContainer,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        Text(
+                          '${valueToStr(value)}',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: colors.onSecondaryContainer,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
-            ));
-      }),
+            ),
+          );
+        },
+      ),
     );
   }
 }

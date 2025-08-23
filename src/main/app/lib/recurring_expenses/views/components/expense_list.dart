@@ -1,10 +1,13 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:spend_spent_spent/add_expense_dialog/views/components/expense_averages.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/recurring_expenses/models/recurring_expense.dart';
-import 'package:spend_spent_spent/recurring_expenses/views/components/add_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/recurring_expenses/views/components/add_recurring_expense.dart';
 import 'package:spend_spent_spent/recurring_expenses/views/components/expense.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/utils/extensions/list_insert_between.dart';
 import 'package:spend_spent_spent/utils/views/components/expense_separator.dart';
 
@@ -16,9 +19,28 @@ class ExpenseList extends StatelessWidget {
       yearly = [];
   final Function() refreshExpenses;
 
-  ExpenseList(
-      {super.key, required this.expenses, required this.refreshExpenses}) {
+  ExpenseList({
+    super.key,
+    required this.expenses,
+    required this.refreshExpenses,
+  }) {
     splitExpenses(expenses);
+  }
+
+  void showAddRecurringExpenseDialog(BuildContext context) {
+    showModal(
+      context: context,
+      builder: (context) => Card(
+        margin: getInsetsForMaxSize(
+          MediaQuery.of(context),
+          maxWidth: 350,
+          maxHeight: 450,
+        ),
+        child: AddRecurringExpenseDialog(
+          refreshRecurringExpenses: refreshExpenses,
+        ),
+      ),
+    );
   }
 
   void splitExpenses(List<RecurringExpense> expenses) {
@@ -38,14 +60,17 @@ class ExpenseList extends StatelessWidget {
           continue;
       }
     }
-/*
+    /*
     print(
         ' total: ${expenses.length} daily: ${daily.length}, weekly: ${weekly.length}, monthly: ${monthly.length}, yearly: ${yearly.length}');
 */
   }
 
   Widget? expensesFromSplit(
-      BuildContext context, List<RecurringExpense> expenses, String title) {
+    BuildContext context,
+    List<RecurringExpense> expenses,
+    String title,
+  ) {
     List<Widget> results = [];
 
     if (expenses.isNotEmpty) {
@@ -57,17 +82,21 @@ class ExpenseList extends StatelessWidget {
 
       List<Widget> expensesWidget = [];
       for (var e in expenses) {
-        expensesWidget.add(Expense(
-          key: Key(e.id.toString()),
-          expense: e,
-          refreshExpenses: refreshExpenses,
-        ));
+        expensesWidget.add(
+          Expense(
+            key: Key(e.id.toString()),
+            expense: e,
+            refreshExpenses: refreshExpenses,
+          ),
+        );
       }
 
-      results.add(Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Column(children: expensesWidget),
-      ));
+      results.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Column(children: expensesWidget),
+        ),
+      );
       return Column(children: results);
     } else {
       return null;
@@ -76,7 +105,11 @@ class ExpenseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     List<Widget> children = [];
+
+    children.add(RecurringExpenseAverages(expenses: expenses));
 
     var daily = expensesFromSplit(context, this.daily, 'Daily');
     if (daily != null) {
@@ -96,16 +129,26 @@ class ExpenseList extends StatelessWidget {
       children.add(yearly);
     }
 
-    children.add(AddExpense(
-      refreshExpenses: refreshExpenses,
-    ));
-
     children.addItemBetween(Gap(24));
 
     children.add(Gap(bottomPadding));
 
-    return ListView(
-      children: children,
+    return Stack(
+      children: [
+        ListView(children: children),
+        Positioned(
+          right: 20,
+          bottom: 120,
+          child: IconButton(
+            iconSize: 36,
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(colors.primaryContainer),
+            ),
+            onPressed: () => showAddRecurringExpenseDialog(context),
+            icon: Icon(Icons.add),
+          ),
+        ),
+      ],
     );
   }
 }

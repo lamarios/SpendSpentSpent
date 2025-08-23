@@ -18,12 +18,13 @@ class DummyFadeState extends State<DummyFade> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _controller = AnimationController(
-        duration: const Duration(milliseconds: 2000),
-        vsync: this,
-        value: 1,
-        lowerBound: 0.4,
-        upperBound: 1,
-        reverseDuration: const Duration(microseconds: 2000));
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+      value: 1,
+      lowerBound: 0.4,
+      upperBound: 1,
+      reverseDuration: const Duration(microseconds: 2000),
+    );
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
 
     if (widget.running ?? true) {

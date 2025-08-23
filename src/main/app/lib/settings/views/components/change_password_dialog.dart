@@ -20,17 +20,22 @@ class ChangePasswordDialogState extends State<ChangePasswordDialog>
 
   void randomPassword() {
     var r = Random.secure();
-    passwordController.text =
-        randomAlpha(16, provider: CoreRandomProvider.from(r));
+    passwordController.text = randomAlpha(
+      16,
+      provider: CoreRandomProvider.from(r),
+    );
   }
 
   Future<void> savePassword(BuildContext context) async {
     await service.setUserPassword(
-        widget.userId, passwordController.text.trim());
+      widget.userId,
+      passwordController.text.trim(),
+    );
     Navigator.of(context).pop();
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text("Password saved")));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Password saved")));
   }
 
   @override
@@ -45,9 +50,7 @@ class ChangePasswordDialogState extends State<ChangePasswordDialog>
           const Text('Password'),
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
-            child: TextField(
-              controller: passwordController,
-            ),
+            child: TextField(controller: passwordController),
           ),
           TextButton(
             onPressed: randomPassword,
@@ -61,19 +64,16 @@ class ChangePasswordDialogState extends State<ChangePasswordDialog>
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(),
-                ),
+                child: const Text('Cancel', style: TextStyle()),
               ),
               TextButton(
                 onPressed: passwordController.text.trim().isNotEmpty
                     ? () => savePassword(context)
                     : null,
                 child: Text('Save', style: TextStyle(color: colors.primary)),
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
     );

@@ -17,9 +17,13 @@ class ResetPasswordState extends State<ResetPassword> {
 
   Future<void> resetPassword(BuildContext context) async {
     await service.resetPassword(widget.server, usernameController.text.trim());
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
         content: Text(
-            "Reset password request sent successfully, check your email for instructions")));
+          "Reset password request sent successfully, check your email for instructions",
+        ),
+      ),
+    );
 
     widget.onBack();
   }
@@ -35,18 +39,25 @@ class ResetPasswordState extends State<ResetPassword> {
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Container(
-                alignment: Alignment.centerLeft,
-                child: Text('Email',
-                    style: TextStyle(color: colors.onPrimaryContainer))),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Email',
+                style: TextStyle(color: colors.onPrimaryContainer),
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
-                controller: usernameController,
-                autocorrect: false,
-                keyboardType: TextInputType.emailAddress,
-                decoration:
-                    getFieldDecoration("Email", "user@example.org", colors)),
+              controller: usernameController,
+              autocorrect: false,
+              keyboardType: TextInputType.emailAddress,
+              decoration: getFieldDecoration(
+                "Email",
+                "user@example.org",
+                colors,
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -54,17 +65,17 @@ class ResetPasswordState extends State<ResetPassword> {
               children: [
                 Expanded(
                   child: FilledButton.tonal(
-                      onPressed: () => resetPassword(context),
-                      child: const Text('Reset password')),
+                    onPressed: () => resetPassword(context),
+                    child: const Text('Reset password'),
+                  ),
                 ),
               ],
             ),
           ),
           TextButton(
-              onPressed: () => widget.onBack(),
-              child: const Text(
-                'Back',
-              ))
+            onPressed: () => widget.onBack(),
+            child: const Text('Back'),
+          ),
         ],
       ),
     );

@@ -9,10 +9,11 @@ part 'day_expense.freezed.dart';
 
 @freezed
 sealed class DayExpense with _$DayExpense {
-  const factory DayExpense(
-      {required String date,
-      required double total,
-      @Default([]) List<Expense> expenses}) = _DayExpense;
+  const factory DayExpense({
+    required String date,
+    required double total,
+    @Default([]) List<Expense> expenses,
+  }) = _DayExpense;
 
   factory DayExpense.fromJson(Map<String, dynamic> json) =>
       _$DayExpenseFromJson(json);

@@ -1,5 +1,5 @@
 name: 'spend_spent_spent'
-version: '2.4.3+97'
+version: '2.5.0+97'
 publish_to: none
 environment:
   sdk: '>=3.8.0 <4.0.0'
@@ -30,6 +30,7 @@ dependencies:
   location: 8.0.0
   logging: 1.3.0
 #  oauth2_client: 4.2.0
+  material_loading_indicator: 1.0.0
   month_year_picker: 0.5.0+1
   oidc: 0.12.1+2
   oidc_default_store: 0.4.0+3

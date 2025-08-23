@@ -8,8 +8,11 @@ class ExpenseNoteDialog extends StatelessWidget {
   final Function(String note) onChanged;
   final String initialNote;
 
-  const ExpenseNoteDialog(
-      {super.key, required this.onChanged, required this.initialNote});
+  const ExpenseNoteDialog({
+    super.key,
+    required this.onChanged,
+    required this.initialNote,
+  });
 
   static Future<String?> show(BuildContext context, String startingNote) async {
     String note = startingNote;
@@ -26,11 +29,13 @@ class ExpenseNoteDialog extends StatelessWidget {
           ),
           actions: [
             TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text("Cancel")),
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("Cancel"),
+            ),
             TextButton(
-                onPressed: () => Navigator.of(context).pop(note),
-                child: Text("Ok"))
+              onPressed: () => Navigator.of(context).pop(note),
+              child: Text("Ok"),
+            ),
           ],
         ),
       ),
@@ -50,9 +55,7 @@ class ExpenseNoteDialog extends StatelessWidget {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(
-                controller: cubit.controller,
-              ),
+              TextField(controller: cubit.controller),
               Gap(10),
               SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -67,10 +70,10 @@ class ExpenseNoteDialog extends StatelessWidget {
                         text: e,
                         tapSuggestion: cubit.selectSuggestion,
                       ),
-                    )
+                    ),
                   ],
                 ),
-              )
+              ),
             ],
           );
         },

@@ -27,19 +27,23 @@ class EditProfileState extends State<EditProfile> with AfterLayoutMixin {
   savePassword() async {
     User user = await service.getCurrentUser();
     user = user.copyWith(
-        firstName: firstNameController.text, lastName: lastNameController.text);
+      firstName: firstNameController.text,
+      lastName: lastNameController.text,
+    );
 
     await service.saveUser(user);
 
     widget.onProfileSaved();
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text("Profile saved")));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Profile saved")));
   }
 
   valueChanged() {
     setState(() {
-      canSave = lastNameController.text.trim().isNotEmpty &&
+      canSave =
+          lastNameController.text.trim().isNotEmpty &&
           firstNameController.text.trim().isNotEmpty;
     });
   }
@@ -53,16 +57,12 @@ class EditProfileState extends State<EditProfile> with AfterLayoutMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('First name'),
-            TextField(
-              controller: firstNameController,
-            ),
+            TextField(controller: firstNameController),
             const Padding(
               padding: EdgeInsets.only(top: 20.0),
               child: Text('Last name'),
             ),
-            TextField(
-              controller: lastNameController,
-            ),
+            TextField(controller: lastNameController),
             Padding(
               padding: const EdgeInsets.only(top: 30.0),
               child: Row(
@@ -70,14 +70,12 @@ class EditProfileState extends State<EditProfile> with AfterLayoutMixin {
                   Expanded(
                     child: FilledButton.tonal(
                       onPressed: !canSave ? null : savePassword,
-                      child: const Text(
-                        'Save',
-                      ),
+                      child: const Text('Save'),
                     ),
-                  )
+                  ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

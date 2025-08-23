@@ -21,7 +21,7 @@ class LogoutHandler extends StatelessWidget {
           listener: (BuildContext context, UsernamePasswordState state) {
             AutoRouter.of(context).replaceAll([const LoginRoute()]);
           },
-        )
+        ),
       ],
       child: child,
     );

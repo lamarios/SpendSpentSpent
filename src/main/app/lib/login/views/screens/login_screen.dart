@@ -13,8 +13,8 @@ class LoginScreen extends StatelessWidget {
       body: SafeArea(
         bottom: false,
         child: Login(
-            onLoginSuccess: () =>
-                AutoRouter.of(context).push(const HomeRoute())),
+          onLoginSuccess: () => AutoRouter.of(context).push(const HomeRoute()),
+        ),
       ),
     );
   }

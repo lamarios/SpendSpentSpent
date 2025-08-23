@@ -10,11 +10,12 @@ part 'search_parameters.freezed.dart';
 
 @freezed
 sealed class SearchParameters with _$SearchParameters {
-  const factory SearchParameters(
-      {@Default([]) List<Category> categories,
-      required int minAmount,
-      required int maxAmount,
-      required String note}) = _SearchParameters;
+  const factory SearchParameters({
+    @Default([]) List<Category> categories,
+    required int minAmount,
+    required int maxAmount,
+    required String note,
+  }) = _SearchParameters;
 
   factory SearchParameters.fromJson(Map<String, dynamic> json) =>
       _$SearchParametersFromJson(json);
