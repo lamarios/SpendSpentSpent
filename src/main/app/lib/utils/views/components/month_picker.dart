@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/utils/states/month_picker.dart';
 import 'package:spend_spent_spent/utils/views/components/conditional_wrapper.dart';
@@ -75,6 +76,7 @@ class MonthPicker extends StatelessWidget {
             ),
             child: Container(
               margin: EdgeInsets.all(36),
+              constraints: BoxConstraints(maxWidth: BIG_PHONE.toDouble()),
               decoration: BoxDecoration(
                 color: colors.surfaceContainerHigh,
                 borderRadius: BorderRadius.circular(_borderRadius),
@@ -168,20 +170,24 @@ class MonthPicker extends StatelessWidget {
                         ),
                       ),
 
-                      GridView.count(
-                            key: ValueKey(state.selectedYear),
-                            crossAxisCount: 4,
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            children: months,
-                          )
-                          .animate(key: ValueKey(state.selectedYear))
-                          .fadeIn(duration: animationDuration, begin: 0)
-                          .slideY(
-                            curve: animationCurve,
-                            duration: animationDuration,
-                            begin: 0.05,
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child:
+                            GridView.count(
+                                  key: ValueKey(state.selectedYear),
+                                  crossAxisCount: 4,
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  children: months,
+                                )
+                                .animate(key: ValueKey(state.selectedYear))
+                                .fadeIn(duration: animationDuration, begin: 0)
+                                .slideY(
+                                  curve: animationCurve,
+                                  duration: animationDuration,
+                                  begin: 0.05,
+                                ),
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -197,6 +203,7 @@ class MonthPicker extends StatelessWidget {
                           ),
                         ],
                       ),
+                      Gap(8),
                     ],
                   );
                 },
