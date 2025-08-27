@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:material_loading_indicator/loading_indicator.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/expenses/state/expense_list.dart';
+import 'package:spend_spent_spent/expenses/views/components/below_date_widget.dart';
 import 'package:spend_spent_spent/expenses/views/components/diff_with_previous_period.dart';
 import 'package:spend_spent_spent/expenses/views/components/expense_menu.dart';
 import 'package:spend_spent_spent/expenses/views/components/one_day.dart';
@@ -14,15 +15,14 @@ import 'package:spend_spent_spent/expenses/views/components/stylized_amount.dart
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/utils/views/components/data_change_monitor.dart';
+import 'package:spend_spent_spent/utils/views/components/month_picker.dart';
 
 @RoutePage()
 class RightColumnTab extends StatelessWidget {
   const RightColumnTab({super.key});
 
   String convertDate(String date) {
-    return DateFormat(
-      'MMMM yyyy',
-    ).format(DateFormat('yyyy-MM-dd').parse('$date-01'));
+    return monthFormatter.format(DateFormat('yyyy-MM-dd').parse('$date-01'));
   }
 
   Widget getExpensesWidget(
@@ -46,9 +46,62 @@ class RightColumnTab extends StatelessWidget {
     );
   }
 
+  Future<void> selectMonth(BuildContext context) async {
+    var state = context.read<ExpenseListCubit>().state;
+    final months = state.months;
+    if (months.isEmpty) {
+      return;
+    }
+    var firstMonthSplit = months.first.split('-');
+    var lastMonthSplit = months.last.split('-');
+    late final DateTime initialDate;
+    if (state.selected.isEmpty) {
+      initialDate = DateTime.now();
+    } else {
+      final selectedSplit = state.selected.split('-');
+      initialDate = DateTime(
+        int.parse(selectedSplit[0]),
+        int.parse(selectedSplit[1]),
+      );
+    }
+    var firstDate = DateTime(
+      int.parse(firstMonthSplit[0]),
+      int.parse(firstMonthSplit[1]),
+    );
+    var lastDate = DateTime(
+      int.parse(lastMonthSplit[0]),
+      int.parse(lastMonthSplit[1]),
+    );
+
+    final selected = await MonthPicker.show(
+      context,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      initialDate: initialDate,
+      monthPredicate: (date) => months.contains(dateToSSSMonth(date)),
+      belowDateWidget: (date) => BelowDateInCalendarWidget(month: date),
+    );
+
+    /*
+    final selected = await showMonthPicker(
+      context: context,
+      lastDate: lastDate,
+      firstDate: firstDate,
+      initialDate: initialDate,
+      selectableMonthPredicate: (date) => months.contains(dateToSSSMonth(date)),
+    );
+*/
+
+    if (selected != null && context.mounted) {
+      context.read<ExpenseListCubit>().monthChanged(dateToSSSMonth(selected));
+    }
+  }
+
+  String dateToSSSMonth(DateTime date) =>
+      '${date.year}-${date.month.toString().padLeft(2, '0')}';
+
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
     return BlocProvider(
@@ -59,134 +112,98 @@ class RightColumnTab extends StatelessWidget {
           builder: (context, state) {
             final cubit = context.read<ExpenseListCubit>();
 
-            return Padding(
-              padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
-              child: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(width: 50),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0,
-                            vertical: 2,
-                          ),
-                          child: AnimatedCrossFade(
-                            sizeCurve: Curves.easeInOutQuad,
-                            crossFadeState: state.searchMode
-                                ? CrossFadeState.showFirst
-                                : CrossFadeState.showSecond,
-                            duration: panelTransition,
-                            firstChild: Search(search: cubit.search),
-                            secondChild: SizedBox(
-                              height: 48,
-                              child: Column(
-                                children: [
-                                  DropdownButton<String>(
-                                    value: state.selected,
-                                    items: state.months
-                                        .map(
-                                          (e) => DropdownMenuItem(
-                                            value: e,
-                                            child: Text(
-                                              convertDate(e),
-                                              style: TextStyle(
-                                                color:
-                                                    colors.onSecondaryContainer,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                    selectedItemBuilder: (context) => state
-                                        .months
-                                        .map(
-                                          (e) => Center(
-                                            child: Text(
-                                              convertDate(e),
-                                              style: textTheme.bodyLarge,
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                    style: TextStyle(
-                                      color: colors.onPrimaryContainer,
-                                    ),
-                                    isExpanded: true,
-                                    iconEnabledColor: colors.onPrimaryContainer,
-                                    underline: const SizedBox.shrink(),
-                                    dropdownColor: colors.secondaryContainer,
-                                    onChanged: cubit.monthChanged,
-                                    alignment: Alignment.center,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 50,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 8,
-                            right: 8.0,
-                            top: 8,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: colors.secondaryContainer,
-                            ),
-                            child: IconButton(
-                              onPressed: cubit.switchSearch,
-                              padding: EdgeInsets.zero,
-                              visualDensity: VisualDensity.compact,
-                              iconSize: 15,
-                              splashRadius: 15,
-                              icon: Icon(
-                                state.searchMode ? Icons.clear : Icons.search,
-                                color: colors.onPrimaryContainer,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    key: ValueKey(state.selected),
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      alignment: Alignment.center,
+            return state.months.isEmpty
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(36.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          StylizedAmount(amount: state.total, size: 50),
-                          if (!state.searchMode) ...[
-                            Gap(4),
-                            DiffWithPreviousPeriod(
-                              diff: state.diffWithPreviousPeriod,
-                              currentMonth: state.selected,
-                            ),
-                          ],
+                          Icon(Icons.arrow_back, size: 100),
+                          Gap(24),
+                          Text(
+                            'No expenses yet. Go back to the middle screen.',
+                            textAlign: TextAlign.center,
+                            style: textTheme.titleLarge,
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: AnimatedSwitcher(
-                      duration: panelTransition,
-                      child: state.loading
-                          ? Center(child: LoadingIndicator())
-                          : getExpensesWidget(context, state.expenses),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
+                    child: Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(width: 50),
+                            Gap(4),
+                            Expanded(
+                              child: AnimatedCrossFade(
+                                sizeCurve: Curves.easeInOutQuad,
+                                crossFadeState: state.searchMode
+                                    ? CrossFadeState.showFirst
+                                    : CrossFadeState.showSecond,
+                                duration: panelTransition,
+                                firstChild: Search(search: cubit.search),
+                                secondChild: state.loading
+                                    ? SizedBox.shrink()
+                                    : Center(
+                                        child: FilledButton.tonalIcon(
+                                          onPressed: () => selectMonth(context),
+                                          icon: Icon(Icons.calendar_month),
+                                          label: Text(
+                                            convertDate(state.selected),
+                                          ),
+                                        ),
+                                      ),
+                              ),
+                            ),
+                            Gap(4),
+                            SizedBox(
+                              width: 50,
+                              child: IconButton.filledTonal(
+                                onPressed: cubit.switchSearch,
+                                icon: Icon(
+                                  state.searchMode ? Icons.clear : Icons.search,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          key: ValueKey(state.selected),
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                StylizedAmount(amount: state.total, size: 50),
+                                if (!state.searchMode) ...[
+                                  Gap(4),
+                                  DiffWithPreviousPeriod(
+                                    diff: state.diffWithPreviousPeriod,
+                                    currentMonth: state.selected,
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: AnimatedSwitcher(
+                            duration: panelTransition,
+                            child: state.loading
+                                ? Center(child: LoadingIndicator())
+                                : getExpensesWidget(context, state.expenses),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            );
+                  );
           },
         ),
       ),

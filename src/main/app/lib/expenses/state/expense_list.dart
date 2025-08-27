@@ -19,6 +19,7 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
   }
 
   void getMonths() async {
+    emit(state.copyWith(loading: true));
     List<String> months = await service.getExpensesMonths();
     String now = DateFormat("yyyy-MM").format(DateTime.now());
     int nowIndex = months.indexWhere((element) => element == now);

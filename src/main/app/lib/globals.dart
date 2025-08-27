@@ -26,6 +26,8 @@ const BROADCAST_LOGGED_IN = 'loggedIn',
 const TABLET = 768.0;
 const BIG_PHONE = 500;
 
+final monthFormatter = DateFormat('MMMM yyyy');
+
 ButtonStyle flatButtonStyle = TextButton.styleFrom(
   foregroundColor: Colors.white,
   backgroundColor: Colors.blue[800],

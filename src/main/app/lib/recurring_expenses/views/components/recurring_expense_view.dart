@@ -100,7 +100,7 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> {
       children: [
         RepeatedIconsBackground(
           icon: widget.expense.category.icon!,
-          color: colors.onSurface.withOpacity(0.05),
+          color: colors.onSurface.withValues(alpha: 0.05),
           size: 40,
           child: const SizedBox.shrink(),
         ),
