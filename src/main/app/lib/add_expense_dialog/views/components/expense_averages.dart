@@ -78,7 +78,7 @@ class RecurringExpenseAverages extends StatelessWidget {
                   Icon(Icons.bar_chart_rounded, size: 16),
                   Gap(8),
                   Text(
-                    'Recurring cost breakdown:',
+                    'Recurring cost breakdown',
                     style: textTheme.titleMedium,
                   ),
                 ],

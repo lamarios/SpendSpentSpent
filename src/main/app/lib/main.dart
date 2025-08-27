@@ -96,11 +96,12 @@ class SpendSpentSpent extends StatelessWidget {
 
               const appBarTheme = AppBarTheme(
                 scrolledUnderElevation: 0,
-                color: Colors.transparent,
+                backgroundColor: Colors.transparent,
               );
 
               return MaterialApp.router(
                 routerConfig: _appRouter.config(),
+                localizationsDelegates: [],
                 theme: ThemeData(
                   scaffoldBackgroundColor: lightColorScheme.surface,
                   navigationBarTheme: navigationBarTheme.copyWith(

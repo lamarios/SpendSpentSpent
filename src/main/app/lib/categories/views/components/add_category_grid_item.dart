@@ -9,7 +9,7 @@ import 'package:spend_spent_spent/utils/dialogs.dart';
 class AddCategoryGridItem extends StatelessWidget {
   const AddCategoryGridItem({super.key});
 
-  void showAddCategory(BuildContext context) {
+  static void showAddCategory(BuildContext context) {
     final cubit = context.read<CategoriesCubit>();
     showModal(
       context: context,
@@ -35,9 +35,12 @@ class AddCategoryGridItem extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: defaultBorder,
-          border: Border.all(width: 3, color: colors.primary.withOpacity(0.5)),
+          border: Border.all(
+            width: 3,
+            color: colors.primary.withValues(alpha: 0.5),
+          ),
         ),
-        child: Icon(Icons.add, color: colors.primary.withOpacity(0.5)),
+        child: Icon(Icons.add, color: colors.primary.withValues(alpha: 0.5)),
       ),
     );
   }

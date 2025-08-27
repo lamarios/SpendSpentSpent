@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:material_loading_indicator/loading_indicator.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
@@ -15,6 +16,8 @@ class StatsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return BlocProvider(
       create: (context) =>
           StatsListCubit(const StatsListState(), monthly: monthly),
@@ -29,6 +32,20 @@ class StatsView extends StatelessWidget {
                   duration: panelTransition,
                   child: state.loading
                       ? Center(child: LoadingIndicator())
+                      : state.stats.length == 1
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.arrow_forward, size: 100),
+                            Gap(24),
+                            Text(
+                              'No expenses yet. Go back to the middle screen.',
+                              textAlign: TextAlign.center,
+                              style: textTheme.titleLarge,
+                            ),
+                          ],
+                        )
                       : ListView.builder(
                           scrollDirection: Axis.vertical,
                           itemCount: state.stats.length,

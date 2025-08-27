@@ -102,7 +102,7 @@ class AddUserDialogState extends State<AddUserDialog> {
                 ),
               ),
               TextButton(
-                onPressed: valid() ? () => addUser(context) : null,
+                onPressed: () => addUser(context),
                 child: const Text('Save'),
               ),
             ],

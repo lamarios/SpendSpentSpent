@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/settings/models/settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spend_spent_spent/settings/views/screens/settings.dart';
 import 'package:spend_spent_spent/utils/models/with_error.dart';
 
@@ -14,23 +13,15 @@ class DiffWithPreviousMonthSettingsCubit
   }
 
   Future<void> init() async {
-    var setting = (await service.getAllSettings())
-        .where((s) => s.name == INCLUDE_RECURRING_IN_DIFF)
-        .firstOrNull;
-    emit(
-      state.copyWith(includeRecurringExpenses: (setting?.value ?? "1") == "1"),
-    );
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final enabled = prefs.getBool(INCLUDE_RECURRING_IN_DIFF);
+    emit(state.copyWith(includeRecurringExpenses: enabled ?? true));
   }
 
   Future<void> setIncludeRecurringExpenses(bool include) async {
     emit(state.copyWith(includeRecurringExpenses: include));
-    service.setSettings(
-      Settings(
-        name: INCLUDE_RECURRING_IN_DIFF,
-        value: include ? "1" : "0",
-        secret: false,
-      ),
-    );
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(INCLUDE_RECURRING_IN_DIFF, include);
   }
 }
 

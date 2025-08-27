@@ -72,8 +72,8 @@ class AddCategory extends StatelessWidget {
                                 errorBorder: InputBorder.none,
                                 disabledBorder: InputBorder.none,
                                 hintStyle: TextStyle(
-                                  color: colors.onPrimaryContainer.withOpacity(
-                                    0.5,
+                                  color: colors.onPrimaryContainer.withValues(
+                                    alpha: 0.5,
                                   ),
                                 ),
                               ),
