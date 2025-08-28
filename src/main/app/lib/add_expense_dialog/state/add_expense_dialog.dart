@@ -63,12 +63,12 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     if (useLocation) {
       getLocation()
           .timeout(
-        const Duration(seconds: LOCATION_TIMEOUT),
-        onTimeout: () => null,
-      )
+            const Duration(seconds: LOCATION_TIMEOUT),
+            onTimeout: () => null,
+          )
           .then((loc) {
-        emit(state.copyWith(location: loc));
-      });
+            emit(state.copyWith(location: loc));
+          });
     }
   }
 
@@ -114,12 +114,12 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     if (state.useLocation) {
       getLocation()
           .timeout(
-        const Duration(seconds: LOCATION_TIMEOUT),
-        onTimeout: () => null,
-      )
+            const Duration(seconds: LOCATION_TIMEOUT),
+            onTimeout: () => null,
+          )
           .then((loc) {
-        emit(state.copyWith(location: loc));
-      });
+            emit(state.copyWith(location: loc));
+          });
     }
   }
 
@@ -169,7 +169,8 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     //checking location\
     if (state.useLocation) {
       try {
-        LocationData? locationData = state.location ??
+        LocationData? locationData =
+            state.location ??
             await getLocation().timeout(
               const Duration(seconds: LOCATION_TIMEOUT),
               onTimeout: () => null,

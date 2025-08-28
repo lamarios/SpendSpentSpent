@@ -23,17 +23,18 @@ class DiffWithPreviousPeriod extends StatelessWidget {
       var color = diff! < 1
           ? Colors.green
           : diff! > 1
-              ? Colors.red
-              : null;
+          ? Colors.red
+          : null;
       return InkWell(
-        onTap: () => DiffWithPreviousPeriodSettings.showModalSheet(
-          context,
-          month: currentMonth,
-        ).then((value) {
-          if (context.mounted) {
-            context.read<ExpenseListCubit>().getDiff();
-          }
-        }),
+        onTap: () =>
+            DiffWithPreviousPeriodSettings.showModalSheet(
+              context,
+              month: currentMonth,
+            ).then((value) {
+              if (context.mounted) {
+                context.read<ExpenseListCubit>().getDiff();
+              }
+            }),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

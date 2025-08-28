@@ -106,8 +106,9 @@ class AddRecurringExpenseDialog extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed:
-                          state.stepValid ? () => forward(context) : null,
+                      onPressed: state.stepValid
+                          ? () => forward(context)
+                          : null,
                       child: Text(state.step == 2 ? 'Add' : 'Next'),
                     ),
                   ],

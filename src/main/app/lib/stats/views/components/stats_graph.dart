@@ -38,8 +38,9 @@ class StatsGraph extends StatelessWidget {
               return LineTooltipItem(
                 text + formatCurrency(e.y),
                 TextStyle(
-                  color:
-                      avg ? Colors.white.withValues(alpha: 0.7) : Colors.white,
+                  color: avg
+                      ? Colors.white.withValues(alpha: 0.7)
+                      : Colors.white,
                   fontSize: avg ? 12 : 20,
                 ),
               );
@@ -219,8 +220,8 @@ class StatsGraph extends StatelessWidget {
                 child: AnimatedSwitcher(
                   transitionBuilder:
                       (Widget child, Animation<double> animation) {
-                    return ScaleTransition(scale: animation, child: child);
-                  },
+                        return ScaleTransition(scale: animation, child: child);
+                      },
                   duration: panelTransition,
                   switchInCurve: Curves.easeInOutQuint,
                   switchOutCurve: Curves.easeInOutQuint,

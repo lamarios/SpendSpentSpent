@@ -77,11 +77,11 @@ class AddExpense extends StatelessWidget {
                         switchInCurve: Curves.easeInOutQuart,
                         transitionBuilder:
                             (Widget child, Animation<double> animation) {
-                          return ScaleTransition(
-                            scale: animation,
-                            child: child,
-                          );
-                        },
+                              return ScaleTransition(
+                                scale: animation,
+                                child: child,
+                              );
+                            },
                         child: state.saving
                             ? SizedBox(
                                 height: 200,
@@ -161,8 +161,8 @@ class AddExpense extends StatelessWidget {
                                                   child: Padding(
                                                     padding:
                                                         const EdgeInsets.all(
-                                                      10.0,
-                                                    ),
+                                                          10.0,
+                                                        ),
                                                     child: Text(
                                                       cubit.valueToStr(
                                                         state.value,
@@ -213,11 +213,11 @@ class AddExpense extends StatelessWidget {
                                                   ? () async {
                                                       double iconHeight =
                                                           getIconHeight(
-                                                                MediaQuery.of(
-                                                                  context,
-                                                                ),
-                                                              ) *
-                                                              0.66;
+                                                            MediaQuery.of(
+                                                              context,
+                                                            ),
+                                                          ) *
+                                                          0.66;
                                                       await cubit.addExpense(
                                                         iconHeight,
                                                         colors

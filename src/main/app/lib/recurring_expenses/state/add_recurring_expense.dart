@@ -116,9 +116,9 @@ sealed class AddRecurringExpenseState with _$AddRecurringExpenseState {
   const AddRecurringExpenseState._();
 
   bool get stepValid => switch (step) {
-        0 => category != null,
-        1 => (type != null && typeParam != null) || (type == 0),
-        2 => amount.isNotEmpty,
-        _ => false,
-      };
+    0 => category != null,
+    1 => (type != null && typeParam != null) || (type == 0),
+    2 => amount.isNotEmpty,
+    _ => false,
+  };
 }

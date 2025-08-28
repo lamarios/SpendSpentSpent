@@ -73,11 +73,11 @@ class Step2 extends StatelessWidget {
   });
 
   Map<int, String> get typeParams => switch (type) {
-        1 => WEEKLY_PARAMS,
-        2 => MONTHLY_PARAMS,
-        3 => YEARLY_PARAMS,
-        _ => {},
-      };
+    1 => WEEKLY_PARAMS,
+    2 => MONTHLY_PARAMS,
+    3 => YEARLY_PARAMS,
+    _ => {},
+  };
 
   @override
   Widget build(BuildContext context) {
