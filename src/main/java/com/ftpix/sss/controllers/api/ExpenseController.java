@@ -5,7 +5,6 @@ import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.ExpenseLimits;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.ExpenseService;
-import com.ftpix.sss.services.HistoryService;
 import com.ftpix.sss.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,7 +12,6 @@ import io.swagger.annotations.ApiParam;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -21,7 +19,6 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/API/Expense")
