@@ -90,7 +90,7 @@ public class RecurringExpenseControllerTest extends TestContainerTest {
         assertEquals(today.getDayOfMonth(), newDate.getDayOfMonth());
 
         //Check monthly of non passed date yet
-        LocalDate lastPaymentDate = LocalDate.of(1,3,1);
+        LocalDate lastPaymentDate = LocalDate.of(1, 3, 1);
 
         expense.setType(RecurringExpense.TYPE_MONTHLY);
         expense.setTypeParam(1);
@@ -103,7 +103,7 @@ public class RecurringExpenseControllerTest extends TestContainerTest {
         assertEquals(lastPaymentDate.getDayOfMonth(), newDate.getDayOfMonth());
 
         //Check yearly of non passed date yet
-        lastPaymentDate = LocalDate.of(1,3,1);
+        lastPaymentDate = LocalDate.of(1, 3, 1);
 
         expense.setType(RecurringExpense.TYPE_YEARLY);
         expense.setTypeParam(3);
@@ -114,6 +114,26 @@ public class RecurringExpenseControllerTest extends TestContainerTest {
         assertEquals(lastPaymentDate.getYear() + 1, newDate.getYear());
         assertEquals(lastPaymentDate.getMonth(), newDate.getMonth());
         assertEquals(lastPaymentDate.getDayOfMonth(), newDate.getDayOfMonth());
+    }
+
+    @Test
+    public void testDateCalculationOnNewRecurringExpenses() {
+        RecurringExpense expense = new RecurringExpense();
+        expense.setType(RecurringExpense.TYPE_MONTHLY);
+        // we want our expense to be on the first of the month
+        expense.setTypeParam(1);
+
+
+        // we set our current date
+        LocalDate date = LocalDate.of(2025, 8, 20);
+
+
+        var nextOccurrence = recurringExpenseService.calculateNextDate(expense, date);
+
+        assertEquals(9, nextOccurrence.getMonth().getValue());
+        assertEquals(2025, nextOccurrence.getYear());
+
+
     }
 
 
