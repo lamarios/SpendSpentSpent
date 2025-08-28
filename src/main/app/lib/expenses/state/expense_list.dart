@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/expenses/models/search_parameters.dart';
+import 'package:spend_spent_spent/settings/views/screens/settings.dart';
 import 'package:spend_spent_spent/utils/models/with_error.dart';
 
 part 'expense_list.freezed.dart';
@@ -65,7 +67,12 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
       _log.fine('selected is now: $compareTo');
     }
 
-    var diff = await service.getDiffWithPreviousPeriod(compareDate);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final includeRecurring = prefs.getBool(INCLUDE_RECURRING_IN_DIFF);
+    var diff = await service.getDiffWithPreviousPeriod(
+      compareDate,
+      includeRecurring: includeRecurring ?? true,
+    );
     _log.fine('Comparing data up until $compareDate, diff: $diff');
     emit(state.copyWith(diffWithPreviousPeriod: diff));
   }

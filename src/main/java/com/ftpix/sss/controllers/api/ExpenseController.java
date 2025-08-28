@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiParam;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -20,6 +21,7 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/API/Expense")
@@ -143,9 +145,8 @@ public class ExpenseController {
     }
 
     @GetMapping("/diff/{current-day}")
-    public double getDiffWithPreviousPeriod(@PathVariable("current-day") String currentDay) throws SQLException {
+    public double getDiffWithPreviousPeriod(@PathVariable("current-day") String currentDay, @RequestParam(value = "include-recurring", defaultValue = "true") boolean includeRecurring) throws SQLException {
         var currentUser = userService.getCurrentUser();
-        return expenseService.diffWithPreviousPeriod(currentUser, currentDay);
-
+        return expenseService.diffWithPreviousPeriod(currentUser, currentDay, includeRecurring);
     }
 }

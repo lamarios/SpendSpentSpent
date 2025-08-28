@@ -3,7 +3,6 @@ package com.ftpix.sss.services;
 import com.ftpix.sss.Constants;
 import com.ftpix.sss.dao.ExpenseDao;
 import com.ftpix.sss.models.*;
-import com.ftpix.sss.utils.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jooq.OrderField;
@@ -157,20 +156,16 @@ public class ExpenseService {
      * ex: we're currently the 10 of july, this should retrieve the amount spent in june from the first to the 10th of june
      *
      * @param user
-     * @param userCurrentDay current date in yyyy-MM-dd format this should be sent by the front end as it might not always be at the same day of the server
+     * @param userCurrentDay   current date in yyyy-MM-dd format this should be sent by the front end as it might not always be at the same day of the server
+     * @param includeRecurring
      * @return
      */
-    public double diffWithPreviousPeriod(User user, String userCurrentDay) throws SQLException {
+    public double diffWithPreviousPeriod(User user, String userCurrentDay, boolean includeRecurring) throws SQLException {
         // find starting point, it should be the beginning of the userCurrentDay month - 1
         var split = userCurrentDay.split("-");
         if (split.length != 3) {
             throw new InvalidParameterException("dates shoud be yyyy-MM-dd format");
         }
-
-
-        boolean includeRecurring = Optional.ofNullable(settingsService.getByName(Settings.INCLUDE_RECURRING_IN_DIFF))
-                .map(settings -> settings.getValue().equalsIgnoreCase("1"))
-                .orElse(true);
 
         int year = Integer.parseInt(split[0]);
         int month = Integer.parseInt(split[1]);
