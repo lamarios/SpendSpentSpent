@@ -14,8 +14,7 @@ class PaginationSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool hasNext =
-        pagination.totalPages > 1 &&
+    bool hasNext = pagination.totalPages > 1 &&
         pagination.page < pagination.totalPages - 1;
     bool hasPrevious = pagination.totalPages > 1 && pagination.page > 0;
 

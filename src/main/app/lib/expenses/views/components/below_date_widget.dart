@@ -33,10 +33,10 @@ class BelowDateInCalendarWidget extends StatelessWidget {
                         formatCurrency(state.amount ?? 0),
                         style: textTheme.labelSmall,
                       ).animate().slideY(
-                        duration: animationDuration,
-                        curve: animationCurve,
-                        begin: 0.5,
-                      ),
+                          duration: animationDuration,
+                          curve: animationCurve,
+                          begin: 0.5,
+                        ),
               ),
             );
           },

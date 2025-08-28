@@ -114,8 +114,8 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
       var expenses = await service.search(params);
       double total = expenses.values.isNotEmpty
           ? expenses.values
-                .map((e) => e.total)
-                .reduce((value, element) => value + element)
+              .map((e) => e.total)
+              .reduce((value, element) => value + element)
           : 0;
       if (!isClosed) {
         emit(state.copyWith(expenses: expenses, total: total));

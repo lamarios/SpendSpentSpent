@@ -30,14 +30,14 @@ const ALLOW_SIGNUP = "allowSignUp",
     INCLUDE_RECURRING_IN_DIFF = "includeRecurringInDiff";
 
 settingsTheme(ColorScheme colorScheme) => SettingsThemeData(
-  settingsSectionBackground: colorScheme.surface,
-  settingsListBackground: colorScheme.surface,
-  titleTextColor: colorScheme.primary,
-  dividerColor: colorScheme.onSurface,
-  tileDescriptionTextColor: colorScheme.secondary,
-  leadingIconsColor: colorScheme.secondary,
-  tileHighlightColor: colorScheme.secondaryContainer,
-);
+      settingsSectionBackground: colorScheme.surface,
+      settingsListBackground: colorScheme.surface,
+      titleTextColor: colorScheme.primary,
+      dividerColor: colorScheme.onSurface,
+      tileDescriptionTextColor: colorScheme.secondary,
+      leadingIconsColor: colorScheme.secondary,
+      tileHighlightColor: colorScheme.secondaryContainer,
+    );
 
 @RoutePage()
 class SettingsScreen extends StatefulWidget {

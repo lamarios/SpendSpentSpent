@@ -147,24 +147,23 @@ class ExpenseActions extends StatelessWidget {
                           controller: cubit.suggestionController,
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            children:
-                                [
-                                      if (state.expenseNote.isNotEmpty)
-                                        state.expenseNote,
-                                      ...state.noteSuggestions.where(
-                                        (e) => e != state.expenseNote,
-                                      ),
-                                    ]
-                                    .map(
-                                      (e) => NoteSuggestionPill(
-                                        key: Key(e),
-                                        text: e,
-                                        current: state.expenseNote == e,
-                                        tapSuggestion: (text) =>
-                                            tapSuggestion(context, text),
-                                      ),
-                                    )
-                                    .toList(),
+                            children: [
+                              if (state.expenseNote.isNotEmpty)
+                                state.expenseNote,
+                              ...state.noteSuggestions.where(
+                                (e) => e != state.expenseNote,
+                              ),
+                            ]
+                                .map(
+                                  (e) => NoteSuggestionPill(
+                                    key: Key(e),
+                                    text: e,
+                                    current: state.expenseNote == e,
+                                    tapSuggestion: (text) =>
+                                        tapSuggestion(context, text),
+                                  ),
+                                )
+                                .toList(),
                           ),
                         ),
                       ),

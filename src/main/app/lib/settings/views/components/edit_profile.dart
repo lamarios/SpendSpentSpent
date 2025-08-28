@@ -42,8 +42,7 @@ class EditProfileState extends State<EditProfile> with AfterLayoutMixin {
 
   valueChanged() {
     setState(() {
-      canSave =
-          lastNameController.text.trim().isNotEmpty &&
+      canSave = lastNameController.text.trim().isNotEmpty &&
           firstNameController.text.trim().isNotEmpty;
     });
   }

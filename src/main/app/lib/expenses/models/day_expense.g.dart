@@ -7,14 +7,13 @@ part of 'day_expense.dart';
 // **************************************************************************
 
 _DayExpense _$DayExpenseFromJson(Map<String, dynamic> json) => _DayExpense(
-  date: json['date'] as String,
-  total: (json['total'] as num).toDouble(),
-  expenses:
-      (json['expenses'] as List<dynamic>?)
-          ?.map((e) => Expense.fromJson(e as Map<String, dynamic>))
-          .toList() ??
-      const [],
-);
+      date: json['date'] as String,
+      total: (json['total'] as num).toDouble(),
+      expenses: (json['expenses'] as List<dynamic>?)
+              ?.map((e) => Expense.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    );
 
 Map<String, dynamic> _$DayExpenseToJson(_DayExpense instance) =>
     <String, dynamic>{

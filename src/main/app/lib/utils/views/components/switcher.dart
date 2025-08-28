@@ -23,8 +23,7 @@ class Switcher extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final left = (constraints.maxWidth / labels.length) * selected;
-          final right =
-              constraints.maxWidth -
+          final right = constraints.maxWidth -
               ((constraints.maxWidth / labels.length) * selected) -
               constraints.maxWidth / labels.length;
           return Stack(

@@ -8,8 +8,7 @@ part of 'search_parameters.dart';
 
 _SearchParameters _$SearchParametersFromJson(Map<String, dynamic> json) =>
     _SearchParameters(
-      categories:
-          (json['categories'] as List<dynamic>?)
+      categories: (json['categories'] as List<dynamic>?)
               ?.map((e) => Category.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],

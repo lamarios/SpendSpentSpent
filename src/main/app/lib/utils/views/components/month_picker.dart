@@ -81,7 +81,6 @@ class MonthPicker extends StatelessWidget {
                 color: colors.surfaceContainerHigh,
                 borderRadius: BorderRadius.circular(_borderRadius),
               ),
-
               child: BlocBuilder<MonthPickerCubit, MonthPickerState>(
                 builder: (context, state) {
                   final List<Widget> months = [];
@@ -90,8 +89,7 @@ class MonthPicker extends StatelessWidget {
                     months.add(
                       _Month(
                         month: i,
-                        selected:
-                            state.selected.year == state.selectedYear &&
+                        selected: state.selected.year == state.selectedYear &&
                             state.selected.month == i,
                         enabled: monthPredicate(
                           DateTime(state.selectedYear, i),
@@ -131,29 +129,29 @@ class MonthPicker extends StatelessWidget {
                                   IconButton(
                                     onPressed:
                                         state.selectedYear > firstDate.year
-                                        ? () {
-                                            if (state.selectedYear >
-                                                firstDate.year) {
-                                              cubit.setYear(
-                                                state.selectedYear - 1,
-                                              );
-                                            }
-                                          }
-                                        : null,
+                                            ? () {
+                                                if (state.selectedYear >
+                                                    firstDate.year) {
+                                                  cubit.setYear(
+                                                    state.selectedYear - 1,
+                                                  );
+                                                }
+                                              }
+                                            : null,
                                     icon: Icon(Icons.chevron_left),
                                   ),
                                   IconButton(
                                     onPressed:
                                         state.selectedYear < lastDate.year
-                                        ? () {
-                                            if (state.selectedYear <
-                                                lastDate.year) {
-                                              cubit.setYear(
-                                                state.selectedYear + 1,
-                                              );
-                                            }
-                                          }
-                                        : null,
+                                            ? () {
+                                                if (state.selectedYear <
+                                                    lastDate.year) {
+                                                  cubit.setYear(
+                                                    state.selectedYear + 1,
+                                                  );
+                                                }
+                                              }
+                                            : null,
                                     icon: Icon(Icons.chevron_right),
                                   ),
                                 ],
@@ -169,24 +167,22 @@ class MonthPicker extends StatelessWidget {
                           ),
                         ),
                       ),
-
                       Padding(
                         padding: const EdgeInsets.all(4.0),
-                        child:
-                            GridView.count(
-                                  key: ValueKey(state.selectedYear),
-                                  crossAxisCount: 4,
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  children: months,
-                                )
-                                .animate(key: ValueKey(state.selectedYear))
-                                .fadeIn(duration: animationDuration, begin: 0)
-                                .slideY(
-                                  curve: animationCurve,
-                                  duration: animationDuration,
-                                  begin: 0.05,
-                                ),
+                        child: GridView.count(
+                          key: ValueKey(state.selectedYear),
+                          crossAxisCount: 4,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          children: months,
+                        )
+                            .animate(key: ValueKey(state.selectedYear))
+                            .fadeIn(duration: animationDuration, begin: 0)
+                            .slideY(
+                              curve: animationCurve,
+                              duration: animationDuration,
+                              begin: 0.05,
+                            ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -270,8 +266,8 @@ class _Month extends StatelessWidget {
                   color: selected
                       ? colors.onPrimaryContainer
                       : enabled
-                      ? colors.onSurface
-                      : colors.onSurface.withValues(alpha: 0.5),
+                          ? colors.onSurface
+                          : colors.onSurface.withValues(alpha: 0.5),
                 ),
               ),
             ),

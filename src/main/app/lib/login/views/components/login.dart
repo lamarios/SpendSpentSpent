@@ -89,26 +89,27 @@ class Login extends StatelessWidget {
                                     server: cubit.urlController.text.trim(),
                                   )
                                 : state.page == LoginPage.resetPassword
-                                ? ResetPassword(
-                                    onBack: () => cubit.resetPassword(false),
-                                    server: cubit.urlController.text.trim(),
-                                    key: ValueKey(state.page),
-                                  )
-                                : LoginForm(
-                                    error: state.loginError,
-                                    key: const ValueKey(false),
-                                    urlController: cubit.urlController,
-                                    config: state.config,
-                                    logIn: (username, password) async {
-                                      await cubit.logIn(username, password);
-                                    },
-                                    loginWithSso: () async {
-                                      await cubit.logInWithOidc();
-                                    },
-                                    showSignUp: () => cubit.signUp(true),
-                                    showResetPassword: () =>
-                                        cubit.resetPassword(true),
-                                  ),
+                                    ? ResetPassword(
+                                        onBack: () =>
+                                            cubit.resetPassword(false),
+                                        server: cubit.urlController.text.trim(),
+                                        key: ValueKey(state.page),
+                                      )
+                                    : LoginForm(
+                                        error: state.loginError,
+                                        key: const ValueKey(false),
+                                        urlController: cubit.urlController,
+                                        config: state.config,
+                                        logIn: (username, password) async {
+                                          await cubit.logIn(username, password);
+                                        },
+                                        loginWithSso: () async {
+                                          await cubit.logInWithOidc();
+                                        },
+                                        showSignUp: () => cubit.signUp(true),
+                                        showResetPassword: () =>
+                                            cubit.resetPassword(true),
+                                      ),
                           ),
                         ),
                       ),

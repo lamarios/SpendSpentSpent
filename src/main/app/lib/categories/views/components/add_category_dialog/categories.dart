@@ -29,8 +29,7 @@ class Categories extends StatelessWidget {
             Wrap(
               spacing: 8.0,
               runSpacing: 4,
-              children:
-                  categories
+              children: categories
                       ?.map(
                         (e) => GestureDetector(
                           onTap: () => onSelect(e),

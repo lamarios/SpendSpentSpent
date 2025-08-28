@@ -29,8 +29,8 @@ class RecurringExpenseAverages extends StatelessWidget {
 
     final openedBackgroundColor = isMaterialYou
         ? MediaQuery.platformBrightnessOf(context) == Brightness.dark
-              ? brighten(colors.surfaceContainerHigh, 0.1)
-              : colors.onInverseSurface
+            ? brighten(colors.surfaceContainerHigh, 0.1)
+            : colors.onInverseSurface
         : colors.surfaceContainerHigh;
 
     int daysInsYear = _daysInYear();
