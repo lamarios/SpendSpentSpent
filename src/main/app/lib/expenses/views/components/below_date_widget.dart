@@ -13,6 +13,7 @@ class BelowDateInCalendarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final colors = Theme.of(context).colorScheme;
 
     return Padding(
       padding: const EdgeInsets.only(top: 4),
@@ -31,7 +32,9 @@ class BelowDateInCalendarWidget extends StatelessWidget {
                     ? SizedBox(width: 20, height: 20, child: LoadingIndicator())
                     : Text(
                         formatCurrency(state.amount ?? 0),
-                        style: textTheme.labelSmall,
+                        style: textTheme.labelMedium?.copyWith(
+                          color: colors.primary,
+                        ),
                       ).animate().slideY(
                         duration: animationDuration,
                         curve: animationCurve,
