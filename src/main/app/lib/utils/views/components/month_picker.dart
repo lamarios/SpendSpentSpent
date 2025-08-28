@@ -81,7 +81,6 @@ class MonthPicker extends StatelessWidget {
                 color: colors.surfaceContainerHigh,
                 borderRadius: BorderRadius.circular(_borderRadius),
               ),
-
               child: BlocBuilder<MonthPickerCubit, MonthPickerState>(
                 builder: (context, state) {
                   final List<Widget> months = [];
@@ -169,7 +168,6 @@ class MonthPicker extends StatelessWidget {
                           ),
                         ),
                       ),
-
                       Padding(
                         padding: const EdgeInsets.all(4.0),
                         child:

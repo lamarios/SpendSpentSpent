@@ -36,17 +36,20 @@ public class RecurringExpenseService {
         this.recurringExpenseDaoJooq = recurringExpenseDaoJooq;
     }
 
+    public LocalDate calculateNextDate(RecurringExpense expense) {
+        return calculateNextDate(expense, LocalDate.now());
+    }
+
     /**
      * Calculate the next instance of a recurring expense
      *
      * @param expense the expense we want to check.
      * @return when is the new payment due.
      */
-    public LocalDate calculateNextDate(RecurringExpense expense) {
+    public LocalDate calculateNextDate(RecurringExpense expense, LocalDate today) {
         ChronoField calendarField;
         ChronoUnit calendarUnit;
-        LocalDate cal = LocalDate.now();
-        LocalDate today = LocalDate.now();
+        LocalDate cal = today;
 //        Calendar cal = new GregorianCalendar();
 //        Calendar today = new GregorianCalendar();
         switch (expense.getType()) {
@@ -93,7 +96,7 @@ public class RecurringExpenseService {
             logger.info("Comparing today[{}] and the set up date[{}]", today, cal);
 
             if (today.isAfter(cal)) {
-                cal = cal.with(calendarField, 1);
+                cal = cal.plus( 1, calendarUnit);
                 logger.info("The calculated date is expired, adding the extra time, new date[{}]", cal);
 
                 // Handling special cases
