@@ -51,6 +51,10 @@ bool isTablet(MediaQueryData data) {
   return data.size.width >= TABLET;
 }
 
+bool isTabletFromSize(Size size) {
+  return size.width >= TABLET;
+}
+
 bool isBigPhone(MediaQueryData data) {
   return data.size.width > BIG_PHONE;
 }

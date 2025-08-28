@@ -7,6 +7,7 @@ import 'package:spend_spent_spent/utils/states/month_picker.dart';
 import 'package:spend_spent_spent/utils/views/components/conditional_wrapper.dart';
 
 const double _borderRadius = 20;
+const double _arrowSizes = 44;
 const List<String> _monthNames = [
   "January",
   "February",
@@ -117,52 +118,51 @@ class MonthPicker extends StatelessWidget {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(36.0),
-                          child: Column(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Text(
                                       state.selectedYear.toString(),
                                       style: textTheme.displaySmall,
                                     ),
-                                  ),
-                                  IconButton(
-                                    onPressed:
-                                        state.selectedYear > firstDate.year
-                                        ? () {
-                                            if (state.selectedYear >
-                                                firstDate.year) {
-                                              cubit.setYear(
-                                                state.selectedYear - 1,
-                                              );
-                                            }
-                                          }
-                                        : null,
-                                    icon: Icon(Icons.chevron_left),
-                                  ),
-                                  IconButton(
-                                    onPressed:
-                                        state.selectedYear < lastDate.year
-                                        ? () {
-                                            if (state.selectedYear <
-                                                lastDate.year) {
-                                              cubit.setYear(
-                                                state.selectedYear + 1,
-                                              );
-                                            }
-                                          }
-                                        : null,
-                                    icon: Icon(Icons.chevron_right),
-                                  ),
-                                ],
+                                    Text(
+                                      'Selected: ${monthFormatter.format(state.selected)}',
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Selected: ${monthFormatter.format(state.selected)}',
-                                  ),
-                                ],
+                              IconButton(
+                                onPressed: state.selectedYear > firstDate.year
+                                    ? () {
+                                        if (state.selectedYear >
+                                            firstDate.year) {
+                                          cubit.setYear(state.selectedYear - 1);
+                                        }
+                                      }
+                                    : null,
+                                icon: Icon(
+                                  Icons.chevron_left,
+                                  size: _arrowSizes,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: state.selectedYear < lastDate.year
+                                    ? () {
+                                        if (state.selectedYear <
+                                            lastDate.year) {
+                                          cubit.setYear(state.selectedYear + 1);
+                                        }
+                                      }
+                                    : null,
+                                icon: Icon(
+                                  Icons.chevron_right,
+                                  size: _arrowSizes,
+                                ),
                               ),
                             ],
                           ),
@@ -173,7 +173,12 @@ class MonthPicker extends StatelessWidget {
                         child:
                             GridView.count(
                                   key: ValueKey(state.selectedYear),
-                                  crossAxisCount: 4,
+                                  crossAxisCount:
+                                      isTabletFromSize(
+                                        MediaQuery.sizeOf(context),
+                                      )
+                                      ? 4
+                                      : 3,
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
                                   children: months,
