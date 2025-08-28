@@ -40,7 +40,7 @@ class StatsView extends StatelessWidget {
                             Icon(Icons.arrow_forward, size: 100),
                             Gap(24),
                             Text(
-                              'No expenses yet. Go back to the middle screen.',
+                              'No categories yet. Go back to the middle screen.',
                               textAlign: TextAlign.center,
                               style: textTheme.titleLarge,
                             ),
