@@ -7,13 +7,13 @@ part of 'settings.dart';
 // **************************************************************************
 
 _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
-      name: json['name'] as String,
-      value: json['value'] as String,
-      secret: json['secret'] as bool,
-    );
+  name: json['name'] as String,
+  value: json['value'] as String,
+  secret: json['secret'] as bool,
+);
 
 Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
-      'name': instance.name,
-      'value': instance.value,
-      'secret': instance.secret,
-    };
+  'name': instance.name,
+  'value': instance.value,
+  'secret': instance.secret,
+};

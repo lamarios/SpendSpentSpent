@@ -30,8 +30,8 @@ class Search extends StatelessWidget {
                       duration: panelTransition,
                       crossFadeState:
                           state.searchParametersBounds.categories.isEmpty
-                              ? CrossFadeState.showFirst
-                              : CrossFadeState.showSecond,
+                          ? CrossFadeState.showFirst
+                          : CrossFadeState.showSecond,
                       firstChild: Center(child: LoadingIndicator()),
                       secondChild: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
@@ -41,9 +41,9 @@ class Search extends StatelessWidget {
                             (c) {
                               var isSelected =
                                   state.searchParameters.categories.length ==
-                                          1 &&
-                                      state.searchParameters.categories[0].id ==
-                                          c.id;
+                                      1 &&
+                                  state.searchParameters.categories[0].id ==
+                                      c.id;
                               return GestureDetector(
                                 onTap: () => cubit.selectCategory(c),
                                 child: Padding(
@@ -95,7 +95,7 @@ class Search extends StatelessWidget {
                       onChanged: cubit.updateRange,
                       divisions: state.searchParametersBounds.maxAmount > 0
                           ? state.searchParametersBounds.maxAmount -
-                              state.searchParametersBounds.minAmount
+                                state.searchParametersBounds.minAmount
                           : null,
                       max: state.searchParametersBounds.maxAmount.toDouble(),
                       min: state.searchParametersBounds.minAmount.toDouble(),

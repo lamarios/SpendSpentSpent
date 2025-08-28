@@ -34,10 +34,12 @@ class ChangePasswordState extends State<ChangePassword> {
 
   valueChanged() {
     setState(() {
-      invalid = (passwordRepeatController.text.trim().isNotEmpty &&
+      invalid =
+          (passwordRepeatController.text.trim().isNotEmpty &&
           passwordRepeatController.text.trim() !=
               passwordController.text.trim());
-      canSave = passwordRepeatController.text.trim().isNotEmpty &&
+      canSave =
+          passwordRepeatController.text.trim().isNotEmpty &&
           passwordController.text.trim().isNotEmpty;
     });
   }

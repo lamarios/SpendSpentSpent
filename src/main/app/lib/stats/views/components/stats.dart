@@ -33,39 +33,39 @@ class StatsView extends StatelessWidget {
                   child: state.loading
                       ? Center(child: LoadingIndicator())
                       : state.stats.length == 1
-                          ? Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(Icons.arrow_forward, size: 100),
-                                Gap(24),
-                                Text(
-                                  'No expenses yet. Go back to the middle screen.',
-                                  textAlign: TextAlign.center,
-                                  style: textTheme.titleLarge,
-                                ),
-                              ],
-                            )
-                          : ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              itemCount: state.stats.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                    bottom: index == state.stats.length - 1
-                                        ? bottomPadding
-                                        : 0,
-                                  ),
-                                  child: SingleStats(
-                                    key: Key(
-                                      state.stats[index].category.id.toString(),
-                                    ),
-                                    stats: state.stats[index],
-                                    monthly: monthly,
-                                  ),
-                                );
-                              },
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.arrow_forward, size: 100),
+                            Gap(24),
+                            Text(
+                              'No expenses yet. Go back to the middle screen.',
+                              textAlign: TextAlign.center,
+                              style: textTheme.titleLarge,
                             ),
+                          ],
+                        )
+                      : ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemCount: state.stats.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                bottom: index == state.stats.length - 1
+                                    ? bottomPadding
+                                    : 0,
+                              ),
+                              child: SingleStats(
+                                key: Key(
+                                  state.stats[index].category.id.toString(),
+                                ),
+                                stats: state.stats[index],
+                                monthly: monthly,
+                              ),
+                            );
+                          },
+                        ),
                 ),
               );
             },

@@ -11,61 +11,47 @@ part of 'recurring_expenses.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$RecurringExpensesState {
-  bool get loading;
-  dynamic get error;
-  StackTrace? get stackTrace;
-  List<RecurringExpense> get expenses;
 
-  /// Create a copy of RecurringExpensesState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $RecurringExpensesStateCopyWith<RecurringExpensesState> get copyWith =>
-      _$RecurringExpensesStateCopyWithImpl<RecurringExpensesState>(
-          this as RecurringExpensesState, _$identity);
+ bool get loading; dynamic get error; StackTrace? get stackTrace; List<RecurringExpense> get expenses;
+/// Create a copy of RecurringExpensesState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RecurringExpensesStateCopyWith<RecurringExpensesState> get copyWith => _$RecurringExpensesStateCopyWithImpl<RecurringExpensesState>(this as RecurringExpensesState, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is RecurringExpensesState &&
-            (identical(other.loading, loading) || other.loading == loading) &&
-            const DeepCollectionEquality().equals(other.error, error) &&
-            (identical(other.stackTrace, stackTrace) ||
-                other.stackTrace == stackTrace) &&
-            const DeepCollectionEquality().equals(other.expenses, expenses));
-  }
 
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      loading,
-      const DeepCollectionEquality().hash(error),
-      stackTrace,
-      const DeepCollectionEquality().hash(expenses));
 
-  @override
-  String toString() {
-    return 'RecurringExpensesState(loading: $loading, error: $error, stackTrace: $stackTrace, expenses: $expenses)';
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecurringExpensesState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace)&&const DeepCollectionEquality().equals(other.expenses, expenses));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(error),stackTrace,const DeepCollectionEquality().hash(expenses));
+
+@override
+String toString() {
+  return 'RecurringExpensesState(loading: $loading, error: $error, stackTrace: $stackTrace, expenses: $expenses)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class $RecurringExpensesStateCopyWith<$Res> {
-  factory $RecurringExpensesStateCopyWith(RecurringExpensesState value,
-          $Res Function(RecurringExpensesState) _then) =
-      _$RecurringExpensesStateCopyWithImpl;
-  @useResult
-  $Res call(
-      {bool loading,
-      dynamic error,
-      StackTrace? stackTrace,
-      List<RecurringExpense> expenses});
-}
+abstract mixin class $RecurringExpensesStateCopyWith<$Res>  {
+  factory $RecurringExpensesStateCopyWith(RecurringExpensesState value, $Res Function(RecurringExpensesState) _then) = _$RecurringExpensesStateCopyWithImpl;
+@useResult
+$Res call({
+ bool loading, dynamic error, StackTrace? stackTrace, List<RecurringExpense> expenses
+});
 
+
+
+
+}
 /// @nodoc
 class _$RecurringExpensesStateCopyWithImpl<$Res>
     implements $RecurringExpensesStateCopyWith<$Res> {
@@ -74,275 +60,200 @@ class _$RecurringExpensesStateCopyWithImpl<$Res>
   final RecurringExpensesState _self;
   final $Res Function(RecurringExpensesState) _then;
 
-  /// Create a copy of RecurringExpensesState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? loading = null,
-    Object? error = freezed,
-    Object? stackTrace = freezed,
-    Object? expenses = null,
-  }) {
-    return _then(_self.copyWith(
-      loading: null == loading
-          ? _self.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      error: freezed == error
-          ? _self.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-      stackTrace: freezed == stackTrace
-          ? _self.stackTrace
-          : stackTrace // ignore: cast_nullable_to_non_nullable
-              as StackTrace?,
-      expenses: null == expenses
-          ? _self.expenses
-          : expenses // ignore: cast_nullable_to_non_nullable
-              as List<RecurringExpense>,
-    ));
-  }
+/// Create a copy of RecurringExpensesState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? loading = null,Object? error = freezed,Object? stackTrace = freezed,Object? expenses = null,}) {
+  return _then(_self.copyWith(
+loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
+as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as dynamic,stackTrace: freezed == stackTrace ? _self.stackTrace : stackTrace // ignore: cast_nullable_to_non_nullable
+as StackTrace?,expenses: null == expenses ? _self.expenses : expenses // ignore: cast_nullable_to_non_nullable
+as List<RecurringExpense>,
+  ));
 }
+
+}
+
 
 /// Adds pattern-matching-related methods to [RecurringExpensesState].
 extension RecurringExpensesStatePatterns on RecurringExpensesState {
-  /// A variant of `map` that fallback to returning `orElse`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_RecurringExpensesState value)? $default, {
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _RecurringExpensesState() when $default != null:
-        return $default(_that);
-      case _:
-        return orElse();
-    }
-  }
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RecurringExpensesState value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _RecurringExpensesState() when $default != null:
+return $default(_that);case _:
+  return orElse();
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// Callbacks receives the raw object, upcasted.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case final Subclass2 value:
-  ///     return ...;
-  /// }
-  /// ```
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_RecurringExpensesState value) $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _RecurringExpensesState():
-        return $default(_that);
-    }
-  }
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RecurringExpensesState value)  $default,){
+final _that = this;
+switch (_that) {
+case _RecurringExpensesState():
+return $default(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  /// A variant of `map` that fallback to returning `null`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RecurringExpensesState value)?  $default,){
+final _that = this;
+switch (_that) {
+case _RecurringExpensesState() when $default != null:
+return $default(_that);case _:
+  return null;
 
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_RecurringExpensesState value)? $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _RecurringExpensesState() when $default != null:
-        return $default(_that);
-      case _:
-        return null;
-    }
-  }
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// A variant of `when` that fallback to an `orElse` callback.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool loading,  dynamic error,  StackTrace? stackTrace,  List<RecurringExpense> expenses)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _RecurringExpensesState() when $default != null:
+return $default(_that.loading,_that.error,_that.stackTrace,_that.expenses);case _:
+  return orElse();
 
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(bool loading, dynamic error, StackTrace? stackTrace,
-            List<RecurringExpense> expenses)?
-        $default, {
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _RecurringExpensesState() when $default != null:
-        return $default(
-            _that.loading, _that.error, _that.stackTrace, _that.expenses);
-      case _:
-        return orElse();
-    }
-  }
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// As opposed to `map`, this offers destructuring.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case Subclass2(:final field2):
-  ///     return ...;
-  /// }
-  /// ```
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool loading,  dynamic error,  StackTrace? stackTrace,  List<RecurringExpense> expenses)  $default,) {final _that = this;
+switch (_that) {
+case _RecurringExpensesState():
+return $default(_that.loading,_that.error,_that.stackTrace,_that.expenses);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(bool loading, dynamic error, StackTrace? stackTrace,
-            List<RecurringExpense> expenses)
-        $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _RecurringExpensesState():
-        return $default(
-            _that.loading, _that.error, _that.stackTrace, _that.expenses);
-    }
-  }
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool loading,  dynamic error,  StackTrace? stackTrace,  List<RecurringExpense> expenses)?  $default,) {final _that = this;
+switch (_that) {
+case _RecurringExpensesState() when $default != null:
+return $default(_that.loading,_that.error,_that.stackTrace,_that.expenses);case _:
+  return null;
 
-  /// A variant of `when` that fallback to returning `null`
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+}
+}
 
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(bool loading, dynamic error, StackTrace? stackTrace,
-            List<RecurringExpense> expenses)?
-        $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _RecurringExpensesState() when $default != null:
-        return $default(
-            _that.loading, _that.error, _that.stackTrace, _that.expenses);
-      case _:
-        return null;
-    }
-  }
 }
 
 /// @nodoc
+
 
 class _RecurringExpensesState implements RecurringExpensesState, WithError {
-  const _RecurringExpensesState(
-      {this.loading = false,
-      this.error,
-      this.stackTrace,
-      final List<RecurringExpense> expenses = const []})
-      : _expenses = expenses;
+  const _RecurringExpensesState({this.loading = false, this.error, this.stackTrace, final  List<RecurringExpense> expenses = const []}): _expenses = expenses;
+  
 
-  @override
-  @JsonKey()
-  final bool loading;
-  @override
-  final dynamic error;
-  @override
-  final StackTrace? stackTrace;
-  final List<RecurringExpense> _expenses;
-  @override
-  @JsonKey()
-  List<RecurringExpense> get expenses {
-    if (_expenses is EqualUnmodifiableListView) return _expenses;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_expenses);
-  }
+@override@JsonKey() final  bool loading;
+@override final  dynamic error;
+@override final  StackTrace? stackTrace;
+ final  List<RecurringExpense> _expenses;
+@override@JsonKey() List<RecurringExpense> get expenses {
+  if (_expenses is EqualUnmodifiableListView) return _expenses;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_expenses);
+}
 
-  /// Create a copy of RecurringExpensesState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  _$RecurringExpensesStateCopyWith<_RecurringExpensesState> get copyWith =>
-      __$RecurringExpensesStateCopyWithImpl<_RecurringExpensesState>(
-          this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _RecurringExpensesState &&
-            (identical(other.loading, loading) || other.loading == loading) &&
-            const DeepCollectionEquality().equals(other.error, error) &&
-            (identical(other.stackTrace, stackTrace) ||
-                other.stackTrace == stackTrace) &&
-            const DeepCollectionEquality().equals(other._expenses, _expenses));
-  }
+/// Create a copy of RecurringExpensesState
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RecurringExpensesStateCopyWith<_RecurringExpensesState> get copyWith => __$RecurringExpensesStateCopyWithImpl<_RecurringExpensesState>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      loading,
-      const DeepCollectionEquality().hash(error),
-      stackTrace,
-      const DeepCollectionEquality().hash(_expenses));
 
-  @override
-  String toString() {
-    return 'RecurringExpensesState(loading: $loading, error: $error, stackTrace: $stackTrace, expenses: $expenses)';
-  }
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecurringExpensesState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace)&&const DeepCollectionEquality().equals(other._expenses, _expenses));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(error),stackTrace,const DeepCollectionEquality().hash(_expenses));
+
+@override
+String toString() {
+  return 'RecurringExpensesState(loading: $loading, error: $error, stackTrace: $stackTrace, expenses: $expenses)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class _$RecurringExpensesStateCopyWith<$Res>
-    implements $RecurringExpensesStateCopyWith<$Res> {
-  factory _$RecurringExpensesStateCopyWith(_RecurringExpensesState value,
-          $Res Function(_RecurringExpensesState) _then) =
-      __$RecurringExpensesStateCopyWithImpl;
-  @override
-  @useResult
-  $Res call(
-      {bool loading,
-      dynamic error,
-      StackTrace? stackTrace,
-      List<RecurringExpense> expenses});
-}
+abstract mixin class _$RecurringExpensesStateCopyWith<$Res> implements $RecurringExpensesStateCopyWith<$Res> {
+  factory _$RecurringExpensesStateCopyWith(_RecurringExpensesState value, $Res Function(_RecurringExpensesState) _then) = __$RecurringExpensesStateCopyWithImpl;
+@override @useResult
+$Res call({
+ bool loading, dynamic error, StackTrace? stackTrace, List<RecurringExpense> expenses
+});
 
+
+
+
+}
 /// @nodoc
 class __$RecurringExpensesStateCopyWithImpl<$Res>
     implements _$RecurringExpensesStateCopyWith<$Res> {
@@ -351,35 +262,19 @@ class __$RecurringExpensesStateCopyWithImpl<$Res>
   final _RecurringExpensesState _self;
   final $Res Function(_RecurringExpensesState) _then;
 
-  /// Create a copy of RecurringExpensesState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? loading = null,
-    Object? error = freezed,
-    Object? stackTrace = freezed,
-    Object? expenses = null,
-  }) {
-    return _then(_RecurringExpensesState(
-      loading: null == loading
-          ? _self.loading
-          : loading // ignore: cast_nullable_to_non_nullable
-              as bool,
-      error: freezed == error
-          ? _self.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-      stackTrace: freezed == stackTrace
-          ? _self.stackTrace
-          : stackTrace // ignore: cast_nullable_to_non_nullable
-              as StackTrace?,
-      expenses: null == expenses
-          ? _self._expenses
-          : expenses // ignore: cast_nullable_to_non_nullable
-              as List<RecurringExpense>,
-    ));
-  }
+/// Create a copy of RecurringExpensesState
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? loading = null,Object? error = freezed,Object? stackTrace = freezed,Object? expenses = null,}) {
+  return _then(_RecurringExpensesState(
+loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
+as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as dynamic,stackTrace: freezed == stackTrace ? _self.stackTrace : stackTrace // ignore: cast_nullable_to_non_nullable
+as StackTrace?,expenses: null == expenses ? _self._expenses : expenses // ignore: cast_nullable_to_non_nullable
+as List<RecurringExpense>,
+  ));
+}
+
+
 }
 
 // dart format on
