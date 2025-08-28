@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:spend_spent_spent/categories/models/available_categories.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
@@ -78,6 +79,8 @@ const CONFIG = '${API_ROOT}config';
 const SEARCH = '$API_URL/Search';
 
 const List<String> emptyList = [];
+
+final _log = Logger('Service');
 
 class Service {
   String url = "";
@@ -157,7 +160,11 @@ class Service {
     return url;
   }
 
-  Future<Uri> formatUrl(String url, [List<String> params = emptyList]) async {
+  Future<Uri> formatUrl(
+    String url, {
+    Map<String, dynamic>? query,
+    List<String>? params,
+  }) async {
     final serverUrl = await getUrl();
 
     if (serverUrl.isEmpty) {
@@ -167,11 +174,29 @@ class Service {
 
     url = url.replaceFirst("{apiUrl}", serverUrl);
 
+    params ??= [];
+    query ??= {};
+
     params.asMap().forEach((key, value) {
       url = url.replaceFirst('{$key}', value);
     });
 
-    print("Calling $url");
+    List<String> formattedQuery = [];
+    query.forEach((key, value) {
+      if (value is List) {
+        value.forEach(
+          (element) => formattedQuery.add('$key=${element.toString()}'),
+        );
+      } else {
+        formattedQuery.add('$key=${value.toString()}');
+      }
+    });
+
+    if (formattedQuery.isNotEmpty) {
+      url += '?${formattedQuery.join("&")}';
+    }
+
+    _log.fine("Calling $url");
     return Uri.parse(url);
   }
 
@@ -318,7 +343,7 @@ class Service {
 
   Future<double> getCurrencyRate(String from, String to) async {
     final response = await http.get(
-      await formatUrl(CURRENCY_GET, [from, to]),
+      await formatUrl(CURRENCY_GET, params: [from, to]),
       headers: await headers,
     );
 
@@ -345,7 +370,7 @@ class Service {
 
   Future<bool> updateRecurringExpense(RecurringExpense expense) async {
     final response = await http.post(
-      await formatUrl(RECURRING_UPDATE, [expense.id.toString()]),
+      await formatUrl(RECURRING_UPDATE, params: [expense.id.toString()]),
       headers: await headers,
       body: jsonEncode(expense),
     );
@@ -355,7 +380,7 @@ class Service {
 
   Future<bool> deleteRecurringExpense(int id) async {
     final response = await http.delete(
-      await formatUrl(RECURRING_DELETE, [id.toString()]),
+      await formatUrl(RECURRING_DELETE, params: [id.toString()]),
       headers: await headers,
     );
     processResponse(response);
@@ -385,7 +410,7 @@ class Service {
 
   Future<Map<String, DayExpense>> getMonthExpenses(String month) async {
     final response = await http.get(
-      await formatUrl(EXPENSE_BY_MONTH, [month]),
+      await formatUrl(EXPENSE_BY_MONTH, params: [month]),
       headers: await headers,
     );
     processResponse(response);
@@ -394,9 +419,16 @@ class Service {
     return map.map((key, value) => MapEntry(key, DayExpense.fromJson(value)));
   }
 
-  Future<double> getDiffWithPreviousPeriod(String currentTime) async {
+  Future<double> getDiffWithPreviousPeriod(
+    String currentTime, {
+    required bool includeRecurring,
+  }) async {
     final response = await http.get(
-      await formatUrl(EXPENSE_DIFF_WITH_PREVIOUS_PERIOD, [currentTime]),
+      await formatUrl(
+        EXPENSE_DIFF_WITH_PREVIOUS_PERIOD,
+        params: [currentTime],
+        query: {'include-recurring': includeRecurring},
+      ),
       headers: await headers,
     );
     processResponse(response);
@@ -405,7 +437,7 @@ class Service {
 
   Future<bool> deleteExpense(int id) async {
     final response = await http.delete(
-      await formatUrl(EXPENSE_DELETE, [id.toString()]),
+      await formatUrl(EXPENSE_DELETE, params: [id.toString()]),
       headers: await headers,
     );
     processResponse(response);
@@ -443,10 +475,10 @@ class Service {
 
   Future<List<GraphDataPoint>> getMonthlyData(int categoryId, int count) async {
     final response = await http.get(
-      await formatUrl(HISTORY_MONTHLY, [
-        categoryId.toString(),
-        count.toString(),
-      ]),
+      await formatUrl(
+        HISTORY_MONTHLY,
+        params: [categoryId.toString(), count.toString()],
+      ),
       headers: await headers,
     );
 
@@ -457,10 +489,10 @@ class Service {
 
   Future<List<GraphDataPoint>> getYearlyData(int categoryId, int count) async {
     final response = await http.get(
-      await formatUrl(HISTORY_YEARLY, [
-        categoryId.toString(),
-        count.toString(),
-      ]),
+      await formatUrl(
+        HISTORY_YEARLY,
+        params: [categoryId.toString(), count.toString()],
+      ),
       headers: await headers,
     );
 
@@ -483,7 +515,7 @@ class Service {
   Future<bool> deleteCategory(int id) async {
     print('id $id');
     final response = await http.delete(
-      await formatUrl(CATEGORY_DELETE, [id.toString()]),
+      await formatUrl(CATEGORY_DELETE, params: [id.toString()]),
       headers: await headers,
     );
 
@@ -527,11 +559,10 @@ class Service {
     int pageSize,
   ) async {
     final response = await http.get(
-      await formatUrl(USER_GET, [
-        search ?? '',
-        page.toString(),
-        pageSize.toString(),
-      ]),
+      await formatUrl(
+        USER_GET,
+        params: [search ?? '', page.toString(), pageSize.toString()],
+      ),
       headers: await headers,
     );
 
@@ -561,7 +592,7 @@ class Service {
 
   Future<bool> deleteUser(String id) async {
     final response = await http.delete(
-      await formatUrl(USER_DELETE_USER, [id]),
+      await formatUrl(USER_DELETE_USER, params: [id]),
       headers: await headers,
     );
 
@@ -572,7 +603,7 @@ class Service {
 
   Future<bool> setUserAdmin(String id, bool admin) async {
     final response = await http.get(
-      await formatUrl(USER_SET_ADMIN, [id, admin.toString()]),
+      await formatUrl(USER_SET_ADMIN, params: [id, admin.toString()]),
       headers: await headers,
     );
 
@@ -582,7 +613,7 @@ class Service {
 
   Future<bool> setUserPassword(String id, String password) async {
     final response = await http.post(
-      await formatUrl(USER_UPDATE_PASSWORD, [id]),
+      await formatUrl(USER_UPDATE_PASSWORD, params: [id]),
       body: '"$password"',
       headers: await headers,
     );
@@ -592,7 +623,7 @@ class Service {
 
   Future<int> countCategoryExpenses(int id) async {
     final response = await http.get(
-      await formatUrl(CATEGORY_COUNT_EXPENSES, [id.toString()]),
+      await formatUrl(CATEGORY_COUNT_EXPENSES, params: [id.toString()]),
       headers: await headers,
     );
     processResponse(response);

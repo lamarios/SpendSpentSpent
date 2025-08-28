@@ -5,7 +5,6 @@ import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.ExpenseLimits;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.ExpenseService;
-import com.ftpix.sss.services.HistoryService;
 import com.ftpix.sss.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -143,9 +142,8 @@ public class ExpenseController {
     }
 
     @GetMapping("/diff/{current-day}")
-    public double getDiffWithPreviousPeriod(@PathVariable("current-day") String currentDay) throws SQLException {
+    public double getDiffWithPreviousPeriod(@PathVariable("current-day") String currentDay, @RequestParam(value = "include-recurring", defaultValue = "true") boolean includeRecurring) throws SQLException {
         var currentUser = userService.getCurrentUser();
-        return expenseService.diffWithPreviousPeriod(currentUser, currentDay);
-
+        return expenseService.diffWithPreviousPeriod(currentUser, currentDay, includeRecurring);
     }
 }

@@ -1,6 +1,5 @@
 package com.ftpix.sss.controllers.api;
 
-import com.ftpix.sss.Constants;
 import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.TestContainerTest;
 import com.ftpix.sss.dao.CategoryDao;
@@ -14,16 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static com.ftpix.sss.Constants.dateFormatter;
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,7 +43,6 @@ public class ExpenseControllerTest extends TestContainerTest {
 
     @Autowired
     private CategoryDao categoryDaoJooq;
-
 
 
     private Expense create(User user, double amount, Category cat, String date, boolean income, int expenseType, long lat, long longitude, String note) throws Exception {
@@ -113,7 +104,8 @@ public class ExpenseControllerTest extends TestContainerTest {
 
         var cats = categoryDaoJooq.getWhere(currentUser);
 
-        Expense newExpense = create(10d, cats.get(0).getId(), dateFormatter.format(today), false, Expense.TYPE_NORMAL, 0, 0, "");
+        Expense newExpense = create(10d, cats.get(0)
+                .getId(), dateFormatter.format(today), false, Expense.TYPE_NORMAL, 0, 0, "");
         Expense newExpense2 = create(10d, cats.get(0).getId(), "2012-03-21", false, Expense.TYPE_NORMAL, 0, 0, "");
 
         String properTime = String.format("%02d", today.getHour()) + ":" + String.format("%02d", today.getMinute());
@@ -202,12 +194,11 @@ public class ExpenseControllerTest extends TestContainerTest {
         create(20d, cats.get(0).getId(), "2024-12-16", false, Expense.TYPE_NORMAL, 0, 0, "");
         create(20d, cats.get(0).getId(), "2024-11-30", false, Expense.TYPE_NORMAL, 0, 0, "");
 
-        var diff = expenseService.diffWithPreviousPeriod(currentUser, "2025-01-15");
+        var diff = expenseService.diffWithPreviousPeriod(currentUser, "2025-01-15", true);
         assertEquals(0.25, diff);
 
         // now we exclude recurring expenses
-        settingsService.save(new Settings(Settings.INCLUDE_RECURRING_IN_DIFF, "0"));
-        diff = expenseService.diffWithPreviousPeriod(currentUser, "2025-01-15");
+        diff = expenseService.diffWithPreviousPeriod(currentUser, "2025-01-15", false);
         assertEquals(0.5, diff);
 
     }
