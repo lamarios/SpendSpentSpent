@@ -6,16 +6,21 @@ package com.ftpix.sss.dsl.tables;
 
 import com.ftpix.sss.dsl.Keys;
 import com.ftpix.sss.dsl.PUBLIC;
+import com.ftpix.sss.dsl.tables.Files.FilesPath;
 import com.ftpix.sss.dsl.tables.records.ExpenseRecord;
 
 import java.util.Collection;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.InverseForeignKey;
 import org.jooq.Name;
+import org.jooq.Path;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
+import org.jooq.Record;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
@@ -134,6 +139,39 @@ public class Expense extends TableImpl<ExpenseRecord> {
         this(DSL.name("expense"), null);
     }
 
+    public <O extends Record> Expense(Table<O> path, ForeignKey<O, ExpenseRecord> childPath, InverseForeignKey<O, ExpenseRecord> parentPath) {
+        super(path, childPath, parentPath, EXPENSE);
+    }
+
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    public static class ExpensePath extends Expense implements Path<ExpenseRecord> {
+
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> ExpensePath(Table<O> path, ForeignKey<O, ExpenseRecord> childPath, InverseForeignKey<O, ExpenseRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private ExpensePath(Name alias, Table<ExpenseRecord> aliased) {
+            super(alias, aliased);
+        }
+
+        @Override
+        public ExpensePath as(String alias) {
+            return new ExpensePath(DSL.name(alias), this);
+        }
+
+        @Override
+        public ExpensePath as(Name alias) {
+            return new ExpensePath(alias, this);
+        }
+
+        @Override
+        public ExpensePath as(Table<?> alias) {
+            return new ExpensePath(alias.getQualifiedName(), this);
+        }
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : PUBLIC.PUBLIC;
@@ -147,6 +185,18 @@ public class Expense extends TableImpl<ExpenseRecord> {
     @Override
     public UniqueKey<ExpenseRecord> getPrimaryKey() {
         return Keys.EXPENSE_PKEY;
+    }
+
+    private transient FilesPath _files;
+
+    /**
+     * Get the implicit to-many join path to the <code>public.files</code> table
+     */
+    public FilesPath files() {
+        if (_files == null)
+            _files = new FilesPath(this, null, Keys.FILES__FK_SSS_FILE_EXPENSE.getInverseKey());
+
+        return _files;
     }
 
     @Override

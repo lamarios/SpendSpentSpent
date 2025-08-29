@@ -30,20 +30,34 @@ public class ExpenseService {
     private final SimpleDateFormat monthOnly = new SimpleDateFormat("yyyy-MM");
 
     private final ExpenseDao expenseDaoJooq;
+    private final FileService fileService;
 
     @Autowired
-    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ExpenseDao expenseDaoJooq) {
+    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ExpenseDao expenseDaoJooq, FileService fileService) {
         this.categoryService = categoryService;
         this.settingsService = settingsService;
         this.expenseDaoJooq = expenseDaoJooq;
+        this.fileService = fileService;
     }
 
     public List<Expense> getAll(User user) throws Exception {
-        return expenseDaoJooq.getWhere(user);
+        List<Expense> expenses = expenseDaoJooq.getWhere(user);
+        getFiles(expenses);
+        return expenses;
     }
 
     public Expense get(long id, User user) throws Exception {
-        return expenseDaoJooq.get(user, id).orElse(null);
+        return expenseDaoJooq.get(user, id).map(expense -> {
+            getFiles(List.of(expense));
+            return expense;
+        }).orElse(null);
+    }
+
+    private void getFiles(List<Expense> expenses) {
+        List<SSSFile> files = fileService.getFiles(expenses);
+
+        files.forEach(file -> expenses.stream().filter(e -> Objects.equals(e.getId(), file.getExpenseId()))
+                .forEach(expense -> expense.getFiles().add(file)));
     }
 
     public Map<String, Long> suggestNotes(User currentUser, Expense expense) {
@@ -74,6 +88,9 @@ public class ExpenseService {
         Map<String, List<Expense>> grouped = expenseDaoJooq.getWhere(user, EXPENSE.DATE.like(month + "%"))
                 .stream()
                 .collect(Collectors.groupingBy(expense -> Constants.dateFormatter.format(expense.getDate())));
+
+        getFiles(grouped.values().stream().flatMap(Collection::stream).toList());
+
 
         Map<String, DailyExpense> result = new TreeMap<>(Collections.reverseOrder());
 

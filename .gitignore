@@ -106,3 +106,4 @@ web-drivers
 /src/main/app/linux/.flatpak-builder/
 /SSS-backup.json
 /SSS-server-backup.json
+/files/

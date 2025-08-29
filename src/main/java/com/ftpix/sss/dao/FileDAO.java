@@ -1,0 +1,94 @@
+package com.ftpix.sss.dao;
+
+import com.ftpix.sss.dsl.tables.records.FilesRecord;
+import com.ftpix.sss.listeners.DaoListener;
+import com.ftpix.sss.models.AiProcessingStatus;
+import com.ftpix.sss.models.SSSFile;
+import org.jooq.DSLContext;
+import org.jooq.OrderField;
+import org.jooq.impl.TableImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import static com.ftpix.sss.dsl.Tables.FILES;
+
+@Component("fileDao")
+public class FileDAO implements Dao<FilesRecord, SSSFile> {
+    private final DSLContext dslContext;
+
+    private final List<DaoListener<SSSFile>> listeners = new ArrayList<>();
+
+    @Autowired
+    public FileDAO(DSLContext dslContext) {
+        this.dslContext = dslContext;
+    }
+
+
+    @Override
+    public DSLContext getDsl() {
+        return dslContext;
+    }
+
+    @Override
+    public void addListener(DaoListener<SSSFile> listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public List<DaoListener<SSSFile>> getListeners() {
+        return listeners;
+    }
+
+    @Override
+    public TableImpl<FilesRecord> getTable() {
+        return FILES;
+    }
+
+    @Override
+    public SSSFile fromRecord(FilesRecord record) {
+        SSSFile f = new SSSFile();
+        f.setId(UUID.fromString(record.getId()));
+        f.setUserId(UUID.fromString(record.getUserId()));
+        f.setExpenseId(record.getExpenseId());
+        f.setStatus(AiProcessingStatus.valueOf(record.getStatus()));
+        f.setTimeCreated(record.getTimeCreated());
+        f.setTimeUpdated(record.getTimeUpdated());
+        if (record.getAiTags() != null) {
+            f.setAiTags(Arrays.stream(record.getAiTags().split(",")).toList());
+        }
+        f.setFileName(record.getFileName());
+
+        return f;
+    }
+
+    @Override
+    public FilesRecord setRecordData(FilesRecord record, SSSFile f) {
+        if (f.getId() == null) {
+            f.setId(UUID.randomUUID());
+        }
+
+        record.setId(f.getId().toString());
+        record.setUserId(f.getUserId().toString());
+        record.setExpenseId(f.getExpenseId());
+        record.setStatus(f.getStatus().name());
+        record.setTimeCreated(f.getTimeCreated());
+        record.setTimeUpdated(System.currentTimeMillis());
+        if (f.getAiTags() != null) {
+            record.setAiTags(String.join(",", f.getAiTags()));
+        }
+        record.setFileName(f.getFileName());
+
+
+        return record;
+    }
+
+    @Override
+    public OrderField[] getDefaultOrderBy() {
+        return new OrderField[0];
+    }
+}

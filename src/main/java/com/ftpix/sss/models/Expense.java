@@ -3,7 +3,9 @@ package com.ftpix.sss.models;
 import com.ftpix.sss.dao.HasCategory;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Expense implements HasCategory {
 
@@ -31,6 +33,8 @@ public class Expense implements HasCategory {
     private String time;
 
     private long timestamp = System.currentTimeMillis();
+
+    private List<SSSFile> files = new ArrayList<>();
 
 
     public Long getId() {
@@ -123,4 +127,11 @@ public class Expense implements HasCategory {
         this.timestamp = timestamp;
     }
 
+    public List<SSSFile> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<SSSFile> files) {
+        this.files = files;
+    }
 }
