@@ -130,7 +130,19 @@ public class ExpenseService {
             expense.setType(Expense.TYPE_NORMAL);
         }
 
-        return expenseDaoJooq.insert(user, expense);
+        Expense result = expenseDaoJooq.insert(user, expense);
+
+        // we process the files
+        // we don't update the files with what we got as it might still be processing, we just take the DB version and assign
+        // the expense id
+        for (SSSFile sssFile : expense.getFiles()) {
+            fileService.getfile(user, sssFile.getId().toString()).ifPresent(file -> {
+                file.setExpenseId(result.getId());
+                fileService.updateFile(file);
+            });
+        }
+
+        return result;
     }
 
     public boolean delete(long id, User user) throws Exception {

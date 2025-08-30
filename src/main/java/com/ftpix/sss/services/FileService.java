@@ -52,7 +52,8 @@ public class FileService {
         this.filePath = folder.getAbsolutePath();
     }
 
-    public void createFile(User currentUser, MultipartFile file) throws IOException {
+
+    public SSSFile createFile(User currentUser, MultipartFile file) throws IOException {
         SSSFile sssFile = new SSSFile();
         sssFile.setUserId(currentUser.getId());
         sssFile.setTimeCreated(System.currentTimeMillis());
@@ -68,23 +69,40 @@ public class FileService {
         filesDAO.insert(sssFile);
 
         processFileWithAi(sssFile);
+
+        return sssFile;
     }
 
     private void processFileWithAi(SSSFile file) {
         exec.submit(() -> {
             File f = new File(filePath + "/" + file.getFileName());
+            SSSFile toProcess = file;
             try {
+                // we refresh the file before saving it to avoid issues
+                toProcess = filesDAO.getOneWhere(FILES.ID.eq(file.getId().toString())).get();
+                toProcess.setStatus(AiProcessingStatus.PROCESSING);
+                filesDAO.update(toProcess);
                 List<String> tags = aiFileProcessingService.getTagsForFile(f);
-                file.setAiTags(tags);
-                file.setStatus(AiProcessingStatus.DONE);
-                filesDAO.update(file);
+                toProcess = filesDAO.getOneWhere(FILES.ID.eq(file.getId().toString())).get();
+                toProcess.setAiTags(tags);
+                toProcess.setStatus(AiProcessingStatus.DONE);
+                filesDAO.update(toProcess);
             } catch (Exception e) {
                 log.error("Error while processing file " + file.getId(), e);
-                file.setStatus(AiProcessingStatus.ERROR);
-                filesDAO.update(file);
+                toProcess = filesDAO.getOneWhere(FILES.ID.eq(file.getId().toString())).get();
+                toProcess.setStatus(AiProcessingStatus.ERROR);
+                filesDAO.update(toProcess);
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    public Optional<SSSFile> getfile(User user, String fileId) {
+        return filesDAO.getOneWhere(FILES.ID.eq(fileId).and(FILES.USER_ID.eq(user.getId().toString())));
+    }
+
+    public void updateFile(SSSFile file) {
+        filesDAO.update(file);
     }
 
     public List<SSSFile> getFiles(List<Expense> expenses) {
@@ -93,9 +111,9 @@ public class FileService {
 
     public File getFileAsFile(User currentUser, String fileId) throws FileNotFoundException {
         var sssFile = filesDAO.getOneWhere(FILES.USER_ID.eq(currentUser.getId().toString()).and(FILES.ID.eq(fileId)));
-        if(sssFile.isEmpty()){
+        if (sssFile.isEmpty()) {
             throw new FileNotFoundException();
         }
-        return new File(filePath+"/"+sssFile.get().getFileName());
+        return new File(filePath + "/" + sssFile.get().getFileName());
     }
 }

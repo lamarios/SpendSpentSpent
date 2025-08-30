@@ -17,6 +17,8 @@ import java.util.List;
 public class AiFileProcessingService {
     private final static Logger log = LogManager.getLogger();
 
+    private final static List<String> junk = List.of("0.00", "price", "seller");
+
     @Value("${OLLAMA_API_URL}")
     private String ollamaUrl;
 
@@ -40,13 +42,13 @@ public class AiFileProcessingService {
         var api = getClient();
 
 
-        OllamaResult result = api.generateWithImageFiles(ocrModel,
-                prompt, List.of(f),
-                new OptionsBuilder().build());
+        OllamaResult result = api.generateWithImageFiles(ocrModel, prompt, List.of(f), new OptionsBuilder().build());
 
         log.info("Processing finished, response: {}", result.getResponse());
 
-        return Arrays.stream(result.getResponse().split(",")).toList();
+        return Arrays.stream(result.getResponse().split(",")).map(String::trim)
+                // filtering junk
+                .filter(s -> !junk.contains(s)).toList();
     }
 
 

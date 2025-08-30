@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Expense {
 
- String get date; double get amount; double? get latitude; double? get longitude; String? get note; int get type; int? get timestamp; bool get income; Category get category; int? get id;
+ String get date; double get amount; double? get latitude; double? get longitude; String? get note; int get type; int? get timestamp; bool get income; Category get category; int? get id; List<SssFile> get files;
 /// Create a copy of Expense
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ExpenseCopyWith<Expense> get copyWith => _$ExpenseCopyWithImpl<Expense>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Expense&&(identical(other.date, date) || other.date == date)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.note, note) || other.note == note)&&(identical(other.type, type) || other.type == type)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.income, income) || other.income == income)&&(identical(other.category, category) || other.category == category)&&(identical(other.id, id) || other.id == id));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Expense&&(identical(other.date, date) || other.date == date)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.note, note) || other.note == note)&&(identical(other.type, type) || other.type == type)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.income, income) || other.income == income)&&(identical(other.category, category) || other.category == category)&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.files, files));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,amount,latitude,longitude,note,type,timestamp,income,category,id);
+int get hashCode => Object.hash(runtimeType,date,amount,latitude,longitude,note,type,timestamp,income,category,id,const DeepCollectionEquality().hash(files));
 
 @override
 String toString() {
-  return 'Expense(date: $date, amount: $amount, latitude: $latitude, longitude: $longitude, note: $note, type: $type, timestamp: $timestamp, income: $income, category: $category, id: $id)';
+  return 'Expense(date: $date, amount: $amount, latitude: $latitude, longitude: $longitude, note: $note, type: $type, timestamp: $timestamp, income: $income, category: $category, id: $id, files: $files)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ExpenseCopyWith<$Res>  {
   factory $ExpenseCopyWith(Expense value, $Res Function(Expense) _then) = _$ExpenseCopyWithImpl;
 @useResult
 $Res call({
- String date, double amount, double? latitude, double? longitude, String? note, int type, int? timestamp, bool income, Category category, int? id
+ String date, double amount, double? latitude, double? longitude, String? note, int type, int? timestamp, bool income, Category category, int? id, List<SssFile> files
 });
 
 
@@ -65,7 +65,7 @@ class _$ExpenseCopyWithImpl<$Res>
 
 /// Create a copy of Expense
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? amount = null,Object? latitude = freezed,Object? longitude = freezed,Object? note = freezed,Object? type = null,Object? timestamp = freezed,Object? income = null,Object? category = null,Object? id = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? amount = null,Object? latitude = freezed,Object? longitude = freezed,Object? note = freezed,Object? type = null,Object? timestamp = freezed,Object? income = null,Object? category = null,Object? id = freezed,Object? files = null,}) {
   return _then(_self.copyWith(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
@@ -77,7 +77,8 @@ as int,timestamp: freezed == timestamp ? _self.timestamp : timestamp // ignore: 
 as int?,income: null == income ? _self.income : income // ignore: cast_nullable_to_non_nullable
 as bool,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as Category,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,files: null == files ? _self.files : files // ignore: cast_nullable_to_non_nullable
+as List<SssFile>,
   ));
 }
 /// Create a copy of Expense
@@ -168,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String date,  double amount,  double? latitude,  double? longitude,  String? note,  int type,  int? timestamp,  bool income,  Category category,  int? id)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String date,  double amount,  double? latitude,  double? longitude,  String? note,  int type,  int? timestamp,  bool income,  Category category,  int? id,  List<SssFile> files)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Expense() when $default != null:
-return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.note,_that.type,_that.timestamp,_that.income,_that.category,_that.id);case _:
+return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.note,_that.type,_that.timestamp,_that.income,_that.category,_that.id,_that.files);case _:
   return orElse();
 
 }
@@ -189,10 +190,10 @@ return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.not
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String date,  double amount,  double? latitude,  double? longitude,  String? note,  int type,  int? timestamp,  bool income,  Category category,  int? id)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String date,  double amount,  double? latitude,  double? longitude,  String? note,  int type,  int? timestamp,  bool income,  Category category,  int? id,  List<SssFile> files)  $default,) {final _that = this;
 switch (_that) {
 case _Expense():
-return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.note,_that.type,_that.timestamp,_that.income,_that.category,_that.id);}
+return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.note,_that.type,_that.timestamp,_that.income,_that.category,_that.id,_that.files);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -206,10 +207,10 @@ return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.not
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String date,  double amount,  double? latitude,  double? longitude,  String? note,  int type,  int? timestamp,  bool income,  Category category,  int? id)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String date,  double amount,  double? latitude,  double? longitude,  String? note,  int type,  int? timestamp,  bool income,  Category category,  int? id,  List<SssFile> files)?  $default,) {final _that = this;
 switch (_that) {
 case _Expense() when $default != null:
-return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.note,_that.type,_that.timestamp,_that.income,_that.category,_that.id);case _:
+return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.note,_that.type,_that.timestamp,_that.income,_that.category,_that.id,_that.files);case _:
   return null;
 
 }
@@ -221,7 +222,7 @@ return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.not
 @JsonSerializable()
 
 class _Expense implements Expense {
-  const _Expense({required this.date, required this.amount, this.latitude, this.longitude, this.note, this.type = 1, this.timestamp, this.income = false, required this.category, this.id});
+  const _Expense({required this.date, required this.amount, this.latitude, this.longitude, this.note, this.type = 1, this.timestamp, this.income = false, required this.category, this.id, final  List<SssFile> files = const []}): _files = files;
   factory _Expense.fromJson(Map<String, dynamic> json) => _$ExpenseFromJson(json);
 
 @override final  String date;
@@ -234,6 +235,13 @@ class _Expense implements Expense {
 @override@JsonKey() final  bool income;
 @override final  Category category;
 @override final  int? id;
+ final  List<SssFile> _files;
+@override@JsonKey() List<SssFile> get files {
+  if (_files is EqualUnmodifiableListView) return _files;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_files);
+}
+
 
 /// Create a copy of Expense
 /// with the given fields replaced by the non-null parameter values.
@@ -248,16 +256,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Expense&&(identical(other.date, date) || other.date == date)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.note, note) || other.note == note)&&(identical(other.type, type) || other.type == type)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.income, income) || other.income == income)&&(identical(other.category, category) || other.category == category)&&(identical(other.id, id) || other.id == id));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Expense&&(identical(other.date, date) || other.date == date)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.note, note) || other.note == note)&&(identical(other.type, type) || other.type == type)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.income, income) || other.income == income)&&(identical(other.category, category) || other.category == category)&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._files, _files));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,amount,latitude,longitude,note,type,timestamp,income,category,id);
+int get hashCode => Object.hash(runtimeType,date,amount,latitude,longitude,note,type,timestamp,income,category,id,const DeepCollectionEquality().hash(_files));
 
 @override
 String toString() {
-  return 'Expense(date: $date, amount: $amount, latitude: $latitude, longitude: $longitude, note: $note, type: $type, timestamp: $timestamp, income: $income, category: $category, id: $id)';
+  return 'Expense(date: $date, amount: $amount, latitude: $latitude, longitude: $longitude, note: $note, type: $type, timestamp: $timestamp, income: $income, category: $category, id: $id, files: $files)';
 }
 
 
@@ -268,7 +276,7 @@ abstract mixin class _$ExpenseCopyWith<$Res> implements $ExpenseCopyWith<$Res> {
   factory _$ExpenseCopyWith(_Expense value, $Res Function(_Expense) _then) = __$ExpenseCopyWithImpl;
 @override @useResult
 $Res call({
- String date, double amount, double? latitude, double? longitude, String? note, int type, int? timestamp, bool income, Category category, int? id
+ String date, double amount, double? latitude, double? longitude, String? note, int type, int? timestamp, bool income, Category category, int? id, List<SssFile> files
 });
 
 
@@ -285,7 +293,7 @@ class __$ExpenseCopyWithImpl<$Res>
 
 /// Create a copy of Expense
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? amount = null,Object? latitude = freezed,Object? longitude = freezed,Object? note = freezed,Object? type = null,Object? timestamp = freezed,Object? income = null,Object? category = null,Object? id = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? amount = null,Object? latitude = freezed,Object? longitude = freezed,Object? note = freezed,Object? type = null,Object? timestamp = freezed,Object? income = null,Object? category = null,Object? id = freezed,Object? files = null,}) {
   return _then(_Expense(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
@@ -297,7 +305,8 @@ as int,timestamp: freezed == timestamp ? _self.timestamp : timestamp // ignore: 
 as int?,income: null == income ? _self.income : income // ignore: cast_nullable_to_non_nullable
 as bool,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as Category,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,files: null == files ? _self._files : files // ignore: cast_nullable_to_non_nullable
+as List<SssFile>,
   ));
 }
 

@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:gap/gap.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
+import 'package:spend_spent_spent/expenses/views/components/expense_images.dart';
 import 'package:spend_spent_spent/globals.dart';
 
 import '../../models/expense.dart';
@@ -19,6 +19,7 @@ class ExpenseMenu extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      showDragHandle: true,
       useSafeArea: true,
       builder: (context) {
         return SafeArea(
@@ -69,12 +70,25 @@ class ExpenseMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     bool hasMap = expense.latitude != 0 && expense.longitude != 0;
     final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
+        spacing: 16,
         children: [
+          if (expense.note != null && expense.note!.trim().isNotEmpty)
+            Row(
+              spacing: 16,
+              children: [
+                Icon(Icons.comment, color: colors.secondary),
+                Expanded(
+                  child: Text(expense.note!, style: textTheme.bodyLarge),
+                ),
+              ],
+            ),
           if (hasMap) ...[
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
@@ -82,7 +96,7 @@ class ExpenseMenu extends StatelessWidget {
                 builder: (context, constraints) {
                   return SizedBox(
                     width: min(700, constraints.maxWidth),
-                    height: min(500, constraints.maxHeight),
+                    height: min(300, constraints.maxHeight),
                     child: FlutterMap(
                       options: MapOptions(
                         initialZoom: 15,
@@ -120,8 +134,8 @@ class ExpenseMenu extends StatelessWidget {
                 },
               ),
             ),
-            Gap(20),
           ],
+          if (expense.files.isNotEmpty) ExpenseImages(files: expense.files),
           FilledButton.tonalIcon(
             icon: Icon(Icons.delete),
             style: ButtonStyle(

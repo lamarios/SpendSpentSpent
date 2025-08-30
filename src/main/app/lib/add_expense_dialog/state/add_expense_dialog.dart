@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/add_expense.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
+import 'package:spend_spent_spent/expenses/models/sss_file.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/expenses/models/currency_conversion.dart';
@@ -146,9 +147,6 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
   Future<void> addExpense(double iconHeight, Color iconColor) async {
     emit(state.copyWith(saving: true));
 
-    await Future.delayed(panelTransition);
-    // double iconHeight = getIconHeight(MediaQuery.of(context)) * 0.66;
-
     var amount = double.parse(valueToStr(state.value));
     var date = DateFormat('yyyy-MM-dd').format(state.expenseDate);
     var note = state.expenseNote;
@@ -164,6 +162,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       category: category,
       date: date,
       note: note,
+      files: state.files,
     );
 
     //checking location\
@@ -250,6 +249,25 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       ),
     );
   }
+
+  void setImages(List<SssFile> list) {
+    emit(state.copyWith(files: list));
+  }
+
+  void setFiles(List<SssFile> files) {
+    emit(state.copyWith(files: files));
+  }
+
+  void setAmount(String text) {
+    emit(state.copyWith(value: text.replaceAll(".", "")));
+  }
+
+  void updateFile(SssFile file) {
+    final List<SssFile> files = List.from(state.files);
+    final index = files.indexWhere((element) => element.id == file.id);
+    files[index] = file;
+    emit(state.copyWith(files: files));
+  }
 }
 
 @freezed
@@ -268,8 +286,34 @@ sealed class AddExpenseDialogState
     @Default(false) bool showCurrencyConversion,
     @Default(false) bool saving,
     @Default([]) List<String> noteSuggestions,
+    @Default([]) List<SssFile> files,
     LocationData? location,
     dynamic error,
     StackTrace? stackTrace,
   }) = _AddExpenseDialogState;
+
+  const AddExpenseDialogState._();
+
+  List<String> get aiAndNoteSuggestions {
+    final List<String> notes = List.from(possibleTags);
+    notes.addAll(noteSuggestions);
+
+    return notes.toSet().toList();
+  }
+
+  List<double> get possiblePrices {
+    return files
+        .map((e) => e.possiblePrices)
+        .expand((element) => element)
+        .toSet()
+        .toList();
+  }
+
+  List<String> get possibleTags {
+    return files
+        .map((e) => e.possibleTags)
+        .expand((element) => element)
+        .toSet()
+        .toList();
+  }
 }

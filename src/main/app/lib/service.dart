@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:spend_spent_spent/categories/models/available_categories.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
+import 'package:spend_spent_spent/expenses/models/sss_file.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
@@ -134,6 +136,12 @@ class Service {
     } else {
       return appBuildVersion!;
     }
+  }
+
+  Future<Uri> getWebsocketUrl() async {
+    return Uri.parse(
+      '${url.replaceFirst("http", "ws")}/ws?token=${await token}',
+    );
   }
 
   Future<bool> needLogin() async {
@@ -749,6 +757,31 @@ class Service {
     return map.map((key, value) => MapEntry(key, DayExpense.fromJson(value)));
   }
 
+  Future<SssFile> uploadImage(XFile image) async {
+    final request = http.MultipartRequest(
+      "POST",
+      await formatUrl('$API_URL/Files'),
+    );
+    request.headers.addAll(await headers);
+
+    request.files.add(
+      http.MultipartFile.fromBytes(
+        'file',
+        await image.readAsBytes(),
+        filename: image.name,
+      ),
+    );
+
+    final response = await request.send();
+    _processStatusCode(response.statusCode);
+
+    final body = await response.stream.bytesToString();
+
+    Map<String, dynamic> map = jsonDecode(body);
+
+    return SssFile.fromJson(map);
+  }
+
   void processResponse(Response response) {
     if (response.headers.containsKey("x-version")) {
       String version = response.headers['x-version']!;
@@ -769,19 +802,21 @@ class Service {
       print('no server version');
     }
 
-    switch (response.statusCode) {
+    _processStatusCode(response.statusCode, response.body);
+  }
+
+  void _processStatusCode(int statusCode, [String? body]) {
+    switch (statusCode) {
       case 200:
         return;
       case 401:
         logout();
-        throw Exception("Couldn't execute request ${response.body}");
+        throw Exception("Couldn't execute request, unauthorized}");
       case 426:
         logout();
         throw NeedUpgradeException();
       default:
-        throw Exception(
-          "Couldn't execute request ${response.statusCode} -> ${response.body}",
-        );
+        throw Exception("Couldn't execute request ${statusCode} -> ${body}");
     }
   }
 }

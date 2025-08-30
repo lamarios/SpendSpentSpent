@@ -3,7 +3,10 @@ package com.ftpix.sss.dao;
 import com.ftpix.sss.dsl.tables.records.FilesRecord;
 import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.AiProcessingStatus;
+import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.SSSFile;
+import com.ftpix.sss.websockets.WebSocketSessionManager;
+import com.google.gson.Gson;
 import org.jooq.DSLContext;
 import org.jooq.OrderField;
 import org.jooq.impl.TableImpl;
@@ -20,14 +23,14 @@ import static com.ftpix.sss.dsl.Tables.FILES;
 @Component("fileDao")
 public class FileDAO implements Dao<FilesRecord, SSSFile> {
     private final DSLContext dslContext;
-
+    private final Gson gson;
     private final List<DaoListener<SSSFile>> listeners = new ArrayList<>();
 
     @Autowired
-    public FileDAO(DSLContext dslContext) {
+    public FileDAO(DSLContext dslContext, Gson gson) {
         this.dslContext = dslContext;
+        this.gson = gson;
     }
-
 
     @Override
     public DSLContext getDsl() {
@@ -47,6 +50,13 @@ public class FileDAO implements Dao<FilesRecord, SSSFile> {
     @Override
     public TableImpl<FilesRecord> getTable() {
         return FILES;
+    }
+
+    @Override
+    public boolean update(SSSFile object) {
+        boolean update = Dao.super.update(object);
+        WebSocketSessionManager.sendToUser(object.getUserId().toString(), object);
+        return update;
     }
 
     @Override
