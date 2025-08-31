@@ -1,5 +1,6 @@
 package com.ftpix.sss.controllers.api;
 
+import com.ftpix.sss.models.CategorySuggestionResponse;
 import com.ftpix.sss.models.SSSFile;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.FileService;
@@ -61,7 +62,7 @@ public class FileController {
     }
 
     @PostMapping(value = "/find-category",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public SSSFile findFileCategory(@RequestParam("file") MultipartFile file) throws SQLException, IOException, ExecutionException, InterruptedException {
+    public CategorySuggestionResponse findFileCategory(@RequestParam("file") MultipartFile file) throws SQLException, IOException, ExecutionException, InterruptedException {
         final User currentUser = userService.getCurrentUser();
         return fileService.findFileCategory(currentUser, file);
     }

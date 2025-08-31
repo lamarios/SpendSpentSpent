@@ -1,6 +1,8 @@
 package com.ftpix.sss.services;
 
+import com.ftpix.sss.models.CategorySuggestionResponse;
 import com.ftpix.sss.models.NewCategoryIcon;
+import com.ftpix.sss.models.SSSFile;
 import com.ftpix.sss.models.ai_responses.CategoryMatchResponse;
 import com.ftpix.sss.models.ai_responses.ImageTagsResponse;
 import com.google.gson.Gson;
@@ -51,10 +53,20 @@ public class AiFileProcessingService {
     }
 
 
-    public List<NewCategoryIcon> findBestCategory(File f, List<NewCategoryIcon> availableCategories) throws Exception {
+    public CategorySuggestionResponse findBestCategory(File f, List<NewCategoryIcon> availableCategories) throws Exception {
         log.info("Finding best categories for the file {}", f.getAbsolutePath());
 
         var tags = getTagsForFile(f);
+
+        var tagsForPrompt = tags.stream().filter(s -> {
+            try {
+                var parsed = Double.parseDouble(s);
+                // if we can parse it, it's a value and not useful for categorisation
+                return false;
+            } catch (Exception e) {
+                return true;
+            }
+        }).toList();
 
         var api = getClient();
 
@@ -86,12 +98,10 @@ public class AiFileProcessingService {
                 
                 Categories:
                 %s
-                
-                
                 """;
 
 
-        var prompt = findCategoryPrompt.formatted(String.join(",", tags), join);
+        var prompt = findCategoryPrompt.formatted(String.join(",", tagsForPrompt), join);
 
 
         OllamaResult result = api.generate(textModel, prompt, CategoryMatchResponse.toOllamaFormat());
@@ -106,7 +116,10 @@ public class AiFileProcessingService {
                         Long.compare(countMatches(o2, response.categories()), countMatches(o1, response.categories())))
                 .toList();
 
-        return sorted;
+        SSSFile file = new SSSFile();
+        file.setAiTags(tags);
+
+        return new CategorySuggestionResponse(sorted, file);
     }
 
     private long countMatches(NewCategoryIcon icon, List<String> terms) {

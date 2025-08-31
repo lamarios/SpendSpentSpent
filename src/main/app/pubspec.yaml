@@ -36,6 +36,9 @@ dependencies:
   oidc_default_store: 0.4.0+3
   package_info_plus: 8.3.1
   random_string: 2.3.1
+  receive_sharing_intent:
+    git:
+      url: https://github.com/KasemJaffer/receive_sharing_intent
   shared_preferences: 2.5.3
   tinycolor2: 3.0.1
   web_socket_channel: 3.0.3

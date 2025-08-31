@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:spend_spent_spent/add_expense_dialog/models/category_guess_result.dart';
 import 'package:spend_spent_spent/categories/models/available_categories.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:spend_spent_spent/expenses/models/sss_file.dart';
@@ -780,6 +781,31 @@ class Service {
     Map<String, dynamic> map = jsonDecode(body);
 
     return SssFile.fromJson(map);
+  }
+
+  Future<CategoryGuessResult> guessCategory(XFile image) async {
+    final request = http.MultipartRequest(
+      "POST",
+      await formatUrl('$API_URL/Files/find-category'),
+    );
+    request.headers.addAll(await headers);
+
+    request.files.add(
+      http.MultipartFile.fromBytes(
+        'file',
+        await image.readAsBytes(),
+        filename: image.name,
+      ),
+    );
+
+    final response = await request.send();
+    _processStatusCode(response.statusCode);
+
+    final body = await response.stream.bytesToString();
+
+    Map<String, dynamic> map = jsonDecode(body);
+
+    return CategoryGuessResult.fromJson(map);
   }
 
   void processResponse(Response response) {

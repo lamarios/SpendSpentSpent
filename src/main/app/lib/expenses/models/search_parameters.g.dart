@@ -15,7 +15,7 @@ _SearchParameters _$SearchParametersFromJson(Map<String, dynamic> json) =>
           const [],
       minAmount: (json['minAmount'] as num).toInt(),
       maxAmount: (json['maxAmount'] as num).toInt(),
-      note: json['searchQuery'] as String,
+      note: json['note'] as String,
     );
 
 Map<String, dynamic> _$SearchParametersToJson(_SearchParameters instance) =>
@@ -23,5 +23,5 @@ Map<String, dynamic> _$SearchParametersToJson(_SearchParameters instance) =>
       'categories': instance.categories,
       'minAmount': instance.minAmount,
       'maxAmount': instance.maxAmount,
-      'searchQuery': instance.note,
+      'note': instance.note,
     };

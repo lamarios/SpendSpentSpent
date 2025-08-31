@@ -37,7 +37,7 @@ int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(
 
 @override
 String toString() {
-  return 'SearchParameters(categories: $categories, minAmount: $minAmount, maxAmount: $maxAmount, searchQuery: $note)';
+  return 'SearchParameters(categories: $categories, minAmount: $minAmount, maxAmount: $maxAmount, note: $note)';
 }
 
 
@@ -242,7 +242,7 @@ int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(
 
 @override
 String toString() {
-  return 'SearchParameters(categories: $categories, minAmount: $minAmount, maxAmount: $maxAmount, searchQuery: $note)';
+  return 'SearchParameters(categories: $categories, minAmount: $minAmount, maxAmount: $maxAmount, note: $note)';
 }
 
 

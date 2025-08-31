@@ -55,6 +55,11 @@ public class FileService {
         this.filePath = folder.getAbsolutePath();
     }
 
+    public boolean clearExpenseFiles(Long expenseId){
+        return filesDAO.clearExpenseFiles(expenseId);
+    }
+
+
 
     @Scheduled(fixedRate = ONE_DAY)
     public void fileMaintenance() {
@@ -99,6 +104,7 @@ public class FileService {
         return true;
     }
 
+
     public SSSFile createFile(User currentUser, MultipartFile file) throws IOException, ExecutionException, InterruptedException {
         boolean aiEnabled = aiFileProcessingService.isAiEnabled();
         SSSFile sssFile = new SSSFile();
@@ -122,29 +128,51 @@ public class FileService {
         return sssFile;
     }
 
-    public SSSFile findFileCategory(User currentUser, MultipartFile file) throws ExecutionException, InterruptedException {
+    public CategorySuggestionResponse findFileCategory(User currentUser, MultipartFile file) throws ExecutionException, InterruptedException {
         var work = exec.submit(() -> {
-            String newfileName = "test." + FilenameUtils.getExtension(file.getOriginalFilename());
+            boolean aiEnabled = aiFileProcessingService.isAiEnabled();
+            SSSFile sssFile = new SSSFile();
+            sssFile.setUserId(currentUser.getId());
+            sssFile.setTimeCreated(System.currentTimeMillis());
+            sssFile.setTimeUpdated(System.currentTimeMillis());
+            sssFile.setStatus(aiEnabled ? AiProcessingStatus.PENDING : AiProcessingStatus.NO_PROCESSING);
+
+            String newfileName = sssFile.getId() + "." + FilenameUtils.getExtension(file.getOriginalFilename());
             File dest = new File(filePath + "/" + newfileName);
             file.transferTo(dest);
 
+            sssFile.setFileName(newfileName);
+
+            filesDAO.insert(sssFile);
+
             try {
-                // we refresh the file before saving it to avoid issues
-                return aiFileProcessingService.findBestCategory(dest, categoryService.getUsed(currentUser)
+                CategorySuggestionResponse bestCategory;
+
+                List<NewCategoryIcon> categories = categoryService.getUsed(currentUser)
                         .values()
                         .stream()
                         .flatMap(Collection::stream)
-                        .toList());
+                        .toList();
+
+                if (aiEnabled) {
+                    // we refresh the file before saving it to avoid issues
+                    bestCategory = aiFileProcessingService.findBestCategory(dest, categories);
+                    sssFile.setAiTags(bestCategory.file().getAiTags());
+                    bestCategory = new CategorySuggestionResponse(bestCategory.categories(), sssFile);
+                    bestCategory.file().setStatus(AiProcessingStatus.DONE);
+                } else {
+                    bestCategory = new CategorySuggestionResponse(categories, sssFile);
+                }
+
+
+                return bestCategory;
             } catch (Exception e) {
                 log.error("Error while processing file " + dest.getAbsolutePath(), e);
                 throw new RuntimeException(e);
             }
         });
 
-        var result = work.get();
-        System.out.println(result);
-
-        return null;
+        return work.get();
     }
 
     private void processFileWithAi(SSSFile file) {

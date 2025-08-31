@@ -59,6 +59,11 @@ public class FileDAO implements Dao<FilesRecord, SSSFile> {
         return update;
     }
 
+
+    public boolean clearExpenseFiles(Long expenseId) {
+        return getDsl().update(FILES).setNull(FILES.EXPENSE_ID).where(FILES.EXPENSE_ID.eq(expenseId)).execute() > 0;
+    }
+
     @Override
     public SSSFile fromRecord(FilesRecord record) {
         SSSFile f = new SSSFile();

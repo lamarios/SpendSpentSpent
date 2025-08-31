@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:animations/animations.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -12,6 +13,7 @@ import 'package:spend_spent_spent/add_expense_dialog/views/components/currency_c
 import 'package:spend_spent_spent/add_expense_dialog/views/components/keypad.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/note_suggestion_pill.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
+import 'package:spend_spent_spent/expenses/models/expense.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
@@ -21,9 +23,40 @@ import 'package:spend_spent_spent/utils/views/components/repeated_icons.dart';
 const LOCATION_TIMEOUT = 10;
 
 class AddExpense extends StatelessWidget {
-  final Category category;
+  final Category? category;
+  final Expense? expense;
 
-  const AddExpense({super.key, required this.category});
+  const AddExpense({super.key, this.category, this.expense});
+
+  static Future<Expense?> showDialog(
+    BuildContext context, {
+    Category? category,
+    Expense? expense,
+  }) async {
+    if (foundation.kIsWeb) {
+      return showModal<Expense>(
+        context: context,
+        builder: (context) => Card(
+          color: Colors.white.withValues(alpha: 0),
+          margin: EdgeInsets.zero,
+          child: AddExpense(category: category, expense: expense),
+        ),
+      );
+    } else {
+      return showModalBottomSheet<Expense>(
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => Wrap(
+          children: [
+            SafeArea(
+              bottom: true,
+              child: AddExpense(category: category, expense: expense),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   double getIconHeight(MediaQueryData mq) {
     return min(mq.size.height / 6, 150);
@@ -35,7 +68,7 @@ class AddExpense extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return getIcon(
-      category.icon!,
+      category?.icon ?? expense?.category.icon ?? '',
       size: iconHeight * 0.66,
       color: colors.onPrimaryContainer,
     );
@@ -51,10 +84,13 @@ class AddExpense extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
+    final cat = category ?? expense?.category;
+
     return BlocProvider(
       create: (context) => AddExpenseDialogCubit(
         AddExpenseDialogState(expenseDate: DateTime.now()),
         category: category,
+        expense: expense,
         lastExpenseCubit: context.read<LastExpenseCubit>(),
       ),
       child: BlocBuilder<AddExpenseDialogCubit, AddExpenseDialogState>(
@@ -119,12 +155,12 @@ class AddExpense extends StatelessWidget {
                                                   ),
                                             ),
                                             child: RepeatedIconsBackground(
-                                              icon: category.icon!,
+                                              icon: cat!.icon!,
                                               size: 40,
                                               color: colors.onPrimaryContainer
                                                   .withValues(alpha: 0.05),
                                               child: Hero(
-                                                tag: category.icon!,
+                                                tag: cat.icon!,
                                                 child: getIconHeader(context),
                                               ),
                                             ),
@@ -268,15 +304,16 @@ class AddExpense extends StatelessWidget {
                                                               ),
                                                             ) *
                                                             0.66;
-                                                        await cubit.addExpense(
-                                                          iconHeight,
-                                                          colors
-                                                              .onPrimaryContainer,
-                                                        );
+                                                        final newExpense =
+                                                            await cubit.addExpense(
+                                                              iconHeight,
+                                                              colors
+                                                                  .onPrimaryContainer,
+                                                            );
                                                         if (context.mounted) {
                                                           Navigator.of(
                                                             context,
-                                                          ).pop();
+                                                          ).pop(newExpense);
                                                         }
                                                       }
                                                     : null,

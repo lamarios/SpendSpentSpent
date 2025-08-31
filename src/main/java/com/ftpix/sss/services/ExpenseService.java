@@ -31,13 +31,15 @@ public class ExpenseService {
 
     private final ExpenseDao expenseDaoJooq;
     private final FileService fileService;
+    private final ExpenseDao expenseDao;
 
     @Autowired
-    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ExpenseDao expenseDaoJooq, FileService fileService) {
+    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ExpenseDao expenseDaoJooq, FileService fileService, ExpenseDao expenseDao) {
         this.categoryService = categoryService;
         this.settingsService = settingsService;
         this.expenseDaoJooq = expenseDaoJooq;
         this.fileService = fileService;
+        this.expenseDao = expenseDao;
     }
 
     public List<Expense> getAll(User user) throws Exception {
@@ -103,6 +105,19 @@ public class ExpenseService {
         });
 
         return result;
+    }
+
+    public Expense update(Expense expense, User user) {
+        expenseDao.update(user, expense);
+
+        fileService.clearExpenseFiles(expense.getId());
+
+        expense.getFiles()
+                .stream()
+                .peek(file -> file.setExpenseId(expense.getId()))
+                .forEach(fileService::updateFile);
+
+        return expense;
     }
 
     public Expense create(Expense expense, User user) throws Exception {
