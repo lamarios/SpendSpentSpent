@@ -13,6 +13,7 @@ sealed class SssFile with _$SssFile {
     int? expenseId,
     required AiProcessingStatus status,
     @Default([]) List<String> aiTags,
+    @Default([]) List<double> amounts,
     required String fileName,
     required int timeCreated,
     required int timeUpdated,
@@ -22,18 +23,4 @@ sealed class SssFile with _$SssFile {
       _$SssFileFromJson(json);
 
   const SssFile._();
-
-  List<double> get possiblePrices => aiTags
-      .map((e) => double.tryParse(e))
-      .where((element) => element != null)
-      .map((e) => e!)
-      .where((element) => element > 0)
-      .toList();
-
-  List<String> get possibleTags {
-    List<String> result = List.from(aiTags);
-    result.removeWhere((element) => double.tryParse(element) != null);
-    print('tags: $aiTags, after removal: $result');
-    return result;
-  }
 }

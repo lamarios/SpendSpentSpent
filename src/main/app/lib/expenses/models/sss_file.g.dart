@@ -14,6 +14,11 @@ _SssFile _$SssFileFromJson(Map<String, dynamic> json) => _SssFile(
   aiTags:
       (json['aiTags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
       const [],
+  amounts:
+      (json['amounts'] as List<dynamic>?)
+          ?.map((e) => (e as num).toDouble())
+          .toList() ??
+      const [],
   fileName: json['fileName'] as String,
   timeCreated: (json['timeCreated'] as num).toInt(),
   timeUpdated: (json['timeUpdated'] as num).toInt(),
@@ -25,6 +30,7 @@ Map<String, dynamic> _$SssFileToJson(_SssFile instance) => <String, dynamic>{
   'expenseId': instance.expenseId,
   'status': _$AiProcessingStatusEnumMap[instance.status]!,
   'aiTags': instance.aiTags,
+  'amounts': instance.amounts,
   'fileName': instance.fileName,
   'timeCreated': instance.timeCreated,
   'timeUpdated': instance.timeUpdated,

@@ -64,7 +64,7 @@ sealed class ExpenseFileManagementState with _$ExpenseFileManagementState {
 
   List<double> get possiblePrices {
     return files
-        .map((e) => e.possiblePrices)
+        .map((e) => e.amounts)
         .expand((element) => element)
         .toSet()
         .toList();
@@ -72,7 +72,7 @@ sealed class ExpenseFileManagementState with _$ExpenseFileManagementState {
 
   List<String> get possibleTags {
     return files
-        .map((e) => e.possibleTags)
+        .map((e) => e.aiTags)
         .expand((element) => element)
         .toSet()
         .toList();

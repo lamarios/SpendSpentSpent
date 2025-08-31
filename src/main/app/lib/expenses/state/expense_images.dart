@@ -24,7 +24,7 @@ sealed class ExpenseImagesState with _$ExpenseImagesState {
 
   List<String> get possibleTags {
     return files
-        .map((e) => e.possibleTags)
+        .map((e) => e.aiTags)
         .expand((element) => element)
         .toSet()
         .toList();

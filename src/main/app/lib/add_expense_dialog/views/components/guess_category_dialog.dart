@@ -75,7 +75,7 @@ class GuessCategoryDialog extends StatelessWidget {
                     showStatus: false,
                   ),
                 ),
-                if ((state.results?.file.possibleTags ?? []).isNotEmpty) ...[
+                if ((state.results?.file.aiTags ?? []).isNotEmpty) ...[
                   Gap(20),
                   Row(
                     mainAxisSize: MainAxisSize.max,
@@ -87,7 +87,7 @@ class GuessCategoryDialog extends StatelessWidget {
                         child: Wrap(
                           spacing: 16,
                           runSpacing: 4,
-                          children: (state.results?.file.possibleTags ?? [])
+                          children: (state.results?.file.aiTags ?? [])
                               .map((e) => Text(e))
                               .toList(),
                         ),
@@ -95,7 +95,7 @@ class GuessCategoryDialog extends StatelessWidget {
                     ],
                   ),
                 ],
-                if ((state.results?.file.possiblePrices ?? []).isNotEmpty) ...[
+                if ((state.results?.file.amounts ?? []).isNotEmpty) ...[
                   Gap(20),
                   Row(
                     mainAxisSize: MainAxisSize.max,
@@ -107,7 +107,7 @@ class GuessCategoryDialog extends StatelessWidget {
                         child: Wrap(
                           spacing: 16,
                           runSpacing: 4,
-                          children: (state.results?.file.possiblePrices ?? [])
+                          children: (state.results?.file.amounts ?? [])
                               .map((e) => Text(formatCurrency(e)))
                               .toList(),
                         ),
@@ -171,14 +171,13 @@ class GuessCategoryDialog extends StatelessWidget {
                             return;
                           }
                           final expense = Expense(
-                            amount:
-                                results.file.possiblePrices.firstOrNull ?? 0,
+                            amount: results.file.amounts.firstOrNull ?? 0,
                             date: DateFormat(
                               expenseDateFormat,
                             ).format(DateTime.now()),
                             category: cat,
                             files: [results.file],
-                            note: results.file.possibleTags.firstOrNull,
+                            note: results.file.aiTags.firstOrNull,
                           );
 
                           Navigator.of(context).pop();

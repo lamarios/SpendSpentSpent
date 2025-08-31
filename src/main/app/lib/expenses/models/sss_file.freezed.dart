@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SssFile {
 
- String get id; String get userId; int? get expenseId; AiProcessingStatus get status; List<String> get aiTags; String get fileName; int get timeCreated; int get timeUpdated;
+ String get id; String get userId; int? get expenseId; AiProcessingStatus get status; List<String> get aiTags; List<double> get amounts; String get fileName; int get timeCreated; int get timeUpdated;
 /// Create a copy of SssFile
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $SssFileCopyWith<SssFile> get copyWith => _$SssFileCopyWithImpl<SssFile>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SssFile&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.expenseId, expenseId) || other.expenseId == expenseId)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.aiTags, aiTags)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.timeCreated, timeCreated) || other.timeCreated == timeCreated)&&(identical(other.timeUpdated, timeUpdated) || other.timeUpdated == timeUpdated));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SssFile&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.expenseId, expenseId) || other.expenseId == expenseId)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.aiTags, aiTags)&&const DeepCollectionEquality().equals(other.amounts, amounts)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.timeCreated, timeCreated) || other.timeCreated == timeCreated)&&(identical(other.timeUpdated, timeUpdated) || other.timeUpdated == timeUpdated));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,expenseId,status,const DeepCollectionEquality().hash(aiTags),fileName,timeCreated,timeUpdated);
+int get hashCode => Object.hash(runtimeType,id,userId,expenseId,status,const DeepCollectionEquality().hash(aiTags),const DeepCollectionEquality().hash(amounts),fileName,timeCreated,timeUpdated);
 
 @override
 String toString() {
-  return 'SssFile(id: $id, userId: $userId, expenseId: $expenseId, status: $status, aiTags: $aiTags, fileName: $fileName, timeCreated: $timeCreated, timeUpdated: $timeUpdated)';
+  return 'SssFile(id: $id, userId: $userId, expenseId: $expenseId, status: $status, aiTags: $aiTags, amounts: $amounts, fileName: $fileName, timeCreated: $timeCreated, timeUpdated: $timeUpdated)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $SssFileCopyWith<$Res>  {
   factory $SssFileCopyWith(SssFile value, $Res Function(SssFile) _then) = _$SssFileCopyWithImpl;
 @useResult
 $Res call({
- String id, String userId, int? expenseId, AiProcessingStatus status, List<String> aiTags, String fileName, int timeCreated, int timeUpdated
+ String id, String userId, int? expenseId, AiProcessingStatus status, List<String> aiTags, List<double> amounts, String fileName, int timeCreated, int timeUpdated
 });
 
 
@@ -65,14 +65,15 @@ class _$SssFileCopyWithImpl<$Res>
 
 /// Create a copy of SssFile
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? expenseId = freezed,Object? status = null,Object? aiTags = null,Object? fileName = null,Object? timeCreated = null,Object? timeUpdated = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? expenseId = freezed,Object? status = null,Object? aiTags = null,Object? amounts = null,Object? fileName = null,Object? timeCreated = null,Object? timeUpdated = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,expenseId: freezed == expenseId ? _self.expenseId : expenseId // ignore: cast_nullable_to_non_nullable
 as int?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as AiProcessingStatus,aiTags: null == aiTags ? _self.aiTags : aiTags // ignore: cast_nullable_to_non_nullable
-as List<String>,fileName: null == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
+as List<String>,amounts: null == amounts ? _self.amounts : amounts // ignore: cast_nullable_to_non_nullable
+as List<double>,fileName: null == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
 as String,timeCreated: null == timeCreated ? _self.timeCreated : timeCreated // ignore: cast_nullable_to_non_nullable
 as int,timeUpdated: null == timeUpdated ? _self.timeUpdated : timeUpdated // ignore: cast_nullable_to_non_nullable
 as int,
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  int? expenseId,  AiProcessingStatus status,  List<String> aiTags,  String fileName,  int timeCreated,  int timeUpdated)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  int? expenseId,  AiProcessingStatus status,  List<String> aiTags,  List<double> amounts,  String fileName,  int timeCreated,  int timeUpdated)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SssFile() when $default != null:
-return $default(_that.id,_that.userId,_that.expenseId,_that.status,_that.aiTags,_that.fileName,_that.timeCreated,_that.timeUpdated);case _:
+return $default(_that.id,_that.userId,_that.expenseId,_that.status,_that.aiTags,_that.amounts,_that.fileName,_that.timeCreated,_that.timeUpdated);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.id,_that.userId,_that.expenseId,_that.status,_that.aiTags,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  int? expenseId,  AiProcessingStatus status,  List<String> aiTags,  String fileName,  int timeCreated,  int timeUpdated)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  int? expenseId,  AiProcessingStatus status,  List<String> aiTags,  List<double> amounts,  String fileName,  int timeCreated,  int timeUpdated)  $default,) {final _that = this;
 switch (_that) {
 case _SssFile():
-return $default(_that.id,_that.userId,_that.expenseId,_that.status,_that.aiTags,_that.fileName,_that.timeCreated,_that.timeUpdated);}
+return $default(_that.id,_that.userId,_that.expenseId,_that.status,_that.aiTags,_that.amounts,_that.fileName,_that.timeCreated,_that.timeUpdated);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -195,10 +196,10 @@ return $default(_that.id,_that.userId,_that.expenseId,_that.status,_that.aiTags,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  int? expenseId,  AiProcessingStatus status,  List<String> aiTags,  String fileName,  int timeCreated,  int timeUpdated)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  int? expenseId,  AiProcessingStatus status,  List<String> aiTags,  List<double> amounts,  String fileName,  int timeCreated,  int timeUpdated)?  $default,) {final _that = this;
 switch (_that) {
 case _SssFile() when $default != null:
-return $default(_that.id,_that.userId,_that.expenseId,_that.status,_that.aiTags,_that.fileName,_that.timeCreated,_that.timeUpdated);case _:
+return $default(_that.id,_that.userId,_that.expenseId,_that.status,_that.aiTags,_that.amounts,_that.fileName,_that.timeCreated,_that.timeUpdated);case _:
   return null;
 
 }
@@ -210,7 +211,7 @@ return $default(_that.id,_that.userId,_that.expenseId,_that.status,_that.aiTags,
 @JsonSerializable()
 
 class _SssFile extends SssFile {
-  const _SssFile({required this.id, required this.userId, this.expenseId, required this.status, final  List<String> aiTags = const [], required this.fileName, required this.timeCreated, required this.timeUpdated}): _aiTags = aiTags,super._();
+  const _SssFile({required this.id, required this.userId, this.expenseId, required this.status, final  List<String> aiTags = const [], final  List<double> amounts = const [], required this.fileName, required this.timeCreated, required this.timeUpdated}): _aiTags = aiTags,_amounts = amounts,super._();
   factory _SssFile.fromJson(Map<String, dynamic> json) => _$SssFileFromJson(json);
 
 @override final  String id;
@@ -222,6 +223,13 @@ class _SssFile extends SssFile {
   if (_aiTags is EqualUnmodifiableListView) return _aiTags;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_aiTags);
+}
+
+ final  List<double> _amounts;
+@override@JsonKey() List<double> get amounts {
+  if (_amounts is EqualUnmodifiableListView) return _amounts;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_amounts);
 }
 
 @override final  String fileName;
@@ -241,16 +249,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SssFile&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.expenseId, expenseId) || other.expenseId == expenseId)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._aiTags, _aiTags)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.timeCreated, timeCreated) || other.timeCreated == timeCreated)&&(identical(other.timeUpdated, timeUpdated) || other.timeUpdated == timeUpdated));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SssFile&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.expenseId, expenseId) || other.expenseId == expenseId)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._aiTags, _aiTags)&&const DeepCollectionEquality().equals(other._amounts, _amounts)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.timeCreated, timeCreated) || other.timeCreated == timeCreated)&&(identical(other.timeUpdated, timeUpdated) || other.timeUpdated == timeUpdated));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,expenseId,status,const DeepCollectionEquality().hash(_aiTags),fileName,timeCreated,timeUpdated);
+int get hashCode => Object.hash(runtimeType,id,userId,expenseId,status,const DeepCollectionEquality().hash(_aiTags),const DeepCollectionEquality().hash(_amounts),fileName,timeCreated,timeUpdated);
 
 @override
 String toString() {
-  return 'SssFile(id: $id, userId: $userId, expenseId: $expenseId, status: $status, aiTags: $aiTags, fileName: $fileName, timeCreated: $timeCreated, timeUpdated: $timeUpdated)';
+  return 'SssFile(id: $id, userId: $userId, expenseId: $expenseId, status: $status, aiTags: $aiTags, amounts: $amounts, fileName: $fileName, timeCreated: $timeCreated, timeUpdated: $timeUpdated)';
 }
 
 
@@ -261,7 +269,7 @@ abstract mixin class _$SssFileCopyWith<$Res> implements $SssFileCopyWith<$Res> {
   factory _$SssFileCopyWith(_SssFile value, $Res Function(_SssFile) _then) = __$SssFileCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String userId, int? expenseId, AiProcessingStatus status, List<String> aiTags, String fileName, int timeCreated, int timeUpdated
+ String id, String userId, int? expenseId, AiProcessingStatus status, List<String> aiTags, List<double> amounts, String fileName, int timeCreated, int timeUpdated
 });
 
 
@@ -278,14 +286,15 @@ class __$SssFileCopyWithImpl<$Res>
 
 /// Create a copy of SssFile
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? expenseId = freezed,Object? status = null,Object? aiTags = null,Object? fileName = null,Object? timeCreated = null,Object? timeUpdated = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? expenseId = freezed,Object? status = null,Object? aiTags = null,Object? amounts = null,Object? fileName = null,Object? timeCreated = null,Object? timeUpdated = null,}) {
   return _then(_SssFile(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,expenseId: freezed == expenseId ? _self.expenseId : expenseId // ignore: cast_nullable_to_non_nullable
 as int?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as AiProcessingStatus,aiTags: null == aiTags ? _self._aiTags : aiTags // ignore: cast_nullable_to_non_nullable
-as List<String>,fileName: null == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
+as List<String>,amounts: null == amounts ? _self._amounts : amounts // ignore: cast_nullable_to_non_nullable
+as List<double>,fileName: null == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
 as String,timeCreated: null == timeCreated ? _self.timeCreated : timeCreated // ignore: cast_nullable_to_non_nullable
 as int,timeUpdated: null == timeUpdated ? _self.timeUpdated : timeUpdated // ignore: cast_nullable_to_non_nullable
 as int,
