@@ -49,11 +49,11 @@ abstract public class TestContainerTest {
 
     @AfterEach
     public void cleaningDB() {
-        dslContext.truncate(EXPENSE).execute();
-        dslContext.truncate(CATEGORY).execute();
-        dslContext.truncate(RECURRING_EXPENSE).execute();
-        dslContext.truncate(MONTHLY_HISTORY).execute();
-        dslContext.truncate(YEARLY_HISTORY).execute();
+        dslContext.truncate(EXPENSE).cascade().execute();
+        dslContext.truncate(CATEGORY).cascade().execute();
+        dslContext.truncate(RECURRING_EXPENSE).cascade().execute();
+        dslContext.truncate(MONTHLY_HISTORY).cascade().execute();
+        dslContext.truncate(YEARLY_HISTORY).cascade().execute();
     }
 
     @BeforeEach
