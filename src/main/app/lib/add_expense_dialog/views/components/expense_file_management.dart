@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_loading_indicator/loading_indicator.dart';
 import 'package:spend_spent_spent/add_expense_dialog/state/expense_file_management.dart';
@@ -12,18 +13,24 @@ import 'package:spend_spent_spent/utils/views/components/expense_image.dart';
 
 class ExpenseFileManagement extends StatelessWidget {
   final List<SssFile> files;
-  final Function(List<SssFile>) onFilesChanged;
+  final Function(List<SssFile> file) onFilesChanged;
+  final Function(String tag) onTagTapped;
+  final Function(double amount) onAmountTapped;
 
   const ExpenseFileManagement({
     super.key,
     required this.files,
     required this.onFilesChanged,
+    required this.onTagTapped,
+    required this.onAmountTapped,
   });
 
   static Future<List<SssFile>?> show(
     BuildContext context, {
     required List<SssFile> files,
     required Function(List<SssFile>) onFilesChanged,
+    required Function(String tag) onTagTapped,
+    required Function(double amount) onAmountTapped,
   }) async {
     return showModalBottomSheet<List<SssFile>>(
       context: context,
@@ -33,7 +40,12 @@ class ExpenseFileManagement extends StatelessWidget {
         bottom: true,
         child: Wrap(
           children: [
-            ExpenseFileManagement(files: files, onFilesChanged: onFilesChanged),
+            ExpenseFileManagement(
+              files: files,
+              onFilesChanged: onFilesChanged,
+              onAmountTapped: onAmountTapped,
+              onTagTapped: onTagTapped,
+            ),
           ],
         ),
       ),
@@ -77,7 +89,6 @@ class ExpenseFileManagement extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Column(
-                    spacing: 24,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.end,
                     mainAxisSize: MainAxisSize.min,
@@ -97,7 +108,10 @@ class ExpenseFileManagement extends StatelessWidget {
                               : ScrollConfiguration(
                                   behavior: AllScrollBehavior(),
                                   child: CarouselView(
-                                    itemExtent: 300,
+                                    key: ValueKey(state.files.length),
+                                    itemExtent: state.files.length == 1
+                                        ? double.maxFinite
+                                        : 300,
                                     itemSnapping: true,
                                     controller: cubit.carouselController,
                                     enableSplash: false,
@@ -113,7 +127,9 @@ class ExpenseFileManagement extends StatelessWidget {
                                           children: [
                                             ExpenseImage(
                                               file: e,
-                                              width: 300,
+                                              width: state.files.length == 1
+                                                  ? double.maxFinite
+                                                  : 300,
                                               height: 300,
                                               showStatus: true,
                                             ),
@@ -142,6 +158,7 @@ class ExpenseFileManagement extends StatelessWidget {
                                 ),
                         ),
                       ),
+                      Gap(24),
                       if (state.possibleTags.isNotEmpty) ...[
                         Row(
                           spacing: 4,
@@ -150,26 +167,34 @@ class ExpenseFileManagement extends StatelessWidget {
                             Text('Found tags', style: textTheme.labelMedium),
                           ],
                         ),
+                        Gap(8),
                         Wrap(
                           spacing: 8,
                           runSpacing: 4,
                           children: state.possibleTags
                               .map(
-                                (e) => Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 2,
+                                (e) => InkWell(
+                                  onTap: () {
+                                    onTagTapped(e);
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: colors.primaryContainer,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(e),
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: colors.primaryContainer,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(e),
                                 ),
                               )
                               .toList(),
                         ),
                       ],
+                      Gap(24),
                       if (state.possiblePrices.isNotEmpty) ...[
                         Row(
                           spacing: 4,
@@ -178,26 +203,34 @@ class ExpenseFileManagement extends StatelessWidget {
                             Text('Found amounts', style: textTheme.labelMedium),
                           ],
                         ),
+                        Gap(8),
                         Wrap(
                           spacing: 8,
                           runSpacing: 4,
                           children: state.possiblePrices
                               .map(
-                                (e) => Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 2,
+                                (e) => InkWell(
+                                  onTap: () {
+                                    onAmountTapped(e);
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: colors.primaryContainer,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(formatCurrency(e)),
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: colors.primaryContainer,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(formatCurrency(e)),
                                 ),
                               )
                               .toList(),
                         ),
                       ],
+                      Gap(24),
                       Row(
                         mainAxisSize: MainAxisSize.max,
                         spacing: 16,

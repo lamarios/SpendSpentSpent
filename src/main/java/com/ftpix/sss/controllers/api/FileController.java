@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/API/Files")
@@ -54,10 +55,15 @@ public class FileController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public SSSFile uploadFile(@RequestParam("file") MultipartFile file) throws SQLException, IOException {
+    public SSSFile uploadFile(@RequestParam("file") MultipartFile file) throws SQLException, IOException, ExecutionException, InterruptedException {
         final User currentUser = userService.getCurrentUser();
         return fileService.createFile(currentUser, file);
+    }
 
+    @PostMapping(value = "/find-category",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public SSSFile findFileCategory(@RequestParam("file") MultipartFile file) throws SQLException, IOException, ExecutionException, InterruptedException {
+        final User currentUser = userService.getCurrentUser();
+        return fileService.findFileCategory(currentUser, file);
     }
 
 }

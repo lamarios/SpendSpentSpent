@@ -108,21 +108,17 @@ class Search extends StatelessWidget {
                 ],
               ),
               Row(
+                spacing: 4,
                 children: [
                   SizedBox(
                     width: iconWidth,
-                    child: Icon(
-                      Icons.comment_outlined,
-                      color: colors.onSurface,
-                    ),
+                    child: Icon(Icons.search, color: colors.onSurface),
                   ),
                   Expanded(
                     child: TextField(
                       controller: cubit.noteController,
                       autocorrect: false,
-                      decoration: const InputDecoration(
-                        hintText: "Expense note",
-                      ),
+                      decoration: const InputDecoration(hintText: "Search"),
                     ),
                   ),
                 ],

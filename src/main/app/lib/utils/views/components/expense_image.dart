@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/material.dart';
+import 'package:material_loading_indicator/loading_indicator.dart';
+import 'package:spend_spent_spent/expenses/models/ai_processing_status.dart';
 import 'package:spend_spent_spent/expenses/models/sss_file.dart';
 import 'package:spend_spent_spent/globals.dart';
 
@@ -21,7 +25,6 @@ class ExpenseImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
 
     return FutureBuilder<String?>(
       builder: (context, data) {
@@ -39,9 +42,20 @@ class ExpenseImage extends StatelessWidget {
                       fit: BoxFit.cover,
                       fadeInDuration: animationDuration,
                       fadeOutDuration: animationDuration,
+                      progressIndicatorBuilder: (context, url, progress) {
+                        double side = min(width, height) / 10;
+                        return Center(
+                          child: SizedBox(
+                            width: side,
+                            height: side,
+                            child: LoadingIndicator(),
+                          ),
+                        );
+                      },
                     ),
                   ),
-                  if (showStatus)
+                  if (showStatus &&
+                      file.status != AiProcessingStatus.NO_PROCESSING)
                     Positioned(
                       bottom: 20,
                       right: 20,
@@ -56,25 +70,23 @@ class ExpenseImage extends StatelessWidget {
                         ),
                         child: AnimatedSwitcher(
                           duration: animationDuration,
-                          key: ValueKey(file.status),
-                          child: Row(
-                            spacing: 8,
-                            children: [
-                              if (file.status.getIcon() != null)
-                                Icon(
-                                  file.status.getIcon(),
-                                  size: 15,
-                                  color: colors.onPrimaryContainer,
-                                ),
-                              if (file.status.getLabel().isNotEmpty)
-                                Text(
-                                  file.status.getLabel(),
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: colors.onPrimaryContainer,
-                                  ),
-                                ),
-                            ],
-                          ),
+                          child: switch (file.status) {
+                            AiProcessingStatus.NO_PROCESSING =>
+                              SizedBox.shrink(),
+                            AiProcessingStatus.DONE => Icon(
+                              Icons.auto_awesome,
+                              size: 15,
+                            ),
+                            AiProcessingStatus.ERROR => Icon(
+                              Icons.error,
+                              size: 15,
+                            ),
+                            _ => SizedBox(
+                              width: 15,
+                              height: 15,
+                              child: LoadingIndicator(),
+                            ),
+                          },
                         ),
                       ),
                     ),

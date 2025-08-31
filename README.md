@@ -33,6 +33,8 @@ new expense as easy and as quick as possible. The application features are split
 | ALLOW_SIGNUP         | 0       | No       | 1 = allow signups, 0 = Do not allow signups                                                                                                                                     |
 | ANNOUNCEMENT_MESSAGE | (none)  | No       | Show a message on the login screen, ex: ANNOUNCEMENT_MESSAGE="Welcome to my SpendSpentSpent instance". See demo instance to see what it looks like                              |
 
+### Email
+
 SMTP environment variables are necessary if you want to enable the forgot password function and recurring expense
 notification emails.
 
@@ -45,6 +47,18 @@ notification emails.
 | SMTP_PASSWORD           | (none)                | No                                                    |                                                       |
 | SMTP_FROM               | (none)                | **Yes**                                               | Who will be the sender of the email                   | 
 | SMTP_TRANSPORT_STRATEGY | SMTP                  | **Yes**                                               | Possible values: SMTP, SMTPS, SMTP_TLS                |
+
+### Ollama AI
+
+SSS supports analyzing images using ollama to find prices or tags about images attached to an expense.
+
+| Name                | Default      | Comments                                                                    | 
+|---------------------|--------------|-----------------------------------------------------------------------------|
+| OLLAMA_API_URL      | (none)       | The url of the ollama instance                                              | 
+| OLLAMA_API_KEY      | (none)       | API Key to talk to the ollama server                                        |
+| OLLAMA_VISION_MODEL | qwen2.5vl:7b | Which model to user. I observed fairly good results with the default model. |
+
+### OIDC
 
 SSS Supports SSO by implementing OIDC. You will need to set up your OIDC client as a Public Client and enable PKCE.
 Here are the used callback urls:

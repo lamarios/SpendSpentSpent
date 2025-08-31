@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spend_spent_spent/add_expense_dialog/state/add_expense_dialog.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/expense_file_management.dart';
 import 'package:spend_spent_spent/expenses/models/sss_file.dart';
+import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/utils/views/components/expense_image.dart';
 
 class UploadImageButton extends StatelessWidget {
@@ -16,6 +17,10 @@ class UploadImageButton extends StatelessWidget {
       context,
       files: files,
       onFilesChanged: (files) => cubit.setImages(files),
+      onAmountTapped: (amount) {
+        cubit.setAmount(formatCurrency(amount));
+      },
+      onTagTapped: cubit.setNote,
     );
   }
 

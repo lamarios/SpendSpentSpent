@@ -1,6 +1,5 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.Constants;
 import com.ftpix.sss.dao.ExpenseDao;
 import com.ftpix.sss.models.*;
 import org.jooq.Condition;
@@ -9,24 +8,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.ftpix.sss.Constants.dateFormatter;
 import static com.ftpix.sss.dsl.Tables.EXPENSE;
+import static com.ftpix.sss.dsl.Tables.FILES;
 import static org.jooq.impl.DSL.upper;
 
 @Service
 public class SearchService {
     private final CategoryService categoryService;
     private final ExpenseDao expenseDao;
+    private final FileService fileService;
 
     @Autowired
-    public SearchService(CategoryService categoryService, ExpenseDao expenseDao) {
+    public SearchService(CategoryService categoryService, ExpenseDao expenseDao, FileService fileService) {
         this.categoryService = categoryService;
         this.expenseDao = expenseDao;
+        this.fileService = fileService;
     }
 
     public SearchParameters getSearchParameters(User currentUser, Long categoryId) throws SQLException {
@@ -87,11 +88,20 @@ public class SearchService {
         }
 
         //TODO: handle dates
-        if (parameters.note() != null && !parameters.note().trim().isEmpty()) {
-            conditions.add(upper(EXPENSE.NOTE).like("%" + parameters.note().toUpperCase() + "%"));
+        if (parameters.searchQuery() != null && !parameters.searchQuery().trim().isEmpty()) {
+            String upperCase = parameters.searchQuery().toUpperCase();
+            conditions.add(upper(EXPENSE.NOTE).like("%" + upperCase + "%")
+                    .or(upper(FILES.AI_TAGS).like("%" + upperCase + "%")));
         }
 
-        Map<String, List<Expense>> grouped = expenseDao.getWhere(currentUser, new OrderField[]{EXPENSE.DATE.desc()}, conditions.toArray(new Condition[0]))
+        List<Expense> searchResult = expenseDao.search(currentUser, new OrderField[]{EXPENSE.DATE.desc()}, conditions.toArray(new Condition[0]));
+
+        List<SSSFile> files = fileService.getFiles(searchResult);
+
+        files.forEach(file -> searchResult.stream().filter(e -> Objects.equals(e.getId(), file.getExpenseId()))
+                .forEach(expense -> expense.getFiles().add(file)));
+
+        Map<String, List<Expense>> grouped = searchResult
                 .stream()
                 .collect(Collectors.groupingBy(expense -> dateFormatter.format(expense.getDate())));
 
@@ -104,6 +114,7 @@ public class SearchService {
             exp.setTotal(expenses.stream().mapToDouble(Expense::getAmount).sum());
             result.put(s, exp);
         });
+
 
         return result;
     }

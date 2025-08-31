@@ -1,11 +1,11 @@
 meta {
-  name: Upload file
+  name: Find category
   type: http
-  seq: 1
+  seq: 3
 }
 
 post {
-  url: {{API}}/API/Files
+  url: {{API}}/API/Files/find-category
   body: multipartForm
   auth: inherit
 }

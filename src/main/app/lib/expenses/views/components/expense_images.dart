@@ -6,6 +6,8 @@ import 'package:spend_spent_spent/sss_files/views/components/sss_file_listener.d
 import 'package:spend_spent_spent/utils/all_scroll_behavior.dart';
 import 'package:spend_spent_spent/utils/views/components/expense_image.dart';
 
+const double _imageSize = 270;
+
 class ExpenseImages extends StatelessWidget {
   final List<SssFile> files;
 
@@ -31,22 +33,28 @@ class ExpenseImages extends StatelessWidget {
               spacing: 8,
               children: [
                 SizedBox(
-                  height: 300,
+                  height: _imageSize,
                   child: ScrollConfiguration(
                     behavior: AllScrollBehavior(),
                     child: CarouselView(
-                      itemExtent: 300,
+                      itemExtent: files.length == 1
+                          ? double.infinity
+                          : _imageSize,
                       itemSnapping: true,
                       enableSplash: false,
                       children: [
                         ...files.map(
                           (e) => Stack(
                             children: [
-                              ExpenseImage(
-                                file: e,
-                                width: 300,
-                                height: 300,
-                                showStatus: true,
+                              Positioned.fill(
+                                child: ExpenseImage(
+                                  file: e,
+                                  width: files.length == 1
+                                      ? double.maxFinite
+                                      : _imageSize,
+                                  height: _imageSize,
+                                  showStatus: true,
+                                ),
                               ),
                             ],
                           ),

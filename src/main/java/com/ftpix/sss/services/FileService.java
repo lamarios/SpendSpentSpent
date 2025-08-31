@@ -1,10 +1,7 @@
 package com.ftpix.sss.services;
 
 import com.ftpix.sss.dao.FileDAO;
-import com.ftpix.sss.models.AiProcessingStatus;
-import com.ftpix.sss.models.Expense;
-import com.ftpix.sss.models.SSSFile;
-import com.ftpix.sss.models.User;
+import com.ftpix.sss.models.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,14 +10,17 @@ import org.jooq.Fields;
 import org.jooq.Files;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -30,17 +30,20 @@ import static com.ftpix.sss.dsl.Tables.FILES;
 @Service
 public class FileService {
 
+    public static final int ONE_DAY = 24 * 60 * 60 * 1000;
     private final String filePath;
     private final FileDAO filesDAO;
     private final AiFileProcessingService aiFileProcessingService;
+    private final CategoryService categoryService;
     private final static Logger log = LogManager.getLogger();
 
     private final ExecutorService exec = Executors.newSingleThreadExecutor();
 
     @Autowired
-    public FileService(@Value("${FILE_PATH:./files}") String filePath, FileDAO filesDAO, AiFileProcessingService aiFileProcessingService) {
+    public FileService(@Value("${FILE_PATH:./files}") String filePath, FileDAO filesDAO, AiFileProcessingService aiFileProcessingService, CategoryService categoryService) {
         this.filesDAO = filesDAO;
         this.aiFileProcessingService = aiFileProcessingService;
+        this.categoryService = categoryService;
         File folder = new File(filePath);
         if (!folder.exists()) {
             folder.mkdir();
@@ -53,12 +56,56 @@ public class FileService {
     }
 
 
-    public SSSFile createFile(User currentUser, MultipartFile file) throws IOException {
+    @Scheduled(fixedRate = ONE_DAY)
+    public void fileMaintenance() {
+        long oneDayFromNow = System.currentTimeMillis() - ONE_DAY;
+        // we get all the pictures older than one day
+        filesDAO.getWhere(FILES.TIME_UPDATED.lt(oneDayFromNow))
+                .stream()
+                .filter(file -> {
+                    boolean toDelete = file.getExpenseId() == null;
+
+                    if (toDelete) {
+                        deleteFile(file);
+                    }
+
+                    return !toDelete;
+                })
+                // then we remove anything that is already done
+                .filter(file -> file.getStatus() != AiProcessingStatus.DONE && file.getStatus() != AiProcessingStatus.NO_PROCESSING)
+                // with the remaining files, we reprocess them through our ai
+                .forEach(file -> {
+                    if (aiFileProcessingService.isAiEnabled()) {
+                        file.setStatus(AiProcessingStatus.PENDING);
+                        filesDAO.update(file);
+                        processFileWithAi(file);
+                    }
+                });
+
+
+        // we reprocess pictures if the status is not done
+    }
+
+    private boolean deleteFile(SSSFile file) {
+        File f = new File(filePath + "/" + file.getFileName());
+        if (f.exists()) {
+            try {
+                f.delete();
+            } catch (Exception e) {
+                log.error("Couldn't delete file " + f.getAbsolutePath(), e);
+            }
+        }
+        filesDAO.delete(file);
+        return true;
+    }
+
+    public SSSFile createFile(User currentUser, MultipartFile file) throws IOException, ExecutionException, InterruptedException {
+        boolean aiEnabled = aiFileProcessingService.isAiEnabled();
         SSSFile sssFile = new SSSFile();
         sssFile.setUserId(currentUser.getId());
         sssFile.setTimeCreated(System.currentTimeMillis());
         sssFile.setTimeUpdated(System.currentTimeMillis());
-        sssFile.setStatus(AiProcessingStatus.PENDING);
+        sssFile.setStatus(aiEnabled ? AiProcessingStatus.PENDING : AiProcessingStatus.NO_PROCESSING);
 
         String newfileName = sssFile.getId() + "." + FilenameUtils.getExtension(file.getOriginalFilename());
         File dest = new File(filePath + "/" + newfileName);
@@ -68,15 +115,42 @@ public class FileService {
 
         filesDAO.insert(sssFile);
 
-        processFileWithAi(sssFile);
+        if (aiEnabled) {
+            processFileWithAi(sssFile);
+        }
 
         return sssFile;
+    }
+
+    public SSSFile findFileCategory(User currentUser, MultipartFile file) throws ExecutionException, InterruptedException {
+        var work = exec.submit(() -> {
+            String newfileName = "test." + FilenameUtils.getExtension(file.getOriginalFilename());
+            File dest = new File(filePath + "/" + newfileName);
+            file.transferTo(dest);
+
+            try {
+                // we refresh the file before saving it to avoid issues
+                return aiFileProcessingService.findBestCategory(dest, categoryService.getAvailable(currentUser)
+                        .values()
+                        .stream()
+                        .flatMap(Collection::stream)
+                        .toList());
+            } catch (Exception e) {
+                log.error("Error while processing file " + dest.getAbsolutePath(), e);
+                throw new RuntimeException(e);
+            }
+        });
+
+        var result = work.get();
+        System.out.println(result);
+
+        return null;
     }
 
     private void processFileWithAi(SSSFile file) {
         exec.submit(() -> {
             File f = new File(filePath + "/" + file.getFileName());
-            SSSFile toProcess = file;
+            SSSFile toProcess;
             try {
                 // we refresh the file before saving it to avoid issues
                 toProcess = filesDAO.getOneWhere(FILES.ID.eq(file.getId().toString())).get();

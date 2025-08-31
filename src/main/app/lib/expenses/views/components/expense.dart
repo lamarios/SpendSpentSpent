@@ -65,7 +65,11 @@ class OneExpense extends StatelessWidget {
                   visible: hasNote(),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(expense.note ?? ''),
+                    child: Text(
+                      expense.note ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
                 Row(
@@ -100,42 +104,53 @@ class OneExpense extends StatelessWidget {
               ],
             ),
           ),
-          if (expense.files.isNotEmpty)
-            Stack(
-              clipBehavior: Clip.none,
+          SizedBox(
+            width: 200,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                ExpenseImage(
-                  file: expense.files.first,
-                  width: 50,
-                  height: 50,
-                  showStatus: false,
-                ),
-                Positioned(
-                  top: -10,
-                  right: -10,
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colors.primaryContainer,
-                    ),
-                    child: Center(
-                      child: Text(
-                        expense.files.length.toString(),
-                        style: textTheme.labelSmall?.copyWith(
-                          color: colors.onPrimaryContainer,
+                if (expense.files.isNotEmpty)
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      ExpenseImage(
+                        file: expense.files.first,
+                        width: 50,
+                        height: 50,
+                        showStatus: false,
+                      ),
+                      Positioned(
+                        top: -10,
+                        right: -10,
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: colors.primaryContainer,
+                          ),
+                          child: Center(
+                            child: Text(
+                              expense.files.length.toString(),
+                              style: textTheme.labelSmall?.copyWith(
+                                color: colors.onPrimaryContainer,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
+                    ],
+                  ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      textAlign: TextAlign.right,
+                      formatCurrency(expense.amount),
+                      style: TextStyle(color: colors.onSurface),
                     ),
                   ),
                 ),
               ],
-            ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              formatCurrency(expense.amount),
-              style: TextStyle(color: colors.onSurface),
             ),
           ),
         ],
