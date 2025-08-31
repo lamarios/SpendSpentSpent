@@ -130,7 +130,7 @@ public class FileService {
 
             try {
                 // we refresh the file before saving it to avoid issues
-                return aiFileProcessingService.findBestCategory(dest, categoryService.getAvailable(currentUser)
+                return aiFileProcessingService.findBestCategory(dest, categoryService.getUsed(currentUser)
                         .values()
                         .stream()
                         .flatMap(Collection::stream)
