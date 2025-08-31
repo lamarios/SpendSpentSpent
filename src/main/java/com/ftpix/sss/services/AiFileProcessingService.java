@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,7 +57,7 @@ public class AiFileProcessingService {
 
         var tags = getTagsForFile(f);
 
-        var tagsForPrompt = tags.stream().filter(s -> {
+        var tagsForPrompt = tags.tags().stream().filter(s -> {
             try {
                 var parsed = Double.parseDouble(s);
                 // if we can parse it, it's a value and not useful for categorisation
@@ -117,7 +116,8 @@ public class AiFileProcessingService {
                 .toList();
 
         SSSFile file = new SSSFile();
-        file.setAiTags(tags);
+        file.setAiTags(tags.tags());
+        file.setAmounts(tags.amounts());
 
         return new CategorySuggestionResponse(sorted, file);
     }
@@ -126,24 +126,65 @@ public class AiFileProcessingService {
         return Arrays.stream(icon.getSearchTerms()).filter(terms::contains).count();
     }
 
-    public List<String> getTagsForFile(File f) throws Exception {
+    public ImageTagsResponse getTagsForFile(File f) throws Exception {
         log.info("Processing file {}", f.getAbsolutePath());
 
         var api = getClient();
 
+        String imagePrompt = """
+                You are an AI system that analyze images to find what it is. \s
+                
+                Your task: \s
+                - Describe the image focusing on items, and their descriptions. if a price is written you may add it. \s
+                - Find a total price if it is written, do not do esimations \s
+                - Find any information about a seller
+                """;
+
+/*
         String prompt = """
                 Analyze this picture and generate search tags for an expense tracking application based on what you see,
                 Your tags should focus on describing the items, the price and who is selling it. If you see a price, format it so it can be parsed as double in java.
-                
+
                 You answer will only contain the tags, separated by commas. You should give at most 5 tags. Follow this instruction very strictly
                 """;
-        OllamaResult result = api.generateWithImageFiles(visionModel, prompt, List.of(f), new OptionsBuilder().build());
+*/
+        OllamaResult result = api.generateWithImageFiles(visionModel, imagePrompt, List.of(f), new OptionsBuilder().build());
+
+        log.info("Image description finished, response: {}", result.getResponse());
+
+
+        String tagPrompt = """
+                You are an AI that categorizes image descriptions for an expense tracker application.
+                You will be given one input:
+                
+                - An image description
+                
+                Your task:
+                - Find tags that can help categorisation of an expense
+                - Your tags can include the seller information if you find any
+                - Find any amount and format it into a java parseable format
+                - Do not include price information in the tags
+                - Do not include location information in the tags
+                - You will include up to 7 tags
+                - The tags will be sorted in order of relevance
+                - The tags will be in proper english, no special characters
+                
+                
+                
+                The description:
+                %s
+                
+                """;
+
+        result = api.generate(textModel, tagPrompt.formatted(result.getResponse()), ImageTagsResponse.toOllamaFormat());
 
         log.info("Processing finished, response: {}", result.getResponse());
 
-        return Arrays.stream(result.getResponse().split(",")).map(String::trim)
-                // filtering junk
-                .filter(s -> !junk.contains(s)).toList();
+        var response = gson.fromJson(result.getResponse(), ImageTagsResponse.class);
+
+        response.amounts().sort((o1, o2) -> Double.compare(o2,o1));
+
+        return response;
     }
 
 

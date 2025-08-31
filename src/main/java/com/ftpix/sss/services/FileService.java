@@ -55,10 +55,9 @@ public class FileService {
         this.filePath = folder.getAbsolutePath();
     }
 
-    public boolean clearExpenseFiles(Long expenseId){
+    public boolean clearExpenseFiles(Long expenseId) {
         return filesDAO.clearExpenseFiles(expenseId);
     }
-
 
 
     @Scheduled(fixedRate = ONE_DAY)
@@ -158,6 +157,7 @@ public class FileService {
                     // we refresh the file before saving it to avoid issues
                     bestCategory = aiFileProcessingService.findBestCategory(dest, categories);
                     sssFile.setAiTags(bestCategory.file().getAiTags());
+                    sssFile.setAmounts(bestCategory.file().getAmounts());
                     bestCategory = new CategorySuggestionResponse(bestCategory.categories(), sssFile);
                     bestCategory.file().setStatus(AiProcessingStatus.DONE);
                 } else {
@@ -184,9 +184,10 @@ public class FileService {
                 toProcess = filesDAO.getOneWhere(FILES.ID.eq(file.getId().toString())).get();
                 toProcess.setStatus(AiProcessingStatus.PROCESSING);
                 filesDAO.update(toProcess);
-                List<String> tags = aiFileProcessingService.getTagsForFile(f);
+                var tags = aiFileProcessingService.getTagsForFile(f);
                 toProcess = filesDAO.getOneWhere(FILES.ID.eq(file.getId().toString())).get();
-                toProcess.setAiTags(tags);
+                toProcess.setAiTags(tags.tags());
+                toProcess.setAmounts(tags.amounts());
                 toProcess.setStatus(AiProcessingStatus.DONE);
                 filesDAO.update(toProcess);
             } catch (Exception e) {

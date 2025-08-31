@@ -89,45 +89,59 @@ public class FilesRecord extends UpdatableRecordImpl<FilesRecord> {
     }
 
     /**
+     * Setter for <code>public.files.amounts</code>.
+     */
+    public void setAmounts(String value) {
+        set(5, value);
+    }
+
+    /**
+     * Getter for <code>public.files.amounts</code>.
+     */
+    public String getAmounts() {
+        return (String) get(5);
+    }
+
+    /**
      * Setter for <code>public.files.file_name</code>.
      */
     public void setFileName(String value) {
-        set(5, value);
+        set(6, value);
     }
 
     /**
      * Getter for <code>public.files.file_name</code>.
      */
     public String getFileName() {
-        return (String) get(5);
+        return (String) get(6);
     }
 
     /**
      * Setter for <code>public.files.time_created</code>.
      */
     public void setTimeCreated(Long value) {
-        set(6, value);
+        set(7, value);
     }
 
     /**
      * Getter for <code>public.files.time_created</code>.
      */
     public Long getTimeCreated() {
-        return (Long) get(6);
+        return (Long) get(7);
     }
 
     /**
      * Setter for <code>public.files.time_updated</code>.
      */
     public void setTimeUpdated(Long value) {
-        set(7, value);
+        set(8, value);
     }
 
     /**
      * Getter for <code>public.files.time_updated</code>.
      */
     public Long getTimeUpdated() {
-        return (Long) get(7);
+        return (Long) get(8);
     }
 
     // -------------------------------------------------------------------------
@@ -153,7 +167,7 @@ public class FilesRecord extends UpdatableRecordImpl<FilesRecord> {
     /**
      * Create a detached, initialised FilesRecord
      */
-    public FilesRecord(String id, String userId, Long expenseId, String status, String aiTags, String fileName, Long timeCreated, Long timeUpdated) {
+    public FilesRecord(String id, String userId, Long expenseId, String status, String aiTags, String amounts, String fileName, Long timeCreated, Long timeUpdated) {
         super(Files.FILES);
 
         setId(id);
@@ -161,6 +175,7 @@ public class FilesRecord extends UpdatableRecordImpl<FilesRecord> {
         setExpenseId(expenseId);
         setStatus(status);
         setAiTags(aiTags);
+        setAmounts(amounts);
         setFileName(fileName);
         setTimeCreated(timeCreated);
         setTimeUpdated(timeUpdated);

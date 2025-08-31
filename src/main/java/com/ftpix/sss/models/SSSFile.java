@@ -9,6 +9,7 @@ public class SSSFile {
     private Long expenseId;
     private AiProcessingStatus status;
     private List<String> aiTags;
+    private List<Double> amounts;
     private String fileName;
     private long timeCreated;
     private long timeUpdated;
@@ -76,5 +77,13 @@ public class SSSFile {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public List<Double> getAmounts() {
+        return amounts;
+    }
+
+    public void setAmounts(List<Double> amounts) {
+        this.amounts = amounts;
     }
 }

@@ -2,7 +2,7 @@ CREATE TABLE files (
     id           VARCHAR(55) PRIMARY KEY DEFAULT gen_random_uuid(),
 
     -- Foreign key to user(id), not nullable, delete file if user is deleted
-    user_id      VARCHAR(55)   NOT NULL,
+    user_id      VARCHAR(55) NOT NULL,
     CONSTRAINT fk_sss_file_user FOREIGN KEY (user_id)
         REFERENCES "user" (id)
         ON DELETE CASCADE,
@@ -18,10 +18,11 @@ CREATE TABLE files (
 
     -- Free-form AI tags
     ai_tags      TEXT,
+    amounts      TEXT,
 
-    file_name TEXT,
+    file_name    TEXT,
 
     -- Unix timestamps
-    time_created BIGINT NOT NULL,
-    time_updated BIGINT NOT NULL
+    time_created BIGINT      NOT NULL,
+    time_updated BIGINT      NOT NULL
 );

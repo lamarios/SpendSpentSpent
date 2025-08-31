@@ -83,6 +83,11 @@ public class Files extends TableImpl<FilesRecord> {
     public final TableField<FilesRecord, String> AI_TAGS = createField(DSL.name("ai_tags"), SQLDataType.CLOB, this, "");
 
     /**
+     * The column <code>public.files.amounts</code>.
+     */
+    public final TableField<FilesRecord, String> AMOUNTS = createField(DSL.name("amounts"), SQLDataType.CLOB, this, "");
+
+    /**
      * The column <code>public.files.file_name</code>.
      */
     public final TableField<FilesRecord, String> FILE_NAME = createField(DSL.name("file_name"), SQLDataType.CLOB, this, "");
