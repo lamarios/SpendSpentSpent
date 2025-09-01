@@ -57,16 +57,6 @@ public class AiFileProcessingService {
 
         var tags = getTagsForFile(f);
 
-        var tagsForPrompt = tags.tags().stream().filter(s -> {
-            try {
-                var parsed = Double.parseDouble(s);
-                // if we can parse it, it's a value and not useful for categorisation
-                return false;
-            } catch (Exception e) {
-                return true;
-            }
-        }).toList();
-
         var api = getClient();
 
         List<String> availableSearchTerms = availableCategories.stream()
@@ -100,7 +90,7 @@ public class AiFileProcessingService {
                 """;
 
 
-        var prompt = findCategoryPrompt.formatted(String.join(",", tagsForPrompt), join);
+        var prompt = findCategoryPrompt.formatted(String.join(",", tags.tags()), join);
 
 
         OllamaResult result = api.generate(textModel, prompt, CategoryMatchResponse.toOllamaFormat());
@@ -182,7 +172,7 @@ public class AiFileProcessingService {
 
         var response = gson.fromJson(result.getResponse(), ImageTagsResponse.class);
 
-        response.amounts().sort((o1, o2) -> Double.compare(o2,o1));
+        response.amounts().sort((o1, o2) -> Double.compare(o2, o1));
 
         return response;
     }
@@ -190,7 +180,10 @@ public class AiFileProcessingService {
 
     private OllamaAPI getClient() throws Exception {
         OllamaAPI api = new OllamaAPI(ollamaUrl);
-        api.setRequestTimeoutSeconds(3600);
+        if (ollamaApiKey != null && !ollamaApiKey.trim().isEmpty()) {
+            api.setBearerAuth(ollamaApiKey);
+        }
+        api.setRequestTimeoutSeconds(120);
         api.setVerbose(false);
 
         if (!api.ping()) {

@@ -40,7 +40,7 @@ public class FileService {
     private final ExecutorService exec = Executors.newSingleThreadExecutor();
 
     @Autowired
-    public FileService(@Value("${FILE_PATH:./files}") String filePath, FileDAO filesDAO, AiFileProcessingService aiFileProcessingService, CategoryService categoryService) {
+    public FileService(@Value("${FILES_PATH:./files}") String filePath, FileDAO filesDAO, AiFileProcessingService aiFileProcessingService, CategoryService categoryService) {
         this.filesDAO = filesDAO;
         this.aiFileProcessingService = aiFileProcessingService;
         this.categoryService = categoryService;
