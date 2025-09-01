@@ -34,7 +34,7 @@ class ExpenseMenu extends StatelessWidget {
     );
   }
 
-  Future<void> editExpense(BuildContext context) async {
+  Future<void> editExpense(BuildContext context, Expense expense) async {
     final exp = await AddExpense.showDialog(context, expense: expense);
     if (exp != null && context.mounted) {
       context.read<SimpleCubitState<Expense?>>().setValue(exp);
@@ -172,7 +172,7 @@ class ExpenseMenu extends StatelessWidget {
                   Expanded(
                     child: FilledButton.tonalIcon(
                       icon: Icon(Icons.edit),
-                      onPressed: () => editExpense(context),
+                      onPressed: () => editExpense(context, expense),
                       label: Text('Edit expense'),
                     ),
                   ),
