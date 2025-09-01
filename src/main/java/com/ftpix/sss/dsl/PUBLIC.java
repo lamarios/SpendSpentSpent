@@ -6,6 +6,7 @@ package com.ftpix.sss.dsl;
 
 import com.ftpix.sss.dsl.tables.Category;
 import com.ftpix.sss.dsl.tables.Expense;
+import com.ftpix.sss.dsl.tables.Files;
 import com.ftpix.sss.dsl.tables.FlywaySchemaHistory;
 import com.ftpix.sss.dsl.tables.MonthlyHistory;
 import com.ftpix.sss.dsl.tables.RecurringExpense;
@@ -45,6 +46,11 @@ public class PUBLIC extends SchemaImpl {
      * The table <code>public.expense</code>.
      */
     public final Expense EXPENSE = Expense.EXPENSE;
+
+    /**
+     * The table <code>public.files</code>.
+     */
+    public final Files FILES = Files.FILES;
 
     /**
      * The table <code>public.flyway_schema_history</code>.
@@ -99,6 +105,7 @@ public class PUBLIC extends SchemaImpl {
         return Arrays.asList(
             Category.CATEGORY,
             Expense.EXPENSE,
+            Files.FILES,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
             MonthlyHistory.MONTHLY_HISTORY,
             RecurringExpense.RECURRING_EXPENSE,

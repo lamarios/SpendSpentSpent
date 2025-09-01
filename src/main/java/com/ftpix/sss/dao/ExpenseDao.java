@@ -1,5 +1,6 @@
 package com.ftpix.sss.dao;
 
+import com.ftpix.sss.dsl.Tables;
 import com.ftpix.sss.dsl.tables.records.ExpenseRecord;
 import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.Category;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 
 import static com.ftpix.sss.Constants.dateFormatter;
 import static com.ftpix.sss.dsl.Tables.EXPENSE;
+import static com.ftpix.sss.dsl.Tables.FILES;
 import static org.jooq.impl.DSL.lower;
 
 @Component("expenseDaoJooq")
@@ -107,7 +109,28 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
         e.setTimestamp(r.getTimestamp());
         e.setNote(r.getNote());
         return e;
+    }
 
+    /**
+     * Like getWhere but will join the image table to search the tags
+     * @param user
+     * @param orderBy
+     * @param filter
+     * @return
+     */
+    public List<Expense> search(User user, OrderField[] orderBy, Condition... filter){
+        Map<Long, Category> userCategories = getUserCategories(user);
+
+        Condition[] conditions = (Condition[]) ArrayUtils.add(filter, getCategoryField().in(userCategories.keySet()));
+        return getDsl().selectDistinct(EXPENSE.fields())
+                .from(getTable())
+                .leftJoin(Tables.FILES)
+                .on(FILES.EXPENSE_ID.eq(EXPENSE.ID))
+                .where(conditions)
+                .orderBy(orderBy)
+                .fetch(r -> {
+                    return fromRecord(r.into(EXPENSE), userCategories);
+                });
     }
 
     @Override

@@ -1,6 +1,6 @@
 FROM amazoncorretto:21
 
-RUN mkdir /app && mkdir /config
+RUN mkdir /app && mkdir /config && mkdir /app-files
 
 
 COPY ./target/SpendSpentSpent-*.jar  /app/SpendSpentSpent.jar
@@ -10,6 +10,7 @@ ADD ./docker/run.sh /run.sh
 EXPOSE 9001
 
 VOLUME "/config"
+VOLUME "/app-files"
 
 RUN chmod +x /run.sh
 

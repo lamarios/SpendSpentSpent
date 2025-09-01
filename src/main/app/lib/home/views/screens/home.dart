@@ -1,21 +1,78 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:gap/gap.dart';
+import 'package:logging/logging.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:spend_spent_spent/add_expense_dialog/views/components/guess_category_dialog.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
-import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/identity/views/components/logout_handler.dart';
 import 'package:spend_spent_spent/router.dart';
 
 import '../../../globals.dart';
 
+final _log = Logger('HomeScreen');
+
 @RoutePage()
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late StreamSubscription _intentSub;
+
+  @override
+  void dispose() {
+    _intentSub.cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _setupIntentSharing();
+  }
+
+  void _setupIntentSharing() {
+    // Listen to media sharing coming from outside the app while the app is in the memory.
+    _intentSub = ReceiveSharingIntent.instance.getMediaStream().listen(
+      (value) async {
+        _log.fine("Received file to open: ${value.length}");
+        if (value.isNotEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            if (context.mounted) {
+              GuessCategoryDialog.show(context, file: value.first);
+            }
+          });
+        }
+      },
+      onError: (err) {
+        _log.severe("Failed to receive file to open", err);
+      },
+    );
+
+    // Get the media sharing coming from outside the app while the app is closed.
+    ReceiveSharingIntent.instance.getInitialMedia().then((value) async {
+      _log.fine("Received file to open 2 ${value.length}");
+
+      if (value.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          if (context.mounted) {
+            GuessCategoryDialog.show(context, file: value.first);
+          }
+        });
+      }
+
+      // Tell the library that we are done processing the intent.
+      ReceiveSharingIntent.instance.reset();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     final screenWidth = MediaQuery.sizeOf(context).width;
     final menuWidth = 250;
     final menuMargin = (screenWidth - menuWidth) / 2;

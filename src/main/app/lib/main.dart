@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -36,17 +38,44 @@ Future<void> main() async {
   var serverUrl = await Preferences.get(Preferences.SERVER_URL);
   if (serverUrl.isNotEmpty) {
     try {
-      service.setUrl(serverUrl);
+      await service.setUrl(serverUrl);
     } catch (e) {
       await Preferences.remove(Preferences.SERVER_URL);
     }
   }
 
+  // once we're all ready, and we're already logged in, we connect to the websocket
+  if (existingToken.isNotEmpty) {
+    userPassCubit.connectToSocket();
+  }
+
   runApp(const SpendSpentSpent());
 }
 
-class SpendSpentSpent extends StatelessWidget {
+class SpendSpentSpent extends StatefulWidget {
   const SpendSpentSpent({super.key});
+
+  @override
+  State<SpendSpentSpent> createState() => _SpendSpentSpentState();
+}
+
+class _SpendSpentSpentState extends State<SpendSpentSpent>
+    with WidgetsBindingObserver {
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    getIt<UsernamePasswordCubit>().socket?.close();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      getIt<UsernamePasswordCubit>().socket?.close();
+    } else if (state == AppLifecycleState.resumed) {
+      getIt<UsernamePasswordCubit>().socket?.connect();
+    }
+  }
 
   // This widget is the root of your application.
   @override

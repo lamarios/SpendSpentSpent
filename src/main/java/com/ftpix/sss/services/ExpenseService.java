@@ -30,20 +30,36 @@ public class ExpenseService {
     private final SimpleDateFormat monthOnly = new SimpleDateFormat("yyyy-MM");
 
     private final ExpenseDao expenseDaoJooq;
+    private final FileService fileService;
+    private final ExpenseDao expenseDao;
 
     @Autowired
-    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ExpenseDao expenseDaoJooq) {
+    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ExpenseDao expenseDaoJooq, FileService fileService, ExpenseDao expenseDao) {
         this.categoryService = categoryService;
         this.settingsService = settingsService;
         this.expenseDaoJooq = expenseDaoJooq;
+        this.fileService = fileService;
+        this.expenseDao = expenseDao;
     }
 
     public List<Expense> getAll(User user) throws Exception {
-        return expenseDaoJooq.getWhere(user);
+        List<Expense> expenses = expenseDaoJooq.getWhere(user);
+        getFiles(expenses);
+        return expenses;
     }
 
     public Expense get(long id, User user) throws Exception {
-        return expenseDaoJooq.get(user, id).orElse(null);
+        return expenseDaoJooq.get(user, id).map(expense -> {
+            getFiles(List.of(expense));
+            return expense;
+        }).orElse(null);
+    }
+
+    private void getFiles(List<Expense> expenses) {
+        List<SSSFile> files = fileService.getFiles(expenses);
+
+        files.forEach(file -> expenses.stream().filter(e -> Objects.equals(e.getId(), file.getExpenseId()))
+                .forEach(expense -> expense.getFiles().add(file)));
     }
 
     public Map<String, Long> suggestNotes(User currentUser, Expense expense) {
@@ -75,6 +91,9 @@ public class ExpenseService {
                 .stream()
                 .collect(Collectors.groupingBy(expense -> Constants.dateFormatter.format(expense.getDate())));
 
+        getFiles(grouped.values().stream().flatMap(Collection::stream).toList());
+
+
         Map<String, DailyExpense> result = new TreeMap<>(Collections.reverseOrder());
 
         grouped.forEach((s, expenses) -> {
@@ -86,6 +105,19 @@ public class ExpenseService {
         });
 
         return result;
+    }
+
+    public Expense update(Expense expense, User user) {
+        expenseDao.update(user, expense);
+
+        fileService.clearExpenseFiles(expense.getId());
+
+        expense.getFiles()
+                .stream()
+                .peek(file -> file.setExpenseId(expense.getId()))
+                .forEach(fileService::updateFile);
+
+        return expense;
     }
 
     public Expense create(Expense expense, User user) throws Exception {
@@ -113,7 +145,19 @@ public class ExpenseService {
             expense.setType(Expense.TYPE_NORMAL);
         }
 
-        return expenseDaoJooq.insert(user, expense);
+        Expense result = expenseDaoJooq.insert(user, expense);
+
+        // we process the files
+        // we don't update the files with what we got as it might still be processing, we just take the DB version and assign
+        // the expense id
+        for (SSSFile sssFile : expense.getFiles()) {
+            fileService.getfile(user, sssFile.getId().toString()).ifPresent(file -> {
+                file.setExpenseId(result.getId());
+                fileService.updateFile(file);
+            });
+        }
+
+        return result;
     }
 
     public boolean delete(long id, User user) throws Exception {

@@ -1,0 +1,19 @@
+meta {
+  name: Upload file
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API}}/API/Files
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: @file(/home/gz/dl/PXL_20250528_044257110.jpg)
+}
+
+settings {
+  encodeUrl: true
+}

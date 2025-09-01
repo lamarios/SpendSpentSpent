@@ -1,5 +1,5 @@
 name: 'spend_spent_spent'
-version: '2.6.2+100'
+version: '2.7.0+101'
 publish_to: none
 environment:
   sdk: '>=3.8.0 <4.0.0'
@@ -8,6 +8,7 @@ dependencies:
   after_layout: 1.2.0
   animations: 2.0.11
   auto_route: 10.1.1
+  cached_network_image: 3.4.1
   dynamic_color: 1.8.1
   easy_debounce: 2.0.3
   fl_chart: 1.0.0
@@ -23,6 +24,7 @@ dependencies:
   gap: 3.0.1
   get_it: 8.2.0
   http: 1.5.0
+  image_picker: 1.2.0
   intl: 0.20.2
   json_annotation: 4.9.0
   jwt_decoder: 2.0.1
@@ -34,8 +36,12 @@ dependencies:
   oidc_default_store: 0.4.0+3
   package_info_plus: 8.3.1
   random_string: 2.3.1
+  receive_sharing_intent:
+    git:
+      url: https://github.com/KasemJaffer/receive_sharing_intent
   shared_preferences: 2.5.3
   tinycolor2: 3.0.1
+  web_socket_channel: 3.0.3
 dev_dependencies:
   analyzer: any
   auto_route_generator: any

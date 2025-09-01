@@ -32,6 +32,9 @@ new expense as easy and as quick as possible. The application features are split
 | DB_PASSWORD          | (none)  | **Yes**  |                                                                                                                                                                                 | 
 | ALLOW_SIGNUP         | 0       | No       | 1 = allow signups, 0 = Do not allow signups                                                                                                                                     |
 | ANNOUNCEMENT_MESSAGE | (none)  | No       | Show a message on the login screen, ex: ANNOUNCEMENT_MESSAGE="Welcome to my SpendSpentSpent instance". See demo instance to see what it looks like                              |
+| FILES_PATH           | ./files | No       | Where to store the pictures uploaded by the users                                                                                                                               |
+
+### Email
 
 SMTP environment variables are necessary if you want to enable the forgot password function and recurring expense
 notification emails.
@@ -45,6 +48,19 @@ notification emails.
 | SMTP_PASSWORD           | (none)                | No                                                    |                                                       |
 | SMTP_FROM               | (none)                | **Yes**                                               | Who will be the sender of the email                   | 
 | SMTP_TRANSPORT_STRATEGY | SMTP                  | **Yes**                                               | Possible values: SMTP, SMTPS, SMTP_TLS                |
+
+### Ollama AI
+
+SSS supports analyzing images using ollama to find prices or tags about images attached to an expense.
+
+| Name                | Default      | Comments                                                                                                                         | 
+|---------------------|--------------|----------------------------------------------------------------------------------------------------------------------------------|
+| OLLAMA_API_URL      | (none)       | The url of the ollama instance                                                                                                   | 
+| OLLAMA_API_KEY      | (none)       | API Key to talk to the ollama server                                                                                             |
+| OLLAMA_VISION_MODEL | qwen2.5vl:7b | Which vision model to use. This model will be used to generate picture description                                               |
+| OLLAMA_TEXT_MODEL   | qwen3vl:7b   | Which text model to use. This model will take the description and generate tags and find the best expense category for a picture |
+
+### OIDC
 
 SSS Supports SSO by implementing OIDC. You will need to set up your OIDC client as a Public Client and enable PKCE.
 Here are the used callback urls:
@@ -87,11 +103,13 @@ With docker compose:
      - "9001:9001"
    volumes:
      - /etc/localtime:/etc/localtime:ro
+     - /some/path:/app-files # Where to store the files
    environment:
      SALT: somerandomstring
      DB_PATH: "jdbc:postgresql://postgres-sss:5432/sss"
      DB_USER: "postgres"
      DB_PASSWORD: "postgres"
+     
  postgres-sss:
    container_name: postgres-sss
    image: postgres:17

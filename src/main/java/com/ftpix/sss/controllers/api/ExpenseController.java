@@ -96,10 +96,13 @@ public class ExpenseController {
      * @throws SQLException
      */
     @PostMapping
-    public Expense create(@RequestBody Expense expense) throws Exception {
+    public Expense createOrUpdate(@RequestBody Expense expense) throws Exception {
         final User currentUser = userService.getCurrentUser();
-        Expense expense1 = expenseService.create(expense, currentUser);
-        return expense1;
+        if (expense.getId() != null) {
+            return expenseService.update(expense, currentUser);
+        } else {
+            return expenseService.create(expense, currentUser);
+        }
     }
 
     /**

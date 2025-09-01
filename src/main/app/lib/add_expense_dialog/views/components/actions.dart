@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/add_expense_dialog/state/add_expense_dialog.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/expense_note_dialog.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/note_suggestion_pill.dart';
+import 'package:spend_spent_spent/add_expense_dialog/views/components/upload_image_button.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/utils/views/components/dummies/DummyFade.dart';
 
@@ -54,6 +55,7 @@ class ExpenseActions extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 8.0, top: 8.0, right: 8.0),
               child: Row(
+                spacing: 10,
                 children: [
                   TextButton(
                     // style: flatButtonStyle,
@@ -68,64 +70,56 @@ class ExpenseActions extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: DummyFade(
-                      running: state.gettingLocation,
-                      child: IconButton(
-                        onPressed: () {
-                          cubit.setLocation(!state.useLocation);
-                        },
-                        icon: Icon(
-                          Icons.near_me,
-                          color: state.useLocation
-                              ? colors.primary
-                              : colors.onSurface,
-                        ),
+                  DummyFade(
+                    running: state.gettingLocation,
+                    child: IconButton(
+                      onPressed: () {
+                        cubit.setLocation(!state.useLocation);
+                      },
+                      icon: Icon(
+                        Icons.near_me,
+                        color: state.useLocation
+                            ? colors.primary
+                            : colors.onSurface,
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: AnimatedContainer(
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          topRight: Radius.circular(15),
-                        ),
-                        color: state.noteSuggestions.isEmpty
-                            ? colors.surfaceContainer
-                            : colors.surface,
+                  AnimatedContainer(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
                       ),
-                      duration: Duration(
-                        milliseconds: panelTransition.inMilliseconds ~/ 2,
-                      ),
-                      child: IconButton(
-                        onPressed: () => showNoteDialog(context),
-                        icon: Icon(
-                          Icons.comment_rounded,
-                          color: state.expenseNote.isNotEmpty
-                              ? colors.primary
-                              : colors.onSurface,
-                        ),
+                      color: state.noteSuggestions.isEmpty
+                          ? colors.surfaceContainer
+                          : colors.surface,
+                    ),
+                    duration: Duration(
+                      milliseconds: panelTransition.inMilliseconds ~/ 2,
+                    ),
+                    child: IconButton(
+                      onPressed: () => showNoteDialog(context),
+                      icon: Icon(
+                        Icons.comment_rounded,
+                        color: state.expenseNote.isNotEmpty
+                            ? colors.primary
+                            : colors.onSurface,
                       ),
                     ),
                   ),
                   Visibility(
                     visible: service.config?.canConvertCurrency ?? false,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 0),
-                      child: IconButton(
-                        onPressed: () => enableCurrencyConversion(context),
-                        icon: Icon(
-                          Icons.attach_money,
-                          color: state.showCurrencyConversion
-                              ? colors.primary
-                              : colors.onSurface,
-                        ),
+                    child: IconButton(
+                      onPressed: () => enableCurrencyConversion(context),
+                      icon: Icon(
+                        Icons.attach_money,
+                        color: state.showCurrencyConversion
+                            ? colors.primary
+                            : colors.onSurface,
                       ),
                     ),
                   ),
+                  UploadImageButton(files: state.files),
                 ],
               ),
             ),
@@ -151,7 +145,7 @@ class ExpenseActions extends StatelessWidget {
                                 [
                                       if (state.expenseNote.isNotEmpty)
                                         state.expenseNote,
-                                      ...state.noteSuggestions.where(
+                                      ...state.aiAndNoteSuggestions.where(
                                         (e) => e != state.expenseNote,
                                       ),
                                     ]

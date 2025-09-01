@@ -1,0 +1,19 @@
+meta {
+  name: Find category
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{API}}/API/Files/find-category
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: @file(/home/gz/dl/PXL_20250528_044257110.jpg)
+}
+
+settings {
+  encodeUrl: true
+}

@@ -6,6 +6,7 @@ package com.ftpix.sss.dsl;
 
 import com.ftpix.sss.dsl.tables.Category;
 import com.ftpix.sss.dsl.tables.Expense;
+import com.ftpix.sss.dsl.tables.Files;
 import com.ftpix.sss.dsl.tables.FlywaySchemaHistory;
 import com.ftpix.sss.dsl.tables.MonthlyHistory;
 import com.ftpix.sss.dsl.tables.RecurringExpense;
@@ -15,6 +16,7 @@ import com.ftpix.sss.dsl.tables.User;
 import com.ftpix.sss.dsl.tables.YearlyHistory;
 import com.ftpix.sss.dsl.tables.records.CategoryRecord;
 import com.ftpix.sss.dsl.tables.records.ExpenseRecord;
+import com.ftpix.sss.dsl.tables.records.FilesRecord;
 import com.ftpix.sss.dsl.tables.records.FlywaySchemaHistoryRecord;
 import com.ftpix.sss.dsl.tables.records.MonthlyHistoryRecord;
 import com.ftpix.sss.dsl.tables.records.RecurringExpenseRecord;
@@ -23,10 +25,12 @@ import com.ftpix.sss.dsl.tables.records.SettingsRecord;
 import com.ftpix.sss.dsl.tables.records.UserRecord;
 import com.ftpix.sss.dsl.tables.records.YearlyHistoryRecord;
 
+import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
+import org.jooq.impl.QOM.ForeignKeyRule;
 
 
 /**
@@ -42,6 +46,7 @@ public class Keys {
 
     public static final UniqueKey<CategoryRecord> CATEGORY_PKEY = Internal.createUniqueKey(Category.CATEGORY, DSL.name("category_pkey"), new TableField[] { Category.CATEGORY.ID }, true);
     public static final UniqueKey<ExpenseRecord> EXPENSE_PKEY = Internal.createUniqueKey(Expense.EXPENSE, DSL.name("expense_pkey"), new TableField[] { Expense.EXPENSE.ID }, true);
+    public static final UniqueKey<FilesRecord> FILES_PKEY = Internal.createUniqueKey(Files.FILES, DSL.name("files_pkey"), new TableField[] { Files.FILES.ID }, true);
     public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = Internal.createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, DSL.name("flyway_schema_history_pk"), new TableField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK }, true);
     public static final UniqueKey<MonthlyHistoryRecord> MONTHLY_HISTORY_PKEY = Internal.createUniqueKey(MonthlyHistory.MONTHLY_HISTORY, DSL.name("monthly_history_pkey"), new TableField[] { MonthlyHistory.MONTHLY_HISTORY.ID }, true);
     public static final UniqueKey<RecurringExpenseRecord> RECURRING_EXPENSE_PKEY = Internal.createUniqueKey(RecurringExpense.RECURRING_EXPENSE, DSL.name("recurring_expense_pkey"), new TableField[] { RecurringExpense.RECURRING_EXPENSE.ID }, true);
@@ -50,4 +55,11 @@ public class Keys {
     public static final UniqueKey<UserRecord> USER_EMAIL_KEY = Internal.createUniqueKey(User.USER, DSL.name("user_email_key"), new TableField[] { User.USER.EMAIL }, true);
     public static final UniqueKey<UserRecord> USER_PKEY = Internal.createUniqueKey(User.USER, DSL.name("user_pkey"), new TableField[] { User.USER.ID }, true);
     public static final UniqueKey<YearlyHistoryRecord> YEARLY_HISTORY_PKEY = Internal.createUniqueKey(YearlyHistory.YEARLY_HISTORY, DSL.name("yearly_history_pkey"), new TableField[] { YearlyHistory.YEARLY_HISTORY.ID }, true);
+
+    // -------------------------------------------------------------------------
+    // FOREIGN KEY definitions
+    // -------------------------------------------------------------------------
+
+    public static final ForeignKey<FilesRecord, ExpenseRecord> FILES__FK_SSS_FILE_EXPENSE = Internal.createForeignKey(Files.FILES, DSL.name("fk_sss_file_expense"), new TableField[] { Files.FILES.EXPENSE_ID }, Keys.EXPENSE_PKEY, new TableField[] { Expense.EXPENSE.ID }, true, ForeignKeyRule.CASCADE, ForeignKeyRule.NO_ACTION);
+    public static final ForeignKey<FilesRecord, UserRecord> FILES__FK_SSS_FILE_USER = Internal.createForeignKey(Files.FILES, DSL.name("fk_sss_file_user"), new TableField[] { Files.FILES.USER_ID }, Keys.USER_PKEY, new TableField[] { User.USER.ID }, true, ForeignKeyRule.CASCADE, ForeignKeyRule.NO_ACTION);
 }

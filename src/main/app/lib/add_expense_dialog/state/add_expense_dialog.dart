@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/add_expense.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
+import 'package:spend_spent_spent/expenses/models/sss_file.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/expenses/models/currency_conversion.dart';
@@ -17,15 +18,19 @@ import '../../expenses/models/expense.dart';
 
 part 'add_expense_dialog.freezed.dart';
 
+const expenseDateFormat = 'yyyy-MM-dd';
+
 class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
-  final Category category;
+  final Category? category;
   final LastExpenseCubit lastExpenseCubit;
   final suggestionController = ScrollController();
+  final Expense? expense;
 
   AddExpenseDialogCubit(
     super.initialState, {
-    required this.category,
+    this.category,
     required this.lastExpenseCubit,
+    this.expense,
   }) {
     init();
   }
@@ -45,7 +50,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
           Expense(
             amount: double.parse(valueToStr(value)),
             date: '2022-01-23',
-            category: category,
+            category: category ?? expense!.category,
           ),
         );
         List<String> results = suggestions.keys.toList(growable: false);
@@ -56,11 +61,11 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     );
   }
 
-  init() async {
+  Future<void> init() async {
     var useLocation = await Preferences.getBool(Preferences.EXPENSE_LOCATION);
     emit(state.copyWith(useLocation: useLocation));
 
-    if (useLocation) {
+    if (useLocation && (expense?.id == null)) {
       getLocation()
           .timeout(
             const Duration(seconds: LOCATION_TIMEOUT),
@@ -69,6 +74,23 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
           .then((loc) {
             emit(state.copyWith(location: loc));
           });
+    }
+    if (expense != null) {
+      // we init our state with the current state of our edited expense.
+      emit(
+        state.copyWith(
+          files: expense!.files,
+          expenseDate: DateFormat(expenseDateFormat).parse(expense!.date),
+          value: formatCurrency(
+            expense!.amount,
+          ).replaceAll(".", "").replaceAll(",", ""),
+          expenseNote: expense!.note ?? '',
+          location: LocationData.fromMap({
+            'longitude': expense!.longitude,
+            'latitude': expense!.latitude,
+          }),
+        ),
+      );
     }
   }
 
@@ -143,14 +165,11 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     calculateRateConversion();
   }
 
-  Future<void> addExpense(double iconHeight, Color iconColor) async {
+  Future<Expense> addExpense(double iconHeight, Color iconColor) async {
     emit(state.copyWith(saving: true));
 
-    await Future.delayed(panelTransition);
-    // double iconHeight = getIconHeight(MediaQuery.of(context)) * 0.66;
-
     var amount = double.parse(valueToStr(state.value));
-    var date = DateFormat('yyyy-MM-dd').format(state.expenseDate);
+    var date = DateFormat(expenseDateFormat).format(state.expenseDate);
     var note = state.expenseNote;
     if (state.currencyConversion != null) {
       if (note.isNotEmpty) {
@@ -161,13 +180,16 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     }
     var expense = Expense(
       amount: amount,
-      category: category,
+      category: category ?? this.expense!.category,
       date: date,
       note: note,
+      files: state.files,
+      id: this.expense?.id,
     );
 
-    //checking location\
-    if (state.useLocation) {
+    //checking location
+    // but only if we're not editing an expense
+    if (this.expense?.id == null && state.useLocation) {
       try {
         LocationData? locationData =
             state.location ??
@@ -185,13 +207,20 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
         emit(state.copyWith(error: e, stackTrace: s));
         rethrow;
       }
+    } else if (this.expense != null) {
+      expense = expense.copyWith(
+        latitude: state.location?.latitude,
+        longitude: state.location?.longitude,
+      );
     }
 
     try {
-      await service.addExpense(expense);
+      final result = await service.addExpense(expense);
       lastExpenseCubit.refresh();
+      return result;
     } catch (e, s) {
       emit(state.copyWith(error: e, stackTrace: s));
+      rethrow;
     }
   }
 
@@ -222,18 +251,17 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       locationData = await location.getLocation();
       return locationData;
     } catch (e) {
-      print(e);
       throw Exception("Couldn't get data");
     } finally {
       emit(state.copyWith(gettingLocation: false));
     }
   }
 
-  setDate(DateTime date) {
+  void setDate(DateTime date) {
     emit(state.copyWith(expenseDate: date));
   }
 
-  setNote(String note) {
+  void setNote(String note) {
     emit(state.copyWith(expenseNote: note));
     suggestionController.animateTo(
       0,
@@ -242,13 +270,32 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     );
   }
 
-  enableCurrencyConversion(bool enable) {
+  void enableCurrencyConversion(bool enable) {
     emit(
       state.copyWith(
         showCurrencyConversion: enable,
         currencyConversion: enable ? state.currencyConversion : null,
       ),
     );
+  }
+
+  void setImages(List<SssFile> list) {
+    emit(state.copyWith(files: list));
+  }
+
+  void setFiles(List<SssFile> files) {
+    emit(state.copyWith(files: files));
+  }
+
+  void setAmount(String text) {
+    emit(state.copyWith(value: text.replaceAll(".", "").replaceAll(",", "")));
+  }
+
+  void updateFile(SssFile file) {
+    final List<SssFile> files = List.from(state.files);
+    final index = files.indexWhere((element) => element.id == file.id);
+    files[index] = file;
+    emit(state.copyWith(files: files));
   }
 }
 
@@ -268,8 +315,34 @@ sealed class AddExpenseDialogState
     @Default(false) bool showCurrencyConversion,
     @Default(false) bool saving,
     @Default([]) List<String> noteSuggestions,
+    @Default([]) List<SssFile> files,
     LocationData? location,
     dynamic error,
     StackTrace? stackTrace,
   }) = _AddExpenseDialogState;
+
+  const AddExpenseDialogState._();
+
+  List<String> get aiAndNoteSuggestions {
+    final List<String> notes = List.from(possibleTags);
+    notes.addAll(noteSuggestions);
+
+    return notes.toSet().toList();
+  }
+
+  List<double> get possiblePrices {
+    return files
+        .map((e) => e.amounts)
+        .expand((element) => element)
+        .toSet()
+        .toList();
+  }
+
+  List<String> get possibleTags {
+    return files
+        .map((e) => e.aiTags)
+        .expand((element) => element)
+        .toSet()
+        .toList();
+  }
 }

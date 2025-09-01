@@ -26,6 +26,9 @@ class OneDay extends StatelessWidget {
         .map((e) => e.amount)
         .reduce((value, element) => value + element);
 
+    List<Expense> expenses = List.from(expense.expenses);
+    expenses.sort((a, b) => (b.timestamp ?? 0).compareTo(a.timestamp ?? 0));
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: Column(
@@ -34,7 +37,7 @@ class OneDay extends StatelessWidget {
           const Gap(10),
           Column(
             spacing: 10,
-            children: expense.expenses
+            children: expenses
                 .map(
                   (e) => OneExpense(
                     key: Key(e.id.toString()),

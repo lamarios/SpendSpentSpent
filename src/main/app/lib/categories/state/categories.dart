@@ -25,6 +25,12 @@ class CategoriesCubit extends Cubit<CategoriesState> {
   void reset() {
     emit(state.copyWith(categories: []));
   }
+
+  Category? findByName(String name) {
+    return state.categories
+        .where((element) => element.icon == name)
+        .firstOrNull;
+  }
 }
 
 @freezed

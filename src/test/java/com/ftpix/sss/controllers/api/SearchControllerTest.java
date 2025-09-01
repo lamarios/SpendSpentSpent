@@ -4,8 +4,6 @@ import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.TestContainerTest;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.SearchParameters;
-import com.ftpix.sss.models.User;
-import com.ftpix.sss.services.CategoryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
@@ -39,14 +37,14 @@ public class SearchControllerTest extends TestContainerTest {
         e1.setCategory(cat1);
         e1.setAmount(10);
         e1.setNote("my note");
-        e1 = expenseController.create(e1);
+        e1 = expenseController.createOrUpdate(e1);
 
 
         Expense e2 = new Expense();
         e2.setCategory(cat2);
         e2.setAmount(100);
         e2.setNote("my second note");
-        e2 = expenseController.create(e2);
+        e2 = expenseController.createOrUpdate(e2);
 
         SearchParameters params = new SearchParameters(new ArrayList<>(), 9, 11, null, null, null);
 

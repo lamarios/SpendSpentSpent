@@ -45,6 +45,13 @@ public class CategoryService {
                 .collect(Collectors.groupingBy(NewCategoryIcon::getCategory));
     }
 
+    public Map<String, List<NewCategoryIcon>> getUsed(User user) throws SQLException {
+        List<Category> categories = getAll(user);
+        return Stream.of(NewCategoryIcon.values())
+                .filter(s -> categories.stream().anyMatch(c -> c.getIcon().equalsIgnoreCase(s.name())))
+                .collect(Collectors.groupingBy(NewCategoryIcon::getCategory));
+    }
+
     public Category create(Category category, User user) throws Exception {
         boolean found = Stream.of(NewCategoryIcon.values())
                 .anyMatch(c -> category.getIcon().equalsIgnoreCase(c.name()));

@@ -1,0 +1,19 @@
+meta {
+  name: Download file
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{API}}/API/Files/:fileId/download
+  body: none
+  auth: inherit
+}
+
+params:path {
+  fileId: e5d3022c-b89e-4ed0-a58f-e72c7a538147
+}
+
+settings {
+  encodeUrl: true
+}

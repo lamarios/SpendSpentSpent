@@ -46,7 +46,7 @@ public enum NewCategoryIcon {
     bus(Constants.TRANSPORTS, new String[]{"bus", "travel", "transport", "public"}),
     car(Constants.TRANSPORTS, new String[]{"car", "travel", "service", "fix"}),
     carengine(Constants.TRANSPORTS, new String[]{"car", "repair", "engine", "maintenance"}),
-    computer(Constants.TECH, new String[]{"computer", "cpu", "ram","gpu", "fix", "gaming"}),
+    computer(Constants.TECH, new String[]{"computer", "cpu", "ram","gpu", "fix", "gaming", "graphics card"}),
     documents(Constants.DOCUMENTS, new String[]{"official", "document", "documents", "certificate", "certification"}),
     games(Constants.TECH, new String[]{"gaming", "console", "controller", "pad", "xbox", "playstation", "switch"}),
     internet(Constants.TECH, new String[]{"internet", "broadband", "wifi", "connection", "3g", "lte", "4g"}),

@@ -3,10 +3,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:gap/gap.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:spend_spent_spent/add_expense_dialog/views/components/add_expense.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
+import 'package:spend_spent_spent/expenses/views/components/expense_images.dart';
+import 'package:spend_spent_spent/expenses/views/components/stylized_amount.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/utils/states/simple_cubit.dart';
+import 'package:spend_spent_spent/utils/views/components/simple_cubit.dart';
 
 import '../../models/expense.dart';
 
@@ -19,6 +23,7 @@ class ExpenseMenu extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      showDragHandle: true,
       useSafeArea: true,
       builder: (context) {
         return SafeArea(
@@ -27,6 +32,13 @@ class ExpenseMenu extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> editExpense(BuildContext context) async {
+    final exp = await AddExpense.showDialog(context, expense: expense);
+    if (exp != null && context.mounted) {
+      context.read<SimpleCubitState<Expense?>>().setValue(exp);
+    }
   }
 
   showDeleteExpenseDialog(BuildContext context) {
@@ -67,72 +79,124 @@ class ExpenseMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool hasMap = expense.latitude != 0 && expense.longitude != 0;
-    final colors = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (hasMap) ...[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return SizedBox(
-                    width: min(700, constraints.maxWidth),
-                    height: min(500, constraints.maxHeight),
-                    child: FlutterMap(
-                      options: MapOptions(
-                        initialZoom: 15,
-                        initialCenter: LatLng(
-                          (expense.latitude ?? 0),
-                          expense.longitude ?? 0,
-                        ),
-                      ),
-                      children: [
-                        TileLayer(
-                          urlTemplate:
-                              "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                          userAgentPackageName: 'com.spendspentspent.app',
-                        ),
-                        MarkerLayer(
-                          markers: [
-                            Marker(
-                              width: 40.0,
-                              height: 40.0,
-                              point: LatLng(
-                                expense.latitude ?? 0,
-                                expense.longitude ?? 0,
-                              ),
-                              child: Icon(
-                                Icons.location_on,
-                                color: colors.primary,
-                                size: 50,
-                              ),
+    return SimpleCubit<Expense>(
+      initialValue: expense,
+      builder: (context, expense) {
+        print('HELLO $expense}');
+        if (expense == null) {
+          return SizedBox.shrink();
+        }
+
+        bool hasMap = expense.latitude != 0 && expense.longitude != 0;
+        final colors = Theme.of(context).colorScheme;
+        final textTheme = Theme.of(context).textTheme;
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            spacing: 16,
+            children: [
+              StylizedAmount(amount: expense.amount, size: 40),
+              /*
+              Text(
+                formatCurrency(expense.amount),
+                style: textTheme.displaySmall,
+              ),
+*/
+              if (expense.note != null && expense.note!.trim().isNotEmpty)
+                Row(
+                  spacing: 16,
+                  children: [
+                    Icon(Icons.comment, color: colors.secondary),
+                    Expanded(
+                      child: Text(expense.note!, style: textTheme.bodyLarge),
+                    ),
+                  ],
+                ),
+              if (hasMap) ...[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SizedBox(
+                        width: min(700, constraints.maxWidth),
+                        height: min(300, constraints.maxHeight),
+                        child: FlutterMap(
+                          options: MapOptions(
+                            initialZoom: 15,
+                            initialCenter: LatLng(
+                              (expense.latitude ?? 0),
+                              expense.longitude ?? 0,
+                            ),
+                          ),
+                          children: [
+                            TileLayer(
+                              urlTemplate:
+                                  "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                              userAgentPackageName: 'com.spendspentspent.app',
+                            ),
+                            MarkerLayer(
+                              markers: [
+                                Marker(
+                                  width: 40.0,
+                                  height: 40.0,
+                                  point: LatLng(
+                                    expense.latitude ?? 0,
+                                    expense.longitude ?? 0,
+                                  ),
+                                  child: Icon(
+                                    Icons.location_on,
+                                    color: colors.primary,
+                                    size: 50,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+              if (expense.files.isNotEmpty)
+                ExpenseImages(
+                  key: ValueKey(expense.files),
+                  files: expense.files,
+                ),
+              Row(
+                spacing: 16,
+                children: [
+                  Expanded(
+                    child: FilledButton.tonalIcon(
+                      icon: Icon(Icons.edit),
+                      onPressed: () => editExpense(context),
+                      label: Text('Edit expense'),
                     ),
-                  );
-                },
+                  ),
+                  Expanded(
+                    child: FilledButton.tonalIcon(
+                      icon: Icon(Icons.delete),
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                          colors.errorContainer,
+                        ),
+                        foregroundColor: WidgetStatePropertyAll(
+                          colors.onErrorContainer,
+                        ),
+                      ),
+                      onPressed: () => showDeleteExpenseDialog(context),
+                      label: Text('Delete'),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Gap(20),
-          ],
-          FilledButton.tonalIcon(
-            icon: Icon(Icons.delete),
-            style: ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(colors.errorContainer),
-              foregroundColor: WidgetStatePropertyAll(colors.onErrorContainer),
-            ),
-            onPressed: () => showDeleteExpenseDialog(context),
-            label: Text('Delete expense'),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
