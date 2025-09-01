@@ -1,11 +1,13 @@
 package com.ftpix.sss.services;
 
 import com.ftpix.sss.dao.FileDAO;
+import com.ftpix.sss.dsl.tables.records.FilesRecord;
 import com.ftpix.sss.models.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Condition;
+import org.jooq.Field;
 import org.jooq.Fields;
 import org.jooq.Files;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,20 +183,24 @@ public class FileService {
             SSSFile toProcess;
             try {
                 // we refresh the file before saving it to avoid issues
-                toProcess = filesDAO.getOneWhere(FILES.ID.eq(file.getId().toString())).get();
-                toProcess.setStatus(AiProcessingStatus.PROCESSING);
-                filesDAO.update(toProcess);
+                filesDAO.updateField(file, FILES.STATUS, AiProcessingStatus.PROCESSING.name());
                 var tags = aiFileProcessingService.getTagsForFile(f);
+
+
                 toProcess = filesDAO.getOneWhere(FILES.ID.eq(file.getId().toString())).get();
                 toProcess.setAiTags(tags.tags());
                 toProcess.setAmounts(tags.amounts());
                 toProcess.setStatus(AiProcessingStatus.DONE);
-                filesDAO.update(toProcess);
+
+                var record = filesDAO.setRecordData(new FilesRecord(), toProcess);
+                filesDAO.updateField(file, FILES.STATUS, AiProcessingStatus.DONE.name());
+                filesDAO.updateField(file, FILES.AI_TAGS, record.getAiTags());
+                filesDAO.updateField(file, FILES.AMOUNTS, record.getAmounts());
+
+
             } catch (Exception e) {
                 log.error("Error while processing file " + file.getId(), e);
-                toProcess = filesDAO.getOneWhere(FILES.ID.eq(file.getId().toString())).get();
-                toProcess.setStatus(AiProcessingStatus.ERROR);
-                filesDAO.update(toProcess);
+                filesDAO.updateField(file, FILES.STATUS, AiProcessingStatus.ERROR.name());
                 throw new RuntimeException(e);
             }
         });
@@ -218,5 +224,9 @@ public class FileService {
             throw new FileNotFoundException();
         }
         return new File(filePath + "/" + sssFile.get().getFileName());
+    }
+
+    public <T> boolean updateField(SSSFile file, Field<T> field, T value) {
+        return filesDAO.updateField(file, field, value);
     }
 }
