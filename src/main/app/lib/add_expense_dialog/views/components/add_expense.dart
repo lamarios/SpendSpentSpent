@@ -18,6 +18,7 @@ import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/sss_files/views/components/sss_file_listener.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/utils/views/components/repeated_icons.dart';
 
 const LOCATION_TIMEOUT = 10;
@@ -43,16 +44,11 @@ class AddExpense extends StatelessWidget {
         ),
       );
     } else {
-      return showModalBottomSheet<Expense>(
+      return showMotorBottomSheet<Expense>(
         context: context,
-        isScrollControlled: true,
-        builder: (context) => Wrap(
-          children: [
-            SafeArea(
-              bottom: true,
-              child: AddExpense(category: category, expense: expense),
-            ),
-          ],
+        // isScrollControlled: true,
+        child: Wrap(
+          children: [AddExpense(category: category, expense: expense)],
         ),
       );
     }

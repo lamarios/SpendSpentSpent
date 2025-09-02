@@ -41,6 +41,7 @@ dependencies:
     git:
       url: https://github.com/KasemJaffer/receive_sharing_intent
   shared_preferences: 2.5.3
+  stupid_simple_sheet: 0.0.2
   tinycolor2: 3.0.1
   web_socket_channel: 3.0.3
 dev_dependencies:

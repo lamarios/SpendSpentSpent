@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:material_loading_indicator/loading_indicator.dart';
 import 'package:spend_spent_spent/add_expense_dialog/state/expense_file_management.dart';
 import 'package:spend_spent_spent/expenses/models/sss_file.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/sss_files/views/components/sss_file_listener.dart';
-import 'package:spend_spent_spent/utils/all_scroll_behavior.dart';
-import 'package:spend_spent_spent/utils/views/components/expense_image.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/utils/views/components/image_carousell.dart';
 
 class ExpenseFileManagement extends StatelessWidget {
@@ -33,12 +31,12 @@ class ExpenseFileManagement extends StatelessWidget {
     required Function(String tag) onTagTapped,
     required Function(double amount) onAmountTapped,
   }) async {
-    return showModalBottomSheet<List<SssFile>>(
+    return showMotorBottomSheet<List<SssFile>>(
       context: context,
-      showDragHandle: true,
-      isScrollControlled: true,
-      builder: (context) => SafeArea(
-        bottom: true,
+      // showDragHandle: true,
+      // isScrollControlled: true,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 16),
         child: Wrap(
           children: [
             ExpenseFileManagement(
@@ -88,7 +86,7 @@ class ExpenseFileManagement extends StatelessWidget {
               return SssFileListener(
                 onFile: cubit.onFileUpdated,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.end,
