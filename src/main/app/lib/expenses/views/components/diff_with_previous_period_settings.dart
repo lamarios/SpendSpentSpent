@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/expenses/state/diff_with_previous_month_settings.dart';
 import 'package:spend_spent_spent/expenses/views/components/diff_wiht_previous_period_graph.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
 
 final DateFormat _df = DateFormat("yyyy-MM");
 final DateFormat _df2 = DateFormat.yMMMd();
@@ -21,16 +22,9 @@ class DiffWithPreviousPeriodSettings extends StatelessWidget {
     BuildContext context, {
     required String month,
   }) async {
-    await showModalBottomSheet(
+    await showMotorBottomSheet(
       context: context,
-      builder: (context) => Wrap(
-        children: [
-          SafeArea(
-            bottom: true,
-            child: DiffWithPreviousPeriodSettings(month: month),
-          ),
-        ],
-      ),
+      child: Wrap(children: [DiffWithPreviousPeriodSettings(month: month)]),
     );
   }
 

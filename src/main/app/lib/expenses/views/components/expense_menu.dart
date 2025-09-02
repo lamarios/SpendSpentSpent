@@ -12,9 +12,11 @@ import 'package:spend_spent_spent/expenses/views/components/expense_images.dart'
 import 'package:spend_spent_spent/expenses/views/components/stylized_amount.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/utils/states/simple_cubit.dart';
 import 'package:spend_spent_spent/utils/views/components/repeated_icons.dart';
 import 'package:spend_spent_spent/utils/views/components/simple_cubit.dart';
+import 'package:stupid_simple_sheet/stupid_simple_sheet.dart';
 
 import '../../models/expense.dart';
 
@@ -24,17 +26,17 @@ class ExpenseMenu extends StatelessWidget {
   const ExpenseMenu({super.key, required this.expense});
 
   static Future<void> showSheet(BuildContext context, Expense expense) async {
-    await showModalBottomSheet(
+    await showMotorBottomSheet(
       context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      useSafeArea: true,
-      builder: (context) {
-        return SafeArea(
-          bottom: true,
-          child: Wrap(children: [ExpenseMenu(expense: expense)]),
-        );
-      },
+      // context: context,
+      // isScrollControlled: true,
+      // showDragHandle: true,
+      // useSafeArea: true,
+      // builder: (context) {
+      child: Padding(
+        padding: const EdgeInsets.only(top: 16.0),
+        child: Wrap(children: [ExpenseMenu(expense: expense)]),
+      ),
     );
   }
 

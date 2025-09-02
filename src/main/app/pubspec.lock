@@ -976,6 +976,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  motor:
+    dependency: "direct main"
+    description:
+      name: motor
+      sha256: e2ca4ba326ff86df73986f43c803f5f5ea6af04c5e79a836c44b28874af0f699
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0-dev.6"
   nested:
     dependency: transitive
     description:
@@ -1345,6 +1353,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
+  scroll_drag_detector:
+    dependency: transitive
+    description:
+      name: scroll_drag_detector
+      sha256: "71f63584bca44b56d6988feb74df0f15e2cf6e98c32eb095ef4636eae726ea85"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -1558,6 +1574,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  stupid_simple_sheet:
+    dependency: "direct main"
+    description:
+      name: stupid_simple_sheet
+      sha256: "591fddde18175322c0451c69a393ed5d67904edc658d20db91576c74a2b9202b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   synchronized:
     dependency: transitive
     description:

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:material_loading_indicator/loading_indicator.dart';
+import 'package:motor/motor.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/expenses/state/expense_list.dart';
 import 'package:spend_spent_spent/expenses/views/components/below_date_widget.dart';
@@ -14,7 +15,6 @@ import 'package:spend_spent_spent/expenses/views/components/search.dart';
 import 'package:spend_spent_spent/expenses/views/components/stylized_amount.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
-import 'package:spend_spent_spent/recurring_expenses/views/components/expense_list.dart';
 import 'package:spend_spent_spent/utils/views/components/data_change_monitor.dart';
 import 'package:spend_spent_spent/utils/views/components/month_picker.dart';
 
@@ -144,10 +144,16 @@ class RightColumnTab extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            AnimatedContainer(
-                              duration: animationDuration * 3,
-                              curve: Curves.easeInOutQuint,
-                              width: state.searchMode ? 0 : 50,
+                            SingleMotionBuilder(
+                              value: state.searchMode ? 8 : 50,
+                              motion:
+                                  MaterialSpringMotion.expressiveSpatialDefault(),
+                              builder:
+                                  (
+                                    BuildContext context,
+                                    double value,
+                                    Widget? child,
+                                  ) => Container(width: value),
                             ),
                             Gap(4),
                             Expanded(

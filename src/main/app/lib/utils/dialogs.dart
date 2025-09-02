@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:stupid_simple_sheet/stupid_simple_sheet.dart';
 
 void showAlertDialog(BuildContext context, String title, String text) {
   showDialog(
@@ -72,4 +74,41 @@ EdgeInsetsGeometry getInsetsForMaxSize(
     (data.size.height - (maxHeight ?? data.size.height)) / 2,
   );
   return EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical);
+}
+
+Future<T?> showMotorBottomSheet<T>({
+  required BuildContext context,
+  required Widget child,
+}) async {
+  final colors = Theme.of(context).colorScheme;
+
+  return Navigator.of(context).push(
+    StupidSimpleSheetRoute(
+      motion: MaterialSpringMotion.expressiveSpatialDefault(),
+      child: Stack(
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(null),
+            behavior: HitTestBehavior.translucent,
+          ),
+          Align(
+            alignment: Alignment(0, 1),
+            child: Container(
+              constraints: BoxConstraints(maxWidth: TABLET),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                child: Material(
+                  color: colors.surfaceContainer,
+                  child: SafeArea(top: false, bottom: true, child: child),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
