@@ -11,9 +11,9 @@ import 'package:spend_spent_spent/utils/views/components/expense_image.dart';
 import 'package:spend_spent_spent/utils/views/components/image_carousell.dart';
 
 class ExpenseImages extends StatelessWidget {
-  final List<SssFile> files;
+  final List<SssFile> initialFiles;
 
-  const ExpenseImages({super.key, required this.files});
+  const ExpenseImages({super.key, required this.initialFiles});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,8 @@ class ExpenseImages extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return BlocProvider(
-      create: (context) => ExpenseImagesCubit(ExpenseImagesState(files: files)),
+      create: (context) =>
+          ExpenseImagesCubit(ExpenseImagesState(files: initialFiles)),
       child: BlocBuilder<ExpenseImagesCubit, ExpenseImagesState>(
         builder: (context, state) {
           final cubit = context.read<ExpenseImagesCubit>();
@@ -37,11 +38,11 @@ class ExpenseImages extends StatelessWidget {
               children: [
                 Expanded(
                   child: ImageCarousel(
-                    files: files,
+                    files: state.files,
                     onTap: (value) {
                       AutoRouter.of(context).push(
                         ImageViewerRoute(
-                          images: files,
+                          images: state.files,
                           initiallySelected: value,
                         ),
                       );

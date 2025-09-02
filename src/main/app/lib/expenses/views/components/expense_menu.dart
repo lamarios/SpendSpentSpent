@@ -23,8 +23,8 @@ class ExpenseMenu extends StatelessWidget {
 
   const ExpenseMenu({super.key, required this.expense});
 
-  static showSheet(BuildContext context, Expense expense) {
-    showModalBottomSheet(
+  static Future<void> showSheet(BuildContext context, Expense expense) async {
+    await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
@@ -45,7 +45,7 @@ class ExpenseMenu extends StatelessWidget {
     }
   }
 
-  showDeleteExpenseDialog(BuildContext context) {
+  void showDeleteExpenseDialog(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     showDialog(
       context: context,
@@ -73,7 +73,7 @@ class ExpenseMenu extends StatelessWidget {
     );
   }
 
-  deleteExpense(BuildContext context) async {
+  Future<void> deleteExpense(BuildContext context) async {
     await service.deleteExpense(expense.id!);
     if (context.mounted) {
       context.read<LastExpenseCubit>().refresh();
@@ -177,7 +177,7 @@ class ExpenseMenu extends StatelessWidget {
                         Expanded(
                           child: ExpenseImages(
                             key: ValueKey(expense.files),
-                            files: expense.files,
+                            initialFiles: expense.files,
                           ),
                         ),
                     ],

@@ -8,7 +8,9 @@ import com.ftpix.sss.models.SSSFile;
 import com.ftpix.sss.websockets.WebSocketSessionManager;
 import com.google.gson.Gson;
 import org.jooq.DSLContext;
+import org.jooq.Field;
 import org.jooq.OrderField;
+import org.jooq.TableField;
 import org.jooq.impl.TableImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -65,6 +67,20 @@ public class FileDAO implements Dao<FilesRecord, SSSFile> {
         return getDsl().update(FILES).setNull(FILES.EXPENSE_ID).where(FILES.EXPENSE_ID.eq(expenseId)).execute() > 0;
     }
 
+    public <T> boolean updateField(SSSFile file, Field<T> field, T value) {
+        boolean b = getDsl().update(FILES).set(field, value).where(FILES.ID.eq(file.getId().toString())).execute() == 1;
+        WebSocketSessionManager.sendToUser(file.getUserId().toString(), getOneWhere(FILES.ID.eq(file.getId()
+                .toString())).get());
+        return b;
+    }
+
+
+    @Override
+    public OrderField[] getDefaultOrderBy() {
+        return new OrderField[]{FILES.TIME_CREATED.asc()};
+    }
+
+
     @Override
     public SSSFile fromRecord(FilesRecord record) {
         SSSFile f = new SSSFile();
@@ -117,10 +133,5 @@ public class FileDAO implements Dao<FilesRecord, SSSFile> {
 
 
         return record;
-    }
-
-    @Override
-    public OrderField[] getDefaultOrderBy() {
-        return new OrderField[0];
     }
 }

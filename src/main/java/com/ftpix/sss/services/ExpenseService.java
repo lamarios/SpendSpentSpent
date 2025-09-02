@@ -19,6 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.ftpix.sss.dsl.Tables.EXPENSE;
+import static com.ftpix.sss.dsl.Tables.FILES;
 
 @Service
 public class ExpenseService {
@@ -113,9 +114,7 @@ public class ExpenseService {
         fileService.clearExpenseFiles(expense.getId());
 
         expense.getFiles()
-                .stream()
-                .peek(file -> file.setExpenseId(expense.getId()))
-                .forEach(fileService::updateFile);
+                .forEach(file -> fileService.updateField(file, FILES.EXPENSE_ID, expense.getId()));
 
         return expense;
     }
@@ -152,8 +151,7 @@ public class ExpenseService {
         // the expense id
         for (SSSFile sssFile : expense.getFiles()) {
             fileService.getfile(user, sssFile.getId().toString()).ifPresent(file -> {
-                file.setExpenseId(result.getId());
-                fileService.updateFile(file);
+                fileService.updateField(file, FILES.EXPENSE_ID, result.getId());
             });
         }
 
