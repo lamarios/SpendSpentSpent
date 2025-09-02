@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_loading_indicator/loading_indicator.dart';
+import 'package:motor/motor.dart';
 import 'package:spend_spent_spent/expenses/state/below_date_in_calendar.dart';
 import 'package:spend_spent_spent/globals.dart';
 
@@ -30,15 +30,20 @@ class BelowDateInCalendarWidget extends StatelessWidget {
                 switchOutCurve: animationCurve,
                 child: state.loading
                     ? SizedBox(width: 20, height: 20, child: LoadingIndicator())
-                    : Text(
-                        formatCurrency(state.amount ?? 0),
-                        style: textTheme.labelMedium?.copyWith(
-                          color: colors.primary,
+                    : SingleMotionBuilder(
+                        motion: MaterialSpringMotion.expressiveSpatialDefault(),
+                        from: 50,
+                        value: 0,
+                        builder: (context, value, child) => Transform.translate(
+                          offset: Offset(0, value),
+                          child: child,
                         ),
-                      ).animate().slideY(
-                        duration: animationDuration,
-                        curve: animationCurve,
-                        begin: 0.5,
+                        child: Text(
+                          formatCurrency(state.amount ?? 0),
+                          style: textTheme.labelMedium?.copyWith(
+                            color: colors.primary,
+                          ),
+                        ),
                       ),
               ),
             );

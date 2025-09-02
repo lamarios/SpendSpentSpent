@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:motor/motor.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/utils/states/month_picker.dart';
 import 'package:spend_spent_spent/utils/views/components/conditional_wrapper.dart';
@@ -244,10 +245,11 @@ class _Month extends StatelessWidget {
               return cubit.setMonth(DateTime(cubit.state.selectedYear, month));
             }
           : null,
-      child: AnimatedScale(
-        duration: animationDuration,
-        curve: animationCurve,
-        scale: selected ? 1.15 : 1,
+      child: SingleMotionBuilder(
+        motion: MaterialSpringMotion.expressiveEffectsDefault(),
+        value: selected ? 115 : 100,
+        builder: (context, value, child) =>
+            Transform.scale(scale: value / 100, child: child),
         child: AnimatedContainer(
           duration: animationDuration,
           curve: animationCurve,
