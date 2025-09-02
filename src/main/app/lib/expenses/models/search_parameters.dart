@@ -14,7 +14,7 @@ sealed class SearchParameters with _$SearchParameters {
     @Default([]) List<Category> categories,
     required int minAmount,
     required int maxAmount,
-    required String note,
+    @Default('') String searchQuery,
   }) = _SearchParameters;
 
   factory SearchParameters.fromJson(Map<String, dynamic> json) =>

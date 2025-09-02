@@ -21,17 +21,8 @@ class RecurringExpenseAverages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final colors = Theme.of(context).colorScheme;
 
-    final isMaterialYou = context.select(
-      (AppSettingsCubit c) => !c.state.blackBackground && c.state.materialYou,
-    );
-
-    final openedBackgroundColor = isMaterialYou
-        ? MediaQuery.platformBrightnessOf(context) == Brightness.dark
-              ? brighten(colors.surfaceContainerHigh, 0.1)
-              : colors.onInverseSurface
-        : colors.surfaceContainerHigh;
+    final openedBackgroundColor = getLightBackground(context);
 
     int daysInsYear = _daysInYear();
 

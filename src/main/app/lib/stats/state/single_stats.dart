@@ -9,11 +9,11 @@ part 'single_stats.freezed.dart';
 class SingleStatsCubit extends Cubit<SingleStatsState> {
   SingleStatsCubit(super.initialState);
 
-  closeContainer() {
+  void closeContainer() {
     emit(state.copyWith(open: false, showGraph: false));
   }
 
-  openContainer() {
+  void openContainer() {
     final newState = !state.open;
     emit(state.copyWith(open: newState));
     Future.delayed(panelTransition, () {

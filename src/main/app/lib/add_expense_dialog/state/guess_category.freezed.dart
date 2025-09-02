@@ -11,33 +11,30 @@ part of 'guess_category.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$GuessCategoryState {
 
- bool get loading; CategoryGuessResult? get results; String? get selected;
+ bool get loading; CategoryGuessResult? get results; String? get selected; dynamic get error; StackTrace? get stackTrace;
 /// Create a copy of GuessCategoryState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $GuessCategoryStateCopyWith<GuessCategoryState> get copyWith => _$GuessCategoryStateCopyWithImpl<GuessCategoryState>(this as GuessCategoryState, _$identity);
 
-  /// Serializes this GuessCategoryState to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GuessCategoryState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.results, results) || other.results == results)&&(identical(other.selected, selected) || other.selected == selected));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GuessCategoryState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.results, results) || other.results == results)&&(identical(other.selected, selected) || other.selected == selected)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
-int get hashCode => Object.hash(runtimeType,loading,results,selected);
+int get hashCode => Object.hash(runtimeType,loading,results,selected,const DeepCollectionEquality().hash(error),stackTrace);
 
 @override
 String toString() {
-  return 'GuessCategoryState(loading: $loading, results: $results, selected: $selected)';
+  return 'GuessCategoryState(loading: $loading, results: $results, selected: $selected, error: $error, stackTrace: $stackTrace)';
 }
 
 
@@ -48,7 +45,7 @@ abstract mixin class $GuessCategoryStateCopyWith<$Res>  {
   factory $GuessCategoryStateCopyWith(GuessCategoryState value, $Res Function(GuessCategoryState) _then) = _$GuessCategoryStateCopyWithImpl;
 @useResult
 $Res call({
- bool loading, CategoryGuessResult? results, String? selected
+ bool loading, CategoryGuessResult? results, String? selected, dynamic error, StackTrace? stackTrace
 });
 
 
@@ -65,12 +62,14 @@ class _$GuessCategoryStateCopyWithImpl<$Res>
 
 /// Create a copy of GuessCategoryState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? loading = null,Object? results = freezed,Object? selected = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? loading = null,Object? results = freezed,Object? selected = freezed,Object? error = freezed,Object? stackTrace = freezed,}) {
   return _then(_self.copyWith(
 loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,results: freezed == results ? _self.results : results // ignore: cast_nullable_to_non_nullable
 as CategoryGuessResult?,selected: freezed == selected ? _self.selected : selected // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as dynamic,stackTrace: freezed == stackTrace ? _self.stackTrace : stackTrace // ignore: cast_nullable_to_non_nullable
+as StackTrace?,
   ));
 }
 /// Create a copy of GuessCategoryState
@@ -164,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool loading,  CategoryGuessResult? results,  String? selected)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool loading,  CategoryGuessResult? results,  String? selected,  dynamic error,  StackTrace? stackTrace)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GuessCategoryState() when $default != null:
-return $default(_that.loading,_that.results,_that.selected);case _:
+return $default(_that.loading,_that.results,_that.selected,_that.error,_that.stackTrace);case _:
   return orElse();
 
 }
@@ -185,10 +184,10 @@ return $default(_that.loading,_that.results,_that.selected);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool loading,  CategoryGuessResult? results,  String? selected)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool loading,  CategoryGuessResult? results,  String? selected,  dynamic error,  StackTrace? stackTrace)  $default,) {final _that = this;
 switch (_that) {
 case _GuessCategoryState():
-return $default(_that.loading,_that.results,_that.selected);}
+return $default(_that.loading,_that.results,_that.selected,_that.error,_that.stackTrace);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -202,10 +201,10 @@ return $default(_that.loading,_that.results,_that.selected);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool loading,  CategoryGuessResult? results,  String? selected)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool loading,  CategoryGuessResult? results,  String? selected,  dynamic error,  StackTrace? stackTrace)?  $default,) {final _that = this;
 switch (_that) {
 case _GuessCategoryState() when $default != null:
-return $default(_that.loading,_that.results,_that.selected);case _:
+return $default(_that.loading,_that.results,_that.selected,_that.error,_that.stackTrace);case _:
   return null;
 
 }
@@ -214,15 +213,17 @@ return $default(_that.loading,_that.results,_that.selected);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _GuessCategoryState implements GuessCategoryState {
-  const _GuessCategoryState({this.loading = true, this.results, this.selected});
-  factory _GuessCategoryState.fromJson(Map<String, dynamic> json) => _$GuessCategoryStateFromJson(json);
+  const _GuessCategoryState({this.loading = true, this.results, this.selected, this.error, this.stackTrace});
+  
 
 @override@JsonKey() final  bool loading;
 @override final  CategoryGuessResult? results;
 @override final  String? selected;
+@override final  dynamic error;
+@override final  StackTrace? stackTrace;
 
 /// Create a copy of GuessCategoryState
 /// with the given fields replaced by the non-null parameter values.
@@ -230,23 +231,20 @@ class _GuessCategoryState implements GuessCategoryState {
 @pragma('vm:prefer-inline')
 _$GuessCategoryStateCopyWith<_GuessCategoryState> get copyWith => __$GuessCategoryStateCopyWithImpl<_GuessCategoryState>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$GuessCategoryStateToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GuessCategoryState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.results, results) || other.results == results)&&(identical(other.selected, selected) || other.selected == selected));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GuessCategoryState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.results, results) || other.results == results)&&(identical(other.selected, selected) || other.selected == selected)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
-int get hashCode => Object.hash(runtimeType,loading,results,selected);
+int get hashCode => Object.hash(runtimeType,loading,results,selected,const DeepCollectionEquality().hash(error),stackTrace);
 
 @override
 String toString() {
-  return 'GuessCategoryState(loading: $loading, results: $results, selected: $selected)';
+  return 'GuessCategoryState(loading: $loading, results: $results, selected: $selected, error: $error, stackTrace: $stackTrace)';
 }
 
 
@@ -257,7 +255,7 @@ abstract mixin class _$GuessCategoryStateCopyWith<$Res> implements $GuessCategor
   factory _$GuessCategoryStateCopyWith(_GuessCategoryState value, $Res Function(_GuessCategoryState) _then) = __$GuessCategoryStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool loading, CategoryGuessResult? results, String? selected
+ bool loading, CategoryGuessResult? results, String? selected, dynamic error, StackTrace? stackTrace
 });
 
 
@@ -274,12 +272,14 @@ class __$GuessCategoryStateCopyWithImpl<$Res>
 
 /// Create a copy of GuessCategoryState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? loading = null,Object? results = freezed,Object? selected = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? loading = null,Object? results = freezed,Object? selected = freezed,Object? error = freezed,Object? stackTrace = freezed,}) {
   return _then(_GuessCategoryState(
 loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,results: freezed == results ? _self.results : results // ignore: cast_nullable_to_non_nullable
 as CategoryGuessResult?,selected: freezed == selected ? _self.selected : selected // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as dynamic,stackTrace: freezed == stackTrace ? _self.stackTrace : stackTrace // ignore: cast_nullable_to_non_nullable
+as StackTrace?,
   ));
 }
 

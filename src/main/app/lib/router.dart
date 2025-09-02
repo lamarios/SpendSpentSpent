@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:spend_spent_spent/categories/views/components/category_list.dart';
+import 'package:spend_spent_spent/expenses/models/sss_file.dart';
+import 'package:spend_spent_spent/expenses/views/screens/image_viewer.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/categories/views/screens/category_settings.dart';
 import 'package:spend_spent_spent/home/views/screens/home.dart';
@@ -15,7 +18,7 @@ import 'stats/views/screens/left_column.dart';
 
 part 'router.gr.dart';
 
-@AutoRouterConfig(replaceInRouteName: 'Screen|Tab,Route')
+@AutoRouterConfig(replaceInRouteName: 'Screen|Tab,Route', argsEquality: false)
 class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
@@ -43,6 +46,7 @@ class AppRouter extends RootStackRouter {
     ),
     AutoRoute(page: CategorySettingsRoute.page),
     AutoRoute(page: SettingsRoute.page),
+    AutoRoute(page: ImageViewerRoute.page),
     AutoRoute(page: LoginRoute.page),
   ];
 

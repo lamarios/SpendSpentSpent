@@ -51,16 +51,7 @@ class SingleStats extends StatelessWidget {
         builder: (context, state) {
           final cubit = context.read<SingleStatsCubit>();
 
-          final isMaterialYou = context.select(
-            (AppSettingsCubit c) =>
-                !c.state.blackBackground && c.state.materialYou,
-          );
-
-          final openedBackgroundColor = isMaterialYou
-              ? MediaQuery.platformBrightnessOf(context) == Brightness.dark
-                    ? brighten(colors.surfaceContainerHigh, 0.1)
-                    : colors.onInverseSurface
-              : colors.surfaceContainerHigh;
+          final openedBackgroundColor = getLightBackground(context);
 
           return Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
@@ -70,6 +61,7 @@ class SingleStats extends StatelessWidget {
               child: Column(
                 children: [
                   Row(
+                    spacing: 4,
                     children: [
                       AnimatedRotation(
                         turns: state.open ? 0.25 : 0,
@@ -116,8 +108,6 @@ class SingleStats extends StatelessWidget {
                           width: getBarWidth(context, constraints),
                           height: state.open ? openedHeight : 10,
                           decoration: BoxDecoration(
-                            // border: Border.all(color:  state.ocolors.onPrimaryContainer, width: 1),
-                            // border: Border.all(color: colors.surfaceContainerHighest, width: state.open ? 5: 0),
                             borderRadius: const BorderRadius.all(
                               Radius.circular(10),
                             ),

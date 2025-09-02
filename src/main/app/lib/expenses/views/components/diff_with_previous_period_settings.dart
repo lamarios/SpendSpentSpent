@@ -113,24 +113,36 @@ class DiffWithPreviousPeriodSettings extends StatelessWidget {
                   horizontal: 16,
                 ),
                 child: Column(
+                  spacing: 16,
                   children: [
                     Text(
                       'This shows the difference between  ${_df2.format(currentPeriod.start)} to ${_df2.format(currentPeriod.end)} and ${_df2.format(previousPeriod.start)} to ${_df2.format(previousPeriod.end)}',
                       style: textTheme.labelMedium,
                     ),
-                    Gap(16),
-                    SwitchListTile(
-                      value: state.includeRecurringExpenses,
-                      title: Text('Include recurring expenses in comparison'),
-                      onChanged: (value) =>
-                          cubit.setIncludeRecurringExpenses(value),
-                    ),
-                    Gap(16),
                     DiffWithPreviousPeriodGraph(
                       key: ValueKey(state.includeRecurringExpenses),
                       currentPeriod: currentPeriod,
                       previousPeriod: previousPeriod,
                       includeRecurring: state.includeRecurringExpenses,
+                    ),
+                    InkWell(
+                      onTap: () => cubit.setIncludeRecurringExpenses(
+                        !state.includeRecurringExpenses,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Include recurring expenses in comparison',
+                            ),
+                          ),
+                          Switch(
+                            value: state.includeRecurringExpenses,
+                            onChanged: (value) =>
+                                cubit.setIncludeRecurringExpenses(value),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

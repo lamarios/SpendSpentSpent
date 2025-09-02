@@ -13,6 +13,8 @@ class ExpenseImage extends StatelessWidget {
   final double width;
   final double height;
   final bool showStatus;
+  final double? borderRadius;
+  final BoxFit? boxFit;
 
   const ExpenseImage({
     super.key,
@@ -20,6 +22,8 @@ class ExpenseImage extends StatelessWidget {
     required this.width,
     required this.height,
     required this.showStatus,
+    this.borderRadius,
+    this.boxFit,
   });
 
   @override
@@ -32,14 +36,19 @@ class ExpenseImage extends StatelessWidget {
             ? Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(
+                      borderRadius ??
+                          (width > 100
+                              ? bigItemBorderRadius
+                              : smallItemBorderRadius),
+                    ),
                     child: CachedNetworkImage(
                       imageUrl: '${service.url}/API/Files/${file.id}/download',
                       httpHeaders: {'Authorization': 'Bearer ${data.data}'},
                       imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
                       width: width,
                       height: height,
-                      fit: BoxFit.cover,
+                      fit: boxFit ?? BoxFit.cover,
                       fadeInDuration: animationDuration,
                       fadeOutDuration: animationDuration,
                       progressIndicatorBuilder: (context, url, progress) {

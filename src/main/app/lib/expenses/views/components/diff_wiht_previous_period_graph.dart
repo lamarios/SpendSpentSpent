@@ -73,6 +73,7 @@ class DiffWithPreviousPeriodGraph extends StatelessWidget {
                                 LineChartData(
                                   baselineX: 1,
                                   baselineY: 0,
+                                  minX: 1,
                                   maxY:
                                       max(
                                         currentSpots[currentSpots.length - 1].y,
@@ -81,6 +82,7 @@ class DiffWithPreviousPeriodGraph extends StatelessWidget {
                                       ) *
                                       1.1,
                                   minY: 0,
+                                  maxX: currentSpots.length < 5 ? 5 : null,
                                   lineTouchData: LineTouchData(
                                     touchTooltipData: LineTouchTooltipData(
                                       fitInsideHorizontally: true,
@@ -114,6 +116,15 @@ class DiffWithPreviousPeriodGraph extends StatelessWidget {
                                     // rightTitles: SideTitles(showTitles: false),
                                     topTitles: const AxisTitles(
                                       sideTitles: SideTitles(showTitles: false),
+                                    ),
+                                    bottomTitles: AxisTitles(
+                                      sideTitles: SideTitles(
+                                        showTitles: true,
+                                        interval: 1,
+                                        getTitlesWidget: (value, meta) =>
+                                            Text(value.toStringAsFixed(0)),
+                                        reservedSize: 25,
+                                      ),
                                     ),
                                     leftTitles: AxisTitles(
                                       sideTitles: SideTitles(
