@@ -10,8 +10,10 @@ class ExpenseImagesCubit extends Cubit<ExpenseImagesState> {
   void updateImage(SssFile file) {
     final List<SssFile> files = List.from(state.files);
     final index = files.indexWhere((element) => element.id == file.id);
-    files[index] = file;
-    emit(state.copyWith(files: files));
+    if (index >= 0) {
+      files[index] = file;
+      emit(state.copyWith(files: files));
+    }
   }
 }
 

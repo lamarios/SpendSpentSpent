@@ -68,8 +68,18 @@ public class FileDAO implements Dao<FilesRecord, SSSFile> {
     }
 
     public <T> boolean updateField(SSSFile file, Field<T> field, T value) {
-        return getDsl().update(FILES).set(field, value).where(FILES.ID.eq(file.getId().toString())).execute() == 1;
+        boolean b = getDsl().update(FILES).set(field, value).where(FILES.ID.eq(file.getId().toString())).execute() == 1;
+        WebSocketSessionManager.sendToUser(file.getUserId().toString(), getOneWhere(FILES.ID.eq(file.getId()
+                .toString())).get());
+        return b;
     }
+
+
+    @Override
+    public OrderField[] getDefaultOrderBy() {
+        return new OrderField[]{FILES.TIME_CREATED.asc()};
+    }
+
 
     @Override
     public SSSFile fromRecord(FilesRecord record) {
@@ -123,10 +133,5 @@ public class FileDAO implements Dao<FilesRecord, SSSFile> {
 
 
         return record;
-    }
-
-    @Override
-    public OrderField[] getDefaultOrderBy() {
-        return new OrderField[0];
     }
 }

@@ -299,6 +299,15 @@ class Service {
     return Expense.fromJson(jsonDecode(response.body));
   }
 
+  Future<Expense> getExpense(int id) async {
+    final response = await http.get(
+      await formatUrl('$API_URL/Expense/ById/$id'),
+      headers: await headers,
+    );
+    processResponse(response);
+    return Expense.fromJson(jsonDecode(response.body));
+  }
+
   Future<ExpenseLimits> getExpenseLimits() async {
     final response = await http.get(
       await formatUrl(EXPENSE_GET_LIMITS),

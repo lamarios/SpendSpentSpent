@@ -45,7 +45,7 @@ public class WebSocketSessionManager {
                     try {
                         session.sendMessage(new TextMessage(gson.toJson(message)));
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        log.error("Error sending message:", e);
                     }
                 }
             }

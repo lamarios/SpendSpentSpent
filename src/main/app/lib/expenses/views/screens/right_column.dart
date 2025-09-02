@@ -14,6 +14,7 @@ import 'package:spend_spent_spent/expenses/views/components/search.dart';
 import 'package:spend_spent_spent/expenses/views/components/stylized_amount.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
+import 'package:spend_spent_spent/recurring_expenses/views/components/expense_list.dart';
 import 'package:spend_spent_spent/utils/views/components/data_change_monitor.dart';
 import 'package:spend_spent_spent/utils/views/components/month_picker.dart';
 
@@ -38,7 +39,12 @@ class RightColumnTab extends StatelessWidget {
             bottom: index == expenses.length - 1 ? bottomPadding : 0,
           ),
           child: OneDay(
-            showExpense: (expense) => ExpenseMenu.showSheet(context, expense),
+            showExpense: (expense) async {
+              final exp = await service.getExpense(expense.id!);
+              if (context.mounted) {
+                await ExpenseMenu.showSheet(context, exp);
+              }
+            },
             expense: expenses[expensesKeys[index]]!,
           ),
         );
