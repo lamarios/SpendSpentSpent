@@ -23,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late StreamSubscription _intentSub;
+  bool _sharedFileIsHandled = false;
 
   @override
   void dispose() {
@@ -40,13 +41,15 @@ class _HomeScreenState extends State<HomeScreen> {
     // Listen to media sharing coming from outside the app while the app is in the memory.
     _intentSub = ReceiveSharingIntent.instance.getMediaStream().listen(
       (value) async {
-        _log.fine("Received file to open: ${value.length}");
-        if (value.isNotEmpty) {
-          WidgetsBinding.instance.addPostFrameCallback((_) async {
-            if (context.mounted) {
-              GuessCategoryDialog.show(context, file: value.first);
-            }
-          });
+        _log.fine("Received file to open while app is opened: ${value.length}");
+        if (value.isNotEmpty && !_sharedFileIsHandled) {
+          _sharedFileIsHandled = true;
+          if (context.mounted) {
+            GuessCategoryDialog.show(
+              context,
+              file: value.first,
+            ).then((value) => _sharedFileIsHandled = false);
+          }
         }
       },
       onError: (err) {
@@ -56,12 +59,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Get the media sharing coming from outside the app while the app is closed.
     ReceiveSharingIntent.instance.getInitialMedia().then((value) async {
-      _log.fine("Received file to open 2 ${value.length}");
+      _log.fine("Received file to open from app start: ${value.length}");
 
       if (value.isNotEmpty) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           if (context.mounted) {
-            GuessCategoryDialog.show(context, file: value.first);
+            _sharedFileIsHandled = true;
+            GuessCategoryDialog.show(
+              context,
+              file: value.first,
+            ).then((value) => _sharedFileIsHandled = false);
           }
         });
       }

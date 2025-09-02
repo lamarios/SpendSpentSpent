@@ -60,17 +60,17 @@ class Step1 extends StatelessWidget {
                             onTap: () => onSelect(e),
                             child: AnimatedContainer(
                               decoration: BoxDecoration(
-                                borderRadius: defaultBorder,
+                                shape: BoxShape.circle,
                                 color: (selected?.icon ?? '') != e.icon
                                     ? Colors.transparent
                                     : colors.primaryContainer,
                               ),
                               duration: panelTransition,
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(12.0),
                                 child: getIcon(
                                   e.icon!,
-                                  size: 30,
+                                  size: 24,
                                   color: (selected?.icon ?? '') == e.icon
                                       ? colors.onPrimaryContainer
                                       : colors.primary,

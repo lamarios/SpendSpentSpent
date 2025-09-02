@@ -52,7 +52,36 @@ class GuessCategoryDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Center(child: LoadingIndicator()),
-                  Text('Getting info...'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 8,
+                    children: [
+                      Icon(Icons.auto_awesome),
+                      Text('Analyzing image...'),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (state.error != null) {
+            return SizedBox(
+              height: 300,
+              child: Column(
+                spacing: 24,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Icon(
+                      Icons.sentiment_dissatisfied,
+                      size: 50,
+                      color: colors.secondary,
+                    ),
+                  ),
+                  Text('Picture guessing failed, check the server logs'),
                 ],
               ),
             );

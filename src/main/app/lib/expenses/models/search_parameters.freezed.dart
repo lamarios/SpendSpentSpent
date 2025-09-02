@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SearchParameters {
 
- List<Category> get categories; int get minAmount; int get maxAmount; String get note;
+ List<Category> get categories; int get minAmount; int get maxAmount; String get searchQuery;
 /// Create a copy of SearchParameters
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $SearchParametersCopyWith<SearchParameters> get copyWith => _$SearchParametersCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchParameters&&const DeepCollectionEquality().equals(other.categories, categories)&&(identical(other.minAmount, minAmount) || other.minAmount == minAmount)&&(identical(other.maxAmount, maxAmount) || other.maxAmount == maxAmount)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchParameters&&const DeepCollectionEquality().equals(other.categories, categories)&&(identical(other.minAmount, minAmount) || other.minAmount == minAmount)&&(identical(other.maxAmount, maxAmount) || other.maxAmount == maxAmount)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(categories),minAmount,maxAmount,note);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(categories),minAmount,maxAmount,searchQuery);
 
 @override
 String toString() {
-  return 'SearchParameters(categories: $categories, minAmount: $minAmount, maxAmount: $maxAmount, note: $note)';
+  return 'SearchParameters(categories: $categories, minAmount: $minAmount, maxAmount: $maxAmount, searchQuery: $searchQuery)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $SearchParametersCopyWith<$Res>  {
   factory $SearchParametersCopyWith(SearchParameters value, $Res Function(SearchParameters) _then) = _$SearchParametersCopyWithImpl;
 @useResult
 $Res call({
- List<Category> categories, int minAmount, int maxAmount, String note
+ List<Category> categories, int minAmount, int maxAmount, String searchQuery
 });
 
 
@@ -65,12 +65,12 @@ class _$SearchParametersCopyWithImpl<$Res>
 
 /// Create a copy of SearchParameters
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? categories = null,Object? minAmount = null,Object? maxAmount = null,Object? note = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? categories = null,Object? minAmount = null,Object? maxAmount = null,Object? searchQuery = null,}) {
   return _then(_self.copyWith(
 categories: null == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
 as List<Category>,minAmount: null == minAmount ? _self.minAmount : minAmount // ignore: cast_nullable_to_non_nullable
 as int,maxAmount: null == maxAmount ? _self.maxAmount : maxAmount // ignore: cast_nullable_to_non_nullable
-as int,note: null == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
+as int,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -153,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Category> categories,  int minAmount,  int maxAmount,  String note)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Category> categories,  int minAmount,  int maxAmount,  String searchQuery)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SearchParameters() when $default != null:
-return $default(_that.categories,_that.minAmount,_that.maxAmount,_that.note);case _:
+return $default(_that.categories,_that.minAmount,_that.maxAmount,_that.searchQuery);case _:
   return orElse();
 
 }
@@ -174,10 +174,10 @@ return $default(_that.categories,_that.minAmount,_that.maxAmount,_that.note);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Category> categories,  int minAmount,  int maxAmount,  String note)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Category> categories,  int minAmount,  int maxAmount,  String searchQuery)  $default,) {final _that = this;
 switch (_that) {
 case _SearchParameters():
-return $default(_that.categories,_that.minAmount,_that.maxAmount,_that.note);}
+return $default(_that.categories,_that.minAmount,_that.maxAmount,_that.searchQuery);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -191,10 +191,10 @@ return $default(_that.categories,_that.minAmount,_that.maxAmount,_that.note);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Category> categories,  int minAmount,  int maxAmount,  String note)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Category> categories,  int minAmount,  int maxAmount,  String searchQuery)?  $default,) {final _that = this;
 switch (_that) {
 case _SearchParameters() when $default != null:
-return $default(_that.categories,_that.minAmount,_that.maxAmount,_that.note);case _:
+return $default(_that.categories,_that.minAmount,_that.maxAmount,_that.searchQuery);case _:
   return null;
 
 }
@@ -206,7 +206,7 @@ return $default(_that.categories,_that.minAmount,_that.maxAmount,_that.note);cas
 @JsonSerializable()
 
 class _SearchParameters implements SearchParameters {
-  const _SearchParameters({final  List<Category> categories = const [], required this.minAmount, required this.maxAmount, required this.note}): _categories = categories;
+  const _SearchParameters({final  List<Category> categories = const [], required this.minAmount, required this.maxAmount, this.searchQuery = ''}): _categories = categories;
   factory _SearchParameters.fromJson(Map<String, dynamic> json) => _$SearchParametersFromJson(json);
 
  final  List<Category> _categories;
@@ -218,7 +218,7 @@ class _SearchParameters implements SearchParameters {
 
 @override final  int minAmount;
 @override final  int maxAmount;
-@override final  String note;
+@override@JsonKey() final  String searchQuery;
 
 /// Create a copy of SearchParameters
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchParameters&&const DeepCollectionEquality().equals(other._categories, _categories)&&(identical(other.minAmount, minAmount) || other.minAmount == minAmount)&&(identical(other.maxAmount, maxAmount) || other.maxAmount == maxAmount)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchParameters&&const DeepCollectionEquality().equals(other._categories, _categories)&&(identical(other.minAmount, minAmount) || other.minAmount == minAmount)&&(identical(other.maxAmount, maxAmount) || other.maxAmount == maxAmount)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_categories),minAmount,maxAmount,note);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_categories),minAmount,maxAmount,searchQuery);
 
 @override
 String toString() {
-  return 'SearchParameters(categories: $categories, minAmount: $minAmount, maxAmount: $maxAmount, note: $note)';
+  return 'SearchParameters(categories: $categories, minAmount: $minAmount, maxAmount: $maxAmount, searchQuery: $searchQuery)';
 }
 
 
@@ -253,7 +253,7 @@ abstract mixin class _$SearchParametersCopyWith<$Res> implements $SearchParamete
   factory _$SearchParametersCopyWith(_SearchParameters value, $Res Function(_SearchParameters) _then) = __$SearchParametersCopyWithImpl;
 @override @useResult
 $Res call({
- List<Category> categories, int minAmount, int maxAmount, String note
+ List<Category> categories, int minAmount, int maxAmount, String searchQuery
 });
 
 
@@ -270,12 +270,12 @@ class __$SearchParametersCopyWithImpl<$Res>
 
 /// Create a copy of SearchParameters
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? categories = null,Object? minAmount = null,Object? maxAmount = null,Object? note = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? categories = null,Object? minAmount = null,Object? maxAmount = null,Object? searchQuery = null,}) {
   return _then(_SearchParameters(
 categories: null == categories ? _self._categories : categories // ignore: cast_nullable_to_non_nullable
 as List<Category>,minAmount: null == minAmount ? _self.minAmount : minAmount // ignore: cast_nullable_to_non_nullable
 as int,maxAmount: null == maxAmount ? _self.maxAmount : maxAmount // ignore: cast_nullable_to_non_nullable
-as int,note: null == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
+as int,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

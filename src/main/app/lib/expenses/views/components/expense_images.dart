@@ -1,12 +1,14 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spend_spent_spent/expenses/models/sss_file.dart';
 import 'package:spend_spent_spent/expenses/state/expense_images.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/sss_files/views/components/sss_file_listener.dart';
 import 'package:spend_spent_spent/utils/all_scroll_behavior.dart';
 import 'package:spend_spent_spent/utils/views/components/expense_image.dart';
-
-const double _imageSize = 270;
+import 'package:spend_spent_spent/utils/views/components/image_carousell.dart';
 
 class ExpenseImages extends StatelessWidget {
   final List<SssFile> files;
@@ -30,71 +32,60 @@ class ExpenseImages extends StatelessWidget {
               }
             },
             child: Column(
+              mainAxisSize: MainAxisSize.max,
               spacing: 8,
               children: [
-                SizedBox(
-                  height: _imageSize,
-                  child: ScrollConfiguration(
-                    behavior: AllScrollBehavior(),
-                    child: CarouselView(
-                      itemExtent: files.length == 1
-                          ? double.infinity
-                          : _imageSize,
-                      itemSnapping: true,
-                      enableSplash: false,
-                      children: [
-                        ...files.map(
-                          (e) => Stack(
-                            children: [
-                              Positioned.fill(
-                                child: ExpenseImage(
-                                  file: e,
-                                  width: files.length == 1
-                                      ? double.maxFinite
-                                      : _imageSize,
-                                  height: _imageSize,
-                                  showStatus: true,
-                                ),
-                              ),
-                            ],
-                          ),
+                Expanded(
+                  child: ImageCarousel(
+                    files: files,
+                    onTap: (value) {
+                      AutoRouter.of(context).push(
+                        ImageViewerRoute(
+                          images: files,
+                          initiallySelected: value,
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ),
 
                 if (state.possibleTags.isNotEmpty)
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    spacing: 16,
+                    spacing: 8,
                     children: [
                       Icon(Icons.local_offer, color: colors.secondary),
                       Expanded(
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 4,
-                          children: state.possibleTags
-                              .map(
-                                (e) => Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 4,
-                                    horizontal: 8,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: colors.primaryContainer,
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
+                        child: SizedBox(
+                          height: 30,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: state.possibleTags
+                                .map(
+                                  (e) => Center(
+                                    child: Container(
+                                      margin: EdgeInsets.only(right: 4),
+                                      key: ValueKey(e),
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 4,
+                                        horizontal: 8,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: colors.primaryContainer,
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
 
-                                  child: Text(
-                                    e,
-                                    style: textTheme.bodySmall?.copyWith(
-                                      color: colors.onPrimaryContainer,
+                                      child: Text(
+                                        e,
+                                        style: textTheme.bodySmall?.copyWith(
+                                          color: colors.onPrimaryContainer,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              )
-                              .toList(),
+                                )
+                                .toList(),
+                          ),
                         ),
                       ),
                     ],

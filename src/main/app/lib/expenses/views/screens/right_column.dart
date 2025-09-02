@@ -138,17 +138,18 @@ class RightColumnTab extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(width: 50),
+                            AnimatedContainer(
+                              duration: animationDuration * 3,
+                              curve: Curves.easeInOutQuint,
+                              width: state.searchMode ? 0 : 50,
+                            ),
                             Gap(4),
                             Expanded(
-                              child: AnimatedCrossFade(
-                                sizeCurve: Curves.easeInOutQuad,
-                                crossFadeState: state.searchMode
-                                    ? CrossFadeState.showFirst
-                                    : CrossFadeState.showSecond,
+                              child: AnimatedSwitcher(
                                 duration: panelTransition,
-                                firstChild: Search(search: cubit.search),
-                                secondChild: state.loading
+                                child: state.searchMode
+                                    ? Search(search: cubit.search)
+                                    : state.loading
                                     ? SizedBox.shrink()
                                     : Center(
                                         child: FilledButton.tonalIcon(
@@ -164,10 +165,14 @@ class RightColumnTab extends StatelessWidget {
                             Gap(4),
                             SizedBox(
                               width: 50,
-                              child: IconButton.filledTonal(
-                                onPressed: cubit.switchSearch,
-                                icon: Icon(
-                                  state.searchMode ? Icons.clear : Icons.search,
+                              child: Center(
+                                child: IconButton.filledTonal(
+                                  onPressed: cubit.switchSearch,
+                                  icon: Icon(
+                                    state.searchMode
+                                        ? Icons.clear
+                                        : Icons.search,
+                                  ),
                                 ),
                               ),
                             ),

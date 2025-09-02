@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/utils/views/components/conditional_wrapper.dart';
 import 'package:spend_spent_spent/utils/views/components/expense_image.dart';
 
 const double MAP_HEIGHT = 200;
@@ -104,53 +105,56 @@ class OneExpense extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            width: 200,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                if (expense.files.isNotEmpty)
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      ExpenseImage(
-                        file: expense.files.first,
-                        width: 50,
-                        height: 50,
-                        showStatus: false,
-                      ),
-                      Positioned(
-                        top: -10,
-                        right: -10,
-                        child: Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: colors.primaryContainer,
-                          ),
-                          child: Center(
-                            child: Text(
-                              expense.files.length.toString(),
-                              style: textTheme.labelSmall?.copyWith(
-                                color: colors.onPrimaryContainer,
+          ConditionalWrapper(
+            wrapIf: expense.files.isNotEmpty,
+            wrapper: (child) => SizedBox(
+              width: 170,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (expense.files.isNotEmpty)
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        ExpenseImage(
+                          file: expense.files.first,
+                          width: 50,
+                          height: 50,
+                          showStatus: false,
+                        ),
+                        if (expense.files.length > 1)
+                          Positioned(
+                            top: -10,
+                            right: -10,
+                            child: Container(
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: colors.primaryContainer,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  expense.files.length.toString(),
+                                  style: textTheme.labelSmall?.copyWith(
+                                    color: colors.onPrimaryContainer,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      textAlign: TextAlign.right,
-                      formatCurrency(expense.amount),
-                      style: TextStyle(color: colors.onSurface),
+                      ],
                     ),
-                  ),
-                ),
-              ],
+                  Expanded(child: child),
+                ],
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                textAlign: TextAlign.right,
+                formatCurrency(expense.amount),
+                style: TextStyle(color: colors.onSurface),
+              ),
             ),
           ),
         ],

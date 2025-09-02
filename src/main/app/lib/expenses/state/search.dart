@@ -39,7 +39,7 @@ class SearchCubit extends Cubit<SearchState> {
   }
 
   setNote() {
-    emit(state.copyWith.searchParameters(note: noteController.text));
+    emit(state.copyWith.searchParameters(searchQuery: noteController.text));
 
     triggerSearch();
   }
@@ -76,13 +76,13 @@ class SearchCubit extends Cubit<SearchState> {
             categories: state.searchParameters.categories,
             maxAmount: value.maxAmount,
             minAmount: value.minAmount,
-            note: state.searchParameters.note,
+            searchQuery: state.searchParameters.searchQuery,
           ),
           searchParametersBounds: SearchParameters(
             categories: value.categories,
             maxAmount: value.maxAmount,
             minAmount: value.minAmount,
-            note: "",
+            searchQuery: "",
           ),
         ),
       );
@@ -94,11 +94,21 @@ class SearchCubit extends Cubit<SearchState> {
 sealed class SearchState with _$SearchState {
   const factory SearchState({
     @Default(
-      SearchParameters(categories: [], maxAmount: 0, minAmount: 0, note: ""),
+      SearchParameters(
+        categories: [],
+        maxAmount: 0,
+        minAmount: 0,
+        searchQuery: "",
+      ),
     )
     SearchParameters searchParametersBounds,
     @Default(
-      SearchParameters(categories: [], maxAmount: 0, minAmount: 0, note: ""),
+      SearchParameters(
+        categories: [],
+        maxAmount: 0,
+        minAmount: 0,
+        searchQuery: "",
+      ),
     )
     SearchParameters searchParameters,
   }) = _SearchState;

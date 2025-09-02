@@ -15,6 +15,8 @@ const defaultPadding = 20.0;
 const panelTransition = Duration(milliseconds: 350);
 const animationDuration = Duration(milliseconds: 250);
 const animationCurve = Curves.easeInOutQuad;
+const double bigItemBorderRadius = 20;
+const double smallItemBorderRadius = 10;
 
 // broadcast message types
 const BROADCAST_LOGGED_IN = 'loggedIn',

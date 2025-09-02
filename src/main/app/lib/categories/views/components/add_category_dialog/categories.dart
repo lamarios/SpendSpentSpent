@@ -36,7 +36,7 @@ class Categories extends StatelessWidget {
                           onTap: () => onSelect(e),
                           child: AnimatedContainer(
                             decoration: BoxDecoration(
-                              borderRadius: defaultBorder,
+                              shape: BoxShape.circle,
                               color: selected == e
                                   ? colors.primaryContainer
                                   : Colors.transparent,

@@ -10,6 +10,7 @@ import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/sss_files/views/components/sss_file_listener.dart';
 import 'package:spend_spent_spent/utils/all_scroll_behavior.dart';
 import 'package:spend_spent_spent/utils/views/components/expense_image.dart';
+import 'package:spend_spent_spent/utils/views/components/image_carousell.dart';
 
 class ExpenseFileManagement extends StatelessWidget {
   final List<SssFile> files;
@@ -105,54 +106,22 @@ class ExpenseFileManagement extends StatelessWidget {
                                     color: colors.secondary,
                                   ),
                                 )
-                              : ScrollConfiguration(
-                                  behavior: AllScrollBehavior(),
-                                  child: CarouselView(
-                                    key: ValueKey(state.files.length),
-                                    itemExtent: state.files.length == 1
-                                        ? double.maxFinite
-                                        : 300,
-                                    itemSnapping: true,
-                                    controller: cubit.carouselController,
-                                    enableSplash: false,
-                                    onTap: (value) =>
-                                        cubit.carouselController.animateToItem(
-                                          value,
-                                          curve: animationCurve,
-                                          duration: animationDuration,
-                                        ),
+                              : ImageCarousel(
+                                  files: state.files,
+                                  controller: cubit.carouselController,
+                                  builder: (context, imageWidget) => Stack(
                                     children: [
-                                      ...state.files.map(
-                                        (e) => Stack(
-                                          children: [
-                                            ExpenseImage(
-                                              file: e,
-                                              width: state.files.length == 1
-                                                  ? double.maxFinite
-                                                  : 300,
-                                              height: 300,
-                                              showStatus: true,
-                                            ),
-                                            Positioned(
-                                              top: 10,
-                                              right: 10,
-                                              child: IconButton.filledTonal(
-                                                onPressed: () =>
-                                                    cubit.removeFile(e),
-                                                icon: Icon(Icons.close),
-                                              ),
-                                            ),
-                                          ],
+                                      Positioned.fill(child: imageWidget),
+                                      Positioned(
+                                        top: 10,
+                                        right: 10,
+                                        child: IconButton.filledTonal(
+                                          onPressed: () => cubit.removeFile(
+                                            imageWidget.file,
+                                          ),
+                                          icon: Icon(Icons.close),
                                         ),
                                       ),
-                                      if (state.loading)
-                                        Center(
-                                          child: SizedBox(
-                                            width: 50,
-                                            height: 50,
-                                            child: LoadingIndicator(),
-                                          ),
-                                        ),
                                     ],
                                   ),
                                 ),
@@ -267,6 +236,7 @@ class ExpenseFileManagement extends StatelessWidget {
                           ],
                         ],
                       ),
+                      if (kIsWeb) Gap(16),
                     ],
                   ),
                 ),

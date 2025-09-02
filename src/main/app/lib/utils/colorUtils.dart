@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spend_spent_spent/settings/state/app_settings.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 /*
@@ -76,4 +78,17 @@ Color brighten(Color color, [double amount = .1]) {
   final hsl = HSLColor.fromColor(color);
   final hslBright = hsl.withLightness((hsl.lightness + amount).clamp(0.0, 1.0));
   return hslBright.toColor();
+}
+
+Color getLightBackground(BuildContext context) {
+  final isMaterialYou = context.select(
+    (AppSettingsCubit c) => !c.state.blackBackground && c.state.materialYou,
+  );
+
+  final colors = Theme.of(context).colorScheme;
+  return isMaterialYou
+      ? MediaQuery.platformBrightnessOf(context) == Brightness.dark
+            ? brighten(colors.surfaceContainerHigh, 0.1)
+            : colors.onInverseSurface
+      : colors.surfaceContainerHigh;
 }

@@ -219,7 +219,7 @@ return $default(_that.searchParametersBounds,_that.searchParameters);case _:
 
 
 class _SearchState implements SearchState {
-  const _SearchState({this.searchParametersBounds = const SearchParameters(categories: [], maxAmount: 0, minAmount: 0, note: ""), this.searchParameters = const SearchParameters(categories: [], maxAmount: 0, minAmount: 0, note: "")});
+  const _SearchState({this.searchParametersBounds = const SearchParameters(categories: [], maxAmount: 0, minAmount: 0, searchQuery: ""), this.searchParameters = const SearchParameters(categories: [], maxAmount: 0, minAmount: 0, searchQuery: "")});
   
 
 @override@JsonKey() final  SearchParameters searchParametersBounds;
