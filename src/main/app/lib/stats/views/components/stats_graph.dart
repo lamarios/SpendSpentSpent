@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_loading_indicator/loading_indicator.dart';
+import 'package:motor/motor.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/stats/state/stats_graph.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -218,47 +219,49 @@ class StatsGraph extends StatelessWidget {
               ),
               Expanded(
                 child: AnimatedSwitcher(
-                  transitionBuilder:
-                      (Widget child, Animation<double> animation) {
-                        return ScaleTransition(scale: animation, child: child);
-                      },
-                  duration: panelTransition,
-                  switchInCurve: Curves.easeInOutQuint,
-                  switchOutCurve: Curves.easeInOutQuint,
+                  duration: animationDuration,
                   child: state.loading
                       ? Center(child: LoadingIndicator())
-                      : Column(
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                      : SingleMotionBuilder(
+                          motion:
+                              MaterialSpringMotion.expressiveSpatialDefault(),
+                          from: 0,
+                          value: 100,
+                          builder: (context, value, child) =>
+                              Transform.scale(scale: value / 100, child: child),
+                          child: Column(
+                            children: [
+                              Expanded(
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: LineChart(getData(context)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: LineChart(getData(context)),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                getLabel(context),
-                                style: TextStyle(color: colors.onSurface),
+                              Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  getLabel(context),
+                                  style: TextStyle(color: colors.onSurface),
+                                ),
                               ),
-                            ),
-                            Slider.adaptive(
-                              min: 1,
-                              max: state.periodMax.toDouble(),
-                              divisions: state.periodMax - 1,
-                              onChangeEnd: (p0) =>
-                                  cubit.changeCount(p0.toInt()),
-                              value: state.count.toDouble(),
-                              activeColor: colors.onSurface,
-                              inactiveColor: colors.secondaryContainer,
-                              thumbColor: colors.primary.lighten(10),
-                              onChanged: (double double) =>
-                                  cubit.setLiveCount(double),
-                            ),
-                          ],
+                              Slider.adaptive(
+                                min: 1,
+                                max: state.periodMax.toDouble(),
+                                divisions: state.periodMax - 1,
+                                onChangeEnd: (p0) =>
+                                    cubit.changeCount(p0.toInt()),
+                                value: state.count.toDouble(),
+                                activeColor: colors.onSurface,
+                                inactiveColor: colors.secondaryContainer,
+                                thumbColor: colors.primary.lighten(10),
+                                onChanged: (double double) =>
+                                    cubit.setLiveCount(double),
+                              ),
+                            ],
+                          ),
                         ),
                 ),
               ),

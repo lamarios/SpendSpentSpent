@@ -32,6 +32,7 @@ dependencies:
   location: 8.0.0
   logging: 1.3.0
   material_loading_indicator: 1.0.0
+  motor: 1.0.0-dev.6
   oidc: 0.12.1+2
   oidc_default_store: 0.4.0+3
   package_info_plus: 8.3.1
