@@ -40,10 +40,7 @@ class RightColumnTab extends StatelessWidget {
           ),
           child: OneDay(
             showExpense: (expense) async {
-              final exp = await service.getExpense(expense.id!);
-              if (context.mounted) {
-                await ExpenseMenu.showSheet(context, exp);
-              }
+              await ExpenseMenu.showSheet(context, expense);
             },
             expense: expenses[expensesKeys[index]]!,
           ),

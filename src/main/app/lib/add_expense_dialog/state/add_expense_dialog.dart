@@ -185,6 +185,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       note: note,
       files: state.files,
       id: this.expense?.id,
+      type: this.expense?.type ?? 1,
     );
 
     //checking location
