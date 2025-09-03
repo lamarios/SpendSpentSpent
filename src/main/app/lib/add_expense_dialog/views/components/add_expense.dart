@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:material_loading_indicator/loading_indicator.dart';
+import 'package:motor/motor.dart';
 import 'package:spend_spent_spent/add_expense_dialog/state/add_expense_dialog.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/actions.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/currency_converter.dart';
@@ -155,10 +155,7 @@ class AddExpense extends StatelessWidget {
                                               size: 40,
                                               color: colors.onPrimaryContainer
                                                   .withValues(alpha: 0.05),
-                                              child: Hero(
-                                                tag: cat.icon!,
-                                                child: getIconHeader(context),
-                                              ),
+                                              child: getIconHeader(context),
                                             ),
                                           ),
                                           if (isWeb)
@@ -240,42 +237,49 @@ class AddExpense extends StatelessWidget {
                                         ),
                                       ),
                                       if (state.possiblePrices.isNotEmpty)
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                          ),
-                                          child: SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              spacing: 4,
-                                              children: [
-                                                Icon(
-                                                  Icons.auto_awesome,
-                                                  size: 20,
-                                                  color: colors.primary,
-                                                ),
-                                                Gap(8),
-                                                ...state.possiblePrices.map(
-                                                  (e) => NoteSuggestionPill(
-                                                    text: formatCurrency(e),
-                                                    tapSuggestion: (text) {
-                                                      cubit.setAmount(text);
-                                                    },
-                                                    current: false,
+                                        SingleMotionBuilder(
+                                          motion:
+                                              MaterialSpringMotion.expressiveSpatialDefault(),
+                                          from: 0,
+                                          value: 100,
+                                          builder: (context, value, child) =>
+                                              Transform.scale(
+                                                scaleY: value / 100,
+                                                child: child,
+                                              ),
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                            ),
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                spacing: 4,
+                                                children: [
+                                                  Icon(
+                                                    Icons.auto_awesome,
+                                                    size: 20,
+                                                    color: colors.primary,
                                                   ),
-                                                ),
-                                              ],
+                                                  Gap(8),
+                                                  ...state.possiblePrices.map(
+                                                    (e) => NoteSuggestionPill(
+                                                      text: formatCurrency(e),
+                                                      tapSuggestion: (text) {
+                                                        cubit.setAmount(text);
+                                                      },
+                                                      current: false,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ).animate().scaleY(
-                                          duration: animationDuration,
-                                          curve: animationCurve,
-                                          begin: 0,
                                         ),
                                       KeyPad(
                                         addNumber: cubit.addNumber,
