@@ -61,7 +61,7 @@ class MainMenu extends StatelessWidget {
                   children: [
                     Positioned.fill(
                       child: Transform.scale(
-                        scale: lerpDouble(0.0, 1, value / 100),
+                        scaleX: lerpDouble(0.0, 1, value / 100),
                         child: Container(
                           decoration: BoxDecoration(
                             color: backgroundColor,

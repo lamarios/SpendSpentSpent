@@ -87,42 +87,38 @@ Future<T?> showMotorBottomSheet<T>({
       motion: MaterialSpringMotion.expressiveSpatialDefault(),
       child: Builder(
         builder: (ctx) {
-          return GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTap: () => Navigator.of(ctx).pop(null),
-            child: GestureDetector(
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      constraints: BoxConstraints(maxWidth: TABLET),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(24),
-                        ),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(24),
-                        ),
-                        child: Material(
-                          color: colors.surfaceContainer,
-                          child: SafeArea(
-                            top: false,
-                            bottom: true,
-                            child: child,
-                          ),
-                        ),
-                      ),
+          return Stack(
+            children: [
+              Positioned.fill(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => Navigator.of(ctx).pop(null),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: TABLET),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(24),
                     ),
                   ),
-                ],
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(24),
+                    ),
+                    child: Material(
+                      color: colors.surfaceContainer,
+                      child: SafeArea(top: false, bottom: true, child: child),
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           );
         },
       ),
