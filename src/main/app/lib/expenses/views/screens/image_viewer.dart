@@ -19,8 +19,10 @@ class ImageViewerScreen extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       backgroundColor: Colors.black,
-
-      appBar: AppBar(backgroundColor: Colors.black),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -62,7 +64,7 @@ class ImageViewerScreen extends StatelessWidget {
                             spacing: 16,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Icon(Icons.local_offer),
+                              Icon(Icons.local_offer, color: Colors.white),
                               Expanded(
                                 child: Wrap(
                                   direction: Axis.horizontal,
@@ -70,8 +72,12 @@ class ImageViewerScreen extends StatelessWidget {
                                   runSpacing: 4,
                                   children: image.aiTags
                                       .map(
-                                        (e) =>
-                                            Text(e, style: textTheme.bodySmall),
+                                        (e) => Text(
+                                          e,
+                                          style: textTheme.bodySmall?.copyWith(
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                       )
                                       .toList(),
                                 ),

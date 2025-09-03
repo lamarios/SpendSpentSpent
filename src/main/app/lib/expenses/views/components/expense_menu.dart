@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,9 +12,7 @@ import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/utils/states/simple_cubit.dart';
-import 'package:spend_spent_spent/utils/views/components/repeated_icons.dart';
 import 'package:spend_spent_spent/utils/views/components/simple_cubit.dart';
-import 'package:stupid_simple_sheet/stupid_simple_sheet.dart';
 
 import '../../models/expense.dart';
 
@@ -108,7 +104,11 @@ class ExpenseMenu extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 spacing: 12,
                 children: [
-                  getIcon(expense.category.icon!, size: 32),
+                  getIcon(
+                    expense.category.icon!,
+                    size: 32,
+                    color: colors.onSurface,
+                  ),
                   StylizedAmount(amount: expense.amount, size: 40),
                 ],
               ),

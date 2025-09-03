@@ -24,13 +24,10 @@ class CategoryGridItem extends StatelessWidget {
         ),
         duration: panelTransition,
         curve: Curves.easeInOutQuart,
-        child: Hero(
-          tag: category.icon!,
-          child: getIcon(
-            category.icon!,
-            size: 40,
-            color: colors.onPrimaryContainer,
-          ),
+        child: getIcon(
+          category.icon!,
+          size: 40,
+          color: colors.onPrimaryContainer,
         ),
       ),
     );

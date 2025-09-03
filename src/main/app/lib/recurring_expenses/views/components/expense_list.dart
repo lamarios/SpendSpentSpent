@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:motor/motor.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/expense_averages.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/recurring_expenses/models/recurring_expense.dart';
@@ -139,13 +140,22 @@ class ExpenseList extends StatelessWidget {
         Positioned(
           right: 20,
           bottom: 120,
-          child: IconButton(
-            iconSize: 36,
-            style: ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(colors.primaryContainer),
+          child: SingleMotionBuilder(
+            motion: MaterialSpringMotion.expressiveSpatialDefault(),
+            from: 0,
+            value: 100,
+            builder: (context, value, child) =>
+                Transform.scale(scale: value / 100, child: child),
+            child: IconButton(
+              iconSize: 36,
+              style: ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(
+                  colors.primaryContainer,
+                ),
+              ),
+              onPressed: () => showAddRecurringExpenseDialog(context),
+              icon: Icon(Icons.add),
             ),
-            onPressed: () => showAddRecurringExpenseDialog(context),
-            icon: Icon(Icons.add),
           ),
         ),
       ],

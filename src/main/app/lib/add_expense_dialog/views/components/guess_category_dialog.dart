@@ -11,6 +11,7 @@ import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/utils/views/components/expense_image.dart';
 
 class GuessCategoryDialog extends StatelessWidget {
@@ -22,12 +23,9 @@ class GuessCategoryDialog extends StatelessWidget {
     BuildContext context, {
     required SharedMediaFile file,
   }) async {
-    return showModalBottomSheet(
-      isScrollControlled: true,
-      showDragHandle: true,
-      enableDrag: true,
+    return showMotorBottomSheet(
       context: context,
-      builder: (context) => SafeArea(
+      child: SafeArea(
         child: Wrap(children: [GuessCategoryDialog(file: file)]),
       ),
     );
