@@ -17,11 +17,13 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
@@ -39,7 +41,7 @@ public class AiFileProcessingService {
     private AiClient aiClient;
 
     @Autowired
-    public AiFileProcessingService(@Value("${OLLAMA_API_URL:}") String ollamaUrl, @Value("${OLLAMA_API_KEY:}") String ollamaApiKey, @Value("${OPENAI_API_URL:}") String openAiUrl, @Value("${OPENAI_API_KEY:}") String openAiApiKey
+    public AiFileProcessingService(@Value("${OLLAMA_API_URL:}") String ollamaUrl, @Value("${OLLAMA_API_KEY:}") String ollamaApiKey, @Value("${OPENAI_API_URL:}") String openAiUrl, @Value("${OPENAI_API_KEY:no-key}") String openAiApiKey
     ) {
         if (ollamaUrl != null && !ollamaUrl.trim().isBlank()) {
             aiClient = new OllamaAiClient(ollamaUrl.trim(), ollamaApiKey.trim());
@@ -53,9 +55,13 @@ public class AiFileProcessingService {
     }
 
     public CategorySuggestionResponse findBestCategory(File f, List<NewCategoryIcon> availableCategories) throws Exception {
+        StopWatch watch = new StopWatch();
         log.info("Finding best categories for the file {}", f.getAbsolutePath());
+        watch.start("Analyzing image");
 
         var tags = getTagsForFile(f);
+
+        log.info("Got tags");
 
 
         List<String> availableSearchTerms = availableCategories.stream()
@@ -66,6 +72,9 @@ public class AiFileProcessingService {
 
 
         String join = String.join(",", availableSearchTerms);
+
+        watch.stop();
+        watch.start("Finding best category");
 
         String findCategoryPrompt = """
                 You are an AI system that classifies items into the most relevant categories. \s
@@ -92,7 +101,7 @@ public class AiFileProcessingService {
         var prompt = findCategoryPrompt.formatted(String.join(",", tags.tags()), join);
 
 
-        var response = aiClient.generateFormatted(textModel, prompt, CategoryMatchResponse.class).getFirst();
+        var response = aiClient.generateFormatted(textModel, prompt, CategoryMatchResponse.class).get(0);
 
         log.info("Processing finished, response: {}", response);
 
@@ -105,6 +114,10 @@ public class AiFileProcessingService {
         file.setAiTags(tags.tags());
         file.setAmounts(tags.amounts());
 
+        watch.stop();
+
+        log.info("finished finding best category \n{}",watch.prettyPrint(TimeUnit.SECONDS));
+
         return new CategorySuggestionResponse(sorted, file);
     }
 
@@ -113,6 +126,9 @@ public class AiFileProcessingService {
     }
 
     public ImageTagsResponse getTagsForFile(File f) throws Exception {
+
+        StopWatch watch = new StopWatch();
+        watch.start("Vision analyzsis");
         log.info("Processing file {}", f.getAbsolutePath());
 
         String imagePrompt = """
@@ -126,8 +142,11 @@ public class AiFileProcessingService {
 
         var result = aiClient.processImage(visionModel, imagePrompt, f);
 
-        log.info("Image description finished, response: {}", result);
+        log.info("Image analysis finished, response: {}", result);
+        log.info("Getting tags");
 
+        watch.stop();
+        watch.start("Getting tags");
 
         String tagPrompt = """
                 You are an AI that categorizes image descriptions for an expense tracker application.
@@ -153,11 +172,15 @@ public class AiFileProcessingService {
                 """;
 
         var taggingResponse = aiClient.generateFormatted(textModel, tagPrompt.formatted(result), ImageTagsResponse.class)
-                .getFirst();
+                .get(0);
 
         log.info("Processing finished, response: {}", taggingResponse);
 
         taggingResponse.amounts().sort((o1, o2) -> Double.compare(o2, o1));
+
+        watch.stop();
+
+        log.info("finished analysing image \n{}",watch.prettyPrint(TimeUnit.SECONDS));
 
         return taggingResponse;
     }

@@ -27,7 +27,8 @@ public class SssOpenAiClient implements AiClient {
     }
 
     private OpenAIClient getClient() {
-        var client = OpenAIOkHttpClient.builder().baseUrl(url);
+        var client = OpenAIOkHttpClient.builder().baseUrl(url)
+                .checkJacksonVersionCompatibility(false);
 
         if (apiKey != null && !apiKey.trim().isBlank()) {
             client = client.apiKey(apiKey);
@@ -65,6 +66,7 @@ public class SssOpenAiClient implements AiClient {
                 .model(model)
                 .addUserMessageOfArrayOfContentParts(List.of(questionContentPart, imageContentPart))
                 .build();
+
 
         return client.chat().completions().create(createParams).choices().stream()
                 .flatMap(choice -> choice.message().content().stream())
