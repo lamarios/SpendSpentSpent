@@ -53,12 +53,12 @@ notification emails.
 
 SSS supports analyzing images using ollama to find prices or tags about images attached to an expense.
 
-| Name                | Default      | Comments                                                                                                                         | 
-|---------------------|--------------|----------------------------------------------------------------------------------------------------------------------------------|
-| OLLAMA_API_URL      | (none)       | The url of the ollama instance                                                                                                   | 
-| OLLAMA_API_KEY      | (none)       | API Key to talk to the ollama server                                                                                             |
-| OLLAMA_VISION_MODEL | qwen2.5vl:7b | Which vision model to use. This model will be used to generate picture description                                               |
-| OLLAMA_TEXT_MODEL   | qwen3:8b     | Which text model to use. This model will take the description and generate tags and find the best expense category for a picture |
+| Name            | Default      | Comments                                                                                                                         | 
+|-----------------|--------------|----------------------------------------------------------------------------------------------------------------------------------|
+| OLLAMA_API_URL  | (none)       | The url of the ollama instance                                                                                                   | 
+| OLLAMA_API_KEY  | (none)       | API Key to talk to the ollama server                                                                                             |
+| AI_VISION_MODEL | qwen2.5vl:7b | Which vision model to use. This model will be used to generate picture description                                               |
+| AI_TEXT_MODEL   | qwen3:8b     | Which text model to use. This model will take the description and generate tags and find the best expense category for a picture |
 
 ### OIDC
 

@@ -5,6 +5,9 @@ import com.ftpix.sss.models.NewCategoryIcon;
 import com.ftpix.sss.models.SSSFile;
 import com.ftpix.sss.models.ai_responses.CategoryMatchResponse;
 import com.ftpix.sss.models.ai_responses.ImageTagsResponse;
+import com.ftpix.sss.services.aiClients.AiClient;
+import com.ftpix.sss.services.aiClients.OllamaAiClient;
+import com.ftpix.sss.services.aiClients.SssOpenAiClient;
 import com.google.gson.Gson;
 import io.github.ollama4j.OllamaAPI;
 import io.github.ollama4j.models.response.OllamaResult;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -25,39 +29,34 @@ import java.util.stream.Collectors;
 public class AiFileProcessingService {
     private final static Logger log = LogManager.getLogger();
 
-    private final static List<String> junk = List.of("0.00", "price", "seller");
 
-    @Value("${OLLAMA_API_URL:}")
-    private String ollamaUrl;
-
-    @Value("${OLLAMA_API_KEY:}")
-    private String ollamaApiKey;
-
-    @Value("${OLLAMA_VISION_MODEL:qwen2.5vl:7b}")
+    @Value("${AI_VISION_MODEL:${OLLAMA_VISION_MODEL:qwen2.5vl:7b}}")
     private String visionModel;
 
-    @Value("${OLLAMA_TEXT_MODEL:qwen3:8b}")
+    @Value("${AI_TEXT_MODEL:${OLLAMA_TEXT_MODEL:qwen3:8b}}")
     private String textModel;
 
-    private final Gson gson;
+    private AiClient aiClient;
 
     @Autowired
-    public AiFileProcessingService(Gson gson) {
-        this.gson = gson;
+    public AiFileProcessingService(@Value("${OLLAMA_API_URL:}") String ollamaUrl, @Value("${OLLAMA_API_KEY:}") String ollamaApiKey, @Value("${OPENAI_API_URL:}") String openAiUrl, @Value("${OPENAI_API_KEY:}") String openAiApiKey
+    ) {
+        if (ollamaUrl != null && !ollamaUrl.trim().isBlank()) {
+            aiClient = new OllamaAiClient(ollamaUrl.trim(), ollamaApiKey.trim());
+        } else if (openAiUrl != null && !openAiUrl.trim().isBlank()) {
+            aiClient = new SssOpenAiClient(openAiUrl.trim(), openAiApiKey.trim());
+        }
     }
-
 
     public boolean isAiEnabled() {
-        return ollamaUrl != null && !ollamaUrl.trim().isEmpty();
+        return aiClient != null;
     }
-
 
     public CategorySuggestionResponse findBestCategory(File f, List<NewCategoryIcon> availableCategories) throws Exception {
         log.info("Finding best categories for the file {}", f.getAbsolutePath());
 
         var tags = getTagsForFile(f);
 
-        var api = getClient();
 
         List<String> availableSearchTerms = availableCategories.stream()
                 .map(NewCategoryIcon::getSearchTerms)
@@ -93,12 +92,9 @@ public class AiFileProcessingService {
         var prompt = findCategoryPrompt.formatted(String.join(",", tags.tags()), join);
 
 
-        OllamaResult result = api.generate(textModel, prompt, CategoryMatchResponse.toOllamaFormat());
+        var response = aiClient.generateFormatted(textModel, prompt, CategoryMatchResponse.class).getFirst();
 
-        log.info("Processing finished, response: {}", result.getResponse());
-
-
-        var response = gson.fromJson(result.getResponse(), CategoryMatchResponse.class);
+        log.info("Processing finished, response: {}", response);
 
         var sorted = availableCategories.stream()
                 .sorted((o1, o2) ->
@@ -119,8 +115,6 @@ public class AiFileProcessingService {
     public ImageTagsResponse getTagsForFile(File f) throws Exception {
         log.info("Processing file {}", f.getAbsolutePath());
 
-        var api = getClient();
-
         String imagePrompt = """
                 You are an AI system that analyze images to find what it is. \s
                 
@@ -130,17 +124,9 @@ public class AiFileProcessingService {
                 - Find any information about a seller
                 """;
 
-/*
-        String prompt = """
-                Analyze this picture and generate search tags for an expense tracking application based on what you see,
-                Your tags should focus on describing the items, the price and who is selling it. If you see a price, format it so it can be parsed as double in java.
+        var result = aiClient.processImage(visionModel, imagePrompt, f);
 
-                You answer will only contain the tags, separated by commas. You should give at most 5 tags. Follow this instruction very strictly
-                """;
-*/
-        OllamaResult result = api.generateWithImageFiles(visionModel, imagePrompt, List.of(f), new OptionsBuilder().build());
-
-        log.info("Image description finished, response: {}", result.getResponse());
+        log.info("Image description finished, response: {}", result);
 
 
         String tagPrompt = """
@@ -166,32 +152,14 @@ public class AiFileProcessingService {
                 
                 """;
 
-        result = api.generate(textModel, tagPrompt.formatted(result.getResponse()), ImageTagsResponse.toOllamaFormat());
+        var taggingResponse = aiClient.generateFormatted(textModel, tagPrompt.formatted(result), ImageTagsResponse.class)
+                .getFirst();
 
-        log.info("Processing finished, response: {}", result.getResponse());
+        log.info("Processing finished, response: {}", taggingResponse);
 
-        var response = gson.fromJson(result.getResponse(), ImageTagsResponse.class);
+        taggingResponse.amounts().sort((o1, o2) -> Double.compare(o2, o1));
 
-        response.amounts().sort((o1, o2) -> Double.compare(o2, o1));
-
-        return response;
-    }
-
-
-    private OllamaAPI getClient() throws Exception {
-        OllamaAPI api = new OllamaAPI(ollamaUrl);
-        if (ollamaApiKey != null && !ollamaApiKey.trim().isEmpty()) {
-            api.setBearerAuth(ollamaApiKey);
-        }
-        api.setRequestTimeoutSeconds(120);
-        api.setVerbose(false);
-
-        if (!api.ping()) {
-            throw new Exception("Ollama not reachable");
-        }
-
-        return api;
-
+        return taggingResponse;
     }
 
 }

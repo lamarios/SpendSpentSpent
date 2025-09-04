@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 
-public record CategoryMatchResponse (List<String> categories){
+public record CategoryMatchResponse(List<String> categories) implements OllamaResponse {
+    public CategoryMatchResponse() {
+        this(null);
+    }
 
-    public static Map<String, Object> toOllamaFormat(){
+    public Map<String, Object> toOllamaFormat() {
         Map<String, Object> format = new HashMap<>();
         format.put("type", "object");
         format.put("properties", new HashMap<String, Object>() {
