@@ -1,5 +1,5 @@
 name: 'spend_spent_spent'
-version: '2.7.5+101'
+version: '2.7.6+101'
 publish_to: none
 environment:
   sdk: '>=3.8.0 <4.0.0'
@@ -32,7 +32,7 @@ dependencies:
   location: 8.0.0
   logging: 1.3.0
   material_loading_indicator: 1.0.0
-  motor: 1.0.0-dev.6
+  motor: 1.0.0-dev.8
   oidc: 0.12.1+2
   oidc_default_store: 0.4.0+3
   package_info_plus: 8.3.1

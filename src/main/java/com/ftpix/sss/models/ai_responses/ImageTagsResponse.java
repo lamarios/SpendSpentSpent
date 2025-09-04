@@ -5,8 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public record ImageTagsResponse(List<String> tags, List<Double> amounts) {
-    public static Map<String, Object> toOllamaFormat() {
+public record ImageTagsResponse(List<String> tags, List<Double> amounts) implements  OllamaResponse{
+
+    public ImageTagsResponse() {
+        this(null, null);
+    }
+
+    public Map<String, Object> toOllamaFormat() {
         Map<String, Object> format = new HashMap<>();
         format.put("type", "object");
         format.put("properties", new HashMap<String, Object>() {

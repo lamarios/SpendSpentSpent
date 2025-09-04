@@ -49,16 +49,20 @@ notification emails.
 | SMTP_FROM               | (none)                | **Yes**                                               | Who will be the sender of the email                   | 
 | SMTP_TRANSPORT_STRATEGY | SMTP                  | **Yes**                                               | Possible values: SMTP, SMTPS, SMTP_TLS                |
 
-### Ollama AI
+### AI (ollama / openai)
 
-SSS supports analyzing images using ollama to find prices or tags about images attached to an expense.
+SSS supports analyzing images using ollama or open ai (or a compatible server) to find prices or tags about images
+attached to an expense.
+The default models tested well with a RX6600XT GPU (8GB VRAM).
 
-| Name                | Default      | Comments                                                                                                                         | 
-|---------------------|--------------|----------------------------------------------------------------------------------------------------------------------------------|
-| OLLAMA_API_URL      | (none)       | The url of the ollama instance                                                                                                   | 
-| OLLAMA_API_KEY      | (none)       | API Key to talk to the ollama server                                                                                             |
-| OLLAMA_VISION_MODEL | qwen2.5vl:7b | Which vision model to use. This model will be used to generate picture description                                               |
-| OLLAMA_TEXT_MODEL   | qwen3:8b     | Which text model to use. This model will take the description and generate tags and find the best expense category for a picture |
+| Name            | Default      | Comments                                                                                                                         | 
+|-----------------|--------------|----------------------------------------------------------------------------------------------------------------------------------|
+| OLLAMA_API_URL  | (none)       | The url of the ollama instance. Do not use together with OPENAI_API_URL                                                          | 
+| OLLAMA_API_KEY  | (none)       | API Key to talk to the ollama server                                                                                             |
+| OPENAI_API_URL  | (none)       | The url of the open ai compatible instance. Do not use together with OPENAI_API_URL                                              | 
+| OPENAI_API_KEY  | (none)       | API Key to talk to the open ai compatible server                                                                                 |
+| AI_VISION_MODEL | qwen2.5vl:7b | Which vision model to use. This model will be used to generate picture description                                               |
+| AI_TEXT_MODEL   | qwen3:8b     | Which text model to use. This model will take the description and generate tags and find the best expense category for a picture |
 
 ### OIDC
 
@@ -67,7 +71,7 @@ Here are the used callback urls:
 
 ```
 com.spendspentspent.app:/oidcRedirect 
-https://your.sss-domain.com/redirect.html
+https://your.spendspentsspent-domain.com/redirect.html
 ```
 
 | Name                   | Default | Required | Comments                                                                                        |
@@ -81,16 +85,8 @@ https://your.sss-domain.com/redirect.html
 
 This is the easiest way to run SSS
 
-```
-docker run -t -v "/path/to/your/save-folder:/config" \
-	-v "/etc/localtime:/etc/localtime:ro" \
-	-e "SALT=somerandomstring" \
-	-p "9001:9001" \
-	gonzague/spendspentspent
-```
-
 The SALT environment variable is required especially if you want to use password protection to the application. Once
-set, **do not change it** while running against the same config folder.
+set, **do not change it** while running against the same database.
 
 With docker compose:
 
@@ -109,7 +105,7 @@ With docker compose:
      DB_PATH: "jdbc:postgresql://postgres-sss:5432/sss"
      DB_USER: "postgres"
      DB_PASSWORD: "postgres"
-     
+
  postgres-sss:
    container_name: postgres-sss
    image: postgres:17
