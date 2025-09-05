@@ -19,6 +19,10 @@ public class SSSFile {
         return status;
     }
 
+    public String getEncryptedFileName(){
+        return id.toString()+".bin";
+    }
+
     public void setStatus(AiProcessingStatus status) {
         this.status = status;
     }

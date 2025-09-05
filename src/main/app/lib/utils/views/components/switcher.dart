@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:motor/motor.dart';
 import 'package:spend_spent_spent/globals.dart';
 
 class Switcher extends StatelessWidget {
   final List<String> labels;
+  final double backgroundPadding;
 
   final int selected;
-  final Function onSelect;
+  final Function(int index) onSelect;
 
   const Switcher({
     super.key,
+    this.backgroundPadding = 0,
     required this.labels,
     required this.selected,
     required this.onSelect,
@@ -29,19 +32,45 @@ class Switcher extends StatelessWidget {
               constraints.maxWidth / labels.length;
           return Stack(
             children: [
-              AnimatedPositioned(
-                duration: panelTransition,
-                left: left,
-                right: right,
-                top: 0,
-                bottom: 0,
-                curve: Curves.easeInOutQuart,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(25)),
-                    color: colors.secondaryContainer,
-                  ),
-                ),
+              SingleMotionBuilder(
+                motion: MaterialSpringMotion.expressiveSpatialDefault(),
+                value: left,
+                builder: (context, leftValue, child) {
+                  return SingleMotionBuilder(
+                    motion: MaterialSpringMotion.expressiveSpatialDefault(),
+                    value: right,
+                    builder: (context, rightValue, child) => Positioned(
+                      left: leftValue,
+                      right: rightValue,
+                      top: 0,
+                      bottom: 0,
+                      child: Center(
+                        child: AnimatedContainer(
+                          height: 30,
+                          margin: EdgeInsets.symmetric(
+                            horizontal: backgroundPadding,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(25),
+                            ),
+                            color: colors.secondaryContainer,
+                          ),
+                          duration: animationDuration,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 36),
+                            child: Text(
+                              labels[selected],
+                              style: TextStyle(
+                                color: colors.secondaryContainer,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
               Row(
                 children: labels

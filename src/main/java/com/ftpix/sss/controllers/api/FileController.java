@@ -5,18 +5,13 @@ import com.ftpix.sss.models.SSSFile;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.FileService;
 import com.ftpix.sss.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,30 +33,41 @@ public class FileController {
     }
 
     @GetMapping("/{id}/download")
-    public ResponseEntity<Resource> downloadFile(@PathVariable("id") String fileId) throws SQLException, IOException {
+    public ResponseEntity<byte[]> downloadFile(@PathVariable("id") String fileId) throws Exception {
 
-        File f = fileService.getFileAsFile(userService.getCurrentUser(), fileId);
+        var sssFile = fileService.getfile(userService.getCurrentUser(), fileId);
 
-        Path p = Path.of(f.getAbsolutePath());
+        if (sssFile.isPresent()) {
 
-        Resource resource = new FileSystemResource(f.getAbsolutePath());
+            return fileService.decryptAndDo(sssFile.get(), f -> {
 
-        String mimeType = Files.probeContentType(p);
+                Path p = Path.of(f.getAbsolutePath());
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + p.getFileName() + "\"")
-                .contentType(MediaType.valueOf(mimeType))
-                .contentLength(Files.size(p))
-                .body(resource);
+                String mimeType = null;
+                try {
+                    mimeType = Files.probeContentType(p);
+
+                    return ResponseEntity.ok()
+                            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + p.getFileName() + "\"")
+                            .contentType(MediaType.valueOf(mimeType))
+                            .contentLength(Files.size(p))
+                            .body(Files.readAllBytes(f.toPath()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        } else {
+            return ResponseEntity.status(404).build();
+        }
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public SSSFile uploadFile(@RequestParam("file") MultipartFile file) throws SQLException, IOException, ExecutionException, InterruptedException {
+    public SSSFile uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
         final User currentUser = userService.getCurrentUser();
         return fileService.createFile(currentUser, file);
     }
 
-    @PostMapping(value = "/find-category",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/find-category", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CategorySuggestionResponse findFileCategory(@RequestParam("file") MultipartFile file) throws SQLException, IOException, ExecutionException, InterruptedException {
         final User currentUser = userService.getCurrentUser();
         return fileService.findFileCategory(currentUser, file);

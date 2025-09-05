@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:spend_spent_spent/utils/views/components/switcher.dart';
 
 @RoutePage()
 class LeftColumnTab extends StatelessWidget {
@@ -11,7 +12,18 @@ class LeftColumnTab extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       builder: (context, child, tabController) {
         return Column(
+          spacing: 16,
           children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Switcher(
+                labels: ['Monthly', 'Yearly'],
+                backgroundPadding: 24,
+                onSelect: (index) => tabController.animateTo(index),
+                selected: tabController.index,
+              ),
+            ),
+            /*
             TabBar(
               dividerHeight: 0,
               controller: tabController,
@@ -20,6 +32,7 @@ class LeftColumnTab extends StatelessWidget {
                 Tab(text: 'Yearly'),
               ],
             ),
+*/
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(top: 8),
