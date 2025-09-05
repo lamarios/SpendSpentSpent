@@ -15,7 +15,7 @@ class MiddleColumnTab extends StatelessWidget {
           spacing: 16,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.only(top: 16.0),
               child: Switcher(
                 labels: ['Normal', 'Recurring'],
                 onSelect: (index) => controller.animateTo(index),

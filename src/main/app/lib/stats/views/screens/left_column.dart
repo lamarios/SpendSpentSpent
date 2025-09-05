@@ -15,10 +15,9 @@ class LeftColumnTab extends StatelessWidget {
           spacing: 16,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.only(top: 16),
               child: Switcher(
                 labels: ['Monthly', 'Yearly'],
-                backgroundPadding: 24,
                 onSelect: (index) => tabController.animateTo(index),
                 selected: tabController.index,
               ),
