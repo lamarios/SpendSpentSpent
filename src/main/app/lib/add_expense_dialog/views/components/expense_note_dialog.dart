@@ -55,7 +55,16 @@ class ExpenseNoteDialog extends StatelessWidget {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(controller: cubit.controller),
+              Row(
+                children: [
+                  Expanded(child: TextField(controller: cubit.controller)),
+                  IconButton(
+                    onPressed: () => cubit.controller.clear(),
+                    icon: Icon(Icons.clear, size: 20),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ],
+              ),
               Gap(10),
               SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
