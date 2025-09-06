@@ -24,7 +24,8 @@ public class UserSessionControllerTest extends TestContainerTest {
         final UserSessionController.UserCredentials userCredentials = new UserSessionController.UserCredentials();
         userCredentials.password = "pass";
         userCredentials.email = "test@example.org";
-        assertNotNull(jwtAuthenticationController.generateAuthenticationToken(userCredentials));
+        String actual = jwtAuthenticationController.generateAuthenticationToken(userCredentials);
+        assertNotNull(actual);
 
         Assertions.assertThrows(BadCredentialsException.class, () -> {
             userCredentials.email = "wrong user";
