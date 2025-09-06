@@ -3,6 +3,7 @@ package com.ftpix.sss.services;
 import com.ftpix.sss.dao.FileDAO;
 import com.ftpix.sss.dsl.tables.records.FilesRecord;
 import com.ftpix.sss.models.*;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +20,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.Collection;
@@ -77,7 +79,7 @@ public class FileService {
 
 
     @Scheduled(fixedRate = ONE_DAY)
-    public void fileMaintenance() {
+    public void fileMaintenance() throws IOException {
         long oneDayFromNow = System.currentTimeMillis() - ONE_DAY;
         // we get all the pictures older than one day
         filesDAO.getWhere(FILES.TIME_UPDATED.lt(oneDayFromNow)).stream().filter(file -> {
@@ -101,7 +103,20 @@ public class FileService {
                 });
 
 
-        // we reprocess pictures if the status is not done
+        // we delete any physical file that has no sssFile linked to it
+        Files.list(Path.of(filePath)).filter(
+                path -> {
+                    var name = FilenameUtils.getBaseName(path.toString());
+                    var file = filesDAO.getOneWhere(FILES.ID.eq(name));
+
+                    return file.isEmpty();
+                }
+        ).forEach(path -> {
+            log.info("Deleting {}, it has no SssFile attached to it", path);
+            path.toFile().delete();
+        });
+
+
     }
 
     private boolean deleteFile(SSSFile file) {
@@ -289,7 +304,7 @@ public class FileService {
     }
 
     // Derive key from password + salt
-    private static SecretKey deriveKey(char[] password, byte[] salt) throws Exception {
+    public static SecretKey deriveKey(char[] password, byte[] salt) throws Exception {
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
         KeySpec spec = new PBEKeySpec(password, salt, ITERATIONS, KEY_SIZE);
         byte[] keyBytes = factory.generateSecret(spec).getEncoded();

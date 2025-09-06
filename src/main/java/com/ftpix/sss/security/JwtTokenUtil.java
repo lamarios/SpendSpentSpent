@@ -16,11 +16,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,14 +32,13 @@ import java.util.function.Function;
 
 @Component
 public class JwtTokenUtil implements Serializable, ApplicationContextAware {
-    private final SecretKey key = Jwts.SIG.HS512.key().build();
+    private final SecretKey key;
 
     public static final long JWT_TOKEN_VALIDITY = 90 * 24 * 60 * 60;
     private static final long serialVersionUID = -2550185165626007488L;
 
 
-    @Value("${SALT}")
-    private String salt;
+    private final String salt;
 
     private final OIDCService oidcService;
 
@@ -43,10 +46,33 @@ public class JwtTokenUtil implements Serializable, ApplicationContextAware {
     private final UserService userService;
 
     @Autowired
-    public JwtTokenUtil(OIDCService oidcService, UserService userService) {
+    public JwtTokenUtil(OIDCService oidcService, UserService userService, @Value("${SALT}") String salt) throws Exception {
         this.oidcService = oidcService;
         this.userService = userService;
+        this.salt = salt;
+
+        this.key = deriveKey(salt);
+
     }
+
+    private static SecretKey deriveKey(String salt) throws Exception {
+
+        // If shorter than 64 bytes, repeat until length ≥ 64
+        byte[] saltBytes = salt.getBytes();
+        if (saltBytes.length < 64) {
+            byte[] extended = new byte[64];
+            for (int i = 0; i < 64; i++) {
+                extended[i] = saltBytes[i % saltBytes.length];
+            }
+            saltBytes = extended;
+        } else if (saltBytes.length > 64) {
+            // Truncate to 64 bytes if longer
+            saltBytes = Arrays.copyOf(saltBytes, 64);
+        }
+
+        return new SecretKeySpec(saltBytes, "HmacSHA512");
+    }
+
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);

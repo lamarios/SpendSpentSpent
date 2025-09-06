@@ -51,6 +51,18 @@ class ExpenseImage extends StatelessWidget {
                       fit: boxFit ?? BoxFit.cover,
                       fadeInDuration: animationDuration,
                       fadeOutDuration: animationDuration,
+                      errorWidget: (context, url, error) => Container(
+                        decoration: BoxDecoration(
+                          color: colors.secondaryContainer,
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.error_outline,
+                            size: 20,
+                            color: colors.onSecondaryContainer,
+                          ),
+                        ),
+                      ),
                       progressIndicatorBuilder: (context, url, progress) {
                         double side = min(width, height) / 10;
                         return Center(

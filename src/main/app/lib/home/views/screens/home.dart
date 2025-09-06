@@ -84,6 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final menuWidth = 250;
     final menuMargin = (screenWidth - menuWidth) / 2;
 
+    final safeAreaPadding = MediaQuery.paddingOf(context).bottom;
+
     return LogoutHandler(
       child: AutoTabsRouter.pageView(
         curve: Curves.easeInOutQuad,
@@ -110,15 +112,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: SizedBox(
+                      height: 45 + safeAreaPadding,
+                      child: Container(color: Colors.transparent),
+                    ),
+                  ),
+                  Positioned(
                     left: menuMargin,
                     right: menuMargin,
-                    bottom: 36,
-                    child: SizedBox(
-                      height: 50,
-                      child: Center(
-                        child: MainMenu(
-                          tabsRouter: tabsRouter,
-                          selectedIndex: tabsRouter.activeIndex,
+                    bottom: 20,
+                    child: SafeArea(
+                      top: false,
+                      child: SizedBox(
+                        height: 50,
+                        child: Center(
+                          child: MainMenu(
+                            tabsRouter: tabsRouter,
+                            selectedIndex: tabsRouter.activeIndex,
+                          ),
                         ),
                       ),
                     ),
@@ -126,38 +140,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            /*
-              appBar: AppBar(
-                title: Row(
-                  children: [
-                    getIcon('groceries_bag', size: 25, color: colors.onSurface),
-                    const Gap(10),
-                    const Text('SpendSpentSpent'),
-                  ],
-                ),
-                actions: [
-                  IconButton(
-                      onPressed: () =>
-                          AutoRouter.of(context).push(const SettingsRoute()),
-                      icon: const Icon(Icons.settings))
-                ],
-              ),
-*/
-            /*
-              bottomNavigationBar: NavigationBar(
-                selectedIndex: tabsRouter.activeIndex,
-                onDestinationSelected: (value) =>
-                    tabsRouter.setActiveIndex(value),
-                destinations: const [
-                  NavigationDestination(
-                      icon: Icon(Icons.auto_graph), label: 'graphs'),
-                  NavigationDestination(
-                      icon: Icon(Icons.square_rounded), label: 'expenses'),
-                  NavigationDestination(
-                      icon: Icon(Icons.list), label: 'detail'),
-                ],
-              ),
-*/
           );
         },
       ),
