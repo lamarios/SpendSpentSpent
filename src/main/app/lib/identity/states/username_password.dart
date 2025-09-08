@@ -15,13 +15,15 @@ class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
 
   ReconnectableWebSocket? socket;
 
-  Future<void> setToken(String? token) async {
+  Future<void> setToken(String server, String? token) async {
     if (token != null) {
       await Preferences.set(Preferences.TOKEN, token);
       await Preferences.set(
         Preferences.TOKEN_TYPE,
         TokenType.usernamePassword.name,
       );
+
+      await service.setUrl(server);
 
       emit(state.copyWith(token: token));
 
