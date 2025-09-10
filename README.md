@@ -5,7 +5,7 @@ new expense as easy and as quick as possible. The application features are split
 
 [Demo instance](https://sss.ftpix.com)
 
-[<img src="[drawing.jpg](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)" alt="drawing" width="200"/>](https://github.com/lamarios/SpendSpentSpent)
+[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="drawing" width="200"/>](https://github.com/lamarios/SpendSpentSpent)
 
 ## Spend (center page)
 
