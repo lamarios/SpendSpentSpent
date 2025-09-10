@@ -5,6 +5,8 @@ new expense as easy and as quick as possible. The application features are split
 
 [Demo instance](https://sss.ftpix.com)
 
+[Get on the play store](https://github.com/lamarios/SpendSpentSpent)
+
 ## Spend (center page)
 
 - Add expense categories
