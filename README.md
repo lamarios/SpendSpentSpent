@@ -5,7 +5,7 @@ new expense as easy and as quick as possible. The application features are split
 
 [Demo instance](https://sss.ftpix.com)
 
-[Get on the play store](https://github.com/lamarios/SpendSpentSpent)
+[![Get it on the play store](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)](https://github.com/lamarios/SpendSpentSpent)
 
 ## Spend (center page)
 
