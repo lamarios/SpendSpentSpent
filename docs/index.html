@@ -1,86 +1,351 @@
-<html><title>SpendSpentSpent</title>
-<link rel="stylesheet" href="devices.css">
-<link rel="stylesheet" href="style.css">
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;800&display=swap" rel="stylesheet">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SpendSpentSpent – Self-Hosted Expense Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --card: #111418;
+            --accent: #194975;
+            --text: #f2f2f2;
+            --muted: #999;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Inter", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2rem;
+            /*background: rgba(0, 0, 0, 0.6);*/
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            background: var(--text);
+            height: 3px;
+            width: 25px;
+            margin: 4px 0;
+            border-radius: 2px;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+                flex-direction: column;
+                background: var(--card);
+                position: absolute;
+                top: 60px;
+                right: 0;
+                width: 200px;
+                padding: 1rem;
+                border-radius: 0 0 8px 8px;
+            }
+
+            nav.active {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+        }
+
+        /* Hero with gradient overlay */
+        .hero {
+            position: relative;
+            text-align: center;
+            padding: 6rem 2rem;
+            /*background: url('hero-bg.jpg') center/cover no-repeat; !* optional background *!*/
+        }
+
+        /*
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(17, 20, 24, 0.85), rgba(17, 20, 24, 0.95));
+            z-index: 1;
+        }
+        */
+
+        .hero-overlay {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .hero img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 1.5rem;
+            border-radius: 20%;
+            background: var(--accent);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            max-width: 650px;
+            margin: 0 auto 2rem;
+            color: var(--muted);
+        }
+
+        .hero button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .hero button:hover {
+            background: #13385a;
+            transform: scale(1.05);
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 4rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .feature {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .feature.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.6s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Screenshots */
+        .screenshots {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: var(--card);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .screenshots.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .screenshots img {
+            max-width: 250px;
+            margin: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s;
+        }
+
+        .screenshots img:hover {
+            transform: scale(1.05);
+        }
+
+        /* CTA */
+        .cta {
+            text-align: center;
+            padding: 4rem 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .cta.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cta button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 0.5rem;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .cta button:hover {
+            background: #13385a;
+            transform: scale(1.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
 <body>
-<div class="links">
-    <iframe src="https://ghbtns.com/github-btn.html?user=lamarios&repo=spendspentspent&type=star&count=true&size=large"
-            frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
-    <div class="spacer"></div>
-    <a href="https://sss.ftpix.com" target="_blank">
-        <button class="blue try-button">Try demo</button>
-    </a>
-</div>
-<div class="hero">
-    <div class="title blue-text">SpendSpentSpent</div>
-    <div class="sub-title">The easy self-hosted expense tracker</div>
-</div>
-<div class="scaffold">
-    <div class="device-video">
-        <div class="device device-iphone-x">
-            <div class="device-frame">
-                <!--            <img class="device-content" src="images/screenshot.png">-->
-                <video class="device-content light" autoplay loop muted playsinline="">
-                    <source src="videos/light-compressed.mp4" type="video/mp4">
-                </video>
-                <video class="device-content dark" autoplay loop muted playsinline="">
-                    <source src="videos/dark-compressed.mp4" type="video/mp4">
-                </video>
-            </div>
-            <div class="device-stripe"></div>
-            <div class="device-header"></div>
-            <div class="device-sensors"></div>
-            <div class="device-btns"></div>
-            <div class="device-power"></div>
-        </div>
+<header>
+    <h1>SpendSpentSpent</h1>
+    <div class="menu-toggle" id="menu-toggle">
+        <span></span><span></span><span></span>
     </div>
-    <div class="text">
-        <section>
-            <div class="content"><h1>Spend</h1>
-                <h2>Simple</h2>
-                <p>SpendSpentSpent makes it quick and easy to track one's expenses. Add a category, tap on it and that's
-                    it.</p>
-                <p>Add your location, a note or even convert from different currencies your expense for more
-                    control.</p>
-                <h2>Recurring expenses</h2>
-                <p>You can also easily add recurring expenses, so you don't need to think of adding that Spotify
-                    subscription
-                    every month.</p>
-            </div>
-        </section>
-        <section class="middle">
-            <div class="content"><h1>Spent</h1>
-                <p>Keep track of your day-to-day expense and get all the information you need.</p>
-            </div>
-        </section>
-        <section>
-            <div class="content"><h1>Spent</h1>
-                <p>See how much you spent for each category for the past months or years.</p>
-            </div>
-        </section>
-    </div>
-</div>
-<section class="install">
-    <div class="content"><h1>Host it yourself</h1>
-        <p>Spend Spent Spent is easy to run. Go on <a
-                href="http://github.com/lamarios/SpendSpentSpent">GitHub</a> for
-            more details</p> <code> docker run -t -v "/path/to/your/save-folder:/config" -v
-            "/etc/localtime:/etc/localtime:ro" -e "SALT=somerandomstring" -p "9001:9001"
-            gonzague/spendspentspent </code></div>
-</section>
-<section class="run">
-    <div class="content">
-        <h1>Use it anywhere</h1>
-        <p>SpentSpendSpent is available on Android, you can also just run it on the web.</p>
-        <div class="download-links">
-            <a href='https://play.google.com/store/apps/details?id=com.spendspentspent.app&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img class="android-link" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
-<!--            <a href="https://apps.apple.com/us/app/spendspentspent/id1583371136"><img src="images/appstore.svg" /></a>-->
-        </div>
+    <nav id="nav">
+        <a href="#features">Features</a>
+        <a href="#screenshots">Screenshots</a>
+        <a href="#download">Demo</a>
+        <a href="https://github.com/lamarios/SpendSpentSpent">GitHub</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="hero-overlay">
+        <img src="groceries_bag.svg" alt="App Icon"/>
+        <h2>Track your expenses. Self-hosted, fast, and reliable.</h2>
+        <p>SpendSpentSpent is an expense tracker built to make logging expenses effortless. It’s self-hosted, lightning
+            fast, and gives you clear insights into your spending without distractions.</p>
+        <button onclick="location.href='https://sss.ftpix.com'" type="button" >Try the Demo</button>
     </div>
 </section>
-<footer>Developed by Paul Fauchon - <a href="http://github.com/lamarios">Github</a>
+
+<section id="features" class="features">
+    <div class="feature">
+        <h3>🚀 Fast & Simple</h3>
+        <p>Add an expense in seconds, without complicated menus or forms.</p>
+    </div>
+    <div class="feature">
+        <h3>📊 Clear Insights</h3>
+        <p>See where your money goes with charts and summaries that make sense.</p>
+    </div>
+    <div class="feature">
+        <h3>🖥️ Self-Hosted</h3>
+        <p>You’re in full control. Host the app yourself, keep your data safe, and customize as you like.</p>
+    </div>
+    <div class="feature">
+        <h3>🤖 Smart Categorization</h3>
+        <p>Optional AI-powered analysis helps suggest the right category by looking at receipts or pictures of your
+            purchases.</p>
+    </div>
+</section>
+
+<section id="screenshots" class="screenshots">
+    <h2>See it in Action</h2>
+    <img src="screenshot1.png" alt="App screenshot 1"/>
+    <img src="screenshot5.png" alt="App screenshot 5"/>
+    <img src="screenshot2.png" alt="App screenshot 2"/>
+    <img src="screenshot3.png" alt="App screenshot 3"/>
+    <img src="screenshot4.png" alt="App screenshot 4"/>
+</section>
+
+<section id="download" class="cta">
+    <h2>Ready to take control of your spending?</h2>
+    <button onclick="location.href='https://sss.ftpix.com'" type="button" >Try the Demo</button>
+    <button onclick="location.href='https://github.com/lamarios/SpendSpentSpent'" type="button" >View on GitHub</button>
+    <button onclick="location.href='https://play.google.com/store/apps/details?id=com.spendspentspent.app&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'" type="button" >Get the Android app</button>
+</section>
+
+<footer>
+    <p>© 2025 SpendSpentSpent. All rights reserved. |
+        <a id="github" href="https://github.com/lamarios/SpendSpentSpent">GitHub</a>
+    </p>
 </footer>
+
+<script>
+    // Mobile menu toggle
+    document.getElementById("menu-toggle").addEventListener("click", () => {
+        document.getElementById("nav").classList.toggle("active");
+    });
+
+    // Scroll reveal animations
+    const revealElements = document.querySelectorAll(".feature, .screenshots, .cta");
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {threshold: 0.2});
+    revealElements.forEach(el => observer.observe(el));
+</script>
 </body>
 </html>
+
