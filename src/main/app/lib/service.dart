@@ -565,7 +565,7 @@ class Service {
 
     if (await Preferences.get(Preferences.TOKEN_TYPE) ==
         TokenType.usernamePassword.name) {
-      getIt<UsernamePasswordCubit>().setToken(newToken);
+      getIt<UsernamePasswordCubit>().setToken(url, newToken);
     }
 
     return true;

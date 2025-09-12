@@ -50,7 +50,7 @@ class LoginCubit extends Cubit<LoginState> {
       Config c = await service.getServerConfig(urlController.text.trim());
       print('can register ? ${c.allowSignup}');
 
-      emit(state.copyWith(config: c));
+      emit(state.copyWith(config: c, error: null, stackTrace: null));
     } on NeedUpgradeException {
       emit(
         state.copyWith(
@@ -115,12 +115,13 @@ class LoginCubit extends Cubit<LoginState> {
     emit(state.copyWith(loginError: ''));
 
     try {
-      await globals.service.setUrl(urlController.text.trim());
+      var url = urlController.text.trim();
+      await globals.service.setUrl(url);
       var token = await globals.service.login(username, password);
 
       emit(state.copyWith(loginError: ''));
 
-      usernamePasswordCubit.setToken(token);
+      usernamePasswordCubit.setToken(url, token);
 
       return true;
     } catch (e) {
@@ -137,7 +138,8 @@ class LoginCubit extends Cubit<LoginState> {
     emit(state.copyWith(loginError: ''));
 
     try {
-      await globals.service.setUrl(urlController.text.trim());
+      var url = urlController.text.trim();
+      await globals.service.setUrl(url);
       if (state.config?.oidc != null) {
         final accessToken = await oidcLogin(state.config!.oidc!);
 
@@ -146,7 +148,7 @@ class LoginCubit extends Cubit<LoginState> {
 
           emit(state.copyWith(loginError: ''));
 
-          usernamePasswordCubit.setToken(token);
+          usernamePasswordCubit.setToken(url, token);
 
           return true;
         }

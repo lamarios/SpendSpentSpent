@@ -254,7 +254,9 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     } catch (e) {
       throw Exception("Couldn't get data");
     } finally {
-      emit(state.copyWith(gettingLocation: false));
+      if (!isClosed) {
+        emit(state.copyWith(gettingLocation: false));
+      }
     }
   }
 

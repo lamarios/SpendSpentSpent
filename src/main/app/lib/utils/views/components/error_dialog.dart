@@ -28,13 +28,13 @@ class ErrorDialog extends StatelessWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: _buildError(context, error, trace),
+          children: buildError(context, error, trace),
         ),
       ),
     );
   }
 
-  static List<Widget> _buildError(
+  static List<Widget> buildError(
     BuildContext context,
     dynamic error,
     StackTrace? trace,
@@ -56,9 +56,7 @@ class ErrorDialog extends StatelessWidget {
             const Gap(20),
             Flexible(
               child: SingleChildScrollView(
-                child: Column(
-                  children: [..._buildError(context, error, trace)],
-                ),
+                child: Column(children: [...buildError(context, error, trace)]),
               ),
             ),
             const Gap(20),

@@ -45,6 +45,8 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return AutofillGroup(
       child: Container(
         color: Colors.transparent,
@@ -154,11 +156,16 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: defaultBorder,
-                              color: Colors.red.shade400,
+                              color: colors.errorContainer,
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(widget.error),
+                              child: Text(
+                                widget.error,
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: colors.error,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -169,10 +176,12 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                           children: [
                             Expanded(
                               child: FilledButton.tonal(
-                                onPressed: () => widget.logIn(
-                                  usernameController.text.trim(),
-                                  passwordController.text.trim(),
-                                ),
+                                onPressed: widget.config == null
+                                    ? null
+                                    : () => widget.logIn(
+                                        usernameController.text.trim(),
+                                        passwordController.text.trim(),
+                                      ),
                                 child: const Text('Log in'),
                               ),
                             ),
