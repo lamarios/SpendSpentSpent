@@ -18,9 +18,10 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     final categories = await service.getCategories();
     emit(state.copyWith(categories: categories, loading: false));
     final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
-    final predictions = await service.suggestExpenseCategory(currentTimeZone);
-    print(predictions);
-    emit(state.copyWith(suggestions: predictions));
+    if (currentTimeZone != 'Etc/Unknown') {
+      final predictions = await service.suggestExpenseCategory(currentTimeZone);
+      emit(state.copyWith(suggestions: predictions));
+    }
   }
 
   double getProbability(Category category) {

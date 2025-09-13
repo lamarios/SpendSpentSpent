@@ -16,6 +16,8 @@ import 'globals.dart';
 
 final _appRouter = AppRouter();
 
+final _log = Logger('Main');
+
 Future<void> main() async {
   Logger.root.level = kDebugMode ? Level.ALL : Level.INFO;
   Logger.root.onRecord.listen((record) {
@@ -62,6 +64,12 @@ class SpendSpentSpent extends StatefulWidget {
 class _SpendSpentSpentState extends State<SpendSpentSpent>
     with WidgetsBindingObserver {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     getIt<UsernamePasswordCubit>().socket?.close();
@@ -70,7 +78,8 @@ class _SpendSpentSpentState extends State<SpendSpentSpent>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
+    if (state != AppLifecycleState.resumed) {
+      _log.info("App is hiding, disconnecting from websocket");
       getIt<UsernamePasswordCubit>().socket?.close();
     } else if (state == AppLifecycleState.resumed) {
       getIt<UsernamePasswordCubit>().socket?.connect();
