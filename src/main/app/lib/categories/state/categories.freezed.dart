@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CategoriesState {
 
- bool get loading; List<Category> get categories;
+ bool get loading; List<Category> get categories; List<CategoryPrediction> get suggestions;
 /// Create a copy of CategoriesState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CategoriesStateCopyWith<CategoriesState> get copyWith => _$CategoriesStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CategoriesState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.categories, categories));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CategoriesState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.suggestions, suggestions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(categories));
+int get hashCode => Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(suggestions));
 
 @override
 String toString() {
-  return 'CategoriesState(loading: $loading, categories: $categories)';
+  return 'CategoriesState(loading: $loading, categories: $categories, suggestions: $suggestions)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CategoriesStateCopyWith<$Res>  {
   factory $CategoriesStateCopyWith(CategoriesState value, $Res Function(CategoriesState) _then) = _$CategoriesStateCopyWithImpl;
 @useResult
 $Res call({
- bool loading, List<Category> categories
+ bool loading, List<Category> categories, List<CategoryPrediction> suggestions
 });
 
 
@@ -62,11 +62,12 @@ class _$CategoriesStateCopyWithImpl<$Res>
 
 /// Create a copy of CategoriesState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? loading = null,Object? categories = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? loading = null,Object? categories = null,Object? suggestions = null,}) {
   return _then(_self.copyWith(
 loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,categories: null == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
-as List<Category>,
+as List<Category>,suggestions: null == suggestions ? _self.suggestions : suggestions // ignore: cast_nullable_to_non_nullable
+as List<CategoryPrediction>,
   ));
 }
 
@@ -148,10 +149,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool loading,  List<Category> categories)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool loading,  List<Category> categories,  List<CategoryPrediction> suggestions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CategoriesState() when $default != null:
-return $default(_that.loading,_that.categories);case _:
+return $default(_that.loading,_that.categories,_that.suggestions);case _:
   return orElse();
 
 }
@@ -169,10 +170,10 @@ return $default(_that.loading,_that.categories);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool loading,  List<Category> categories)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool loading,  List<Category> categories,  List<CategoryPrediction> suggestions)  $default,) {final _that = this;
 switch (_that) {
 case _CategoriesState():
-return $default(_that.loading,_that.categories);}
+return $default(_that.loading,_that.categories,_that.suggestions);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -186,10 +187,10 @@ return $default(_that.loading,_that.categories);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool loading,  List<Category> categories)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool loading,  List<Category> categories,  List<CategoryPrediction> suggestions)?  $default,) {final _that = this;
 switch (_that) {
 case _CategoriesState() when $default != null:
-return $default(_that.loading,_that.categories);case _:
+return $default(_that.loading,_that.categories,_that.suggestions);case _:
   return null;
 
 }
@@ -201,7 +202,7 @@ return $default(_that.loading,_that.categories);case _:
 
 
 class _CategoriesState implements CategoriesState {
-  const _CategoriesState({this.loading = true, final  List<Category> categories = const []}): _categories = categories;
+  const _CategoriesState({this.loading = true, final  List<Category> categories = const [], final  List<CategoryPrediction> suggestions = const []}): _categories = categories,_suggestions = suggestions;
   
 
 @override@JsonKey() final  bool loading;
@@ -210,6 +211,13 @@ class _CategoriesState implements CategoriesState {
   if (_categories is EqualUnmodifiableListView) return _categories;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_categories);
+}
+
+ final  List<CategoryPrediction> _suggestions;
+@override@JsonKey() List<CategoryPrediction> get suggestions {
+  if (_suggestions is EqualUnmodifiableListView) return _suggestions;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_suggestions);
 }
 
 
@@ -223,16 +231,16 @@ _$CategoriesStateCopyWith<_CategoriesState> get copyWith => __$CategoriesStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CategoriesState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other._categories, _categories));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CategoriesState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._suggestions, _suggestions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(_categories));
+int get hashCode => Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_suggestions));
 
 @override
 String toString() {
-  return 'CategoriesState(loading: $loading, categories: $categories)';
+  return 'CategoriesState(loading: $loading, categories: $categories, suggestions: $suggestions)';
 }
 
 
@@ -243,7 +251,7 @@ abstract mixin class _$CategoriesStateCopyWith<$Res> implements $CategoriesState
   factory _$CategoriesStateCopyWith(_CategoriesState value, $Res Function(_CategoriesState) _then) = __$CategoriesStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool loading, List<Category> categories
+ bool loading, List<Category> categories, List<CategoryPrediction> suggestions
 });
 
 
@@ -260,11 +268,12 @@ class __$CategoriesStateCopyWithImpl<$Res>
 
 /// Create a copy of CategoriesState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? loading = null,Object? categories = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? loading = null,Object? categories = null,Object? suggestions = null,}) {
   return _then(_CategoriesState(
 loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,categories: null == categories ? _self._categories : categories // ignore: cast_nullable_to_non_nullable
-as List<Category>,
+as List<Category>,suggestions: null == suggestions ? _self._suggestions : suggestions // ignore: cast_nullable_to_non_nullable
+as List<CategoryPrediction>,
   ));
 }
 

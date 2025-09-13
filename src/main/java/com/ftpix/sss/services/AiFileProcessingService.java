@@ -1,5 +1,6 @@
 package com.ftpix.sss.services;
 
+import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.CategorySuggestionResponse;
 import com.ftpix.sss.models.NewCategoryIcon;
 import com.ftpix.sss.models.SSSFile;
@@ -8,10 +9,6 @@ import com.ftpix.sss.models.ai_responses.ImageTagsResponse;
 import com.ftpix.sss.services.aiClients.AiClient;
 import com.ftpix.sss.services.aiClients.OllamaAiClient;
 import com.ftpix.sss.services.aiClients.SssOpenAiClient;
-import com.google.gson.Gson;
-import io.github.ollama4j.OllamaAPI;
-import io.github.ollama4j.models.response.OllamaResult;
-import io.github.ollama4j.utils.OptionsBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +17,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
 import java.io.File;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -39,6 +39,8 @@ public class AiFileProcessingService {
     private String textModel;
 
     private AiClient aiClient;
+
+    public final static ExecutorService exec = Executors.newSingleThreadExecutor();
 
     @Autowired
     public AiFileProcessingService(@Value("${OLLAMA_API_URL:}") String ollamaUrl, @Value("${OLLAMA_API_KEY:}") String ollamaApiKey, @Value("${OPENAI_API_URL:}") String openAiUrl, @Value("${OPENAI_API_KEY:no-key}") String openAiApiKey
@@ -116,7 +118,7 @@ public class AiFileProcessingService {
 
         watch.stop();
 
-        log.info("finished finding best category \n{}",watch.prettyPrint(TimeUnit.SECONDS));
+        log.info("finished finding best category \n{}", watch.prettyPrint(TimeUnit.SECONDS));
 
         return new CategorySuggestionResponse(sorted, file);
     }
@@ -180,9 +182,8 @@ public class AiFileProcessingService {
 
         watch.stop();
 
-        log.info("finished analysing image \n{}",watch.prettyPrint(TimeUnit.SECONDS));
+        log.info("finished analysing image \n{}", watch.prettyPrint(TimeUnit.SECONDS));
 
         return taggingResponse;
     }
-
 }

@@ -9,6 +9,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:spend_spent_spent/add_expense_dialog/models/category_guess_result.dart';
 import 'package:spend_spent_spent/categories/models/available_categories.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
+import 'package:spend_spent_spent/expenses/models/category_prediction.dart';
 import 'package:spend_spent_spent/expenses/models/sss_file.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
@@ -52,6 +53,7 @@ const EXPENSE_GET_NOTE_SUGGESTIONS = '$API_URL/Expense/suggest-notes';
 const EXPENSE_GET_NOTE_AUTOCOMPLETE = '$API_URL/Expense/notes-autocomplete';
 const EXPENSE_GET_LIMITS = '$API_URL/Expense/limits';
 const EXPENSE_DIFF_WITH_PREVIOUS_PERIOD = '$API_URL/Expense/diff/{0}';
+const EXPENSE_CATEGORY_SUGGEST = '$API_URL/Expense/suggest';
 const HISTORY_OVERALL_MONTH = "$API_URL/History/CurrentMonth";
 const HISTORY_OVERALL_YEAR = "$API_URL/History/CurrentYear";
 const HISTORY_YEARLY = "$API_URL/History/Yearly/{0}/{1}";
@@ -815,6 +817,21 @@ class Service {
     Map<String, dynamic> map = jsonDecode(body);
 
     return CategoryGuessResult.fromJson(map);
+  }
+
+  Future<List<CategoryPrediction>> suggestExpenseCategory(
+    String timeZone,
+  ) async {
+    final response = await http.get(
+      await formatUrl(EXPENSE_CATEGORY_SUGGEST, query: {'timezone': timeZone}),
+      headers: await headers,
+    );
+
+    processResponse(response);
+    Iterable i = jsonDecode(response.body);
+    return List<CategoryPrediction>.from(
+      i.map((e) => CategoryPrediction.fromJson(e)),
+    );
   }
 
   void processResponse(Response response) {

@@ -51,7 +51,6 @@ public class FileService {
     private static final int KEY_SIZE = 256;
     private static final String ALGO = "AES/GCM/NoPadding";
 
-    private final ExecutorService exec = Executors.newSingleThreadExecutor();
 
     private final SecretKey encryptionKey;
 
@@ -174,7 +173,7 @@ public class FileService {
 
 
     public CategorySuggestionResponse findFileCategory(User currentUser, MultipartFile file) throws ExecutionException, InterruptedException {
-        var work = exec.submit(() -> {
+        var work = AiFileProcessingService.exec.submit(() -> {
             boolean aiEnabled = aiFileProcessingService.isAiEnabled();
             SSSFile sssFile = createFromUpload(currentUser, file);
 
@@ -313,7 +312,7 @@ public class FileService {
 
 
     private void processFileWithAi(SSSFile file) {
-        exec.submit(() -> {
+        AiFileProcessingService.exec.submit(() -> {
             User user = new User();
             user.setId(file.getId());
             try {
