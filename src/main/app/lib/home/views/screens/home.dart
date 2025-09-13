@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/guess_category_dialog.dart';
+import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/identity/views/components/logout_handler.dart';
 import 'package:spend_spent_spent/router.dart';
@@ -21,20 +24,31 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   late StreamSubscription _intentSub;
   bool _sharedFileIsHandled = false;
 
   @override
   void dispose() {
     _intentSub.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _setupIntentSharing();
+    WidgetsBinding.instance.addObserver(this);
+    if (!kIsWeb) {
+      _setupIntentSharing();
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      context.read<CategoriesCubit>().getCategories();
+    }
   }
 
   void _setupIntentSharing() {
