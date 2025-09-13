@@ -1,5 +1,5 @@
 name: 'spend_spent_spent'
-version: '2.7.9+102'
+version: '2.8.0+102'
 publish_to: none
 environment:
   sdk: '>=3.8.0 <4.0.0'
@@ -20,6 +20,7 @@ dependencies:
   flutter_map: 8.2.1
   flutter_settings_ui: 3.0.1
   flutter_svg: 2.2.1
+  flutter_timezone: 4.1.1
   freezed_annotation: 3.1.0
   gap: 3.0.1
   get_it: 8.2.0

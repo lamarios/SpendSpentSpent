@@ -1,0 +1,19 @@
+meta {
+  name: Suggest category
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{API}}/API/Expense/suggest?timezone=Asia/Kuala_Lumpur
+  body: none
+  auth: inherit
+}
+
+params:query {
+  timezone: Asia/Kuala_Lumpur
+}
+
+settings {
+  encodeUrl: true
+}

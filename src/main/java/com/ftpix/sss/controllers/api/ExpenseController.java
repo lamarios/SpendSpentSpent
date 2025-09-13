@@ -1,11 +1,9 @@
 package com.ftpix.sss.controllers.api;
 
-import com.ftpix.sss.models.DailyExpense;
-import com.ftpix.sss.models.Expense;
-import com.ftpix.sss.models.ExpenseLimits;
-import com.ftpix.sss.models.User;
+import com.ftpix.sss.models.*;
 import com.ftpix.sss.services.ExpenseService;
 import com.ftpix.sss.services.UserService;
+import com.ftpix.sss.utils.CategoryPredictor;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -19,6 +17,7 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/API/Expense")
@@ -145,8 +144,14 @@ public class ExpenseController {
     }
 
     @GetMapping("/diff/{current-day}")
-    public double getDiffWithPreviousPeriod(@PathVariable("current-day") String currentDay, @RequestParam(value = "include-recurring", defaultValue = "true") boolean includeRecurring) throws SQLException {
+    public double getDiffWithPreviousPeriod(@PathVariable("current-day") String currentDay,  @RequestParam(value = "include-recurring", defaultValue = "true") boolean includeRecurring) throws SQLException {
         var currentUser = userService.getCurrentUser();
         return expenseService.diffWithPreviousPeriod(currentUser, currentDay, includeRecurring);
+    }
+
+    @GetMapping("/suggest")
+    public List<CategoryPredictor.CategoryPrediction> suggestCategory(@RequestParam("timezone") String timeZone, @RequestParam(value = "latitude", required = false) Double latitude, @RequestParam(value = "longitude",required = false) Double longitude) throws SQLException, ExecutionException, InterruptedException {
+        var currentUser = userService.getCurrentUser();
+        return expenseService.getExpenseCategorySuggestion(currentUser, timeZone, latitude, longitude);
     }
 }

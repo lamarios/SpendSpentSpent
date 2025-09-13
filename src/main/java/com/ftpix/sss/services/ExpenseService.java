@@ -1,8 +1,10 @@
 package com.ftpix.sss.services;
 
 import com.ftpix.sss.Constants;
+import com.ftpix.sss.dao.CategoryDao;
 import com.ftpix.sss.dao.ExpenseDao;
 import com.ftpix.sss.models.*;
+import com.ftpix.sss.utils.CategoryPredictor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jooq.OrderField;
@@ -12,10 +14,9 @@ import org.springframework.stereotype.Service;
 import java.security.InvalidParameterException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
+import java.time.*;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import static com.ftpix.sss.dsl.Tables.EXPENSE;
@@ -33,14 +34,18 @@ public class ExpenseService {
     private final ExpenseDao expenseDaoJooq;
     private final FileService fileService;
     private final ExpenseDao expenseDao;
+    private final AiFileProcessingService aiFileProcessingService;
+    private final CategoryDao categoryDao;
 
     @Autowired
-    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ExpenseDao expenseDaoJooq, FileService fileService, ExpenseDao expenseDao) {
+    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ExpenseDao expenseDaoJooq, FileService fileService, ExpenseDao expenseDao, AiFileProcessingService aiFileProcessingService, CategoryDao categoryDao) {
         this.categoryService = categoryService;
         this.settingsService = settingsService;
         this.expenseDaoJooq = expenseDaoJooq;
         this.fileService = fileService;
         this.expenseDao = expenseDao;
+        this.aiFileProcessingService = aiFileProcessingService;
+        this.categoryDao = categoryDao;
     }
 
     public List<Expense> getAll(User user) throws Exception {
@@ -83,7 +88,6 @@ public class ExpenseService {
                 .filter(s -> !s.isBlank())
                 .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
     }
-
 
     public Map<String, DailyExpense> getByDay(String month, User user) throws Exception {
 
@@ -242,4 +246,17 @@ public class ExpenseService {
         return currentSum / previousSum;
     }
 
+    public List<CategoryPredictor.CategoryPrediction> getExpenseCategorySuggestion(User currentUser, String currentTimeZone, Double latitude, Double longitude) throws ExecutionException, InterruptedException {
+        var expenses = expenseDaoJooq.getWhere(currentUser, EXPENSE.TIMESTAMP.gt(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 90), EXPENSE.TYPE.eq(1)); // get the last 6 months of expenses
+
+
+        var timeZone = ZoneId.of(currentTimeZone);
+
+        CategoryPredictor categoryPredictor = new CategoryPredictor();
+        categoryPredictor.train(expenses, timeZone);
+
+        var now = ZonedDateTime.now(timeZone);
+
+        return categoryPredictor.predict(now.getDayOfWeek(), now.getHour());
+    }
 }

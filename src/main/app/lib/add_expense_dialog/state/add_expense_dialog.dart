@@ -72,7 +72,9 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
             onTimeout: () => null,
           )
           .then((loc) {
-            emit(state.copyWith(location: loc));
+            if (!isClosed) {
+              emit(state.copyWith(location: loc));
+            }
           });
     }
     if (expense != null) {

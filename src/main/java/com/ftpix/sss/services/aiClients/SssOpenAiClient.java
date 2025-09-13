@@ -82,7 +82,6 @@ public class SssOpenAiClient implements AiClient {
                 .responseFormat(format)
                 .build();
 
-
         return client.chat().completions().create(params).choices().stream()
                 .flatMap(choice -> choice.message().content().stream())
                 .toList();
