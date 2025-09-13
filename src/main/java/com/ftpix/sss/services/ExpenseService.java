@@ -259,38 +259,4 @@ public class ExpenseService {
 
         return categoryPredictor.predict(now.getDayOfWeek(), now.getHour());
     }
-
-    private String expenseToCsv(ZoneId timeZone, Expense expense) {
-
-        Instant i = Instant.ofEpochMilli(expense.getTimestamp());
-        var date = ZonedDateTime.ofInstant(i, timeZone);
-
-        // columns: year, month, day, day of week, 24h time, category, amount, latitude, longitude, note
-        return "%s,%s,%s,%s,%02d:%02d,%s,%s,%s,%s,%s".formatted(
-                date.getYear(),
-                date.getMonth().toString(),
-                date.getDayOfMonth(),
-                date.getDayOfWeek().toString(),
-                date.getHour(),
-                date.getMinute(),
-                expense.getCategory().getIcon(),
-                expense.getAmount(),
-                expense.getLatitude() == 0 ? "" : expense.getLatitude(),
-                expense.getLongitude() == 0 ? "" : expense.getLongitude(),
-                Optional.ofNullable(expense.getNote()).map(this::escapeSpecialCharacters).orElse("")
-        );
-    }
-
-    private String escapeSpecialCharacters(String data) {
-        if (data == null) {
-            throw new IllegalArgumentException("Input data cannot be null");
-        }
-        String escapedData = data.replaceAll("\\R", " ");
-        if (escapedData.contains(",") || escapedData.contains("\"") || escapedData.contains("'")) {
-            escapedData = escapedData.replace("\"", "\"\"");
-            escapedData = "\"" + escapedData + "\"";
-        }
-        return escapedData;
-    }
-
 }
