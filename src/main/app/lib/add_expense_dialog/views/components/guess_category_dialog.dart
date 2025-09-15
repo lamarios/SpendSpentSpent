@@ -205,6 +205,7 @@ class GuessCategoryDialog extends StatelessWidget {
                             category: cat,
                             files: [results.file],
                             note: results.file.aiTags.firstOrNull,
+                            timestamp: DateTime.now().millisecondsSinceEpoch,
                           );
 
                           Navigator.of(context).pop();

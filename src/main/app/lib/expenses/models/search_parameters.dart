@@ -15,6 +15,8 @@ sealed class SearchParameters with _$SearchParameters {
     required int minAmount,
     required int maxAmount,
     @Default('') String searchQuery,
+    int? minDate,
+    int? maxDate,
   }) = _SearchParameters;
 
   factory SearchParameters.fromJson(Map<String, dynamic> json) =>

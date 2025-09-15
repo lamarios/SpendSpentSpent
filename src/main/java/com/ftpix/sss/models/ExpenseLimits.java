@@ -4,26 +4,26 @@ package com.ftpix.sss.models;
  * Chass to represent how many months and years of expenses we have
  */
 public class ExpenseLimits {
-    int years, months;
+    long years, months;
 
-    public ExpenseLimits(int years, int months) {
+    public ExpenseLimits(long years, long months) {
         this.years = years;
         this.months = months;
     }
 
-    public int getYears() {
+    public long getYears() {
         return years;
     }
 
-    public void setYears(int years) {
+    public void setYears(long years) {
         this.years = years;
     }
 
-    public int getMonths() {
+    public long getMonths() {
         return months;
     }
 
-    public void setMonths(int months) {
+    public void setMonths(long months) {
         this.months = months;
     }
 }

@@ -14,16 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.ftpix.sss.dsl.Tables.*;
+import static com.ftpix.sss.dsl.Tables.MONTHLY_HISTORY;
+import static com.ftpix.sss.dsl.Tables.YEARLY_HISTORY;
 
 @Service
 public class HistoryService {
@@ -38,6 +38,21 @@ public class HistoryService {
     private final CategoryDao categoryDaoJooq;
     private final MonthlyHistoryDao monthlyHistoryDaoJooq;
     private final YearlyHistoryDao yearlyHistoryDaoJooq;
+    private final ZoneId zoneId;
+
+    @Autowired
+    public HistoryService(CategoryService categoryService, ExpenseService expenseService, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq, ZoneId zoneId) {
+        this.categoryService = categoryService;
+        this.expenseService = expenseService;
+        this.expenseDaoJooq = expenseDaoJooq;
+        this.categoryDaoJooq = categoryDaoJooq;
+        this.monthlyHistoryDaoJooq = monthlyHistoryDaoJooq;
+        this.yearlyHistoryDaoJooq = yearlyHistoryDaoJooq;
+        this.zoneId = zoneId;
+
+        this.expenseDaoJooq.addUserBasedListener(expenseDaoListener);
+        this.categoryDaoJooq.addUserBasedListener(categoryDaoListener);
+    }
 
     private final DaoUserListener<Category> categoryDaoListener = new DaoUserListener<Category>() {
         @Override
@@ -73,19 +88,6 @@ public class HistoryService {
     };
 
 
-    @Autowired
-    public HistoryService(CategoryService categoryService, ExpenseService expenseService, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq) {
-        this.categoryService = categoryService;
-        this.expenseService = expenseService;
-        this.expenseDaoJooq = expenseDaoJooq;
-        this.categoryDaoJooq = categoryDaoJooq;
-        this.monthlyHistoryDaoJooq = monthlyHistoryDaoJooq;
-        this.yearlyHistoryDaoJooq = yearlyHistoryDaoJooq;
-
-        this.expenseDaoJooq.addUserBasedListener(expenseDaoListener);
-        this.categoryDaoJooq.addUserBasedListener(categoryDaoListener);
-    }
-
     /**
      * Gets expense sum for each categories for the current year
      *
@@ -105,7 +107,7 @@ public class HistoryService {
         categoryAll.setUser(user);
         overall.setCategory(categoryAll);
 
-        LocalDate now = LocalDate.now();
+        ZonedDateTime now = ZonedDateTime.now(zoneId);
         int year = now.getYear();
 
         List<YearlyHistory> yearly = yearlyHistoryDaoJooq.getWhere(user, YEARLY_HISTORY.DATE.eq(year));
@@ -243,7 +245,7 @@ public class HistoryService {
     public List<Map<String, Object>> getMonthlyHistory(long categoryId, int count, User user) throws Exception {
         List<Map<String, Object>> result = new ArrayList<>();
 
-        LocalDate date = LocalDate.now();
+        ZonedDateTime date = ZonedDateTime.now(zoneId);
         List<Integer> data = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
@@ -286,10 +288,9 @@ public class HistoryService {
 
     public void cacheForExpense(User user, Expense expense) throws SQLException {
         logger.info("History for expense " + expense.getId() + " of category " + expense.getCategory().getId());
-        LocalDate localDate = expense.getDate();
-        String date = localDate.format(historyDateTimeFormatter);
+        ZonedDateTime expenseDate = DateUtils.fromTimestamp(expense.getTimestamp(), zoneId);
 
-        cacheForCategory(user, Integer.parseInt(date), expense.getCategory());
+        cacheForCategory(user, expenseDate, expense.getCategory());
     }
 
     /**
@@ -298,28 +299,29 @@ public class HistoryService {
      * @param date
      * @param category
      */
-    public void cacheForCategory(User user, int date, Category category) throws SQLException {
+    public void cacheForCategory(User user, ZonedDateTime date, Category category) throws SQLException {
 //        logger.info("Refreshing cache for category :" + category.getId());
 
         cacheForCategoryMonthly(user, date, category);
-        cacheForCategoryYearly(user, Math.floorDiv(date, 100), category);
+        cacheForCategoryYearly(user, date, category);
     }
 
     /**
      * @param date     in formay yyyy-DD
      * @param category
      */
-    private void cacheForCategoryYearly(User user, int date, Category category) throws SQLException {
+    private void cacheForCategoryYearly(User user, ZonedDateTime date, Category category) throws SQLException {
 
-        double sum = expenseService.getSumWhere(user, Integer.toString(date), category);
+        double sum = expenseService.getSumWhere(user, DateUtils.getMonthBoundaries(date, zoneId), category);
 
-        Optional<YearlyHistory> history = yearlyHistoryDaoJooq.getOneWhere(YEARLY_HISTORY.CATEGORY_ID.eq(category.getId()), YEARLY_HISTORY.DATE.eq(date));
+        int formattedDate = Integer.parseInt(DateTimeFormatter.ofPattern("yyyy").format(date));
+        Optional<YearlyHistory> history = yearlyHistoryDaoJooq.getOneWhere(YEARLY_HISTORY.CATEGORY_ID.eq(category.getId()), YEARLY_HISTORY.DATE.eq(formattedDate));
 
         YearlyHistory yearlyHistory;
         if (history.isEmpty()) {
             yearlyHistory = new YearlyHistory();
             yearlyHistory.setCategory(category);
-            yearlyHistory.setDate(date);
+            yearlyHistory.setDate(formattedDate);
             yearlyHistoryDaoJooq.insert(yearlyHistory);
         } else {
             yearlyHistory = history.get();
@@ -334,19 +336,18 @@ public class HistoryService {
      * @param date     in format YYYY
      * @param category
      */
-    private void cacheForCategoryMonthly(User user, int date, Category category) throws SQLException {
-        int year = Math.floorDiv(date, 100);
-        int month = Math.floorMod(date, 100);
+    private void cacheForCategoryMonthly(User user, ZonedDateTime date, Category category) throws SQLException {
 
-        double sum = expenseService.getSumWhere(user, year + "-" + String.format("%02d", month), category);
+        double sum = expenseService.getSumWhere(user, DateUtils.getMonthBoundaries(date, zoneId), category);
 
-        Optional<MonthlyHistory> history = monthlyHistoryDaoJooq.getOneWhere(MONTHLY_HISTORY.CATEGORY_ID.eq(category.getId()), MONTHLY_HISTORY.DATE.eq(date));
+        int formattedDate = Integer.parseInt(DateTimeFormatter.ofPattern("yyyyMM").format(date));
+        Optional<MonthlyHistory> history = monthlyHistoryDaoJooq.getOneWhere(MONTHLY_HISTORY.CATEGORY_ID.eq(category.getId()), MONTHLY_HISTORY.DATE.eq(formattedDate));
 
         MonthlyHistory monthlyHistory;
         if (history.isEmpty()) {
             monthlyHistory = new MonthlyHistory();
             monthlyHistory.setCategory(category);
-            monthlyHistory.setDate(date);
+            monthlyHistory.setDate(formattedDate);
             monthlyHistoryDaoJooq.insert(monthlyHistory);
         } else {
             monthlyHistory = history.get();

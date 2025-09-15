@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
@@ -91,6 +92,7 @@ class Service {
   String url = "";
 
   String? version;
+  String? timezone;
 
   Future<Map<String, String>> get headers async {
     var headers = {'Content-Type': 'application/json'};
@@ -104,6 +106,9 @@ class Service {
     if (version != null) {
       headers['x-version'] = version!;
     }
+
+    headers['x-timezone'] =
+        timezone ?? await FlutterTimezone.getLocalTimezone();
 
     return headers;
   }

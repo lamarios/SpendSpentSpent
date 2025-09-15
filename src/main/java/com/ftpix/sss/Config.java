@@ -12,6 +12,7 @@ import org.simplejavamail.api.mailer.config.TransportStrategy;
 import org.simplejavamail.mailer.MailerBuilder;
 import org.simplejavamail.mailer.internal.MailerRegularBuilderImpl;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +53,13 @@ public class Config {
     @Bean
     public String rootUrl() {
         return rootUrl;
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean(ZoneId.class)
+    public ZoneId zoneId(@Value("${TIMEZONE}") String timeZone) {
+        return ZoneId.of(timeZone);
     }
 
     @Bean

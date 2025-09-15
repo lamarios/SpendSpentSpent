@@ -18,7 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -69,15 +73,16 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
      * @param user
      * @return
      */
-    public List<String> getMonths(User user) {
+    public List<String> getMonths(User user, ZoneId zoneId) {
         Map<Long, Category> userCategories = getUserCategories(user);
 
-        return dslContext.selectDistinct(EXPENSE.DATE)
+        return dslContext.select(EXPENSE.TIMESTAMP)
                 .from(EXPENSE)
                 .where(EXPENSE.CATEGORY_ID.in(userCategories.keySet()))
-                .fetch(r -> r.get(EXPENSE.DATE))
+                .fetch(r -> r.get(EXPENSE.TIMESTAMP))
                 .stream()
-                .map(s -> s.substring(0, 7))
+                .map(s -> ZonedDateTime.ofInstant(Instant.ofEpochMilli(s), zoneId))
+                .map(d -> DateTimeFormatter.ofPattern("yyyy-MM").format(d))
                 .sorted()
                 .distinct()
                 .collect(Collectors.toList());
@@ -101,8 +106,10 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
         e.setType(r.getType());
         e.setAmount(r.getAmount());
         e.setIncome(r.getIncome() != null && r.getIncome().equals(1));
-        var date = r.getDate();
-        e.setDate(LocalDate.parse(date, dateFormatter));
+        if (r.getDate() != null) {
+            var date = r.getDate();
+            e.setDate(LocalDate.parse(date, dateFormatter));
+        }
         e.setLatitude(r.getLatitude());
         e.setLongitude(r.getLongitude());
         e.setTime(r.getTime());
@@ -113,12 +120,13 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
 
     /**
      * Like getWhere but will join the image table to search the tags
+     *
      * @param user
      * @param orderBy
      * @param filter
      * @return
      */
-    public List<Expense> search(User user, OrderField[] orderBy, Condition... filter){
+    public List<Expense> search(User user, OrderField[] orderBy, Condition... filter) {
         Map<Long, Category> userCategories = getUserCategories(user);
 
         Condition[] conditions = (Condition[]) ArrayUtils.add(filter, getCategoryField().in(userCategories.keySet()));
@@ -142,10 +150,14 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
         r.setType(o.getType());
         r.setAmount(o.getAmount());
         r.setIncome(o.isIncome() ? 1 : 0);
-        r.setDate(dateFormatter.format(o.getDate()));
+        if (o.getDate() != null) {
+            r.setDate(dateFormatter.format(o.getDate()));
+        }
         r.setLatitude(o.getLatitude());
         r.setLongitude(o.getLongitude());
-        r.setTime(o.getTime());
+        if (o.getTime() != null) {
+            r.setTime(o.getTime());
+        }
         r.setTimestamp(o.getTimestamp());
         r.setNote(o.getNote());
         return r;
@@ -199,11 +211,11 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
                 .fetch(EXPENSE.NOTE);
     }
 
-    public List<Expense> getFromTo(User user, String from, String to, boolean includeRecurring) {
+    public List<Expense> getFromTo(User user, long from, long to, boolean includeRecurring) {
 
         Map<Long, Category> userCategories = getUserCategories(user);
 
-        var query = dslContext.select().from(EXPENSE).where(EXPENSE.DATE.between(from, to));
+        var query = dslContext.select().from(EXPENSE).where(EXPENSE.TIMESTAMP.between(from, to));
 
         if (!includeRecurring) {
             query = query.and(EXPENSE.TYPE.ne(Expense.TYPE_RECURRENT));

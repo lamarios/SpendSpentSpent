@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,12 +24,14 @@ public class SearchService {
     private final CategoryService categoryService;
     private final ExpenseDao expenseDao;
     private final FileService fileService;
+    private final ZoneId zoneId;
 
     @Autowired
-    public SearchService(CategoryService categoryService, ExpenseDao expenseDao, FileService fileService) {
+    public SearchService(CategoryService categoryService, ExpenseDao expenseDao, FileService fileService, ZoneId zoneId) {
         this.categoryService = categoryService;
         this.expenseDao = expenseDao;
         this.fileService = fileService;
+        this.zoneId = zoneId;
     }
 
     public SearchParameters getSearchParameters(User currentUser, Long categoryId) throws SQLException {
@@ -35,7 +39,7 @@ public class SearchService {
 
         List<Category> categories = categoryService.getAll(currentUser);
 
-        Condition categoryCondition = categoryId != null ? EXPENSE.CATEGORY_ID.eq(categoryId) : null;
+        Condition[] categoryCondition = categoryId != null ? new Condition[]{EXPENSE.CATEGORY_ID.eq(categoryId)} : new Condition[0];
 
 
         int minAmount = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.AMOUNT.asc()}, categoryCondition)
@@ -55,24 +59,25 @@ public class SearchService {
                 .findFirst()
                 .orElse(0);
 
-        LocalDate minDate = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.DATE.asc()})
+        long minDate = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.TIMESTAMP.asc()}, categoryCondition)
                 .getData()
                 .stream()
-                .map(Expense::getDate)
+                .map(Expense::getTimestamp)
                 .findFirst()
-                .orElse(LocalDate.now());
+                .orElse(System.currentTimeMillis() - 1000 * 60 * 60 * 24);
 
-        LocalDate maxDate = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.DATE.desc()})
+        long maxDate = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.TIMESTAMP.desc()}, categoryCondition)
                 .getData()
                 .stream()
-                .map(Expense::getDate)
+                .map(Expense::getTimestamp)
                 .findFirst()
-                .orElse(LocalDate.now());
+                .orElse(System.currentTimeMillis());
 
         return new SearchParameters(categories, minAmount, maxAmount, minDate, maxDate, "");
     }
 
-    public Map<String, DailyExpense> search(User currentUser, SearchParameters parameters) {
+    public Map<String, DailyExpense> search(User currentUser, SearchParameters parameters, ZoneId zone) {
+
         List<Condition> conditions = new ArrayList<>();
 
         if (parameters.maxAmount() >= 0) {
@@ -87,11 +92,18 @@ public class SearchService {
             conditions.add(EXPENSE.CATEGORY_ID.in(parameters.categories().stream().map(Category::getId).toList()));
         }
 
-        //TODO: handle dates
         if (parameters.searchQuery() != null && !parameters.searchQuery().trim().isEmpty()) {
             String upperCase = parameters.searchQuery().toUpperCase();
             conditions.add(upper(EXPENSE.NOTE).like("%" + upperCase + "%")
                     .or(upper(FILES.AI_TAGS).like("%" + upperCase + "%")));
+        }
+
+        if (parameters.minDate() != null) {
+            conditions.add(EXPENSE.TIMESTAMP.ge(parameters.minDate()));
+        }
+
+        if (parameters.maxDate() != null) {
+            conditions.add(EXPENSE.TIMESTAMP.le(parameters.maxDate()));
         }
 
         List<Expense> searchResult = expenseDao.search(currentUser, new OrderField[]{EXPENSE.DATE.desc()}, conditions.toArray(new Condition[0]));
@@ -103,7 +115,9 @@ public class SearchService {
 
         Map<String, List<Expense>> grouped = searchResult
                 .stream()
-                .collect(Collectors.groupingBy(expense -> dateFormatter.format(expense.getDate())));
+//                .collect(Collectors.groupingBy(expense -> dateFormatter.format(expense.getDate())));
+                .collect(Collectors.groupingBy(expense -> dateFormatter.format(ZonedDateTime.ofInstant(Instant.ofEpochMilli(expense.getTimestamp()), Optional.ofNullable(zone)
+                        .orElse(zoneId)))));
 
         Map<String, DailyExpense> result = new TreeMap<>(Collections.reverseOrder());
 

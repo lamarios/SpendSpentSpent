@@ -53,10 +53,12 @@ public class Expense implements HasCategory {
         this.amount = amount;
     }
 
+    @Deprecated
     public LocalDate getDate() {
         return date;
     }
 
+    @Deprecated
     public void setDate(LocalDate date) {
         this.date = date;
     }
@@ -103,10 +105,12 @@ public class Expense implements HasCategory {
         this.longitude = longitude;
     }
 
+    @Deprecated
     public String getTime() {
         return time;
     }
 
+    @Deprecated
     public void setTime(String time) {
         this.time = time;
     }

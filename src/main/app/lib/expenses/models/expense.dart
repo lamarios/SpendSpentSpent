@@ -11,13 +11,13 @@ part 'expense.g.dart';
 @freezed
 sealed class Expense with _$Expense {
   const factory Expense({
-    required String date,
+    @Deprecated("date is deprecated") String? date,
     required double amount,
     double? latitude,
     double? longitude,
     String? note,
     @Default(1) int type,
-    int? timestamp,
+    required int timestamp,
     @Default(false) bool income,
     required Category category,
     int? id,

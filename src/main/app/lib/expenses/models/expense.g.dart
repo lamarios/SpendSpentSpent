@@ -7,13 +7,13 @@ part of 'expense.dart';
 // **************************************************************************
 
 _Expense _$ExpenseFromJson(Map<String, dynamic> json) => _Expense(
-  date: json['date'] as String,
+  date: json['date'] as String?,
   amount: (json['amount'] as num).toDouble(),
   latitude: (json['latitude'] as num?)?.toDouble(),
   longitude: (json['longitude'] as num?)?.toDouble(),
   note: json['note'] as String?,
   type: (json['type'] as num?)?.toInt() ?? 1,
-  timestamp: (json['timestamp'] as num?)?.toInt(),
+  timestamp: (json['timestamp'] as num).toInt(),
   income: json['income'] as bool? ?? false,
   category: Category.fromJson(json['category'] as Map<String, dynamic>),
   id: (json['id'] as num?)?.toInt(),

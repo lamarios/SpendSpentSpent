@@ -10,10 +10,12 @@ import com.ftpix.sss.services.UserService;
 import com.ftpix.sss.utils.UserServiceMock;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.time.ZoneId;
 
 
 @TestConfiguration
@@ -23,6 +25,12 @@ public class TestConfig {
     @Bean
     public UserService userService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, CategoryDao categoryDaoJooq, EmailService emailService, SettingsService settingsService, UserDao userDaoJooq) {
         return new UserServiceMock(recurringExpenseService, expenseService, categoryService, categoryDaoJooq, emailService, settingsService, userDaoJooq);
+    }
+
+    @Bean
+    @Primary
+    public ZoneId zoneId(){
+        return ZoneId.systemDefault();
     }
 
     @Bean
