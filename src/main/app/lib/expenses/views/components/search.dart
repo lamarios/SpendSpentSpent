@@ -201,6 +201,7 @@ class Search extends StatelessWidget {
                               '${formatter.format(DateTime.fromMillisecondsSinceEpoch(state.searchParameters.minDate ?? 0))}_${formatter.format(DateTime.fromMillisecondsSinceEpoch(state.searchParameters.maxDate ?? 0))}.csv';
 
                           final params = ShareParams(
+                            fileNameOverrides: [fileName],
                             files: [
                               XFile.fromData(
                                 file,
