@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:material_loading_indicator/loading_indicator.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:spend_spent_spent/expenses/models/search_parameters.dart';
 import 'package:spend_spent_spent/expenses/state/search.dart';
 import 'package:spend_spent_spent/globals.dart';
@@ -191,7 +193,25 @@ class Search extends StatelessWidget {
                       ),
                     ),
                     IconButton.filledTonal(
-                      onPressed: () => cubit.downloadData(),
+                      onPressed: () async {
+                        final file = await cubit.downloadData();
+                        if (context.mounted) {
+                          var formatter = DateFormat('yyyy-MM-dd');
+                          String fileName =
+                              '${formatter.format(DateTime.fromMillisecondsSinceEpoch(state.searchParameters.minDate ?? 0))}_${formatter.format(DateTime.fromMillisecondsSinceEpoch(state.searchParameters.maxDate ?? 0))}.csv';
+
+                          final params = ShareParams(
+                            files: [
+                              XFile.fromData(
+                                file,
+                                mimeType: "text/csv",
+                                name: fileName,
+                              ),
+                            ],
+                          );
+                          await SharePlus.instance.share(params);
+                        }
+                      },
                       icon: Icon(Icons.save_alt),
                     ),
                   ],

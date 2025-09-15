@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:typed_data';
 
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -109,7 +110,9 @@ class SearchCubit extends Cubit<SearchState> {
     triggerSearch();
   }
 
-  void downloadData() {}
+  Future<Uint8List> downloadData() async {
+    return await service.downloadSearchCsv(state.searchParameters);
+  }
 }
 
 @freezed
