@@ -102,6 +102,7 @@ public class ExpenseService {
 
                 logger.info("Migrating expense:" + localDate + " zoned: " + zoned + " -> " + (zoned.toEpochSecond() * 1000));
                 expense.setTimestamp(zoned.toEpochSecond() * 1000);
+                expense.setTimeCreated(expense.getTimestamp());
                 expenseDaoJooq.update(user, expense);
             });
         }
@@ -284,7 +285,10 @@ public class ExpenseService {
     }
 
     public List<CategoryPredictor.CategoryPrediction> getExpenseCategorySuggestion(User currentUser, ZoneId timeZone, Double latitude, Double longitude) throws ExecutionException, InterruptedException {
-        var expenses = expenseDaoJooq.getWhere(currentUser, EXPENSE.TIMESTAMP.gt(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 90), EXPENSE.TYPE.eq(1)); // get the last 6 months of expenses
+        // we only select expenses that have been created on the spot and not back dated, backdated expenses will have a time of 00:00 of the user's timezone
+        long oneMinute = 1000 * 60L;
+        var expenses = expenseDaoJooq.getWhere(currentUser, new OrderField[]{EXPENSE.ID.desc()},EXPENSE.TIMESTAMP.gt(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 90), EXPENSE.TYPE.eq(1), EXPENSE.TIMESTAMP.minus(EXPENSE.TIMECREATED)
+                .between(-oneMinute, oneMinute)); // get the last 6 months of expenses
 
         CategoryPredictor categoryPredictor = new CategoryPredictor();
         categoryPredictor.train(expenses, timeZone);

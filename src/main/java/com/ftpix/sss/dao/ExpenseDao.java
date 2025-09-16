@@ -66,6 +66,11 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
         return dslContext.select().from(EXPENSE).fetch(r -> fromRecord((ExpenseRecord) r, categoriesById));
     }
 
+    @Override
+    public Expense insert(User user, Expense object) {
+        object.setTimeCreated(System.currentTimeMillis());
+        return UserCategoryBasedDao.super.insert(user, object);
+    }
 
     /**
      * Gets available months of expenses
@@ -115,6 +120,7 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
         e.setTime(r.getTime());
         e.setTimestamp(r.getTimestamp());
         e.setNote(r.getNote());
+        e.setTimeCreated(r.getTimecreated());
         return e;
     }
 
@@ -160,6 +166,7 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
         }
         r.setTimestamp(o.getTimestamp());
         r.setNote(o.getNote());
+        r.setTimecreated(o.getTimeCreated());
         return r;
     }
 
