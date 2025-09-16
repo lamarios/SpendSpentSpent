@@ -32,7 +32,7 @@ new expense as easy and as quick as possible. The application features are split
 | DB_PATH              | (none)  | **Yes**  | A full postgres [JDBC connection url](https://www.codejava.net/java-se/jdbc/jdbc-database-connection-url-for-common-databases). Example: `jdbc:postgresql://localhost:5432/sss` |
 | DB_USER              | (none)  | **Yes**  |                                                                                                                                                                                 | 
 | DB_PASSWORD          | (none)  | **Yes**  |                                                                                                                                                                                 | 
-| TIMEZONE             | (none)  | **Yes**  | The timezone of the server (ex: Europe/Paris)                                                                                                                                   |
+| TIMEZONE             | (none)  | **Yes**  | The timezone of the server (ex: Europe/Paris) from the [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)                                                                                                          |
 | ALLOW_SIGNUP         | 0       | No       | 1 = allow signups, 0 = Do not allow signups                                                                                                                                     |
 | ANNOUNCEMENT_MESSAGE | (none)  | No       | Show a message on the login screen, ex: ANNOUNCEMENT_MESSAGE="Welcome to my SpendSpentSpent instance". See demo instance to see what it looks like                              |
 | FILES_PATH           | ./files | No       | Where to store the pictures uploaded by the users                                                                                                                               |
@@ -116,6 +116,7 @@ With docker compose:
      POSTGRES_PASSWORD: postgres
      POSTGRES_USER: postgres
      POSTGRES_DB: sss
+     TIMEZONE: Europe/Paris
    volumes:
      - ./sss/db:/var/lib/postgresql/data
 ```
