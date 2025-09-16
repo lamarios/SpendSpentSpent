@@ -6,16 +6,23 @@ package com.ftpix.sss.dsl.tables;
 
 import com.ftpix.sss.dsl.Keys;
 import com.ftpix.sss.dsl.PUBLIC;
+import com.ftpix.sss.dsl.tables.Category.CategoryPath;
 import com.ftpix.sss.dsl.tables.records.RecurringExpenseRecord;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.InverseForeignKey;
 import org.jooq.Name;
+import org.jooq.Path;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
+import org.jooq.Record;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
@@ -124,6 +131,39 @@ public class RecurringExpense extends TableImpl<RecurringExpenseRecord> {
         this(DSL.name("recurring_expense"), null);
     }
 
+    public <O extends Record> RecurringExpense(Table<O> path, ForeignKey<O, RecurringExpenseRecord> childPath, InverseForeignKey<O, RecurringExpenseRecord> parentPath) {
+        super(path, childPath, parentPath, RECURRING_EXPENSE);
+    }
+
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    public static class RecurringExpensePath extends RecurringExpense implements Path<RecurringExpenseRecord> {
+
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> RecurringExpensePath(Table<O> path, ForeignKey<O, RecurringExpenseRecord> childPath, InverseForeignKey<O, RecurringExpenseRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private RecurringExpensePath(Name alias, Table<RecurringExpenseRecord> aliased) {
+            super(alias, aliased);
+        }
+
+        @Override
+        public RecurringExpensePath as(String alias) {
+            return new RecurringExpensePath(DSL.name(alias), this);
+        }
+
+        @Override
+        public RecurringExpensePath as(Name alias) {
+            return new RecurringExpensePath(alias, this);
+        }
+
+        @Override
+        public RecurringExpensePath as(Table<?> alias) {
+            return new RecurringExpensePath(alias.getQualifiedName(), this);
+        }
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : PUBLIC.PUBLIC;
@@ -137,6 +177,23 @@ public class RecurringExpense extends TableImpl<RecurringExpenseRecord> {
     @Override
     public UniqueKey<RecurringExpenseRecord> getPrimaryKey() {
         return Keys.RECURRING_EXPENSE_PKEY;
+    }
+
+    @Override
+    public List<ForeignKey<RecurringExpenseRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.RECURRING_EXPENSE__FK_RECURRING_EXPENSE_CATEGORY);
+    }
+
+    private transient CategoryPath _category;
+
+    /**
+     * Get the implicit join path to the <code>public.category</code> table.
+     */
+    public CategoryPath category() {
+        if (_category == null)
+            _category = new CategoryPath(this, Keys.RECURRING_EXPENSE__FK_RECURRING_EXPENSE_CATEGORY, null);
+
+        return _category;
     }
 
     @Override

@@ -4,17 +4,22 @@
 package com.ftpix.sss.dsl.tables;
 
 
+import com.ftpix.sss.dsl.Indexes;
 import com.ftpix.sss.dsl.Keys;
 import com.ftpix.sss.dsl.PUBLIC;
+import com.ftpix.sss.dsl.tables.Category.CategoryPath;
 import com.ftpix.sss.dsl.tables.Files.FilesPath;
 import com.ftpix.sss.dsl.tables.records.ExpenseRecord;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.Index;
 import org.jooq.InverseForeignKey;
 import org.jooq.Name;
 import org.jooq.Path;
@@ -110,6 +115,11 @@ public class Expense extends TableImpl<ExpenseRecord> {
      */
     public final TableField<ExpenseRecord, Long> TIMESTAMP = createField(DSL.name("timestamp"), SQLDataType.BIGINT, this, "");
 
+    /**
+     * The column <code>public.expense.timecreated</code>.
+     */
+    public final TableField<ExpenseRecord, Long> TIMECREATED = createField(DSL.name("timecreated"), SQLDataType.BIGINT, this, "");
+
     private Expense(Name alias, Table<ExpenseRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }
@@ -178,6 +188,11 @@ public class Expense extends TableImpl<ExpenseRecord> {
     }
 
     @Override
+    public List<Index> getIndexes() {
+        return Arrays.asList(Indexes.EXPENSE_CATEGORY_TIME);
+    }
+
+    @Override
     public Identity<ExpenseRecord, Long> getIdentity() {
         return (Identity<ExpenseRecord, Long>) super.getIdentity();
     }
@@ -185,6 +200,23 @@ public class Expense extends TableImpl<ExpenseRecord> {
     @Override
     public UniqueKey<ExpenseRecord> getPrimaryKey() {
         return Keys.EXPENSE_PKEY;
+    }
+
+    @Override
+    public List<ForeignKey<ExpenseRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.EXPENSE__FK_EXPENSE_CATEGORY);
+    }
+
+    private transient CategoryPath _category;
+
+    /**
+     * Get the implicit join path to the <code>public.category</code> table.
+     */
+    public CategoryPath category() {
+        if (_category == null)
+            _category = new CategoryPath(this, Keys.EXPENSE__FK_EXPENSE_CATEGORY, null);
+
+        return _category;
     }
 
     private transient FilesPath _files;

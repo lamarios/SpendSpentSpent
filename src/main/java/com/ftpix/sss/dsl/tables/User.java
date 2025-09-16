@@ -6,6 +6,7 @@ package com.ftpix.sss.dsl.tables;
 
 import com.ftpix.sss.dsl.Keys;
 import com.ftpix.sss.dsl.PUBLIC;
+import com.ftpix.sss.dsl.tables.Category.CategoryPath;
 import com.ftpix.sss.dsl.tables.Files.FilesPath;
 import com.ftpix.sss.dsl.tables.records.UserRecord;
 
@@ -176,6 +177,19 @@ public class User extends TableImpl<UserRecord> {
     @Override
     public List<UniqueKey<UserRecord>> getUniqueKeys() {
         return Arrays.asList(Keys.USER_EMAIL_KEY);
+    }
+
+    private transient CategoryPath _category;
+
+    /**
+     * Get the implicit to-many join path to the <code>public.category</code>
+     * table
+     */
+    public CategoryPath category() {
+        if (_category == null)
+            _category = new CategoryPath(this, null, Keys.CATEGORY__FK_CATEGORY_USER.getInverseKey());
+
+        return _category;
     }
 
     private transient FilesPath _files;

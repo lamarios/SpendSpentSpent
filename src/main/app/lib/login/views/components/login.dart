@@ -94,14 +94,14 @@ class Login extends StatelessWidget {
                         child: AnimatedSwitcher(
                           duration: panelTransition,
                           child:
-                              state.error != null &&
+                              state.error == null &&
                                   state.page == LoginPage.signUp
                               ? SignUp(
                                   key: ValueKey(state.page),
                                   onBack: () => cubit.signUp(false),
                                   server: cubit.urlController.text.trim(),
                                 )
-                              : state.error != null &&
+                              : state.error == null &&
                                     state.page == LoginPage.resetPassword
                               ? ResetPassword(
                                   onBack: () => cubit.resetPassword(false),

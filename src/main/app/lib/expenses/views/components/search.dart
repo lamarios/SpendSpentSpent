@@ -23,7 +23,7 @@ class Search extends StatelessWidget {
     final cubit = context.read<SearchCubit>();
     final dates = await showDateRangePicker(
       context: context,
-      saveText: 'Set',
+      saveText: 'Search',
       firstDate: DateTime.fromMillisecondsSinceEpoch(
         cubit.state.searchParametersBounds.minDate ?? 0,
       ),

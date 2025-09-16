@@ -6,16 +6,27 @@ package com.ftpix.sss.dsl.tables;
 
 import com.ftpix.sss.dsl.Keys;
 import com.ftpix.sss.dsl.PUBLIC;
+import com.ftpix.sss.dsl.tables.Expense.ExpensePath;
+import com.ftpix.sss.dsl.tables.MonthlyHistory.MonthlyHistoryPath;
+import com.ftpix.sss.dsl.tables.RecurringExpense.RecurringExpensePath;
+import com.ftpix.sss.dsl.tables.User.UserPath;
+import com.ftpix.sss.dsl.tables.YearlyHistory.YearlyHistoryPath;
 import com.ftpix.sss.dsl.tables.records.CategoryRecord;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.ForeignKey;
 import org.jooq.Identity;
+import org.jooq.InverseForeignKey;
 import org.jooq.Name;
+import org.jooq.Path;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
+import org.jooq.Record;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
@@ -99,6 +110,39 @@ public class Category extends TableImpl<CategoryRecord> {
         this(DSL.name("category"), null);
     }
 
+    public <O extends Record> Category(Table<O> path, ForeignKey<O, CategoryRecord> childPath, InverseForeignKey<O, CategoryRecord> parentPath) {
+        super(path, childPath, parentPath, CATEGORY);
+    }
+
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    public static class CategoryPath extends Category implements Path<CategoryRecord> {
+
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> CategoryPath(Table<O> path, ForeignKey<O, CategoryRecord> childPath, InverseForeignKey<O, CategoryRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private CategoryPath(Name alias, Table<CategoryRecord> aliased) {
+            super(alias, aliased);
+        }
+
+        @Override
+        public CategoryPath as(String alias) {
+            return new CategoryPath(DSL.name(alias), this);
+        }
+
+        @Override
+        public CategoryPath as(Name alias) {
+            return new CategoryPath(alias, this);
+        }
+
+        @Override
+        public CategoryPath as(Table<?> alias) {
+            return new CategoryPath(alias.getQualifiedName(), this);
+        }
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : PUBLIC.PUBLIC;
@@ -112,6 +156,75 @@ public class Category extends TableImpl<CategoryRecord> {
     @Override
     public UniqueKey<CategoryRecord> getPrimaryKey() {
         return Keys.CATEGORY_PKEY;
+    }
+
+    @Override
+    public List<ForeignKey<CategoryRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.CATEGORY__FK_CATEGORY_USER);
+    }
+
+    private transient UserPath _user;
+
+    /**
+     * Get the implicit join path to the <code>public.user</code> table.
+     */
+    public UserPath user() {
+        if (_user == null)
+            _user = new UserPath(this, Keys.CATEGORY__FK_CATEGORY_USER, null);
+
+        return _user;
+    }
+
+    private transient ExpensePath _expense;
+
+    /**
+     * Get the implicit to-many join path to the <code>public.expense</code>
+     * table
+     */
+    public ExpensePath expense() {
+        if (_expense == null)
+            _expense = new ExpensePath(this, null, Keys.EXPENSE__FK_EXPENSE_CATEGORY.getInverseKey());
+
+        return _expense;
+    }
+
+    private transient MonthlyHistoryPath _monthlyHistory;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>public.monthly_history</code> table
+     */
+    public MonthlyHistoryPath monthlyHistory() {
+        if (_monthlyHistory == null)
+            _monthlyHistory = new MonthlyHistoryPath(this, null, Keys.MONTHLY_HISTORY__FK_MONTHLY_HISTORY_CATEGORY.getInverseKey());
+
+        return _monthlyHistory;
+    }
+
+    private transient RecurringExpensePath _recurringExpense;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>public.recurring_expense</code> table
+     */
+    public RecurringExpensePath recurringExpense() {
+        if (_recurringExpense == null)
+            _recurringExpense = new RecurringExpensePath(this, null, Keys.RECURRING_EXPENSE__FK_RECURRING_EXPENSE_CATEGORY.getInverseKey());
+
+        return _recurringExpense;
+    }
+
+    private transient YearlyHistoryPath _yearlyHistory;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>public.yearly_history</code> table
+     */
+    public YearlyHistoryPath yearlyHistory() {
+        if (_yearlyHistory == null)
+            _yearlyHistory = new YearlyHistoryPath(this, null, Keys.YEARLY_HISTORY__FK_YEARLY_HISTORY_CATEGORY.getInverseKey());
+
+        return _yearlyHistory;
     }
 
     @Override

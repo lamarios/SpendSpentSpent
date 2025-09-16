@@ -4,6 +4,7 @@
 package com.ftpix.sss.dsl;
 
 
+import com.ftpix.sss.dsl.tables.Expense;
 import com.ftpix.sss.dsl.tables.FlywaySchemaHistory;
 import com.ftpix.sss.dsl.tables.MonthlyHistory;
 import com.ftpix.sss.dsl.tables.YearlyHistory;
@@ -24,6 +25,7 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
+    public static final Index EXPENSE_CATEGORY_TIME = Internal.createIndex(DSL.name("expense_category_time"), Expense.EXPENSE, new OrderField[] { Expense.EXPENSE.CATEGORY_ID, Expense.EXPENSE.TIMESTAMP }, false);
     public static final Index FLYWAY_SCHEMA_HISTORY_S_IDX = Internal.createIndex(DSL.name("flyway_schema_history_s_idx"), FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, new OrderField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.SUCCESS }, false);
     public static final Index MONTHLY_HISTORY_DATE_IDX = Internal.createIndex(DSL.name("monthly_history_date_idx"), MonthlyHistory.MONTHLY_HISTORY, new OrderField[] { MonthlyHistory.MONTHLY_HISTORY.DATE }, false);
     public static final Index MONTHLY_HISTORY_UNIQUE_IDX = Internal.createIndex(DSL.name("monthly_history_unique_idx"), MonthlyHistory.MONTHLY_HISTORY, new OrderField[] { MonthlyHistory.MONTHLY_HISTORY.CATEGORY_ID, MonthlyHistory.MONTHLY_HISTORY.DATE }, true);

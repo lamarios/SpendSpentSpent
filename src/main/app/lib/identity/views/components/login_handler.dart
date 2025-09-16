@@ -19,7 +19,7 @@ class LoginHandler extends StatelessWidget {
               previous.token != current.token && current.token != null,
           listener: (context, state) async {
             if (context.mounted) {
-              context.read<CategoriesCubit>().getCategories();
+              context.read<CategoriesCubit>().getCategories(true);
               AutoRouter.of(context).replaceAll([const HomeRoute()]);
             }
           },
