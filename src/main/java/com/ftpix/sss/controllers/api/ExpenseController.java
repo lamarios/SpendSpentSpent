@@ -4,20 +4,25 @@ import com.ftpix.sss.models.*;
 import com.ftpix.sss.services.ExpenseService;
 import com.ftpix.sss.services.UserService;
 import com.ftpix.sss.utils.CategoryPredictor;
+import com.ftpix.sss.utils.DateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import static com.ftpix.sss.Constants.TIMEZONE_HEADER;
 
 @RestController
 @RequestMapping("/API/Expense")
@@ -27,11 +32,13 @@ public class ExpenseController {
     protected final Log logger = LogFactory.getLog(this.getClass());
     private final UserService userService;
     private final ExpenseService expenseService;
+    private final ZoneId zoneId;
 
     @Autowired
-    public ExpenseController(UserService userService, ExpenseService expenseService) {
+    public ExpenseController(UserService userService, ExpenseService expenseService, ZoneId zoneId) {
         this.userService = userService;
         this.expenseService = expenseService;
+        this.zoneId = zoneId;
     }
 
     /**
@@ -70,9 +77,10 @@ public class ExpenseController {
      */
     @GetMapping(value = "/ByDay")
     @ApiOperation("Gets the expenses of a given month day by day")
-    public Map<String, DailyExpense> getByDay(@ApiParam("Given month, format yyyy-mm ex: 2020-03") @RequestParam String month) throws Exception {
+    public Map<String, DailyExpense> getByDay(@ApiParam("Given month, format yyyy-mm ex: 2020-03") @RequestParam String month,  @RequestHeader(value = TIMEZONE_HEADER, defaultValue = "") String zoneId) throws Exception {
         final User currentUser = userService.getCurrentUser();
-        return expenseService.getByDay(month, currentUser);
+
+        return expenseService.getByDay(month, currentUser, DateUtils.parseZoneId(zoneId, this.zoneId));
     }
 
 
@@ -82,9 +90,9 @@ public class ExpenseController {
      * @return
      */
     @GetMapping("/GetMonths")
-    public List<String> getMonths() throws Exception {
+    public List<String> getMonths(@RequestHeader(value = TIMEZONE_HEADER, defaultValue = "") String zone) throws Exception {
         final User currentUser = userService.getCurrentUser();
-        return expenseService.getMonths(currentUser);
+        return expenseService.getMonths(currentUser, DateUtils.parseZoneId(zone, zoneId));
     }
 
 
@@ -144,14 +152,16 @@ public class ExpenseController {
     }
 
     @GetMapping("/diff/{current-day}")
-    public double getDiffWithPreviousPeriod(@PathVariable("current-day") String currentDay,  @RequestParam(value = "include-recurring", defaultValue = "true") boolean includeRecurring) throws SQLException {
+    public double getDiffWithPreviousPeriod(@PathVariable("current-day") String currentDay, @RequestParam(value = "include-recurring", defaultValue = "true") boolean includeRecurring, @DefaultValue("") @RequestHeader(TIMEZONE_HEADER) String timeZone) throws SQLException {
+
         var currentUser = userService.getCurrentUser();
-        return expenseService.diffWithPreviousPeriod(currentUser, currentDay, includeRecurring);
+        return expenseService.diffWithPreviousPeriod(currentUser, currentDay, includeRecurring, DateUtils.parseZoneId(timeZone, this.zoneId));
     }
 
     @GetMapping("/suggest")
-    public List<CategoryPredictor.CategoryPrediction> suggestCategory(@RequestParam("timezone") String timeZone, @RequestParam(value = "latitude", required = false) Double latitude, @RequestParam(value = "longitude",required = false) Double longitude) throws SQLException, ExecutionException, InterruptedException {
+    public List<CategoryPredictor.CategoryPrediction> suggestCategory( @RequestHeader(value = TIMEZONE_HEADER, defaultValue = "") String timeZone, @RequestParam(value = "latitude", required = false) Double latitude, @RequestParam(value = "longitude", required = false) Double longitude) throws SQLException, ExecutionException, InterruptedException {
         var currentUser = userService.getCurrentUser();
-        return expenseService.getExpenseCategorySuggestion(currentUser, timeZone, latitude, longitude);
+        return expenseService.getExpenseCategorySuggestion(currentUser, DateUtils.parseZoneId(timeZone, zoneId), latitude, longitude);
     }
+
 }

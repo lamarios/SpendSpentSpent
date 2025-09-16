@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
 import java.sql.SQLException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +92,7 @@ public class SearchControllerTest extends TestContainerTest {
     }
 
     private List<Expense> search(SearchParameters params) throws SQLException {
-        var results = searchController.search(params);
+        var results = searchController.search(params, ZoneId.systemDefault().toString());
 
         // firstExpense
         return results.get(results.keySet().stream().findFirst().get()).getExpenses();

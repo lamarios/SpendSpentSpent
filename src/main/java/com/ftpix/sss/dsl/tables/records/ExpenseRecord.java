@@ -172,6 +172,20 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> {
         return (Long) get(10);
     }
 
+    /**
+     * Setter for <code>public.expense.timecreated</code>.
+     */
+    public void setTimecreated(Long value) {
+        set(11, value);
+    }
+
+    /**
+     * Getter for <code>public.expense.timecreated</code>.
+     */
+    public Long getTimecreated() {
+        return (Long) get(11);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -195,7 +209,7 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> {
     /**
      * Create a detached, initialised ExpenseRecord
      */
-    public ExpenseRecord(Long id, Double amount, Long categoryId, String date, Integer type, Integer income, Double latitude, Double longitude, String note, String time, Long timestamp) {
+    public ExpenseRecord(Long id, Double amount, Long categoryId, String date, Integer type, Integer income, Double latitude, Double longitude, String note, String time, Long timestamp, Long timecreated) {
         super(Expense.EXPENSE);
 
         setId(id);
@@ -209,6 +223,7 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> {
         setNote(note);
         setTime(time);
         setTimestamp(timestamp);
+        setTimecreated(timecreated);
         resetTouchedOnNotNull();
     }
 }

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,22 +12,22 @@ import 'package:spend_spent_spent/add_expense_dialog/models/category_guess_resul
 import 'package:spend_spent_spent/categories/models/available_categories.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:spend_spent_spent/expenses/models/category_prediction.dart';
-import 'package:spend_spent_spent/expenses/models/sss_file.dart';
-import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
+import 'package:spend_spent_spent/expenses/models/search_parameters.dart';
+import 'package:spend_spent_spent/expenses/models/sss_file.dart';
+import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/identity/states/username_password.dart';
+import 'package:spend_spent_spent/settings/models/settings.dart';
 import 'package:spend_spent_spent/stats/models/graph_data_point.dart';
 import 'package:spend_spent_spent/utils/models/paginatedResults.dart';
-import 'package:spend_spent_spent/expenses/models/search_parameters.dart';
-import 'package:spend_spent_spent/settings/models/settings.dart';
 import 'package:spend_spent_spent/utils/models/token_type.dart';
 
-import 'settings/models/config.dart';
 import 'expenses/models/expense_limits.dart';
 import 'expenses/models/search_categories.dart';
-import 'settings/models/user.dart';
 import 'recurring_expenses/models/recurring_expense.dart';
+import 'settings/models/config.dart';
+import 'settings/models/user.dart';
 import 'stats/models/left_column_stats.dart';
 import 'utils/models/exceptions/BackendNeedUpgradeException.dart';
 import 'utils/models/exceptions/NeedUpgradeException.dart';
@@ -91,6 +93,7 @@ class Service {
   String url = "";
 
   String? version;
+  String? timezone;
 
   Future<Map<String, String>> get headers async {
     var headers = {'Content-Type': 'application/json'};
@@ -104,6 +107,9 @@ class Service {
     if (version != null) {
       headers['x-version'] = version!;
     }
+
+    headers['x-timezone'] =
+        timezone ?? await FlutterTimezone.getLocalTimezone();
 
     return headers;
   }
@@ -832,6 +838,19 @@ class Service {
     return List<CategoryPrediction>.from(
       i.map((e) => CategoryPrediction.fromJson(e)),
     );
+  }
+
+  Future<Uint8List> downloadSearchCsv(SearchParameters parameters) async {
+    final uri = await formatUrl('${API_URL}/Search/csv');
+
+    final response = await http.post(
+      uri,
+      headers: await headers,
+      body: jsonEncode(parameters),
+    );
+    processResponse(response);
+
+    return response.bodyBytes;
   }
 
   void processResponse(Response response) {

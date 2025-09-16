@@ -33,6 +33,7 @@ public class Expense implements HasCategory {
     private String time;
 
     private long timestamp = System.currentTimeMillis();
+    private Long timeCreated;
 
     private List<SSSFile> files = new ArrayList<>();
 
@@ -53,10 +54,12 @@ public class Expense implements HasCategory {
         this.amount = amount;
     }
 
+    @Deprecated
     public LocalDate getDate() {
         return date;
     }
 
+    @Deprecated
     public void setDate(LocalDate date) {
         this.date = date;
     }
@@ -103,10 +106,12 @@ public class Expense implements HasCategory {
         this.longitude = longitude;
     }
 
+    @Deprecated
     public String getTime() {
         return time;
     }
 
+    @Deprecated
     public void setTime(String time) {
         this.time = time;
     }
@@ -133,5 +138,13 @@ public class Expense implements HasCategory {
 
     public void setFiles(List<SSSFile> files) {
         this.files = files;
+    }
+
+    public Long getTimeCreated() {
+        return timeCreated;
+    }
+
+    public void setTimeCreated(Long timeCreated) {
+        this.timeCreated = timeCreated;
     }
 }

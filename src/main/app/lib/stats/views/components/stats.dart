@@ -22,7 +22,7 @@ class StatsView extends StatelessWidget {
       create: (context) =>
           StatsListCubit(const StatsListState(), monthly: monthly),
       child: DataChangeMonitor(
-        onChange: (context) => context.read<StatsListCubit>().getStats(),
+        onChange: (context) => context.read<StatsListCubit>().getStats(false),
         child: ErrorHandler<StatsListCubit, StatsListState>(
           child: BlocBuilder<StatsListCubit, StatsListState>(
             builder: (context, state) {

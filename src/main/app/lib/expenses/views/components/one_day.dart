@@ -27,7 +27,7 @@ class OneDay extends StatelessWidget {
         .reduce((value, element) => value + element);
 
     List<Expense> expenses = List.from(expense.expenses);
-    expenses.sort((a, b) => (b.timestamp ?? 0).compareTo(a.timestamp ?? 0));
+    expenses.sort((a, b) => (b.timestamp).compareTo(a.timestamp));
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15),
@@ -40,7 +40,7 @@ class OneDay extends StatelessWidget {
             children: expenses
                 .map(
                   (e) => OneExpense(
-                    key: Key(e.id.toString()),
+                    key: ValueKey(e.id),
                     expense: e,
                     showExpense: showExpense,
                   ),

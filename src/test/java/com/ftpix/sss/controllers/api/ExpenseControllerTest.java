@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static com.ftpix.sss.Constants.dateFormatter;
@@ -51,6 +53,9 @@ public class ExpenseControllerTest extends TestContainerTest {
 
         exp.setCategory(cat);
         exp.setDate(LocalDate.parse(date, dateFormatter));
+
+        ZonedDateTime timestamp = exp.getDate().atStartOfDay(ZoneId.systemDefault());
+        exp.setTimestamp(timestamp.toInstant().toEpochMilli());
 
         exp.setIncome(income);
         exp.setType(expenseType);
@@ -99,24 +104,6 @@ public class ExpenseControllerTest extends TestContainerTest {
 
 
     @Test
-    public void testAddWithTime() throws Exception {
-        LocalDateTime today = LocalDateTime.now();
-
-        var cats = categoryDaoJooq.getWhere(currentUser);
-
-        Expense newExpense = create(10d, cats.get(0)
-                .getId(), dateFormatter.format(today), false, Expense.TYPE_NORMAL, 0, 0, "");
-        Expense newExpense2 = create(10d, cats.get(0).getId(), "2012-03-21", false, Expense.TYPE_NORMAL, 0, 0, "");
-
-        String properTime = String.format("%02d", today.getHour()) + ":" + String.format("%02d", today.getMinute());
-
-        assertEquals(properTime, newExpense.getTime());
-        assertNull(newExpense2.getTime());
-        assertNull(newExpense2.getTime());
-    }
-
-
-    @Test
     public void testCategoryByDay() throws Exception {
         var cats = categoryDaoJooq.getWhere(currentUser);
 
@@ -127,11 +114,11 @@ public class ExpenseControllerTest extends TestContainerTest {
         create(50d, cats.get(0).getId(), "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
 
 
-        assertEquals(2, expenseService.getMonths(currentUser).size());
-        assertTrue(expenseService.getMonths(currentUser).contains("2012-10"));
-        assertTrue(expenseService.getMonths(currentUser).contains("2012-12"));
+        assertEquals(2, expenseService.getMonths(currentUser, ZoneId.systemDefault()).size());
+        assertTrue(expenseService.getMonths(currentUser, ZoneId.systemDefault()).contains("2012-10"));
+        assertTrue(expenseService.getMonths(currentUser, ZoneId.systemDefault()).contains("2012-12"));
 
-        Map<String, DailyExpense> byDay = expenseService.getByDay("2012-12", currentUser);
+        Map<String, DailyExpense> byDay = expenseService.getByDay("2012-12", currentUser, ZoneId.systemDefault());
         //we only have 3 distinct days of expenses
         assertEquals(3, byDay.size());
         assertEquals(2, ((List) byDay.get("2012-12-24").getExpenses()).size());
@@ -194,11 +181,11 @@ public class ExpenseControllerTest extends TestContainerTest {
         create(20d, cats.get(0).getId(), "2024-12-16", false, Expense.TYPE_NORMAL, 0, 0, "");
         create(20d, cats.get(0).getId(), "2024-11-30", false, Expense.TYPE_NORMAL, 0, 0, "");
 
-        var diff = expenseService.diffWithPreviousPeriod(currentUser, "2025-01-15", true);
+        var diff = expenseService.diffWithPreviousPeriod(currentUser, "2025-01-15", true, ZoneId.systemDefault());
         assertEquals(0.25, diff);
 
         // now we exclude recurring expenses
-        diff = expenseService.diffWithPreviousPeriod(currentUser, "2025-01-15", false);
+        diff = expenseService.diffWithPreviousPeriod(currentUser, "2025-01-15", false, ZoneId.systemDefault());
         assertEquals(0.5, diff);
 
     }

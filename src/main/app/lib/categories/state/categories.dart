@@ -10,11 +10,11 @@ part 'categories.freezed.dart';
 
 class CategoriesCubit extends Cubit<CategoriesState> {
   CategoriesCubit(super.initialState) {
-    getCategories();
+    getCategories(true);
   }
 
-  getCategories() async {
-    emit(state.copyWith(loading: true));
+  getCategories(bool loading) async {
+    emit(state.copyWith(loading: loading));
     final categories = await service.getCategories();
     emit(state.copyWith(categories: categories, loading: false));
     final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
@@ -34,7 +34,7 @@ class CategoriesCubit extends Cubit<CategoriesState> {
 
   void addCategory(String selected) async {
     await service.addCategory(selected);
-    getCategories();
+    getCategories(false);
   }
 
   void reset() {

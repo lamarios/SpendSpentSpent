@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,14 +29,16 @@ public class BackgroundJob {
     private final RecurringExpenseDao recurringExpenseDaoJooq;
     private final UserService userService;
     private final EmailService emailService;
+    private final ZoneId zoneId;
 
     @Autowired
-    public BackgroundJob(RecurringExpenseService recurringExpenseService, ExpenseDao expenseDaoJooq, RecurringExpenseDao recurringExpenseDaoJooq, UserService userService, EmailService emailService) {
+    public BackgroundJob(RecurringExpenseService recurringExpenseService, ExpenseDao expenseDaoJooq, RecurringExpenseDao recurringExpenseDaoJooq, UserService userService, EmailService emailService, ZoneId zoneId) {
         this.recurringExpenseService = recurringExpenseService;
         this.expenseDaoJooq = expenseDaoJooq;
         this.recurringExpenseDaoJooq = recurringExpenseDaoJooq;
         this.userService = userService;
         this.emailService = emailService;
+        this.zoneId = zoneId;
     }
 
 
@@ -48,7 +51,8 @@ public class BackgroundJob {
             logger.info("{} Recurring expense process for user {}", recurringExpenses.size(), user.getId());
             for (RecurringExpense recurring : recurringExpenses) {
                 try {
-                    logger.info("Recurring payment: category[{}], amount[{}], lastOccurrence[{}], nextOccurence[{}]", recurring.getCategory().getIcon(), recurring.getAmount(),
+                    logger.info("Recurring payment: category[{}], amount[{}], lastOccurrence[{}], nextOccurence[{}]", recurring.getCategory()
+                                    .getIcon(), recurring.getAmount(),
                             recurring.getLastOccurrence(), recurring.getNextOccurrence());
                     Expense expense = new Expense();
                     expense.setType(Expense.TYPE_RECURRENT);
@@ -56,6 +60,12 @@ public class BackgroundJob {
                     expense.setCategory(recurring.getCategory());
                     expense.setDate(recurring.getNextOccurrence());
                     expense.setIncome(false);
+                    expense.setTimestamp(recurring.getNextOccurrence()
+                            .atStartOfDay()
+                            .atZone(zoneId)
+                            .toInstant()
+                            .toEpochMilli());
+
 
                     if (recurring.getName() != null && recurring.getName().trim().length() > 0) {
                         expense.setNote(recurring.getName().trim());

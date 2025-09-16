@@ -7,6 +7,7 @@ package com.ftpix.sss.dsl.tables;
 import com.ftpix.sss.dsl.Indexes;
 import com.ftpix.sss.dsl.Keys;
 import com.ftpix.sss.dsl.PUBLIC;
+import com.ftpix.sss.dsl.tables.Category.CategoryPath;
 import com.ftpix.sss.dsl.tables.records.YearlyHistoryRecord;
 
 import java.util.Arrays;
@@ -15,10 +16,14 @@ import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.ForeignKey;
 import org.jooq.Index;
+import org.jooq.InverseForeignKey;
 import org.jooq.Name;
+import org.jooq.Path;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
+import org.jooq.Record;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
@@ -102,6 +107,39 @@ public class YearlyHistory extends TableImpl<YearlyHistoryRecord> {
         this(DSL.name("yearly_history"), null);
     }
 
+    public <O extends Record> YearlyHistory(Table<O> path, ForeignKey<O, YearlyHistoryRecord> childPath, InverseForeignKey<O, YearlyHistoryRecord> parentPath) {
+        super(path, childPath, parentPath, YEARLY_HISTORY);
+    }
+
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    public static class YearlyHistoryPath extends YearlyHistory implements Path<YearlyHistoryRecord> {
+
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> YearlyHistoryPath(Table<O> path, ForeignKey<O, YearlyHistoryRecord> childPath, InverseForeignKey<O, YearlyHistoryRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private YearlyHistoryPath(Name alias, Table<YearlyHistoryRecord> aliased) {
+            super(alias, aliased);
+        }
+
+        @Override
+        public YearlyHistoryPath as(String alias) {
+            return new YearlyHistoryPath(DSL.name(alias), this);
+        }
+
+        @Override
+        public YearlyHistoryPath as(Name alias) {
+            return new YearlyHistoryPath(alias, this);
+        }
+
+        @Override
+        public YearlyHistoryPath as(Table<?> alias) {
+            return new YearlyHistoryPath(alias.getQualifiedName(), this);
+        }
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : PUBLIC.PUBLIC;
@@ -115,6 +153,23 @@ public class YearlyHistory extends TableImpl<YearlyHistoryRecord> {
     @Override
     public UniqueKey<YearlyHistoryRecord> getPrimaryKey() {
         return Keys.YEARLY_HISTORY_PKEY;
+    }
+
+    @Override
+    public List<ForeignKey<YearlyHistoryRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.YEARLY_HISTORY__FK_YEARLY_HISTORY_CATEGORY);
+    }
+
+    private transient CategoryPath _category;
+
+    /**
+     * Get the implicit join path to the <code>public.category</code> table.
+     */
+    public CategoryPath category() {
+        if (_category == null)
+            _category = new CategoryPath(this, Keys.YEARLY_HISTORY__FK_YEARLY_HISTORY_CATEGORY, null);
+
+        return _category;
     }
 
     @Override

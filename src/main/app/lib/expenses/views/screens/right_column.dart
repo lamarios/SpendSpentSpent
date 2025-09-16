@@ -110,7 +110,8 @@ class RightColumnTab extends StatelessWidget {
     return BlocProvider(
       create: (context) => ExpenseListCubit(const ExpenseListState()),
       child: DataChangeMonitor(
-        onChange: (context) => context.read<ExpenseListCubit>().getMonths(),
+        onChange: (context) =>
+            context.read<ExpenseListCubit>().getMonths(false),
         child: BlocBuilder<ExpenseListCubit, ExpenseListState>(
           builder: (context, state) {
             final cubit = context.read<ExpenseListCubit>();

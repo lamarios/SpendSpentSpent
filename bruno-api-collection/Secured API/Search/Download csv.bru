@@ -1,0 +1,22 @@
+meta {
+  name: Download csv
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API}}/API/Search/csv
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    minAmount: 0,
+    maxAmount: 999999999
+  }
+}
+
+settings {
+  encodeUrl: true
+}

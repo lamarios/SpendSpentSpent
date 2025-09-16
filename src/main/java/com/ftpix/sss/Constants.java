@@ -7,6 +7,7 @@ public class Constants {
 
     public final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public final static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+    public final static String TIMEZONE_HEADER = "x-timezone";
 
     public static final String JSON = "application/json";
     public static final boolean ALLOW_SIGNUP = Optional.ofNullable(System.getenv("ALLOW_SIGNUP"))

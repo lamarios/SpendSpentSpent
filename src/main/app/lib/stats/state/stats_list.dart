@@ -12,11 +12,11 @@ class StatsListCubit extends Cubit<StatsListState> {
   final bool monthly;
 
   StatsListCubit(super.initialState, {required this.monthly}) {
-    getStats();
+    getStats(true);
   }
 
-  Future<void> getStats() async {
-    emit(state.copyWith(loading: true));
+  Future<void> getStats(bool loading) async {
+    emit(state.copyWith(loading: loading));
     try {
       List<LeftColumnStats> stats = [];
       if (monthly) {

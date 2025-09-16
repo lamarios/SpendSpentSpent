@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Expense {
 
- String get date; double get amount; double? get latitude; double? get longitude; String? get note; int get type; int? get timestamp; bool get income; Category get category; int? get id; List<SssFile> get files;
+@Deprecated("date is deprecated") String? get date; double get amount; double? get latitude; double? get longitude; String? get note; int get type; int get timestamp; bool get income; Category get category; int? get id; List<SssFile> get files;
 /// Create a copy of Expense
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ExpenseCopyWith<$Res>  {
   factory $ExpenseCopyWith(Expense value, $Res Function(Expense) _then) = _$ExpenseCopyWithImpl;
 @useResult
 $Res call({
- String date, double amount, double? latitude, double? longitude, String? note, int type, int? timestamp, bool income, Category category, int? id, List<SssFile> files
+@Deprecated("date is deprecated") String? date, double amount, double? latitude, double? longitude, String? note, int type, int timestamp, bool income, Category category, int? id, List<SssFile> files
 });
 
 
@@ -65,16 +65,16 @@ class _$ExpenseCopyWithImpl<$Res>
 
 /// Create a copy of Expense
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? amount = null,Object? latitude = freezed,Object? longitude = freezed,Object? note = freezed,Object? type = null,Object? timestamp = freezed,Object? income = null,Object? category = null,Object? id = freezed,Object? files = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? date = freezed,Object? amount = null,Object? latitude = freezed,Object? longitude = freezed,Object? note = freezed,Object? type = null,Object? timestamp = null,Object? income = null,Object? category = null,Object? id = freezed,Object? files = null,}) {
   return _then(_self.copyWith(
-date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+date: freezed == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as String?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as double,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
 as String?,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as int,timestamp: freezed == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
-as int?,income: null == income ? _self.income : income // ignore: cast_nullable_to_non_nullable
+as int,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
+as int,income: null == income ? _self.income : income // ignore: cast_nullable_to_non_nullable
 as bool,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as Category,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,files: null == files ? _self.files : files // ignore: cast_nullable_to_non_nullable
@@ -169,7 +169,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String date,  double amount,  double? latitude,  double? longitude,  String? note,  int type,  int? timestamp,  bool income,  Category category,  int? id,  List<SssFile> files)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@Deprecated("date is deprecated")  String? date,  double amount,  double? latitude,  double? longitude,  String? note,  int type,  int timestamp,  bool income,  Category category,  int? id,  List<SssFile> files)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Expense() when $default != null:
 return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.note,_that.type,_that.timestamp,_that.income,_that.category,_that.id,_that.files);case _:
@@ -190,7 +190,7 @@ return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.not
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String date,  double amount,  double? latitude,  double? longitude,  String? note,  int type,  int? timestamp,  bool income,  Category category,  int? id,  List<SssFile> files)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@Deprecated("date is deprecated")  String? date,  double amount,  double? latitude,  double? longitude,  String? note,  int type,  int timestamp,  bool income,  Category category,  int? id,  List<SssFile> files)  $default,) {final _that = this;
 switch (_that) {
 case _Expense():
 return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.note,_that.type,_that.timestamp,_that.income,_that.category,_that.id,_that.files);}
@@ -207,7 +207,7 @@ return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.not
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String date,  double amount,  double? latitude,  double? longitude,  String? note,  int type,  int? timestamp,  bool income,  Category category,  int? id,  List<SssFile> files)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@Deprecated("date is deprecated")  String? date,  double amount,  double? latitude,  double? longitude,  String? note,  int type,  int timestamp,  bool income,  Category category,  int? id,  List<SssFile> files)?  $default,) {final _that = this;
 switch (_that) {
 case _Expense() when $default != null:
 return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.note,_that.type,_that.timestamp,_that.income,_that.category,_that.id,_that.files);case _:
@@ -222,16 +222,16 @@ return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.not
 @JsonSerializable()
 
 class _Expense implements Expense {
-  const _Expense({required this.date, required this.amount, this.latitude, this.longitude, this.note, this.type = 1, this.timestamp, this.income = false, required this.category, this.id, final  List<SssFile> files = const []}): _files = files;
+  const _Expense({@Deprecated("date is deprecated") this.date, required this.amount, this.latitude, this.longitude, this.note, this.type = 1, required this.timestamp, this.income = false, required this.category, this.id, final  List<SssFile> files = const []}): _files = files;
   factory _Expense.fromJson(Map<String, dynamic> json) => _$ExpenseFromJson(json);
 
-@override final  String date;
+@override@Deprecated("date is deprecated") final  String? date;
 @override final  double amount;
 @override final  double? latitude;
 @override final  double? longitude;
 @override final  String? note;
 @override@JsonKey() final  int type;
-@override final  int? timestamp;
+@override final  int timestamp;
 @override@JsonKey() final  bool income;
 @override final  Category category;
 @override final  int? id;
@@ -276,7 +276,7 @@ abstract mixin class _$ExpenseCopyWith<$Res> implements $ExpenseCopyWith<$Res> {
   factory _$ExpenseCopyWith(_Expense value, $Res Function(_Expense) _then) = __$ExpenseCopyWithImpl;
 @override @useResult
 $Res call({
- String date, double amount, double? latitude, double? longitude, String? note, int type, int? timestamp, bool income, Category category, int? id, List<SssFile> files
+@Deprecated("date is deprecated") String? date, double amount, double? latitude, double? longitude, String? note, int type, int timestamp, bool income, Category category, int? id, List<SssFile> files
 });
 
 
@@ -293,16 +293,16 @@ class __$ExpenseCopyWithImpl<$Res>
 
 /// Create a copy of Expense
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? amount = null,Object? latitude = freezed,Object? longitude = freezed,Object? note = freezed,Object? type = null,Object? timestamp = freezed,Object? income = null,Object? category = null,Object? id = freezed,Object? files = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? date = freezed,Object? amount = null,Object? latitude = freezed,Object? longitude = freezed,Object? note = freezed,Object? type = null,Object? timestamp = null,Object? income = null,Object? category = null,Object? id = freezed,Object? files = null,}) {
   return _then(_Expense(
-date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+date: freezed == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as String?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as double,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
 as String?,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as int,timestamp: freezed == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
-as int?,income: null == income ? _self.income : income // ignore: cast_nullable_to_non_nullable
+as int,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
+as int,income: null == income ? _self.income : income // ignore: cast_nullable_to_non_nullable
 as bool,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as Category,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,files: null == files ? _self._files : files // ignore: cast_nullable_to_non_nullable

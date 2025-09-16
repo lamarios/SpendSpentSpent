@@ -51,6 +51,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
             amount: double.parse(valueToStr(value)),
             date: '2022-01-23',
             category: category ?? expense!.category,
+            timestamp: DateTime.now().millisecondsSinceEpoch,
           ),
         );
         List<String> results = suggestions.keys.toList(growable: false);
@@ -82,7 +83,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       emit(
         state.copyWith(
           files: expense!.files,
-          expenseDate: DateFormat(expenseDateFormat).parse(expense!.date),
+          expenseDate: DateTime.fromMillisecondsSinceEpoch(expense!.timestamp),
           value: formatCurrency(
             expense!.amount,
           ).replaceAll(".", "").replaceAll(",", ""),
@@ -188,6 +189,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       files: state.files,
       id: this.expense?.id,
       type: this.expense?.type ?? 1,
+      timestamp: state.expenseDate.millisecondsSinceEpoch,
     );
 
     //checking location

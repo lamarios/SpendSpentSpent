@@ -6,9 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
-import 'package:spend_spent_spent/expenses/models/expense.dart';
-import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/expenses/models/search_parameters.dart';
+import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/settings/views/screens/settings.dart';
 import 'package:spend_spent_spent/utils/models/with_error.dart';
 
@@ -18,11 +17,11 @@ final _log = Logger('ExpenseListCubit');
 
 class ExpenseListCubit extends Cubit<ExpenseListState> {
   ExpenseListCubit(super.initialState) {
-    getMonths();
+    getMonths(true);
   }
 
-  void getMonths() async {
-    emit(state.copyWith(loading: true));
+  void getMonths(bool loading) async {
+    emit(state.copyWith(loading: loading));
     List<String> months = await service.getExpensesMonths();
     String now = DateFormat("yyyy-MM").format(DateTime.now());
     int nowIndex = months.indexWhere((element) => element == now);
@@ -36,15 +35,17 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
 
       emit(state.copyWith(months: months, selected: selected));
 
-      getExpenses();
-      getDiff();
+      if (!state.searchMode) {
+        getExpenses(loading);
+        getDiff();
+      }
     }
   }
 
   void monthChanged(value) {
     if (!isClosed) {
       emit(state.copyWith(selected: value ?? ''));
-      getExpenses();
+      getExpenses(true);
       getDiff();
     }
   }
@@ -78,8 +79,8 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
     emit(state.copyWith(diffWithPreviousPeriod: diff));
   }
 
-  getExpenses() async {
-    emit(state.copyWith(loading: true));
+  getExpenses(bool loading) async {
+    emit(state.copyWith(loading: loading));
 
     try {
       var expenses = await service.getMonthExpenses(state.selected);
@@ -100,7 +101,7 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
     emit(state.copyWith(searchMode: !state.searchMode));
 
     if (!state.searchMode) {
-      getExpenses();
+      getExpenses(true);
       getDiff();
     } else {
       emit(

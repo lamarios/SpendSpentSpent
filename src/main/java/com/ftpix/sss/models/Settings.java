@@ -3,7 +3,7 @@ package com.ftpix.sss.models;
 import com.ftpix.sss.services.Encryption;
 
 public class Settings {
-    public static final String CURRENCY_API_KEY = "currencyApiKey", ALLOW_SIGNUP = "allowSignUp", DEMO_MODE = "demoMode", MOTD = "motd";
+    public static final String CURRENCY_API_KEY = "currencyApiKey", ALLOW_SIGNUP = "allowSignUp", DEMO_MODE = "demoMode", MOTD = "motd", TIMESTAMP_FIXED = "timestamps_fixed";
 
     private String name;
 

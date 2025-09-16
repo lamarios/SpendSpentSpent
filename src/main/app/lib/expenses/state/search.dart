@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:typed_data';
 
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class SearchCubit extends Cubit<SearchState> {
     getSearchParameters();
   }
 
-  updateRange(RangeValues range) {
+  void updateRange(RangeValues range) {
     emit(
       state.copyWith.searchParameters(
         minAmount: range.start.floor(),
@@ -30,7 +31,7 @@ class SearchCubit extends Cubit<SearchState> {
     triggerSearch();
   }
 
-  triggerSearch() {
+  void triggerSearch() {
     EasyDebounce.debounce(
       'expense-search',
       const Duration(milliseconds: 500),
@@ -38,13 +39,27 @@ class SearchCubit extends Cubit<SearchState> {
     );
   }
 
-  setNote() {
+  void setNote() {
     emit(state.copyWith.searchParameters(searchQuery: noteController.text));
 
     triggerSearch();
   }
 
-  selectCategory(Category c) {
+  void setDates(DateTimeRange<DateTime>? range) {
+    if (range != null) {
+      emit(
+        state.copyWith(
+          searchParameters: state.searchParameters.copyWith(
+            minDate: range.start.millisecondsSinceEpoch,
+            maxDate: range.end.millisecondsSinceEpoch,
+          ),
+        ),
+      );
+      triggerSearch();
+    }
+  }
+
+  void selectCategory(Category c) {
     List<Category> categories = List.from(state.searchParameters.categories);
     if (c.id == null) {
       categories = [];
@@ -58,12 +73,11 @@ class SearchCubit extends Cubit<SearchState> {
     print('selected category ${c.id}');
 
     emit(state.copyWith.searchParameters(categories: categories));
-    triggerSearch();
 
     getSearchParameters();
   }
 
-  getSearchParameters() {
+  void getSearchParameters() {
     int? categoryId;
     if (state.searchParameters.categories.isNotEmpty) {
       categoryId = state.searchParameters.categories[0].id;
@@ -77,16 +91,27 @@ class SearchCubit extends Cubit<SearchState> {
             maxAmount: value.maxAmount,
             minAmount: value.minAmount,
             searchQuery: state.searchParameters.searchQuery,
+            minDate:
+                state.searchParameters.minDate ??
+                DateTime.now().add(Duration(days: -7)).millisecondsSinceEpoch,
+            maxDate: state.searchParameters.maxDate ?? value.maxDate,
           ),
           searchParametersBounds: SearchParameters(
             categories: value.categories,
             maxAmount: value.maxAmount,
             minAmount: value.minAmount,
+            minDate: value.minDate,
+            maxDate: value.maxDate,
             searchQuery: "",
           ),
         ),
       );
     });
+    triggerSearch();
+  }
+
+  Future<Uint8List> downloadData() async {
+    return await service.downloadSearchCsv(state.searchParameters);
   }
 }
 

@@ -69,7 +69,7 @@ class CategorySettingsCubit extends Cubit<CategorySettingsState> {
         await service.deleteCategory(category.id!);
       }
 
-      categoriesCubit.getCategories();
+      categoriesCubit.getCategories(true);
     } catch (e, s) {
       emit(state.copyWith(error: e, stackTrace: s));
     }
