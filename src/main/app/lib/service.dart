@@ -104,9 +104,7 @@ class Service {
       headers['Authorization'] = token;
     }
 
-    if (version != null) {
-      headers['x-version'] = version!;
-    }
+    headers['x-version'] = version ?? (await getVersion()).toString();
 
     headers['x-timezone'] =
         timezone ?? await FlutterTimezone.getLocalTimezone();
@@ -139,7 +137,7 @@ class Service {
     // ugly but that should work
     if (appBuildVersion == null) {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      appBuildVersion = int.parse(packageInfo.buildNumber);
+      appBuildVersion = int.parse(packageInfo.buildNumber) % 1000;
       version = appBuildVersion!.toString();
       return appBuildVersion!;
     } else {

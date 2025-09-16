@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/service.dart';
 
 Service service = Service();
-const MIN_BACKEND_VERSION = 67;
+const MIN_BACKEND_VERSION = 118;
 final getIt = GetIt.instance;
 
 const BorderRadius defaultBorder = BorderRadius.all(Radius.circular(15));
