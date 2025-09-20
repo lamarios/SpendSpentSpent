@@ -27,6 +27,12 @@ public class HouseholdService {
     }
 
     public Household createHousehold(User user) {
+        var household = getCurrentHousehold(user);
+
+        if (household.isPresent()) {
+            return household.get();
+        }
+
         Household hs = new Household();
         hs.setId(UUID.randomUUID());
         HouseholdMember hm = new HouseholdMember();
@@ -87,8 +93,14 @@ public class HouseholdService {
         return null;
     }
 
-    public Household removeMember(User user, String memberId) {
-        return null;
+    public void removeMember(User user, User memberId) {
+        getCurrentHousehold(user)
+                .filter(hs -> isHouseholdAdmin(user, hs))
+                .flatMap(hs -> hs.getMembers()
+                        .stream()
+                        .filter(m -> m.getUser().getId().equals(memberId.getId()))
+                        .findFirst())
+                .ifPresent(membership -> householdDao.getHouseholdMemberDao().delete(membership));
     }
 
     public boolean deleteHousehold(User user, String householdId) {
@@ -150,5 +162,17 @@ public class HouseholdService {
                     });
         }
 
+    }
+
+    public void setColor(User currentUser, HouseholdColor householdColor) {
+        getCurrentHousehold(currentUser)
+                .flatMap(household -> household.getMembers()
+                        .stream()
+                        .filter(householdMember -> householdMember.getUser().getId().equals(currentUser.getId()))
+                        .findFirst())
+                .ifPresent(householdMember -> {
+                    householdMember.setColors(householdColor);
+                    householdDao.getHouseholdMemberDao().update(householdMember);
+                });
     }
 }

@@ -77,6 +77,19 @@ public class HouseholdDao implements Dao<HouseholdRecord, Household> {
         return hh;
     }
 
+    public List<User> getHouseholdUsers(User user) {
+        Optional<Household> household = getUserHousehold(user);
+
+        List<User> users = new ArrayList<>();
+        if (household.isPresent()) {
+            household.get().getMembers().forEach(m -> users.add(m.getUser()));
+        } else {
+            users.add(user);
+        }
+
+        return users;
+    }
+
     @Override
     public HouseholdRecord setRecordData(HouseholdRecord householdRecord, Household object) {
         householdRecord.setId(object.getId().toString());

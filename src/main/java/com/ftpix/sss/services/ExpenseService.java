@@ -142,7 +142,7 @@ public class ExpenseService {
         ZonedDateTime from = zoned.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
         ZonedDateTime to = zoned.with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59);
 
-        Map<String, List<Expense>> grouped = expenseDaoJooq.getWhere(user, EXPENSE.TIMESTAMP.ge(from.toInstant()
+        Map<String, List<Expense>> grouped = expenseDaoJooq.getFromHouseholdWhere(user, expenseDao.getDefaultOrderBy(), EXPENSE.TIMESTAMP.ge(from.toInstant()
                         .toEpochMilli()).and(EXPENSE.TIMESTAMP.le(to.toInstant().toEpochMilli())))
                 .stream()
                 .collect(Collectors.groupingBy(expense -> Constants.dateFormatter.format(DateUtils.fromTimestamp(expense.getTimestamp(), zone))));
@@ -262,7 +262,7 @@ public class ExpenseService {
 
         ZonedDateTime end = date;
 
-        var currentSum = expenseDaoJooq.getFromTo(user, start.toInstant().toEpochMilli(), end.toInstant()
+        var currentSum = expenseDaoJooq.getFromTo(user, true, start.toInstant().toEpochMilli(), end.toInstant()
                         .toEpochMilli(), includeRecurring)
                 .stream()
                 .mapToDouble(Expense::getAmount)
@@ -272,7 +272,7 @@ public class ExpenseService {
         end = end.minusMonths(1);
 
 
-        var previousSum = expenseDaoJooq.getFromTo(user, start.toInstant().toEpochMilli(), end.toInstant()
+        var previousSum = expenseDaoJooq.getFromTo(user, true, start.toInstant().toEpochMilli(), end.toInstant()
                         .toEpochMilli(), includeRecurring)
                 .stream()
                 .mapToDouble(Expense::getAmount)
@@ -287,7 +287,7 @@ public class ExpenseService {
     public List<CategoryPredictor.CategoryPrediction> getExpenseCategorySuggestion(User currentUser, ZoneId timeZone, Double latitude, Double longitude) throws ExecutionException, InterruptedException {
         // we only select expenses that have been created on the spot and not back dated, backdated expenses will have a time of 00:00 of the user's timezone
         long oneMinute = 1000 * 60L;
-        var expenses = expenseDaoJooq.getWhere(currentUser, new OrderField[]{EXPENSE.ID.desc()},EXPENSE.TIMESTAMP.gt(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 90), EXPENSE.TYPE.eq(1), EXPENSE.TIMESTAMP.minus(EXPENSE.TIMECREATED)
+        var expenses = expenseDaoJooq.getFromHouseholdWhere(currentUser, new OrderField[]{EXPENSE.ID.desc()}, EXPENSE.TIMESTAMP.gt(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 90), EXPENSE.TYPE.eq(1), EXPENSE.TIMESTAMP.minus(EXPENSE.TIMECREATED)
                 .between(-oneMinute, oneMinute)); // get the last 6 months of expenses
 
         CategoryPredictor categoryPredictor = new CategoryPredictor();

@@ -18,7 +18,7 @@ import static com.ftpix.sss.dsl.Tables.CATEGORY;
 import static com.ftpix.sss.dsl.Tables.MONTHLY_HISTORY;
 
 @Component("monthlyHistoryDaoJooq")
-public class MonthlyHistoryDao implements Dao<MonthlyHistoryRecord, MonthlyHistory>, UserCategoryBasedDao<MonthlyHistoryRecord, MonthlyHistory> {
+public class MonthlyHistoryDao implements Dao<MonthlyHistoryRecord, MonthlyHistory>, UserCategoryBasedDao<MonthlyHistoryRecord, MonthlyHistory>, HouseholdCategoryBaseDao<MonthlyHistoryRecord, MonthlyHistory> {
     private final DSLContext dslContext;
     private final List<DaoListener<MonthlyHistory>> listeners = new ArrayList<>();
     private final List<DaoUserListener<MonthlyHistory>> userListeners = new ArrayList<>();

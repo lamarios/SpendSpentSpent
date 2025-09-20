@@ -23,10 +23,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -36,15 +33,18 @@ import static com.ftpix.sss.dsl.Tables.FILES;
 import static org.jooq.impl.DSL.lower;
 
 @Component("expenseDaoJooq")
-public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> {
+public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense>, HouseholdCategoryBaseDao<ExpenseRecord, Expense> {
 
     private final DefaultDSLContext dslContext;
 
     private final List<DaoUserListener<Expense>> listeners = new ArrayList<>();
 
+    private final HouseholdDao householdDao;
+
     @Autowired
-    public ExpenseDao(DefaultDSLContext dslContext) {
+    public ExpenseDao(DefaultDSLContext dslContext, HouseholdDao householdDao) {
         this.dslContext = dslContext;
+        this.householdDao = householdDao;
     }
 
     public Optional<Expense> get(User user, long id) {
@@ -218,9 +218,9 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense> 
                 .fetch(EXPENSE.NOTE);
     }
 
-    public List<Expense> getFromTo(User user, long from, long to, boolean includeRecurring) {
+    public List<Expense> getFromTo(User user, boolean includeHousehold, long from, long to, boolean includeRecurring) {
 
-        Map<Long, Category> userCategories = getUserCategories(user);
+        Map<Long, Category> userCategories = includeHousehold ? getHouseholdCategories(user) : getUserCategories(user);
 
         var query = dslContext.select().from(EXPENSE).where(EXPENSE.TIMESTAMP.between(from, to));
 
