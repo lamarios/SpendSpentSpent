@@ -8,6 +8,7 @@ import com.ftpix.sss.dsl.Keys;
 import com.ftpix.sss.dsl.PUBLIC;
 import com.ftpix.sss.dsl.tables.Category.CategoryPath;
 import com.ftpix.sss.dsl.tables.Files.FilesPath;
+import com.ftpix.sss.dsl.tables.HouseholdMembers.HouseholdMembersPath;
 import com.ftpix.sss.dsl.tables.records.UserRecord;
 
 import java.util.Arrays;
@@ -190,6 +191,34 @@ public class User extends TableImpl<UserRecord> {
             _category = new CategoryPath(this, null, Keys.CATEGORY__FK_CATEGORY_USER.getInverseKey());
 
         return _category;
+    }
+
+    private transient HouseholdMembersPath _fkHouseholdInvitedBy;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>public.household_members</code> table, via the
+     * <code>fk_household_invited_by</code> key
+     */
+    public HouseholdMembersPath fkHouseholdInvitedBy() {
+        if (_fkHouseholdInvitedBy == null)
+            _fkHouseholdInvitedBy = new HouseholdMembersPath(this, null, Keys.HOUSEHOLD_MEMBERS__FK_HOUSEHOLD_INVITED_BY.getInverseKey());
+
+        return _fkHouseholdInvitedBy;
+    }
+
+    private transient HouseholdMembersPath _fkHouseholdUser;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>public.household_members</code> table, via the
+     * <code>fk_household_user</code> key
+     */
+    public HouseholdMembersPath fkHouseholdUser() {
+        if (_fkHouseholdUser == null)
+            _fkHouseholdUser = new HouseholdMembersPath(this, null, Keys.HOUSEHOLD_MEMBERS__FK_HOUSEHOLD_USER.getInverseKey());
+
+        return _fkHouseholdUser;
     }
 
     private transient FilesPath _files;
