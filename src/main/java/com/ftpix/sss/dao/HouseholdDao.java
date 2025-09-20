@@ -4,6 +4,9 @@ import com.ftpix.sss.dsl.Keys;
 import com.ftpix.sss.dsl.tables.records.HouseholdRecord;
 import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.Household;
+import com.ftpix.sss.models.HouseholdInviteStatus;
+import com.ftpix.sss.models.HouseholdMember;
+import com.ftpix.sss.models.User;
 import org.jooq.DSLContext;
 import org.jooq.OrderField;
 import org.jooq.impl.DefaultDSLContext;
@@ -13,9 +16,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.ftpix.sss.dsl.Tables.HOUSEHOLD;
+import static com.ftpix.sss.dsl.Tables.HOUSEHOLD_MEMBERS;
 
 @Component
 public class HouseholdDao implements Dao<HouseholdRecord, Household> {
@@ -28,6 +33,17 @@ public class HouseholdDao implements Dao<HouseholdRecord, Household> {
     public HouseholdDao(DefaultDSLContext dslContext) {
         this.dslContext = dslContext;
         this.householdMemberDao = new HouseholdMemberDao(dslContext);
+    }
+
+    @Override
+    public Household insert(Household hs) {
+        var newHs = Dao.super.insert(hs);
+        newHs.setMembers(new ArrayList<>());
+        for (HouseholdMember householdMember : hs.getMembers()) {
+            householdMember.setHousehold(newHs);
+            householdMemberDao.insert(householdMember);
+        }
+        return getOneWhere(HOUSEHOLD.ID.eq(newHs.getId().toString())).get();
     }
 
     @Override
@@ -70,5 +86,19 @@ public class HouseholdDao implements Dao<HouseholdRecord, Household> {
     @Override
     public OrderField[] getDefaultOrderBy() {
         return new OrderField[0];
+    }
+
+    public Optional<Household> getUserHousehold(User user) {
+        List<HouseholdMember> where = householdMemberDao.getWhere(HOUSEHOLD_MEMBERS.USER_ID.eq(user.getId()
+                .toString()), HOUSEHOLD_MEMBERS.STATUS.eq(HouseholdInviteStatus.accepted.name()));
+        return where
+                .stream()
+                .findFirst()
+                .flatMap(member -> getOneWhere(HOUSEHOLD.ID.eq(member.getHousehold().getId().toString())));
+
+    }
+
+    public HouseholdMemberDao getHouseholdMemberDao() {
+        return householdMemberDao;
     }
 }

@@ -5,6 +5,7 @@ import com.ftpix.sss.dsl.tables.HouseholdMembers;
 import com.ftpix.sss.dsl.tables.records.HouseholdMembersRecord;
 import com.ftpix.sss.dsl.tables.records.UserRecord;
 import com.ftpix.sss.listeners.DaoListener;
+import com.ftpix.sss.models.Household;
 import com.ftpix.sss.models.HouseholdColor;
 import com.ftpix.sss.models.HouseholdInviteStatus;
 import com.ftpix.sss.models.HouseholdMember;
@@ -54,10 +55,14 @@ public class HouseholdMemberDao implements Dao<HouseholdMembersRecord, Household
         hm.setAdmin(r.getAdmin());
         hm.setStatus(HouseholdInviteStatus.valueOf(r.getStatus()));
         hm.setColors(HouseholdColor.valueOf(r.getColor()));
-
+        Household hs = new Household();
+        hs.setId(UUID.fromString(r.getHouseholdId()));
+        hm.setHousehold(hs);
         UserDao userDao = new UserDao(getDsl());
-        hm.setInvitedBy(r.fetchParent(Keys.HOUSEHOLD_MEMBERS__FK_HOUSEHOLD_INVITED_BY)
-                .map(record -> userDao.fromRecord((UserRecord) record)));
+        if(r.getInvitedById() != null) {
+            hm.setInvitedBy(r.fetchParent(Keys.HOUSEHOLD_MEMBERS__FK_HOUSEHOLD_INVITED_BY)
+                    .map(record -> userDao.fromRecord((UserRecord) record)));
+        }
         hm.setUser(r.fetchParent(Keys.HOUSEHOLD_MEMBERS__FK_HOUSEHOLD_USER)
                 .map(record -> userDao.fromRecord((UserRecord) record)));
 
@@ -72,8 +77,9 @@ public class HouseholdMemberDao implements Dao<HouseholdMembersRecord, Household
         r.setColor(hm.getColors().toString());
         r.setStatus(hm.getStatus().toString());
         r.setUserId(hm.getUser().getId().toString());
-        r.setInvitedById(hm.getInvitedBy().getId().toString());
-
+        if (hm.getInvitedBy() != null) {
+            r.setInvitedById(hm.getInvitedBy().getId().toString());
+        }
         return r;
     }
 

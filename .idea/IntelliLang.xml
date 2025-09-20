@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="LanguageInjectionConfiguration">
+    <injection language="http-header-reference" injector-id="java">
+      <display-name>Apache HttpClient 4 HTTP Header (org.apache.http)</display-name>
+      <single-file value="true" />
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("setHeader", "addHeader", "getFirstHeader", "getLastHeader", "removeHeaders").definedInClass("org.apache.http.HttpMessage"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("setHeader", "addHeader", "getFirstHeader", "getLastHeader", "removeHeaders").definedInClass("org.apache.http.message.AbstractHttpMessage"))]]></place>
+    </injection>
+    <injection language="http-header-reference" injector-id="java">
+      <display-name>Apache HttpClient 5 HTTP Header (org.apache.hc.core5)</display-name>
+      <single-file value="true" />
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("setHeader", "addHeader").definedInClass("org.apache.hc.core5.http.message.BasicHttpRequest"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("setHeader", "addHeader", "getFirstHeader", "getLastHeader", "removeHeaders").definedInClass("org.apache.hc.client5.http.async.methods.SimpleRequestBuilder"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("setHeader", "addHeader", "getFirstHeader", "getLastHeader", "removeHeaders").definedInClass("org.apache.hc.core5.http.io.support.ClassicRequestBuilder"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("setHeader", "addHeader", "getFirstHeader", "getLastHeader", "removeHeaders").definedInClass("org.apache.hc.core5.http.nio.support.AsyncRequestBuilder"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("setHeader", "addHeader", "getFirstHeader", "getLastHeader", "removeHeaders").definedInClass("org.apache.hc.core5.http.support.BasicRequestBuilder"))]]></place>
+    </injection>
+    <injection language="SQL" injector-id="java">
+      <display-name>MyBatis @Select/@Delete/@Insert/@Update</display-name>
+      <single-file value="true" />
+      <place><![CDATA[psiMethod().withName("value").withParameters().definedInClass("org.apache.ibatis.annotations.Delete")]]></place>
+      <place><![CDATA[psiMethod().withName("value").withParameters().definedInClass("org.apache.ibatis.annotations.Insert")]]></place>
+      <place><![CDATA[psiMethod().withName("value").withParameters().definedInClass("org.apache.ibatis.annotations.Select")]]></place>
+      <place><![CDATA[psiMethod().withName("value").withParameters().definedInClass("org.apache.ibatis.annotations.Update")]]></place>
+    </injection>
+    <injection language="SQL" injector-id="java">
+      <display-name>Spring JDBC (org.springframework.jdbc.core.JdbcOperations)</display-name>
+      <single-file value="true" />
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("batchUpdate").definedInClass("org.springframework.jdbc.core.JdbcOperations"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("execute").definedInClass("org.springframework.jdbc.core.JdbcOperations"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("query").definedInClass("org.springframework.jdbc.core.JdbcOperations"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("queryForInt").definedInClass("org.springframework.jdbc.core.JdbcOperations"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("queryForList").definedInClass("org.springframework.jdbc.core.JdbcOperations"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("queryForLong").definedInClass("org.springframework.jdbc.core.JdbcOperations"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("queryForMap").definedInClass("org.springframework.jdbc.core.JdbcOperations"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("queryForObject").definedInClass("org.springframework.jdbc.core.JdbcOperations"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("queryForRowSet").definedInClass("org.springframework.jdbc.core.JdbcOperations"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("queryForStream").definedInClass("org.springframework.jdbc.core.JdbcOperations"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("sql").definedInClass("org.springframework.jdbc.core.simple.JdbcClient"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("update").definedInClass("org.springframework.jdbc.core.JdbcOperations"))]]></place>
+    </injection>
+    <injection language="SpEL" injector-id="java">
+      <display-name>Spring Security @PostAuthorize/@PostFilter/@PreAuthorize/@PreFilter/@AuthenticationPrincipal</display-name>
+      <single-file value="true" />
+      <place><![CDATA[psiMethod().withName("expression").withParameters().definedInClass("org.springframework.security.core.annotation.AuthenticationPrincipal")]]></place>
+      <place><![CDATA[psiMethod().withName("expression").withParameters().definedInClass("org.springframework.security.core.annotation.CurrentSecurityContext")]]></place>
+      <place><![CDATA[psiMethod().withName("value").withParameters().definedInClass("org.springframework.security.access.prepost.PostAuthorize")]]></place>
+      <place><![CDATA[psiMethod().withName("value").withParameters().definedInClass("org.springframework.security.access.prepost.PostFilter")]]></place>
+      <place><![CDATA[psiMethod().withName("value").withParameters().definedInClass("org.springframework.security.access.prepost.PreAuthorize")]]></place>
+      <place><![CDATA[psiMethod().withName("value").withParameters().definedInClass("org.springframework.security.access.prepost.PreFilter")]]></place>
+    </injection>
+    <injection language="SpEL" injector-id="java">
+      <display-name>Spring State Machine</display-name>
+      <single-file value="true" />
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("event").withParameters("java.lang.String").definedInClass("org.springframework.statemachine.config.configurers.SecurityConfigurer"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("guardExpression").withParameters("java.lang.String").definedInClass("org.springframework.statemachine.config.configurers.TransitionConfigurer"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("secured").withParameters("java.lang.String").definedInClass("org.springframework.statemachine.config.configurers.TransitionConfigurer"))]]></place>
+      <place><![CDATA[psiParameter().ofMethod(0, psiMethod().withName("transition").withParameters("java.lang.String").definedInClass("org.springframework.statemachine.config.configurers.SecurityConfigurer"))]]></place>
+    </injection>
+  </component>
+</project>

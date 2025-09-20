@@ -3,7 +3,7 @@ package com.ftpix.sss.models;
 import java.util.UUID;
 
 public class HouseholdMember {
-    private UUID id;
+    private UUID id = UUID.randomUUID();
     private User user;
     private User invitedBy;
     private HouseholdInviteStatus status;
