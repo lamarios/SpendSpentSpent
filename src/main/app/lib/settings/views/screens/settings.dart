@@ -215,6 +215,18 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                             ),
                           ],
                         ),
+                        if (!demoMode)
+                          SettingsSection(
+                            title: Text('Household'),
+                            tiles: [
+                              SettingsTile(
+                                title: Text('household stuff'),
+                                onPressed: (context) => AutoRouter.of(
+                                  context,
+                                ).push(HouseholdManagementRoute()),
+                              ),
+                            ],
+                          ),
                         if (currentUser?.isAdmin ?? false)
                           SettingsSection(
                             title: Text(

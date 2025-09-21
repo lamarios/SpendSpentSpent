@@ -38,10 +38,14 @@ public class HouseholdService {
         HouseholdMember hm = new HouseholdMember();
         hm.setAdmin(true);
         hm.setId(UUID.randomUUID());
-        hm.setColors(HouseholdColor.values()[0]);
+        hm.setColor(HouseholdColor.values()[0]);
         hm.setStatus(HouseholdInviteStatus.accepted);
         hm.setUser(user);
         hs.setMembers(List.of(hm));
+
+        // we need to delete all other invitations
+        getInvitations(user).forEach(householdMember -> householdDao.getHouseholdMemberDao().delete(householdMember));
+
 
         return householdDao.insert(hs);
     }
@@ -51,7 +55,9 @@ public class HouseholdService {
     }
 
     private boolean isHouseholdAdmin(User user, Household household) {
-        return household.getMembers().stream().filter(member -> member.getUser().getId().equals(user.getId()))
+        return household.getMembers()
+                .stream()
+                .filter(member -> member.getUser().getId().equals(user.getId()))
                 .findFirst()
                 .map(HouseholdMember::isAdmin)
                 .orElse(false);
@@ -76,14 +82,27 @@ public class HouseholdService {
                 return;
             }
 
+            // you can only invite someone once
+            Household household = hs.get();
+            var similarInvites = household.getMembers()
+                    .stream()
+                    .filter(householdMember -> householdMember.getUser()
+                            .getId()
+                            .equals(invitee.get()
+                                    .getId()) && householdMember.getStatus() == HouseholdInviteStatus.pending)
+                    .count();
+
+            if (similarInvites > 0) {
+                return;
+            }
+
             HouseholdMember hm = new HouseholdMember();
             hm.setUser(invitee.get());
             hm.setInvitedBy(user);
             hm.setStatus(HouseholdInviteStatus.pending);
             hm.setAdmin(false);
 
-            Household household = hs.get();
-            hm.setColors(HouseholdColor.values()[household.getMembers().size() - 1]);
+            hm.setColor(HouseholdColor.values()[household.getMembers().size()]);
             hm.setHousehold(household);
             householdDao.getHouseholdMemberDao().insert(hm);
         }
@@ -94,8 +113,7 @@ public class HouseholdService {
     }
 
     public void removeMember(User user, User memberId) {
-        getCurrentHousehold(user)
-                .filter(hs -> isHouseholdAdmin(user, hs))
+        getCurrentHousehold(user).filter(hs -> isHouseholdAdmin(user, hs))
                 .flatMap(hs -> hs.getMembers()
                         .stream()
                         .filter(m -> m.getUser().getId().equals(memberId.getId()))
@@ -103,8 +121,9 @@ public class HouseholdService {
                 .ifPresent(membership -> householdDao.getHouseholdMemberDao().delete(membership));
     }
 
-    public boolean deleteHousehold(User user, String householdId) {
-        return false;
+    public void deleteHousehold(User user) {
+        getCurrentHousehold(user).filter(household -> isHouseholdAdmin(user, household))
+                .ifPresent(householdDao::delete);
     }
 
     public boolean leaveHousehold(User user) {
@@ -155,8 +174,12 @@ public class HouseholdService {
         var hs = getCurrentHousehold(user);
         if (hs.isPresent() && isHouseholdAdmin(user, hs.get())) {
 
-            hs.get().getMembers().stream().filter(member -> member.getUser().getId().equals(target.getId()))
-                    .findFirst().ifPresent(member -> {
+            hs.get()
+                    .getMembers()
+                    .stream()
+                    .filter(member -> member.getUser().getId().equals(target.getId()))
+                    .findFirst()
+                    .ifPresent(member -> {
                         member.setAdmin(admin);
                         householdDao.getHouseholdMemberDao().update(member);
                     });
@@ -165,14 +188,12 @@ public class HouseholdService {
     }
 
     public void setColor(User currentUser, HouseholdColor householdColor) {
-        getCurrentHousehold(currentUser)
-                .flatMap(household -> household.getMembers()
-                        .stream()
-                        .filter(householdMember -> householdMember.getUser().getId().equals(currentUser.getId()))
-                        .findFirst())
-                .ifPresent(householdMember -> {
-                    householdMember.setColors(householdColor);
-                    householdDao.getHouseholdMemberDao().update(householdMember);
-                });
+        getCurrentHousehold(currentUser).flatMap(household -> household.getMembers()
+                .stream()
+                .filter(householdMember -> householdMember.getUser().getId().equals(currentUser.getId()))
+                .findFirst()).ifPresent(householdMember -> {
+            householdMember.setColor(householdColor);
+            householdDao.getHouseholdMemberDao().update(householdMember);
+        });
     }
 }

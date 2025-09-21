@@ -123,7 +123,7 @@ public class HouseholdServiceTest extends TestContainerTest {
         householdService.setColor(currentUser, HouseholdColor.cyan);
 
         hs = householdService.getCurrentHousehold(currentUser).get();
-        assertEquals(HouseholdColor.cyan, hs.getMembers().get(0).getColors());
+        assertEquals(HouseholdColor.cyan, hs.getMembers().get(0).getColor());
     }
 
     @Test

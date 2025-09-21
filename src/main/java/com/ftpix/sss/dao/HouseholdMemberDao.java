@@ -1,7 +1,6 @@
 package com.ftpix.sss.dao;
 
 import com.ftpix.sss.dsl.Keys;
-import com.ftpix.sss.dsl.tables.HouseholdMembers;
 import com.ftpix.sss.dsl.tables.records.HouseholdMembersRecord;
 import com.ftpix.sss.dsl.tables.records.UserRecord;
 import com.ftpix.sss.listeners.DaoListener;
@@ -54,7 +53,7 @@ public class HouseholdMemberDao implements Dao<HouseholdMembersRecord, Household
         hm.setId(UUID.fromString(r.getId()));
         hm.setAdmin(r.getAdmin());
         hm.setStatus(HouseholdInviteStatus.valueOf(r.getStatus()));
-        hm.setColors(HouseholdColor.valueOf(r.getColor()));
+        hm.setColor(HouseholdColor.valueOf(r.getColor()));
         Household hs = new Household();
         hs.setId(UUID.fromString(r.getHouseholdId()));
         hm.setHousehold(hs);
@@ -74,7 +73,7 @@ public class HouseholdMemberDao implements Dao<HouseholdMembersRecord, Household
         r.setId(hm.getId().toString());
         r.setHouseholdId(hm.getHousehold().getId().toString());
         r.setAdmin(hm.isAdmin());
-        r.setColor(hm.getColors().toString());
+        r.setColor(hm.getColor().toString());
         r.setStatus(hm.getStatus().toString());
         r.setUserId(hm.getUser().getId().toString());
         if (hm.getInvitedBy() != null) {

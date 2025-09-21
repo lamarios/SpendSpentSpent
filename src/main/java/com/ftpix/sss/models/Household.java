@@ -24,4 +24,9 @@ public class Household {
     public void setMembers(List<HouseholdMember> members) {
         this.members = members;
     }
+
+    public Household withoutPendingInvitations() {
+        this.members.removeIf(householdMember -> householdMember.getStatus() == HouseholdInviteStatus.pending);
+        return this;
+    }
 }

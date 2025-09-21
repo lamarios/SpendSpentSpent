@@ -12,6 +12,7 @@ import 'package:spend_spent_spent/home/views/screens/middle_column.dart';
 import 'package:spend_spent_spent/expenses/views/screens/right_column.dart';
 import 'package:spend_spent_spent/stats/views/screens/yearly_stats.dart';
 
+import 'households/views/screens/household_management.dart';
 import 'recurring_expenses/views/components/recurring_expense_list.dart';
 import 'stats/views/screens/montly_stats.dart';
 import 'stats/views/screens/left_column.dart';
@@ -48,6 +49,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: SettingsRoute.page),
     AutoRoute(page: ImageViewerRoute.page),
     AutoRoute(page: LoginRoute.page),
+    AutoRoute(page: HouseholdManagementRoute.page),
   ];
 
   @override
@@ -78,7 +80,7 @@ class AppRouter extends RootStackRouter {
 
       // tip: use resolver.redirect to have the redirected route
       // automatically removed from the stack when the resolver is completed
-      resolver.redirect(const LoginRoute(), replace: true);
+      resolver.redirectUntil(const LoginRoute(), replace: true);
     }
   }
 }

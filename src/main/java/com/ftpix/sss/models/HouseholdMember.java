@@ -8,7 +8,7 @@ public class HouseholdMember {
     private User invitedBy;
     private HouseholdInviteStatus status;
     private boolean admin;
-    private HouseholdColor colors;
+    private HouseholdColor color;
     private Household household;
 
     public UUID getId() {
@@ -51,12 +51,12 @@ public class HouseholdMember {
         this.admin = admin;
     }
 
-    public HouseholdColor getColors() {
-        return colors;
+    public HouseholdColor getColor() {
+        return color;
     }
 
-    public void setColors(HouseholdColor colors) {
-        this.colors = colors;
+    public void setColor(HouseholdColor color) {
+        this.color = color;
     }
 
     public Household getHousehold() {

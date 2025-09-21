@@ -67,6 +67,26 @@ class HomeRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [HouseholdManagementScreen]
+class HouseholdManagementRoute extends PageRouteInfo<void> {
+  const HouseholdManagementRoute({List<PageRouteInfo>? children})
+    : super(
+        HouseholdManagementRoute.name,
+        initialChildren: children,
+        argsEquality: false,
+      );
+
+  static const String name = 'HouseholdManagementRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const HouseholdManagementScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [ImageViewerScreen]
 class ImageViewerRoute extends PageRouteInfo<ImageViewerRouteArgs> {
   ImageViewerRoute({
