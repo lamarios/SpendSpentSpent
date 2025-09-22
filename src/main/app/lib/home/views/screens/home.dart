@@ -8,7 +8,9 @@ import 'package:logging/logging.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/guess_category_dialog.dart';
 import 'package:spend_spent_spent/categories/state/categories.dart';
+import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
+import 'package:spend_spent_spent/households/states/household.dart';
 import 'package:spend_spent_spent/identity/views/components/logout_handler.dart';
 import 'package:spend_spent_spent/router.dart';
 
@@ -108,8 +110,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           final tabsRouter = AutoTabsRouter.of(context);
           return Scaffold(
             floatingActionButton: IconButton(
-              onPressed: () =>
-                  AutoRouter.of(context).push(const SettingsRoute()),
+              onPressed: () => AutoRouter.of(context)
+                  .push(const SettingsRoute())
+                  .then((value) async {
+                    if (context.mounted) {
+                      await context.read<HouseholdCubit>().getData();
+                      if (context.mounted) {
+                        context.read<LastExpenseCubit>().refresh();
+                      }
+                    }
+                  }),
               icon: const Icon(Icons.settings),
             ),
             body: SafeArea(

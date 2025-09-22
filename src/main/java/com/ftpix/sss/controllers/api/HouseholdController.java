@@ -29,7 +29,9 @@ public class HouseholdController {
 
     @GetMapping
     public Household getHousehold() throws SQLException {
-        return householdService.getCurrentHousehold(userService.getCurrentUser()).orElse(null);
+        return householdService.getCurrentHousehold(userService.getCurrentUser())
+                .map(Household::withoutPendingInvitations)
+                .orElse(null);
     }
 
     @PutMapping
