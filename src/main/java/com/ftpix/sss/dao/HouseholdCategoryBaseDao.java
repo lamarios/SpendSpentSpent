@@ -32,6 +32,7 @@ public interface HouseholdCategoryBaseDao<R extends UpdatableRecord<R>, M extend
 
 
     default Map<Long, Category> getHouseholdCategories(User user) {
+        var userDao = new UserDao(getDsl());
         // fetching the use household if there's one
         var id = getDsl().select(HOUSEHOLD_MEMBERS.HOUSEHOLD_ID)
                 .from(HOUSEHOLD_MEMBERS)
@@ -65,8 +66,15 @@ public interface HouseholdCategoryBaseDao<R extends UpdatableRecord<R>, M extend
                     CategoryRecord catR = (CategoryRecord) r;
 
                     var userRecord = ((CategoryRecord) r).fetchParent(Keys.CATEGORY__FK_CATEGORY_USER);
-                    var categoryUser = userRecord.into(User.class);
-                    into.setUser(categoryUser);
+                    if (userRecord != null) {
+                        var categoryUser = userDao.fromRecord(userRecord);
+                        // remove private stuff as this could be shared
+                        categoryUser.setPassword(null);
+                        categoryUser.setOidcSub(null);
+                        categoryUser.setShowAnnouncement(false);
+                        categoryUser.setSubscriptionExpiryDate(0);
+                        into.setUser(categoryUser);
+                    }
 
                     return into;
                 })

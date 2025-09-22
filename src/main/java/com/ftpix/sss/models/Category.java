@@ -11,8 +11,6 @@ public class Category implements HasCategory {
 
     private int categoryOrder;
 
-
-    @JsonIgnore
     private User user;
 
     private double percentageOfMonthly = 0;
