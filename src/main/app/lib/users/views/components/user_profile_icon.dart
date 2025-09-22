@@ -5,13 +5,13 @@ import '../../../settings/models/user.dart';
 class UserProfileIcon extends StatelessWidget {
   final User user;
   final double size;
-  final Color? color;
+  final ColorScheme? colorScheme;
 
   const UserProfileIcon({
     super.key,
     required this.user,
     required this.size,
-    this.color,
+    this.colorScheme,
   });
 
   @override
@@ -23,7 +23,7 @@ class UserProfileIcon extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: color ?? colors.primaryContainer,
+        color: colorScheme?.primaryContainer ?? colors.primaryContainer,
       ),
       child: Center(
         child: SizedBox(
@@ -35,7 +35,9 @@ class UserProfileIcon extends StatelessWidget {
               '${user.firstName.substring(0, 1).toUpperCase()}${user.lastName.substring(0, 1).toUpperCase()}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: colors.onPrimaryContainer,
+                color:
+                    colorScheme?.onPrimaryContainer ??
+                    colors.onPrimaryContainer,
               ),
             ),
           ),

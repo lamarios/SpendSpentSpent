@@ -122,7 +122,9 @@ class DiffWithPreviousPeriodGraph extends StatelessWidget {
                                         showTitles: true,
                                         interval: 1,
                                         getTitlesWidget: (value, meta) =>
-                                            Text(value.toStringAsFixed(0)),
+                                            value % 2 == 0
+                                            ? SizedBox.shrink()
+                                            : Text(value.toStringAsFixed(0)),
                                         reservedSize: 25,
                                       ),
                                     ),

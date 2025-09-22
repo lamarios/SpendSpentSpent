@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:motor/motor.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/households/states/household.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/stats/models/left_column_stats.dart';
 import 'package:spend_spent_spent/stats/state/single_stats.dart';
@@ -88,6 +89,13 @@ class SingleStats extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
+    final catColor = stats.category.id != -1
+        ? context.read<HouseholdCubit>().state.getCategoryColor(
+            context,
+            stats.category,
+          )
+        : colors;
+
     // TODO: implement build
     return BlocProvider(
       create: (context) => SingleStatsCubit(const SingleStatsState()),
@@ -139,7 +147,7 @@ class SingleStats extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             child: getIcon(
                               stats.category.icon!,
-                              color: colors.primary,
+                              color: catColor.primary,
                               size: 20,
                             ),
                           ),
@@ -166,7 +174,7 @@ class SingleStats extends StatelessWidget {
                           //     ? colors.surface
                           //     : colors.primaryContainer,
                           color: Color.lerp(
-                            colors.primaryContainer,
+                            catColor.primaryContainer,
                             colors.surface,
                             value,
                           ),
@@ -190,7 +198,7 @@ class SingleStats extends StatelessWidget {
                                   Radius.circular(10),
                                 ),
                                 color: Color.lerp(
-                                  colors.onPrimaryContainer,
+                                  catColor.onPrimaryContainer,
                                   openedBackgroundColor,
                                   value,
                                 ),

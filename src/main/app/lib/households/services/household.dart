@@ -25,7 +25,6 @@ extension HouseholdService on Service {
       headers: await headers,
     );
 
-    print('body: ${response.body}');
     processResponse(response);
     if (response.body.trim().isEmpty) {
       return null;
@@ -53,6 +52,15 @@ extension HouseholdService on Service {
     processResponse(response);
 
     return Household.fromJson(jsonDecode(response.body));
+  }
+
+  Future<void> rejectInvitation(String invitationId) async {
+    final response = await http.delete(
+      await formatUrl('$API_URL/Household/invites/$invitationId/reject'),
+      headers: await headers,
+    );
+
+    processResponse(response);
   }
 
   Future<List<HouseholdMembers>> getInvitations() async {

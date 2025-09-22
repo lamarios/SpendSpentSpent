@@ -100,6 +100,28 @@ class HouseholdManagementCubit extends Cubit<HouseholdManagementState> {
 
     getData(false);
   }
+
+  Future<void> acceptInvitation(String id) async {
+    try {
+      await service.acceptInvitation(id);
+    } catch (e, s) {
+      emit(state.copyWith(error: e, stackTrace: s));
+      rethrow;
+    }
+
+    getData(false);
+  }
+
+  Future<void> rejectInvitation(String id) async {
+    try {
+      await service.rejectInvitation(id);
+    } catch (e, s) {
+      emit(state.copyWith(error: e, stackTrace: s));
+      rethrow;
+    }
+
+    getData(false);
+  }
 }
 
 @freezed

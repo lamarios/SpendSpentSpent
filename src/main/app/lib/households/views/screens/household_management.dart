@@ -2,8 +2,11 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_loading_indicator/loading_indicator.dart';
+import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/households/services/household.dart';
 import 'package:spend_spent_spent/households/states/household_management.dart';
 import 'package:spend_spent_spent/households/views/components/household.dart';
+import 'package:spend_spent_spent/households/views/components/household_invitations.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/utils/views/components/error_listener.dart';
 
@@ -13,20 +16,79 @@ class HouseholdManagementScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Household')),
-      body: SafeArea(
-        child: BlocProvider(
-          create: (context) =>
-              HouseholdManagementCubit(HouseholdManagementState()),
-          child: BlocBuilder<HouseholdManagementCubit, HouseholdManagementState>(
-            builder: (context, state) {
-              final cubit = context.read<HouseholdManagementCubit>();
+    final colors = Theme.of(context).colorScheme;
 
-              return ErrorHandler<
-                HouseholdManagementCubit,
-                HouseholdManagementState
-              >(
+    return BlocProvider(
+      create: (context) => HouseholdManagementCubit(HouseholdManagementState()),
+      child: BlocBuilder<HouseholdManagementCubit, HouseholdManagementState>(
+        builder: (context, state) {
+          final cubit = context.read<HouseholdManagementCubit>();
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Household'),
+              actions: [
+                if (state.household != null)
+                  MenuAnchor(
+                    builder: (context, controller, child) {
+                      return IconButton(
+                        icon: const Icon(Icons.more_vert),
+                        onPressed: () {
+                          if (controller.isOpen) {
+                            controller.close();
+                          } else {
+                            controller.open();
+                          }
+                        },
+                      );
+                    },
+                    menuChildren: [
+                      MenuItemButton(
+                        leadingIcon: Icon(Icons.logout),
+                        onPressed: () => okCancelDialog(
+                          context,
+                          title: 'Leave household ?',
+                          content: Text(
+                            'After leaving the household, you will not be able to see the other users expenses',
+                          ),
+                          onOk: () async {
+                            await service.leaveHousehold();
+                            if (context.mounted) {
+                              cubit.getData(true);
+                            }
+                          },
+                        ),
+                        child: Text('Leave household'),
+                      ),
+                      if (cubit.isAdmin)
+                        MenuItemButton(
+                          leadingIcon: Icon(
+                            Icons.delete_outline,
+                            color: colors.error,
+                          ),
+                          onPressed: () => okCancelDialog(
+                            context,
+                            title: 'Delete household ?',
+                            content: Text(
+                              'After deleting the household, every member will stop seeing anyone expenses',
+                            ),
+                            onOk: () async {
+                              await service.deleteHousehold();
+                              if (context.mounted) {
+                                cubit.getData(true);
+                              }
+                            },
+                          ),
+                          child: Text(
+                            'Delete household',
+                            style: TextStyle(color: colors.error),
+                          ),
+                        ),
+                    ],
+                  ),
+              ],
+            ),
+            body: SafeArea(
+              child: ErrorHandler<HouseholdManagementCubit, HouseholdManagementState>(
                 child: state.loading
                     ? Center(child: LoadingIndicator())
                     : (state.household == null && state.invitations.isEmpty)
@@ -60,11 +122,11 @@ class HouseholdManagementScreen extends StatelessWidget {
                       )
                     : state.household != null
                     ? HouseholdView(household: state.household!)
-                    : Text('invitations'),
-              );
-            },
-          ),
-        ),
+                    : HouseholdInvitations(invitations: state.invitations),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

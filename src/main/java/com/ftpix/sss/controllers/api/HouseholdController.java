@@ -51,6 +51,11 @@ public class HouseholdController {
                 .orElse(null);
     }
 
+    @DeleteMapping("/invites/{id}/reject")
+    public void rejectInvitation(@PathVariable("id") String invitationId) throws SQLException {
+        householdService.rejectInvitation(userService.getCurrentUser(), UUID.fromString(invitationId));
+    }
+
     @GetMapping("/invites")
     public List<HouseholdMember> getInvitations() throws SQLException {
         return householdService.getInvitations(userService.getCurrentUser());

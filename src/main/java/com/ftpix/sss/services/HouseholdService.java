@@ -7,6 +7,7 @@ import com.ftpix.sss.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -102,7 +103,12 @@ public class HouseholdService {
             hm.setStatus(HouseholdInviteStatus.pending);
             hm.setAdmin(false);
 
-            hm.setColor(HouseholdColor.values()[household.getMembers().size()]);
+            var usedColors = household.getMembers().stream().map(HouseholdMember::getColor).toList();
+            var color = Arrays.stream(HouseholdColor.values())
+                    .filter(c -> !usedColors.contains(c))
+                    .findFirst();
+
+            hm.setColor(color.get());
             hm.setHousehold(household);
             householdDao.getHouseholdMemberDao().insert(hm);
         }
@@ -130,12 +136,18 @@ public class HouseholdService {
         var hs = getCurrentHousehold(user);
         if (hs.isPresent()) {
             var house = hs.get();
-            house.getMembers()
-                    .stream()
-                    .filter(member -> member.getUser().getId().equals(user.getId()))
-                    .findFirst()
-                    .ifPresent(member -> householdDao.getHouseholdMemberDao().delete(member));
-            return true;
+
+            if (house.getMembers().size() > 1) {
+
+                house.getMembers()
+                        .stream()
+                        .filter(member -> member.getUser().getId().equals(user.getId()))
+                        .findFirst()
+                        .ifPresent(member -> householdDao.getHouseholdMemberDao().delete(member));
+                return true;
+            } else {
+                householdDao.delete(house);
+            }
         }
         return false;
     }
@@ -146,10 +158,10 @@ public class HouseholdService {
                         .toString()), HOUSEHOLD_MEMBERS.STATUS.eq(HouseholdInviteStatus.pending.name()));
     }
 
-    public Optional<Household> acceptInvitation(User invitee, UUID householdId) {
+    public Optional<Household> acceptInvitation(User invitee, UUID invitationId) {
         List<HouseholdMember> invitations = getInvitations(invitee);
         Optional<HouseholdMember> invitation = invitations.stream()
-                .filter(hs -> hs.getHousehold().getId().equals(householdId))
+                .filter(hs -> hs.getId().equals(invitationId))
                 .findFirst();
 
         if (invitation.isPresent()) {
@@ -163,6 +175,15 @@ public class HouseholdService {
         }
 
         return getCurrentHousehold(invitee);
+    }
+
+    public void rejectInvitation(User invitee, UUID invitationId) {
+        List<HouseholdMember> invitations = getInvitations(invitee);
+
+        invitations.stream()
+                .filter(hs -> hs.getId().equals(invitationId))
+                .findFirst()
+                .ifPresent(householdMember -> householdDao.getHouseholdMemberDao().delete(householdMember));
     }
 
     public void setAdmin(User user, User target, boolean admin) {
@@ -196,4 +217,5 @@ public class HouseholdService {
             householdDao.getHouseholdMemberDao().update(householdMember);
         });
     }
+
 }

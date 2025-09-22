@@ -48,19 +48,7 @@ public class CategoryController {
     public List<Category> getAll() throws Exception {
         final User currentUser = userService.getCurrentUser();
 
-
-        return historyService.monthly(currentUser)
-                .stream()
-                .skip(1) // first is always the overall category
-                .map(c -> {
-                    if (c.getTotal() > 0) {
-                        double percentage = c.getAmount() / c.getTotal();
-                        c.getCategory().setPercentageOfMonthly(percentage);
-                    }
-                    return c.getCategory();
-                })
-                .sorted(Comparator.comparingInt(Category::getCategoryOrder))
-                .collect(Collectors.toList());
+        return categoryService.getAll(currentUser);
     }
 
     /**

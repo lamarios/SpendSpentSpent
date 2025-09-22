@@ -79,7 +79,7 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense>,
      * @return
      */
     public List<String> getMonths(User user, ZoneId zoneId) {
-        Map<Long, Category> userCategories = getUserCategories(user);
+        Map<Long, Category> userCategories = getHouseholdCategories(user);
 
         return dslContext.select(EXPENSE.TIMESTAMP)
                 .from(EXPENSE)

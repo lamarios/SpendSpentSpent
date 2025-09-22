@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
+import 'package:spend_spent_spent/households/states/household.dart';
 import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/settings/state/app_settings.dart';
@@ -35,6 +36,9 @@ Future<void> main() async {
     ),
   );
 
+  var householdCubit = HouseholdCubit(HouseholdState());
+  getIt.registerSingleton<HouseholdCubit>(householdCubit);
+
   getIt.registerSingleton<UsernamePasswordCubit>(userPassCubit);
   // we check if we already are on  a server
   var serverUrl = await Preferences.get(Preferences.SERVER_URL);
@@ -49,6 +53,7 @@ Future<void> main() async {
   // once we're all ready, and we're already logged in, we connect to the websocket
   if (existingToken.isNotEmpty) {
     userPassCubit.connectToSocket();
+    householdCubit.getData();
   }
 
   runApp(const SpendSpentSpent());
@@ -99,6 +104,7 @@ class _SpendSpentSpentState extends State<SpendSpentSpent>
           create: (context) => AppSettingsCubit(const AppSettingsState()),
         ),
         BlocProvider(create: (context) => getIt<UsernamePasswordCubit>()),
+        BlocProvider(create: (context) => getIt<HouseholdCubit>()),
       ],
       child: DynamicColorBuilder(
         builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
