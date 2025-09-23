@@ -83,7 +83,8 @@ class _SpendSpentSpentState extends State<SpendSpentSpent>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed) {
+    _log.fine('app state: $state');
+    if (state == AppLifecycleState.hidden) {
       _log.info("App is hiding, disconnecting from websocket");
       getIt<UsernamePasswordCubit>().socket?.close();
     } else if (state == AppLifecycleState.resumed) {

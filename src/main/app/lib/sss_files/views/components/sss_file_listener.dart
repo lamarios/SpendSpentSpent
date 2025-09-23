@@ -12,7 +12,7 @@ class SssFileListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SssSocketListener(
-      onFileChange: (message) {
+      onChange: (message) {
         print('Listening....');
         if (message.type == SssSocketMessageType.sssFile) {
           onFile(SssFile.fromJson(message.message));

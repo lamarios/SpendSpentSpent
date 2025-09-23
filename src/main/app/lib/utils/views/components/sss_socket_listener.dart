@@ -8,12 +8,12 @@ import '../../models/socket_message.dart';
 
 class SssSocketListener extends StatefulWidget {
   final Widget child;
-  final void Function(SssSocketMessage message) onFileChange;
+  final void Function(SssSocketMessage message) onChange;
 
   const SssSocketListener({
     super.key,
     required this.child,
-    required this.onFileChange,
+    required this.onChange,
   });
 
   @override
@@ -27,7 +27,7 @@ class _SssSocketListenerState extends State<SssSocketListener> {
   void initState() {
     super.initState();
     _sub = getIt<UsernamePasswordCubit>().socket?.stream.listen((data) {
-      widget.onFileChange(data); // 👈 called every time there’s a new event
+      widget.onChange(data); // 👈 called every time there’s a new event
     });
   }
 

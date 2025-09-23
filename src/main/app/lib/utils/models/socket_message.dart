@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'socket_message.freezed.dart';
 part 'socket_message.g.dart';
 
-enum SssSocketMessageType { sssFile }
+enum SssSocketMessageType { sssFile, householdUpdate }
 
 @freezed
 sealed class SssSocketMessage with _$SssSocketMessage {

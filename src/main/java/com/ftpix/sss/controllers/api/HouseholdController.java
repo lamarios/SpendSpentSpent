@@ -1,10 +1,9 @@
 package com.ftpix.sss.controllers.api;
 
-import com.ftpix.sss.models.Household;
-import com.ftpix.sss.models.HouseholdColor;
-import com.ftpix.sss.models.HouseholdMember;
+import com.ftpix.sss.models.*;
 import com.ftpix.sss.services.HouseholdService;
 import com.ftpix.sss.services.UserService;
+import com.ftpix.sss.websockets.WebSocketSessionManager;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

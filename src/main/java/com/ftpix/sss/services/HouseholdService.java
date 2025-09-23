@@ -4,9 +4,11 @@ package com.ftpix.sss.services;
 import com.ftpix.sss.dao.HouseholdDao;
 import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.*;
+import com.ftpix.sss.websockets.WebSocketSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -64,7 +66,7 @@ public class HouseholdService {
                 .orElse(false);
     }
 
-    public void inviteUser(User user, String email) {
+    public void inviteUser(User user, String email) throws SQLException {
         var invitee = userDao.getOneWhere(USER.EMAIL.eq(email));
         var hs = getCurrentHousehold(user);
 
@@ -111,6 +113,9 @@ public class HouseholdService {
             hm.setColor(color.get());
             hm.setHousehold(household);
             householdDao.getHouseholdMemberDao().insert(hm);
+
+
+            sendMessageToOtherUsers(getCurrentHousehold(user).get(), user);
         }
     }
 
@@ -118,21 +123,33 @@ public class HouseholdService {
         return null;
     }
 
-    public void removeMember(User user, User memberId) {
-        getCurrentHousehold(user).filter(hs -> isHouseholdAdmin(user, hs))
+    public void removeMember(User user, User memberId) throws SQLException {
+        Optional<Household> currentHousehold = getCurrentHousehold(user);
+        currentHousehold.filter(hs -> isHouseholdAdmin(user, hs))
                 .flatMap(hs -> hs.getMembers()
                         .stream()
                         .filter(m -> m.getUser().getId().equals(memberId.getId()))
                         .findFirst())
-                .ifPresent(membership -> householdDao.getHouseholdMemberDao().delete(membership));
+                .ifPresent(membership -> {
+                    householdDao.getHouseholdMemberDao().delete(membership);
+
+                });
+
+        if (currentHousehold.isPresent()) {
+            sendMessageToOtherUsers(currentHousehold.get(), user);
+        }
     }
 
-    public void deleteHousehold(User user) {
-        getCurrentHousehold(user).filter(household -> isHouseholdAdmin(user, household))
+    public void deleteHousehold(User user) throws SQLException {
+        Optional<Household> currentHousehold = getCurrentHousehold(user);
+        currentHousehold.filter(household -> isHouseholdAdmin(user, household))
                 .ifPresent(householdDao::delete);
+        if (currentHousehold.isPresent()) {
+            sendMessageToOtherUsers(currentHousehold.get(), user);
+        }
     }
 
-    public boolean leaveHousehold(User user) {
+    public boolean leaveHousehold(User user) throws SQLException {
         var hs = getCurrentHousehold(user);
         if (hs.isPresent()) {
             var house = hs.get();
@@ -144,6 +161,10 @@ public class HouseholdService {
                         .filter(member -> member.getUser().getId().equals(user.getId()))
                         .findFirst()
                         .ifPresent(member -> householdDao.getHouseholdMemberDao().delete(member));
+
+
+                sendMessageToOtherUsers(house, user);
+
                 return true;
             } else {
                 householdDao.delete(house);
@@ -158,7 +179,7 @@ public class HouseholdService {
                         .toString()), HOUSEHOLD_MEMBERS.STATUS.eq(HouseholdInviteStatus.pending.name()));
     }
 
-    public Optional<Household> acceptInvitation(User invitee, UUID invitationId) {
+    public Optional<Household> acceptInvitation(User invitee, UUID invitationId) throws SQLException {
         List<HouseholdMember> invitations = getInvitations(invitee);
         Optional<HouseholdMember> invitation = invitations.stream()
                 .filter(hs -> hs.getId().equals(invitationId))
@@ -174,7 +195,9 @@ public class HouseholdService {
             invitations.forEach(member -> householdDao.getHouseholdMemberDao().delete(member));
         }
 
-        return getCurrentHousehold(invitee);
+        Optional<Household> hs = getCurrentHousehold(invitee);
+        sendMessageToOtherUsers(hs.get(), invitee);
+        return hs;
     }
 
     public void rejectInvitation(User invitee, UUID invitationId) {
@@ -186,7 +209,7 @@ public class HouseholdService {
                 .ifPresent(householdMember -> householdDao.getHouseholdMemberDao().delete(householdMember));
     }
 
-    public void setAdmin(User user, User target, boolean admin) {
+    public void setAdmin(User user, User target, boolean admin) throws SQLException {
         if (user.getId().equals(target.getId())) {
             // users can't change their own statuses
             return;
@@ -204,18 +227,36 @@ public class HouseholdService {
                         member.setAdmin(admin);
                         householdDao.getHouseholdMemberDao().update(member);
                     });
+
+            sendMessageToOtherUsers(hs.get(), user);
         }
 
     }
 
-    public void setColor(User currentUser, HouseholdColor householdColor) {
-        getCurrentHousehold(currentUser).flatMap(household -> household.getMembers()
+    public void setColor(User currentUser, HouseholdColor householdColor) throws SQLException {
+        Optional<Household> currentHousehold = getCurrentHousehold(currentUser);
+        currentHousehold.flatMap(household -> household.getMembers()
                 .stream()
                 .filter(householdMember -> householdMember.getUser().getId().equals(currentUser.getId()))
                 .findFirst()).ifPresent(householdMember -> {
             householdMember.setColor(householdColor);
             householdDao.getHouseholdMemberDao().update(householdMember);
         });
+        if (currentHousehold.isPresent()) {
+            sendMessageToOtherUsers(currentHousehold.get(), currentUser);
+        }
+    }
+
+
+    private List<User> getHouseholdOtherMembers(Optional<Household> hs, User user) {
+        return hs.map(household -> household.getMembers().stream().map(HouseholdMember::getUser)
+                .filter(user1 -> !user1.getId().equals(user.getId()))
+                .toList()).orElseGet(List::of);
+    }
+
+    private void sendMessageToOtherUsers(Household hs, User currentUser) throws SQLException {
+        getHouseholdOtherMembers(Optional.ofNullable(hs), currentUser).forEach(user -> WebSocketSessionManager.sendToUser(user.getId()
+                .toString(), new HouseholdWebsocketUpdate()));
     }
 
 }

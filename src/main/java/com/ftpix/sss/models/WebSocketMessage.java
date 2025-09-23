@@ -5,7 +5,9 @@ import java.util.Arrays;
 
 public class WebSocketMessage<T> {
     public enum Type {
+        householdUpdate(HouseholdWebsocketUpdate.class),
         sssFile(SSSFile.class);
+
 
         private final Class<?> clazz;
 

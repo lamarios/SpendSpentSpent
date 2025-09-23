@@ -111,6 +111,7 @@ public class HouseholdDao implements Dao<HouseholdRecord, Household> {
 
     }
 
+
     public HouseholdMemberDao getHouseholdMemberDao() {
         return householdMemberDao;
     }

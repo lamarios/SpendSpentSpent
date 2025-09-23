@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
+import java.sql.SQLException;
 import java.time.ZoneId;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public class HouseholdServiceTest extends TestContainerTest {
     private HistoryService historyService;
 
     @Test
-    public void testHouseholdFlow() {
+    public void testHouseholdFlow() throws SQLException {
         // create a household
         var hs = householdService.createHousehold(currentUser);
         // verify that iam in my own household as an admin

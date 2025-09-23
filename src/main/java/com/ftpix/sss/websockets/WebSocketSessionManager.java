@@ -32,13 +32,13 @@ public class WebSocketSessionManager {
     }
 
     public static <T> void sendToUser(String userId, T content) {
-        Gson gson = new Gson();
-
-        WebSocketMessage<T> message = new WebSocketMessage<T>();
-        message.setType(WebSocketMessage.Type.getFromClass(content.getClass()));
-        message.setMessage(content);
-
         if (sessions.containsKey(userId)) {
+            Gson gson = new Gson();
+
+            WebSocketMessage<T> message = new WebSocketMessage<T>();
+            message.setType(WebSocketMessage.Type.getFromClass(content.getClass()));
+            message.setMessage(content);
+
             List<WebSocketSession> userSessions = sessions.get(userId);
             for (WebSocketSession session : userSessions) {
                 if (session != null && session.isOpen()) {

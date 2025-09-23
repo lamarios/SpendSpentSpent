@@ -4,10 +4,9 @@ import com.ftpix.sss.dsl.Keys;
 import com.ftpix.sss.dsl.tables.records.HouseholdMembersRecord;
 import com.ftpix.sss.dsl.tables.records.UserRecord;
 import com.ftpix.sss.listeners.DaoListener;
-import com.ftpix.sss.models.Household;
-import com.ftpix.sss.models.HouseholdColor;
-import com.ftpix.sss.models.HouseholdInviteStatus;
-import com.ftpix.sss.models.HouseholdMember;
+import com.ftpix.sss.models.*;
+import com.ftpix.sss.websockets.WebSocketHandler;
+import com.ftpix.sss.websockets.WebSocketSessionManager;
 import org.jooq.DSLContext;
 import org.jooq.OrderField;
 import org.jooq.impl.DefaultDSLContext;
@@ -58,7 +57,7 @@ public class HouseholdMemberDao implements Dao<HouseholdMembersRecord, Household
         hs.setId(UUID.fromString(r.getHouseholdId()));
         hm.setHousehold(hs);
         UserDao userDao = new UserDao(getDsl());
-        if(r.getInvitedById() != null) {
+        if (r.getInvitedById() != null) {
             hm.setInvitedBy(r.fetchParent(Keys.HOUSEHOLD_MEMBERS__FK_HOUSEHOLD_INVITED_BY)
                     .map(record -> userDao.fromRecord((UserRecord) record)));
         }
