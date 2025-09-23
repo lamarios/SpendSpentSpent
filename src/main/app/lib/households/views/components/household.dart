@@ -73,7 +73,11 @@ class HouseholdView extends StatelessWidget {
                   size: 40,
                   colorScheme: hm.color.getColor(context),
                 ),
-                title: Text('${hm.user.firstName} ${hm.user.lastName}'),
+                title: Text(
+                  index == 0
+                      ? 'You'
+                      : '${hm.user.firstName} ${hm.user.lastName}',
+                ),
                 subtitle: Text(hm.user.email),
                 trailing: hm.admin
                     ? Chip(

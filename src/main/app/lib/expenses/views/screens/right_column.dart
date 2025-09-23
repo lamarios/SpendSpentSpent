@@ -7,6 +7,7 @@ import 'package:material_loading_indicator/loading_indicator.dart';
 import 'package:motor/motor.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/expenses/state/expense_list.dart';
+import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/expenses/views/components/below_date_widget.dart';
 import 'package:spend_spent_spent/expenses/views/components/diff_with_previous_period.dart';
 import 'package:spend_spent_spent/expenses/views/components/expense_menu.dart';
@@ -115,6 +116,7 @@ class RightColumnTab extends StatelessWidget {
         child: BlocBuilder<ExpenseListCubit, ExpenseListState>(
           builder: (context, state) {
             final cubit = context.read<ExpenseListCubit>();
+            final lastExpense = context.select((LastExpenseCubit c) => c.state);
 
             return state.months.isEmpty
                 ? Center(

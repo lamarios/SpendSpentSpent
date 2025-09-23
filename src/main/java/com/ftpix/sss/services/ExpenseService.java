@@ -7,6 +7,7 @@ import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.utils.CategoryPredictor;
 import com.ftpix.sss.utils.DateUtils;
+import com.ftpix.sss.websockets.WebSocketSessionManager;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,10 +44,11 @@ public class ExpenseService {
     private final AiFileProcessingService aiFileProcessingService;
     private final CategoryDao categoryDao;
     private final UserDao userDao;
+    private final HouseholdService householdService;
 
 
     @Autowired
-    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ZoneId zoneId, ExpenseDao expenseDaoJooq, FileService fileService, ExpenseDao expenseDao, AiFileProcessingService aiFileProcessingService, CategoryDao categoryDao, UserDao userDao) throws SQLException {
+    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ZoneId zoneId, ExpenseDao expenseDaoJooq, FileService fileService, ExpenseDao expenseDao, AiFileProcessingService aiFileProcessingService, CategoryDao categoryDao, UserDao userDao, HouseholdService householdService) throws SQLException {
         this.categoryService = categoryService;
         this.settingsService = settingsService;
         this.zoneId = zoneId;
@@ -57,6 +59,7 @@ public class ExpenseService {
         this.categoryDao = categoryDao;
 
         this.userDao = userDao;
+        this.householdService = householdService;
         fixLegacyExpensesTimeZones();
     }
 
@@ -171,6 +174,7 @@ public class ExpenseService {
         expense.getFiles()
                 .forEach(file -> fileService.updateField(file, FILES.EXPENSE_ID, expense.getId()));
 
+        sendMessageToOtherUsers(user);
         return expense;
     }
 
@@ -197,13 +201,18 @@ public class ExpenseService {
             });
         }
 
+        sendMessageToOtherUsers(user);
         return result;
     }
 
     public boolean delete(long id, User user) throws Exception {
         final Expense expense = get(id, user);
         if (expense.getCategory().getUser().getId().equals(user.getId())) {
-            return expenseDaoJooq.delete(user, expense);
+            try {
+                return expenseDaoJooq.delete(user, expense);
+            } finally {
+                sendMessageToOtherUsers(user);
+            }
         } else {
             return false;
         }
@@ -296,5 +305,19 @@ public class ExpenseService {
         var now = ZonedDateTime.now(timeZone);
 
         return categoryPredictor.predict(now.getDayOfWeek(), now.getHour());
+    }
+
+
+    private List<User> getHouseholdOtherMembers(User user) {
+        return householdService.getCurrentHousehold(user)
+                .map(household -> household.getMembers().stream().map(HouseholdMember::getUser)
+                        .filter(user1 -> !user1.getId().equals(user.getId()))
+                        .toList())
+                .orElseGet(List::of);
+    }
+
+    public void sendMessageToOtherUsers(User currentUser) {
+        getHouseholdOtherMembers(currentUser).forEach(user -> WebSocketSessionManager.sendToUser(user.getId()
+                .toString(), new NewHouseholdExpense()));
     }
 }

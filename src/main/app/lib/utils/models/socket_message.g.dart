@@ -21,4 +21,5 @@ Map<String, dynamic> _$SssSocketMessageToJson(_SssSocketMessage instance) =>
 const _$SssSocketMessageTypeEnumMap = {
   SssSocketMessageType.sssFile: 'sssFile',
   SssSocketMessageType.householdUpdate: 'householdUpdate',
+  SssSocketMessageType.newHouseholdExpense: 'newHouseholdExpense',
 };

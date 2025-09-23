@@ -254,7 +254,7 @@ public class HouseholdService {
                 .toList()).orElseGet(List::of);
     }
 
-    private void sendMessageToOtherUsers(Household hs, User currentUser) throws SQLException {
+    public void sendMessageToOtherUsers(Household hs, User currentUser) {
         getHouseholdOtherMembers(Optional.ofNullable(hs), currentUser).forEach(user -> WebSocketSessionManager.sendToUser(user.getId()
                 .toString(), new HouseholdWebsocketUpdate()));
     }

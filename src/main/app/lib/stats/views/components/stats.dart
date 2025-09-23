@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:material_loading_indicator/loading_indicator.dart';
+import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/stats/state/stats_list.dart';
@@ -26,6 +27,9 @@ class StatsView extends StatelessWidget {
         child: ErrorHandler<StatsListCubit, StatsListState>(
           child: BlocBuilder<StatsListCubit, StatsListState>(
             builder: (context, state) {
+              final lastExpense = context.select(
+                (LastExpenseCubit c) => c.state,
+              );
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: AnimatedSwitcher(

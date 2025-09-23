@@ -4,6 +4,7 @@ import com.ftpix.sss.dao.*;
 import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.utils.DateUtils;
+import com.ftpix.sss.utils.PaginationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jooq.Condition;
@@ -36,10 +37,11 @@ public class HistoryService {
     private final HouseholdDao householdDao;
     private final MonthlyHistoryDao monthlyHistoryDaoJooq;
     private final YearlyHistoryDao yearlyHistoryDaoJooq;
+    private final UserDao userDao;
     private final ZoneId zoneId;
 
     @Autowired
-    public HistoryService(CategoryService categoryService, ExpenseService expenseService, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, HouseholdDao householdDao, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq, ZoneId zoneId) {
+    public HistoryService(CategoryService categoryService, ExpenseService expenseService, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, HouseholdDao householdDao, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq, UserDao userDao, ZoneId zoneId) {
         this.categoryService = categoryService;
         this.expenseService = expenseService;
         this.expenseDaoJooq = expenseDaoJooq;
@@ -47,15 +49,45 @@ public class HistoryService {
         this.householdDao = householdDao;
         this.monthlyHistoryDaoJooq = monthlyHistoryDaoJooq;
         this.yearlyHistoryDaoJooq = yearlyHistoryDaoJooq;
+        this.userDao = userDao;
         this.zoneId = zoneId;
 
         this.expenseDaoJooq.addUserBasedListener(expenseDaoListener);
         this.categoryDaoJooq.addUserBasedListener(categoryDaoListener);
+        recalculateStats();
+    }
+
+
+    private void recalculateStats() {
+        logger.info("Recalculating stats cache");
+        for (User user : userDao.getWhere()) {
+            boolean hasMore;
+            int page = PaginationUtils.DEFAULT_PAGE;
+            do {
+                logger.info("Refreshing cache for user" + user.getId().toString() + " page: " + page);
+                PaginatedResults<Expense> expenses = expenseDaoJooq.getPaginatedWhere(user, page, 100);
+                expenses.getData().forEach(expense -> {
+                    try {
+                        cacheForExpense(user, expense);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                hasMore = expenses.getData().size() == 100;
+                page++;
+            } while (hasMore);
+        }
     }
 
     private final DaoUserListener<Category> categoryDaoListener = new DaoUserListener<Category>() {
         @Override
         public void afterInsert(User user, Category newRecord) {
+
+        }
+
+        @Override
+        public void afterUpdate(User user, Category newRecord) {
 
         }
 
@@ -71,6 +103,15 @@ public class HistoryService {
         public void afterInsert(User user, Expense newRecord) {
             try {
                 cacheForExpense(user, newRecord);
+            } catch (SQLException e) {
+                logger.error(e);
+            }
+        }
+
+        @Override
+        public void afterUpdate(User user, Expense updatedRecord) {
+            try {
+                cacheForExpense(user, updatedRecord);
             } catch (SQLException e) {
                 logger.error(e);
             }
