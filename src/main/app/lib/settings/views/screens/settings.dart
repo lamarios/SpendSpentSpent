@@ -26,6 +26,7 @@ const ALLOW_SIGNUP = "allowSignUp",
     DEMO_MODE = "demoMode",
     MOTD = "motd",
     MATERIAL_YOU = "material-you",
+    USE_HOUSEFOLD_COLOR = "use-household-color",
     BLACK_BACKGROUND = "black-background",
     CURRENCY_API_KEY = "currencyApiKey",
     INCLUDE_RECURRING_IN_DIFF = "includeRecurringInDiff";
@@ -232,6 +233,20 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                               tiles: [
                                 SettingsTile(
                                   title: Text('Manage household'),
+                                  leading: Stack(
+                                    children: [
+                                      Icon(Icons.house_outlined),
+                                      if (householdCubit
+                                          .state
+                                          .invitations
+                                          .isNotEmpty)
+                                        Positioned(
+                                          top: 0,
+                                          right: 0,
+                                          child: Badge(smallSize: 10),
+                                        ),
+                                    ],
+                                  ),
                                   description: householdCubit.state.loading
                                       ? SizedBox(
                                           width: 16,

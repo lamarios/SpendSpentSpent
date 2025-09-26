@@ -5,10 +5,12 @@ import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.utils.DateUtils;
 import com.ftpix.sss.utils.PaginationUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -54,21 +56,41 @@ public class HistoryService {
 
         this.expenseDaoJooq.addUserBasedListener(expenseDaoListener);
         this.categoryDaoJooq.addUserBasedListener(categoryDaoListener);
-        recalculateStats();
     }
 
 
+    @Scheduled(fixedRate = 86_400_000)
     private void recalculateStats() {
         logger.info("Recalculating stats cache");
         for (User user : userDao.getWhere()) {
             boolean hasMore;
             int page = PaginationUtils.DEFAULT_PAGE;
+
+            // we keep a cache of the date / categories we processed so we do have to do it many times per category / month
+            Map<Integer, Set<Long>> alreadyDoneMonthly = new HashMap<>();
+            Map<Integer, Set<Long>> alreadyDoneYearly = new HashMap<>();
             do {
-                logger.info("Refreshing cache for user" + user.getId().toString() + " page: " + page);
+                logger.info("Refreshing cache for user " + user.getId().toString() + " page: " + page);
                 PaginatedResults<Expense> expenses = expenseDaoJooq.getPaginatedWhere(user, page, 100);
                 expenses.getData().forEach(expense -> {
                     try {
-                        cacheForExpense(user, expense);
+
+                        ZonedDateTime expenseDate = DateUtils.fromTimestamp(expense.getTimestamp(), zoneId);
+                        int formattedDate = Integer.parseInt(DateTimeFormatter.ofPattern("yyyyMM").format(expenseDate));
+                        int formattedYear = Integer.parseInt(DateTimeFormatter.ofPattern("yyyy").format(expenseDate));
+                        alreadyDoneMonthly.putIfAbsent(formattedDate, new HashSet<>());
+                        alreadyDoneYearly.putIfAbsent(formattedYear, new HashSet<>());
+
+                        if (!alreadyDoneMonthly.get(formattedDate).contains(expense.getCategory().getId())) {
+                            cacheForCategoryMonthly(user, expenseDate, expense.getCategory());
+                            alreadyDoneMonthly.get(formattedDate).add(expense.getCategory().getId());
+                        }
+
+                        if (!alreadyDoneYearly.get(formattedYear).contains(expense.getCategory().getId())) {
+                            cacheForCategoryYearly(user, expenseDate, expense.getCategory());
+                            alreadyDoneYearly.get(formattedYear).add(expense.getCategory().getId());
+                        }
+
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }

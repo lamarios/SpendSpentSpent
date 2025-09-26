@@ -8,6 +8,7 @@ import 'package:spend_spent_spent/households/models/household_members.dart';
 import 'package:spend_spent_spent/households/services/household.dart';
 import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/settings/models/user.dart';
+import 'package:spend_spent_spent/settings/state/app_settings.dart';
 import 'package:spend_spent_spent/utils/models/with_error.dart';
 
 part 'household.freezed.dart';
@@ -66,25 +67,31 @@ sealed class HouseholdState with _$HouseholdState implements WithError {
 
   const HouseholdState._();
 
-  ColorScheme? getForUser(BuildContext context, User user) {
+  ColorScheme getForUser(BuildContext context, User user) {
+    final colors = Theme.of(context).colorScheme;
+
     if (Theme.brightnessOf(context) == Brightness.dark) {
-      return userDarkColors[user.id!];
+      return userDarkColors[user.id!] ?? colors;
     } else {
-      return userLightColors[user.id];
+      return userLightColors[user.id] ?? colors;
     }
   }
 
   ColorScheme getCategoryColor(BuildContext context, Category category) {
+    final usehouseHoldColor = context
+        .read<AppSettingsCubit>()
+        .state
+        .useHouseholdColors;
     final colors = Theme.of(context).colorScheme;
 
     final currentUser = context.read<UsernamePasswordCubit>().currentUser;
     return currentUser?.id != null &&
-            (category.user == null || currentUser!.id == category.user?.id)
+            (category.user == null ||
+                (currentUser!.id == category.user?.id && !usehouseHoldColor))
         ? colors
         : context.read<HouseholdCubit>().state.getForUser(
-                context,
-                category.user!,
-              ) ??
-              colors;
+            context,
+            category.user!,
+          );
   }
 }

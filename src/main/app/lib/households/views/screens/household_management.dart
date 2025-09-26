@@ -12,6 +12,8 @@ import 'package:spend_spent_spent/utils/models/socket_message.dart';
 import 'package:spend_spent_spent/utils/views/components/error_listener.dart';
 import 'package:spend_spent_spent/utils/views/components/sss_socket_listener.dart';
 
+import '../../states/household.dart';
+
 @RoutePage()
 class HouseholdManagementScreen extends StatelessWidget {
   const HouseholdManagementScreen({super.key});
@@ -63,6 +65,7 @@ class HouseholdManagementScreen extends StatelessWidget {
                               await service.leaveHousehold();
                               if (context.mounted) {
                                 cubit.getData(true);
+                                getIt<HouseholdCubit>().getData();
                               }
                             },
                           ),
@@ -84,6 +87,7 @@ class HouseholdManagementScreen extends StatelessWidget {
                                 await service.deleteHousehold();
                                 if (context.mounted) {
                                   cubit.getData(true);
+                                  getIt<HouseholdCubit>().getData();
                                 }
                               },
                             ),

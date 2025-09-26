@@ -5,6 +5,7 @@ import 'package:spend_spent_spent/households/models/household_enums.dart';
 import 'package:spend_spent_spent/households/models/household_members.dart';
 import 'package:spend_spent_spent/households/states/membership_management.dart';
 import 'package:spend_spent_spent/households/views/components/member_color.dart';
+import 'package:spend_spent_spent/settings/state/app_settings.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 
 class MemberManagement extends StatelessWidget {
@@ -74,6 +75,8 @@ class MemberManagement extends StatelessWidget {
         child: BlocBuilder<MembershipManagementCubit, MembershipManagementState>(
           builder: (context, state) {
             var hmColor = state.color.getColor(context);
+            final settingsCubit = context.watch<AppSettingsCubit>();
+            final useHouseholdColors = settingsCubit.state.useHouseholdColors;
 
             final cubit = context.read<MembershipManagementCubit>();
             return Column(
@@ -105,6 +108,13 @@ class MemberManagement extends StatelessWidget {
                         setColor(membership, newColor);
                       }
                     },
+                  ),
+                if (isSelf)
+                  SwitchListTile(
+                    value: useHouseholdColors,
+                    title: Text('Use color to theme the whole application'),
+                    onChanged: (value) =>
+                        settingsCubit.setUseHouseholdColos(value),
                   ),
                 if (isAdmin && !isSelf) ...[
                   SwitchListTile(

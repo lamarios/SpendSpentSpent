@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppSettingsState {
 
- bool get materialYou; bool get blackBackground;
+ bool get materialYou; bool get blackBackground; bool get useHouseholdColors;
 /// Create a copy of AppSettingsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $AppSettingsStateCopyWith<AppSettingsState> get copyWith => _$AppSettingsStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettingsState&&(identical(other.materialYou, materialYou) || other.materialYou == materialYou)&&(identical(other.blackBackground, blackBackground) || other.blackBackground == blackBackground));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettingsState&&(identical(other.materialYou, materialYou) || other.materialYou == materialYou)&&(identical(other.blackBackground, blackBackground) || other.blackBackground == blackBackground)&&(identical(other.useHouseholdColors, useHouseholdColors) || other.useHouseholdColors == useHouseholdColors));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,materialYou,blackBackground);
+int get hashCode => Object.hash(runtimeType,materialYou,blackBackground,useHouseholdColors);
 
 @override
 String toString() {
-  return 'AppSettingsState(materialYou: $materialYou, blackBackground: $blackBackground)';
+  return 'AppSettingsState(materialYou: $materialYou, blackBackground: $blackBackground, useHouseholdColors: $useHouseholdColors)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $AppSettingsStateCopyWith<$Res>  {
   factory $AppSettingsStateCopyWith(AppSettingsState value, $Res Function(AppSettingsState) _then) = _$AppSettingsStateCopyWithImpl;
 @useResult
 $Res call({
- bool materialYou, bool blackBackground
+ bool materialYou, bool blackBackground, bool useHouseholdColors
 });
 
 
@@ -62,10 +62,11 @@ class _$AppSettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of AppSettingsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? materialYou = null,Object? blackBackground = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? materialYou = null,Object? blackBackground = null,Object? useHouseholdColors = null,}) {
   return _then(_self.copyWith(
 materialYou: null == materialYou ? _self.materialYou : materialYou // ignore: cast_nullable_to_non_nullable
 as bool,blackBackground: null == blackBackground ? _self.blackBackground : blackBackground // ignore: cast_nullable_to_non_nullable
+as bool,useHouseholdColors: null == useHouseholdColors ? _self.useHouseholdColors : useHouseholdColors // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -148,10 +149,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool materialYou,  bool blackBackground)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool materialYou,  bool blackBackground,  bool useHouseholdColors)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppSettingsState() when $default != null:
-return $default(_that.materialYou,_that.blackBackground);case _:
+return $default(_that.materialYou,_that.blackBackground,_that.useHouseholdColors);case _:
   return orElse();
 
 }
@@ -169,10 +170,10 @@ return $default(_that.materialYou,_that.blackBackground);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool materialYou,  bool blackBackground)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool materialYou,  bool blackBackground,  bool useHouseholdColors)  $default,) {final _that = this;
 switch (_that) {
 case _AppSettingsState():
-return $default(_that.materialYou,_that.blackBackground);}
+return $default(_that.materialYou,_that.blackBackground,_that.useHouseholdColors);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -186,10 +187,10 @@ return $default(_that.materialYou,_that.blackBackground);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool materialYou,  bool blackBackground)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool materialYou,  bool blackBackground,  bool useHouseholdColors)?  $default,) {final _that = this;
 switch (_that) {
 case _AppSettingsState() when $default != null:
-return $default(_that.materialYou,_that.blackBackground);case _:
+return $default(_that.materialYou,_that.blackBackground,_that.useHouseholdColors);case _:
   return null;
 
 }
@@ -201,11 +202,12 @@ return $default(_that.materialYou,_that.blackBackground);case _:
 
 
 class _AppSettingsState implements AppSettingsState {
-  const _AppSettingsState({this.materialYou = false, this.blackBackground = false});
+  const _AppSettingsState({this.materialYou = false, this.blackBackground = false, this.useHouseholdColors = false});
   
 
 @override@JsonKey() final  bool materialYou;
 @override@JsonKey() final  bool blackBackground;
+@override@JsonKey() final  bool useHouseholdColors;
 
 /// Create a copy of AppSettingsState
 /// with the given fields replaced by the non-null parameter values.
@@ -217,16 +219,16 @@ _$AppSettingsStateCopyWith<_AppSettingsState> get copyWith => __$AppSettingsStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettingsState&&(identical(other.materialYou, materialYou) || other.materialYou == materialYou)&&(identical(other.blackBackground, blackBackground) || other.blackBackground == blackBackground));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettingsState&&(identical(other.materialYou, materialYou) || other.materialYou == materialYou)&&(identical(other.blackBackground, blackBackground) || other.blackBackground == blackBackground)&&(identical(other.useHouseholdColors, useHouseholdColors) || other.useHouseholdColors == useHouseholdColors));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,materialYou,blackBackground);
+int get hashCode => Object.hash(runtimeType,materialYou,blackBackground,useHouseholdColors);
 
 @override
 String toString() {
-  return 'AppSettingsState(materialYou: $materialYou, blackBackground: $blackBackground)';
+  return 'AppSettingsState(materialYou: $materialYou, blackBackground: $blackBackground, useHouseholdColors: $useHouseholdColors)';
 }
 
 
@@ -237,7 +239,7 @@ abstract mixin class _$AppSettingsStateCopyWith<$Res> implements $AppSettingsSta
   factory _$AppSettingsStateCopyWith(_AppSettingsState value, $Res Function(_AppSettingsState) _then) = __$AppSettingsStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool materialYou, bool blackBackground
+ bool materialYou, bool blackBackground, bool useHouseholdColors
 });
 
 
@@ -254,10 +256,11 @@ class __$AppSettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of AppSettingsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? materialYou = null,Object? blackBackground = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? materialYou = null,Object? blackBackground = null,Object? useHouseholdColors = null,}) {
   return _then(_AppSettingsState(
 materialYou: null == materialYou ? _self.materialYou : materialYou // ignore: cast_nullable_to_non_nullable
 as bool,blackBackground: null == blackBackground ? _self.blackBackground : blackBackground // ignore: cast_nullable_to_non_nullable
+as bool,useHouseholdColors: null == useHouseholdColors ? _self.useHouseholdColors : useHouseholdColors // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

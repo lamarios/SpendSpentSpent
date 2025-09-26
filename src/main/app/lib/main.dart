@@ -14,6 +14,7 @@ import 'package:spend_spent_spent/settings/state/app_settings.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
 
 import 'globals.dart';
+import 'households/states/household.dart';
 
 final _appRouter = AppRouter();
 
@@ -114,6 +115,8 @@ class _SpendSpentSpentState extends State<SpendSpentSpent>
               ColorScheme lightColorScheme;
               ColorScheme darkColorScheme;
 
+              final householdCubit = context.watch<HouseholdCubit>();
+
               if (state.materialYou &&
                   lightDynamic != null &&
                   darkDynamic != null) {
@@ -125,6 +128,21 @@ class _SpendSpentSpentState extends State<SpendSpentSpent>
                   seedColor: Colors.blue,
                   brightness: Brightness.dark,
                 );
+              }
+
+              if (state.useHouseholdColors) {
+                final currentUser = context
+                    .read<UsernamePasswordCubit>()
+                    .currentUser;
+                if (householdCubit.state.household != null &&
+                    currentUser != null) {
+                  lightColorScheme =
+                      householdCubit.state.userLightColors[currentUser.id!] ??
+                      lightColorScheme;
+                  darkColorScheme =
+                      householdCubit.state.userDarkColors[currentUser.id!] ??
+                      darkColorScheme;
+                }
               }
 
               if (state.blackBackground) {

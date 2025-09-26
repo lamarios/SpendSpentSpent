@@ -4,6 +4,7 @@ import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/households/models/household_enums.dart';
 import 'package:spend_spent_spent/households/models/household_members.dart';
 import 'package:spend_spent_spent/households/services/household.dart';
+import 'package:spend_spent_spent/households/states/household.dart';
 import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/utils/models/with_error.dart';
 
@@ -41,6 +42,7 @@ class HouseholdManagementCubit extends Cubit<HouseholdManagementState> {
     try {
       final hs = await service.createHousehold();
       emit(state.copyWith(household: hs));
+      getIt<HouseholdCubit>().getData();
     } catch (e, s) {
       emit(state.copyWith(error: e, stackTrace: s));
       rethrow;
@@ -83,6 +85,7 @@ class HouseholdManagementCubit extends Cubit<HouseholdManagementState> {
   ) async {
     try {
       await service.setColor(color);
+      getIt<HouseholdCubit>().getData();
     } catch (e, s) {
       emit(state.copyWith(error: e, stackTrace: s));
       rethrow;
