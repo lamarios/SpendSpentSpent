@@ -89,11 +89,9 @@ class SingleStats extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
+    var householdCubit = context.read<HouseholdCubit>();
     final catColor = stats.category.id != -1
-        ? context.read<HouseholdCubit>().state.getCategoryColor(
-            context,
-            stats.category,
-          )
+        ? householdCubit.state.getCategoryColor(context, stats.category)
         : colors;
 
     // TODO: implement build
@@ -113,7 +111,7 @@ class SingleStats extends StatelessWidget {
         builder: (context, state) {
           final cubit = context.read<SingleStatsCubit>();
 
-          final openedBackgroundColor = getLightBackground(context);
+          final openedBackgroundColor = getLightBackground(context, catColor);
 
           return SingleMotionBuilder(
             motion: MaterialSpringMotion.expressiveSpatialDefault(),
@@ -175,7 +173,7 @@ class SingleStats extends StatelessWidget {
                           //     : colors.primaryContainer,
                           color: Color.lerp(
                             catColor.primaryContainer,
-                            colors.surface,
+                            catColor.surface,
                             value,
                           ),
                         ),
@@ -197,11 +195,34 @@ class SingleStats extends StatelessWidget {
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(10),
                                 ),
-                                color: Color.lerp(
-                                  catColor.onPrimaryContainer,
-                                  openedBackgroundColor,
-                                  value,
-                                ),
+                                gradient: stats.category.id == -1
+                                    ? LinearGradient(
+                                        colors: householdCubit.state
+                                            .colorsAsGradient(
+                                              context,
+                                              (colors) =>
+                                                  colors.onPrimaryContainer,
+                                            )
+                                            .colors
+                                            .map(
+                                              (e) =>
+                                                  Color.lerp(
+                                                    e,
+                                                    openedBackgroundColor,
+                                                    value,
+                                                  ) ??
+                                                  e,
+                                            )
+                                            .toList(),
+                                      )
+                                    : null,
+                                color: stats.category.id == -1
+                                    ? null
+                                    : Color.lerp(
+                                        catColor.onPrimaryContainer,
+                                        openedBackgroundColor,
+                                        value,
+                                      ),
                                 // color: state.open
                                 //     ? openedBackgroundColor
                                 //     : colors.onPrimaryContainer,
@@ -212,6 +233,7 @@ class SingleStats extends StatelessWidget {
                                   duration: panelTransition,
                                   child: StatsGraph(
                                     categoryId: stats.category.id!,
+                                    colors: catColor,
                                     monthly: monthly,
                                     close: cubit.closeContainer,
                                   ),

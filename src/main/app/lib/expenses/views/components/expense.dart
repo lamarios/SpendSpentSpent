@@ -20,7 +20,7 @@ class OneExpense extends StatelessWidget {
     required this.expense,
   });
 
-  openContainer() {
+  void openContainer() {
     showExpense(expense);
   }
 

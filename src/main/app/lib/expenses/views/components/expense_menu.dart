@@ -23,6 +23,11 @@ class ExpenseMenu extends StatelessWidget {
   const ExpenseMenu({super.key, required this.expense});
 
   static Future<void> showSheet(BuildContext context, Expense expense) async {
+    var colors = context.read<HouseholdCubit>().state.getCategoryColor(
+      context,
+      expense.category,
+    );
+
     await showMotorBottomSheet(
       context: context,
       // context: context,
@@ -30,9 +35,15 @@ class ExpenseMenu extends StatelessWidget {
       // showDragHandle: true,
       // useSafeArea: true,
       // builder: (context) {
-      child: Padding(
-        padding: const EdgeInsets.only(top: 16.0),
-        child: Wrap(children: [ExpenseMenu(expense: expense)]),
+      child: Theme(
+        data: Theme.of(context).copyWith(colorScheme: colors),
+        child: Container(
+          color: colors.surfaceContainer,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: Wrap(children: [ExpenseMenu(expense: expense)]),
+          ),
+        ),
       ),
     );
   }

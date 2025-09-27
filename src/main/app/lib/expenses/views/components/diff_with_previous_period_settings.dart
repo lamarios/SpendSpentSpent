@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/expenses/state/diff_with_previous_month_settings.dart';
 import 'package:spend_spent_spent/expenses/views/components/diff_wiht_previous_period_graph.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 
 final DateFormat _df = DateFormat("yyyy-MM");
-final DateFormat _df2 = DateFormat.yMMMd();
 
 class DiffWithPreviousPeriodSettings extends StatelessWidget {
   final String month;
@@ -85,8 +83,6 @@ class DiffWithPreviousPeriodSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return BlocProvider(
       create: (context) => DiffWithPreviousMonthSettingsCubit(
         DiffWithPreviousMonthSettingsState(),
@@ -109,10 +105,6 @@ class DiffWithPreviousPeriodSettings extends StatelessWidget {
                 child: Column(
                   spacing: 16,
                   children: [
-                    Text(
-                      'This shows the difference between  ${_df2.format(currentPeriod.start)} to ${_df2.format(currentPeriod.end)} and ${_df2.format(previousPeriod.start)} to ${_df2.format(previousPeriod.end)}',
-                      style: textTheme.labelMedium,
-                    ),
                     DiffWithPreviousPeriodGraph(
                       key: ValueKey(state.includeRecurringExpenses),
                       currentPeriod: currentPeriod,

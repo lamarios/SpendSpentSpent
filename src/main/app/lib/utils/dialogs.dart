@@ -59,6 +59,7 @@ void showPromptDialog(
   TextEditingController controller,
   Function() onOk, {
   int? maxLines,
+  TextInputType? textInputType,
   String Function(String seed)? getAutoComplete,
 }) {
   final colors = Theme.of(context).colorScheme;
@@ -71,7 +72,7 @@ void showPromptDialog(
           decoration: InputDecoration(label: Text(label)),
           controller: controller,
           maxLines: maxLines,
-          keyboardType: TextInputType.multiline,
+          keyboardType: textInputType ?? TextInputType.multiline,
         ),
         actions: <Widget>[
           TextButton(

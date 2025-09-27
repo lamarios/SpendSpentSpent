@@ -1,5 +1,6 @@
 import 'dart:core';
 
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
@@ -79,61 +80,70 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
     emit(state.copyWith(diffWithPreviousPeriod: diff));
   }
 
-  getExpenses(bool loading) async {
-    emit(state.copyWith(loading: loading));
-
-    try {
-      var expenses = await service.getMonthExpenses(state.selected);
-      var total = expenses.values
-          .map((e) => e.total)
-          .reduce((value, element) => value + element);
-      if (!isClosed) {
-        emit(state.copyWith(expenses: expenses, total: total));
+  Future<void> getExpenses(bool loading) async {
+    EasyDebounce.debounce('expenses', Duration(milliseconds: 500), () async {
+      try {
+        emit(state.copyWith(loading: loading));
+        var expenses = await service.getMonthExpenses(state.selected);
+        var total = expenses.values
+            .map((e) => e.total)
+            .reduce((value, element) => value + element);
+        if (!isClosed) {
+          emit(state.copyWith(expenses: expenses, total: total));
+        }
+      } catch (e, s) {
+        emit(state.copyWith(error: e, stackTrace: s));
+      } finally {
+        emit(state.copyWith(loading: false));
       }
-    } catch (e, s) {
-      emit(state.copyWith(error: e, stackTrace: s));
-    } finally {
-      emit(state.copyWith(loading: false));
-    }
+    });
   }
 
-  switchSearch() {
+  void switchSearch() {
     emit(state.copyWith(searchMode: !state.searchMode));
 
     if (!state.searchMode) {
+      emit(
+        state.copyWith(
+          expenses: {},
+          total: 0,
+          diffWithPreviousPeriod: null,
+          loading: true,
+        ),
+      );
       getExpenses(true);
       getDiff();
     } else {
       emit(
-        state.copyWith(expenses: {}, total: 0, diffWithPreviousPeriod: null),
+        state.copyWith(
+          expenses: {},
+          total: 0,
+          diffWithPreviousPeriod: null,
+          loading: true,
+        ),
       );
-      /*
-      setState(() {
-        this.expenses = <String, DayExpense>{};
-        this.total = 0;
-        expensesWidget = getExpensesWidget();
-      });
-*/
     }
   }
 
-  search(SearchParameters params) async {
-    try {
-      emit(state.copyWith(loading: true));
-      var expenses = await service.search(params);
-      double total = expenses.values.isNotEmpty
-          ? expenses.values
-                .map((e) => e.total)
-                .reduce((value, element) => value + element)
-          : 0;
-      if (!isClosed) {
-        emit(state.copyWith(expenses: expenses, total: total));
+  Future<void> search(SearchParameters params) async {
+    EasyDebounce.debounce('expenses', Duration(milliseconds: 500), () async {
+      try {
+        emit(state.copyWith(loading: true));
+        var expenses = await service.search(params);
+        double total = expenses.values.isNotEmpty
+            ? expenses.values
+                  .map((e) => e.total)
+                  .reduce((value, element) => value + element)
+            : 0;
+        if (!isClosed) {
+          emit(state.copyWith(expenses: expenses, total: total));
+        }
+      } catch (e, s) {
+        emit(state.copyWith(error: e, stackTrace: s));
+      } finally {
+        emit(state.copyWith(loading: false));
       }
-    } catch (e, s) {
-      emit(state.copyWith(error: e, stackTrace: s));
-    } finally {
-      emit(state.copyWith(loading: false));
-    }
+    });
   }
 }
 

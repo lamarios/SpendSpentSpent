@@ -4,9 +4,12 @@ import com.ftpix.sss.dsl.Keys;
 import com.ftpix.sss.dsl.tables.records.CategoryRecord;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.HouseholdInviteStatus;
+import com.ftpix.sss.models.PaginatedResults;
 import com.ftpix.sss.models.User;
+import com.ftpix.sss.utils.PaginationUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.jooq.*;
+import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 
 import java.util.ArrayList;
@@ -97,6 +100,32 @@ public interface HouseholdCategoryBaseDao<R extends UpdatableRecord<R>, M extend
                 .where(conditions)
                 .orderBy(orderBy)
                 .fetch(r -> fromRecord((R) r, userCategories));
+    }
+
+    default PaginatedResults<M> getFromHouseholdPaginatedWhere(User user, int page, int pageSize, OrderField[] orderBy, Condition... filter) {
+        if (page < 0) {
+            page = PaginationUtils.DEFAULT_PAGE;
+        }
+        if (pageSize <= 0) {
+            pageSize = PaginationUtils.DEFAULT_PAGE_SIZE;
+        }
+
+        Map<Long, Category> userCategories = getHouseholdCategories(user);
+        Condition[] conditions = (Condition[]) ArrayUtils.add(filter, getCategoryField().in(userCategories.keySet()));
+
+        int offset = page * pageSize;
+        List<M> results = getDsl().select().from(getTable())
+                .where(conditions)
+                .orderBy(orderBy)
+                .limit(pageSize)
+                .offset(offset)
+                .fetch(r -> fromRecord((R) r, userCategories));
+
+        Integer count = getDsl().select(DSL.count().as("count")).from(getTable())
+                .where(conditions)
+                .fetchOne(r -> r.get("count", Integer.class));
+
+        return new PaginatedResults<>(page, count, pageSize, results);
     }
 
 }

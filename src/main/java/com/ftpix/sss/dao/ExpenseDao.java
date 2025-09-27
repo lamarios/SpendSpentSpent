@@ -147,6 +147,19 @@ public class ExpenseDao implements UserCategoryBasedDao<ExpenseRecord, Expense>,
                 });
     }
 
+    public List<Expense> searchInHousehold(User user, OrderField[] orderBy, Condition... filter) {
+        Map<Long, Category> userCategories = getHouseholdCategories(user);
+
+        Condition[] conditions = (Condition[]) ArrayUtils.add(filter, getCategoryField().in(userCategories.keySet()));
+        return getDsl().selectDistinct(EXPENSE.fields())
+                .from(getTable())
+                .leftJoin(Tables.FILES)
+                .on(FILES.EXPENSE_ID.eq(EXPENSE.ID))
+                .where(conditions)
+                .orderBy(orderBy)
+                .fetch(r -> fromRecord(r.into(EXPENSE), userCategories));
+    }
+
     @Override
     public ExpenseRecord setRecordData(ExpenseRecord r, Expense o) {
         if (o.getId() != null) {

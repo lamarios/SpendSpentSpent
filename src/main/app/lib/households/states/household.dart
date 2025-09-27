@@ -77,6 +77,36 @@ sealed class HouseholdState with _$HouseholdState implements WithError {
     }
   }
 
+  LinearGradient colorsAsGradient(
+    BuildContext context, [
+    Color Function(ColorScheme colors)? colorGetter,
+  ]) {
+    final colors = Theme.of(context).colorScheme;
+
+    Map<String, ColorScheme> userColors = Map.of(
+      Theme.brightnessOf(context) == Brightness.dark
+          ? userDarkColors
+          : userLightColors,
+    );
+
+    final currentUser = context.read<UsernamePasswordCubit>().currentUser;
+
+    if (currentUser?.id != null) {
+      userColors[currentUser!.id!] = colors;
+    }
+
+    var list = userColors.values
+        .map(
+          (colors) =>
+              colorGetter != null ? colorGetter(colors) : colors.primary,
+        )
+        .toList();
+    if (list.length == 1) {
+      list.add(list[0]);
+    }
+    return LinearGradient(colors: list);
+  }
+
   ColorScheme getCategoryColor(BuildContext context, Category category) {
     final usehouseHoldColor = context
         .read<AppSettingsCubit>()

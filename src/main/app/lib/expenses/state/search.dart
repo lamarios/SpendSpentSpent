@@ -1,7 +1,6 @@
 import 'dart:core';
 import 'dart:typed_data';
 
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -12,6 +11,7 @@ import 'package:spend_spent_spent/globals.dart';
 part 'search.freezed.dart';
 
 class SearchCubit extends Cubit<SearchState> {
+  final int onDayMinusOneMs = 1000 * 60 * 60 * 24 - 1;
   final Function(SearchParameters params) search;
   final TextEditingController noteController = TextEditingController();
 
@@ -32,11 +32,7 @@ class SearchCubit extends Cubit<SearchState> {
   }
 
   void triggerSearch() {
-    EasyDebounce.debounce(
-      'expense-search',
-      const Duration(milliseconds: 500),
-      () => search(state.searchParameters),
-    );
+    search(state.searchParameters);
   }
 
   void setNote() {
@@ -51,7 +47,7 @@ class SearchCubit extends Cubit<SearchState> {
         state.copyWith(
           searchParameters: state.searchParameters.copyWith(
             minDate: range.start.millisecondsSinceEpoch,
-            maxDate: range.end.millisecondsSinceEpoch,
+            maxDate: range.end.millisecondsSinceEpoch + onDayMinusOneMs,
           ),
         ),
       );
@@ -70,8 +66,6 @@ class SearchCubit extends Cubit<SearchState> {
     } else {
       categories = [c];
     }
-    print('selected category ${c.id}');
-
     emit(state.copyWith.searchParameters(categories: categories));
 
     getSearchParameters();
@@ -106,8 +100,9 @@ class SearchCubit extends Cubit<SearchState> {
           ),
         ),
       );
+
+      triggerSearch();
     });
-    triggerSearch();
   }
 
   Future<Uint8List> downloadData() async {

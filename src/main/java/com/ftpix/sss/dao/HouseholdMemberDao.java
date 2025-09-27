@@ -66,6 +66,7 @@ public class HouseholdMemberDao implements Dao<HouseholdMembersRecord, Household
 
         return hm;
     }
+    
 
     @Override
     public HouseholdMembersRecord setRecordData(HouseholdMembersRecord r, HouseholdMember hm) {

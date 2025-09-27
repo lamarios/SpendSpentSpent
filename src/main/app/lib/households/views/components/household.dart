@@ -32,6 +32,7 @@ class HouseholdView extends StatelessWidget {
         }
       },
       maxLines: 1,
+      textInputType: TextInputType.emailAddress,
     );
   }
 
@@ -109,11 +110,12 @@ class HouseholdView extends StatelessWidget {
             },
           ),
         ),
-        FilledButton.tonalIcon(
-          onPressed: () => showInviteDialog(context),
-          label: Text('Invite user to household'),
-          icon: Icon(Icons.add),
-        ),
+        if (isAdmin)
+          FilledButton.tonalIcon(
+            onPressed: () => showInviteDialog(context),
+            label: Text('Invite user to household'),
+            icon: Icon(Icons.add),
+          ),
       ],
     );
   }

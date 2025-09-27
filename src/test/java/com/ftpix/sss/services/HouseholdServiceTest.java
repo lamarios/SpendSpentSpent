@@ -66,7 +66,7 @@ public class HouseholdServiceTest extends TestContainerTest {
         assertEquals(hs.getId(), invitations.get(0).getHousehold().getId());
 
         // new users accepts invitation
-        Optional<Household> newHousehold = householdService.acceptInvitation(invitee, hs.getId());
+        Optional<Household> newHousehold = householdService.acceptInvitation(invitee, invitations.get(0).getId());
         assertTrue(newHousehold.isPresent());
         assertEquals(hs.getId(), newHousehold.get().getId());
         hs = newHousehold.get();
@@ -89,7 +89,7 @@ public class HouseholdServiceTest extends TestContainerTest {
 
         householdService.inviteUser(currentUser, invitee.getEmail());
         //re-accept
-        householdService.acceptInvitation(invitee, hs.getId());
+        householdService.acceptInvitation(invitee, hs);
         // set user as admin
         householdService.setAdmin(currentUser, invitee, true);
 
@@ -205,7 +205,7 @@ public class HouseholdServiceTest extends TestContainerTest {
         var hs = householdService.createHousehold(user);
         // invite the new usr to my household
         householdService.inviteUser(user, invitee.getEmail());
-        householdService.acceptInvitation(invitee, hs.getId());
+        householdService.acceptInvitation(invitee, hs);
         // now if i get todays expenses, i should have a total of 10 + 30 = 40
         months = expenseService.getMonths(user, ZoneId.systemDefault());
         expenses = expenseService.getByDay(months.get(0), user, ZoneId.systemDefault());

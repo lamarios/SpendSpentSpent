@@ -110,12 +110,13 @@ public class HouseholdService {
                     .filter(c -> !usedColors.contains(c))
                     .findFirst();
 
-            hm.setColor(color.get());
-            hm.setHousehold(household);
-            householdDao.getHouseholdMemberDao().insert(hm);
+            if (color.isPresent()) {
+                hm.setColor(color.get());
+                hm.setHousehold(household);
+                householdDao.getHouseholdMemberDao().insert(hm);
 
-
-            sendMessageToOtherUsers(getCurrentHousehold(user).get(), user);
+                getCurrentHousehold(user).ifPresent(household1 -> sendMessageToOtherUsers(household1, user));
+            }
         }
     }
 
@@ -135,18 +136,14 @@ public class HouseholdService {
 
                 });
 
-        if (currentHousehold.isPresent()) {
-            sendMessageToOtherUsers(currentHousehold.get(), user);
-        }
+        currentHousehold.ifPresent(household -> sendMessageToOtherUsers(household, user));
     }
 
     public void deleteHousehold(User user) throws SQLException {
         Optional<Household> currentHousehold = getCurrentHousehold(user);
         currentHousehold.filter(household -> isHouseholdAdmin(user, household))
                 .ifPresent(householdDao::delete);
-        if (currentHousehold.isPresent()) {
-            sendMessageToOtherUsers(currentHousehold.get(), user);
-        }
+        currentHousehold.ifPresent(household -> sendMessageToOtherUsers(household, user));
     }
 
     public boolean leaveHousehold(User user) throws SQLException {
@@ -179,10 +176,26 @@ public class HouseholdService {
                         .toString()), HOUSEHOLD_MEMBERS.STATUS.eq(HouseholdInviteStatus.pending.name()));
     }
 
+
+    public Optional<Household> acceptInvitation(User invitee, Household household) {
+        return getInvitations(invitee).stream()
+                .filter(householdMember -> householdMember.getUser()
+                        .getId()
+                        .equals(invitee.getId()) && householdMember.getHousehold().getId().equals(household.getId()))
+                .findFirst()
+                .flatMap(householdMember -> {
+                    try {
+                        return acceptInvitation(invitee, householdMember.getId());
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
+
     public Optional<Household> acceptInvitation(User invitee, UUID invitationId) throws SQLException {
         List<HouseholdMember> invitations = getInvitations(invitee);
         Optional<HouseholdMember> invitation = invitations.stream()
-                .filter(hs -> hs.getId().equals(invitationId))
+                .filter(invite -> invite.getId().equals(invitationId))
                 .findFirst();
 
         if (invitation.isPresent()) {
@@ -196,7 +209,7 @@ public class HouseholdService {
         }
 
         Optional<Household> hs = getCurrentHousehold(invitee);
-        sendMessageToOtherUsers(hs.get(), invitee);
+        hs.ifPresent(household -> sendMessageToOtherUsers(household, invitee));
         return hs;
     }
 
@@ -242,9 +255,7 @@ public class HouseholdService {
             householdMember.setColor(householdColor);
             householdDao.getHouseholdMemberDao().update(householdMember);
         });
-        if (currentHousehold.isPresent()) {
-            sendMessageToOtherUsers(currentHousehold.get(), currentUser);
-        }
+        currentHousehold.ifPresent(household -> sendMessageToOtherUsers(household, currentUser));
     }
 
 
