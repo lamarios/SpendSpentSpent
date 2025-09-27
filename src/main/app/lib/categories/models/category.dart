@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:spend_spent_spent/settings/models/user.dart';
 
 /// This allows the `User` class to access private members in
 /// the generated file. The value for this is *.g.dart, where
@@ -17,6 +18,7 @@ sealed class Category with _$Category {
     int? categoryOrder,
     int? id,
     double? percentageOfMonthly,
+    User? user,
   }) = _Category;
 
   /// A necessary factory constructor for creating a new User instance

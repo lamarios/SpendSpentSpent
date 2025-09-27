@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/households/states/household.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/utils/views/components/conditional_wrapper.dart';
 import 'package:spend_spent_spent/utils/views/components/expense_image.dart';
@@ -18,7 +20,7 @@ class OneExpense extends StatelessWidget {
     required this.expense,
   });
 
-  openContainer() {
+  void openContainer() {
     showExpense(expense);
   }
 
@@ -35,6 +37,11 @@ class OneExpense extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
+    final expenseColors = context.read<HouseholdCubit>().state.getCategoryColor(
+      context,
+      expense.category,
+    );
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: openContainer,
@@ -45,14 +52,14 @@ class OneExpense extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: colors.primaryContainer,
+              color: expenseColors.primaryContainer,
             ),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: getIcon(
                 expense.category.icon!,
                 size: 20,
-                color: colors.onPrimaryContainer,
+                color: expenseColors.onPrimaryContainer,
               ),
             ),
           ),

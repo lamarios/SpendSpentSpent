@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:stupid_simple_sheet/stupid_simple_sheet.dart';
 
-void showAlertDialog(BuildContext context, String title, String text) {
-  showDialog(
+Future<void> showAlertDialog(
+  BuildContext context,
+  String title,
+  String text,
+) async {
+  await showDialog(
     context: context,
     builder: (BuildContext context) => AlertDialog(
       title: Text(title),
@@ -20,13 +24,42 @@ void showAlertDialog(BuildContext context, String title, String text) {
   );
 }
 
+Future<void> okCancelDialog(
+  BuildContext context, {
+  required String title,
+  required Widget content,
+  required Function() onOk,
+}) async {
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      title: Text(title),
+      content: content,
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, null),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context, 'OK');
+            onOk();
+          },
+          child: const Text('OK'),
+        ),
+      ],
+    ),
+  );
+}
+
 void showPromptDialog(
   BuildContext context,
   String title,
   String label,
   TextEditingController controller,
-  Function onOk, {
+  Function() onOk, {
   int? maxLines,
+  TextInputType? textInputType,
   String Function(String seed)? getAutoComplete,
 }) {
   final colors = Theme.of(context).colorScheme;
@@ -36,9 +69,10 @@ void showPromptDialog(
       return AlertDialog(
         title: Text(title),
         content: TextField(
+          decoration: InputDecoration(label: Text(label)),
           controller: controller,
           maxLines: maxLines,
-          keyboardType: TextInputType.multiline,
+          keyboardType: textInputType ?? TextInputType.multiline,
         ),
         actions: <Widget>[
           TextButton(

@@ -12,10 +12,16 @@ class AppSettingsCubit extends Cubit<AppSettingsState> {
   }
 
   init() async {
-    final materialYou = await Preferences.getBool(MATERIAL_YOU, false);
-    emit(state.copyWith(materialYou: materialYou));
-    final blackBackground = await Preferences.getBool(BLACK_BACKGROUND, false);
-    emit(state.copyWith(blackBackground: blackBackground));
+    final materialYou = Preferences.getBool(MATERIAL_YOU, false);
+    final blackBackground = Preferences.getBool(BLACK_BACKGROUND, false);
+    final useHouseholdColors = Preferences.getBool(USE_HOUSEFOLD_COLOR, false);
+    emit(
+      state.copyWith(
+        blackBackground: await blackBackground,
+        materialYou: await materialYou,
+        useHouseholdColors: await useHouseholdColors,
+      ),
+    );
     service.getCurrentServerConfig();
   }
 
@@ -28,6 +34,11 @@ class AppSettingsCubit extends Cubit<AppSettingsState> {
     await Preferences.setBool(BLACK_BACKGROUND, value);
     emit(state.copyWith(blackBackground: value));
   }
+
+  setUseHouseholdColos(bool value) async {
+    await Preferences.setBool(USE_HOUSEFOLD_COLOR, value);
+    emit(state.copyWith(useHouseholdColors: value));
+  }
 }
 
 @freezed
@@ -35,5 +46,6 @@ sealed class AppSettingsState with _$AppSettingsState {
   const factory AppSettingsState({
     @Default(false) bool materialYou,
     @Default(false) bool blackBackground,
+    @Default(false) bool useHouseholdColors,
   }) = _AppSettingsState;
 }

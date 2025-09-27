@@ -209,8 +209,8 @@ return $default(_that.expense,_that.loading);case _:
 /// @nodoc
 
 
-class _ExpenseMenuState implements ExpenseMenuState {
-  const _ExpenseMenuState({required this.expense, this.loading = true});
+class _ExpenseMenuState extends ExpenseMenuState {
+  const _ExpenseMenuState({required this.expense, this.loading = true}): super._();
   
 
 @override final  Expense expense;

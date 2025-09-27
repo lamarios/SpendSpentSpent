@@ -80,12 +80,12 @@ Color brighten(Color color, [double amount = .1]) {
   return hslBright.toColor();
 }
 
-Color getLightBackground(BuildContext context) {
+Color getLightBackground(BuildContext context, [ColorScheme? usercolors]) {
   final isMaterialYou = context.select(
     (AppSettingsCubit c) => !c.state.blackBackground && c.state.materialYou,
   );
 
-  final colors = Theme.of(context).colorScheme;
+  final colors = usercolors ?? Theme.of(context).colorScheme;
   return isMaterialYou
       ? MediaQuery.platformBrightnessOf(context) == Brightness.dark
             ? brighten(colors.surfaceContainerHigh, 0.1)

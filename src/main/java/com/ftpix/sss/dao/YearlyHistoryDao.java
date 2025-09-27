@@ -13,13 +13,14 @@ import org.jooq.impl.TableImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.Year;
 import java.util.*;
 
 import static com.ftpix.sss.dsl.Tables.CATEGORY;
 import static com.ftpix.sss.dsl.Tables.YEARLY_HISTORY;
 
 @Component("yearlyHistoryDaoJooq")
-public class YearlyHistoryDao implements Dao<YearlyHistoryRecord, YearlyHistory>, UserCategoryBasedDao<YearlyHistoryRecord, YearlyHistory> {
+public class YearlyHistoryDao implements Dao<YearlyHistoryRecord, YearlyHistory>, UserCategoryBasedDao<YearlyHistoryRecord, YearlyHistory>, HouseholdCategoryBaseDao<YearlyHistoryRecord, YearlyHistory> {
 
     private final DSLContext dslContext;
     private final List<DaoListener<YearlyHistory>> listeners = new ArrayList<>();

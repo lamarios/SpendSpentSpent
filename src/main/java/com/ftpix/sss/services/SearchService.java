@@ -37,12 +37,12 @@ public class SearchService {
     public SearchParameters getSearchParameters(User currentUser, Long categoryId) throws SQLException {
 
 
-        List<Category> categories = categoryService.getAll(currentUser);
+        List<Category> categories = expenseDao.getHouseholdCategories(currentUser).values().stream().toList();
 
         Condition[] categoryCondition = categoryId != null ? new Condition[]{EXPENSE.CATEGORY_ID.eq(categoryId)} : new Condition[0];
 
 
-        int minAmount = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.AMOUNT.asc()}, categoryCondition)
+        int minAmount = expenseDao.getFromHouseholdPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.AMOUNT.asc()}, categoryCondition)
                 .getData()
                 .stream()
                 .map(Expense::getAmount)
@@ -50,7 +50,7 @@ public class SearchService {
                 .findFirst()
                 .orElse(0);
 
-        int maxAmount = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.AMOUNT.desc()}, categoryCondition)
+        int maxAmount = expenseDao.getFromHouseholdPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.AMOUNT.desc()}, categoryCondition)
                 .getData()
                 .stream()
                 .map(Expense::getAmount)
@@ -59,14 +59,14 @@ public class SearchService {
                 .findFirst()
                 .orElse(0);
 
-        long minDate = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.TIMESTAMP.asc()}, categoryCondition)
+        long minDate = expenseDao.getFromHouseholdPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.TIMESTAMP.asc()}, categoryCondition)
                 .getData()
                 .stream()
                 .map(Expense::getTimestamp)
                 .findFirst()
                 .orElse(System.currentTimeMillis() - 1000 * 60 * 60 * 24);
 
-        long maxDate = expenseDao.getPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.TIMESTAMP.desc()}, categoryCondition)
+        long maxDate = expenseDao.getFromHouseholdPaginatedWhere(currentUser, 0, 1, new OrderField[]{EXPENSE.TIMESTAMP.desc()}, categoryCondition)
                 .getData()
                 .stream()
                 .map(Expense::getTimestamp)
@@ -106,7 +106,7 @@ public class SearchService {
             conditions.add(EXPENSE.TIMESTAMP.le(parameters.maxDate()));
         }
 
-        List<Expense> searchResult = expenseDao.search(currentUser, new OrderField[]{EXPENSE.DATE.desc()}, conditions.toArray(new Condition[0]));
+        List<Expense> searchResult = expenseDao.searchInHousehold(currentUser, new OrderField[]{EXPENSE.DATE.desc()}, conditions.toArray(new Condition[0]));
 
         List<SSSFile> files = fileService.getFiles(searchResult);
 
@@ -115,7 +115,6 @@ public class SearchService {
 
         Map<String, List<Expense>> grouped = searchResult
                 .stream()
-//                .collect(Collectors.groupingBy(expense -> dateFormatter.format(expense.getDate())));
                 .collect(Collectors.groupingBy(expense -> dateFormatter.format(ZonedDateTime.ofInstant(Instant.ofEpochMilli(expense.getTimestamp()), Optional.ofNullable(zone)
                         .orElse(zoneId)))));
 

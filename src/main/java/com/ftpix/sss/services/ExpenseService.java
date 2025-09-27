@@ -7,6 +7,7 @@ import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.utils.CategoryPredictor;
 import com.ftpix.sss.utils.DateUtils;
+import com.ftpix.sss.websockets.WebSocketSessionManager;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,10 +44,11 @@ public class ExpenseService {
     private final AiFileProcessingService aiFileProcessingService;
     private final CategoryDao categoryDao;
     private final UserDao userDao;
+    private final HouseholdService householdService;
 
 
     @Autowired
-    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ZoneId zoneId, ExpenseDao expenseDaoJooq, FileService fileService, ExpenseDao expenseDao, AiFileProcessingService aiFileProcessingService, CategoryDao categoryDao, UserDao userDao) throws SQLException {
+    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ZoneId zoneId, ExpenseDao expenseDaoJooq, FileService fileService, ExpenseDao expenseDao, AiFileProcessingService aiFileProcessingService, CategoryDao categoryDao, UserDao userDao, HouseholdService householdService) throws SQLException {
         this.categoryService = categoryService;
         this.settingsService = settingsService;
         this.zoneId = zoneId;
@@ -57,6 +59,7 @@ public class ExpenseService {
         this.categoryDao = categoryDao;
 
         this.userDao = userDao;
+        this.householdService = householdService;
         fixLegacyExpensesTimeZones();
     }
 
@@ -142,7 +145,7 @@ public class ExpenseService {
         ZonedDateTime from = zoned.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
         ZonedDateTime to = zoned.with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59);
 
-        Map<String, List<Expense>> grouped = expenseDaoJooq.getWhere(user, EXPENSE.TIMESTAMP.ge(from.toInstant()
+        Map<String, List<Expense>> grouped = expenseDaoJooq.getFromHouseholdWhere(user, expenseDao.getDefaultOrderBy(), EXPENSE.TIMESTAMP.ge(from.toInstant()
                         .toEpochMilli()).and(EXPENSE.TIMESTAMP.le(to.toInstant().toEpochMilli())))
                 .stream()
                 .collect(Collectors.groupingBy(expense -> Constants.dateFormatter.format(DateUtils.fromTimestamp(expense.getTimestamp(), zone))));
@@ -171,6 +174,7 @@ public class ExpenseService {
         expense.getFiles()
                 .forEach(file -> fileService.updateField(file, FILES.EXPENSE_ID, expense.getId()));
 
+        sendMessageToOtherUsers(user);
         return expense;
     }
 
@@ -197,13 +201,18 @@ public class ExpenseService {
             });
         }
 
+        sendMessageToOtherUsers(user);
         return result;
     }
 
     public boolean delete(long id, User user) throws Exception {
         final Expense expense = get(id, user);
         if (expense.getCategory().getUser().getId().equals(user.getId())) {
-            return expenseDaoJooq.delete(user, expense);
+            try {
+                return expenseDaoJooq.delete(user, expense);
+            } finally {
+                sendMessageToOtherUsers(user);
+            }
         } else {
             return false;
         }
@@ -262,7 +271,7 @@ public class ExpenseService {
 
         ZonedDateTime end = date;
 
-        var currentSum = expenseDaoJooq.getFromTo(user, start.toInstant().toEpochMilli(), end.toInstant()
+        var currentSum = expenseDaoJooq.getFromTo(user, true, start.toInstant().toEpochMilli(), end.toInstant()
                         .toEpochMilli(), includeRecurring)
                 .stream()
                 .mapToDouble(Expense::getAmount)
@@ -272,7 +281,7 @@ public class ExpenseService {
         end = end.minusMonths(1);
 
 
-        var previousSum = expenseDaoJooq.getFromTo(user, start.toInstant().toEpochMilli(), end.toInstant()
+        var previousSum = expenseDaoJooq.getFromTo(user, true, start.toInstant().toEpochMilli(), end.toInstant()
                         .toEpochMilli(), includeRecurring)
                 .stream()
                 .mapToDouble(Expense::getAmount)
@@ -287,7 +296,7 @@ public class ExpenseService {
     public List<CategoryPredictor.CategoryPrediction> getExpenseCategorySuggestion(User currentUser, ZoneId timeZone, Double latitude, Double longitude) throws ExecutionException, InterruptedException {
         // we only select expenses that have been created on the spot and not back dated, backdated expenses will have a time of 00:00 of the user's timezone
         long oneMinute = 1000 * 60L;
-        var expenses = expenseDaoJooq.getWhere(currentUser, new OrderField[]{EXPENSE.ID.desc()},EXPENSE.TIMESTAMP.gt(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 90), EXPENSE.TYPE.eq(1), EXPENSE.TIMESTAMP.minus(EXPENSE.TIMECREATED)
+        var expenses = expenseDaoJooq.getFromHouseholdWhere(currentUser, new OrderField[]{EXPENSE.ID.desc()}, EXPENSE.TIMESTAMP.gt(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 90), EXPENSE.TYPE.eq(1), EXPENSE.TIMESTAMP.minus(EXPENSE.TIMECREATED)
                 .between(-oneMinute, oneMinute)); // get the last 6 months of expenses
 
         CategoryPredictor categoryPredictor = new CategoryPredictor();
@@ -296,5 +305,19 @@ public class ExpenseService {
         var now = ZonedDateTime.now(timeZone);
 
         return categoryPredictor.predict(now.getDayOfWeek(), now.getHour());
+    }
+
+
+    private List<User> getHouseholdOtherMembers(User user) {
+        return householdService.getCurrentHousehold(user)
+                .map(household -> household.getMembers().stream().map(HouseholdMember::getUser)
+                        .filter(user1 -> !user1.getId().equals(user.getId()))
+                        .toList())
+                .orElseGet(List::of);
+    }
+
+    public void sendMessageToOtherUsers(User currentUser) {
+        getHouseholdOtherMembers(currentUser).forEach(user -> WebSocketSessionManager.sendToUser(user.getId()
+                .toString(), new NewHouseholdExpense()));
     }
 }

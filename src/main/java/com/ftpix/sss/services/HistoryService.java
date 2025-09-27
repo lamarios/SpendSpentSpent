@@ -1,16 +1,16 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.dao.CategoryDao;
-import com.ftpix.sss.dao.ExpenseDao;
-import com.ftpix.sss.dao.MonthlyHistoryDao;
-import com.ftpix.sss.dao.YearlyHistoryDao;
+import com.ftpix.sss.dao.*;
 import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.utils.DateUtils;
+import com.ftpix.sss.utils.PaginationUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -36,27 +36,80 @@ public class HistoryService {
 
     private final ExpenseDao expenseDaoJooq;
     private final CategoryDao categoryDaoJooq;
+    private final HouseholdDao householdDao;
     private final MonthlyHistoryDao monthlyHistoryDaoJooq;
     private final YearlyHistoryDao yearlyHistoryDaoJooq;
+    private final UserDao userDao;
     private final ZoneId zoneId;
 
     @Autowired
-    public HistoryService(CategoryService categoryService, ExpenseService expenseService, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq, ZoneId zoneId) {
+    public HistoryService(CategoryService categoryService, ExpenseService expenseService, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, HouseholdDao householdDao, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq, UserDao userDao, ZoneId zoneId) {
         this.categoryService = categoryService;
         this.expenseService = expenseService;
         this.expenseDaoJooq = expenseDaoJooq;
         this.categoryDaoJooq = categoryDaoJooq;
+        this.householdDao = householdDao;
         this.monthlyHistoryDaoJooq = monthlyHistoryDaoJooq;
         this.yearlyHistoryDaoJooq = yearlyHistoryDaoJooq;
+        this.userDao = userDao;
         this.zoneId = zoneId;
 
         this.expenseDaoJooq.addUserBasedListener(expenseDaoListener);
         this.categoryDaoJooq.addUserBasedListener(categoryDaoListener);
     }
 
+
+    @Scheduled(fixedRate = 86_400_000)
+    private void recalculateStats() {
+        logger.info("Recalculating stats cache");
+        for (User user : userDao.getWhere()) {
+            boolean hasMore;
+            int page = PaginationUtils.DEFAULT_PAGE;
+
+            // we keep a cache of the date / categories we processed so we do have to do it many times per category / month
+            Map<Integer, Set<Long>> alreadyDoneMonthly = new HashMap<>();
+            Map<Integer, Set<Long>> alreadyDoneYearly = new HashMap<>();
+            do {
+                logger.info("Refreshing cache for user " + user.getId().toString() + " page: " + page);
+                PaginatedResults<Expense> expenses = expenseDaoJooq.getPaginatedWhere(user, page, 100);
+                expenses.getData().forEach(expense -> {
+                    try {
+
+                        ZonedDateTime expenseDate = DateUtils.fromTimestamp(expense.getTimestamp(), zoneId);
+                        int formattedDate = Integer.parseInt(DateTimeFormatter.ofPattern("yyyyMM").format(expenseDate));
+                        int formattedYear = Integer.parseInt(DateTimeFormatter.ofPattern("yyyy").format(expenseDate));
+                        alreadyDoneMonthly.putIfAbsent(formattedDate, new HashSet<>());
+                        alreadyDoneYearly.putIfAbsent(formattedYear, new HashSet<>());
+
+                        if (!alreadyDoneMonthly.get(formattedDate).contains(expense.getCategory().getId())) {
+                            cacheForCategoryMonthly(user, expenseDate, expense.getCategory());
+                            alreadyDoneMonthly.get(formattedDate).add(expense.getCategory().getId());
+                        }
+
+                        if (!alreadyDoneYearly.get(formattedYear).contains(expense.getCategory().getId())) {
+                            cacheForCategoryYearly(user, expenseDate, expense.getCategory());
+                            alreadyDoneYearly.get(formattedYear).add(expense.getCategory().getId());
+                        }
+
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                hasMore = expenses.getData().size() == 100;
+                page++;
+            } while (hasMore);
+        }
+    }
+
     private final DaoUserListener<Category> categoryDaoListener = new DaoUserListener<Category>() {
         @Override
         public void afterInsert(User user, Category newRecord) {
+
+        }
+
+        @Override
+        public void afterUpdate(User user, Category newRecord) {
 
         }
 
@@ -72,6 +125,15 @@ public class HistoryService {
         public void afterInsert(User user, Expense newRecord) {
             try {
                 cacheForExpense(user, newRecord);
+            } catch (SQLException e) {
+                logger.error(e);
+            }
+        }
+
+        @Override
+        public void afterUpdate(User user, Expense updatedRecord) {
+            try {
+                cacheForExpense(user, updatedRecord);
             } catch (SQLException e) {
                 logger.error(e);
             }
@@ -98,7 +160,7 @@ public class HistoryService {
     public List<CategoryOverall> yearly(User user) throws Exception {
         List<CategoryOverall> result = new ArrayList<>();
 
-        List<Category> categories = categoryService.getAll(user);
+        List<Category> categories = monthlyHistoryDaoJooq.getHouseholdCategories(user).values().stream().toList();
 
         CategoryOverall overall = new CategoryOverall();
         Category categoryAll = new Category();
@@ -110,7 +172,7 @@ public class HistoryService {
         ZonedDateTime now = ZonedDateTime.now(zoneId);
         int year = now.getYear();
 
-        List<YearlyHistory> yearly = yearlyHistoryDaoJooq.getWhere(user, YEARLY_HISTORY.DATE.eq(year));
+        List<YearlyHistory> yearly = yearlyHistoryDaoJooq.getFromHouseholdWhere(user, YEARLY_HISTORY.DATE.eq(year));
         Map<Long, YearlyHistory> byCategory = yearly.stream()
                 .collect(Collectors.toMap(y -> y.getCategory().getId(), Function.identity()));
         double total = yearly.stream().mapToDouble(YearlyHistory::getTotal).sum();
@@ -157,7 +219,7 @@ public class HistoryService {
     public List<CategoryOverall> monthly(User user) throws Exception {
         List<CategoryOverall> result = new ArrayList<>();
 
-        List<Category> categories = categoryService.getAll(user);
+        List<Category> categories = monthlyHistoryDaoJooq.getHouseholdCategories(user).values().stream().toList();
 
         CategoryOverall overall = new CategoryOverall();
         Category categoryAll = new Category();
@@ -169,7 +231,7 @@ public class HistoryService {
         LocalDate now = LocalDate.now();
         int date = (now.getYear() * 100) + now.getMonthValue();
 
-        List<MonthlyHistory> monthly = monthlyHistoryDaoJooq.getWhere(user, MONTHLY_HISTORY.DATE.eq(date));
+        List<MonthlyHistory> monthly = monthlyHistoryDaoJooq.getFromHouseholdWhere(user, MONTHLY_HISTORY.DATE.eq(date));
         Map<Long, MonthlyHistory> byCategory = monthly.stream()
                 .collect(Collectors.toMap(y -> y.getCategory().getId(), Function.identity()));
         double total = monthly.stream().mapToDouble(MonthlyHistory::getTotal).sum();
@@ -222,7 +284,7 @@ public class HistoryService {
             conditions.add(YEARLY_HISTORY.CATEGORY_ID.eq(categoryId));
         }
 
-        Map<Integer, List<YearlyHistory>> history = yearlyHistoryDaoJooq.getWhere(user, conditions.toArray(new Condition[0]))
+        Map<Integer, List<YearlyHistory>> history = yearlyHistoryDaoJooq.getFromHouseholdWhere(user, conditions.toArray(new Condition[0]))
                 .stream()
                 .collect(Collectors.groupingBy(YearlyHistory::getDate));
 
@@ -259,7 +321,7 @@ public class HistoryService {
             conditions.add(MONTHLY_HISTORY.CATEGORY_ID.eq(categoryId));
         }
 
-        Map<Integer, List<MonthlyHistory>> history = monthlyHistoryDaoJooq.getWhere(user, conditions.toArray(new Condition[0]))
+        Map<Integer, List<MonthlyHistory>> history = monthlyHistoryDaoJooq.getFromHouseholdWhere(user, conditions.toArray(new Condition[0]))
                 .stream()
                 .collect(Collectors.groupingBy(MonthlyHistory::getDate));
 

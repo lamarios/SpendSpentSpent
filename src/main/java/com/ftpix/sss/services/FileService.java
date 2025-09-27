@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -53,12 +54,14 @@ public class FileService {
 
 
     private final SecretKey encryptionKey;
+    private final HouseholdService householdService;
 
     @Autowired
-    public FileService(@Value("${FILES_PATH:./files}") String filePath, FileDAO filesDAO, AiFileProcessingService aiFileProcessingService, CategoryService categoryService, @Value("${SALT}") String salt) throws Exception {
+    public FileService(@Value("${FILES_PATH:./files}") String filePath, FileDAO filesDAO, AiFileProcessingService aiFileProcessingService, CategoryService categoryService, @Value("${SALT}") String salt, HouseholdService householdService) throws Exception {
         this.filesDAO = filesDAO;
         this.aiFileProcessingService = aiFileProcessingService;
         this.categoryService = categoryService;
+        this.householdService = householdService;
         File folder = new File(filePath);
         if (!folder.exists()) {
             folder.mkdir();
@@ -350,7 +353,22 @@ public class FileService {
     }
 
     public Optional<SSSFile> getfile(User user, String fileId) {
-        return filesDAO.getOneWhere(FILES.ID.eq(fileId).and(FILES.USER_ID.eq(user.getId().toString())));
+
+        // file from a household should be able to see each other files
+        var household = householdService.getCurrentHousehold(user);
+        List<String> userIds = new ArrayList<>();
+        if (household.isPresent()) {
+            userIds.addAll(household.get()
+                    .getMembers()
+                    .stream()
+                    .map(householdMember -> householdMember.getUser().getId().toString())
+                    .toList());
+        } else {
+            userIds.add(user.getId().toString());
+        }
+
+
+        return filesDAO.getOneWhere(FILES.ID.eq(fileId).and(FILES.USER_ID.in(userIds)));
     }
 
     public void updateFile(SSSFile file) {

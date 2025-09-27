@@ -8,6 +8,8 @@ import com.ftpix.sss.dsl.tables.Category;
 import com.ftpix.sss.dsl.tables.Expense;
 import com.ftpix.sss.dsl.tables.Files;
 import com.ftpix.sss.dsl.tables.FlywaySchemaHistory;
+import com.ftpix.sss.dsl.tables.Household;
+import com.ftpix.sss.dsl.tables.HouseholdMembers;
 import com.ftpix.sss.dsl.tables.MonthlyHistory;
 import com.ftpix.sss.dsl.tables.RecurringExpense;
 import com.ftpix.sss.dsl.tables.ResetPassword;
@@ -41,6 +43,16 @@ public class Tables {
      * The table <code>public.flyway_schema_history</code>.
      */
     public static final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
+
+    /**
+     * The table <code>public.household</code>.
+     */
+    public static final Household HOUSEHOLD = Household.HOUSEHOLD;
+
+    /**
+     * The table <code>public.household_members</code>.
+     */
+    public static final HouseholdMembers HOUSEHOLD_MEMBERS = HouseholdMembers.HOUSEHOLD_MEMBERS;
 
     /**
      * The table <code>public.monthly_history</code>.

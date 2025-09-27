@@ -7,12 +7,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
+import 'package:spend_spent_spent/households/states/household.dart';
 import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/settings/state/app_settings.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
 
 import 'globals.dart';
+import 'households/states/household.dart';
 
 final _appRouter = AppRouter();
 
@@ -35,6 +37,9 @@ Future<void> main() async {
     ),
   );
 
+  var householdCubit = HouseholdCubit(HouseholdState());
+  getIt.registerSingleton<HouseholdCubit>(householdCubit);
+
   getIt.registerSingleton<UsernamePasswordCubit>(userPassCubit);
   // we check if we already are on  a server
   var serverUrl = await Preferences.get(Preferences.SERVER_URL);
@@ -49,6 +54,7 @@ Future<void> main() async {
   // once we're all ready, and we're already logged in, we connect to the websocket
   if (existingToken.isNotEmpty) {
     userPassCubit.connectToSocket();
+    householdCubit.getData();
   }
 
   runApp(const SpendSpentSpent());
@@ -78,7 +84,8 @@ class _SpendSpentSpentState extends State<SpendSpentSpent>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed) {
+    _log.fine('app state: $state');
+    if (state == AppLifecycleState.hidden) {
       _log.info("App is hiding, disconnecting from websocket");
       getIt<UsernamePasswordCubit>().socket?.close();
     } else if (state == AppLifecycleState.resumed) {
@@ -99,6 +106,7 @@ class _SpendSpentSpentState extends State<SpendSpentSpent>
           create: (context) => AppSettingsCubit(const AppSettingsState()),
         ),
         BlocProvider(create: (context) => getIt<UsernamePasswordCubit>()),
+        BlocProvider(create: (context) => getIt<HouseholdCubit>()),
       ],
       child: DynamicColorBuilder(
         builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
@@ -106,6 +114,8 @@ class _SpendSpentSpentState extends State<SpendSpentSpent>
             builder: (context, state) {
               ColorScheme lightColorScheme;
               ColorScheme darkColorScheme;
+
+              final householdCubit = context.watch<HouseholdCubit>();
 
               if (state.materialYou &&
                   lightDynamic != null &&
@@ -118,6 +128,21 @@ class _SpendSpentSpentState extends State<SpendSpentSpent>
                   seedColor: Colors.blue,
                   brightness: Brightness.dark,
                 );
+              }
+
+              if (state.useHouseholdColors) {
+                final currentUser = context
+                    .read<UsernamePasswordCubit>()
+                    .currentUser;
+                if (householdCubit.state.household != null &&
+                    currentUser != null) {
+                  lightColorScheme =
+                      householdCubit.state.userLightColors[currentUser.id!] ??
+                      lightColorScheme;
+                  darkColorScheme =
+                      householdCubit.state.userDarkColors[currentUser.id!] ??
+                      darkColorScheme;
+                }
               }
 
               if (state.blackBackground) {

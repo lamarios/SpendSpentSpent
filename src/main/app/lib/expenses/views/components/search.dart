@@ -8,6 +8,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:spend_spent_spent/expenses/models/search_parameters.dart';
 import 'package:spend_spent_spent/expenses/state/search.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/households/states/household.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
 
@@ -97,6 +98,12 @@ class Search extends StatelessWidget {
                                           1 &&
                                       state.searchParameters.categories[0].id ==
                                           c.id;
+
+                                  var categoryColor = context
+                                      .read<HouseholdCubit>()
+                                      .state
+                                      .getCategoryColor(context, c);
+
                                   return Center(
                                     key: ValueKey(c),
                                     child: GestureDetector(
@@ -110,7 +117,7 @@ class Search extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             color: isSelected
-                                                ? colors.primaryContainer
+                                                ? categoryColor.primaryContainer
                                                 : lightBackground,
                                           ),
                                           duration: panelTransition,
@@ -118,8 +125,9 @@ class Search extends StatelessWidget {
                                             child: getIcon(
                                               c.icon ?? "",
                                               color: isSelected
-                                                  ? colors.onPrimaryContainer
-                                                  : colors.onSurface,
+                                                  ? categoryColor
+                                                        .onPrimaryContainer
+                                                  : categoryColor.onSurface,
                                               size: 20,
                                             ),
                                           ),

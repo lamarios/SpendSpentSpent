@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/identity/states/username_password.dart';
 
 part 'expense_menu.freezed.dart';
 
@@ -29,4 +30,10 @@ sealed class ExpenseMenuState with _$ExpenseMenuState {
     required Expense expense,
     @Default(true) bool loading,
   }) = _ExpenseMenuState;
+
+  const ExpenseMenuState._();
+
+  bool get isOwnExpense =>
+      getIt<UsernamePasswordCubit>().currentUser?.id ==
+      expense.category.user?.id;
 }

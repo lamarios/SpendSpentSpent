@@ -67,7 +67,28 @@ class DiffWithPreviousPeriodGraph extends StatelessWidget {
                     : SizedBox(
                         height: _graphHeight,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              spacing: 4,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: _Legend(
+                                    range: currentPeriod,
+                                    color: lineColors[0],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: _Legend(
+                                    range: previousPeriod,
+                                    color: lineColors[1],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Gap(24),
                             Expanded(
                               child: LineChart(
                                 LineChartData(
@@ -122,7 +143,9 @@ class DiffWithPreviousPeriodGraph extends StatelessWidget {
                                         showTitles: true,
                                         interval: 1,
                                         getTitlesWidget: (value, meta) =>
-                                            Text(value.toStringAsFixed(0)),
+                                            value % 2 == 0
+                                            ? SizedBox.shrink()
+                                            : Text(value.toStringAsFixed(0)),
                                         reservedSize: 25,
                                       ),
                                     ),
@@ -164,12 +187,6 @@ class DiffWithPreviousPeriodGraph extends StatelessWidget {
                                       .toList(),
                                 ),
                               ),
-                            ),
-                            _Legend(range: currentPeriod, color: lineColors[0]),
-                            Gap(4),
-                            _Legend(
-                              range: previousPeriod,
-                              color: lineColors[1],
                             ),
                           ],
                         ),

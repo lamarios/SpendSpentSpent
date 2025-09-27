@@ -69,7 +69,7 @@ public class SearchController {
         response.setHeader("Content-Disposition", "attachment; filename=\"" + UUID.randomUUID() + ".csv\"");
 
         try (PrintWriter writer = response.getWriter()) {
-            writer.println("date,category,amount,type,latitude,longitude,note");
+            writer.println("date,category,amount,type,latitude,longitude,note,user");
 
             results.forEach(expense -> {
                 Instant t = Instant.ofEpochMilli(expense.getTimestamp());
@@ -79,8 +79,8 @@ public class SearchController {
                 var latitude = expense.getLatitude() == 0 ? "" : Double.toString(expense.getLatitude());
                 var longitude = expense.getLongitude() == 0 ? "" : Double.toString(expense.getLongitude());
 
-                String str = "%s,%s,%s,%s,%s,%s,%s".formatted(Constants.dateFormatter.format(date), expense.getCategory()
-                        .getIcon(), Double.toString(expense.getAmount()), type, latitude, longitude, escapeCsv(expense.getNote()));
+                String str = "%s,%s,%s,%s,%s,%s,%s,%s".formatted(Constants.dateFormatter.format(date), expense.getCategory()
+                        .getIcon(), Double.toString(expense.getAmount()), type, latitude, longitude, escapeCsv(expense.getNote()), expense.getCategory().getUser().getEmail());
                 writer.println(str);
             });
 

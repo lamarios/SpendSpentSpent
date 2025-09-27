@@ -10,7 +10,9 @@ import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/expenses/views/components/expense_images.dart';
 import 'package:spend_spent_spent/expenses/views/components/stylized_amount.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/households/states/household.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/users/views/components/user_profile_icon.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 
 import '../../models/expense.dart';
@@ -21,6 +23,11 @@ class ExpenseMenu extends StatelessWidget {
   const ExpenseMenu({super.key, required this.expense});
 
   static Future<void> showSheet(BuildContext context, Expense expense) async {
+    var colors = context.read<HouseholdCubit>().state.getCategoryColor(
+      context,
+      expense.category,
+    );
+
     await showMotorBottomSheet(
       context: context,
       // context: context,
@@ -28,9 +35,15 @@ class ExpenseMenu extends StatelessWidget {
       // showDragHandle: true,
       // useSafeArea: true,
       // builder: (context) {
-      child: Padding(
-        padding: const EdgeInsets.only(top: 16.0),
-        child: Wrap(children: [ExpenseMenu(expense: expense)]),
+      child: Theme(
+        data: Theme.of(context).copyWith(colorScheme: colors),
+        child: Container(
+          color: colors.surfaceContainer,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: Wrap(children: [ExpenseMenu(expense: expense)]),
+          ),
+        ),
       ),
     );
   }
@@ -80,6 +93,11 @@ class ExpenseMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final expenseColors = context.read<HouseholdCubit>().state.getCategoryColor(
+      context,
+      expense.category,
+    );
+
     return BlocProvider(
       create: (context) => ExpenseMenuCubit(ExpenseMenuState(expense: expense)),
       child: BlocBuilder<ExpenseMenuCubit, ExpenseMenuState>(
@@ -117,6 +135,20 @@ class ExpenseMenu extends StatelessWidget {
                       Icon(Icons.comment, color: colors.secondary),
                       Expanded(
                         child: Text(expense.note!, style: textTheme.bodyLarge),
+                      ),
+                    ],
+                  ),
+                if (!state.isOwnExpense)
+                  Row(
+                    spacing: 16,
+                    children: [
+                      UserProfileIcon(
+                        user: expense.category.user!,
+                        size: 40,
+                        colorScheme: expenseColors,
+                      ),
+                      Text(
+                        '${expense.category.user?.firstName} ${expense.category.user?.lastName}',
                       ),
                     ],
                   ),
@@ -183,32 +215,33 @@ class ExpenseMenu extends StatelessWidget {
                       ],
                     ),
                   ),
-                Row(
-                  spacing: 16,
-                  children: [
-                    Expanded(
-                      child: FilledButton.tonalIcon(
-                        icon: Icon(Icons.edit),
-                        onPressed: state.loading
-                            ? null
-                            : () => editExpense(context, expense),
-                        label: Text('Edit expense'),
-                      ),
-                    ),
-                    IconButton.filledTonal(
-                      icon: Icon(Icons.delete),
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(
-                          colors.errorContainer,
-                        ),
-                        foregroundColor: WidgetStatePropertyAll(
-                          colors.onErrorContainer,
+                if (state.isOwnExpense)
+                  Row(
+                    spacing: 16,
+                    children: [
+                      Expanded(
+                        child: FilledButton.tonalIcon(
+                          icon: Icon(Icons.edit),
+                          onPressed: state.loading
+                              ? null
+                              : () => editExpense(context, expense),
+                          label: Text('Edit expense'),
                         ),
                       ),
-                      onPressed: () => showDeleteExpenseDialog(context),
-                    ),
-                  ],
-                ),
+                      IconButton.filledTonal(
+                        icon: Icon(Icons.delete),
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                            colors.errorContainer,
+                          ),
+                          foregroundColor: WidgetStatePropertyAll(
+                            colors.onErrorContainer,
+                          ),
+                        ),
+                        onPressed: () => showDeleteExpenseDialog(context),
+                      ),
+                    ],
+                  ),
                 if (kIsWeb) Gap(16),
               ],
             ),

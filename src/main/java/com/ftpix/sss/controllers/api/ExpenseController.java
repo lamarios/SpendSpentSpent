@@ -80,7 +80,8 @@ public class ExpenseController {
     public Map<String, DailyExpense> getByDay(@ApiParam("Given month, format yyyy-mm ex: 2020-03") @RequestParam String month,  @RequestHeader(value = TIMEZONE_HEADER, defaultValue = "") String zoneId) throws Exception {
         final User currentUser = userService.getCurrentUser();
 
-        return expenseService.getByDay(month, currentUser, DateUtils.parseZoneId(zoneId, this.zoneId));
+        Map<String, DailyExpense> byDay = expenseService.getByDay(month, currentUser, DateUtils.parseZoneId(zoneId, this.zoneId));
+        return byDay;
     }
 
 

@@ -7,6 +7,7 @@ import 'package:material_loading_indicator/loading_indicator.dart';
 import 'package:motor/motor.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/expenses/state/expense_list.dart';
+import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/expenses/views/components/below_date_widget.dart';
 import 'package:spend_spent_spent/expenses/views/components/diff_with_previous_period.dart';
 import 'package:spend_spent_spent/expenses/views/components/expense_menu.dart';
@@ -115,8 +116,9 @@ class RightColumnTab extends StatelessWidget {
         child: BlocBuilder<ExpenseListCubit, ExpenseListState>(
           builder: (context, state) {
             final cubit = context.read<ExpenseListCubit>();
+            context.select((LastExpenseCubit c) => c.state);
 
-            return state.months.isEmpty
+            return !state.loading && state.months.isEmpty
                 ? Center(
                     child: Padding(
                       padding: const EdgeInsets.all(36.0),
@@ -188,23 +190,39 @@ class RightColumnTab extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Padding(
-                          key: ValueKey(state.selected),
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                StylizedAmount(amount: state.total, size: 50),
-                                if (!state.searchMode) ...[
-                                  Gap(4),
-                                  DiffWithPreviousPeriod(
-                                    diff: state.diffWithPreviousPeriod,
-                                    currentMonth: state.selected,
-                                  ),
+                        SingleMotionBuilder(
+                          motion: MaterialSpringMotion.expressiveEffectsSlow(),
+                          value: !state.loading ? 1 : 0,
+                          builder: (context, value, child) => Opacity(
+                            opacity: value.clamp(0, 1),
+                            child: Transform.scale(
+                              scaleY: value,
+                              alignment: Alignment.bottomCenter,
+                              child: child,
+                            ),
+                          ),
+                          child: Padding(
+                            key: ValueKey(state.selected),
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (!state.loading)
+                                    StylizedAmount(
+                                      amount: state.total,
+                                      size: 50,
+                                    ),
+                                  if (!state.searchMode && !state.loading) ...[
+                                    Gap(4),
+                                    DiffWithPreviousPeriod(
+                                      diff: state.diffWithPreviousPeriod,
+                                      currentMonth: state.selected,
+                                    ),
+                                  ],
                                 ],
-                              ],
+                              ),
                             ),
                           ),
                         ),

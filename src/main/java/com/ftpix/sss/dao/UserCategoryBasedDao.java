@@ -137,7 +137,9 @@ public interface UserCategoryBasedDao<R extends UpdatableRecord<R>, M extends Ha
         if (userCategories.containsKey(object.getCategory().getId())) {
 
             R r = setRecordData(getDsl().newRecord(getTable()), object);
-            return r.update() == 1;
+            boolean b = r.update() == 1;
+            getUserBasedListeners().forEach(l -> l.afterUpdate(user, object));
+            return b;
         } else {
             return false;
         }

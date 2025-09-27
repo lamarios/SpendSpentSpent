@@ -14,19 +14,20 @@ class StatsGraph extends StatelessWidget {
   final bool monthly;
   final int categoryId;
   final Function close;
+  final ColorScheme colors;
 
   const StatsGraph({
     super.key,
     required this.monthly,
     required this.categoryId,
     required this.close,
+    required this.colors,
   });
 
   LineChartData getData(BuildContext context) {
     final cubit = context.read<StatsGraphCubit>();
     final state = cubit.state;
 
-    final colors = Theme.of(context).colorScheme;
     return LineChartData(
       lineTouchData: LineTouchData(
         touchTooltipData: LineTouchTooltipData(
@@ -178,7 +179,6 @@ class StatsGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     return BlocProvider(
       create: (context) => StatsGraphCubit(
         const StatsGraphState(),

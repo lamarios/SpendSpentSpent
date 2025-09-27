@@ -41,7 +41,7 @@ public class ApplicationController {
     private final CurrencyService currencyService;
     private final DataExportImportService dataExportImportService;
 
-    public final static int MIN_APP_VERSION = 118;
+    public final static int MIN_APP_VERSION = 119;
     private final UserDao userDaoJooq;
 
     private final OIDCService oidcService;

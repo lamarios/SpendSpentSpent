@@ -18,4 +18,8 @@ Map<String, dynamic> _$SssSocketMessageToJson(_SssSocketMessage instance) =>
       'type': _$SssSocketMessageTypeEnumMap[instance.type]!,
     };
 
-const _$SssSocketMessageTypeEnumMap = {SssSocketMessageType.sssFile: 'sssFile'};
+const _$SssSocketMessageTypeEnumMap = {
+  SssSocketMessageType.sssFile: 'sssFile',
+  SssSocketMessageType.householdUpdate: 'householdUpdate',
+  SssSocketMessageType.newHouseholdExpense: 'newHouseholdExpense',
+};
