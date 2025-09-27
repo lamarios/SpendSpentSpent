@@ -374,7 +374,8 @@ public class HistoryService {
      */
     private void cacheForCategoryYearly(User user, ZonedDateTime date, Category category) throws SQLException {
 
-        double sum = expenseService.getSumWhere(user, DateUtils.getMonthBoundaries(date, zoneId), category);
+        Pair<ZonedDateTime, ZonedDateTime> yearBoundaries = DateUtils.getYearBoundaries(date, zoneId);
+        double sum = expenseService.getSumWhere(user, yearBoundaries, category);
 
         int formattedDate = Integer.parseInt(DateTimeFormatter.ofPattern("yyyy").format(date));
         Optional<YearlyHistory> history = yearlyHistoryDaoJooq.getOneWhere(YEARLY_HISTORY.CATEGORY_ID.eq(category.getId()), YEARLY_HISTORY.DATE.eq(formattedDate));

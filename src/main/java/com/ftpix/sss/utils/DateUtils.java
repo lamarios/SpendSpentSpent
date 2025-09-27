@@ -29,6 +29,16 @@ public class DateUtils {
         );
     }
 
+    public static Pair<ZonedDateTime, ZonedDateTime> getYearBoundaries(ZonedDateTime month, ZoneId zoneId) {
+        return Pair.of(
+                month.withDayOfMonth(1).withMonth(1).withHour(0).withMinute(0).withSecond(0).truncatedTo(ChronoUnit.DAYS),
+                month.with(TemporalAdjusters.lastDayOfYear())
+                        .withHour(23)
+                        .withMinute(59)
+                        .withSecond(59)
+        );
+    }
+
     public static ZoneId parseZoneId(String zone, ZoneId defaultValue) {
         if (zone == null || zone.equalsIgnoreCase("Etc/Unknown") || zone.trim().isEmpty()) {
             return defaultValue;
