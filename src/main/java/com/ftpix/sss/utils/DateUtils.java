@@ -2,10 +2,8 @@ package com.ftpix.sss.utils;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 
@@ -23,8 +21,11 @@ public class DateUtils {
 
     public static Pair<ZonedDateTime, ZonedDateTime> getMonthBoundaries(ZonedDateTime month, ZoneId zoneId) {
         return Pair.of(
-                month.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0),
-                month.with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59)
+                month.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).truncatedTo(ChronoUnit.DAYS),
+                month.with(TemporalAdjusters.lastDayOfMonth())
+                        .withHour(23)
+                        .withMinute(59)
+                        .withSecond(59)
         );
     }
 

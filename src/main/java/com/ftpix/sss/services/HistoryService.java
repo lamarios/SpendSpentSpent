@@ -160,7 +160,7 @@ public class HistoryService {
     public List<CategoryOverall> yearly(User user) throws Exception {
         List<CategoryOverall> result = new ArrayList<>();
 
-        List<Category> categories = monthlyHistoryDaoJooq.getHouseholdCategories(user).values().stream().toList();
+        List<Category> categories = yearlyHistoryDaoJooq.getHouseholdCategories(user).values().stream().toList();
 
         CategoryOverall overall = new CategoryOverall();
         Category categoryAll = new Category();
@@ -400,7 +400,8 @@ public class HistoryService {
      */
     private void cacheForCategoryMonthly(User user, ZonedDateTime date, Category category) throws SQLException {
 
-        double sum = expenseService.getSumWhere(user, DateUtils.getMonthBoundaries(date, zoneId), category);
+        Pair<ZonedDateTime, ZonedDateTime> monthBoundaries = DateUtils.getMonthBoundaries(date, zoneId);
+        double sum = expenseService.getSumWhere(user, monthBoundaries, category);
 
         int formattedDate = Integer.parseInt(DateTimeFormatter.ofPattern("yyyyMM").format(date));
         Optional<MonthlyHistory> history = monthlyHistoryDaoJooq.getOneWhere(MONTHLY_HISTORY.CATEGORY_ID.eq(category.getId()), MONTHLY_HISTORY.DATE.eq(formattedDate));

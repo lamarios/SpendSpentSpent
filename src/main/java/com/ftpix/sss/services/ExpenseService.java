@@ -238,11 +238,13 @@ public class ExpenseService {
     }
 
     public double getSumWhere(User user, Pair<ZonedDateTime, ZonedDateTime> date, Category category) {
-        return expenseDaoJooq.sumWhere(user, EXPENSE.TIMESTAMP.ge(date.getLeft()
+        long startDate= date.getLeft()
                 .toInstant()
-                .toEpochMilli()), EXPENSE.TIMESTAMP.le(date.getRight()
+                .toEpochMilli();
+        long endDate = date.getRight()
                 .toInstant()
-                .toEpochMilli()), EXPENSE.CATEGORY_ID.eq(category.getId()));
+                .toEpochMilli();
+        return expenseDaoJooq.sumWhere(user, EXPENSE.TIMESTAMP.ge(startDate), EXPENSE.TIMESTAMP.le(endDate), EXPENSE.CATEGORY_ID.eq(category.getId()));
     }
 
     public List<Expense> getForDateLikeAndCategory(User user, String date, Category category) throws SQLException {
