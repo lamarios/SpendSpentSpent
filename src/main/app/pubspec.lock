@@ -510,6 +510,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.2.1"
+  flutter_map_heatmap:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "56de2131e426ad4628dd1f9b0d57e0c4ae7e1253"
+      url: "https://github.com/ThomasAunvik/fluttermap_heatmap.git"
+    source: git
+    version: "0.0.8"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
