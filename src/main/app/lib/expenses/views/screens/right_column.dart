@@ -11,6 +11,7 @@ import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/expenses/views/components/below_date_widget.dart';
 import 'package:spend_spent_spent/expenses/views/components/diff_with_previous_period.dart';
 import 'package:spend_spent_spent/expenses/views/components/expense_menu.dart';
+import 'package:spend_spent_spent/expenses/views/components/expenses_map.dart';
 import 'package:spend_spent_spent/expenses/views/components/one_day.dart';
 import 'package:spend_spent_spent/expenses/views/components/search.dart';
 import 'package:spend_spent_spent/expenses/views/components/stylized_amount.dart';
@@ -177,61 +178,129 @@ class RightColumnTab extends StatelessWidget {
                             Gap(4),
                             SizedBox(
                               width: 50,
-                              child: Center(
-                                child: IconButton.filledTonal(
-                                  onPressed: cubit.switchSearch,
-                                  icon: Icon(
-                                    state.searchMode
-                                        ? Icons.clear
-                                        : Icons.search,
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Center(
+                                    child: IconButton.filledTonal(
+                                      onPressed: cubit.switchSearch,
+                                      icon: Icon(
+                                        state.searchMode
+                                            ? Icons.clear
+                                            : Icons.search,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                        SingleMotionBuilder(
-                          motion: MaterialSpringMotion.expressiveEffectsSlow(),
-                          value: !state.loading ? 1 : 0,
-                          builder: (context, value, child) => Opacity(
-                            opacity: value.clamp(0, 1),
-                            child: Transform.scale(
-                              scaleY: value,
-                              alignment: Alignment.bottomCenter,
-                              child: child,
-                            ),
-                          ),
-                          child: Padding(
-                            key: ValueKey(state.selected),
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  if (!state.loading)
-                                    StylizedAmount(
-                                      amount: state.total,
-                                      size: 50,
-                                    ),
-                                  if (!state.searchMode && !state.loading) ...[
-                                    Gap(4),
-                                    DiffWithPreviousPeriod(
-                                      diff: state.diffWithPreviousPeriod,
-                                      currentMonth: state.selected,
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
                         Expanded(
                           child: AnimatedSwitcher(
-                            duration: panelTransition,
-                            child: state.loading
-                                ? Center(child: LoadingIndicator())
-                                : getExpensesWidget(context, state.expenses),
+                            duration: animationDuration,
+
+                            child: !state.mapMode
+                                ? Column(
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Spacer(flex: 1),
+                                          Expanded(
+                                            flex: 4,
+                                            child: SingleMotionBuilder(
+                                              motion:
+                                                  MaterialSpringMotion.expressiveEffectsSlow(),
+                                              value: !state.loading ? 1 : 0,
+                                              builder:
+                                                  (context, value, child) =>
+                                                      Opacity(
+                                                        opacity: value.clamp(
+                                                          0,
+                                                          1,
+                                                        ),
+                                                        child: Transform.scale(
+                                                          scaleY: value,
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          child: child,
+                                                        ),
+                                                      ),
+                                              child: Padding(
+                                                key: ValueKey(state.selected),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 8.0,
+                                                    ),
+                                                child: Container(
+                                                  alignment: Alignment.center,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      if (!state.loading)
+                                                        StylizedAmount(
+                                                          amount: state.total,
+                                                          size: 50,
+                                                        ),
+                                                      if (!state.searchMode &&
+                                                          !state.loading) ...[
+                                                        Gap(4),
+                                                        DiffWithPreviousPeriod(
+                                                          diff: state
+                                                              .diffWithPreviousPeriod,
+                                                          currentMonth:
+                                                              state.selected,
+                                                        ),
+                                                      ],
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: IconButton.filledTonal(
+                                                onPressed: () =>
+                                                    cubit.toggleMap(),
+                                                icon: Icon(Icons.map_outlined),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Expanded(
+                                        child: AnimatedSwitcher(
+                                          duration: panelTransition,
+                                          child: state.loading
+                                              ? Center(
+                                                  child: LoadingIndicator(),
+                                                )
+                                              : getExpensesWidget(
+                                                  context,
+                                                  state.expenses,
+                                                ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : AnimatedSwitcher(
+                                    duration: animationDuration,
+                                    child: state.loading
+                                        ? Center(child: LoadingIndicator())
+                                        : ExpensesMap(
+                                            key: ValueKey(
+                                              '${state.searchMode}-${state.expenses}',
+                                            ),
+                                            expenses: state.expenses,
+                                          ),
+                                  ),
                           ),
                         ),
                       ],

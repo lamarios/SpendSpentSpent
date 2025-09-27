@@ -145,6 +145,10 @@ class ExpenseListCubit extends Cubit<ExpenseListState> {
       }
     });
   }
+
+  void toggleMap() {
+    emit(state.copyWith(mapMode: !state.mapMode));
+  }
 }
 
 @freezed
@@ -155,6 +159,7 @@ sealed class ExpenseListState with _$ExpenseListState implements WithError {
     @Default('') String selected,
     @Default(0) double total,
     @Default(false) bool loading,
+    @Default(false) bool mapMode,
     @Default(false) bool searchMode,
     double? diffWithPreviousPeriod,
     @Default({}) Map<String, DayExpense> expenses,
