@@ -8,6 +8,7 @@ import com.ftpix.sss.models.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -30,14 +31,17 @@ public class CategoryService {
     }
 
 
+    @Transactional(readOnly = true)
     public List<Category> getAll(User user) throws SQLException {
         return categoryDaoJooq.getWhere(user);
     }
 
+    @Transactional(readOnly = true)
     public Category get(long id, User user) throws SQLException {
         return categoryDaoJooq.get(user, id).orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public Map<String, List<NewCategoryIcon>> getAvailable(User user) throws SQLException {
         List<Category> categories = getAll(user);
         return Stream.of(NewCategoryIcon.values())
@@ -45,6 +49,7 @@ public class CategoryService {
                 .collect(Collectors.groupingBy(NewCategoryIcon::getCategory));
     }
 
+    @Transactional(readOnly = true)
     public Map<String, List<NewCategoryIcon>> getUsed(User user) throws SQLException {
         List<Category> categories = getAll(user);
         return Stream.of(NewCategoryIcon.values())
@@ -52,6 +57,7 @@ public class CategoryService {
                 .collect(Collectors.groupingBy(NewCategoryIcon::getCategory));
     }
 
+    @Transactional
     public Category create(Category category, User user) throws Exception {
         boolean found = Stream.of(NewCategoryIcon.values())
                 .anyMatch(c -> category.getIcon().equalsIgnoreCase(c.name()));
@@ -66,11 +72,13 @@ public class CategoryService {
         return categoryDaoJooq.insert(user, category);
     }
 
+    @Transactional
     public Category update(Category category, User user) throws Exception {
         categoryDaoJooq.update(user, category);
         return category;
     }
 
+    @Transactional
     public boolean delete(long id, User user) throws SQLException {
         Map<String, Object> fields = new HashMap<>();
         fields.put("CATEGORY_ID", id);
@@ -88,6 +96,7 @@ public class CategoryService {
         }
     }
 
+    @Transactional
     public List<Category> updateMany(List<Category> categories, User user) throws SQLException {
         categories.stream()
                 .map(c -> {
@@ -113,6 +122,7 @@ public class CategoryService {
         return getAll(user);
     }
 
+    @Transactional
     public Category create(String icon, User user) throws Exception {
         Category c = new Category();
         c.setIcon(icon);
@@ -121,6 +131,7 @@ public class CategoryService {
         return create(c, user);
     }
 
+    @Transactional
     public Category update(long id, String icon, int order, User user) throws Exception {
         Category cat = get(id, user);
         cat.setIcon(icon);
@@ -128,12 +139,15 @@ public class CategoryService {
         return update(cat, user);
     }
 
+    @Transactional(readOnly = true)
     public List<Long> getUserCategoriesId(User user) throws Exception {
         return getAll(user).stream()
                 .map(Category::getId)
                 .collect(Collectors.toList());
     }
 
+
+    @Transactional(readOnly = true)
     public Map<String, Object> searchAvailableIcon(String name, User user) throws SQLException {
         List<Category> categories = getAll(user);
 
@@ -156,6 +170,7 @@ public class CategoryService {
                 .anyMatch(name -> name.startsWith("icon-"));
     }
 
+    @Transactional
     public boolean mergeCategory(long id, Category catdiff, User currentUser) throws Exception {
         Optional<Category> categoryOptional = Optional.ofNullable(get(id, currentUser));
 
@@ -183,6 +198,7 @@ public class CategoryService {
         }
     }
 
+    @Transactional(readOnly = true)
     public long countExpenses(long id, User currentUser) throws SQLException {
         return Optional.ofNullable(get(id, currentUser))
                 .map(c -> expenseDaoJooq.countExpenses(currentUser, id))

@@ -104,6 +104,6 @@ public class CategoryRecord extends UpdatableRecordImpl<CategoryRecord> {
         setIcon(icon);
         setCategoryOrder(categoryOrder);
         setUserId(userId);
-        resetTouchedOnNotNull();
+        resetChangedOnNotNull();
     }
 }

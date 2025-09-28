@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneId;
 import java.util.HashMap;
@@ -44,6 +45,7 @@ public class BackgroundJob {
 
     @Scheduled(fixedRate = 100 * 60 * 1000, initialDelay = 60 * 60 * 1000)
 //    @Scheduled(fixedRate = 10 * 1000)
+    @Transactional
     public void run() throws Exception {
         final List<User> users = userService.getAll().getData();
         for (User user : users) {

@@ -7,6 +7,7 @@ import com.ftpix.sss.models.*;
 import com.ftpix.sss.websockets.WebSocketSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -29,6 +30,7 @@ public class HouseholdService {
         this.userDao = userDao;
     }
 
+    @Transactional
     public Household createHousehold(User user) {
         var household = getCurrentHousehold(user);
 
@@ -53,6 +55,7 @@ public class HouseholdService {
         return householdDao.insert(hs);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Household> getCurrentHousehold(User user) {
         return householdDao.getUserHousehold(user);
     }
@@ -66,6 +69,7 @@ public class HouseholdService {
                 .orElse(false);
     }
 
+    @Transactional
     public void inviteUser(User user, String email) throws SQLException {
         var invitee = userDao.getOneWhere(USER.EMAIL.eq(email));
         var hs = getCurrentHousehold(user);
@@ -120,10 +124,12 @@ public class HouseholdService {
         }
     }
 
+    @Transactional
     public Household updateUser(User user, HouseholdMember member) {
         return null;
     }
 
+    @Transactional
     public void removeMember(User user, User memberId) throws SQLException {
         Optional<Household> currentHousehold = getCurrentHousehold(user);
         currentHousehold.filter(hs -> isHouseholdAdmin(user, hs))
@@ -138,7 +144,7 @@ public class HouseholdService {
 
         currentHousehold.ifPresent(household -> sendMessageToOtherUsers(household, user));
     }
-
+    @Transactional
     public void deleteHousehold(User user) throws SQLException {
         Optional<Household> currentHousehold = getCurrentHousehold(user);
         currentHousehold.filter(household -> isHouseholdAdmin(user, household))
@@ -146,6 +152,7 @@ public class HouseholdService {
         currentHousehold.ifPresent(household -> sendMessageToOtherUsers(household, user));
     }
 
+    @Transactional
     public boolean leaveHousehold(User user) throws SQLException {
         var hs = getCurrentHousehold(user);
         if (hs.isPresent()) {
@@ -169,14 +176,14 @@ public class HouseholdService {
         }
         return false;
     }
-
+    @Transactional(readOnly = true)
     public List<HouseholdMember> getInvitations(User user) {
         return householdDao.getHouseholdMemberDao()
                 .getWhere(HOUSEHOLD_MEMBERS.USER_ID.eq(user.getId()
                         .toString()), HOUSEHOLD_MEMBERS.STATUS.eq(HouseholdInviteStatus.pending.name()));
     }
 
-
+    @Transactional
     public Optional<Household> acceptInvitation(User invitee, Household household) {
         return getInvitations(invitee).stream()
                 .filter(householdMember -> householdMember.getUser()
@@ -192,6 +199,7 @@ public class HouseholdService {
                 });
     }
 
+    @Transactional
     public Optional<Household> acceptInvitation(User invitee, UUID invitationId) throws SQLException {
         List<HouseholdMember> invitations = getInvitations(invitee);
         Optional<HouseholdMember> invitation = invitations.stream()
@@ -213,6 +221,7 @@ public class HouseholdService {
         return hs;
     }
 
+    @Transactional
     public void rejectInvitation(User invitee, UUID invitationId) {
         List<HouseholdMember> invitations = getInvitations(invitee);
 
@@ -222,6 +231,7 @@ public class HouseholdService {
                 .ifPresent(householdMember -> householdDao.getHouseholdMemberDao().delete(householdMember));
     }
 
+    @Transactional
     public void setAdmin(User user, User target, boolean admin) throws SQLException {
         if (user.getId().equals(target.getId())) {
             // users can't change their own statuses
@@ -246,6 +256,7 @@ public class HouseholdService {
 
     }
 
+    @Transactional
     public void setColor(User currentUser, HouseholdColor householdColor) throws SQLException {
         Optional<Household> currentHousehold = getCurrentHousehold(currentUser);
         currentHousehold.flatMap(household -> household.getMembers()

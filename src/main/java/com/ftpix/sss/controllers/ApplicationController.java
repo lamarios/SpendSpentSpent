@@ -16,6 +16,7 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,6 +63,7 @@ public class ApplicationController {
 
     @PostMapping("/import")
     @ResponseStatus(code = HttpStatus.OK, reason = "OK")
+    @Transactional
     public void importData(@RequestParam("file") MultipartFile file, @RequestHeader("Authorization") String importPassword) throws IOException {
         try {
             logger.info("Received file for import name: {},  {} bytes", file.getOriginalFilename(), file.getSize());
@@ -79,6 +81,7 @@ public class ApplicationController {
      */
     @GetMapping(value = "/config", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
+    @Transactional(readOnly = true)
     public Map<String, Object> getConfig() throws SQLException {
 
         Map<String, Object> results = new HashMap<>();

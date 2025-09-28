@@ -1,9 +1,8 @@
 package com.ftpix.sss.controllers.api;
 
 import com.ftpix.sss.services.CurrencyService;
-import com.ftpix.sss.services.SettingsService;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import io.swagger.annotations.Api;
+import kong.unirest.UnirestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

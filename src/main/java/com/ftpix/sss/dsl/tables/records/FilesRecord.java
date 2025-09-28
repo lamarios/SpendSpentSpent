@@ -179,6 +179,6 @@ public class FilesRecord extends UpdatableRecordImpl<FilesRecord> {
         setFileName(fileName);
         setTimeCreated(timeCreated);
         setTimeUpdated(timeUpdated);
-        resetTouchedOnNotNull();
+        resetChangedOnNotNull();
     }
 }

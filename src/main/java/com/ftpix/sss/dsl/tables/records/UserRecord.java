@@ -179,6 +179,6 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
         setShowannouncement(showannouncement);
         setIsadmin(isadmin);
         setOidcsub(oidcsub);
-        resetTouchedOnNotNull();
+        resetChangedOnNotNull();
     }
 }

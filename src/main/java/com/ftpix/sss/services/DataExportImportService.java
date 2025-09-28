@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -103,6 +104,7 @@ public class DataExportImportService {
     }
 
     @Scheduled(fixedRate = BACKUP_DELAY, initialDelay = 0)
+    @Transactional(readOnly = true)
     public void exportData() throws IOException {
         logger.info("Starting daily backup");
         DataExport export = new DataExport();
@@ -129,6 +131,7 @@ public class DataExportImportService {
 
     }
 
+    @Transactional
     public void importData(MultipartFile file, String importPassword) throws IOException {
         if (ALLOW_IMPORT) {
 

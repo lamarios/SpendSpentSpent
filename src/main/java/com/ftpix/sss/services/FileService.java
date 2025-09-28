@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.crypto.*;
@@ -75,12 +76,14 @@ public class FileService {
         encryptionKey = deriveKey(salt.toCharArray(), new byte[SALT_SIZE]);
     }
 
+    @Transactional
     public boolean clearExpenseFiles(Long expenseId) {
         return filesDAO.clearExpenseFiles(expenseId);
     }
 
 
     @Scheduled(fixedRate = ONE_DAY)
+    @Transactional
     public void fileMaintenance() throws IOException {
         long oneDayFromNow = System.currentTimeMillis() - ONE_DAY;
         // we get all the pictures older than one day
@@ -121,6 +124,7 @@ public class FileService {
 
     }
 
+    @Transactional
     private boolean deleteFile(SSSFile file) {
         File f = new File(filePath + "/" + file.getFileName());
         if (f.exists()) {
@@ -135,6 +139,7 @@ public class FileService {
     }
 
 
+    @Transactional
     public SSSFile createFile(User currentUser, MultipartFile file) throws Exception {
         boolean aiEnabled = aiFileProcessingService.isAiEnabled();
 
@@ -151,6 +156,7 @@ public class FileService {
         }
     }
 
+    @Transactional
     private SSSFile createFromUpload(User currentUser, MultipartFile file) throws Exception {
         SSSFile sssFile = new SSSFile();
         sssFile.setUserId(currentUser.getId());
@@ -175,6 +181,7 @@ public class FileService {
     }
 
 
+    @Transactional
     public CategorySuggestionResponse findFileCategory(User currentUser, MultipartFile file) throws ExecutionException, InterruptedException {
         var work = AiFileProcessingService.exec.submit(() -> {
             boolean aiEnabled = aiFileProcessingService.isAiEnabled();
@@ -352,6 +359,7 @@ public class FileService {
         });
     }
 
+    @Transactional(readOnly = true)
     public Optional<SSSFile> getfile(User user, String fileId) {
 
         // file from a household should be able to see each other files
@@ -371,14 +379,17 @@ public class FileService {
         return filesDAO.getOneWhere(FILES.ID.eq(fileId).and(FILES.USER_ID.in(userIds)));
     }
 
+    @Transactional(readOnly = true)
     public void updateFile(SSSFile file) {
         filesDAO.update(file);
     }
 
+    @Transactional(readOnly = true)
     public List<SSSFile> getFiles(List<Expense> expenses) {
         return filesDAO.getWhere(FILES.EXPENSE_ID.in(expenses.stream().map(Expense::getId).toList()));
     }
 
+    @Transactional(readOnly = true)
     public File getFileAsFile(User currentUser, String fileId) throws FileNotFoundException {
         var sssFile = filesDAO.getOneWhere(FILES.USER_ID.eq(currentUser.getId().toString()).and(FILES.ID.eq(fileId)));
         if (sssFile.isEmpty()) {
@@ -387,6 +398,7 @@ public class FileService {
         return new File(filePath + "/" + sssFile.get().getFileName());
     }
 
+    @Transactional
     public <T> boolean updateField(SSSFile file, Field<T> field, T value) {
         return filesDAO.updateField(file, field, value);
     }

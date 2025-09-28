@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -80,14 +81,17 @@ public class UserService {
         return hashString(email + password);
     }
 
+    @Transactional(readOnly = true)
     public User getByEmail(String email) throws SQLException {
         return userDaoJooq.getOneWhere(USER.EMAIL.eq(email)).orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public User getByOidcSub(String sub) {
         return userDaoJooq.getOneWhere(USER.OIDCSUB.eq(sub)).orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public User getCurrentUser() throws SQLException {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -96,6 +100,7 @@ public class UserService {
         return getByEmail(user.getUsername());
     }
 
+    @Transactional(readOnly = true)
     public PaginatedResults<User> getAll(String search, int page, int pageSize) throws SQLException {
 
         if (search.trim().length() > 0) {
@@ -109,14 +114,17 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public PaginatedResults<User> getAll() throws SQLException {
         return getAll("", 0, Integer.MAX_VALUE);
     }
 
+    @Transactional(readOnly = true)
     public User getById(UUID id) throws SQLException {
         return userDaoJooq.getOneWhere(USER.ID.eq(id.toString())).orElse(null);
     }
 
+    @Transactional
     public User createUser(User user) throws Exception {
         if (user.getFirstName() == null || user.getFirstName().isEmpty()
                 || user.getLastName() == null || user.getLastName().isEmpty()
@@ -172,6 +180,7 @@ public class UserService {
         return toReturn;
     }
 
+    @Transactional
     public boolean deleteUser(String userId, User currentUser) throws Exception {
         if (currentUser.getId().toString().equalsIgnoreCase(userId)) {
             throw new Exception("You can't delete yourself");
@@ -218,6 +227,7 @@ public class UserService {
                 .orElse(false);
     }
 
+    @Transactional
     public boolean setUserPassword(String userId, String newPassword) throws SQLException {
         return Optional.ofNullable(getById(UUID.fromString(userId)))
                 .map(u -> {
@@ -231,6 +241,7 @@ public class UserService {
                 }).orElse(false);
     }
 
+    @Transactional
     public boolean setUserAdmin(String userId, boolean isAdmin, User requester) throws Exception {
         if (requester.getId().toString().equals(userId) && !isAdmin) {
             throw new Exception("You can't remove admin rights to yourself");
@@ -244,6 +255,7 @@ public class UserService {
                 }).orElse(false);
     }
 
+    @Transactional
     public User updateUserProfile(User user, User newUserData) throws Exception {
         if (newUserData.getFirstName() == null || newUserData.getFirstName()
                 .length() == 0 || newUserData.getLastName() == null || newUserData.getLastName().length() == 0) {
@@ -256,8 +268,8 @@ public class UserService {
         final String value = settingsService.getByName(Settings.DEMO_MODE).getValue();
         boolean demo = value.equalsIgnoreCase("1");
 
-        if ((!demo || demo && user.isAdmin()) && newUserData.getPassword() != null && newUserData.getPassword()
-                .length() > 0) {
+        if ((!demo || demo && user.isAdmin()) && newUserData.getPassword() != null && !newUserData.getPassword()
+                .isEmpty()) {
             user.setPassword(hashUserCredentials(user.getEmail(), newUserData.getPassword()));
         }
 
@@ -265,6 +277,7 @@ public class UserService {
         return user;
     }
 
+    @Transactional
     public User updateUser(User user) {
         var updated = userDaoJooq.update(user);
         return user;

@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -35,13 +36,14 @@ public class ResetPasswordService {
         this.resetPasswordDaoJooq = resetPasswordDaoJooq;
         this.rootUrl = rootUrl;
     }
-
     private void clearExpiredRequests() throws SQLException {
         int i = resetPasswordDaoJooq.deleteWhere(RESET_PASSWORD.EXPIRYDATE.lt(System.currentTimeMillis()));
 
         logger.info("Deleted {} expired password requests", i);
     }
 
+
+    @Transactional
     public boolean createResetPasswordRequest(String email) throws SQLException {
         try {
             Optional.ofNullable(userService.getByEmail(email))
@@ -75,6 +77,7 @@ public class ResetPasswordService {
         return true;
     }
 
+    @Transactional
     public boolean resetPassword(ResetPasswordNew resetPasswordNew) throws Exception {
 
         final ResetPassword resetPassword = resetPasswordDaoJooq.getById(resetPasswordNew.getResetId()).orElseThrow(() -> new Exception("Invalid password request"));

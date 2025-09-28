@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -140,31 +141,37 @@ public class RecurringExpenseService {
 
     }
 
+    @Transactional
     public RecurringExpense create(RecurringExpense expense, User user) throws Exception {
         expense.setNextOccurrence(calculateNextDate(expense));
         return recurringExpenseDaoJooq.insert(user, expense);
     }
 
+    @Transactional(readOnly = true)
     public List<RecurringExpense> get(User user) throws Exception {
         return recurringExpenseDaoJooq.getWhere(user);
     }
 
 
+    @Transactional(readOnly = true)
     public RecurringExpense getId(long id, User user) throws Exception {
         return recurringExpenseDaoJooq.queryForId(user, id);
     }
 
 
+    @Transactional
     public boolean delete(long id, User user) throws Exception {
         recurringExpenseDaoJooq.deleteById(user, id);
         return true;
     }
 
 
+    @Transactional(readOnly = true)
     public List<RecurringExpense> getToProcessForUser(User user) throws Exception {
         return recurringExpenseDaoJooq.getWhere(user, RECURRING_EXPENSE.NEXT_OCCURRENCE.le(Constants.dateFormatter.format(LocalDate.now())));
     }
 
+    @Transactional
     public boolean update(RecurringExpense expense, User user) throws Exception {
         RecurringExpense existing = getId(expense.getId(), user);
 

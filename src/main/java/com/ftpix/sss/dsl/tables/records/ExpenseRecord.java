@@ -224,6 +224,6 @@ public class ExpenseRecord extends UpdatableRecordImpl<ExpenseRecord> {
         setTime(time);
         setTimestamp(timestamp);
         setTimecreated(timecreated);
-        resetTouchedOnNotNull();
+        resetChangedOnNotNull();
     }
 }

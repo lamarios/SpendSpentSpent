@@ -7,16 +7,17 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.GetRequest;
+import kong.unirest.GetRequest;
+import kong.unirest.JsonNode;
+import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
+import kong.unirest.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.logging.log4j.util.Strings;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Type;
 import java.security.InvalidParameterException;
@@ -28,14 +29,15 @@ import java.util.concurrent.TimeUnit;
 public class CurrencyService {
     private final SettingsService settingsService;
     private static final String BASE_CURRENCY = "USD";
-    private final LoadingCache<String, Map<String, CurrencyValue>> currencyCache = Caffeine.newBuilder()
-            .expireAfterWrite(24, TimeUnit.HOURS)
-            .build(this::getCurrency);
+    private final LoadingCache<String, Map<String, CurrencyValue>> currencyCache;
     protected final Log log = LogFactory.getLog(this.getClass());
 
     @Autowired
     public CurrencyService(SettingsService settingsService) {
         this.settingsService = settingsService;
+        currencyCache = Caffeine.newBuilder()
+                .expireAfterWrite(24, TimeUnit.HOURS)
+                .build(this::getCurrency);
     }
 
 
@@ -73,7 +75,9 @@ public class CurrencyService {
         return Math.ceil(percentage * 100) / 100;
     }
 
-    private Map<String, CurrencyValue> getCurrency(String base) throws UnirestException, SQLException {
+
+    @Transactional(readOnly = true)
+    public Map<String, CurrencyValue> getCurrency(String base) throws UnirestException, SQLException {
         final Settings apiKey = settingsService.getByName(Settings.CURRENCY_API_KEY);
         if (apiKey == null || Strings.isBlank(apiKey.getRealValue())) {
             throw new InvalidParameterException("currency api key is required");
@@ -94,6 +98,7 @@ public class CurrencyService {
 
     }
 
+    @Transactional(readOnly = true)
     public CurrencyStatus getQuota() throws SQLException, UnirestException {
         final Settings apiKey = settingsService.getByName(Settings.CURRENCY_API_KEY);
         if (apiKey == null || Strings.isBlank(apiKey.getRealValue())) {

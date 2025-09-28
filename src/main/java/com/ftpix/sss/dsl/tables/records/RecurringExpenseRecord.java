@@ -179,6 +179,6 @@ public class RecurringExpenseRecord extends UpdatableRecordImpl<RecurringExpense
         setNextOccurrence(nextOccurrence);
         setAmount(amount);
         setIncome(income);
-        resetTouchedOnNotNull();
+        resetChangedOnNotNull();
     }
 }
