@@ -12,6 +12,7 @@ import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -36,19 +37,17 @@ public class HistoryService {
 
     private final ExpenseDao expenseDaoJooq;
     private final CategoryDao categoryDaoJooq;
-    private final HouseholdDao householdDao;
     private final MonthlyHistoryDao monthlyHistoryDaoJooq;
     private final YearlyHistoryDao yearlyHistoryDaoJooq;
     private final UserDao userDao;
     private final ZoneId zoneId;
 
     @Autowired
-    public HistoryService(CategoryService categoryService, ExpenseService expenseService, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, HouseholdDao householdDao, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq, UserDao userDao, ZoneId zoneId) {
+    public HistoryService(CategoryService categoryService, ExpenseService expenseService, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq, UserDao userDao, ZoneId zoneId) {
         this.categoryService = categoryService;
         this.expenseService = expenseService;
         this.expenseDaoJooq = expenseDaoJooq;
         this.categoryDaoJooq = categoryDaoJooq;
-        this.householdDao = householdDao;
         this.monthlyHistoryDaoJooq = monthlyHistoryDaoJooq;
         this.yearlyHistoryDaoJooq = yearlyHistoryDaoJooq;
         this.userDao = userDao;
@@ -60,7 +59,8 @@ public class HistoryService {
 
 
     @Scheduled(fixedRate = 86_400_000)
-    private void recalculateStats() {
+    @Transactional
+    public void recalculateStats() {
         logger.info("Recalculating stats cache");
         for (User user : userDao.getWhere()) {
             boolean hasMore;
@@ -157,6 +157,7 @@ public class HistoryService {
      * @return
      * @throws Exception
      */
+    @Transactional(readOnly = true)
     public List<CategoryOverall> yearly(User user) throws Exception {
         List<CategoryOverall> result = new ArrayList<>();
 
@@ -216,6 +217,7 @@ public class HistoryService {
      * @return
      * @throws Exception
      */
+    @Transactional(readOnly = true)
     public List<CategoryOverall> monthly(User user) throws Exception {
         List<CategoryOverall> result = new ArrayList<>();
 
@@ -267,6 +269,7 @@ public class HistoryService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<Map<String, Object>> getYearlyHistory(long categoryId, int count, User user) throws Exception {
         List<Map<String, Object>> result = new ArrayList<>();
 
@@ -304,6 +307,7 @@ public class HistoryService {
         return result;
     }
 
+    @Transactional(readOnly = true)
     public List<Map<String, Object>> getMonthlyHistory(long categoryId, int count, User user) throws Exception {
         List<Map<String, Object>> result = new ArrayList<>();
 
@@ -348,6 +352,7 @@ public class HistoryService {
         return result;
     }
 
+    @Transactional
     public void cacheForExpense(User user, Expense expense) throws SQLException {
         logger.info("History for expense " + expense.getId() + " of category " + expense.getCategory().getId());
         ZonedDateTime expenseDate = DateUtils.fromTimestamp(expense.getTimestamp(), zoneId);
@@ -361,6 +366,7 @@ public class HistoryService {
      * @param date
      * @param category
      */
+    @Transactional
     public void cacheForCategory(User user, ZonedDateTime date, Category category) throws SQLException {
 //        logger.info("Refreshing cache for category :" + category.getId());
 

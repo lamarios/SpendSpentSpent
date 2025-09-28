@@ -14,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.jooq.OrderField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -63,12 +64,14 @@ public class ExpenseService {
         fixLegacyExpensesTimeZones();
     }
 
+    @Transactional(readOnly = true)
     public List<Expense> getAll(User user) throws Exception {
         List<Expense> expenses = expenseDaoJooq.getWhere(user);
         getFiles(expenses);
         return expenses;
     }
 
+    @Transactional(readOnly = true)
     public Expense get(long id, User user) throws Exception {
         return expenseDaoJooq.get(user, id).map(expense -> {
             getFiles(List.of(expense));
@@ -83,6 +86,7 @@ public class ExpenseService {
                 .forEach(expense -> expense.getFiles().add(file)));
     }
 
+    @Transactional
     public void fixLegacyExpensesTimeZones() throws SQLException {
 
         var migrated = settingsService.getByName(Settings.TIMESTAMP_FIXED);
@@ -115,6 +119,7 @@ public class ExpenseService {
 
     }
 
+    @Transactional(readOnly = true)
     public Map<String, Long> suggestNotes(User currentUser, Expense expense) {
         double minExpense = expense.getAmount() * 0.8;
         double maxExpense = expense.getAmount() * 1.2;
@@ -127,6 +132,7 @@ public class ExpenseService {
                 .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
     }
 
+    @Transactional(readOnly = true)
     public Map<String, Long> autoCompleteNote(User currentUser, String seed) {
         return expenseDaoJooq.autoCompleteNote(currentUser, seed)
                 .stream()
@@ -136,6 +142,7 @@ public class ExpenseService {
                 .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
     }
 
+    @Transactional(readOnly = true)
     public Map<String, DailyExpense> getByDay(String month, User user, ZoneId userZone) throws Exception {
 
         ZoneId zone = userZone == null ? zoneId : userZone;
@@ -166,6 +173,7 @@ public class ExpenseService {
         return result;
     }
 
+    @Transactional
     public Expense update(Expense expense, User user) {
         expenseDao.update(user, expense);
 
@@ -178,6 +186,7 @@ public class ExpenseService {
         return expense;
     }
 
+    @Transactional
     public Expense create(Expense expense, User user) throws Exception {
         Category category = categoryService.get(expense.getCategory().getId(), user);
         if (category == null) {
@@ -205,6 +214,7 @@ public class ExpenseService {
         return result;
     }
 
+    @Transactional
     public boolean delete(long id, User user) throws Exception {
         final Expense expense = get(id, user);
         if (expense.getCategory().getUser().getId().equals(user.getId())) {
@@ -221,6 +231,7 @@ public class ExpenseService {
     /**
      * @return
      */
+    @Transactional(readOnly = true)
     public ExpenseLimits getLimits(User user) {
         PaginatedResults<Expense> data = expenseDaoJooq.getPaginatedWhere(user, 0, 1, new OrderField[]{EXPENSE.TIMESTAMP.asc()});
         if (data.getData().isEmpty()) {
@@ -233,10 +244,12 @@ public class ExpenseService {
         return new ExpenseLimits(ChronoUnit.YEARS.between(localDate, now), ChronoUnit.MONTHS.between(localDate, now));
     }
 
+    @Transactional(readOnly = true)
     public List<String> getMonths(User user, ZoneId zone) throws Exception {
         return expenseDaoJooq.getMonths(user, Optional.ofNullable(zone).orElse(zoneId));
     }
 
+    @Transactional(readOnly = true)
     public double getSumWhere(User user, Pair<ZonedDateTime, ZonedDateTime> date, Category category) {
         long startDate= date.getLeft()
                 .toInstant()
@@ -245,10 +258,6 @@ public class ExpenseService {
                 .toInstant()
                 .toEpochMilli();
         return expenseDaoJooq.sumWhere(user, EXPENSE.TIMESTAMP.ge(startDate), EXPENSE.TIMESTAMP.le(endDate), EXPENSE.CATEGORY_ID.eq(category.getId()));
-    }
-
-    public List<Expense> getForDateLikeAndCategory(User user, String date, Category category) throws SQLException {
-        return expenseDaoJooq.getWhere(user, EXPENSE.DATE.like(date + "%"), EXPENSE.CATEGORY_ID.eq(category.getId()));
     }
 
     /**
@@ -260,6 +269,7 @@ public class ExpenseService {
      * @param includeRecurring
      * @return
      */
+    @Transactional(readOnly = true)
     public double diffWithPreviousPeriod(User user, String userCurrentDay, boolean includeRecurring, ZoneId zone) throws SQLException {
 
         var date = LocalDate.parse(userCurrentDay, Constants.dateFormatter)
@@ -295,6 +305,7 @@ public class ExpenseService {
         return currentSum / previousSum;
     }
 
+    @Transactional(readOnly = true)
     public List<CategoryPredictor.CategoryPrediction> getExpenseCategorySuggestion(User currentUser, ZoneId timeZone, Double latitude, Double longitude) throws ExecutionException, InterruptedException {
         // we only select expenses that have been created on the spot and not back dated, backdated expenses will have a time of 00:00 of the user's timezone
         long oneMinute = 1000 * 60L;

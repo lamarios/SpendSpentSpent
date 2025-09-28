@@ -17,6 +17,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Type;
 import java.security.InvalidParameterException;
@@ -73,7 +74,9 @@ public class CurrencyService {
         return Math.ceil(percentage * 100) / 100;
     }
 
-    private Map<String, CurrencyValue> getCurrency(String base) throws UnirestException, SQLException {
+
+    @Transactional(readOnly = true)
+    public Map<String, CurrencyValue> getCurrency(String base) throws UnirestException, SQLException {
         final Settings apiKey = settingsService.getByName(Settings.CURRENCY_API_KEY);
         if (apiKey == null || Strings.isBlank(apiKey.getRealValue())) {
             throw new InvalidParameterException("currency api key is required");
@@ -94,6 +97,7 @@ public class CurrencyService {
 
     }
 
+    @Transactional(readOnly = true)
     public CurrencyStatus getQuota() throws SQLException, UnirestException {
         final Settings apiKey = settingsService.getByName(Settings.CURRENCY_API_KEY);
         if (apiKey == null || Strings.isBlank(apiKey.getRealValue())) {

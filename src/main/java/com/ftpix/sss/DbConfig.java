@@ -1,6 +1,8 @@
 package com.ftpix.sss;
 
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.flywaydb.core.Flyway;
@@ -29,12 +31,17 @@ public class DbConfig {
 
     @Bean
     public DataSource dataSource() {
-        return DataSourceBuilder.create()
-                .url(dbPath)
-                .username(dbUsername)
-                .password(dbPassword)
-                .driverClassName(driverClass)
-                .build();
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(dbPath);
+        config.setUsername(dbUsername);
+        config.setPassword(dbPassword);
+        config.setDriverClassName(driverClass);
+        config.setMaximumPoolSize(30);
+        config.setMinimumIdle(5);
+        config.setIdleTimeout(30000);
+        config.setMaxLifetime(1800000);
+
+        return new HikariDataSource(config);
     }
 
     @Bean(name = "flyway")

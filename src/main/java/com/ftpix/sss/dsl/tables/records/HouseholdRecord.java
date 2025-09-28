@@ -59,6 +59,6 @@ public class HouseholdRecord extends UpdatableRecordImpl<HouseholdRecord> {
         super(Household.HOUSEHOLD);
 
         setId(id);
-        resetTouchedOnNotNull();
+        resetChangedOnNotNull();
     }
 }

@@ -104,6 +104,6 @@ public class YearlyHistoryRecord extends UpdatableRecordImpl<YearlyHistoryRecord
         setCategoryId(categoryId);
         setTotal(total);
         setDate(date);
-        resetTouchedOnNotNull();
+        resetChangedOnNotNull();
     }
 }

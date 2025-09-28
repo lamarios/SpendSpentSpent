@@ -89,6 +89,6 @@ public class ResetPasswordRecord extends UpdatableRecordImpl<ResetPasswordRecord
         setId(id);
         setUserId(userId);
         setExpirydate(expirydate);
-        resetTouchedOnNotNull();
+        resetChangedOnNotNull();
     }
 }

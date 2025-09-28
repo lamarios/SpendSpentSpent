@@ -6,6 +6,7 @@ import org.jooq.Condition;
 import org.jooq.OrderField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.time.Instant;
@@ -34,6 +35,7 @@ public class SearchService {
         this.zoneId = zoneId;
     }
 
+    @Transactional(readOnly = true)
     public SearchParameters getSearchParameters(User currentUser, Long categoryId) throws SQLException {
 
 
@@ -76,6 +78,7 @@ public class SearchService {
         return new SearchParameters(categories, minAmount, maxAmount, minDate, maxDate, "");
     }
 
+    @Transactional(readOnly = true)
     public Map<String, DailyExpense> search(User currentUser, SearchParameters parameters, ZoneId zone) {
 
         List<Condition> conditions = new ArrayList<>();

@@ -104,6 +104,6 @@ public class MonthlyHistoryRecord extends UpdatableRecordImpl<MonthlyHistoryReco
         setCategoryId(categoryId);
         setTotal(total);
         setDate(date);
-        resetTouchedOnNotNull();
+        resetChangedOnNotNull();
     }
 }

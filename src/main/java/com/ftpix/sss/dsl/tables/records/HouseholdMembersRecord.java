@@ -149,6 +149,6 @@ public class HouseholdMembersRecord extends UpdatableRecordImpl<HouseholdMembers
         setAdmin(admin);
         setColor(color);
         setHouseholdId(householdId);
-        resetTouchedOnNotNull();
+        resetChangedOnNotNull();
     }
 }

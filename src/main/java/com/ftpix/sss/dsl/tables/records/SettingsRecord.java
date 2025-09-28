@@ -89,6 +89,6 @@ public class SettingsRecord extends UpdatableRecordImpl<SettingsRecord> {
         setName(name);
         setValue(value);
         setSecret(secret);
-        resetTouchedOnNotNull();
+        resetChangedOnNotNull();
     }
 }
