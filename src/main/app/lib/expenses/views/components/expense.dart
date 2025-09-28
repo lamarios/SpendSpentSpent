@@ -1,27 +1,37 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/households/states/household.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/utils/views/components/conditional_wrapper.dart';
 import 'package:spend_spent_spent/utils/views/components/expense_image.dart';
 
 const double MAP_HEIGHT = 200;
 const double NOTE_HEIGHT = 30;
+final _formatter = DateFormat.yMMMMd('en_US');
 
 class OneExpense extends StatelessWidget {
   final Expense expense;
-  final Function(Expense expense) showExpense;
+  final Function(Expense expense)? showExpense;
+  final bool showIcons;
+  final bool showDate;
 
   const OneExpense({
     super.key,
-    required this.showExpense,
+    this.showExpense,
     required this.expense,
+    this.showIcons = true,
+    this.showDate = false,
   });
 
   void openContainer() {
-    showExpense(expense);
+    if (showExpense != null) {
+      showExpense!(expense);
+    }
   }
 
   bool hasNote() {
@@ -80,35 +90,48 @@ class OneExpense extends StatelessWidget {
                     ),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Visibility(
-                      visible: hasLocation(),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Icon(
-                          Icons.near_me,
-                          color: colors.onSurface.withValues(alpha: 0.5),
-                          size: 15,
-                        ),
+                if (showDate)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      _formatter.format(
+                        DateTime.fromMillisecondsSinceEpoch(expense.timestamp),
+                      ),
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colors.secondary,
                       ),
                     ),
-                    Visibility(
-                      visible: expense.type == 2,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Icon(
-                          Icons.refresh,
-                          color: colors.onSurface.withValues(alpha: 0.5),
-                          size: 15,
+                  ),
+                if (showIcons)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Visibility(
+                        visible: hasLocation(),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Icon(
+                            Icons.near_me,
+                            color: colors.onSurface.withValues(alpha: 0.5),
+                            size: 15,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                      Visibility(
+                        visible: expense.type == 2,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Icon(
+                            Icons.refresh,
+                            color: colors.onSurface.withValues(alpha: 0.5),
+                            size: 15,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),
@@ -120,36 +143,50 @@ class OneExpense extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   if (expense.files.isNotEmpty)
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        ExpenseImage(
-                          file: expense.files.first,
-                          width: 50,
-                          height: 50,
-                          showStatus: false,
-                        ),
-                        if (expense.files.length > 1)
-                          Positioned(
-                            top: -10,
-                            right: -10,
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: colors.primaryContainer,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  expense.files.length.toString(),
-                                  style: textTheme.labelSmall?.copyWith(
-                                    color: colors.onPrimaryContainer,
+                    ConditionalWrapper(
+                      wrapIf: showExpense == null,
+                      wrapper: (child) => InkWell(
+                        onTap: () {
+                          AutoRouter.of(context).push(
+                            ImageViewerRoute(
+                              images: expense.files,
+                              initiallySelected: 0,
+                            ),
+                          );
+                        },
+                        child: child,
+                      ),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          ExpenseImage(
+                            file: expense.files.first,
+                            width: 50,
+                            height: 50,
+                            showStatus: false,
+                          ),
+                          if (expense.files.length > 1)
+                            Positioned(
+                              top: -10,
+                              right: -10,
+                              child: Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: colors.primaryContainer,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    expense.files.length.toString(),
+                                    style: textTheme.labelSmall?.copyWith(
+                                      color: colors.onPrimaryContainer,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   Expanded(child: child),
                 ],

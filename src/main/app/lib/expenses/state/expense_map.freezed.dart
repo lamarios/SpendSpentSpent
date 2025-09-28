@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ExpenseMapState {
 
- List<WeightedLatLng> get aggregatedData; bool get showHeatmap; bool get showAmounts;
+ List<ExpenseCluster> get aggregatedData; List<WeightedLatLng> get heatmapData; bool get showHeatmap; bool get showAmounts; CameraFit? get fit; LatLng? get center;
 /// Create a copy of ExpenseMapState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ExpenseMapStateCopyWith<ExpenseMapState> get copyWith => _$ExpenseMapStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseMapState&&const DeepCollectionEquality().equals(other.aggregatedData, aggregatedData)&&(identical(other.showHeatmap, showHeatmap) || other.showHeatmap == showHeatmap)&&(identical(other.showAmounts, showAmounts) || other.showAmounts == showAmounts));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseMapState&&const DeepCollectionEquality().equals(other.aggregatedData, aggregatedData)&&const DeepCollectionEquality().equals(other.heatmapData, heatmapData)&&(identical(other.showHeatmap, showHeatmap) || other.showHeatmap == showHeatmap)&&(identical(other.showAmounts, showAmounts) || other.showAmounts == showAmounts)&&(identical(other.fit, fit) || other.fit == fit)&&(identical(other.center, center) || other.center == center));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(aggregatedData),showHeatmap,showAmounts);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(aggregatedData),const DeepCollectionEquality().hash(heatmapData),showHeatmap,showAmounts,fit,center);
 
 @override
 String toString() {
-  return 'ExpenseMapState(aggregatedData: $aggregatedData, showHeatmap: $showHeatmap, showAmounts: $showAmounts)';
+  return 'ExpenseMapState(aggregatedData: $aggregatedData, heatmapData: $heatmapData, showHeatmap: $showHeatmap, showAmounts: $showAmounts, fit: $fit, center: $center)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ExpenseMapStateCopyWith<$Res>  {
   factory $ExpenseMapStateCopyWith(ExpenseMapState value, $Res Function(ExpenseMapState) _then) = _$ExpenseMapStateCopyWithImpl;
 @useResult
 $Res call({
- List<WeightedLatLng> aggregatedData, bool showHeatmap, bool showAmounts
+ List<ExpenseCluster> aggregatedData, List<WeightedLatLng> heatmapData, bool showHeatmap, bool showAmounts, CameraFit? fit, LatLng? center
 });
 
 
@@ -62,12 +62,15 @@ class _$ExpenseMapStateCopyWithImpl<$Res>
 
 /// Create a copy of ExpenseMapState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? aggregatedData = null,Object? showHeatmap = null,Object? showAmounts = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? aggregatedData = null,Object? heatmapData = null,Object? showHeatmap = null,Object? showAmounts = null,Object? fit = freezed,Object? center = freezed,}) {
   return _then(_self.copyWith(
 aggregatedData: null == aggregatedData ? _self.aggregatedData : aggregatedData // ignore: cast_nullable_to_non_nullable
+as List<ExpenseCluster>,heatmapData: null == heatmapData ? _self.heatmapData : heatmapData // ignore: cast_nullable_to_non_nullable
 as List<WeightedLatLng>,showHeatmap: null == showHeatmap ? _self.showHeatmap : showHeatmap // ignore: cast_nullable_to_non_nullable
 as bool,showAmounts: null == showAmounts ? _self.showAmounts : showAmounts // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,fit: freezed == fit ? _self.fit : fit // ignore: cast_nullable_to_non_nullable
+as CameraFit?,center: freezed == center ? _self.center : center // ignore: cast_nullable_to_non_nullable
+as LatLng?,
   ));
 }
 
@@ -149,10 +152,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<WeightedLatLng> aggregatedData,  bool showHeatmap,  bool showAmounts)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ExpenseCluster> aggregatedData,  List<WeightedLatLng> heatmapData,  bool showHeatmap,  bool showAmounts,  CameraFit? fit,  LatLng? center)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ExpenseMapState() when $default != null:
-return $default(_that.aggregatedData,_that.showHeatmap,_that.showAmounts);case _:
+return $default(_that.aggregatedData,_that.heatmapData,_that.showHeatmap,_that.showAmounts,_that.fit,_that.center);case _:
   return orElse();
 
 }
@@ -170,10 +173,10 @@ return $default(_that.aggregatedData,_that.showHeatmap,_that.showAmounts);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<WeightedLatLng> aggregatedData,  bool showHeatmap,  bool showAmounts)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ExpenseCluster> aggregatedData,  List<WeightedLatLng> heatmapData,  bool showHeatmap,  bool showAmounts,  CameraFit? fit,  LatLng? center)  $default,) {final _that = this;
 switch (_that) {
 case _ExpenseMapState():
-return $default(_that.aggregatedData,_that.showHeatmap,_that.showAmounts);}
+return $default(_that.aggregatedData,_that.heatmapData,_that.showHeatmap,_that.showAmounts,_that.fit,_that.center);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -187,10 +190,10 @@ return $default(_that.aggregatedData,_that.showHeatmap,_that.showAmounts);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<WeightedLatLng> aggregatedData,  bool showHeatmap,  bool showAmounts)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ExpenseCluster> aggregatedData,  List<WeightedLatLng> heatmapData,  bool showHeatmap,  bool showAmounts,  CameraFit? fit,  LatLng? center)?  $default,) {final _that = this;
 switch (_that) {
 case _ExpenseMapState() when $default != null:
-return $default(_that.aggregatedData,_that.showHeatmap,_that.showAmounts);case _:
+return $default(_that.aggregatedData,_that.heatmapData,_that.showHeatmap,_that.showAmounts,_that.fit,_that.center);case _:
   return null;
 
 }
@@ -202,18 +205,27 @@ return $default(_that.aggregatedData,_that.showHeatmap,_that.showAmounts);case _
 
 
 class _ExpenseMapState implements ExpenseMapState {
-  const _ExpenseMapState({final  List<WeightedLatLng> aggregatedData = const [], this.showHeatmap = true, this.showAmounts = true}): _aggregatedData = aggregatedData;
+  const _ExpenseMapState({final  List<ExpenseCluster> aggregatedData = const [], final  List<WeightedLatLng> heatmapData = const [], this.showHeatmap = true, this.showAmounts = true, this.fit, this.center}): _aggregatedData = aggregatedData,_heatmapData = heatmapData;
   
 
- final  List<WeightedLatLng> _aggregatedData;
-@override@JsonKey() List<WeightedLatLng> get aggregatedData {
+ final  List<ExpenseCluster> _aggregatedData;
+@override@JsonKey() List<ExpenseCluster> get aggregatedData {
   if (_aggregatedData is EqualUnmodifiableListView) return _aggregatedData;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_aggregatedData);
 }
 
+ final  List<WeightedLatLng> _heatmapData;
+@override@JsonKey() List<WeightedLatLng> get heatmapData {
+  if (_heatmapData is EqualUnmodifiableListView) return _heatmapData;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_heatmapData);
+}
+
 @override@JsonKey() final  bool showHeatmap;
 @override@JsonKey() final  bool showAmounts;
+@override final  CameraFit? fit;
+@override final  LatLng? center;
 
 /// Create a copy of ExpenseMapState
 /// with the given fields replaced by the non-null parameter values.
@@ -225,16 +237,16 @@ _$ExpenseMapStateCopyWith<_ExpenseMapState> get copyWith => __$ExpenseMapStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseMapState&&const DeepCollectionEquality().equals(other._aggregatedData, _aggregatedData)&&(identical(other.showHeatmap, showHeatmap) || other.showHeatmap == showHeatmap)&&(identical(other.showAmounts, showAmounts) || other.showAmounts == showAmounts));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseMapState&&const DeepCollectionEquality().equals(other._aggregatedData, _aggregatedData)&&const DeepCollectionEquality().equals(other._heatmapData, _heatmapData)&&(identical(other.showHeatmap, showHeatmap) || other.showHeatmap == showHeatmap)&&(identical(other.showAmounts, showAmounts) || other.showAmounts == showAmounts)&&(identical(other.fit, fit) || other.fit == fit)&&(identical(other.center, center) || other.center == center));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_aggregatedData),showHeatmap,showAmounts);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_aggregatedData),const DeepCollectionEquality().hash(_heatmapData),showHeatmap,showAmounts,fit,center);
 
 @override
 String toString() {
-  return 'ExpenseMapState(aggregatedData: $aggregatedData, showHeatmap: $showHeatmap, showAmounts: $showAmounts)';
+  return 'ExpenseMapState(aggregatedData: $aggregatedData, heatmapData: $heatmapData, showHeatmap: $showHeatmap, showAmounts: $showAmounts, fit: $fit, center: $center)';
 }
 
 
@@ -245,7 +257,7 @@ abstract mixin class _$ExpenseMapStateCopyWith<$Res> implements $ExpenseMapState
   factory _$ExpenseMapStateCopyWith(_ExpenseMapState value, $Res Function(_ExpenseMapState) _then) = __$ExpenseMapStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<WeightedLatLng> aggregatedData, bool showHeatmap, bool showAmounts
+ List<ExpenseCluster> aggregatedData, List<WeightedLatLng> heatmapData, bool showHeatmap, bool showAmounts, CameraFit? fit, LatLng? center
 });
 
 
@@ -262,12 +274,15 @@ class __$ExpenseMapStateCopyWithImpl<$Res>
 
 /// Create a copy of ExpenseMapState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? aggregatedData = null,Object? showHeatmap = null,Object? showAmounts = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? aggregatedData = null,Object? heatmapData = null,Object? showHeatmap = null,Object? showAmounts = null,Object? fit = freezed,Object? center = freezed,}) {
   return _then(_ExpenseMapState(
 aggregatedData: null == aggregatedData ? _self._aggregatedData : aggregatedData // ignore: cast_nullable_to_non_nullable
+as List<ExpenseCluster>,heatmapData: null == heatmapData ? _self._heatmapData : heatmapData // ignore: cast_nullable_to_non_nullable
 as List<WeightedLatLng>,showHeatmap: null == showHeatmap ? _self.showHeatmap : showHeatmap // ignore: cast_nullable_to_non_nullable
 as bool,showAmounts: null == showAmounts ? _self.showAmounts : showAmounts // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,fit: freezed == fit ? _self.fit : fit // ignore: cast_nullable_to_non_nullable
+as CameraFit?,center: freezed == center ? _self.center : center // ignore: cast_nullable_to_non_nullable
+as LatLng?,
   ));
 }
 

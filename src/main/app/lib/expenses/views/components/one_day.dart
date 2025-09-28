@@ -14,7 +14,7 @@ class OneDay extends StatelessWidget {
 
   const OneDay({super.key, required this.expense, required this.showExpense});
 
-  displayDate() {
+  String displayDate() {
     return DateFormat.yMMMMd(
       'en_US',
     ).format(DateFormat('yyyy-MM-dd').parse(expense.date));

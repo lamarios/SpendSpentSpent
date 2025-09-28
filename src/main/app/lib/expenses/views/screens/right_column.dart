@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -264,12 +265,23 @@ class RightColumnTab extends StatelessWidget {
                                           ),
                                           Expanded(
                                             flex: 1,
-                                            child: Align(
-                                              alignment: Alignment.centerRight,
-                                              child: IconButton.filledTonal(
-                                                onPressed: () =>
-                                                    cubit.toggleMap(),
-                                                icon: Icon(Icons.map_outlined),
+                                            child: Padding(
+                                              padding: kIsWeb
+                                                  ? const EdgeInsets.only(
+                                                      right: 6.0,
+                                                      top: 8,
+                                                    )
+                                                  : EdgeInsets.zero,
+                                              child: Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: IconButton.filledTonal(
+                                                  onPressed: () =>
+                                                      cubit.toggleMap(),
+                                                  icon: Icon(
+                                                    Icons.map_outlined,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
