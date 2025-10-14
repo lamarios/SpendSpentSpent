@@ -81,7 +81,7 @@ public class ApplicationController {
      */
     @GetMapping(value = "/config", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    @Transactional(readOnly = true)
+    @Transactional()
     public Map<String, Object> getConfig() throws SQLException {
 
         Map<String, Object> results = new HashMap<>();
@@ -132,10 +132,10 @@ public class ApplicationController {
         }
 
 
-        try {
-            CurrencyStatus currencyStatus = currencyService.getQuota();
+        CurrencyStatus currencyStatus = currencyService.getQuota();
+        if (currencyStatus != null) {
             results.put("convertCurrencyQuota", "" + currencyStatus.getRemaining() + "/" + currencyStatus.getTotal());
-        } catch (Exception e) {
+        } else {
             results.put("convertCurrencyQuota", "");
         }
 
