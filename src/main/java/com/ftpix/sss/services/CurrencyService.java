@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.Type;
 import java.security.InvalidParameterException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -35,9 +36,9 @@ public class CurrencyService {
     @Autowired
     public CurrencyService(SettingsService settingsService) {
         this.settingsService = settingsService;
-        currencyCache = Caffeine.newBuilder()
-                .expireAfterWrite(24, TimeUnit.HOURS)
-                .build(this::getCurrency);
+            currencyCache = Caffeine.newBuilder()
+                    .expireAfterWrite(24, TimeUnit.HOURS)
+                    .build(this::getCurrency);
     }
 
 
@@ -80,7 +81,9 @@ public class CurrencyService {
     public Map<String, CurrencyValue> getCurrency(String base) throws UnirestException, SQLException {
         final Settings apiKey = settingsService.getByName(Settings.CURRENCY_API_KEY);
         if (apiKey == null || Strings.isBlank(apiKey.getRealValue())) {
-            throw new InvalidParameterException("currency api key is required");
+//            throw new InvalidParameterException("currency api key is required");
+            log.warn("No currency api key");
+            return new HashMap<>();
         }
 
 
@@ -102,7 +105,8 @@ public class CurrencyService {
     public CurrencyStatus getQuota() throws SQLException, UnirestException {
         final Settings apiKey = settingsService.getByName(Settings.CURRENCY_API_KEY);
         if (apiKey == null || Strings.isBlank(apiKey.getRealValue())) {
-            throw new InvalidParameterException("currency api key is required");
+            log.warn("no api key");
+            return null;
         }
 
         GetRequest request = Unirest.get("https://api.currencyapi.com/v3/status?apikey=" + apiKey.getRealValue())
