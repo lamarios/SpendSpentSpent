@@ -108,6 +108,7 @@ With docker compose:
      DB_PATH: "jdbc:postgresql://postgres-sss:5432/sss"
      DB_USER: "postgres"
      DB_PASSWORD: "postgres"
+     TIMEZONE: "Europe/Paris"
 
  postgres-sss:
    container_name: postgres-sss
