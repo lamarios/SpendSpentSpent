@@ -1,7 +1,7 @@
 package com.ftpix.sss.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ftpix.sss.dao.HasCategory;
-import com.ftpix.sss.utils.JsonIgnore;
 
 public class Category implements HasCategory {
 
@@ -56,11 +56,13 @@ public class Category implements HasCategory {
     }
 
     @Override
+    @JsonIgnore
     public Category getCategory() {
         return this;
     }
 
     @Override
+    @JsonIgnore
     public void setCategory(Category category) {
 
     }

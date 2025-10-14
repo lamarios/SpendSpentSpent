@@ -69,6 +69,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 response.setStatus(401);
             }
         }
+
+        System.out.println(request.getHeader("Authorization"));
+        request.setAttribute("mcpUserId", "ce563419-7042-4b04-aca5-34cee9e238af");
+
         chain.doFilter(request, response);
     }
 

@@ -1,7 +1,7 @@
 spring:
   mvc:
     converters:
-      preferred-json-mapper: gson
+      preferred-json-mapper: jackson
   # fix sping boot 2.6 circular dependcies errors //TODO: fix those
   main:
     allow-circular-references: true
@@ -23,6 +23,17 @@ spring:
     url: ${DB_PATH:jdbc:postgresql://localhost:5432/sss}
     user: ${DB_USER:postgres}
     password: ${DB_PASSWORD:postgres}
+  ai:
+    mcp:
+      server:
+        enabled: true
+        type: sync
+        name: sss-mcp-server
+        protocol: streamable
+        streamable-http:
+          mcp-endpoint: /mcp
+
+
 
 logging:
   level:

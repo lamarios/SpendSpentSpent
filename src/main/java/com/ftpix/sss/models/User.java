@@ -1,5 +1,7 @@
 package com.ftpix.sss.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.UUID;
 
 public class User {
@@ -12,6 +14,7 @@ public class User {
 
     private String firstName;
 
+    @JsonIgnore
     private String password;
 
     private String lastName;

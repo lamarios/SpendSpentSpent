@@ -1,16 +1,22 @@
 package com.ftpix.sss;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import com.ftpix.sss.mcp.MCPTools;
 import com.ftpix.sss.models.Settings;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.utils.*;
 import com.google.gson.*;
 import freemarker.template.TemplateExceptionHandler;
+import io.modelcontextprotocol.server.McpServer;
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria;
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.api.mailer.config.TransportStrategy;
 import org.simplejavamail.mailer.MailerBuilder;
 import org.simplejavamail.mailer.internal.MailerRegularBuilderImpl;
+import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.info.BuildProperties;
@@ -195,4 +201,19 @@ public class Config {
         return Arrays.asList(new SecurityReference("apiKey",
                 authorizationScopes));
     }
+
+    @Bean
+    ToolCallbackProvider mcpToolCallbackProvider(MCPTools mcpTools) {
+        return MethodToolCallbackProvider.builder().toolObjects(mcpTools)
+                .build();
+    }
+
+    @Bean
+    public ObjectMapper mcpObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JSR310Module());
+        // minimal config just to satisfy MCP
+        return mapper;
+    }
+
 }
