@@ -4,6 +4,7 @@
 package com.ftpix.sss.dsl;
 
 
+import com.ftpix.sss.dsl.tables.ApiKeys;
 import com.ftpix.sss.dsl.tables.Category;
 import com.ftpix.sss.dsl.tables.Expense;
 import com.ftpix.sss.dsl.tables.Files;
@@ -23,6 +24,11 @@ import com.ftpix.sss.dsl.tables.YearlyHistory;
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class Tables {
+
+    /**
+     * The table <code>public.api_keys</code>.
+     */
+    public static final ApiKeys API_KEYS = ApiKeys.API_KEYS;
 
     /**
      * The table <code>public.category</code>.

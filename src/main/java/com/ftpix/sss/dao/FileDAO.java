@@ -25,8 +25,8 @@ import static com.ftpix.sss.dsl.Tables.FILES;
 
 @Component("fileDao")
 public class FileDAO implements Dao<FilesRecord, SSSFile> {
-    private final DSLContext dslContext;
     private final Gson gson;
+    private final DSLContext dslContext;
     private final List<DaoListener<SSSFile>> listeners = new ArrayList<>();
 
     @Autowired

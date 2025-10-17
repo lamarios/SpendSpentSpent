@@ -4,6 +4,7 @@
 package com.ftpix.sss.dsl;
 
 
+import com.ftpix.sss.dsl.tables.ApiKeys;
 import com.ftpix.sss.dsl.tables.Category;
 import com.ftpix.sss.dsl.tables.Expense;
 import com.ftpix.sss.dsl.tables.Files;
@@ -16,6 +17,7 @@ import com.ftpix.sss.dsl.tables.ResetPassword;
 import com.ftpix.sss.dsl.tables.Settings;
 import com.ftpix.sss.dsl.tables.User;
 import com.ftpix.sss.dsl.tables.YearlyHistory;
+import com.ftpix.sss.dsl.tables.records.ApiKeysRecord;
 import com.ftpix.sss.dsl.tables.records.CategoryRecord;
 import com.ftpix.sss.dsl.tables.records.ExpenseRecord;
 import com.ftpix.sss.dsl.tables.records.FilesRecord;
@@ -47,6 +49,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<ApiKeysRecord> API_KEYS_PKEY = Internal.createUniqueKey(ApiKeys.API_KEYS, DSL.name("api_keys_pkey"), new TableField[] { ApiKeys.API_KEYS.ID }, true);
     public static final UniqueKey<CategoryRecord> CATEGORY_PKEY = Internal.createUniqueKey(Category.CATEGORY, DSL.name("category_pkey"), new TableField[] { Category.CATEGORY.ID }, true);
     public static final UniqueKey<ExpenseRecord> EXPENSE_PKEY = Internal.createUniqueKey(Expense.EXPENSE, DSL.name("expense_pkey"), new TableField[] { Expense.EXPENSE.ID }, true);
     public static final UniqueKey<FilesRecord> FILES_PKEY = Internal.createUniqueKey(Files.FILES, DSL.name("files_pkey"), new TableField[] { Files.FILES.ID }, true);
@@ -65,6 +68,7 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final ForeignKey<ApiKeysRecord, UserRecord> API_KEYS__FK_API_KEY_USER = Internal.createForeignKey(ApiKeys.API_KEYS, DSL.name("fk_api_key_user"), new TableField[] { ApiKeys.API_KEYS.USER_ID }, Keys.USER_PKEY, new TableField[] { User.USER.ID }, true);
     public static final ForeignKey<CategoryRecord, UserRecord> CATEGORY__FK_CATEGORY_USER = Internal.createForeignKey(Category.CATEGORY, DSL.name("fk_category_user"), new TableField[] { Category.CATEGORY.USER_ID }, Keys.USER_PKEY, new TableField[] { User.USER.ID }, true);
     public static final ForeignKey<ExpenseRecord, CategoryRecord> EXPENSE__FK_EXPENSE_CATEGORY = Internal.createForeignKey(Expense.EXPENSE, DSL.name("fk_expense_category"), new TableField[] { Expense.EXPENSE.CATEGORY_ID }, Keys.CATEGORY_PKEY, new TableField[] { Category.CATEGORY.ID }, true);
     public static final ForeignKey<FilesRecord, ExpenseRecord> FILES__FK_SSS_FILE_EXPENSE = Internal.createForeignKey(Files.FILES, DSL.name("fk_sss_file_expense"), new TableField[] { Files.FILES.EXPENSE_ID }, Keys.EXPENSE_PKEY, new TableField[] { Expense.EXPENSE.ID }, true);

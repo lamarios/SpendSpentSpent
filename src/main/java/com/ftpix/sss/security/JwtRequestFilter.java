@@ -1,5 +1,6 @@
 package com.ftpix.sss.security;
 
+import com.ftpix.sss.services.ApiKeyService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -22,13 +24,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected final Log logger = LogFactory.getLog(this.getClass());
 
     private final JwtUserDetailsService jwtUserDetailsService;
+    private final ApiKeyService apiKeyService;
 
     private final JwtTokenUtil jwtTokenUtil;
     private final String[] AUTH_CHECK = new String[]{"/API/"};
 
     @Autowired
-    public JwtRequestFilter(JwtUserDetailsService jwtUserDetailsService, JwtTokenUtil jwtTokenUtil) {
+    public JwtRequestFilter(JwtUserDetailsService jwtUserDetailsService, ApiKeyService apiKeyService, JwtTokenUtil jwtTokenUtil) {
         this.jwtUserDetailsService = jwtUserDetailsService;
+        this.apiKeyService = apiKeyService;
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
@@ -68,10 +72,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 logger.error("Error while authenticating", e);
                 response.setStatus(401);
             }
+        } else if (request.getRequestURI().endsWith("/mcp")) {
+            final String apiKey = request.getHeader("Authorization");
+            var user = apiKeyService.getUserForKey(apiKey);
+            if (user.isPresent()) {
+                request.setAttribute("mcpUserId", user.get().getId().toString());
+            } else {
+                response.setStatus(401);
+            }
         }
-
-        System.out.println(request.getHeader("Authorization"));
-        request.setAttribute("mcpUserId", "ce563419-7042-4b04-aca5-34cee9e238af");
 
         chain.doFilter(request, response);
     }
