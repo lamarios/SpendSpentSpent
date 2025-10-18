@@ -9,3 +9,5 @@ To get started, you need to generate an API Key. Go to settings -> Api Keys and 
 ## Add the mcp server to your LLM Application
 
 Add a new MCP server using a remote setup, the url should be: `<url of your SSS installtion>/mcp`. Example your SSS installation is running on `https://sss.mydomain.com`, then the MCP server url is `https://sss.mydomain.com/mcp`. The type of the server (if required to choose) is **HTTP Stream**.
+
+[![mcp demo](./mcp.gif)](./mcp.gif)
