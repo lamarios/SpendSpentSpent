@@ -1,6 +1,7 @@
 package com.ftpix.sss.controllers;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ftpix.sss.Constants;
 import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.CurrencyStatus;
@@ -82,7 +83,7 @@ public class ApplicationController {
     @GetMapping(value = "/config", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     @Transactional()
-    public Map<String, Object> getConfig() throws SQLException {
+    public Map<String, Object> getConfig() throws SQLException, JsonProcessingException {
 
         Map<String, Object> results = new HashMap<>();
 

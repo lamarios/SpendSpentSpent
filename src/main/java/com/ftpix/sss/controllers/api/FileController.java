@@ -5,6 +5,8 @@ import com.ftpix.sss.models.SSSFile;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.FileService;
 import com.ftpix.sss.services.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,6 +22,8 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/API/Files")
+@Tag(name = "Files")
+@SecurityRequirement(name = "bearerAuth")
 public class FileController {
 
 

@@ -1,12 +1,13 @@
 package com.ftpix.sss.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ftpix.sss.models.CurrencyStatus;
 import com.ftpix.sss.models.CurrencyValue;
 import com.ftpix.sss.models.Settings;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import kong.unirest.GetRequest;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
@@ -16,10 +17,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Type;
 import java.security.InvalidParameterException;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -32,13 +33,15 @@ public class CurrencyService {
     private static final String BASE_CURRENCY = "USD";
     private final LoadingCache<String, Map<String, CurrencyValue>> currencyCache;
     protected final Log log = LogFactory.getLog(this.getClass());
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public CurrencyService(SettingsService settingsService) {
+    public CurrencyService(SettingsService settingsService, ObjectMapper objectMapper) {
         this.settingsService = settingsService;
-            currencyCache = Caffeine.newBuilder()
-                    .expireAfterWrite(24, TimeUnit.HOURS)
-                    .build(this::getCurrency);
+        currencyCache = Caffeine.newBuilder()
+                .expireAfterWrite(24, TimeUnit.HOURS)
+                .build(this::getCurrency);
+        this.objectMapper = objectMapper;
     }
 
 
@@ -78,7 +81,7 @@ public class CurrencyService {
 
 
     @Transactional(readOnly = true)
-    public Map<String, CurrencyValue> getCurrency(String base) throws UnirestException, SQLException {
+    public Map<String, CurrencyValue> getCurrency(String base) throws UnirestException, SQLException, JsonProcessingException {
         final Settings apiKey = settingsService.getByName(Settings.CURRENCY_API_KEY);
         if (apiKey == null || Strings.isBlank(apiKey.getRealValue())) {
 //            throw new InvalidParameterException("currency api key is required");
@@ -95,14 +98,13 @@ public class CurrencyService {
 
         final JsonNode body = request.asJson().getBody();
         final JSONObject data = body.getObject().getJSONObject("data");
-        Type currencyType = new TypeToken<Map<String, CurrencyValue>>() {
-        }.getType();
-        return new Gson().fromJson(data.toString(0), currencyType);
+        return objectMapper.readValue(data.toString(0), new TypeReference<Map<String, CurrencyValue>>() {
+        });
 
     }
 
     @Transactional(readOnly = true)
-    public CurrencyStatus getQuota() throws SQLException, UnirestException {
+    public CurrencyStatus getQuota() throws SQLException, UnirestException, JsonProcessingException {
         final Settings apiKey = settingsService.getByName(Settings.CURRENCY_API_KEY);
         if (apiKey == null || Strings.isBlank(apiKey.getRealValue())) {
             log.warn("no api key");
@@ -113,13 +115,16 @@ public class CurrencyService {
                 .header("accept", "application/json")
                 .header("content-type", "application/json");
 
+        try {
+            final JsonNode body = request.asJson().getBody();
+            final JSONObject quotas = body.getObject().getJSONObject("quotas");
+            final JSONObject month = quotas.getJSONObject("month");
 
-        final JsonNode body = request.asJson().getBody();
-        final JSONObject quotas = body.getObject().getJSONObject("quotas");
-        final JSONObject month = quotas.getJSONObject("month");
-
-
-        return new Gson().fromJson(month.toString(0), CurrencyStatus.class);
+            return objectMapper.readValue(month.toString(0), CurrencyStatus.class);
+        } catch (Exception e) {
+            log.warn("Error while getting currency status", e);
+            return null;
+        }
     }
 
     public void resetCache() {

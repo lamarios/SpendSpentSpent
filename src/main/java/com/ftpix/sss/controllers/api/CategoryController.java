@@ -7,14 +7,14 @@ import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.CategoryService;
 import com.ftpix.sss.services.HistoryService;
 import com.ftpix.sss.services.UserService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,7 +22,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/API/Category")
-@Api(tags = {"Categories"})
+@Tag(name ="Categories")
+@SecurityRequirement(name = "bearerAuth")
 public class CategoryController {
 
     protected final Log logger = LogFactory.getLog(this.getClass());

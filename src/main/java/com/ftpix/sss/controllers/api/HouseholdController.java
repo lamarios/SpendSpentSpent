@@ -1,10 +1,12 @@
 package com.ftpix.sss.controllers.api;
 
-import com.ftpix.sss.models.*;
+import com.ftpix.sss.models.Household;
+import com.ftpix.sss.models.HouseholdColor;
+import com.ftpix.sss.models.HouseholdMember;
 import com.ftpix.sss.services.HouseholdService;
 import com.ftpix.sss.services.UserService;
-import com.ftpix.sss.websockets.WebSocketSessionManager;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +16,8 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/API/Household")
-@Api(tags = {"Household"})
+@Tag(name = "Household")
+@SecurityRequirement(name = "bearerAuth")
 public class HouseholdController {
     private final HouseholdService householdService;
     private final UserService userService;

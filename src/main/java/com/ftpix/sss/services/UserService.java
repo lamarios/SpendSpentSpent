@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -126,11 +127,11 @@ public class UserService {
 
     @Transactional
     public User createUser(User user) throws Exception {
-        if (user.getFirstName() == null || user.getFirstName().isEmpty()
-                || user.getLastName() == null || user.getLastName().isEmpty()
-                || user.getEmail() == null || user.getEmail().isEmpty()
-                || ((user.getPassword() == null || user.getPassword().isEmpty()) && user.getOidcSub() == null)
-        ) {
+        if (user.getFirstName() == null || user.getFirstName()
+                .isEmpty() || user.getLastName() == null || user.getLastName()
+                .isEmpty() || user.getEmail() == null || user.getEmail()
+                .isEmpty() || ((user.getPassword() == null || user.getPassword()
+                .isEmpty()) && user.getOidcSub() == null)) {
             throw new Exception("All fields must be filled.");
         }
 
@@ -159,6 +160,8 @@ public class UserService {
             throw new Exception("Email already in use");
         }
 
+        // order is important here as the clear password gets updated after the bcrypt
+        user.setPasswordBcrypt(new BCryptPasswordEncoder().encode(user.getPassword()));
         user.setPassword(hashUserCredentials(user.getEmail(), user.getPassword()));
         User toReturn = userDaoJooq.insert(user);
 
@@ -186,59 +189,53 @@ public class UserService {
             throw new Exception("You can't delete yourself");
         }
 
-        return Optional.ofNullable(getById(UUID.fromString(userId)))
-                .map(user -> {
+        return Optional.ofNullable(getById(UUID.fromString(userId))).map(user -> {
+            try {
+                // deleting recurring expenses
+                recurringExpenseService.getAll(user).forEach(e -> {
                     try {
-                        // deleting recurring expenses
-                        recurringExpenseService.getAll(user)
-                                .forEach(e -> {
-                                    try {
-                                        recurringExpenseService.delete(e.getId(), user);
-                                    } catch (Exception throwables) {
-                                        throw new RuntimeException(throwables);
-                                    }
-                                });
-
-                        // all expenses
-                        expenseService.getAll(user)
-                                .forEach(e -> {
-                                    try {
-                                        expenseService.delete(e.getId(), user);
-                                    } catch (Exception throwables) {
-                                        throw new RuntimeException(throwables);
-                                    }
-                                });
-                        // all categories
-                        categoryService.getAll(user)
-                                .forEach(c -> {
-                                    try {
-                                        categoryService.delete(c.getId(), user);
-                                    } catch (Exception throwables) {
-                                        throw new RuntimeException(throwables);
-                                    }
-                                });
-
-                        userDaoJooq.delete(user);
-                        return true;
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
+                        recurringExpenseService.delete(e.getId(), user);
+                    } catch (Exception throwables) {
+                        throw new RuntimeException(throwables);
                     }
-                })
-                .orElse(false);
+                });
+
+                // all expenses
+                expenseService.getAll(user).forEach(e -> {
+                    try {
+                        expenseService.delete(e.getId(), user);
+                    } catch (Exception throwables) {
+                        throw new RuntimeException(throwables);
+                    }
+                });
+                // all categories
+                categoryService.getAll(user).forEach(c -> {
+                    try {
+                        categoryService.delete(c.getId(), user);
+                    } catch (Exception throwables) {
+                        throw new RuntimeException(throwables);
+                    }
+                });
+
+                userDaoJooq.delete(user);
+                return true;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }).orElse(false);
     }
 
     @Transactional
     public boolean setUserPassword(String userId, String newPassword) throws SQLException {
-        return Optional.ofNullable(getById(UUID.fromString(userId)))
-                .map(u -> {
-                    try {
-                        u.setPassword(hashUserCredentials(u.getEmail(), newPassword));
-                        userDaoJooq.update(u);
-                        return true;
-                    } catch (NoSuchAlgorithmException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).orElse(false);
+        return Optional.ofNullable(getById(UUID.fromString(userId))).map(u -> {
+            try {
+                u.setPassword(hashUserCredentials(u.getEmail(), newPassword));
+                userDaoJooq.update(u);
+                return true;
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            }
+        }).orElse(false);
     }
 
     @Transactional
@@ -247,12 +244,11 @@ public class UserService {
             throw new Exception("You can't remove admin rights to yourself");
         }
 
-        return Optional.ofNullable(getById(UUID.fromString(userId)))
-                .map(u -> {
-                    u.setAdmin(isAdmin);
-                    userDaoJooq.update(u);
-                    return true;
-                }).orElse(false);
+        return Optional.ofNullable(getById(UUID.fromString(userId))).map(u -> {
+            u.setAdmin(isAdmin);
+            userDaoJooq.update(u);
+            return true;
+        }).orElse(false);
     }
 
     @Transactional

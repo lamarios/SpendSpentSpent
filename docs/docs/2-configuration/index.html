@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Configuration - SpendSpentSpent</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Configuration";
+        var mkdocs_page_input_path = "2-configuration.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> SpendSpentSpent
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">About SpendSpentSpent</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../1-installation/">Installation</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Configuration</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#environment-variables">Environment variables</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#email">Email</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ai-ollama-openai">AI (ollama / openai)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#oidc">OIDC</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../3-mcp-server/">MCP Server</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">SpendSpentSpent</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Configuration</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="configuration">Configuration</h1>
+<h2 id="environment-variables">Environment variables</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Default</th>
+<th>Required</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SALT</td>
+<td>(none)</td>
+<td><strong>Yes</strong></td>
+<td>Required for password hashing</td>
+</tr>
+<tr>
+<td>DB_PATH</td>
+<td>(none)</td>
+<td><strong>Yes</strong></td>
+<td>A full postgres <a href="https://www.codejava.net/java-se/jdbc/jdbc-database-connection-url-for-common-databases">JDBC connection url</a>. Example: <code>jdbc:postgresql://localhost:5432/sss</code></td>
+</tr>
+<tr>
+<td>DB_USER</td>
+<td>(none)</td>
+<td><strong>Yes</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>DB_PASSWORD</td>
+<td>(none)</td>
+<td><strong>Yes</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>TIMEZONE</td>
+<td>(none)</td>
+<td><strong>Yes</strong></td>
+<td>The timezone of the server (ex: Europe/Paris) from the <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">tz database</a></td>
+</tr>
+<tr>
+<td>ALLOW_SIGNUP</td>
+<td>0</td>
+<td>No</td>
+<td>1 = allow signups, 0 = Do not allow signups</td>
+</tr>
+<tr>
+<td>ANNOUNCEMENT_MESSAGE</td>
+<td>(none)</td>
+<td>No</td>
+<td>Show a message on the login screen, ex: ANNOUNCEMENT_MESSAGE="Welcome to my SpendSpentSpent instance". See demo instance to see what it looks like</td>
+</tr>
+<tr>
+<td>FILES_PATH</td>
+<td>./files</td>
+<td>No</td>
+<td>Where to store the pictures uploaded by the users</td>
+</tr>
+</tbody>
+</table>
+<h3 id="email">Email</h3>
+<p>SMTP environment variables are necessary if you want to enable the forgot password function and recurring expense
+notification emails.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Default</th>
+<th>Required (based on if you want SMTP services enabled)</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROOT_URL</td>
+<td>http://localhost:8080</td>
+<td>No</td>
+<td>The base URL used in the links in email sent to users</td>
+</tr>
+<tr>
+<td>SMTP_HOST</td>
+<td>(none)</td>
+<td><strong>Yes</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>SMTP_PORT</td>
+<td>0</td>
+<td><strong>Yes</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>SMTP_USERNAME</td>
+<td>(none)</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>SMTP_PASSWORD</td>
+<td>(none)</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>SMTP_FROM</td>
+<td>(none)</td>
+<td><strong>Yes</strong></td>
+<td>Who will be the sender of the email</td>
+</tr>
+<tr>
+<td>SMTP_TRANSPORT_STRATEGY</td>
+<td>SMTP</td>
+<td><strong>Yes</strong></td>
+<td>Possible values: SMTP, SMTPS, SMTP_TLS</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ai-ollama-openai">AI (ollama / openai)</h3>
+<p>SSS supports analyzing images using ollama or open ai (or a compatible server) to find prices or tags about images
+attached to an expense.
+The default models tested well with a RX6600XT GPU (8GB VRAM).</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Default</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OLLAMA_API_URL</td>
+<td>(none)</td>
+<td>The url of the ollama instance. Do not use together with OPENAI_API_URL</td>
+</tr>
+<tr>
+<td>OLLAMA_API_KEY</td>
+<td>(none)</td>
+<td>API Key to talk to the ollama server</td>
+</tr>
+<tr>
+<td>OPENAI_API_URL</td>
+<td>(none)</td>
+<td>The url of the open ai compatible instance. Do not use together with OPENAI_API_URL</td>
+</tr>
+<tr>
+<td>OPENAI_API_KEY</td>
+<td>(none)</td>
+<td>API Key to talk to the open ai compatible server</td>
+</tr>
+<tr>
+<td>AI_VISION_MODEL</td>
+<td>qwen2.5vl:7b</td>
+<td>Which vision model to use. This model will be used to generate picture description</td>
+</tr>
+<tr>
+<td>AI_TEXT_MODEL</td>
+<td>qwen3:8b</td>
+<td>Which text model to use. This model will take the description and generate tags and find the best expense category for a picture</td>
+</tr>
+</tbody>
+</table>
+<h3 id="oidc">OIDC</h3>
+<p>SSS Supports SSO by implementing OIDC. You will need to set up your OIDC client as a Public Client and enable PKCE.
+Here are the used callback urls:</p>
+<pre><code>com.spendspentspent.app:/oidcRedirect 
+https://your.spendspentsspent-domain.com/redirect.html
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Default</th>
+<th>Required</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OIDC_DISCOVERY_URL</td>
+<td>(none)</td>
+<td><strong>Yes</strong></td>
+<td>The discovery URL of your OIDC provider https://id.example.com/.well-known/openid-configuration</td>
+</tr>
+<tr>
+<td>OIDC_CLIENT_ID</td>
+<td>(none)</td>
+<td><strong>Yes</strong></td>
+<td>Your OIDC client id</td>
+</tr>
+<tr>
+<td>OIDC_AUTO_SIGNUP_USERS</td>
+<td>false</td>
+<td>No</td>
+<td>Whether to automatically sign up unknown users</td>
+</tr>
+<tr>
+<td>OIDC_NAME</td>
+<td>SSO</td>
+<td>no</td>
+<td>Name of your provider to display on the UI</td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../1-installation/" class="btn btn-neutral float-left" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../3-mcp-server/" class="btn btn-neutral float-right" title="MCP Server">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../1-installation/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../3-mcp-server/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
 import 'package:gap/gap.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:spend_spent_spent/api_keys/views/components/manage_keys.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/households/states/household_management.dart';
 import 'package:spend_spent_spent/settings/models/config.dart';
@@ -31,7 +32,7 @@ const ALLOW_SIGNUP = "allowSignUp",
     CURRENCY_API_KEY = "currencyApiKey",
     INCLUDE_RECURRING_IN_DIFF = "includeRecurringInDiff";
 
-settingsTheme(ColorScheme colorScheme) => SettingsThemeData(
+SettingsThemeData settingsTheme(ColorScheme colorScheme) => SettingsThemeData(
   settingsSectionBackground: colorScheme.surface,
   settingsListBackground: colorScheme.surface,
   titleTextColor: colorScheme.primary,
@@ -62,19 +63,19 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
   bool loading = false;
   Config? config;
 
-  logOut(BuildContext context) async {
+  Future<void> logOut(BuildContext context) async {
     await service.logout();
     AutoRouter.of(context).replaceAll([const LoginRoute()]);
   }
 
-  refreshProfile() async {
+  Future<void> refreshProfile() async {
     User user = await service.getCurrentUser();
     setState(() {
       currentUser = user;
     });
   }
 
-  showPasswordChange(BuildContext context) {
+  void showPasswordChange(BuildContext context) {
     masterDetailKey.currentState!.changeDetails(
       context,
       'Change password',
@@ -82,7 +83,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     );
   }
 
-  showManageUsers(BuildContext context) {
+  void showManageUsers(BuildContext context) {
     masterDetailKey.currentState!.changeDetails(
       context,
       'Manage users',
@@ -90,13 +91,13 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     );
   }
 
-  setMotd() {
+  void setMotd() {
     showPromptDialog(context, 'Login screen message', "", motdController, () {
       setSetting(MOTD, motdController.text.trim(), false);
     }, maxLines: 5);
   }
 
-  setCurrencyApiKey() {
+  void setCurrencyApiKey() {
     showPromptDialog(
       context,
       'currencyapi.com api key',
@@ -108,11 +109,19 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     );
   }
 
-  showEditProfile(BuildContext context) {
+  void showEditProfile(BuildContext context) {
     masterDetailKey.currentState!.changeDetails(
       context,
       'Edit profile',
       EditProfile(onProfileSaved: refreshProfile),
+    );
+  }
+
+  void showApiKeyManagement(BuildContext context) {
+    masterDetailKey.currentState!.changeDetails(
+      context,
+      'Manage API Keys',
+      ManageApiKeys(),
     );
   }
 
@@ -140,7 +149,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     }
   }
 
-  setSetting(String label, String value, bool secret) async {
+  Future<void> setSetting(String label, String value, bool secret) async {
     Settings settings = Settings(name: label, value: value, secret: secret);
     await service.setSettings(settings);
     await refreshSettings();
@@ -217,6 +226,12 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                                   onPressed: showPasswordChange,
                                 ),
                               ],
+                              SettingsTile(
+                                title: Text('Api Keys'),
+                                description: Text('Manage api keys'),
+                                leading: Icon(Icons.api, size: iconSize),
+                                onPressed: showApiKeyManagement,
+                              ),
                               SettingsTile(
                                 title: const Text('Logout'),
                                 leading: const Icon(
@@ -342,7 +357,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                                   ),
                                   initialValue: demoMode,
                                   onToggle: (bool value) => setSetting(
-                                    MATERIAL_YOU,
+                                    DEMO_MODE,
                                     value ? "1" : "0",
                                     false,
                                   ),

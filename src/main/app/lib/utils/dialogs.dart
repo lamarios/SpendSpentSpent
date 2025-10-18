@@ -29,6 +29,7 @@ Future<void> okCancelDialog(
   required String title,
   required Widget content,
   required Function() onOk,
+  bool showCancel = true,
 }) async {
   await showDialog(
     context: context,
@@ -36,10 +37,11 @@ Future<void> okCancelDialog(
       title: Text(title),
       content: content,
       actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.pop(context, null),
-          child: const Text('Cancel'),
-        ),
+        if (showCancel)
+          TextButton(
+            onPressed: () => Navigator.pop(context, null),
+            child: const Text('Cancel'),
+          ),
         TextButton(
           onPressed: () {
             Navigator.pop(context, 'OK');

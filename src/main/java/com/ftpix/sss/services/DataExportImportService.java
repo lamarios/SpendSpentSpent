@@ -1,12 +1,11 @@
 package com.ftpix.sss.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ftpix.sss.dao.*;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.DataExport;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.RecurringExpense;
-import com.ftpix.sss.utils.LocalDateGsonAdapter;
-import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.impl.DefaultDSLContext;
@@ -21,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.InvalidParameterException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -47,16 +45,16 @@ public class DataExportImportService {
     private final MonthlyHistoryDao monthlyHistoryDaoJooq;
     private final DefaultDSLContext dslContext;
 
-    private final Gson gson;
 
     private final String importPassword;
+    private final ObjectMapper objectMapper;
 
     @Value("${DB_PATH:./SSS}")
     private String dbPath;
 
 
     @Autowired
-    public DataExportImportService(DefaultDSLContext dslContext, UserDao userDaoJooq, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, SettingsDao settingsDaoJooq, RecurringExpenseDao recurringExpenseDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq) {
+    public DataExportImportService(DefaultDSLContext dslContext, UserDao userDaoJooq, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, SettingsDao settingsDaoJooq, RecurringExpenseDao recurringExpenseDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq, ObjectMapper objectMapper) {
         this.userDaoJooq = userDaoJooq;
         this.expenseDaoJooq = expenseDaoJooq;
         this.categoryDaoJooq = categoryDaoJooq;
@@ -65,13 +63,7 @@ public class DataExportImportService {
         this.yearlyHistoryDaoJooq = yearlyHistoryDaoJooq;
         this.monthlyHistoryDaoJooq = monthlyHistoryDaoJooq;
         this.dslContext = dslContext;
-
-
-        GsonBuilder builder = new GsonBuilder();
-        builder.serializeSpecialFloatingPointValues();
-        builder.registerTypeAdapter(LocalDate.class, new LocalDateGsonAdapter());
-
-        this.gson = builder.create();
+        this.objectMapper = objectMapper;
 
         // we generate a random password at every restart to allow import
         int leftLimit = 48; // numeral '0'
@@ -121,7 +113,7 @@ public class DataExportImportService {
         export.setMonthlyHistories(monthlyHistoryDaoJooq.getWhere());
 
 
-        var json = gson.toJson(export);
+        var json = objectMapper.writeValueAsString(export);
 
         String fileName = "SSS-backup.json";
 
@@ -140,7 +132,7 @@ public class DataExportImportService {
 
                 var json = new String(file.getBytes());
 
-                DataExport export = gson.fromJson(json, DataExport.class);
+                DataExport export = objectMapper.readValue(json, DataExport.class);
 
                 System.out.println(export);
 

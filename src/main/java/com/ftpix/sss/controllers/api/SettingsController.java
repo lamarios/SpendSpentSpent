@@ -4,7 +4,8 @@ package com.ftpix.sss.controllers.api;
 import com.ftpix.sss.models.Settings;
 import com.ftpix.sss.services.CurrencyService;
 import com.ftpix.sss.services.SettingsService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +15,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/API/Settings")
-@Api(tags = {"Settings"})
+@Tag(name = "Settings")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
+@SecurityRequirement(name = "bearerAuth")
 public class SettingsController {
 
     private final SettingsService settingsService;

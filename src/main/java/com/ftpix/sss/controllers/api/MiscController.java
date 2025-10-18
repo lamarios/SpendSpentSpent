@@ -1,7 +1,8 @@
 package com.ftpix.sss.controllers.api;
 
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
 import kong.unirest.json.JSONObject;
@@ -20,7 +21,8 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/API/Misc")
-@Api(tags = {"Misc"})
+@Tag(name = "Misc")
+@SecurityRequirement(name = "bearerAuth")
 public class MiscController {
 
     @Autowired

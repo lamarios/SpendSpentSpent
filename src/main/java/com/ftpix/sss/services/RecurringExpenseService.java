@@ -4,23 +4,16 @@ import com.ftpix.sss.Constants;
 import com.ftpix.sss.dao.RecurringExpenseDao;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
-import net.bytebuddy.asm.Advice;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalField;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import static com.ftpix.sss.dsl.Tables.RECURRING_EXPENSE;

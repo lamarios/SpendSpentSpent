@@ -4,6 +4,7 @@
 package com.ftpix.sss.dsl;
 
 
+import com.ftpix.sss.dsl.tables.ApiKeys;
 import com.ftpix.sss.dsl.tables.Category;
 import com.ftpix.sss.dsl.tables.Expense;
 import com.ftpix.sss.dsl.tables.Files;
@@ -37,6 +38,11 @@ public class PUBLIC extends SchemaImpl {
      * The reference instance of <code>public</code>
      */
     public static final PUBLIC PUBLIC = new PUBLIC();
+
+    /**
+     * The table <code>public.api_keys</code>.
+     */
+    public final ApiKeys API_KEYS = ApiKeys.API_KEYS;
 
     /**
      * The table <code>public.category</code>.
@@ -114,6 +120,7 @@ public class PUBLIC extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
+            ApiKeys.API_KEYS,
             Category.CATEGORY,
             Expense.EXPENSE,
             Files.FILES,

@@ -1,0 +1,19 @@
+meta {
+  name: DeleteKey
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{API}}/API/ApiKey/:keyId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  keyId: 314c596e-3e41-4312-b4a5-40da42eca17c
+}
+
+settings {
+  encodeUrl: true
+}

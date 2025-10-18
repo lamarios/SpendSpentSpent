@@ -1,7 +1,7 @@
 package com.ftpix.sss.websockets;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ftpix.sss.models.WebSocketMessage;
-import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.socket.TextMessage;
@@ -16,6 +16,7 @@ import java.util.Map;
 public class WebSocketSessionManager {
     private final static Logger log = LogManager.getLogger();
     private static final Map<String, List<WebSocketSession>> sessions = new ConcurrentHashMap<>();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static void register(String userId, WebSocketSession session) {
         sessions.putIfAbsent(userId, new ArrayList<>());
@@ -33,7 +34,6 @@ public class WebSocketSessionManager {
 
     public static <T> void sendToUser(String userId, T content) {
         if (sessions.containsKey(userId)) {
-            Gson gson = new Gson();
 
             WebSocketMessage<T> message = new WebSocketMessage<T>();
             message.setType(WebSocketMessage.Type.getFromClass(content.getClass()));
@@ -43,7 +43,7 @@ public class WebSocketSessionManager {
             for (WebSocketSession session : userSessions) {
                 if (session != null && session.isOpen()) {
                     try {
-                        session.sendMessage(new TextMessage(gson.toJson(message)));
+                        session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
                     } catch (IOException e) {
                         log.error("Error sending message:", e);
                     }

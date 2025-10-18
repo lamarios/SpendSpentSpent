@@ -6,6 +6,7 @@ package com.ftpix.sss.dsl.tables;
 
 import com.ftpix.sss.dsl.Keys;
 import com.ftpix.sss.dsl.PUBLIC;
+import com.ftpix.sss.dsl.tables.ApiKeys.ApiKeysPath;
 import com.ftpix.sss.dsl.tables.Category.CategoryPath;
 import com.ftpix.sss.dsl.tables.Files.FilesPath;
 import com.ftpix.sss.dsl.tables.HouseholdMembers.HouseholdMembersPath;
@@ -103,6 +104,11 @@ public class User extends TableImpl<UserRecord> {
      */
     public final TableField<UserRecord, String> OIDCSUB = createField(DSL.name("oidcsub"), SQLDataType.CLOB, this, "");
 
+    /**
+     * The column <code>public.user.password_bcrypt</code>.
+     */
+    public final TableField<UserRecord, String> PASSWORD_BCRYPT = createField(DSL.name("password_bcrypt"), SQLDataType.CLOB, this, "");
+
     private User(Name alias, Table<UserRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }
@@ -178,6 +184,19 @@ public class User extends TableImpl<UserRecord> {
     @Override
     public List<UniqueKey<UserRecord>> getUniqueKeys() {
         return Arrays.asList(Keys.USER_EMAIL_KEY);
+    }
+
+    private transient ApiKeysPath _apiKeys;
+
+    /**
+     * Get the implicit to-many join path to the <code>public.api_keys</code>
+     * table
+     */
+    public ApiKeysPath apiKeys() {
+        if (_apiKeys == null)
+            _apiKeys = new ApiKeysPath(this, null, Keys.API_KEYS__FK_API_KEY_USER.getInverseKey());
+
+        return _apiKeys;
     }
 
     private transient CategoryPath _category;

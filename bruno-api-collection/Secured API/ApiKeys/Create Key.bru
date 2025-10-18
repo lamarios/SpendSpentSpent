@@ -1,0 +1,21 @@
+meta {
+  name: Create Key
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API}}/API/ApiKey
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "keyName":"my key"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

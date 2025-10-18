@@ -5,18 +5,18 @@ import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.OIDCService;
 import com.ftpix.sss.services.UserService;
 import io.jsonwebtoken.Claims;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
 @RestController
-@Api(tags = {"Login"})
+@Tag(name ="Login")
 public class JwtAuthenticationController {
 
     @Autowired
@@ -33,7 +33,7 @@ public class JwtAuthenticationController {
 
 
     @RequestMapping(value = "/OidcLogin", method = RequestMethod.GET)
-    @ApiOperation(value = "Logs into the system, will return a JWT token to pass to other requests as a bearer token via the Authorization header")
+    @Operation(description = "Logs into the system, will return a JWT token to pass to other requests as a bearer token via the Authorization header")
     public String loginWithOidcToken(@RequestHeader("Authorization") String authorizationHeader) throws Exception {
         String token = authorizationHeader.replaceAll("Bearer ", "");
         Claims claims = oidcService.getParser()
@@ -52,7 +52,7 @@ public class JwtAuthenticationController {
     }
 
     @RequestMapping(value = "/Login", method = RequestMethod.POST)
-    @ApiOperation(value = "Logs into the system, will return a JWT token to pass to other requests as a bearer token via the Authorization header")
+    @Operation(description = "Logs into the system, will return a JWT token to pass to other requests as a bearer token via the Authorization header")
     public String generateAuthenticationToken(@RequestBody UserSessionController.UserCredentials creds)
             throws Exception {
 
@@ -71,8 +71,22 @@ public class JwtAuthenticationController {
         Objects.requireNonNull(password);
         final User byEmail = userService.getByEmail(email);
         final String hash = userService.hashUserCredentials(email, password);
-        if (byEmail == null || !byEmail.getPassword().equalsIgnoreCase(hash)) {
+
+        if (byEmail == null) {
             throw new BadCredentialsException("Invalid username or password");
+        }
+
+
+        boolean hashMatch = byEmail.getPasswordBcrypt() == null && byEmail.getPassword().equalsIgnoreCase(hash);
+        boolean cryptMatch = byEmail.getPasswordBcrypt() != null && new BCryptPasswordEncoder().matches(password, byEmail.getPasswordBcrypt());
+        if (!hashMatch && !cryptMatch) {
+            throw new BadCredentialsException("Invalid username or password");
+        }
+
+        // we have correct credentials for legacy passwords we want to switch to bcrypt
+        if (byEmail.getPasswordBcrypt() == null) {
+            byEmail.setPasswordBcrypt(new BCryptPasswordEncoder().encode(password));
+            userService.updateUser(byEmail);
         }
 
     }
