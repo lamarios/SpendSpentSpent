@@ -115,12 +115,16 @@ public class CurrencyService {
                 .header("accept", "application/json")
                 .header("content-type", "application/json");
 
+        try {
+            final JsonNode body = request.asJson().getBody();
+            final JSONObject quotas = body.getObject().getJSONObject("quotas");
+            final JSONObject month = quotas.getJSONObject("month");
 
-        final JsonNode body = request.asJson().getBody();
-        final JSONObject quotas = body.getObject().getJSONObject("quotas");
-        final JSONObject month = quotas.getJSONObject("month");
-
-        return objectMapper.readValue(month.toString(0), CurrencyStatus.class);
+            return objectMapper.readValue(month.toString(0), CurrencyStatus.class);
+        } catch (Exception e) {
+            log.warn("Error while getting currency status", e);
+            return null;
+        }
     }
 
     public void resetCache() {

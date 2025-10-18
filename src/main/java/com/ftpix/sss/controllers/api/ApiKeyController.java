@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.InvalidParameterException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +29,9 @@ public class ApiKeyController {
 
     @PostMapping
     public ApiKey create(@RequestBody ApiKey apiKey) throws SQLException {
+        if (apiKey.getKeyName() == null || apiKey.getKeyName().trim().isEmpty()) {
+            throw new InvalidParameterException("Key name is required");
+        }
         return apiKeyService.createApiKey(userService.getCurrentUser(), apiKey);
     }
 

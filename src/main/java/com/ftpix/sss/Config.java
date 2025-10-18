@@ -1,7 +1,11 @@
 package com.ftpix.sss;
 
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.StreamReadFeature;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
@@ -197,12 +201,17 @@ public class Config {
 
     @Bean
     public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
+
+        JsonFactory factory = JsonFactory.builder()
+                .enable(StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION).build();
+
+        ObjectMapper mapper = new ObjectMapper(factory);
         SimpleModule module = new SimpleModule();
         module.addSerializer(Settings.class, new SettingsSerializer());
         module.addDeserializer(Settings.class, new SettingsDeserializer());
         module.addSerializer(LocalDate.class, new LocalDateSerializer());
         module.addDeserializer(LocalDate.class, new LocalDateDeserializer());
+        mapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.registerModule(module);
 
         return mapper;

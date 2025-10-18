@@ -1,6 +1,9 @@
 package com.ftpix.sss.models;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.UUID;
 
@@ -13,7 +16,7 @@ public class User {
     private String email;
 
     private String firstName;
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @JsonIgnore
@@ -21,11 +24,15 @@ public class User {
 
     private String lastName;
 
+    @JsonIgnore
     private long subscriptionExpiryDate;
 
     private boolean showAnnouncement = false;
+
+    @JsonProperty("isAdmin")
     private boolean isAdmin = false;
 
+    @JsonIgnore
     private String oidcSub;
 
     //    @DatabaseField(columnName = "TIMECREATED")

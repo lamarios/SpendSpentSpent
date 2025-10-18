@@ -11,7 +11,7 @@ let
 in
 pkgs.mkShell {
   buildInputs = with pkgs; builtins.concatLists [
-    [ corretto21 maven gnumake ]
+    [ corretto21 maven gnumake mkdocs ]
   ];
 
   # to run CI or DB migrations
