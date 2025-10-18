@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Installation - SpendSpentSpent</title>
+    <title>MCP Server - SpendSpentSpent</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Installation";
-        var mkdocs_page_input_path = "1-installation.md";
+        var mkdocs_page_name = "MCP Server";
+        var mkdocs_page_input_path = "4-mcp-server.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -43,14 +43,8 @@
                 <li class="toctree-l1"><a class="reference internal" href="..">About SpendSpentSpent</a>
                 </li>
               </ul>
-              <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href="#">Installation</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#docker">Docker</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#from-the-jar-file">From the JAR file</a>
-    </li>
-    </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../1-installation/">Installation</a>
                 </li>
               </ul>
               <ul>
@@ -61,8 +55,14 @@
                 <li class="toctree-l1"><a class="reference internal" href="../3-api/">API</a>
                 </li>
               </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../4-mcp-server/">MCP Server</a>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">MCP Server</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#generate-an-api-key">Generate an API Key</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#add-the-mcp-server-to-your-llm-application">Add the mcp server to your LLM Application</a>
+    </li>
+    </ul>
                 </li>
               </ul>
       </div>
@@ -79,7 +79,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Installation</li>
+      <li class="breadcrumb-item active">MCP Server</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -88,57 +88,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="installation">Installation</h1>
-<h2 id="docker">Docker</h2>
-<p>This is the easiest way to run SSS</p>
-<p>There is a set of required environment variable. Check the configuration documentation.</p>
-<p>With docker compose:</p>
-<pre><code class="language-yml"> sss:
-   container_name: sss
-   image: gonzague/spendspentspent
-   restart: unless-stopped
-   ports:
-     - &quot;9001:9001&quot;
-   volumes:
-     - /etc/localtime:/etc/localtime:ro
-     - /some/path:/app-files # Where to store the files
-   environment:
-     SALT: somerandomstring #once set DO NOT EVER CHANGE IT
-     DB_PATH: &quot;jdbc:postgresql://postgres-sss:5432/sss&quot;
-     DB_USER: &quot;postgres&quot;
-     DB_PASSWORD: &quot;postgres&quot;
-     TIMEZONE: &quot;Europe/Paris&quot;
-
- postgres-sss:
-   container_name: postgres-sss
-   image: postgres:17
-   environment:
-     POSTGRES_PASSWORD: postgres
-     POSTGRES_USER: postgres
-     POSTGRES_DB: sss
-     TIMEZONE: Europe/Paris
-   volumes:
-     - ./sss/db:/var/lib/postgresql/data
-</code></pre>
-<h2 id="from-the-jar-file">From the JAR file</h2>
-<p>You will need to have <em>Java 21</em> to be installed on your machine to be able to run SSS</p>
-<pre><code> SALT=somerandomestring DB_PATH=&lt;jdbc url&gt;  DB_USER=xxx DB_PASSWORD=yyyy TIMEZONE=Europe/Paris java -Dserver.port=9001 -jar /app/SpendSpentSpent.jar
-</code></pre>
-<h1 id="update">Update</h1>
-<h2 id="docker_1">Docker</h2>
-<pre><code>docker pull gonzague/spendspentspent
-</code></pre>
-<p>and restart your container</p>
-<h2 id="jar-file">Jar File</h2>
-<p>Download the lastest JAR file from the release page and run it the same way.</p>
-<h2 id="accessing-the-app">Accessing the app</h2>
-<p>If you followed the example above, the app will be available on the port <strong>9001</strong>.</p>
+                <h1 id="mcp-server">MCP Server</h1>
+<p>SpendSpentSpent comes with a built-in MCP server so you can use a chatbot to interact with the service.</p>
+<h2 id="generate-an-api-key">Generate an API Key</h2>
+<p>To get started, you need to generate an API Key. Go to settings -&gt; Api Keys and create a new key then copy it.</p>
+<h2 id="add-the-mcp-server-to-your-llm-application">Add the mcp server to your LLM Application</h2>
+<p>Add a new MCP server using a remote setup, the url should be: <code>&lt;url of your SSS installtion&gt;/mcp</code>. Example your SSS installation is running on <code>https://sss.mydomain.com</code>, then the MCP server url is <code>https://sss.mydomain.com/mcp</code>. The type of the server (if required to choose) is <strong>HTTP Stream</strong>.</p>
+<p><a href="../mcp.gif"><img alt="mcp demo" src="../mcp.gif" /></a></p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href=".." class="btn btn-neutral float-left" title="About SpendSpentSpent"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../2-configuration/" class="btn btn-neutral float-right" title="Configuration">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../3-api/" class="btn btn-neutral float-left" title="API"><span class="icon icon-circle-arrow-left"></span> Previous</a>
     </div>
 
   <hr/>
@@ -161,10 +122,8 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../3-api/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
-    
-      <span><a href="../2-configuration/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
