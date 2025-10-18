@@ -144,6 +144,20 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
         return (String) get(8);
     }
 
+    /**
+     * Setter for <code>public.user.password_bcrypt</code>.
+     */
+    public void setPasswordBcrypt(String value) {
+        set(9, value);
+    }
+
+    /**
+     * Getter for <code>public.user.password_bcrypt</code>.
+     */
+    public String getPasswordBcrypt() {
+        return (String) get(9);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -167,7 +181,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
     /**
      * Create a detached, initialised UserRecord
      */
-    public UserRecord(String id, String email, String firstname, String password, String lastname, Long subscriptionexpirydate, Integer showannouncement, Integer isadmin, String oidcsub) {
+    public UserRecord(String id, String email, String firstname, String password, String lastname, Long subscriptionexpirydate, Integer showannouncement, Integer isadmin, String oidcsub, String passwordBcrypt) {
         super(User.USER);
 
         setId(id);
@@ -179,6 +193,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> {
         setShowannouncement(showannouncement);
         setIsadmin(isadmin);
         setOidcsub(oidcsub);
+        setPasswordBcrypt(passwordBcrypt);
         resetChangedOnNotNull();
     }
 }

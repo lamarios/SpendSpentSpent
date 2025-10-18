@@ -1,7 +1,8 @@
 package com.ftpix.sss.models;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import com.ftpix.sss.utils.JsonIgnore;
 
 import java.util.UUID;
 

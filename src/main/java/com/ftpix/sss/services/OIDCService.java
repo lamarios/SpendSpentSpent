@@ -1,8 +1,10 @@
 package com.ftpix.sss.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ftpix.sss.models.OIDCConfig;
 import com.ftpix.sss.models.User;
-import com.google.gson.Gson;
 import io.jsonwebtoken.Identifiable;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -44,11 +46,14 @@ public class OIDCService implements ApplicationContextAware {
 
     private OIDCConfig oidcConfig;
 
+    private final ObjectMapper objectMapper;
+
 
     private final UserService userService;
 
     @Autowired
-    public OIDCService(UserService userService) {
+    public OIDCService(ObjectMapper objectMapper, UserService userService) {
+        this.objectMapper = objectMapper;
         this.userService = userService;
     }
 
@@ -68,8 +73,7 @@ public class OIDCService implements ApplicationContextAware {
             try {
                 var body = request.asString();
 
-                Gson gson = new Gson();
-                oidcConfig = gson.fromJson(body.getBody(), OIDCConfig.class);
+                oidcConfig = objectMapper.readValue(body.getBody(), OIDCConfig.class);
 
                 request = Unirest.get(oidcConfig.getJwksUri());
 
@@ -90,7 +94,7 @@ public class OIDCService implements ApplicationContextAware {
                         .build();
 
 
-            } catch (UnirestException e) {
+            } catch (UnirestException | JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
         }

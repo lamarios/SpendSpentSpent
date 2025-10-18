@@ -1,23 +1,31 @@
 package com.ftpix.sss.utils;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ftpix.sss.models.Settings;
-import com.google.gson.*;
 
-import java.lang.reflect.Type;
+import java.io.IOException;
 
-import static com.ftpix.sss.services.SettingsService.OBFUSCATED_PASSWORD;
+public class SettingsSerializer extends JsonSerializer<Settings> {
 
-public class SettingsSerializer implements JsonSerializer<Settings> {
-
+    private static final String OBFUSCATED_PASSWORD = "********";
 
     @Override
-    public JsonElement serialize(Settings settings, Type type, JsonSerializationContext jsonSerializationContext) {
-        final JsonObject asJsonObject = new Gson().toJsonTree(settings).getAsJsonObject();
+    public void serialize(Settings settings, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+        gen.writeStartObject();
+        gen.writeStringField("name", settings.getName());
+        gen.writeBooleanField("secret", settings.isSecret());
 
         if (settings.isSecret()) {
-            asJsonObject.addProperty("value", OBFUSCATED_PASSWORD);
+            gen.writeStringField("value", OBFUSCATED_PASSWORD);
+        } else {
+            gen.writeStringField("value", settings.getValue());
         }
 
-        return asJsonObject;
+        gen.writeEndObject();
     }
+
+
 }

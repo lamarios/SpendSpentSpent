@@ -2,7 +2,9 @@ package com.ftpix.sss;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ftpix.sss.mcp.MCPTools;
 import com.ftpix.sss.models.Settings;
 import com.ftpix.sss.models.User;
@@ -34,6 +36,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collections;
@@ -106,22 +109,6 @@ public class Config {
                         .allowCredentials(true);
             }
         };
-    }
-
-    @Bean
-    public Gson gson() {
-        GsonBuilder builder = new GsonBuilder();
-        builder.serializeSpecialFloatingPointValues();
-        builder.registerTypeAdapter(LocalDate.class, new LocalDateGsonAdapter());
-
-        builder.registerTypeAdapter(User.class, new UserSerializer());
-        builder.registerTypeAdapter(Settings.class, new SettingsDeserializer());
-        builder.registerTypeAdapter(Settings.class, new SettingsSerializer());
-        builder.registerTypeAdapter(Json.class, new SpringfoxJsonToGsonAdapter());
-
-        return builder
-                .setExclusionStrategies(new JsonIgnoreStrategy())
-                .create();
     }
 
     @Bean
@@ -209,10 +196,15 @@ public class Config {
     }
 
     @Bean
-    public ObjectMapper mcpObjectMapper() {
+    public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JSR310Module());
-        // minimal config just to satisfy MCP
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(Settings.class, new SettingsSerializer());
+        module.addDeserializer(Settings.class, new SettingsDeserializer());
+        module.addSerializer(LocalDate.class, new LocalDateSerializer());
+        module.addDeserializer(LocalDate.class, new LocalDateDeserializer());
+        mapper.registerModule(module);
+
         return mapper;
     }
 

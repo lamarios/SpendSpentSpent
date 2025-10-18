@@ -13,9 +13,11 @@ public class User {
     private String email;
 
     private String firstName;
-
     @JsonIgnore
     private String password;
+
+    @JsonIgnore
+    private String passwordBcrypt;
 
     private String lastName;
 
@@ -108,5 +110,13 @@ public class User {
 
     public void setOidcSub(String oidcSub) {
         this.oidcSub = oidcSub;
+    }
+
+    public String getPasswordBcrypt() {
+        return passwordBcrypt;
+    }
+
+    public void setPasswordBcrypt(String passwordBcrypt) {
+        this.passwordBcrypt = passwordBcrypt;
     }
 }

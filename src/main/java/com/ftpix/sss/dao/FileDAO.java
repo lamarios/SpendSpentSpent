@@ -3,14 +3,11 @@ package com.ftpix.sss.dao;
 import com.ftpix.sss.dsl.tables.records.FilesRecord;
 import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.models.AiProcessingStatus;
-import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.SSSFile;
 import com.ftpix.sss.websockets.WebSocketSessionManager;
-import com.google.gson.Gson;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.OrderField;
-import org.jooq.TableField;
 import org.jooq.impl.TableImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,14 +22,12 @@ import static com.ftpix.sss.dsl.Tables.FILES;
 
 @Component("fileDao")
 public class FileDAO implements Dao<FilesRecord, SSSFile> {
-    private final Gson gson;
     private final DSLContext dslContext;
     private final List<DaoListener<SSSFile>> listeners = new ArrayList<>();
 
     @Autowired
-    public FileDAO(DSLContext dslContext, Gson gson) {
+    public FileDAO(DSLContext dslContext) {
         this.dslContext = dslContext;
-        this.gson = gson;
     }
 
     @Override

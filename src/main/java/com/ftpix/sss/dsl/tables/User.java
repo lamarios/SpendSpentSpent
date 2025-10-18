@@ -104,6 +104,11 @@ public class User extends TableImpl<UserRecord> {
      */
     public final TableField<UserRecord, String> OIDCSUB = createField(DSL.name("oidcsub"), SQLDataType.CLOB, this, "");
 
+    /**
+     * The column <code>public.user.password_bcrypt</code>.
+     */
+    public final TableField<UserRecord, String> PASSWORD_BCRYPT = createField(DSL.name("password_bcrypt"), SQLDataType.CLOB, this, "");
+
     private User(Name alias, Table<UserRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }

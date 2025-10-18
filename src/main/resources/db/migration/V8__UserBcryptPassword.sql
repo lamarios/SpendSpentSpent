@@ -1,0 +1,1 @@
+alter table "user" add column password_bcrypt text null;

@@ -1,7 +1,7 @@
 package com.ftpix.sss.services.aiClients;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ftpix.sss.models.ai_responses.OllamaResponse;
-import com.google.gson.Gson;
 import io.github.ollama4j.OllamaAPI;
 import io.github.ollama4j.models.response.OllamaResult;
 import io.github.ollama4j.utils.OptionsBuilder;
@@ -51,7 +51,7 @@ public class OllamaAiClient implements AiClient {
 
             var result = api.generate(model, prompt, ollamaFormat);
 
-            return List.of(new Gson().fromJson(result.getResponse(), format));
+            return List.of(new ObjectMapper().readValue(result.getResponse(), format));
         } else {
             throw new Exception("format does not have ollama format");
         }
