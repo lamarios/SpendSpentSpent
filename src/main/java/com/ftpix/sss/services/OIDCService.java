@@ -73,18 +73,21 @@ public class OIDCService implements ApplicationContextAware {
             try {
                 var body = request.asString();
 
-                oidcConfig = objectMapper.readValue(body.getBody(), OIDCConfig.class);
+                String bodyStr = body.getBody();
+                oidcConfig = objectMapper.readValue(bodyStr, OIDCConfig.class);
 
                 request = Unirest.get(oidcConfig.getJwksUri());
+                bodyStr = request.asString().getBody();
 
                 oidcConfig.setDiscoveryUrl(oidcDiscoveryUrl);
                 oidcConfig.setClientId(clientId);
                 oidcConfig.setEmailClaim(oidcEmailClaim);
                 oidcConfig.setName(oidcName);
 
+
                 var keyMap = Jwks.setParser()
                         .build()
-                        .parse(request.asString().getBody())
+                        .parse(bodyStr)
                         .getKeys()
                         .stream()
                         .collect(toMap(Identifiable::getId, Jwk::toKey));

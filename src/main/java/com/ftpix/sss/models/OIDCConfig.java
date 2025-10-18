@@ -1,18 +1,19 @@
 package com.ftpix.sss.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 public class OIDCConfig {
-    @SerializedName("authorization_endpoint")
+    @JsonProperty("authorization_endpoint")
     private String authorizationEndpoint;
-    @SerializedName("jwks_uri")
+    @JsonProperty("jwks_uri")
     private String jwksUri;
     private String issuer;
-    @SerializedName("id_token_signing_alg_values_supported")
+    @JsonProperty("id_token_signing_alg_values_supported")
     private List<String> supportedAlgorithm;
-    @SerializedName("userinfo_endpoint")
+    @JsonProperty("userinfo_endpoint")
     private String userInfoUrl;
     private String discoveryUrl;
     private String clientId;
@@ -20,7 +21,7 @@ public class OIDCConfig {
     private String name;
 
 
-    @SerializedName("token_endpoint")
+    @JsonProperty("token_endpoint")
     private String tokenUrl;
 
 
