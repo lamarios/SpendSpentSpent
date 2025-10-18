@@ -1,5 +1,6 @@
 package com.ftpix.sss.security;
 
+import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.ApiKeyService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,7 +28,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final ApiKeyService apiKeyService;
 
     private final JwtTokenUtil jwtTokenUtil;
-    private final String[] AUTH_CHECK = new String[]{"/API/"};
+    private final String[] AUTH_CHECK = new String[]{"/API/", "/mcp"};
 
     @Autowired
     public JwtRequestFilter(JwtUserDetailsService jwtUserDetailsService, ApiKeyService apiKeyService, JwtTokenUtil jwtTokenUtil) {
@@ -46,10 +47,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
                 String username = null;
                 String jwtToken = null;
+                boolean fromApiKey = false;
                 // JWT Token is in the form "Bearer token". Remove Bearer word and get only the Token
                 if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
                     jwtToken = requestTokenHeader.substring(7);
                     username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+                } else if (requestTokenHeader != null) {
+                    // we check api keys
+                    username = apiKeyService.getUserForKey(requestTokenHeader).map(User::getEmail).orElse(null);
+                    fromApiKey = true;
                 }
 
                 //Once we get the token validate it.
@@ -57,7 +63,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username, jwtToken);
 
                     // if token is valid configure Spring Security to manually set authentication
-                    if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+                    if (fromApiKey || jwtTokenUtil.validateToken(jwtToken, userDetails)) {
 
                         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                                 userDetails, null, userDetails.getAuthorities());
@@ -70,14 +76,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 }
             } catch (Exception e) {
                 logger.error("Error while authenticating", e);
-                response.setStatus(401);
-            }
-        } else if (request.getRequestURI().endsWith("/mcp")) {
-            final String apiKey = request.getHeader("Authorization");
-            var user = apiKeyService.getUserForKey(apiKey);
-            if (user.isPresent()) {
-                request.setAttribute("mcpUserId", user.get().getId().toString());
-            } else {
                 response.setStatus(401);
             }
         }

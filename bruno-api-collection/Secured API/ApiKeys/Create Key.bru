@@ -7,7 +7,13 @@ meta {
 post {
   url: {{API}}/API/ApiKey
   body: json
-  auth: inherit
+  auth: apikey
+}
+
+auth:apikey {
+  key: Authorization
+  value: lhArOkJCLCUmxTzJrnrOJXfhGUyCxmfoHUEIkjDQsXhdZBbHVWxPHBNHfRMcEFTD
+  placement: header
 }
 
 body:json {

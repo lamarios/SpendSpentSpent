@@ -42,16 +42,10 @@ public class MCPTools {
         this.recurringExpenseService = recurringExpenseService;
     }
 
-    public User getCurrentMcpUser() throws SQLException {
-        ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attrs == null) return null;
-        HttpServletRequest req = attrs.getRequest();
-        return userService.getById(UUID.fromString((String) req.getAttribute("mcpUserId")));
-    }
 
     @Tool(name = "get_categories", description = "Get all user's expense categories")
     public List<McpCategory> getCategories() throws SQLException {
-        return categoryService.getAll(getCurrentMcpUser())
+        return categoryService.getAll(userService.getCurrentUser())
                 .stream()
                 .map(category -> {
                     NewCategoryIcon newCategoryIcon = NewCategoryIcon.valueOf(category.getIcon());
@@ -69,7 +63,7 @@ public class MCPTools {
         var toTime = LocalDate.parse(toDate).atTime(23, 59, 59).atZone(zoneId).toEpochSecond() * 1000;
 
 
-        User currentMcpUser = getCurrentMcpUser();
+        User currentMcpUser = userService.getCurrentUser();
         var categories = categoryService.getAll(currentMcpUser)
                 .stream()
                 .filter(cat -> category == null || cat.getIcon().equalsIgnoreCase(category))
@@ -90,7 +84,7 @@ public class MCPTools {
                               @ToolParam(description = "the expense amount") double amount,
                               @ToolParam(required = false, description = "Note or description related to the expense") String note
     ) throws Exception {
-        User currentMcpUser = getCurrentMcpUser();
+        User currentMcpUser = userService.getCurrentUser();
         var categories = categoryService.getAll(currentMcpUser)
                 .stream()
                 .filter(cat -> category == null || cat.getIcon().equalsIgnoreCase(category))
@@ -113,10 +107,11 @@ public class MCPTools {
 
     @Tool(name = "get_recurring_expenses", description = "Gets the user's recurring expenses")
     public List<McpRecurringExpense> getRecurringExpenses() throws Exception {
-        return recurringExpenseService.get(getCurrentMcpUser())
+        return recurringExpenseService.get(userService.getCurrentUser())
                 .stream()
                 .map(re -> new McpRecurringExpense(re.getCategory()
-                        .getIcon(), re.getAmount(), re.getName(), re.getLastOccurrence().format(sdf), re.getNextOccurrence().format(sdf)))
+                        .getIcon(), re.getAmount(), re.getName(), re.getLastOccurrence()
+                        .format(sdf), re.getNextOccurrence().format(sdf)))
                 .toList();
     }
 }
