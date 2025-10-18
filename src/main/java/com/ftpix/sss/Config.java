@@ -5,17 +5,17 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.StreamReadFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.ftpix.sss.mcp.MCPTools;
 import com.ftpix.sss.models.Settings;
-import com.ftpix.sss.models.User;
-import com.ftpix.sss.utils.*;
-import com.google.gson.*;
+import com.ftpix.sss.utils.LocalDateDeserializer;
+import com.ftpix.sss.utils.LocalDateSerializer;
+import com.ftpix.sss.utils.SettingsDeserializer;
+import com.ftpix.sss.utils.SettingsSerializer;
 import freemarker.template.TemplateExceptionHandler;
-import io.modelcontextprotocol.server.McpServer;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.hazlewood.connor.bottema.emailaddress.EmailAddressCriteria;
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.api.mailer.config.TransportStrategy;
@@ -25,28 +25,24 @@ import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.*;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.SecurityContext;
-import springfox.documentation.spring.web.json.Json;
-import springfox.documentation.spring.web.plugins.Docket;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @Configuration
+@SecurityScheme(
+        name = "bearerAuth",
+        description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        scheme = "bearer",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        in = SecuritySchemeIn.HEADER
+)
 public class Config {
 
     @Value("${SMTP_USERNAME:}")
@@ -149,49 +145,6 @@ public class Config {
         return cfg;
     }
 
-    @Bean
-    public Docket api(BuildProperties buildProperties) {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.ant("/API/**").or(PathSelectors.ant("/Login")))
-                .build()
-                .apiInfo(getApiInfo(buildProperties))
-                .securitySchemes(Arrays.asList(apiKey()))
-                .securityContexts(Arrays.asList(securityContext()));
-
-    }
-
-    private ApiInfo getApiInfo(BuildProperties buildProperties) {
-        return new ApiInfo(
-                buildProperties.getName(),
-                "Easy to use expense tracker",
-                buildProperties.getVersion(),
-                "",
-                new Contact("Paul fauchon", "https://lamarios.github.io/SpendSpentSpent/", "EMAIL"),
-                "GNU Affero General Public License v3.0",
-                "https://raw.githubusercontent.com/lamarios/SpendSpentSpent/master/LICENSE",
-                Collections.emptyList()
-        );
-    }
-
-    private ApiKey apiKey() {
-        return new ApiKey("apiKey", "Authorization", "header");
-    }
-
-    private SecurityContext securityContext() {
-        return SecurityContext.builder().securityReferences(defaultAuth())
-                .forPaths(PathSelectors.ant("/API/**")).build();
-    }
-
-    private List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope = new AuthorizationScope(
-                "global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        return Arrays.asList(new SecurityReference("apiKey",
-                authorizationScopes));
-    }
 
     @Bean
     ToolCallbackProvider mcpToolCallbackProvider(MCPTools mcpTools) {

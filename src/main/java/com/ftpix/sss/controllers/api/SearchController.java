@@ -7,11 +7,10 @@ import com.ftpix.sss.models.SearchParameters;
 import com.ftpix.sss.services.SearchService;
 import com.ftpix.sss.services.UserService;
 import com.ftpix.sss.utils.DateUtils;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
-import net.bytebuddy.implementation.bind.annotation.Default;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -28,7 +27,8 @@ import static com.ftpix.sss.Constants.TIMEZONE_HEADER;
 
 @RestController
 @RequestMapping("/API/Search")
-@Api(tags = "Search")
+@Tag(name = "Search")
+@SecurityRequirement(name = "bearerAuth")
 public class SearchController {
 
     private final SearchService searchService;

@@ -5,9 +5,10 @@ import com.ftpix.sss.services.ExpenseService;
 import com.ftpix.sss.services.UserService;
 import com.ftpix.sss.utils.CategoryPredictor;
 import com.ftpix.sss.utils.DateUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,8 @@ import static com.ftpix.sss.Constants.TIMEZONE_HEADER;
 
 @RestController
 @RequestMapping("/API/Expense")
-@Api(tags = {"Expenses"})
+@Tag(name = "Expenses")
+@SecurityRequirement(name = "bearerAuth")
 public class ExpenseController {
     public static final String DATE = "date";
     protected final Log logger = LogFactory.getLog(this.getClass());
@@ -76,8 +78,8 @@ public class ExpenseController {
      * @throws ParseException
      */
     @GetMapping(value = "/ByDay")
-    @ApiOperation("Gets the expenses of a given month day by day")
-    public Map<String, DailyExpense> getByDay(@ApiParam("Given month, format yyyy-mm ex: 2020-03") @RequestParam String month,  @RequestHeader(value = TIMEZONE_HEADER, defaultValue = "") String zoneId) throws Exception {
+    @Operation(description =  "Gets the expenses of a given month day by day")
+    public Map<String, DailyExpense> getByDay(@Parameter(description = "Given month, format yyyy-mm ex: 2020-03") @RequestParam String month, @RequestHeader(value = TIMEZONE_HEADER, defaultValue = "") String zoneId) throws Exception {
         final User currentUser = userService.getCurrentUser();
 
         Map<String, DailyExpense> byDay = expenseService.getByDay(month, currentUser, DateUtils.parseZoneId(zoneId, this.zoneId));

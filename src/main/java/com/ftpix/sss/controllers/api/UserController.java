@@ -4,10 +4,10 @@ import com.ftpix.sss.models.PaginatedResults;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.security.JwtTokenUtil;
 import com.ftpix.sss.security.JwtUserDetailsService;
-import com.ftpix.sss.services.OIDCService;
 import com.ftpix.sss.services.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,8 @@ import java.sql.SQLException;
 
 @RestController
 @RequestMapping("/API/User")
-@Api(tags = {"Users"})
+@Tag(name = "Users")
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
     private final static Logger logger = LogManager.getLogger();
 
@@ -50,7 +51,7 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public PaginatedResults<User> getUsers(@ApiParam("Page starts from 0") @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int pageSize, @RequestParam(defaultValue = "") String search) throws Exception {
+    public PaginatedResults<User> getUsers(@Parameter(description = "Page starts from 0") @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int pageSize, @RequestParam(defaultValue = "") String search) throws Exception {
         return userService.getAll(search, page, pageSize);
     }
 

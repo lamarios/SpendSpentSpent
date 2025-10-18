@@ -4,8 +4,7 @@
 
 This is the easiest way to run SSS
 
-The SALT environment variable is required especially if you want to use password protection to the application. Once
-set, **do not change it** while running against the same database.
+There is a set of required environment variable. Check the configuration documentation.
 
 With docker compose:
 
@@ -20,7 +19,7 @@ With docker compose:
      - /etc/localtime:/etc/localtime:ro
      - /some/path:/app-files # Where to store the files
    environment:
-     SALT: somerandomstring
+     SALT: somerandomstring #once set DO NOT EVER CHANGE IT
      DB_PATH: "jdbc:postgresql://postgres-sss:5432/sss"
      DB_USER: "postgres"
      DB_PASSWORD: "postgres"

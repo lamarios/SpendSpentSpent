@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import springfox.documentation.spring.web.plugins.Docket;
 
 import java.util.Optional;
 
@@ -22,8 +21,6 @@ public class ApiKeyServiceTest extends TestContainerTest {
     private ApiKeyService apiKeyService;
     @Autowired
     private User currentUser;
-    @Autowired
-    private Docket api;
 
 
     @Test

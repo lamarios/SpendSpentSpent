@@ -4,8 +4,9 @@ import com.ftpix.sss.models.CategoryOverall;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.HistoryService;
 import com.ftpix.sss.services.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +20,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/API/History")
-@Api(tags = {"History"})
+@Tag(name = "History")
+@SecurityRequirement(name = "bearerAuth")
 public class HistoryController {
     private final UserService userService;
 
@@ -55,7 +57,7 @@ public class HistoryController {
      * @throws SQLException
      */
     @GetMapping(value = "/Yearly/{category}/{count}")
-    @ApiOperation("Gets the expenses for a given category for the past x years")
+    @Operation(description =  "Gets the expenses for a given category for the past x years")
     public List<Map<String, Object>> getYearlyHistory(@PathVariable("category") long categoryId, @PathVariable("count") int count) throws Exception {
         final User user = userService.getCurrentUser();
         return historyService.getYearlyHistory(categoryId, count, user);
@@ -70,7 +72,7 @@ public class HistoryController {
      * @throws SQLException
      */
     @GetMapping("/Monthly/{category}/{count}")
-    @ApiOperation("Gets the expenses for a given category for the past x months")
+    @Operation(description = "Gets the expenses for a given category for the past x months")
     public List<Map<String, Object>> getMonthlyHistory(@PathVariable("category") long categoryId, @PathVariable("count") int count) throws Exception {
         final User user = userService.getCurrentUser();
         return historyService.getMonthlyHistory(categoryId, count, user);

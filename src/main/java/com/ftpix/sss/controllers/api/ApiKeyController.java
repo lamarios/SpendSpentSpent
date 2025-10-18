@@ -3,7 +3,8 @@ package com.ftpix.sss.controllers.api;
 import com.ftpix.sss.models.ApiKey;
 import com.ftpix.sss.services.ApiKeyService;
 import com.ftpix.sss.services.UserService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,8 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/API/ApiKey")
-@Api(tags = {"Api Key"})
+@Tag (name = "Api Key")
+@SecurityRequirement(name = "bearerAuth")
 public class ApiKeyController {
 
     private final UserService userService;
