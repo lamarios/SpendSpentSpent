@@ -1,0 +1,16 @@
+meta {
+  name: Get month total
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{API}}/API/History/Monthly/total/202510
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
