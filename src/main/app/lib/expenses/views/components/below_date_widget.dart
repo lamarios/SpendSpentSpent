@@ -32,7 +32,7 @@ class BelowDateInCalendarWidget extends StatelessWidget {
                     ? SizedBox(width: 20, height: 20, child: LoadingIndicator())
                     : SingleMotionBuilder(
                         motion: MaterialSpringMotion.expressiveSpatialDefault(),
-                        from: 50,
+                        from: -50,
                         value: 0,
                         builder: (context, value, child) => Transform.translate(
                           offset: Offset(0, value),

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static com.ftpix.sss.dsl.Tables.CATEGORY;
 
-public interface UserCategoryBasedDao<R extends UpdatableRecord<R>, M extends HasCategory> {
+public interface UserCategoryBasedDao<R extends TableRecord<R>, M extends HasCategory> {
     DSLContext getDsl();
 
     void addUserBasedListener(DaoUserListener<M> listener);
@@ -110,9 +110,13 @@ public interface UserCategoryBasedDao<R extends UpdatableRecord<R>, M extends Ha
 
         if (userCategories.containsKey(object.getCategory().getId())) {
             R r = setRecordData(getDsl().newRecord(getTable()), object);
-            boolean result = r.delete() == 1;
-            getUserBasedListeners().forEach(l -> l.afterDelete(user, object));
-            return result;
+            if (r instanceof UpdatableRecord updatable) {
+                boolean result = updatable.delete() == 1;
+                getUserBasedListeners().forEach(l -> l.afterDelete(user, object));
+                return result;
+            } else {
+                throw new RuntimeException("record type is not updatable");
+            }
         } else {
             return false;
         }
@@ -123,9 +127,13 @@ public interface UserCategoryBasedDao<R extends UpdatableRecord<R>, M extends Ha
 
         if (userCategories.containsKey(object.getCategory().getId())) {
             R r = setRecordData(getDsl().newRecord(getTable()), object);
-            r.store();
-            getUserBasedListeners().forEach(l -> l.afterInsert(user, object));
-            return fromRecord(r, userCategories);
+            if (r instanceof UpdatableRecord updatable) {
+                updatable.store();
+                getUserBasedListeners().forEach(l -> l.afterInsert(user, object));
+                return fromRecord(r, userCategories);
+            } else {
+                throw new RuntimeException("record type is not updatable");
+            }
         } else {
             return null;
         }
@@ -137,9 +145,13 @@ public interface UserCategoryBasedDao<R extends UpdatableRecord<R>, M extends Ha
         if (userCategories.containsKey(object.getCategory().getId())) {
 
             R r = setRecordData(getDsl().newRecord(getTable()), object);
-            boolean b = r.update() == 1;
-            getUserBasedListeners().forEach(l -> l.afterUpdate(user, object));
-            return b;
+            if (r instanceof UpdatableRecord updatable) {
+                boolean b = updatable.update() == 1;
+                getUserBasedListeners().forEach(l -> l.afterUpdate(user, object));
+                return b;
+            } else {
+                throw new RuntimeException("record type is not updatable");
+            }
         } else {
             return false;
         }

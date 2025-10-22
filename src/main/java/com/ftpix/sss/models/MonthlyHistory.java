@@ -7,22 +7,12 @@ import java.util.UUID;
 
 public class MonthlyHistory implements HasCategory {
 
-    private UUID id = UUID.randomUUID();
-
     private Category category;
 
     private double total;
 
     // date will be of format YYYYMM for easy comparison / sorting
     private int date;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     @Override
     public Category getCategory() {

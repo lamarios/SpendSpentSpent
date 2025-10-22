@@ -61,7 +61,6 @@ public class MonthlyHistoryDao implements Dao<MonthlyHistoryRecord, MonthlyHisto
     @Override
     public MonthlyHistory fromRecord(MonthlyHistoryRecord r, Map<Long, Category> categories) {
         MonthlyHistory h = new MonthlyHistory();
-        h.setId(UUID.fromString(r.getId()));
         h.setCategory(categories.get(r.getCategoryId()));
         h.setDate(r.getDate());
         h.setTotal(r.getTotal());
@@ -80,7 +79,6 @@ public class MonthlyHistoryDao implements Dao<MonthlyHistoryRecord, MonthlyHisto
 
     @Override
     public MonthlyHistoryRecord setRecordData(MonthlyHistoryRecord r, MonthlyHistory o) {
-        r.setId(o.getId().toString());
         r.setCategoryId(o.getCategory().getId());
         r.setDate(o.getDate());
         r.setTotal(o.getTotal());
@@ -104,11 +102,5 @@ public class MonthlyHistoryDao implements Dao<MonthlyHistoryRecord, MonthlyHisto
                 .fetchOne(r -> {
                     return r.into(Category.class);
                 });
-    }
-
-    @Override
-    public MonthlyHistory insert(MonthlyHistory object) {
-        object.setId(UUID.randomUUID());
-        return Dao.super.insert(object);
     }
 }

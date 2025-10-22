@@ -57,10 +57,17 @@ public class HistoryController {
      * @throws SQLException
      */
     @GetMapping(value = "/Yearly/{category}/{count}")
-    @Operation(description =  "Gets the expenses for a given category for the past x years")
+    @Operation(description = "Gets the expenses for a given category for the past x years")
     public List<Map<String, Object>> getYearlyHistory(@PathVariable("category") long categoryId, @PathVariable("count") int count) throws Exception {
         final User user = userService.getCurrentUser();
         return historyService.getYearlyHistory(categoryId, count, user);
+    }
+
+    @GetMapping(value = "/Monthly/total/{month}")
+    @Operation(description = "Gets the total spent in the given month")
+    public double getMonthlTotal(@PathVariable("month") int month) throws Exception {
+        final User user = userService.getCurrentUser();
+        return historyService.getMonthTotal(user, month);
     }
 
     /**

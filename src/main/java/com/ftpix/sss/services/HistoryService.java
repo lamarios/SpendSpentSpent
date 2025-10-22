@@ -1,20 +1,15 @@
 package com.ftpix.sss.services;
 
 import com.ftpix.sss.dao.*;
-import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.*;
-import com.ftpix.sss.utils.DateUtils;
-import com.ftpix.sss.utils.PaginationUtils;
-import org.apache.commons.lang3.tuple.Pair;
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -53,101 +48,40 @@ public class HistoryService {
         this.userDao = userDao;
         this.zoneId = zoneId;
 
-        this.expenseDaoJooq.addUserBasedListener(expenseDaoListener);
-        this.categoryDaoJooq.addUserBasedListener(categoryDaoListener);
+//        this.expenseDaoJooq.addUserBasedListener(expenseDaoListener);
+//        this.categoryDaoJooq.addUserBasedListener(categoryDaoListener);
     }
 
 
-    @Scheduled(fixedRate = 86_400_000)
-    @Transactional
-    public void recalculateStats() {
-        logger.info("Recalculating stats cache");
-        for (User user : userDao.getWhere()) {
-            boolean hasMore;
-            int page = PaginationUtils.DEFAULT_PAGE;
+    @PostConstruct
+    public void recreateViews() {
+        // very dirty way to recreate the views on startup but the zimezone can change so we don't really have a choice
+        String sql = """
+                DROP VIEW IF EXISTS monthly_history;
+                CREATE VIEW monthly_history AS
+                SELECT category_id,
+                       to_char(to_timestamp(timestamp / 1000) AT TIME ZONE '%s', 'YYYYMM')::INTEGER AS date,
+                       ROUND(SUM(amount)::NUMERIC, 2)                                                     AS total,
+                       COUNT(*)                                                                           AS expenses
+                FROM expense
+                GROUP BY category_id, to_char(to_timestamp(timestamp / 1000) AT TIME ZONE '%s', 'YYYYMM')::INTEGER;
+                
+                
+                DROP VIEW IF EXISTS yearly_history;
+                CREATE or replace VIEW yearly_history AS
+                SELECT category_id,
+                       to_char(to_timestamp(timestamp / 1000) AT TIME ZONE '%s', 'YYYY')::INTEGER AS date,
+                       ROUND(SUM(amount)::NUMERIC, 2)                  AS total,
+                       COUNT(*)                                        AS expenses
+                FROM expense
+                GROUP BY category_id, to_char(to_timestamp(timestamp / 1000) AT TIME ZONE '%s', 'YYYY')::INTEGER;
+                """.formatted(zoneId.toString(), zoneId.toString(), zoneId.toString(), zoneId.toString());
 
-            // we keep a cache of the date / categories we processed so we do have to do it many times per category / month
-            Map<Integer, Set<Long>> alreadyDoneMonthly = new HashMap<>();
-            Map<Integer, Set<Long>> alreadyDoneYearly = new HashMap<>();
-            do {
-                logger.info("Refreshing cache for user " + user.getId().toString() + " page: " + page);
-                PaginatedResults<Expense> expenses = expenseDaoJooq.getPaginatedWhere(user, page, 100);
-                expenses.getData().forEach(expense -> {
-                    try {
+        System.out.println(sql);
+        yearlyHistoryDaoJooq.getDsl().execute(sql);
 
-                        ZonedDateTime expenseDate = DateUtils.fromTimestamp(expense.getTimestamp(), zoneId);
-                        int formattedDate = Integer.parseInt(DateTimeFormatter.ofPattern("yyyyMM").format(expenseDate));
-                        int formattedYear = Integer.parseInt(DateTimeFormatter.ofPattern("yyyy").format(expenseDate));
-                        alreadyDoneMonthly.putIfAbsent(formattedDate, new HashSet<>());
-                        alreadyDoneYearly.putIfAbsent(formattedYear, new HashSet<>());
 
-                        if (!alreadyDoneMonthly.get(formattedDate).contains(expense.getCategory().getId())) {
-                            cacheForCategoryMonthly(user, expenseDate, expense.getCategory());
-                            alreadyDoneMonthly.get(formattedDate).add(expense.getCategory().getId());
-                        }
-
-                        if (!alreadyDoneYearly.get(formattedYear).contains(expense.getCategory().getId())) {
-                            cacheForCategoryYearly(user, expenseDate, expense.getCategory());
-                            alreadyDoneYearly.get(formattedYear).add(expense.getCategory().getId());
-                        }
-
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-
-                hasMore = expenses.getData().size() == 100;
-                page++;
-            } while (hasMore);
-        }
     }
-
-    private final DaoUserListener<Category> categoryDaoListener = new DaoUserListener<Category>() {
-        @Override
-        public void afterInsert(User user, Category newRecord) {
-
-        }
-
-        @Override
-        public void afterUpdate(User user, Category newRecord) {
-
-        }
-
-        @Override
-        public void afterDelete(User user, Category deleted) {
-            monthlyHistoryDaoJooq.deleteWhere(MONTHLY_HISTORY.CATEGORY_ID.eq(deleted.getId()));
-            yearlyHistoryDaoJooq.deleteWhere(YEARLY_HISTORY.CATEGORY_ID.eq(deleted.getId()));
-        }
-    };
-
-    private final DaoUserListener<Expense> expenseDaoListener = new DaoUserListener<Expense>() {
-        @Override
-        public void afterInsert(User user, Expense newRecord) {
-            try {
-                cacheForExpense(user, newRecord);
-            } catch (SQLException e) {
-                logger.error(e);
-            }
-        }
-
-        @Override
-        public void afterUpdate(User user, Expense updatedRecord) {
-            try {
-                cacheForExpense(user, updatedRecord);
-            } catch (SQLException e) {
-                logger.error(e);
-            }
-        }
-
-        @Override
-        public void afterDelete(User user, Expense deleted) {
-            try {
-                cacheForExpense(user, deleted);
-            } catch (SQLException e) {
-                logger.error(e);
-            }
-        }
-    };
 
 
     /**
@@ -352,81 +286,9 @@ public class HistoryService {
         return result;
     }
 
-    @Transactional
-    public void cacheForExpense(User user, Expense expense) throws SQLException {
-        logger.info("History for expense " + expense.getId() + " of category " + expense.getCategory().getId());
-        ZonedDateTime expenseDate = DateUtils.fromTimestamp(expense.getTimestamp(), zoneId);
-
-        cacheForCategory(user, expenseDate, expense.getCategory());
+    @Transactional(readOnly = true)
+    public double getMonthTotal(User user, int month) {
+        var expenses = monthlyHistoryDaoJooq.getFromHouseholdWhere(user, MONTHLY_HISTORY.DATE.eq(month));
+        return expenses.stream().mapToDouble(MonthlyHistory::getTotal).sum();
     }
-
-    /**
-     * date in format YYYYMM
-     *
-     * @param date
-     * @param category
-     */
-    @Transactional
-    public void cacheForCategory(User user, ZonedDateTime date, Category category) throws SQLException {
-//        logger.info("Refreshing cache for category :" + category.getId());
-
-        cacheForCategoryMonthly(user, date, category);
-        cacheForCategoryYearly(user, date, category);
-    }
-
-    /**
-     * @param date     in formay yyyy-DD
-     * @param category
-     */
-    private void cacheForCategoryYearly(User user, ZonedDateTime date, Category category) throws SQLException {
-
-        Pair<ZonedDateTime, ZonedDateTime> yearBoundaries = DateUtils.getYearBoundaries(date, zoneId);
-        double sum = expenseService.getSumWhere(user, yearBoundaries, category);
-
-        int formattedDate = Integer.parseInt(DateTimeFormatter.ofPattern("yyyy").format(date));
-        Optional<YearlyHistory> history = yearlyHistoryDaoJooq.getOneWhere(YEARLY_HISTORY.CATEGORY_ID.eq(category.getId()), YEARLY_HISTORY.DATE.eq(formattedDate));
-
-        YearlyHistory yearlyHistory;
-        if (history.isEmpty()) {
-            yearlyHistory = new YearlyHistory();
-            yearlyHistory.setCategory(category);
-            yearlyHistory.setDate(formattedDate);
-            yearlyHistoryDaoJooq.insert(yearlyHistory);
-        } else {
-            yearlyHistory = history.get();
-        }
-
-        yearlyHistory.setTotal(sum);
-
-        yearlyHistoryDaoJooq.update(yearlyHistory);
-    }
-
-    /**
-     * @param date     in format YYYY
-     * @param category
-     */
-    private void cacheForCategoryMonthly(User user, ZonedDateTime date, Category category) throws SQLException {
-
-        Pair<ZonedDateTime, ZonedDateTime> monthBoundaries = DateUtils.getMonthBoundaries(date, zoneId);
-        double sum = expenseService.getSumWhere(user, monthBoundaries, category);
-
-        int formattedDate = Integer.parseInt(DateTimeFormatter.ofPattern("yyyyMM").format(date));
-        Optional<MonthlyHistory> history = monthlyHistoryDaoJooq.getOneWhere(MONTHLY_HISTORY.CATEGORY_ID.eq(category.getId()), MONTHLY_HISTORY.DATE.eq(formattedDate));
-
-        MonthlyHistory monthlyHistory;
-        if (history.isEmpty()) {
-            monthlyHistory = new MonthlyHistory();
-            monthlyHistory.setCategory(category);
-            monthlyHistory.setDate(formattedDate);
-            monthlyHistoryDaoJooq.insert(monthlyHistory);
-        } else {
-            monthlyHistory = history.get();
-        }
-
-        monthlyHistory.setTotal(sum);
-
-        monthlyHistoryDaoJooq.update(monthlyHistory);
-    }
-
-
 }
