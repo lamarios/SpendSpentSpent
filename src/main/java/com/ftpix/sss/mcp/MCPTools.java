@@ -58,17 +58,17 @@ public class MCPTools {
     @Tool(name = "search_expenses", description = "Search user's expenses")
     public List<McpExpense> searchExpenses(@ToolParam(description = "lower inclusive date boundary for expense search, date format yyyy-MM-dd") String fromDate,
                                            @ToolParam(description = "upper inclusive date boundary for expense search in, date format yyyy-MM-dd") String toDate,
-                                           @ToolParam(required = false, description = "Category to which the expense belongs to") String category) throws SQLException {
+                                           @ToolParam(required = false, description = "List of categories to filter filter the expenses on") List<String> categories) throws SQLException {
         var fromTime = LocalDate.parse(fromDate).atTime(0, 0, 0).atZone(zoneId).toEpochSecond() * 1000;
         var toTime = LocalDate.parse(toDate).atTime(23, 59, 59).atZone(zoneId).toEpochSecond() * 1000;
 
 
         User currentMcpUser = userService.getCurrentUser();
-        var categories = categoryService.getAll(currentMcpUser)
+        var categoryFilter = categoryService.getAll(currentMcpUser)
                 .stream()
-                .filter(cat -> category == null || cat.getIcon().equalsIgnoreCase(category))
+                .filter(cat -> categories == null || categories.isEmpty() || categories.contains(cat.getIcon()))
                 .toList();
-        SearchParameters params = new SearchParameters(categories, 0, Integer.MAX_VALUE, fromTime, toTime, null);
+        SearchParameters params = new SearchParameters(categoryFilter, 0, Integer.MAX_VALUE, fromTime, toTime, null);
 
         return searchService.search(currentMcpUser, params, zoneId)
                 .values()

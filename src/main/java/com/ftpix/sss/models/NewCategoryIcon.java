@@ -13,7 +13,7 @@ public enum NewCategoryIcon {
     netflix(Constants.BRANDS, new String[]{"netflix", "streaming", "tv", "movie"}),
     google(Constants.BRANDS, new String[]{"google", "suite", "youtube", "gmail"}),
     youtube(Constants.BRANDS, new String[]{"youtube", "streaming"}),
-    books(Constants.HOBBIES, new String[]{"book", "books", "reading", "read", "litterature", "magazines"}),
+    books(Constants.HOBBIES, new String[]{"book", "books", "reading", "read", "literature", "magazines"}),
     camera(Constants.HOBBIES, new String[]{"photo", "photography", "lens", "video", "camera", "recording"}),
     eyecare(Constants.HEALTH, new String[]{"glasses", "eye care", "optician", "spectacles"}),
     healthcare(Constants.HEALTH, new String[]{"doctor", "hospital", "health", "health care"}),
@@ -44,19 +44,18 @@ public enum NewCategoryIcon {
     shopping_cart(Constants.SHOPPING, new String[]{"shopping", "groceries", "market", "supermarket"}),
     water(Constants.HOUSING, new String[]{"bill", "water"}),
     bus(Constants.TRANSPORTS, new String[]{"bus", "travel", "transport", "public"}),
-    car(Constants.TRANSPORTS, new String[]{"car", "travel", "service", "fix"}),
+    car(Constants.TRANSPORTS, new String[]{"car", "travel", "service", "fix", "repair", "maintenance"}),
     carengine(Constants.TRANSPORTS, new String[]{"car", "repair", "engine", "maintenance"}),
     computer(Constants.TECH, new String[]{"computer", "cpu", "ram","gpu", "fix", "gaming", "graphics card"}),
     documents(Constants.DOCUMENTS, new String[]{"official", "document", "documents", "certificate", "certification"}),
-    games(Constants.TECH, new String[]{"gaming", "console", "controller", "pad", "xbox", "playstation", "switch"}),
+    games(Constants.TECH, new String[]{"gaming", "console", "controller", "pad", "xbox", "playstation", "switch", "video games", "steam"}),
     internet(Constants.TECH, new String[]{"internet", "broadband", "wifi", "connection", "3g", "lte", "4g"}),
     motorbike(Constants.TRANSPORTS, new String[]{"bike", "motorbike", "moto"}),
     phone(Constants.TECH, new String[]{"phone", "smartphone", "iphone", "android", "bill"}),
     plane(Constants.TRANSPORTS, new String[]{"plane", "travel", "flight"}),
     toll(Constants.TRANSPORTS, new String[]{"toll", "highway", "road"}),
     train(Constants.TRANSPORTS, new String[]{"train", "travel", "ticket"}),
-    travel(Constants.TRANSPORTS, new String[]{"travel", "holidays"})
-    ;
+    travel(Constants.TRANSPORTS, new String[]{"travel", "holidays"});
 
     private final String category;
     private final String[] searchTerms;
