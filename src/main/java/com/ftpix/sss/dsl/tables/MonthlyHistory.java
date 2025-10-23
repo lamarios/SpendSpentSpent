@@ -4,26 +4,16 @@
 package com.ftpix.sss.dsl.tables;
 
 
-import com.ftpix.sss.dsl.Indexes;
-import com.ftpix.sss.dsl.Keys;
 import com.ftpix.sss.dsl.PUBLIC;
-import com.ftpix.sss.dsl.tables.Category.CategoryPath;
 import com.ftpix.sss.dsl.tables.records.MonthlyHistoryRecord;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.InverseForeignKey;
 import org.jooq.Name;
-import org.jooq.Path;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
-import org.jooq.Record;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
@@ -31,7 +21,6 @@ import org.jooq.Stringly;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
@@ -59,14 +48,14 @@ public class MonthlyHistory extends TableImpl<MonthlyHistoryRecord> {
     }
 
     /**
-     * The column <code>public.monthly_history.id</code>.
-     */
-    public final TableField<MonthlyHistoryRecord, String> ID = createField(DSL.name("id"), SQLDataType.VARCHAR(48).nullable(false), this, "");
-
-    /**
      * The column <code>public.monthly_history.category_id</code>.
      */
     public final TableField<MonthlyHistoryRecord, Long> CATEGORY_ID = createField(DSL.name("category_id"), SQLDataType.BIGINT, this, "");
+
+    /**
+     * The column <code>public.monthly_history.date</code>.
+     */
+    public final TableField<MonthlyHistoryRecord, Integer> DATE = createField(DSL.name("date"), SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>public.monthly_history.total</code>.
@@ -74,16 +63,23 @@ public class MonthlyHistory extends TableImpl<MonthlyHistoryRecord> {
     public final TableField<MonthlyHistoryRecord, Double> TOTAL = createField(DSL.name("total"), SQLDataType.DOUBLE, this, "");
 
     /**
-     * The column <code>public.monthly_history.date</code>.
+     * The column <code>public.monthly_history.expenses</code>.
      */
-    public final TableField<MonthlyHistoryRecord, Integer> DATE = createField(DSL.name("date"), SQLDataType.INTEGER, this, "");
+    public final TableField<MonthlyHistoryRecord, Long> EXPENSES = createField(DSL.name("expenses"), SQLDataType.BIGINT, this, "");
 
     private MonthlyHistory(Name alias, Table<MonthlyHistoryRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }
 
     private MonthlyHistory(Name alias, Table<MonthlyHistoryRecord> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.view("""
+        create view "monthly_history" as  SELECT category_id,
+          (to_char((to_timestamp((("timestamp" / 1000))::double precision) AT TIME ZONE 'Asia/Kuala_Lumpur'::text), 'YYYYMM'::text))::integer AS date,
+          sum(amount) AS total,
+          count(*) AS expenses
+         FROM expense
+        GROUP BY category_id, (to_char((to_timestamp((("timestamp" / 1000))::double precision) AT TIME ZONE 'Asia/Kuala_Lumpur'::text), 'YYYYMM'::text))::integer;
+        """), where);
     }
 
     /**
@@ -107,69 +103,9 @@ public class MonthlyHistory extends TableImpl<MonthlyHistoryRecord> {
         this(DSL.name("monthly_history"), null);
     }
 
-    public <O extends Record> MonthlyHistory(Table<O> path, ForeignKey<O, MonthlyHistoryRecord> childPath, InverseForeignKey<O, MonthlyHistoryRecord> parentPath) {
-        super(path, childPath, parentPath, MONTHLY_HISTORY);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class MonthlyHistoryPath extends MonthlyHistory implements Path<MonthlyHistoryRecord> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> MonthlyHistoryPath(Table<O> path, ForeignKey<O, MonthlyHistoryRecord> childPath, InverseForeignKey<O, MonthlyHistoryRecord> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private MonthlyHistoryPath(Name alias, Table<MonthlyHistoryRecord> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public MonthlyHistoryPath as(String alias) {
-            return new MonthlyHistoryPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public MonthlyHistoryPath as(Name alias) {
-            return new MonthlyHistoryPath(alias, this);
-        }
-
-        @Override
-        public MonthlyHistoryPath as(Table<?> alias) {
-            return new MonthlyHistoryPath(alias.getQualifiedName(), this);
-        }
-    }
-
     @Override
     public Schema getSchema() {
         return aliased() ? null : PUBLIC.PUBLIC;
-    }
-
-    @Override
-    public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.MONTHLY_HISTORY_DATE_IDX, Indexes.MONTHLY_HISTORY_UNIQUE_IDX);
-    }
-
-    @Override
-    public UniqueKey<MonthlyHistoryRecord> getPrimaryKey() {
-        return Keys.MONTHLY_HISTORY_PKEY;
-    }
-
-    @Override
-    public List<ForeignKey<MonthlyHistoryRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.MONTHLY_HISTORY__FK_MONTHLY_HISTORY_CATEGORY);
-    }
-
-    private transient CategoryPath _category;
-
-    /**
-     * Get the implicit join path to the <code>public.category</code> table.
-     */
-    public CategoryPath category() {
-        if (_category == null)
-            _category = new CategoryPath(this, Keys.MONTHLY_HISTORY__FK_MONTHLY_HISTORY_CATEGORY, null);
-
-        return _category;
     }
 
     @Override

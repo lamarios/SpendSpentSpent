@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 import static com.ftpix.sss.dsl.Tables.*;
 
-public interface HouseholdCategoryBaseDao<R extends UpdatableRecord<R>, M extends HasCategory> {
+public interface HouseholdCategoryBaseDao<R extends TableRecord<R>, M extends HasCategory> {
     DSLContext getDsl();
 
     TableImpl<R> getTable();

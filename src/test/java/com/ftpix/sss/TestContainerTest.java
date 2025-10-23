@@ -52,8 +52,6 @@ abstract public class TestContainerTest {
         dslContext.truncate(EXPENSE).cascade().execute();
         dslContext.truncate(CATEGORY).cascade().execute();
         dslContext.truncate(RECURRING_EXPENSE).cascade().execute();
-        dslContext.truncate(MONTHLY_HISTORY).cascade().execute();
-        dslContext.truncate(YEARLY_HISTORY).cascade().execute();
     }
 
     @BeforeEach

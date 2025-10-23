@@ -64,7 +64,6 @@ public class YearlyHistoryDao implements Dao<YearlyHistoryRecord, YearlyHistory>
     @Override
     public YearlyHistory fromRecord(YearlyHistoryRecord r, Map<Long, Category> categories) {
         YearlyHistory h = new YearlyHistory();
-        h.setId(UUID.fromString(r.getId()));
         h.setCategory(categories.get(r.getCategoryId()));
         h.setDate(r.getDate());
         h.setTotal(r.getTotal());
@@ -83,7 +82,6 @@ public class YearlyHistoryDao implements Dao<YearlyHistoryRecord, YearlyHistory>
 
     @Override
     public YearlyHistoryRecord setRecordData(YearlyHistoryRecord r, YearlyHistory o) {
-        r.setId(o.getId().toString());
         r.setCategoryId(o.getCategory().getId());
         r.setDate(o.getDate());
         r.setTotal(o.getTotal());
@@ -107,11 +105,5 @@ public class YearlyHistoryDao implements Dao<YearlyHistoryRecord, YearlyHistory>
                 .fetchOne(r -> {
                     return r.into(Category.class);
                 });
-    }
-
-    @Override
-    public YearlyHistory insert(YearlyHistory object) {
-        object.setId(UUID.randomUUID());
-        return Dao.super.insert(object);
     }
 }

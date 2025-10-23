@@ -7,10 +7,8 @@ package com.ftpix.sss.dsl.tables;
 import com.ftpix.sss.dsl.Keys;
 import com.ftpix.sss.dsl.PUBLIC;
 import com.ftpix.sss.dsl.tables.Expense.ExpensePath;
-import com.ftpix.sss.dsl.tables.MonthlyHistory.MonthlyHistoryPath;
 import com.ftpix.sss.dsl.tables.RecurringExpense.RecurringExpensePath;
 import com.ftpix.sss.dsl.tables.User.UserPath;
-import com.ftpix.sss.dsl.tables.YearlyHistory.YearlyHistoryPath;
 import com.ftpix.sss.dsl.tables.records.CategoryRecord;
 
 import java.util.Arrays;
@@ -188,19 +186,6 @@ public class Category extends TableImpl<CategoryRecord> {
         return _expense;
     }
 
-    private transient MonthlyHistoryPath _monthlyHistory;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>public.monthly_history</code> table
-     */
-    public MonthlyHistoryPath monthlyHistory() {
-        if (_monthlyHistory == null)
-            _monthlyHistory = new MonthlyHistoryPath(this, null, Keys.MONTHLY_HISTORY__FK_MONTHLY_HISTORY_CATEGORY.getInverseKey());
-
-        return _monthlyHistory;
-    }
-
     private transient RecurringExpensePath _recurringExpense;
 
     /**
@@ -212,19 +197,6 @@ public class Category extends TableImpl<CategoryRecord> {
             _recurringExpense = new RecurringExpensePath(this, null, Keys.RECURRING_EXPENSE__FK_RECURRING_EXPENSE_CATEGORY.getInverseKey());
 
         return _recurringExpense;
-    }
-
-    private transient YearlyHistoryPath _yearlyHistory;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>public.yearly_history</code> table
-     */
-    public YearlyHistoryPath yearlyHistory() {
-        if (_yearlyHistory == null)
-            _yearlyHistory = new YearlyHistoryPath(this, null, Keys.YEARLY_HISTORY__FK_YEARLY_HISTORY_CATEGORY.getInverseKey());
-
-        return _yearlyHistory;
     }
 
     @Override

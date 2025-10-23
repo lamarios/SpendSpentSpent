@@ -10,7 +10,7 @@ import org.jooq.impl.TableImpl;
 import java.util.List;
 import java.util.Optional;
 
-public interface Dao<R extends UpdatableRecord<R>, M> {
+public interface Dao<R extends TableRecord<R>, M> {
     DSLContext getDsl();
 
     void addListener(DaoListener<M> listener);
@@ -84,9 +84,13 @@ public interface Dao<R extends UpdatableRecord<R>, M> {
 
     default boolean delete(M object) {
         R r = setRecordData(getDsl().newRecord(getTable()), object);
-        boolean result = r.delete() == 1;
-        getListeners().forEach(l -> l.afterDelete(object));
-        return result;
+        if (r instanceof UpdatableRecord updatable) {
+            boolean result = updatable.delete() == 1;
+            getListeners().forEach(l -> l.afterDelete(object));
+            return result;
+        } else {
+            throw new RuntimeException("record type is not updatable");
+        }
     }
 
     default M insert(M object) {
@@ -98,7 +102,12 @@ public interface Dao<R extends UpdatableRecord<R>, M> {
 
     default boolean update(M object) {
         R r = setRecordData(getDsl().newRecord(getTable()), object);
-        return r.update() == 1;
+        if (r instanceof UpdatableRecord updatable) {
+            return updatable.update() == 1;
+        } else {
+            throw new RuntimeException("record type is not updatable");
+        }
+
     }
 
     default boolean importMany(List<M> objects) {

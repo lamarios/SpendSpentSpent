@@ -4,26 +4,16 @@
 package com.ftpix.sss.dsl.tables;
 
 
-import com.ftpix.sss.dsl.Indexes;
-import com.ftpix.sss.dsl.Keys;
 import com.ftpix.sss.dsl.PUBLIC;
-import com.ftpix.sss.dsl.tables.Category.CategoryPath;
 import com.ftpix.sss.dsl.tables.records.YearlyHistoryRecord;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.InverseForeignKey;
 import org.jooq.Name;
-import org.jooq.Path;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
-import org.jooq.Record;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
@@ -31,7 +21,6 @@ import org.jooq.Stringly;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
@@ -59,14 +48,14 @@ public class YearlyHistory extends TableImpl<YearlyHistoryRecord> {
     }
 
     /**
-     * The column <code>public.yearly_history.id</code>.
-     */
-    public final TableField<YearlyHistoryRecord, String> ID = createField(DSL.name("id"), SQLDataType.VARCHAR(48).nullable(false), this, "");
-
-    /**
      * The column <code>public.yearly_history.category_id</code>.
      */
     public final TableField<YearlyHistoryRecord, Long> CATEGORY_ID = createField(DSL.name("category_id"), SQLDataType.BIGINT, this, "");
+
+    /**
+     * The column <code>public.yearly_history.date</code>.
+     */
+    public final TableField<YearlyHistoryRecord, Integer> DATE = createField(DSL.name("date"), SQLDataType.INTEGER, this, "");
 
     /**
      * The column <code>public.yearly_history.total</code>.
@@ -74,16 +63,23 @@ public class YearlyHistory extends TableImpl<YearlyHistoryRecord> {
     public final TableField<YearlyHistoryRecord, Double> TOTAL = createField(DSL.name("total"), SQLDataType.DOUBLE, this, "");
 
     /**
-     * The column <code>public.yearly_history.date</code>.
+     * The column <code>public.yearly_history.expenses</code>.
      */
-    public final TableField<YearlyHistoryRecord, Integer> DATE = createField(DSL.name("date"), SQLDataType.INTEGER, this, "");
+    public final TableField<YearlyHistoryRecord, Long> EXPENSES = createField(DSL.name("expenses"), SQLDataType.BIGINT, this, "");
 
     private YearlyHistory(Name alias, Table<YearlyHistoryRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }
 
     private YearlyHistory(Name alias, Table<YearlyHistoryRecord> aliased, Field<?>[] parameters, Condition where) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table(), where);
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.view("""
+        create view "yearly_history" as  SELECT category_id,
+          (to_char((to_timestamp((("timestamp" / 1000))::double precision) AT TIME ZONE 'Asia/Kuala_Lumpur'::text), 'YYYY'::text))::integer AS date,
+          sum(amount) AS total,
+          count(*) AS expenses
+         FROM expense
+        GROUP BY category_id, (to_char((to_timestamp((("timestamp" / 1000))::double precision) AT TIME ZONE 'Asia/Kuala_Lumpur'::text), 'YYYY'::text))::integer;
+        """), where);
     }
 
     /**
@@ -107,69 +103,9 @@ public class YearlyHistory extends TableImpl<YearlyHistoryRecord> {
         this(DSL.name("yearly_history"), null);
     }
 
-    public <O extends Record> YearlyHistory(Table<O> path, ForeignKey<O, YearlyHistoryRecord> childPath, InverseForeignKey<O, YearlyHistoryRecord> parentPath) {
-        super(path, childPath, parentPath, YEARLY_HISTORY);
-    }
-
-    /**
-     * A subtype implementing {@link Path} for simplified path-based joins.
-     */
-    public static class YearlyHistoryPath extends YearlyHistory implements Path<YearlyHistoryRecord> {
-
-        private static final long serialVersionUID = 1L;
-        public <O extends Record> YearlyHistoryPath(Table<O> path, ForeignKey<O, YearlyHistoryRecord> childPath, InverseForeignKey<O, YearlyHistoryRecord> parentPath) {
-            super(path, childPath, parentPath);
-        }
-        private YearlyHistoryPath(Name alias, Table<YearlyHistoryRecord> aliased) {
-            super(alias, aliased);
-        }
-
-        @Override
-        public YearlyHistoryPath as(String alias) {
-            return new YearlyHistoryPath(DSL.name(alias), this);
-        }
-
-        @Override
-        public YearlyHistoryPath as(Name alias) {
-            return new YearlyHistoryPath(alias, this);
-        }
-
-        @Override
-        public YearlyHistoryPath as(Table<?> alias) {
-            return new YearlyHistoryPath(alias.getQualifiedName(), this);
-        }
-    }
-
     @Override
     public Schema getSchema() {
         return aliased() ? null : PUBLIC.PUBLIC;
-    }
-
-    @Override
-    public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.YEARLY_HISTORY_DATE_IDX, Indexes.YEARLY_HISTORY_UNIQUE);
-    }
-
-    @Override
-    public UniqueKey<YearlyHistoryRecord> getPrimaryKey() {
-        return Keys.YEARLY_HISTORY_PKEY;
-    }
-
-    @Override
-    public List<ForeignKey<YearlyHistoryRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.YEARLY_HISTORY__FK_YEARLY_HISTORY_CATEGORY);
-    }
-
-    private transient CategoryPath _category;
-
-    /**
-     * Get the implicit join path to the <code>public.category</code> table.
-     */
-    public CategoryPath category() {
-        if (_category == null)
-            _category = new CategoryPath(this, Keys.YEARLY_HISTORY__FK_YEARLY_HISTORY_CATEGORY, null);
-
-        return _category;
     }
 
     @Override

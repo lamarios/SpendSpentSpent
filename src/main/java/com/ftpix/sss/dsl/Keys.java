@@ -11,12 +11,10 @@ import com.ftpix.sss.dsl.tables.Files;
 import com.ftpix.sss.dsl.tables.FlywaySchemaHistory;
 import com.ftpix.sss.dsl.tables.Household;
 import com.ftpix.sss.dsl.tables.HouseholdMembers;
-import com.ftpix.sss.dsl.tables.MonthlyHistory;
 import com.ftpix.sss.dsl.tables.RecurringExpense;
 import com.ftpix.sss.dsl.tables.ResetPassword;
 import com.ftpix.sss.dsl.tables.Settings;
 import com.ftpix.sss.dsl.tables.User;
-import com.ftpix.sss.dsl.tables.YearlyHistory;
 import com.ftpix.sss.dsl.tables.records.ApiKeysRecord;
 import com.ftpix.sss.dsl.tables.records.CategoryRecord;
 import com.ftpix.sss.dsl.tables.records.ExpenseRecord;
@@ -24,12 +22,10 @@ import com.ftpix.sss.dsl.tables.records.FilesRecord;
 import com.ftpix.sss.dsl.tables.records.FlywaySchemaHistoryRecord;
 import com.ftpix.sss.dsl.tables.records.HouseholdMembersRecord;
 import com.ftpix.sss.dsl.tables.records.HouseholdRecord;
-import com.ftpix.sss.dsl.tables.records.MonthlyHistoryRecord;
 import com.ftpix.sss.dsl.tables.records.RecurringExpenseRecord;
 import com.ftpix.sss.dsl.tables.records.ResetPasswordRecord;
 import com.ftpix.sss.dsl.tables.records.SettingsRecord;
 import com.ftpix.sss.dsl.tables.records.UserRecord;
-import com.ftpix.sss.dsl.tables.records.YearlyHistoryRecord;
 
 import org.jooq.ForeignKey;
 import org.jooq.TableField;
@@ -56,13 +52,11 @@ public class Keys {
     public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = Internal.createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, DSL.name("flyway_schema_history_pk"), new TableField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK }, true);
     public static final UniqueKey<HouseholdRecord> HOUSEHOLD_PKEY = Internal.createUniqueKey(Household.HOUSEHOLD, DSL.name("household_pkey"), new TableField[] { Household.HOUSEHOLD.ID }, true);
     public static final UniqueKey<HouseholdMembersRecord> HOUSEHOLD_MEMBERS_PKEY = Internal.createUniqueKey(HouseholdMembers.HOUSEHOLD_MEMBERS, DSL.name("household_members_pkey"), new TableField[] { HouseholdMembers.HOUSEHOLD_MEMBERS.ID }, true);
-    public static final UniqueKey<MonthlyHistoryRecord> MONTHLY_HISTORY_PKEY = Internal.createUniqueKey(MonthlyHistory.MONTHLY_HISTORY, DSL.name("monthly_history_pkey"), new TableField[] { MonthlyHistory.MONTHLY_HISTORY.ID }, true);
     public static final UniqueKey<RecurringExpenseRecord> RECURRING_EXPENSE_PKEY = Internal.createUniqueKey(RecurringExpense.RECURRING_EXPENSE, DSL.name("recurring_expense_pkey"), new TableField[] { RecurringExpense.RECURRING_EXPENSE.ID }, true);
     public static final UniqueKey<ResetPasswordRecord> RESET_PASSWORD_PKEY = Internal.createUniqueKey(ResetPassword.RESET_PASSWORD, DSL.name("reset_password_pkey"), new TableField[] { ResetPassword.RESET_PASSWORD.ID }, true);
     public static final UniqueKey<SettingsRecord> SETTINGS_PKEY = Internal.createUniqueKey(Settings.SETTINGS, DSL.name("settings_pkey"), new TableField[] { Settings.SETTINGS.NAME }, true);
     public static final UniqueKey<UserRecord> USER_EMAIL_KEY = Internal.createUniqueKey(User.USER, DSL.name("user_email_key"), new TableField[] { User.USER.EMAIL }, true);
     public static final UniqueKey<UserRecord> USER_PKEY = Internal.createUniqueKey(User.USER, DSL.name("user_pkey"), new TableField[] { User.USER.ID }, true);
-    public static final UniqueKey<YearlyHistoryRecord> YEARLY_HISTORY_PKEY = Internal.createUniqueKey(YearlyHistory.YEARLY_HISTORY, DSL.name("yearly_history_pkey"), new TableField[] { YearlyHistory.YEARLY_HISTORY.ID }, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -76,7 +70,5 @@ public class Keys {
     public static final ForeignKey<HouseholdMembersRecord, HouseholdRecord> HOUSEHOLD_MEMBERS__FK_HOUSEHOLD = Internal.createForeignKey(HouseholdMembers.HOUSEHOLD_MEMBERS, DSL.name("fk_household"), new TableField[] { HouseholdMembers.HOUSEHOLD_MEMBERS.HOUSEHOLD_ID }, Keys.HOUSEHOLD_PKEY, new TableField[] { Household.HOUSEHOLD.ID }, true);
     public static final ForeignKey<HouseholdMembersRecord, UserRecord> HOUSEHOLD_MEMBERS__FK_HOUSEHOLD_INVITED_BY = Internal.createForeignKey(HouseholdMembers.HOUSEHOLD_MEMBERS, DSL.name("fk_household_invited_by"), new TableField[] { HouseholdMembers.HOUSEHOLD_MEMBERS.INVITED_BY_ID }, Keys.USER_PKEY, new TableField[] { User.USER.ID }, true);
     public static final ForeignKey<HouseholdMembersRecord, UserRecord> HOUSEHOLD_MEMBERS__FK_HOUSEHOLD_USER = Internal.createForeignKey(HouseholdMembers.HOUSEHOLD_MEMBERS, DSL.name("fk_household_user"), new TableField[] { HouseholdMembers.HOUSEHOLD_MEMBERS.USER_ID }, Keys.USER_PKEY, new TableField[] { User.USER.ID }, true);
-    public static final ForeignKey<MonthlyHistoryRecord, CategoryRecord> MONTHLY_HISTORY__FK_MONTHLY_HISTORY_CATEGORY = Internal.createForeignKey(MonthlyHistory.MONTHLY_HISTORY, DSL.name("fk_monthly_history_category"), new TableField[] { MonthlyHistory.MONTHLY_HISTORY.CATEGORY_ID }, Keys.CATEGORY_PKEY, new TableField[] { Category.CATEGORY.ID }, true);
     public static final ForeignKey<RecurringExpenseRecord, CategoryRecord> RECURRING_EXPENSE__FK_RECURRING_EXPENSE_CATEGORY = Internal.createForeignKey(RecurringExpense.RECURRING_EXPENSE, DSL.name("fk_recurring_expense_category"), new TableField[] { RecurringExpense.RECURRING_EXPENSE.CATEGORY_ID }, Keys.CATEGORY_PKEY, new TableField[] { Category.CATEGORY.ID }, true);
-    public static final ForeignKey<YearlyHistoryRecord, CategoryRecord> YEARLY_HISTORY__FK_YEARLY_HISTORY_CATEGORY = Internal.createForeignKey(YearlyHistory.YEARLY_HISTORY, DSL.name("fk_yearly_history_category"), new TableField[] { YearlyHistory.YEARLY_HISTORY.CATEGORY_ID }, Keys.CATEGORY_PKEY, new TableField[] { Category.CATEGORY.ID }, true);
 }
