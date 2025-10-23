@@ -107,7 +107,7 @@ class Service {
     headers['x-version'] = version ?? (await getVersion()).toString();
 
     headers['x-timezone'] =
-        timezone ?? await FlutterTimezone.getLocalTimezone();
+        timezone ?? (await FlutterTimezone.getLocalTimezone()).identifier;
 
     return headers;
   }

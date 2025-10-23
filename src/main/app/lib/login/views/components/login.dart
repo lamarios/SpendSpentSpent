@@ -14,6 +14,7 @@ import 'package:spend_spent_spent/login/state/login.dart';
 import 'package:spend_spent_spent/login/views/components/loginForm.dart';
 import 'package:spend_spent_spent/login/views/components/resetPassword.dart';
 import 'package:spend_spent_spent/login/views/components/signUp.dart';
+import 'package:spend_spent_spent/utils/number_utils.dart';
 import 'package:spend_spent_spent/utils/views/components/error_dialog.dart';
 
 class Login extends StatelessWidget {
@@ -60,12 +61,14 @@ class Login extends StatelessWidget {
                   SingleMotionBuilder(
                     motion: MaterialSpringMotion.expressiveSpatialDefault(),
                     value: (state.config?.announcement.trim().length ?? 0) > 0
-                        ? 1
-                        : 0,
-                    builder: (context, value, child) => Transform.scale(
-                      scaleY: value,
-                      alignment: Alignment.topCenter,
-                      child: Opacity(opacity: value.clamp(0, 1), child: child),
+                        ? 0
+                        : -500,
+                    builder: (context, value, child) => Transform.translate(
+                      offset: Offset(0, value),
+                      child: Opacity(
+                        opacity: inverseLerp(-500, 0, value).clamp(0, 1),
+                        child: child,
+                      ),
                     ),
                     child: Container(
                       color: colors.tertiaryContainer,

@@ -77,7 +77,6 @@ public class HistoryService {
                 GROUP BY category_id, to_char(to_timestamp(timestamp / 1000) AT TIME ZONE '%s', 'YYYY')::INTEGER;
                 """.formatted(zoneId.toString(), zoneId.toString(), zoneId.toString(), zoneId.toString());
 
-        System.out.println(sql);
         yearlyHistoryDaoJooq.getDsl().execute(sql);
 
 

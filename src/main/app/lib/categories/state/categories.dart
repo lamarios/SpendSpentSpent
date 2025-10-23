@@ -17,7 +17,8 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     emit(state.copyWith(loading: loading));
     final categories = await service.getCategories();
     emit(state.copyWith(categories: categories, loading: false));
-    final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+    final String currentTimeZone =
+        (await FlutterTimezone.getLocalTimezone()).identifier;
     if (currentTimeZone != 'Etc/Unknown') {
       final predictions = await service.suggestExpenseCategory(currentTimeZone);
       emit(state.copyWith(suggestions: predictions));

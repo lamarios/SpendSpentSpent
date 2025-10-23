@@ -179,7 +179,9 @@ class SingleStats extends StatelessWidget {
                         ),
                         child: LayoutBuilder(
                           builder: (context, constraints) {
-                            final percentage = stats.amount / stats.total;
+                            final percentage = stats.total > 0
+                                ? stats.amount / stats.total
+                                : 0;
                             double widthValue = lerpDouble(
                               constraints.maxWidth * percentage,
                               constraints.maxWidth,
