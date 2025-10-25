@@ -13,7 +13,12 @@ import 'package:spend_spent_spent/utils/reconnectable_web_socket.dart';
 part 'username_password.freezed.dart';
 
 class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
-  UsernamePasswordCubit(super.initialState);
+  UsernamePasswordCubit(super.initialState) {
+    if (state.token != null) {
+      var user = User.fromJson(decodeJwtPayload(state.token!)['user']);
+      emit(state.copyWith(user: user));
+    }
+  }
 
   ReconnectableWebSocket? socket;
 
@@ -27,12 +32,9 @@ class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
 
       await service.setUrl(server);
 
-      emit(
-        state.copyWith(
-          token: token,
-          user: User.fromJson(decodeJwtPayload(token)['user']),
-        ),
-      );
+      var user = User.fromJson(decodeJwtPayload(token)['user']);
+      print('user');
+      emit(state.copyWith(token: token, user: user));
 
       connectToSocket();
     } else {
