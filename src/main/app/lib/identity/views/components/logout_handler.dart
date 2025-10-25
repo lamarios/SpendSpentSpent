@@ -19,7 +19,9 @@ class LogoutHandler extends StatelessWidget {
           listenWhen: (previous, current) =>
               previous.token != current.token && current.token == null,
           listener: (BuildContext context, UsernamePasswordState state) {
-            AutoRouter.of(context).replaceAll([const LoginRoute()]);
+            AutoRouter.of(
+              context,
+            ).replaceAll([const LoginRoute()], updateExistingRoutes: false);
           },
         ),
       ],

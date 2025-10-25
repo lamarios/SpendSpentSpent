@@ -193,10 +193,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                             child: SizedBox(
                               height: 50,
                               child: Center(
-                                child: MainMenu(
-                                  tabsRouter: tabsRouter,
-                                  selectedIndex: tabsRouter.activeIndex,
-                                ),
+                                child: MainMenu(tabsRouter: tabsRouter),
                               ),
                             ),
                           ),

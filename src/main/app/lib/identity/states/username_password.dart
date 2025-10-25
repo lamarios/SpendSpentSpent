@@ -27,7 +27,12 @@ class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
 
       await service.setUrl(server);
 
-      emit(state.copyWith(token: token));
+      emit(
+        state.copyWith(
+          token: token,
+          user: User.fromJson(decodeJwtPayload(token)['user']),
+        ),
+      );
 
       connectToSocket();
     } else {
@@ -35,9 +40,7 @@ class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
     }
   }
 
-  User? get currentUser => state.token != null
-      ? User.fromJson(decodeJwtPayload(state.token!)['user'])
-      : null;
+  User? get currentUser => state.user;
 
   Future<void> connectToSocket() async {
     socket = ReconnectableWebSocket(uri: await service.getWebsocketUrl());
@@ -48,12 +51,15 @@ class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
     await Preferences.remove(Preferences.TOKEN);
     await Preferences.remove(Preferences.TOKEN_TYPE);
     socket?.close();
-    emit(state.copyWith(token: null));
+    emit(state.copyWith(token: null, user: null));
   }
 }
 
 @freezed
 sealed class UsernamePasswordState with _$UsernamePasswordState {
-  const factory UsernamePasswordState({String? token, OidcConfig? oidcConfig}) =
-      _UsernamePasswordState;
+  const factory UsernamePasswordState({
+    String? token,
+    OidcConfig? oidcConfig,
+    User? user,
+  }) = _UsernamePasswordState;
 }

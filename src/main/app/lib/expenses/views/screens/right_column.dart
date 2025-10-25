@@ -18,6 +18,7 @@ import 'package:spend_spent_spent/expenses/views/components/search.dart';
 import 'package:spend_spent_spent/expenses/views/components/stylized_amount.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
+import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/utils/views/components/data_change_monitor.dart';
 import 'package:spend_spent_spent/utils/views/components/month_picker.dart';
 
@@ -113,8 +114,11 @@ class RightColumnTab extends StatelessWidget {
     return BlocProvider(
       create: (context) => ExpenseListCubit(const ExpenseListState()),
       child: DataChangeMonitor(
-        onChange: (context) =>
-            context.read<ExpenseListCubit>().getMonths(false),
+        onChange: (context) {
+          if (context.read<UsernamePasswordCubit>().currentUser != null) {
+            context.read<ExpenseListCubit>().getMonths(false);
+          }
+        },
         child: BlocBuilder<ExpenseListCubit, ExpenseListState>(
           builder: (context, state) {
             final cubit = context.read<ExpenseListCubit>();

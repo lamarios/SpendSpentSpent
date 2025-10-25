@@ -21,7 +21,9 @@ class LoginHandler extends StatelessWidget {
           listener: (context, state) async {
             if (context.mounted) {
               context.read<CategoriesCubit>().getCategories(true);
-              AutoRouter.of(context).replaceAll([const HomeRoute()]);
+              AutoRouter.of(
+                context,
+              ).replaceAll([const HomeRoute()], updateExistingRoutes: false);
               context.read<HouseholdCubit>().getData();
             }
           },

@@ -187,6 +187,11 @@ class SingleStats extends StatelessWidget {
                               constraints.maxWidth,
                               value,
                             )!;
+                            var useGradient =
+                                stats.category.id == -1 &&
+                                (householdCubit.state.household?.members ?? [])
+                                        .length >
+                                    1;
                             return Container(
                               width: max(0, widthValue),
                               height: max(
@@ -197,7 +202,7 @@ class SingleStats extends StatelessWidget {
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(10),
                                 ),
-                                gradient: stats.category.id == -1
+                                gradient: useGradient
                                     ? LinearGradient(
                                         colors: householdCubit.state
                                             .colorsAsGradient(
@@ -218,7 +223,7 @@ class SingleStats extends StatelessWidget {
                                             .toList(),
                                       )
                                     : null,
-                                color: stats.category.id == -1
+                                color: useGradient
                                     ? null
                                     : Color.lerp(
                                         catColor.onPrimaryContainer,

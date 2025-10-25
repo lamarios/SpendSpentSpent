@@ -11,7 +11,7 @@ class AppSettingsCubit extends Cubit<AppSettingsState> {
     init();
   }
 
-  init() async {
+  Future<void> init() async {
     final materialYou = Preferences.getBool(MATERIAL_YOU, false);
     final blackBackground = Preferences.getBool(BLACK_BACKGROUND, false);
     final useHouseholdColors = Preferences.getBool(USE_HOUSEFOLD_COLOR, false);
@@ -25,17 +25,17 @@ class AppSettingsCubit extends Cubit<AppSettingsState> {
     service.getCurrentServerConfig();
   }
 
-  setMaterialYou(bool value) async {
+  Future<void> setMaterialYou(bool value) async {
     await Preferences.setBool(MATERIAL_YOU, value);
     emit(state.copyWith(materialYou: value));
   }
 
-  setBlackBackground(bool value) async {
+  Future<void> setBlackBackground(bool value) async {
     await Preferences.setBool(BLACK_BACKGROUND, value);
     emit(state.copyWith(blackBackground: value));
   }
 
-  setUseHouseholdColos(bool value) async {
+  Future<void> setUseHouseholdColos(bool value) async {
     await Preferences.setBool(USE_HOUSEFOLD_COLOR, value);
     emit(state.copyWith(useHouseholdColors: value));
   }
