@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UsernamePasswordState {
 
- String? get token; OidcConfig? get oidcConfig;
+ String? get token; OidcConfig? get oidcConfig; User? get user;
 /// Create a copy of UsernamePasswordState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $UsernamePasswordStateCopyWith<UsernamePasswordState> get copyWith => _$Username
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UsernamePasswordState&&(identical(other.token, token) || other.token == token)&&(identical(other.oidcConfig, oidcConfig) || other.oidcConfig == oidcConfig));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UsernamePasswordState&&(identical(other.token, token) || other.token == token)&&(identical(other.oidcConfig, oidcConfig) || other.oidcConfig == oidcConfig)&&(identical(other.user, user) || other.user == user));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,token,oidcConfig);
+int get hashCode => Object.hash(runtimeType,token,oidcConfig,user);
 
 @override
 String toString() {
-  return 'UsernamePasswordState(token: $token, oidcConfig: $oidcConfig)';
+  return 'UsernamePasswordState(token: $token, oidcConfig: $oidcConfig, user: $user)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $UsernamePasswordStateCopyWith<$Res>  {
   factory $UsernamePasswordStateCopyWith(UsernamePasswordState value, $Res Function(UsernamePasswordState) _then) = _$UsernamePasswordStateCopyWithImpl;
 @useResult
 $Res call({
- String? token, OidcConfig? oidcConfig
+ String? token, OidcConfig? oidcConfig, User? user
 });
 
 
-$OidcConfigCopyWith<$Res>? get oidcConfig;
+$OidcConfigCopyWith<$Res>? get oidcConfig;$UserCopyWith<$Res>? get user;
 
 }
 /// @nodoc
@@ -62,11 +62,12 @@ class _$UsernamePasswordStateCopyWithImpl<$Res>
 
 /// Create a copy of UsernamePasswordState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? token = freezed,Object? oidcConfig = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? token = freezed,Object? oidcConfig = freezed,Object? user = freezed,}) {
   return _then(_self.copyWith(
 token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String?,oidcConfig: freezed == oidcConfig ? _self.oidcConfig : oidcConfig // ignore: cast_nullable_to_non_nullable
-as OidcConfig?,
+as OidcConfig?,user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
+as User?,
   ));
 }
 /// Create a copy of UsernamePasswordState
@@ -80,6 +81,18 @@ $OidcConfigCopyWith<$Res>? get oidcConfig {
 
   return $OidcConfigCopyWith<$Res>(_self.oidcConfig!, (value) {
     return _then(_self.copyWith(oidcConfig: value));
+  });
+}/// Create a copy of UsernamePasswordState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserCopyWith<$Res>? get user {
+    if (_self.user == null) {
+    return null;
+  }
+
+  return $UserCopyWith<$Res>(_self.user!, (value) {
+    return _then(_self.copyWith(user: value));
   });
 }
 }
@@ -160,10 +173,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? token,  OidcConfig? oidcConfig)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? token,  OidcConfig? oidcConfig,  User? user)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UsernamePasswordState() when $default != null:
-return $default(_that.token,_that.oidcConfig);case _:
+return $default(_that.token,_that.oidcConfig,_that.user);case _:
   return orElse();
 
 }
@@ -181,10 +194,10 @@ return $default(_that.token,_that.oidcConfig);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? token,  OidcConfig? oidcConfig)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? token,  OidcConfig? oidcConfig,  User? user)  $default,) {final _that = this;
 switch (_that) {
 case _UsernamePasswordState():
-return $default(_that.token,_that.oidcConfig);}
+return $default(_that.token,_that.oidcConfig,_that.user);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -198,10 +211,10 @@ return $default(_that.token,_that.oidcConfig);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? token,  OidcConfig? oidcConfig)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? token,  OidcConfig? oidcConfig,  User? user)?  $default,) {final _that = this;
 switch (_that) {
 case _UsernamePasswordState() when $default != null:
-return $default(_that.token,_that.oidcConfig);case _:
+return $default(_that.token,_that.oidcConfig,_that.user);case _:
   return null;
 
 }
@@ -213,11 +226,12 @@ return $default(_that.token,_that.oidcConfig);case _:
 
 
 class _UsernamePasswordState implements UsernamePasswordState {
-  const _UsernamePasswordState({this.token, this.oidcConfig});
+  const _UsernamePasswordState({this.token, this.oidcConfig, this.user});
   
 
 @override final  String? token;
 @override final  OidcConfig? oidcConfig;
+@override final  User? user;
 
 /// Create a copy of UsernamePasswordState
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +243,16 @@ _$UsernamePasswordStateCopyWith<_UsernamePasswordState> get copyWith => __$Usern
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UsernamePasswordState&&(identical(other.token, token) || other.token == token)&&(identical(other.oidcConfig, oidcConfig) || other.oidcConfig == oidcConfig));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UsernamePasswordState&&(identical(other.token, token) || other.token == token)&&(identical(other.oidcConfig, oidcConfig) || other.oidcConfig == oidcConfig)&&(identical(other.user, user) || other.user == user));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,token,oidcConfig);
+int get hashCode => Object.hash(runtimeType,token,oidcConfig,user);
 
 @override
 String toString() {
-  return 'UsernamePasswordState(token: $token, oidcConfig: $oidcConfig)';
+  return 'UsernamePasswordState(token: $token, oidcConfig: $oidcConfig, user: $user)';
 }
 
 
@@ -249,11 +263,11 @@ abstract mixin class _$UsernamePasswordStateCopyWith<$Res> implements $UsernameP
   factory _$UsernamePasswordStateCopyWith(_UsernamePasswordState value, $Res Function(_UsernamePasswordState) _then) = __$UsernamePasswordStateCopyWithImpl;
 @override @useResult
 $Res call({
- String? token, OidcConfig? oidcConfig
+ String? token, OidcConfig? oidcConfig, User? user
 });
 
 
-@override $OidcConfigCopyWith<$Res>? get oidcConfig;
+@override $OidcConfigCopyWith<$Res>? get oidcConfig;@override $UserCopyWith<$Res>? get user;
 
 }
 /// @nodoc
@@ -266,11 +280,12 @@ class __$UsernamePasswordStateCopyWithImpl<$Res>
 
 /// Create a copy of UsernamePasswordState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? token = freezed,Object? oidcConfig = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? token = freezed,Object? oidcConfig = freezed,Object? user = freezed,}) {
   return _then(_UsernamePasswordState(
 token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String?,oidcConfig: freezed == oidcConfig ? _self.oidcConfig : oidcConfig // ignore: cast_nullable_to_non_nullable
-as OidcConfig?,
+as OidcConfig?,user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
+as User?,
   ));
 }
 
@@ -285,6 +300,18 @@ $OidcConfigCopyWith<$Res>? get oidcConfig {
 
   return $OidcConfigCopyWith<$Res>(_self.oidcConfig!, (value) {
     return _then(_self.copyWith(oidcConfig: value));
+  });
+}/// Create a copy of UsernamePasswordState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserCopyWith<$Res>? get user {
+    if (_self.user == null) {
+    return null;
+  }
+
+  return $UserCopyWith<$Res>(_self.user!, (value) {
+    return _then(_self.copyWith(user: value));
   });
 }
 }

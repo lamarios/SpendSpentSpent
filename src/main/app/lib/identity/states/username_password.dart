@@ -13,7 +13,12 @@ import 'package:spend_spent_spent/utils/reconnectable_web_socket.dart';
 part 'username_password.freezed.dart';
 
 class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
-  UsernamePasswordCubit(super.initialState);
+  UsernamePasswordCubit(super.initialState) {
+    if (state.token != null) {
+      var user = User.fromJson(decodeJwtPayload(state.token!)['user']);
+      emit(state.copyWith(user: user));
+    }
+  }
 
   ReconnectableWebSocket? socket;
 
@@ -27,7 +32,9 @@ class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
 
       await service.setUrl(server);
 
-      emit(state.copyWith(token: token));
+      var user = User.fromJson(decodeJwtPayload(token)['user']);
+      print('user');
+      emit(state.copyWith(token: token, user: user));
 
       connectToSocket();
     } else {
@@ -35,9 +42,7 @@ class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
     }
   }
 
-  User? get currentUser => state.token != null
-      ? User.fromJson(decodeJwtPayload(state.token!)['user'])
-      : null;
+  User? get currentUser => state.user;
 
   Future<void> connectToSocket() async {
     socket = ReconnectableWebSocket(uri: await service.getWebsocketUrl());
@@ -48,12 +53,15 @@ class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
     await Preferences.remove(Preferences.TOKEN);
     await Preferences.remove(Preferences.TOKEN_TYPE);
     socket?.close();
-    emit(state.copyWith(token: null));
+    emit(state.copyWith(token: null, user: null));
   }
 }
 
 @freezed
 sealed class UsernamePasswordState with _$UsernamePasswordState {
-  const factory UsernamePasswordState({String? token, OidcConfig? oidcConfig}) =
-      _UsernamePasswordState;
+  const factory UsernamePasswordState({
+    String? token,
+    OidcConfig? oidcConfig,
+    User? user,
+  }) = _UsernamePasswordState;
 }

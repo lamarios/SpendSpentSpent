@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:material_loading_indicator/loading_indicator.dart';
-import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
+import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/stats/state/stats_list.dart';
 import 'package:spend_spent_spent/stats/views/components/single_stat.dart';
 import 'package:spend_spent_spent/utils/views/components/data_change_monitor.dart';
@@ -23,13 +23,14 @@ class StatsView extends StatelessWidget {
       create: (context) =>
           StatsListCubit(const StatsListState(), monthly: monthly),
       child: DataChangeMonitor(
-        onChange: (context) => context.read<StatsListCubit>().getStats(false),
+        onChange: (context) {
+          if (context.read<UsernamePasswordCubit>().currentUser != null) {
+            return context.read<StatsListCubit>().getStats(false);
+          }
+        },
         child: ErrorHandler<StatsListCubit, StatsListState>(
           child: BlocBuilder<StatsListCubit, StatsListState>(
             builder: (context, state) {
-              final lastExpense = context.select(
-                (LastExpenseCubit c) => c.state,
-              );
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: AnimatedSwitcher(

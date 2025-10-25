@@ -1,9 +1,20 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SimpleCubitState<T> extends Cubit<T?> {
-  SimpleCubitState(super.initialState);
+  final Function(SimpleCubitState<T> cubit)? init;
+  final Function(SimpleCubitState<T> cubit)? onClose;
 
-  setValue(T value) {
+  SimpleCubitState(super.initialState, {this.init, this.onClose}) {
+    init?.call(this);
+  }
+
+  @override
+  Future<void> close() async {
+    onClose?.call(this);
+    super.close();
+  }
+
+  void setValue(T value) {
     emit(value);
   }
 }
