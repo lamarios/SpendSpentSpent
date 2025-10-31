@@ -49,10 +49,13 @@ class DiffWithPreviousPeriodSettings extends StatelessWidget {
     final now = DateTime.now();
     final start = _getPreviousMonth(currentPeriod.start).copyWith(day: 1);
     if (_isSamePeriod(currentPeriod.start, now)) {
-      return DateTimeRange(
-        start: start,
-        end: start.copyWith(day: currentPeriod.end.day),
-      );
+      var end = start.copyWith(day: currentPeriod.end.day);
+      // if the previous month is shorter and we're at the last day of the month, the end date will pass over the last day and go to the current month
+      // if that's the case, we set the day to 0 to get the end of the month
+      if (end.month != start.month) {
+        end = end.copyWith(day: 0);
+      }
+      return DateTimeRange(start: start, end: end);
     } else {
       return DateTimeRange(
         start: start,
