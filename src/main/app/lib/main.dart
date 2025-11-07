@@ -9,6 +9,7 @@ import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/households/states/household.dart';
 import 'package:spend_spent_spent/identity/states/username_password.dart';
+import 'package:spend_spent_spent/notification_listener/notification_event_listener.dart';
 import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/settings/state/app_settings.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
@@ -56,6 +57,8 @@ Future<void> main() async {
     userPassCubit.connectToSocket();
     householdCubit.getData();
   }
+
+  await NotificationEventListener().init();
 
   runApp(const SpendSpentSpent());
 }

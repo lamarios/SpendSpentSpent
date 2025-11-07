@@ -22,6 +22,8 @@ dependencies:
     git:
       # https://github.com/tprebs/fluttermap_heatmap/pull/23
       url: https://github.com/ThomasAunvik/fluttermap_heatmap.git
+  flutter_notification_listener:
+      path: ../../../../flutter_notification_listener
   flutter_settings_ui: 3.0.1
   flutter_svg: 2.2.1
   flutter_timezone: 5.0.0
