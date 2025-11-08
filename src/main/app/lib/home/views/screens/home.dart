@@ -15,6 +15,7 @@ import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/households/states/household.dart';
 import 'package:spend_spent_spent/identity/views/components/logout_handler.dart';
+import 'package:spend_spent_spent/notification_listener/notification_event_listener.dart';
 import 'package:spend_spent_spent/notification_listener/states/notification_tapped.dart';
 import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/utils/models/socket_message.dart';
@@ -49,6 +50,30 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     if (!kIsWeb) {
       _setupIntentSharing();
+      handleAppStartByExpenseSuggestionNotification();
+    }
+  }
+
+  Future<void> handleAppStartByExpenseSuggestionNotification() async {
+    var cubit = context.read<CategoriesCubit>();
+    await cubit.stream.firstWhere((state) => !state.loading);
+
+    if (cubit.state.categories.isNotEmpty) {
+      final appStartNotification = await NotificationEventListener
+          .flutterLocalNotificationsPlugin
+          ?.getNotificationAppLaunchDetails();
+      if (appStartNotification != null) {
+        final notif = appStartNotification.notificationResponse;
+        final amount = double.tryParse(notif?.payload ?? '');
+        if (amount != null) {
+          handleAppNotification(
+            NotificationTappedState(
+              time: DateTime.now().millisecondsSinceEpoch,
+              amount: amount,
+            ),
+          );
+        }
+      }
     }
   }
 
@@ -56,6 +81,22 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       context.read<CategoriesCubit>().getCategories(false);
+    }
+  }
+
+  void handleAppNotification(NotificationTappedState? state) {
+    var cat = context.read<CategoriesCubit>().state.categories.firstOrNull;
+    // user might not have categories yet
+    if (cat != null && state != null) {
+      AddExpense.showDialog(
+        context,
+        expense: Expense(
+          amount: state.amount,
+          timestamp: state.time,
+          category: cat,
+        ),
+        canChangeCategory: true,
+      );
     }
   }
 
@@ -137,23 +178,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 BlocListener<NotificationTappedCubit, NotificationTappedState?>(
                   listenWhen: (previous, current) => current != null,
                   listener: (context, state) {
-                    var cat = context
-                        .read<CategoriesCubit>()
-                        .state
-                        .categories
-                        .firstOrNull;
-                    // user might not have categories yet
-                    if (cat != null && state != null) {
-                      AddExpense.showDialog(
-                        context,
-                        expense: Expense(
-                          amount: state.amount,
-                          timestamp: state.time,
-                          category: cat,
-                        ),
-                        canChangeCategory: true,
-                      );
-                    }
+                    handleAppNotification(state);
                   },
                   child: BlocBuilder<HouseholdCubit, HouseholdState>(
                     builder: (context, state) {
