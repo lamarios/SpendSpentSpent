@@ -64,7 +64,7 @@ Future<void> main() async {
   );
   var notificationEventListener = NotificationEventListener();
   getIt.registerSingleton<NotificationEventListener>(notificationEventListener);
-  if (await Preferences.getBool(WATCH_NOTIFICATIONS)) {
+  if (!kIsWeb && await Preferences.getBool(WATCH_NOTIFICATIONS)) {
     notificationEventListener.init();
   }
 
