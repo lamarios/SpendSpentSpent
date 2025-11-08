@@ -10,12 +10,13 @@ import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/households/states/household.dart';
 import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/notification_listener/notification_event_listener.dart';
+import 'package:spend_spent_spent/notification_listener/states/notification_tapped.dart';
 import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/settings/state/app_settings.dart';
+import 'package:spend_spent_spent/settings/views/screens/settings.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
 
 import 'globals.dart';
-import 'households/states/household.dart';
 
 final _appRouter = AppRouter();
 
@@ -58,7 +59,14 @@ Future<void> main() async {
     householdCubit.getData();
   }
 
-  await NotificationEventListener().init();
+  getIt.registerSingleton<NotificationTappedCubit>(
+    NotificationTappedCubit(null),
+  );
+  var notificationEventListener = NotificationEventListener();
+  getIt.registerSingleton<NotificationEventListener>(notificationEventListener);
+  if (await Preferences.getBool(WATCH_NOTIFICATIONS)) {
+    notificationEventListener.init();
+  }
 
   runApp(const SpendSpentSpent());
 }
@@ -110,6 +118,7 @@ class _SpendSpentSpentState extends State<SpendSpentSpent>
         ),
         BlocProvider(create: (context) => getIt<UsernamePasswordCubit>()),
         BlocProvider(create: (context) => getIt<HouseholdCubit>()),
+        BlocProvider(create: (context) => getIt<NotificationTappedCubit>()),
       ],
       child: DynamicColorBuilder(
         builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {

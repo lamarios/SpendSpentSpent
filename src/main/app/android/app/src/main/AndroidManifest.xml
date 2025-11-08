@@ -10,6 +10,12 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <!-- this pemission is for auto start service after reboot -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
 
     <application
             android:dataExtractionRules="@xml/data_extraction_rules"
@@ -59,23 +65,21 @@
                 android:name="flutterEmbedding"
                 android:value="2"/>
 
-        <service android:name="im.zoe.labs.flutter_notification_listener.NotificationsHandlerService"
-                 android:label="Flutter Notifications Handler"
-                 android:exported="true"
-                 android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
-        android:foregroundServiceType="dataSync"
-        >
+        <!-- Warning: Do not change service name. -->
+        <service
+                android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
+                android:foregroundServiceType="specialUse"
+                android:exported="false" >
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                      android:value="Listens to notifications in the background"/>
+        </service>
+
+        <service android:label="notifications" android:name="notification.listener.service.NotificationListener"
+                 android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" android:exported="true">
             <intent-filter>
-                <action android:name="android.service.notification.NotificationListenerService"/>
+                <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-        <receiver android:name="im.zoe.labs.flutter_notification_listener.RebootBroadcastReceiver"
-                  android:exported="true"
-                  android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
 
     </application>
 

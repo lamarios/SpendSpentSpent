@@ -47,5 +47,6 @@ sealed class AppSettingsState with _$AppSettingsState {
     @Default(false) bool materialYou,
     @Default(false) bool blackBackground,
     @Default(false) bool useHouseholdColors,
+    @Default(false) bool watchNotifications,
   }) = _AppSettingsState;
 }

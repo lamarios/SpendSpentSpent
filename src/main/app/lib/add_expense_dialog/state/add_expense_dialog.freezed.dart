@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AddExpenseDialogState {
 
- String get value; String get valueFrom; DateTime get expenseDate; String get expenseNote; bool get gettingLocation; bool get useLocation; CurrencyConversion? get currencyConversion; bool get showCurrencyConversion; bool get saving; List<String> get noteSuggestions; List<SssFile> get files; LocationData? get location; dynamic get error; StackTrace? get stackTrace;
+ Category get category; String get value; String get valueFrom; DateTime get expenseDate; String get expenseNote; bool get gettingLocation; bool get useLocation; CurrencyConversion? get currencyConversion; bool get showCurrencyConversion; bool get saving; List<String> get noteSuggestions; List<SssFile> get files; LocationData? get location; dynamic get error; StackTrace? get stackTrace;
 /// Create a copy of AddExpenseDialogState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $AddExpenseDialogStateCopyWith<AddExpenseDialogState> get copyWith => _$AddExpen
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddExpenseDialogState&&(identical(other.value, value) || other.value == value)&&(identical(other.valueFrom, valueFrom) || other.valueFrom == valueFrom)&&(identical(other.expenseDate, expenseDate) || other.expenseDate == expenseDate)&&(identical(other.expenseNote, expenseNote) || other.expenseNote == expenseNote)&&(identical(other.gettingLocation, gettingLocation) || other.gettingLocation == gettingLocation)&&(identical(other.useLocation, useLocation) || other.useLocation == useLocation)&&(identical(other.currencyConversion, currencyConversion) || other.currencyConversion == currencyConversion)&&(identical(other.showCurrencyConversion, showCurrencyConversion) || other.showCurrencyConversion == showCurrencyConversion)&&(identical(other.saving, saving) || other.saving == saving)&&const DeepCollectionEquality().equals(other.noteSuggestions, noteSuggestions)&&const DeepCollectionEquality().equals(other.files, files)&&(identical(other.location, location) || other.location == location)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddExpenseDialogState&&(identical(other.category, category) || other.category == category)&&(identical(other.value, value) || other.value == value)&&(identical(other.valueFrom, valueFrom) || other.valueFrom == valueFrom)&&(identical(other.expenseDate, expenseDate) || other.expenseDate == expenseDate)&&(identical(other.expenseNote, expenseNote) || other.expenseNote == expenseNote)&&(identical(other.gettingLocation, gettingLocation) || other.gettingLocation == gettingLocation)&&(identical(other.useLocation, useLocation) || other.useLocation == useLocation)&&(identical(other.currencyConversion, currencyConversion) || other.currencyConversion == currencyConversion)&&(identical(other.showCurrencyConversion, showCurrencyConversion) || other.showCurrencyConversion == showCurrencyConversion)&&(identical(other.saving, saving) || other.saving == saving)&&const DeepCollectionEquality().equals(other.noteSuggestions, noteSuggestions)&&const DeepCollectionEquality().equals(other.files, files)&&(identical(other.location, location) || other.location == location)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,value,valueFrom,expenseDate,expenseNote,gettingLocation,useLocation,currencyConversion,showCurrencyConversion,saving,const DeepCollectionEquality().hash(noteSuggestions),const DeepCollectionEquality().hash(files),location,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode => Object.hash(runtimeType,category,value,valueFrom,expenseDate,expenseNote,gettingLocation,useLocation,currencyConversion,showCurrencyConversion,saving,const DeepCollectionEquality().hash(noteSuggestions),const DeepCollectionEquality().hash(files),location,const DeepCollectionEquality().hash(error),stackTrace);
 
 @override
 String toString() {
-  return 'AddExpenseDialogState(value: $value, valueFrom: $valueFrom, expenseDate: $expenseDate, expenseNote: $expenseNote, gettingLocation: $gettingLocation, useLocation: $useLocation, currencyConversion: $currencyConversion, showCurrencyConversion: $showCurrencyConversion, saving: $saving, noteSuggestions: $noteSuggestions, files: $files, location: $location, error: $error, stackTrace: $stackTrace)';
+  return 'AddExpenseDialogState(category: $category, value: $value, valueFrom: $valueFrom, expenseDate: $expenseDate, expenseNote: $expenseNote, gettingLocation: $gettingLocation, useLocation: $useLocation, currencyConversion: $currencyConversion, showCurrencyConversion: $showCurrencyConversion, saving: $saving, noteSuggestions: $noteSuggestions, files: $files, location: $location, error: $error, stackTrace: $stackTrace)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $AddExpenseDialogStateCopyWith<$Res>  {
   factory $AddExpenseDialogStateCopyWith(AddExpenseDialogState value, $Res Function(AddExpenseDialogState) _then) = _$AddExpenseDialogStateCopyWithImpl;
 @useResult
 $Res call({
- String value, String valueFrom, DateTime expenseDate, String expenseNote, bool gettingLocation, bool useLocation, CurrencyConversion? currencyConversion, bool showCurrencyConversion, bool saving, List<String> noteSuggestions, List<SssFile> files, LocationData? location, dynamic error, StackTrace? stackTrace
+ Category category, String value, String valueFrom, DateTime expenseDate, String expenseNote, bool gettingLocation, bool useLocation, CurrencyConversion? currencyConversion, bool showCurrencyConversion, bool saving, List<String> noteSuggestions, List<SssFile> files, LocationData? location, dynamic error, StackTrace? stackTrace
 });
 
 
-
+$CategoryCopyWith<$Res> get category;
 
 }
 /// @nodoc
@@ -62,9 +62,10 @@ class _$AddExpenseDialogStateCopyWithImpl<$Res>
 
 /// Create a copy of AddExpenseDialogState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? value = null,Object? valueFrom = null,Object? expenseDate = null,Object? expenseNote = null,Object? gettingLocation = null,Object? useLocation = null,Object? currencyConversion = freezed,Object? showCurrencyConversion = null,Object? saving = null,Object? noteSuggestions = null,Object? files = null,Object? location = freezed,Object? error = freezed,Object? stackTrace = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? category = null,Object? value = null,Object? valueFrom = null,Object? expenseDate = null,Object? expenseNote = null,Object? gettingLocation = null,Object? useLocation = null,Object? currencyConversion = freezed,Object? showCurrencyConversion = null,Object? saving = null,Object? noteSuggestions = null,Object? files = null,Object? location = freezed,Object? error = freezed,Object? stackTrace = freezed,}) {
   return _then(_self.copyWith(
-value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as Category,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as String,valueFrom: null == valueFrom ? _self.valueFrom : valueFrom // ignore: cast_nullable_to_non_nullable
 as String,expenseDate: null == expenseDate ? _self.expenseDate : expenseDate // ignore: cast_nullable_to_non_nullable
 as DateTime,expenseNote: null == expenseNote ? _self.expenseNote : expenseNote // ignore: cast_nullable_to_non_nullable
@@ -81,7 +82,16 @@ as dynamic,stackTrace: freezed == stackTrace ? _self.stackTrace : stackTrace // 
 as StackTrace?,
   ));
 }
-
+/// Create a copy of AddExpenseDialogState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CategoryCopyWith<$Res> get category {
+  
+  return $CategoryCopyWith<$Res>(_self.category, (value) {
+    return _then(_self.copyWith(category: value));
+  });
+}
 }
 
 
@@ -160,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String value,  String valueFrom,  DateTime expenseDate,  String expenseNote,  bool gettingLocation,  bool useLocation,  CurrencyConversion? currencyConversion,  bool showCurrencyConversion,  bool saving,  List<String> noteSuggestions,  List<SssFile> files,  LocationData? location,  dynamic error,  StackTrace? stackTrace)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Category category,  String value,  String valueFrom,  DateTime expenseDate,  String expenseNote,  bool gettingLocation,  bool useLocation,  CurrencyConversion? currencyConversion,  bool showCurrencyConversion,  bool saving,  List<String> noteSuggestions,  List<SssFile> files,  LocationData? location,  dynamic error,  StackTrace? stackTrace)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AddExpenseDialogState() when $default != null:
-return $default(_that.value,_that.valueFrom,_that.expenseDate,_that.expenseNote,_that.gettingLocation,_that.useLocation,_that.currencyConversion,_that.showCurrencyConversion,_that.saving,_that.noteSuggestions,_that.files,_that.location,_that.error,_that.stackTrace);case _:
+return $default(_that.category,_that.value,_that.valueFrom,_that.expenseDate,_that.expenseNote,_that.gettingLocation,_that.useLocation,_that.currencyConversion,_that.showCurrencyConversion,_that.saving,_that.noteSuggestions,_that.files,_that.location,_that.error,_that.stackTrace);case _:
   return orElse();
 
 }
@@ -181,10 +191,10 @@ return $default(_that.value,_that.valueFrom,_that.expenseDate,_that.expenseNote,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String value,  String valueFrom,  DateTime expenseDate,  String expenseNote,  bool gettingLocation,  bool useLocation,  CurrencyConversion? currencyConversion,  bool showCurrencyConversion,  bool saving,  List<String> noteSuggestions,  List<SssFile> files,  LocationData? location,  dynamic error,  StackTrace? stackTrace)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Category category,  String value,  String valueFrom,  DateTime expenseDate,  String expenseNote,  bool gettingLocation,  bool useLocation,  CurrencyConversion? currencyConversion,  bool showCurrencyConversion,  bool saving,  List<String> noteSuggestions,  List<SssFile> files,  LocationData? location,  dynamic error,  StackTrace? stackTrace)  $default,) {final _that = this;
 switch (_that) {
 case _AddExpenseDialogState():
-return $default(_that.value,_that.valueFrom,_that.expenseDate,_that.expenseNote,_that.gettingLocation,_that.useLocation,_that.currencyConversion,_that.showCurrencyConversion,_that.saving,_that.noteSuggestions,_that.files,_that.location,_that.error,_that.stackTrace);}
+return $default(_that.category,_that.value,_that.valueFrom,_that.expenseDate,_that.expenseNote,_that.gettingLocation,_that.useLocation,_that.currencyConversion,_that.showCurrencyConversion,_that.saving,_that.noteSuggestions,_that.files,_that.location,_that.error,_that.stackTrace);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -198,10 +208,10 @@ return $default(_that.value,_that.valueFrom,_that.expenseDate,_that.expenseNote,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String value,  String valueFrom,  DateTime expenseDate,  String expenseNote,  bool gettingLocation,  bool useLocation,  CurrencyConversion? currencyConversion,  bool showCurrencyConversion,  bool saving,  List<String> noteSuggestions,  List<SssFile> files,  LocationData? location,  dynamic error,  StackTrace? stackTrace)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Category category,  String value,  String valueFrom,  DateTime expenseDate,  String expenseNote,  bool gettingLocation,  bool useLocation,  CurrencyConversion? currencyConversion,  bool showCurrencyConversion,  bool saving,  List<String> noteSuggestions,  List<SssFile> files,  LocationData? location,  dynamic error,  StackTrace? stackTrace)?  $default,) {final _that = this;
 switch (_that) {
 case _AddExpenseDialogState() when $default != null:
-return $default(_that.value,_that.valueFrom,_that.expenseDate,_that.expenseNote,_that.gettingLocation,_that.useLocation,_that.currencyConversion,_that.showCurrencyConversion,_that.saving,_that.noteSuggestions,_that.files,_that.location,_that.error,_that.stackTrace);case _:
+return $default(_that.category,_that.value,_that.valueFrom,_that.expenseDate,_that.expenseNote,_that.gettingLocation,_that.useLocation,_that.currencyConversion,_that.showCurrencyConversion,_that.saving,_that.noteSuggestions,_that.files,_that.location,_that.error,_that.stackTrace);case _:
   return null;
 
 }
@@ -213,9 +223,10 @@ return $default(_that.value,_that.valueFrom,_that.expenseDate,_that.expenseNote,
 
 
 class _AddExpenseDialogState extends AddExpenseDialogState implements WithError {
-  const _AddExpenseDialogState({this.value = "", this.valueFrom = "", required this.expenseDate, this.expenseNote = '', this.gettingLocation = false, this.useLocation = false, this.currencyConversion, this.showCurrencyConversion = false, this.saving = false, final  List<String> noteSuggestions = const [], final  List<SssFile> files = const [], this.location, this.error, this.stackTrace}): _noteSuggestions = noteSuggestions,_files = files,super._();
+  const _AddExpenseDialogState({required this.category, this.value = "", this.valueFrom = "", required this.expenseDate, this.expenseNote = '', this.gettingLocation = false, this.useLocation = false, this.currencyConversion, this.showCurrencyConversion = false, this.saving = false, final  List<String> noteSuggestions = const [], final  List<SssFile> files = const [], this.location, this.error, this.stackTrace}): _noteSuggestions = noteSuggestions,_files = files,super._();
   
 
+@override final  Category category;
 @override@JsonKey() final  String value;
 @override@JsonKey() final  String valueFrom;
 @override final  DateTime expenseDate;
@@ -253,16 +264,16 @@ _$AddExpenseDialogStateCopyWith<_AddExpenseDialogState> get copyWith => __$AddEx
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddExpenseDialogState&&(identical(other.value, value) || other.value == value)&&(identical(other.valueFrom, valueFrom) || other.valueFrom == valueFrom)&&(identical(other.expenseDate, expenseDate) || other.expenseDate == expenseDate)&&(identical(other.expenseNote, expenseNote) || other.expenseNote == expenseNote)&&(identical(other.gettingLocation, gettingLocation) || other.gettingLocation == gettingLocation)&&(identical(other.useLocation, useLocation) || other.useLocation == useLocation)&&(identical(other.currencyConversion, currencyConversion) || other.currencyConversion == currencyConversion)&&(identical(other.showCurrencyConversion, showCurrencyConversion) || other.showCurrencyConversion == showCurrencyConversion)&&(identical(other.saving, saving) || other.saving == saving)&&const DeepCollectionEquality().equals(other._noteSuggestions, _noteSuggestions)&&const DeepCollectionEquality().equals(other._files, _files)&&(identical(other.location, location) || other.location == location)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddExpenseDialogState&&(identical(other.category, category) || other.category == category)&&(identical(other.value, value) || other.value == value)&&(identical(other.valueFrom, valueFrom) || other.valueFrom == valueFrom)&&(identical(other.expenseDate, expenseDate) || other.expenseDate == expenseDate)&&(identical(other.expenseNote, expenseNote) || other.expenseNote == expenseNote)&&(identical(other.gettingLocation, gettingLocation) || other.gettingLocation == gettingLocation)&&(identical(other.useLocation, useLocation) || other.useLocation == useLocation)&&(identical(other.currencyConversion, currencyConversion) || other.currencyConversion == currencyConversion)&&(identical(other.showCurrencyConversion, showCurrencyConversion) || other.showCurrencyConversion == showCurrencyConversion)&&(identical(other.saving, saving) || other.saving == saving)&&const DeepCollectionEquality().equals(other._noteSuggestions, _noteSuggestions)&&const DeepCollectionEquality().equals(other._files, _files)&&(identical(other.location, location) || other.location == location)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,value,valueFrom,expenseDate,expenseNote,gettingLocation,useLocation,currencyConversion,showCurrencyConversion,saving,const DeepCollectionEquality().hash(_noteSuggestions),const DeepCollectionEquality().hash(_files),location,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode => Object.hash(runtimeType,category,value,valueFrom,expenseDate,expenseNote,gettingLocation,useLocation,currencyConversion,showCurrencyConversion,saving,const DeepCollectionEquality().hash(_noteSuggestions),const DeepCollectionEquality().hash(_files),location,const DeepCollectionEquality().hash(error),stackTrace);
 
 @override
 String toString() {
-  return 'AddExpenseDialogState(value: $value, valueFrom: $valueFrom, expenseDate: $expenseDate, expenseNote: $expenseNote, gettingLocation: $gettingLocation, useLocation: $useLocation, currencyConversion: $currencyConversion, showCurrencyConversion: $showCurrencyConversion, saving: $saving, noteSuggestions: $noteSuggestions, files: $files, location: $location, error: $error, stackTrace: $stackTrace)';
+  return 'AddExpenseDialogState(category: $category, value: $value, valueFrom: $valueFrom, expenseDate: $expenseDate, expenseNote: $expenseNote, gettingLocation: $gettingLocation, useLocation: $useLocation, currencyConversion: $currencyConversion, showCurrencyConversion: $showCurrencyConversion, saving: $saving, noteSuggestions: $noteSuggestions, files: $files, location: $location, error: $error, stackTrace: $stackTrace)';
 }
 
 
@@ -273,11 +284,11 @@ abstract mixin class _$AddExpenseDialogStateCopyWith<$Res> implements $AddExpens
   factory _$AddExpenseDialogStateCopyWith(_AddExpenseDialogState value, $Res Function(_AddExpenseDialogState) _then) = __$AddExpenseDialogStateCopyWithImpl;
 @override @useResult
 $Res call({
- String value, String valueFrom, DateTime expenseDate, String expenseNote, bool gettingLocation, bool useLocation, CurrencyConversion? currencyConversion, bool showCurrencyConversion, bool saving, List<String> noteSuggestions, List<SssFile> files, LocationData? location, dynamic error, StackTrace? stackTrace
+ Category category, String value, String valueFrom, DateTime expenseDate, String expenseNote, bool gettingLocation, bool useLocation, CurrencyConversion? currencyConversion, bool showCurrencyConversion, bool saving, List<String> noteSuggestions, List<SssFile> files, LocationData? location, dynamic error, StackTrace? stackTrace
 });
 
 
-
+@override $CategoryCopyWith<$Res> get category;
 
 }
 /// @nodoc
@@ -290,9 +301,10 @@ class __$AddExpenseDialogStateCopyWithImpl<$Res>
 
 /// Create a copy of AddExpenseDialogState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? valueFrom = null,Object? expenseDate = null,Object? expenseNote = null,Object? gettingLocation = null,Object? useLocation = null,Object? currencyConversion = freezed,Object? showCurrencyConversion = null,Object? saving = null,Object? noteSuggestions = null,Object? files = null,Object? location = freezed,Object? error = freezed,Object? stackTrace = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? category = null,Object? value = null,Object? valueFrom = null,Object? expenseDate = null,Object? expenseNote = null,Object? gettingLocation = null,Object? useLocation = null,Object? currencyConversion = freezed,Object? showCurrencyConversion = null,Object? saving = null,Object? noteSuggestions = null,Object? files = null,Object? location = freezed,Object? error = freezed,Object? stackTrace = freezed,}) {
   return _then(_AddExpenseDialogState(
-value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as Category,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as String,valueFrom: null == valueFrom ? _self.valueFrom : valueFrom // ignore: cast_nullable_to_non_nullable
 as String,expenseDate: null == expenseDate ? _self.expenseDate : expenseDate // ignore: cast_nullable_to_non_nullable
 as DateTime,expenseNote: null == expenseNote ? _self.expenseNote : expenseNote // ignore: cast_nullable_to_non_nullable
@@ -310,7 +322,16 @@ as StackTrace?,
   ));
 }
 
-
+/// Create a copy of AddExpenseDialogState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CategoryCopyWith<$Res> get category {
+  
+  return $CategoryCopyWith<$Res>(_self.category, (value) {
+    return _then(_self.copyWith(category: value));
+  });
+}
 }
 
 // dart format on

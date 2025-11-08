@@ -7,12 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:spend_spent_spent/add_expense_dialog/views/components/add_expense.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/guess_category_dialog.dart';
 import 'package:spend_spent_spent/categories/state/categories.dart';
+import 'package:spend_spent_spent/expenses/models/expense.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/households/states/household.dart';
 import 'package:spend_spent_spent/identity/views/components/logout_handler.dart';
+import 'package:spend_spent_spent/notification_listener/states/notification_tapped.dart';
 import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/utils/models/socket_message.dart';
 import 'package:spend_spent_spent/utils/views/components/sss_socket_listener.dart';
@@ -130,80 +133,109 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 context.read<LastExpenseCubit>().refresh();
               }
             },
-            child: BlocBuilder<HouseholdCubit, HouseholdState>(
-              builder: (context, state) {
-                return Scaffold(
-                  floatingActionButton: Stack(
-                    children: [
-                      IconButton(
-                        onPressed: () => AutoRouter.of(context)
-                            .push(const SettingsRoute())
-                            .then((value) async {
-                              if (context.mounted) {
-                                await context.read<HouseholdCubit>().getData();
-                                if (context.mounted) {
-                                  context.read<LastExpenseCubit>().refresh();
-                                }
-                              }
-                            }),
-                        icon: const Icon(Icons.settings),
-                      ),
-                      if (state.invitations.isNotEmpty)
-                        Positioned(
-                          right: 5,
-                          top: 5,
-                          child: Badge(
-                            label: Center(
-                              child: Text(state.invitations.length.toString()),
-                            ),
-                          ),
+            child:
+                BlocListener<NotificationTappedCubit, NotificationTappedState?>(
+                  listenWhen: (previous, current) => current != null,
+                  listener: (context, state) {
+                    var cat = context
+                        .read<CategoriesCubit>()
+                        .state
+                        .categories
+                        .firstOrNull;
+                    // user might not have categories yet
+                    if (cat != null && state != null) {
+                      AddExpense.showDialog(
+                        context,
+                        expense: Expense(
+                          amount: state.amount,
+                          timestamp: state.time,
+                          category: cat,
                         ),
-                    ],
-                  ),
-                  body: SafeArea(
-                    bottom: false,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: Container(
-                            alignment: Alignment.topCenter,
-                            child: Container(
-                              constraints: const BoxConstraints(
-                                maxWidth: TABLET,
+                        canChangeCategory: true,
+                      );
+                    }
+                  },
+                  child: BlocBuilder<HouseholdCubit, HouseholdState>(
+                    builder: (context, state) {
+                      return Scaffold(
+                        floatingActionButton: Stack(
+                          children: [
+                            IconButton(
+                              onPressed: () => AutoRouter.of(context)
+                                  .push(const SettingsRoute())
+                                  .then((value) async {
+                                    if (context.mounted) {
+                                      await context
+                                          .read<HouseholdCubit>()
+                                          .getData();
+                                      if (context.mounted) {
+                                        context
+                                            .read<LastExpenseCubit>()
+                                            .refresh();
+                                      }
+                                    }
+                                  }),
+                              icon: const Icon(Icons.settings),
+                            ),
+                            if (state.invitations.isNotEmpty)
+                              Positioned(
+                                right: 5,
+                                top: 5,
+                                child: Badge(
+                                  label: Center(
+                                    child: Text(
+                                      state.invitations.length.toString(),
+                                    ),
+                                  ),
+                                ),
                               ),
-                              child: child,
-                            ),
-                          ),
+                          ],
                         ),
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: SizedBox(
-                            height: 45 + safeAreaPadding,
-                            child: Container(color: Colors.transparent),
-                          ),
-                        ),
-                        Positioned(
-                          left: menuMargin,
-                          right: menuMargin,
-                          bottom: 20,
-                          child: SafeArea(
-                            top: false,
-                            child: SizedBox(
-                              height: 50,
-                              child: Center(
-                                child: MainMenu(tabsRouter: tabsRouter),
+                        body: SafeArea(
+                          bottom: false,
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: Container(
+                                  alignment: Alignment.topCenter,
+                                  child: Container(
+                                    constraints: const BoxConstraints(
+                                      maxWidth: TABLET,
+                                    ),
+                                    child: child,
+                                  ),
+                                ),
                               ),
-                            ),
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                child: SizedBox(
+                                  height: 45 + safeAreaPadding,
+                                  child: Container(color: Colors.transparent),
+                                ),
+                              ),
+                              Positioned(
+                                left: menuMargin,
+                                right: menuMargin,
+                                bottom: 20,
+                                child: SafeArea(
+                                  top: false,
+                                  child: SizedBox(
+                                    height: 50,
+                                    child: Center(
+                                      child: MainMenu(tabsRouter: tabsRouter),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
+                ),
           );
         },
       ),

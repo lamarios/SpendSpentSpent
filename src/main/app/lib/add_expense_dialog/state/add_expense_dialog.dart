@@ -7,10 +7,10 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/add_expense.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
+import 'package:spend_spent_spent/expenses/models/currency_conversion.dart';
 import 'package:spend_spent_spent/expenses/models/sss_file.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
-import 'package:spend_spent_spent/expenses/models/currency_conversion.dart';
 import 'package:spend_spent_spent/utils/models/with_error.dart';
 import 'package:spend_spent_spent/utils/preferences.dart';
 
@@ -21,14 +21,14 @@ part 'add_expense_dialog.freezed.dart';
 const expenseDateFormat = 'yyyy-MM-dd';
 
 class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
-  final Category? category;
   final LastExpenseCubit lastExpenseCubit;
   final suggestionController = ScrollController();
   final Expense? expense;
 
+  CarouselController carouselController = CarouselController();
+
   AddExpenseDialogCubit(
     super.initialState, {
-    this.category,
     required this.lastExpenseCubit,
     this.expense,
   }) {
@@ -38,6 +38,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
   @override
   close() async {
     suggestionController.dispose();
+    carouselController.dispose();
     super.close();
   }
 
@@ -50,7 +51,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
           Expense(
             amount: double.parse(valueToStr(value)),
             date: '2022-01-23',
-            category: category ?? expense!.category,
+            category: state.category,
             timestamp: DateTime.now().millisecondsSinceEpoch,
           ),
         );
@@ -80,13 +81,15 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     }
     if (expense != null) {
       // we init our state with the current state of our edited expense.
+
+      var value = formatCurrency(
+        expense!.amount,
+      ).replaceAll(".", "").replaceAll(",", "");
       emit(
         state.copyWith(
           files: expense!.files,
           expenseDate: DateTime.fromMillisecondsSinceEpoch(expense!.timestamp),
-          value: formatCurrency(
-            expense!.amount,
-          ).replaceAll(".", "").replaceAll(",", ""),
+          value: value,
           expenseNote: expense!.note ?? '',
           location: LocationData.fromMap({
             'longitude': expense!.longitude,
@@ -94,6 +97,8 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
           }),
         ),
       );
+
+      getNoteSuggestions(value);
     }
   }
 
@@ -183,7 +188,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     }
     var expense = Expense(
       amount: amount,
-      category: category ?? this.expense!.category,
+      category: state.category,
       date: date,
       note: note,
       files: state.files,
@@ -220,13 +225,19 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     }
 
     try {
-      final result = await service.addExpense(expense);
+      final result = await service.addExpense(
+        expense.copyWith(category: state.category),
+      );
       lastExpenseCubit.refresh();
       return result;
     } catch (e, s) {
       emit(state.copyWith(error: e, stackTrace: s));
       rethrow;
     }
+  }
+
+  void setCategory(Category cat) {
+    emit(state.copyWith(category: cat));
   }
 
   Future<LocationData?> getLocation() async {
@@ -312,6 +323,7 @@ sealed class AddExpenseDialogState
     implements WithError {
   @Implements<WithError>()
   const factory AddExpenseDialogState({
+    required Category category,
     @Default("") String value,
     @Default("") String valueFrom,
     required DateTime expenseDate,
