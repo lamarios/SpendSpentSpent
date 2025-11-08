@@ -259,19 +259,8 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                                     size: iconSize,
                                   ),
                                   onPressed: showNotificationListenerManagement,
-                                  description: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      Text(
-                                        'Watch device notifications to find expenses to add',
-                                      ),
-                                      Text(
-                                        state.watchNotifications
-                                            ? 'Enabled'
-                                            : 'Not enabled',
-                                      ),
-                                    ],
+                                  description: Text(
+                                    'Watch device notifications to find expenses to add',
                                   ),
                                 ),
                               ],

@@ -71,7 +71,7 @@
                 android:foregroundServiceType="specialUse"
                 android:exported="false" >
             <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                      android:value="Listens to notifications in the background"/>
+                      android:value="Listens to device notification in the background to find possible expenses from other app notifications. All the processing is done locally and none of the data is sent to any third party or server"/>
         </service>
 
         <service android:label="notifications" android:name="notification.listener.service.NotificationListener"

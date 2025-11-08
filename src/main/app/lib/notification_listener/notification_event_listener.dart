@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:notification_listener_service/notification_listener_service.dart';
-import 'package:spend_spent_spent/add_expense_dialog/views/components/add_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/notification_listener/foreground_task_handler.dart';
 import 'package:spend_spent_spent/notification_listener/states/notification_tapped.dart';
@@ -20,7 +18,7 @@ class NotificationEventListener {
 
   NotificationEventListener();
 
-  Future<void> init() async {
+  Future<bool> init() async {
     flutterLocalNotificationsPlugin ??= await setupNotifications((details) {
       print('Notification tapped: ${details.payload}');
       final amount = double.tryParse(details.payload ?? '');
@@ -41,27 +39,35 @@ class NotificationEventListener {
 
     if (status) {
       FlutterForegroundTask.initCommunicationPort();
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        // Request permissions and initialize the service.
-        await _requestPermissions();
+      // Request permissions and initialize the service.
+      final isEverythingAllowed = await _requestPermissions();
+      if (isEverythingAllowed) {
         _initService();
         await _startService();
-      });
+        return true;
+      }
     }
+
+    return false;
   }
 
   Future<void> stop() async {
     await FlutterForegroundTask.stopService();
   }
 
-  Future<void> _requestPermissions() async {
+  Future<bool> _requestPermissions() async {
     // Android 13+, you need to allow notification permission to display foreground service notification.
     //
     // iOS: If you need notification, ask for permission.
-    final NotificationPermission notificationPermission =
+    NotificationPermission notificationPermission =
         await FlutterForegroundTask.checkNotificationPermission();
     if (notificationPermission != NotificationPermission.granted) {
-      await FlutterForegroundTask.requestNotificationPermission();
+      notificationPermission =
+          await FlutterForegroundTask.requestNotificationPermission();
+    }
+
+    if (notificationPermission != NotificationPermission.granted) {
+      return false;
     }
 
     if (Platform.isAndroid) {
@@ -70,7 +76,11 @@ class NotificationEventListener {
       // To restart the service on device reboot or unexpected problem, you need to allow below permission.
       if (!await FlutterForegroundTask.isIgnoringBatteryOptimizations) {
         // This function requires `android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` permission.
-        await FlutterForegroundTask.requestIgnoreBatteryOptimization();
+        final canIgnoreBattery =
+            await FlutterForegroundTask.requestIgnoreBatteryOptimization();
+        if (!canIgnoreBattery) {
+          return false;
+        }
       }
 
       // Use this utility only if you provide services that require long-term survival,
@@ -81,9 +91,14 @@ class NotificationEventListener {
       if (!await FlutterForegroundTask.canScheduleExactAlarms) {
         // When you call this function, will be gone to the settings page.
         // So you need to explain to the user why set it.
-        await FlutterForegroundTask.openAlarmsAndRemindersSettings();
+        final canOpenAlarms =
+            await FlutterForegroundTask.openAlarmsAndRemindersSettings();
+        if (!canOpenAlarms) {
+          return false;
+        }
       }
     }
+    return true;
   }
 
   void _initService() {

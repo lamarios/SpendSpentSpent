@@ -25,6 +25,12 @@ class NotificationListenerSetup extends StatelessWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'SpendSpentSpent can listen to the notifications on your phone and detect if it could be logged as an expense. The app will then send you a notification and by tapping it you can add an expense.\n\nNo notification data is ever sent to the server you\'re using, ALL the processing is done locally.',
+                    ),
+                  ),
                   SwitchListTile(
                     value: state.enabled,
                     onChanged: cubit.enable,
@@ -42,9 +48,9 @@ class NotificationListenerSetup extends StatelessWidget {
                   ),
                   state.history.isEmpty
                       ? Padding(
-                          padding: const EdgeInsets.all(24.0),
+                          padding: const EdgeInsets.all(32.0),
                           child: Text(
-                            'No relevant notifications caught by SpendSpentSpent',
+                            'No relevant notifications caught by SpendSpentSpent yet',
                           ),
                         )
                       : Expanded(

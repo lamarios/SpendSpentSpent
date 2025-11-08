@@ -105,13 +105,14 @@ class NotificationListenerSettingsCubit
 
   Future<void> enable(bool value) async {
     await Preferences.setBool(WATCH_NOTIFICATIONS, value);
-    emit(state.copyWith(enabled: value));
 
     final listener = getIt<NotificationEventListener>();
     if (value) {
-      listener.init();
+      final result = await listener.init();
+      emit(state.copyWith(enabled: result));
     } else {
       listener.stop();
+      emit(state.copyWith(enabled: value));
     }
   }
 }
