@@ -13,15 +13,21 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     getCategories(true);
   }
 
-  getCategories(bool loading) async {
-    emit(state.copyWith(loading: loading));
-    final categories = await service.getCategories();
-    emit(state.copyWith(categories: categories, loading: false));
-    final String currentTimeZone =
-        (await FlutterTimezone.getLocalTimezone()).identifier;
-    if (currentTimeZone != 'Etc/Unknown') {
-      final predictions = await service.suggestExpenseCategory(currentTimeZone);
-      emit(state.copyWith(suggestions: predictions));
+  Future<void> getCategories(bool loading) async {
+    try {
+      emit(state.copyWith(loading: loading));
+      final categories = await service.getCategories();
+      emit(state.copyWith(categories: categories, loading: false));
+      final String currentTimeZone =
+          (await FlutterTimezone.getLocalTimezone()).identifier;
+      if (currentTimeZone != 'Etc/Unknown') {
+        final predictions = await service.suggestExpenseCategory(
+          currentTimeZone,
+        );
+        emit(state.copyWith(suggestions: predictions));
+      }
+    } catch (e) {
+      emit(state.copyWith(loading: false));
     }
   }
 

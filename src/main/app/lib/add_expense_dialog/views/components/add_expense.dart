@@ -13,6 +13,7 @@ import 'package:spend_spent_spent/add_expense_dialog/views/components/currency_c
 import 'package:spend_spent_spent/add_expense_dialog/views/components/keypad.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/note_suggestion_pill.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
+import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
 import 'package:spend_spent_spent/globals.dart';
@@ -26,13 +27,20 @@ const LOCATION_TIMEOUT = 10;
 class AddExpense extends StatelessWidget {
   final Category? category;
   final Expense? expense;
+  final bool canChangeCategory;
 
-  const AddExpense({super.key, this.category, this.expense});
+  const AddExpense({
+    super.key,
+    this.category,
+    this.expense,
+    required this.canChangeCategory,
+  });
 
   static Future<Expense?> showDialog(
     BuildContext context, {
     Category? category,
     Expense? expense,
+    bool canChangeCategory = false,
   }) async {
     if (foundation.kIsWeb) {
       return showModal<Expense>(
@@ -40,7 +48,11 @@ class AddExpense extends StatelessWidget {
         builder: (context) => Card(
           color: Colors.white.withValues(alpha: 0),
           margin: EdgeInsets.zero,
-          child: AddExpense(category: category, expense: expense),
+          child: AddExpense(
+            category: category,
+            expense: expense,
+            canChangeCategory: canChangeCategory,
+          ),
         ),
       );
     } else {
@@ -48,44 +60,51 @@ class AddExpense extends StatelessWidget {
         context: context,
         // isScrollControlled: true,
         child: Wrap(
-          children: [AddExpense(category: category, expense: expense)],
+          children: [
+            AddExpense(
+              category: category,
+              expense: expense,
+              canChangeCategory: canChangeCategory,
+            ),
+          ],
         ),
       );
     }
   }
 
-  double getIconHeight(MediaQueryData mq) {
-    return min(mq.size.height / 6, 150);
+  double getIconHeight(BuildContext context) {
+    return min(MediaQuery.sizeOf(context).height / 6, 150);
   }
 
-  Widget getIconHeader(BuildContext context) {
-    double iconHeight = getIconHeight(MediaQuery.of(context));
+  Widget getIconHeader(BuildContext context, {required Category cat}) {
+    double iconHeight = getIconHeight(context);
 
     final colors = Theme.of(context).colorScheme;
 
     return getIcon(
-      category?.icon ?? expense?.category.icon ?? '',
+      cat.icon ?? '',
       size: iconHeight * 0.66,
       color: colors.onPrimaryContainer,
     );
   }
 
   double getHeaderHeight(BuildContext context) {
-    MediaQueryData mq = MediaQuery.of(context);
-
-    return min(mq.size.height / 6, 150.toDouble());
+    return min(MediaQuery.sizeOf(context).height / 6, 150.toDouble());
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
-    final cat = category ?? expense?.category;
-
     return BlocProvider(
       create: (context) => AddExpenseDialogCubit(
-        AddExpenseDialogState(expenseDate: DateTime.now()),
-        category: category,
+        AddExpenseDialogState(
+          expenseDate: DateTime.now(),
+          category:
+              category ??
+              expense?.category ??
+              context.read<CategoriesCubit>().state.categories.first,
+        ),
         expense: expense,
         lastExpenseCubit: context.read<LastExpenseCubit>(),
       ),
@@ -105,6 +124,10 @@ class AddExpense extends StatelessWidget {
                 decoration: const BoxDecoration(borderRadius: defaultBorder),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
+                    final availableCategories = context.select(
+                      (CategoriesCubit c) => c.state.categories,
+                    );
+
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
@@ -151,11 +174,56 @@ class AddExpense extends StatelessWidget {
                                                   ),
                                             ),
                                             child: RepeatedIconsBackground(
-                                              icon: cat!.icon!,
+                                              icon: state.category.icon!,
                                               size: 40,
                                               color: colors.onPrimaryContainer
                                                   .withValues(alpha: 0.05),
-                                              child: getIconHeader(context),
+                                              child: !canChangeCategory
+                                                  ? getIconHeader(
+                                                      context,
+                                                      cat: state.category,
+                                                    )
+                                                  : CarouselView(
+                                                      controller: cubit
+                                                          .carouselController,
+                                                      itemExtent: getIconHeight(
+                                                        context,
+                                                      ),
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      itemSnapping: true,
+
+                                                      onTap: (value) {
+                                                        cubit.setCategory(
+                                                          availableCategories[value],
+                                                        );
+                                                        cubit.carouselController
+                                                            .animateToItem(
+                                                              value,
+                                                            );
+                                                      },
+                                                      children: availableCategories
+                                                          .map(
+                                                            (e) => Center(
+                                                              child: Transform.scale(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                scale:
+                                                                    state.category ==
+                                                                        e
+                                                                    ? 1
+                                                                    : 0.5,
+                                                                child:
+                                                                    getIconHeader(
+                                                                      context,
+                                                                      cat: e,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          )
+                                                          .toList(),
+                                                    ),
                                             ),
                                           ),
                                           if (isWeb)
@@ -299,9 +367,7 @@ class AddExpense extends StatelessWidget {
                                                     ? () async {
                                                         double iconHeight =
                                                             getIconHeight(
-                                                              MediaQuery.of(
-                                                                context,
-                                                              ),
+                                                              context,
                                                             ) *
                                                             0.66;
                                                         final newExpense =

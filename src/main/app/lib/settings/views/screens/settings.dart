@@ -19,6 +19,7 @@ import 'package:spend_spent_spent/settings/state/app_settings.dart';
 import 'package:spend_spent_spent/settings/views/components/change_password.dart';
 import 'package:spend_spent_spent/settings/views/components/edit_profile.dart';
 import 'package:spend_spent_spent/settings/views/components/manageUsers.dart';
+import 'package:spend_spent_spent/settings/views/components/notification_listener_setup.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:material_loading_indicator/loading_indicator.dart';
 import 'package:spend_spent_spent/utils/views/components/masterDetail.dart';
@@ -30,7 +31,8 @@ const ALLOW_SIGNUP = "allowSignUp",
     USE_HOUSEFOLD_COLOR = "use-household-color",
     BLACK_BACKGROUND = "black-background",
     CURRENCY_API_KEY = "currencyApiKey",
-    INCLUDE_RECURRING_IN_DIFF = "includeRecurringInDiff";
+    INCLUDE_RECURRING_IN_DIFF = "includeRecurringInDiff",
+    WATCH_NOTIFICATIONS = "watch-notifications";
 
 SettingsThemeData settingsTheme(ColorScheme colorScheme) => SettingsThemeData(
   settingsSectionBackground: colorScheme.surface,
@@ -125,6 +127,14 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
     );
   }
 
+  void showNotificationListenerManagement(BuildContext context) {
+    masterDetailKey.currentState!.changeDetails(
+      context,
+      'Manage notification listener',
+      NotificationListenerSetup(),
+    );
+  }
+
   Future<void> refreshSettings() async {
     try {
       List<Settings> settings = await service.getAllSettings();
@@ -202,10 +212,6 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                           SettingsSection(
                             title: Text(
                               '${currentUser?.firstName ?? ""} ${currentUser?.lastName ?? ""}',
-                              style: TextStyle(
-                                color: colors.primary,
-                                fontWeight: FontWeight.bold,
-                              ),
                             ),
                             tiles: [
                               if (showChangePassword) ...[
@@ -242,6 +248,23 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                               ),
                             ],
                           ),
+                          if (!demoMode && !kIsWeb)
+                            SettingsSection(
+                              title: Text('Notification listener'),
+                              tiles: [
+                                SettingsTile(
+                                  title: Text('Manage notification listener'),
+                                  leading: Icon(
+                                    Icons.notifications_active_outlined,
+                                    size: iconSize,
+                                  ),
+                                  onPressed: showNotificationListenerManagement,
+                                  description: Text(
+                                    'Watch device notifications to find expenses to add',
+                                  ),
+                                ),
+                              ],
+                            ),
                           if (!demoMode)
                             SettingsSection(
                               title: Text('Household'),
@@ -293,13 +316,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                             ),
                           if (currentUser?.isAdmin ?? false)
                             SettingsSection(
-                              title: Text(
-                                'Admin',
-                                style: TextStyle(
-                                  color: colors.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                              title: Text('Admin'),
                               tiles: [
                                 SettingsTile(
                                   title: const Text('Manage users'),
@@ -399,13 +416,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                           ),
                           if (packageInfo != null)
                             SettingsSection(
-                              title: Text(
-                                'App info',
-                                style: TextStyle(
-                                  color: colors.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                              title: Text('App info'),
                               tiles: [
                                 SettingsTile(
                                   title: Text(
@@ -421,13 +432,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                             ),
                           if (config?.backendVersion != null)
                             SettingsSection(
-                              title: Text(
-                                'Backend info',
-                                style: TextStyle(
-                                  color: colors.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                              title: Text('Backend info'),
                               tiles: [
                                 SettingsTile(
                                   title: Text(
