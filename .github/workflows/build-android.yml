@@ -71,17 +71,6 @@ jobs:
         with:
           ruby-version: '3.0'
           working-directory: src/main/app/android
-      - name: Install dependencies
-        if: startsWith(github.ref, 'refs/tags/')
-        working-directory: src/main/app/android
-        run: |
-          bundle install
-
-      - name: Run Fastlane to release
-        working-directory: src/main/app/android
-        if: startsWith(github.ref, 'refs/tags/')
-        run: bundle exec fastlane deploy
-
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -96,3 +85,13 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
           file_glob: true
+      - name: Install dependencies
+        if: startsWith(github.ref, 'refs/tags/')
+        working-directory: src/main/app/android
+        run: |
+          bundle install
+
+      - name: Run Fastlane to release
+        working-directory: src/main/app/android
+        if: startsWith(github.ref, 'refs/tags/')
+        run: bundle exec fastlane deploy
