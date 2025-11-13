@@ -16,6 +16,8 @@ part 'notification_listener_settings.freezed.dart';
 
 class NotificationListenerSettingsCubit
     extends Cubit<NotificationListenerSettingsState> {
+  final int pageSize = 50;
+
   NotificationListenerSettingsCubit(super.initialState) {
     init();
   }
@@ -23,10 +25,12 @@ class NotificationListenerSettingsCubit
   Future<void> init() async {
     bool watching = await Preferences.getBool(WATCH_NOTIFICATIONS);
     final ignoreList = await getIgnoreList();
+    var history = await getHistory(state.page);
     emit(
       state.copyWith(
         enabled: watching,
-        history: await getHistory(),
+        history: history,
+        hasMore: pageSize == history.length,
         ignoreList: ignoreList,
       ),
     );
@@ -62,7 +66,8 @@ class NotificationListenerSettingsCubit
         .toList();
   }
 
-  Future<List<ParsedNotification>> getHistory() async {
+  Future<List<ParsedNotification>> getHistory(int page) async {
+    emit(state.copyWith(loading: true));
     final dir = await getApplicationDocumentsDirectory();
     final historyDir = Directory('${dir.path}/notificationHistory');
     await historyDir.create(recursive: true);
@@ -70,11 +75,16 @@ class NotificationListenerSettingsCubit
     // Read all JSON files in the history directory and deserialize them into ParsedNotification objects.
     List<ParsedNotification> history = [];
     try {
-      final files = await historyDir
+      var files = await historyDir
           .list()
           .where((entity) => entity is File)
           .toList();
-      for (final fileEntity in files) {
+
+      files.sort((a, b) => b.path.compareTo(a.path));
+
+      files = files.skip(page * pageSize).take(pageSize).toList();
+
+      for (var fileEntity in files) {
         if (fileEntity is File) {
           final content = await fileEntity.readAsString();
           final jsonMap = jsonDecode(content);
@@ -99,7 +109,7 @@ class NotificationListenerSettingsCubit
     }
 
     history.sort((a, b) => b.time.compareTo(a.time));
-
+    emit(state.copyWith(loading: false));
     return history;
   }
 
@@ -115,6 +125,22 @@ class NotificationListenerSettingsCubit
       emit(state.copyWith(enabled: value));
     }
   }
+
+  Future<void> loadMore() async {
+    final page = state.page + 1;
+    final history = await getHistory(page);
+
+    final newHistory = List<ParsedNotification>.from(state.history);
+    newHistory.addAll(history);
+
+    emit(
+      state.copyWith(
+        page: page,
+        history: newHistory,
+        hasMore: history.length == pageSize,
+      ),
+    );
+  }
 }
 
 @freezed
@@ -124,5 +150,8 @@ sealed class NotificationListenerSettingsState
     @Default(false) bool enabled,
     @Default([]) List<ParsedNotification> history,
     @Default([]) List<String> ignoreList,
+    @Default(0) int page,
+    @Default(false) bool hasMore,
+    @Default(true) bool loading,
   }) = _NotificationListenerSettingsState;
 }

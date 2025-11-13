@@ -1,5 +1,5 @@
 name: 'spend_spent_spent'
-version: '2.13.0+134'
+version: '2.13.1+134'
 publish_to: none
 environment:
   sdk: '>=3.8.0 <4.0.0'
@@ -9,6 +9,7 @@ dependencies:
   animations: 2.1.0
   auto_route: 10.2.0
   cached_network_image: 3.4.1
+  carousel_slider: 5.1.1
   dynamic_color: 1.8.1
   easy_debounce: 2.0.3
   fl_chart: 1.1.1

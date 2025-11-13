@@ -2,6 +2,9 @@
 { pkgs ? import <nixpkgs> {
     config.allowUnfree = true;
     config.allowBroken = true;
+    config.permittedInsecurePackages = [
+                    "gradle-7.6.6"
+                  ];
   }
 , ci ? false}:
 

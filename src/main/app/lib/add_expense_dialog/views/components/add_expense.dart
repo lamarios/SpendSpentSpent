@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:animations/animations.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -183,46 +184,58 @@ class AddExpense extends StatelessWidget {
                                                       context,
                                                       cat: state.category,
                                                     )
-                                                  : CarouselView(
-                                                      controller: cubit
-                                                          .carouselController,
-                                                      itemExtent: getIconHeight(
-                                                        context,
-                                                      ),
-                                                      backgroundColor:
-                                                          Colors.transparent,
-                                                      itemSnapping: true,
-
-                                                      onTap: (value) {
-                                                        cubit.setCategory(
-                                                          availableCategories[value],
-                                                        );
-                                                        cubit.carouselController
-                                                            .animateToItem(
-                                                              value,
-                                                            );
-                                                      },
-                                                      children: availableCategories
-                                                          .map(
-                                                            (e) => Center(
-                                                              child: Transform.scale(
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                scale:
-                                                                    state.category ==
-                                                                        e
-                                                                    ? 1
-                                                                    : 0.5,
-                                                                child:
-                                                                    getIconHeader(
-                                                                      context,
-                                                                      cat: e,
-                                                                    ),
+                                                  : Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: CarouselSlider(
+                                                            items: availableCategories
+                                                                .map(
+                                                                  (e) =>
+                                                                      getIconHeader(
+                                                                        context,
+                                                                        cat: e,
+                                                                      ),
+                                                                )
+                                                                .toList(),
+                                                            options: CarouselOptions(
+                                                              initialPage: context.select(
+                                                                (
+                                                                  CategoriesCubit
+                                                                  c,
+                                                                ) => c.state.categories.indexWhere(
+                                                                  (cat2) =>
+                                                                      c
+                                                                          .state
+                                                                          .suggestions
+                                                                          .firstOrNull
+                                                                          ?.category
+                                                                          .id ==
+                                                                      cat2.id,
+                                                                ),
                                                               ),
+                                                              enlargeCenterPage:
+                                                                  true,
+                                                              enlargeFactor:
+                                                                  0.6,
+                                                              viewportFraction:
+                                                                  0.45,
+                                                              clipBehavior:
+                                                                  Clip.none,
+
+                                                              animateToClosest:
+                                                                  true,
+                                                              onPageChanged:
+                                                                  (
+                                                                    index,
+                                                                    reason,
+                                                                  ) => cubit
+                                                                      .setCategory(
+                                                                        availableCategories[index],
+                                                                      ),
                                                             ),
-                                                          )
-                                                          .toList(),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                             ),
                                           ),
