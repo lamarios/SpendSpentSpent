@@ -238,6 +238,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
 
   void setCategory(Category cat) {
     emit(state.copyWith(category: cat));
+    getNoteSuggestions(state.value);
   }
 
   Future<LocationData?> getLocation() async {

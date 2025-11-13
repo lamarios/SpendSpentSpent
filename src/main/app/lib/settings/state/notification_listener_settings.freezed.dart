@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NotificationListenerSettingsState {
 
- bool get enabled; List<ParsedNotification> get history; List<String> get ignoreList;
+ bool get enabled; List<ParsedNotification> get history; List<String> get ignoreList; int get page; bool get hasMore; bool get loading;
 /// Create a copy of NotificationListenerSettingsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $NotificationListenerSettingsStateCopyWith<NotificationListenerSettingsState> ge
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationListenerSettingsState&&(identical(other.enabled, enabled) || other.enabled == enabled)&&const DeepCollectionEquality().equals(other.history, history)&&const DeepCollectionEquality().equals(other.ignoreList, ignoreList));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationListenerSettingsState&&(identical(other.enabled, enabled) || other.enabled == enabled)&&const DeepCollectionEquality().equals(other.history, history)&&const DeepCollectionEquality().equals(other.ignoreList, ignoreList)&&(identical(other.page, page) || other.page == page)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.loading, loading) || other.loading == loading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,enabled,const DeepCollectionEquality().hash(history),const DeepCollectionEquality().hash(ignoreList));
+int get hashCode => Object.hash(runtimeType,enabled,const DeepCollectionEquality().hash(history),const DeepCollectionEquality().hash(ignoreList),page,hasMore,loading);
 
 @override
 String toString() {
-  return 'NotificationListenerSettingsState(enabled: $enabled, history: $history, ignoreList: $ignoreList)';
+  return 'NotificationListenerSettingsState(enabled: $enabled, history: $history, ignoreList: $ignoreList, page: $page, hasMore: $hasMore, loading: $loading)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $NotificationListenerSettingsStateCopyWith<$Res>  {
   factory $NotificationListenerSettingsStateCopyWith(NotificationListenerSettingsState value, $Res Function(NotificationListenerSettingsState) _then) = _$NotificationListenerSettingsStateCopyWithImpl;
 @useResult
 $Res call({
- bool enabled, List<ParsedNotification> history, List<String> ignoreList
+ bool enabled, List<ParsedNotification> history, List<String> ignoreList, int page, bool hasMore, bool loading
 });
 
 
@@ -62,12 +62,15 @@ class _$NotificationListenerSettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of NotificationListenerSettingsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? history = null,Object? ignoreList = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? history = null,Object? ignoreList = null,Object? page = null,Object? hasMore = null,Object? loading = null,}) {
   return _then(_self.copyWith(
 enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
 as bool,history: null == history ? _self.history : history // ignore: cast_nullable_to_non_nullable
 as List<ParsedNotification>,ignoreList: null == ignoreList ? _self.ignoreList : ignoreList // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
+as int,hasMore: null == hasMore ? _self.hasMore : hasMore // ignore: cast_nullable_to_non_nullable
+as bool,loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -149,10 +152,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enabled,  List<ParsedNotification> history,  List<String> ignoreList)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool enabled,  List<ParsedNotification> history,  List<String> ignoreList,  int page,  bool hasMore,  bool loading)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NotificationListenerSettingsState() when $default != null:
-return $default(_that.enabled,_that.history,_that.ignoreList);case _:
+return $default(_that.enabled,_that.history,_that.ignoreList,_that.page,_that.hasMore,_that.loading);case _:
   return orElse();
 
 }
@@ -170,10 +173,10 @@ return $default(_that.enabled,_that.history,_that.ignoreList);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enabled,  List<ParsedNotification> history,  List<String> ignoreList)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool enabled,  List<ParsedNotification> history,  List<String> ignoreList,  int page,  bool hasMore,  bool loading)  $default,) {final _that = this;
 switch (_that) {
 case _NotificationListenerSettingsState():
-return $default(_that.enabled,_that.history,_that.ignoreList);}
+return $default(_that.enabled,_that.history,_that.ignoreList,_that.page,_that.hasMore,_that.loading);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -187,10 +190,10 @@ return $default(_that.enabled,_that.history,_that.ignoreList);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enabled,  List<ParsedNotification> history,  List<String> ignoreList)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool enabled,  List<ParsedNotification> history,  List<String> ignoreList,  int page,  bool hasMore,  bool loading)?  $default,) {final _that = this;
 switch (_that) {
 case _NotificationListenerSettingsState() when $default != null:
-return $default(_that.enabled,_that.history,_that.ignoreList);case _:
+return $default(_that.enabled,_that.history,_that.ignoreList,_that.page,_that.hasMore,_that.loading);case _:
   return null;
 
 }
@@ -202,7 +205,7 @@ return $default(_that.enabled,_that.history,_that.ignoreList);case _:
 
 
 class _NotificationListenerSettingsState implements NotificationListenerSettingsState {
-  const _NotificationListenerSettingsState({this.enabled = false, final  List<ParsedNotification> history = const [], final  List<String> ignoreList = const []}): _history = history,_ignoreList = ignoreList;
+  const _NotificationListenerSettingsState({this.enabled = false, final  List<ParsedNotification> history = const [], final  List<String> ignoreList = const [], this.page = 0, this.hasMore = false, this.loading = true}): _history = history,_ignoreList = ignoreList;
   
 
 @override@JsonKey() final  bool enabled;
@@ -220,6 +223,9 @@ class _NotificationListenerSettingsState implements NotificationListenerSettings
   return EqualUnmodifiableListView(_ignoreList);
 }
 
+@override@JsonKey() final  int page;
+@override@JsonKey() final  bool hasMore;
+@override@JsonKey() final  bool loading;
 
 /// Create a copy of NotificationListenerSettingsState
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +237,16 @@ _$NotificationListenerSettingsStateCopyWith<_NotificationListenerSettingsState> 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationListenerSettingsState&&(identical(other.enabled, enabled) || other.enabled == enabled)&&const DeepCollectionEquality().equals(other._history, _history)&&const DeepCollectionEquality().equals(other._ignoreList, _ignoreList));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationListenerSettingsState&&(identical(other.enabled, enabled) || other.enabled == enabled)&&const DeepCollectionEquality().equals(other._history, _history)&&const DeepCollectionEquality().equals(other._ignoreList, _ignoreList)&&(identical(other.page, page) || other.page == page)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.loading, loading) || other.loading == loading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,enabled,const DeepCollectionEquality().hash(_history),const DeepCollectionEquality().hash(_ignoreList));
+int get hashCode => Object.hash(runtimeType,enabled,const DeepCollectionEquality().hash(_history),const DeepCollectionEquality().hash(_ignoreList),page,hasMore,loading);
 
 @override
 String toString() {
-  return 'NotificationListenerSettingsState(enabled: $enabled, history: $history, ignoreList: $ignoreList)';
+  return 'NotificationListenerSettingsState(enabled: $enabled, history: $history, ignoreList: $ignoreList, page: $page, hasMore: $hasMore, loading: $loading)';
 }
 
 
@@ -251,7 +257,7 @@ abstract mixin class _$NotificationListenerSettingsStateCopyWith<$Res> implement
   factory _$NotificationListenerSettingsStateCopyWith(_NotificationListenerSettingsState value, $Res Function(_NotificationListenerSettingsState) _then) = __$NotificationListenerSettingsStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool enabled, List<ParsedNotification> history, List<String> ignoreList
+ bool enabled, List<ParsedNotification> history, List<String> ignoreList, int page, bool hasMore, bool loading
 });
 
 
@@ -268,12 +274,15 @@ class __$NotificationListenerSettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of NotificationListenerSettingsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? enabled = null,Object? history = null,Object? ignoreList = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? enabled = null,Object? history = null,Object? ignoreList = null,Object? page = null,Object? hasMore = null,Object? loading = null,}) {
   return _then(_NotificationListenerSettingsState(
 enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
 as bool,history: null == history ? _self._history : history // ignore: cast_nullable_to_non_nullable
 as List<ParsedNotification>,ignoreList: null == ignoreList ? _self._ignoreList : ignoreList // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
+as int,hasMore: null == hasMore ? _self.hasMore : hasMore // ignore: cast_nullable_to_non_nullable
+as bool,loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
