@@ -32,11 +32,7 @@ class ExpenseFileManagementCubit extends Cubit<ExpenseFileManagementState> {
   Future<void> uploadImage(XFile image) async {
     emit(state.copyWith(loading: true));
 
-    carouselController.animateToItem(
-      state.files.length,
-      duration: animationDuration,
-      curve: animationCurve,
-    );
+    carouselController.animateToItem(state.files.length, duration: animationDuration, curve: animationCurve);
     try {
       final file = await service.uploadImage(image);
       addFile(file);
@@ -57,26 +53,16 @@ class ExpenseFileManagementCubit extends Cubit<ExpenseFileManagementState> {
 
 @freezed
 sealed class ExpenseFileManagementState with _$ExpenseFileManagementState {
-  const factory ExpenseFileManagementState({
-    @Default(false) bool loading,
-    @Default([]) List<SssFile> files,
-  }) = _ExpenseFileManagementState;
+  const factory ExpenseFileManagementState({@Default(false) bool loading, @Default([]) List<SssFile> files}) =
+      _ExpenseFileManagementState;
 
   const ExpenseFileManagementState._();
 
   List<double> get possiblePrices {
-    return files
-        .map((e) => e.amounts)
-        .expand((element) => element)
-        .toSet()
-        .toList();
+    return files.map((e) => e.amounts).expand((element) => element).toSet().toList();
   }
 
   List<String> get possibleTags {
-    return files
-        .map((e) => e.aiTags)
-        .expand((element) => element)
-        .toSet()
-        .toList();
+    return files.map((e) => e.aiTags).expand((element) => element).toSet().toList();
   }
 }

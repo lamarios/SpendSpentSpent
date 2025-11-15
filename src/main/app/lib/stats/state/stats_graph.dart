@@ -16,31 +16,20 @@ class StatsGraphCubit extends Cubit<StatsGraphState> {
   final bool monthly;
   final int categoryId;
 
-  StatsGraphCubit(
-    super.initialState, {
-    required this.monthly,
-    required this.categoryId,
-  }) {
+  StatsGraphCubit(super.initialState, {required this.monthly, required this.categoryId}) {
     emit(state.copyWith(loading: true));
     getGraphData();
   }
 
   changeCount(int count) {
     emit(state.copyWith(count: max(count, MIN_PERIOD)));
-    EasyDebounce.debounce(
-      'get-graph-data-$categoryId',
-      const Duration(milliseconds: 500),
-      getGraphData,
-    );
+    EasyDebounce.debounce('get-graph-data-$categoryId', const Duration(milliseconds: 500), getGraphData);
   }
 
   Future<void> getLimits() async {
     final expenseLimits = await service.getExpenseLimits();
 
-    final periodMax = max(
-      state.periodMax,
-      monthly ? expenseLimits.months + 3 : expenseLimits.years + 3,
-    );
+    final periodMax = max(state.periodMax, monthly ? expenseLimits.months + 3 : expenseLimits.years + 3);
     emit(state.copyWith(periodMax: periodMax));
   }
 
@@ -106,22 +95,8 @@ sealed class StatsGraphState with _$StatsGraphState {
     @Default(5) int count,
     @Default(0) double minValue,
     @Default(0) double maxValue,
-    @Default([
-      FlSpot(0, 0),
-      FlSpot(1, 0),
-      FlSpot(2, 0),
-      FlSpot(3, 0),
-      FlSpot(4, 0),
-    ])
-    List<FlSpot> graphData,
-    @Default([
-      FlSpot(0, 0),
-      FlSpot(1, 0),
-      FlSpot(2, 0),
-      FlSpot(3, 0),
-      FlSpot(4, 0),
-    ])
-    List<FlSpot> avgData,
+    @Default([FlSpot(0, 0), FlSpot(1, 0), FlSpot(2, 0), FlSpot(3, 0), FlSpot(4, 0)]) List<FlSpot> graphData,
+    @Default([FlSpot(0, 0), FlSpot(1, 0), FlSpot(2, 0), FlSpot(3, 0), FlSpot(4, 0)]) List<FlSpot> avgData,
     @Default([
       GraphDataPoint(date: '2021', amount: 0),
       GraphDataPoint(date: '2020', amount: 0),

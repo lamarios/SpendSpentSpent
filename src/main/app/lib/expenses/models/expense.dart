@@ -24,6 +24,5 @@ sealed class Expense with _$Expense {
     @Default([]) List<SssFile> files,
   }) = _Expense;
 
-  factory Expense.fromJson(Map<String, dynamic> json) =>
-      _$ExpenseFromJson(json);
+  factory Expense.fromJson(Map<String, dynamic> json) => _$ExpenseFromJson(json);
 }

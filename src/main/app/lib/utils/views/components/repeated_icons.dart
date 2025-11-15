@@ -32,10 +32,7 @@ class RepeatedIconsBackground extends StatelessWidget {
                 top: y,
                 child: getIcon(icon, size: size, color: color)
                     .animate(onPlay: (controller) => controller.repeat())
-                    .move(
-                      duration: const Duration(seconds: 20),
-                      end: Offset(distance, distance),
-                    ),
+                    .move(duration: const Duration(seconds: 20), end: Offset(distance, distance)),
               ),
             );
           }

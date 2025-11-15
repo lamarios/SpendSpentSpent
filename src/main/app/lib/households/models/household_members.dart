@@ -17,6 +17,5 @@ sealed class HouseholdMembers with _$HouseholdMembers {
     @Default(false) bool admin,
   }) = _HouseholdMembers;
 
-  factory HouseholdMembers.fromJson(Map<String, Object?> json) =>
-      _$HouseholdMembersFromJson(json);
+  factory HouseholdMembers.fromJson(Map<String, Object?> json) => _$HouseholdMembersFromJson(json);
 }

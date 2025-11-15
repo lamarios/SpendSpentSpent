@@ -17,8 +17,5 @@ class MonthPickerCubit extends Cubit<MonthPickerState> {
 
 @freezed
 sealed class MonthPickerState with _$MonthPickerState {
-  const factory MonthPickerState({
-    required DateTime selected,
-    required int selectedYear,
-  }) = _MonthPickerState;
+  const factory MonthPickerState({required DateTime selected, required int selectedYear}) = _MonthPickerState;
 }

@@ -19,15 +19,11 @@ class AddCategoryCubit extends Cubit<AddCategoryState> {
   }
 
   void search() {
-    EasyDebounce.debounce(
-      'new-category-search',
-      const Duration(milliseconds: 300),
-      () {
-        service.searchAvailableCategories(searchController.text).then((value) {
-          emit(state.copyWith(selected: '', categories: value));
-        });
-      },
-    );
+    EasyDebounce.debounce('new-category-search', const Duration(milliseconds: 300), () {
+      service.searchAvailableCategories(searchController.text).then((value) {
+        emit(state.copyWith(selected: '', categories: value));
+      });
+    });
   }
 
   getAvailableCategories() async {

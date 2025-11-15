@@ -25,10 +25,7 @@ class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
   Future<void> setToken(String server, String? token) async {
     if (token != null) {
       await Preferences.set(Preferences.TOKEN, token);
-      await Preferences.set(
-        Preferences.TOKEN_TYPE,
-        TokenType.usernamePassword.name,
-      );
+      await Preferences.set(Preferences.TOKEN_TYPE, TokenType.usernamePassword.name);
 
       await service.setUrl(server);
 
@@ -59,9 +56,5 @@ class UsernamePasswordCubit extends Cubit<UsernamePasswordState> {
 
 @freezed
 sealed class UsernamePasswordState with _$UsernamePasswordState {
-  const factory UsernamePasswordState({
-    String? token,
-    OidcConfig? oidcConfig,
-    User? user,
-  }) = _UsernamePasswordState;
+  const factory UsernamePasswordState({String? token, OidcConfig? oidcConfig, User? user}) = _UsernamePasswordState;
 }

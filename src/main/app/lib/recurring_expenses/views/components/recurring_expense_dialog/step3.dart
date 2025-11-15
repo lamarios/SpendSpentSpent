@@ -46,10 +46,7 @@ class Step3 extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    valueToStr(amount),
-                    style: TextStyle(fontSize: 20, color: colors.onSurface),
-                  ),
+                  child: Text(valueToStr(amount), style: TextStyle(fontSize: 20, color: colors.onSurface)),
                 ),
               ),
             ),

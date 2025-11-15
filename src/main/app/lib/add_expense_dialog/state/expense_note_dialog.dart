@@ -25,25 +25,21 @@ class ExpenseNoteDialogCubit extends Cubit<ExpenseNoteDialogState> {
   setNote(String note) {
     emit(state.copyWith(note: note));
     if (note.isNotEmpty) {
-      EasyDebounce.debounce(
-        'note-suggestions',
-        Duration(milliseconds: 200),
-        () async {
-          try {
-            emit(state.copyWith(loading: true));
-            final suggestions = await service.getNoteAutoComplete(note);
-            List<String> suggestionList = List.from(suggestions.keys);
-            suggestionList.sort((a, b) {
-              return suggestions[b]!.compareTo(suggestions[a]!);
-            });
+      EasyDebounce.debounce('note-suggestions', Duration(milliseconds: 200), () async {
+        try {
+          emit(state.copyWith(loading: true));
+          final suggestions = await service.getNoteAutoComplete(note);
+          List<String> suggestionList = List.from(suggestions.keys);
+          suggestionList.sort((a, b) {
+            return suggestions[b]!.compareTo(suggestions[a]!);
+          });
 
-            emit(state.copyWith(suggestions: suggestionList, loading: false));
-          } catch (e) {
-            _log.severe(e);
-            emit(state.copyWith(loading: false));
-          }
-        },
-      );
+          emit(state.copyWith(suggestions: suggestionList, loading: false));
+        } catch (e) {
+          _log.severe(e);
+          emit(state.copyWith(loading: false));
+        }
+      });
     } else {
       EasyDebounce.cancel('note-suggestions');
       emit(state.copyWith(suggestions: []));

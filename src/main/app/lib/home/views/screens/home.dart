@@ -59,19 +59,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     await cubit.stream.firstWhere((state) => !state.loading);
 
     if (cubit.state.categories.isNotEmpty) {
-      final appStartNotification = await NotificationEventListener
-          .flutterLocalNotificationsPlugin
+      final appStartNotification = await NotificationEventListener.flutterLocalNotificationsPlugin
           ?.getNotificationAppLaunchDetails();
       if (appStartNotification != null) {
         final notif = appStartNotification.notificationResponse;
         final amount = double.tryParse(notif?.payload ?? '');
         if (amount != null) {
-          handleAppNotification(
-            NotificationTappedState(
-              time: DateTime.now().millisecondsSinceEpoch,
-              amount: amount,
-            ),
-          );
+          handleAppNotification(NotificationTappedState(time: DateTime.now().millisecondsSinceEpoch, amount: amount));
         }
       }
     }
@@ -86,18 +80,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   void handleAppNotification(NotificationTappedState? state) {
     var cubit = context.read<CategoriesCubit>();
-    var cat =
-        cubit.state.suggestions.firstOrNull?.category ??
-        cubit.state.categories.firstOrNull;
+    var cat = cubit.state.suggestions.firstOrNull?.category ?? cubit.state.categories.firstOrNull;
     // user might not have categories yet
     if (cat != null && state != null) {
       AddExpense.showDialog(
         context,
-        expense: Expense(
-          amount: state.amount,
-          timestamp: state.time,
-          category: cat,
-        ),
+        expense: Expense(amount: state.amount, timestamp: state.time, category: cat),
         canChangeCategory: true,
       );
     }
@@ -111,10 +99,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         if (value.isNotEmpty && !_sharedFileIsHandled) {
           _sharedFileIsHandled = true;
           if (context.mounted) {
-            GuessCategoryDialog.show(
-              context,
-              file: value.first,
-            ).then((value) => _sharedFileIsHandled = false);
+            GuessCategoryDialog.show(context, file: value.first).then((value) => _sharedFileIsHandled = false);
           }
         }
       },
@@ -131,10 +116,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           if (context.mounted) {
             _sharedFileIsHandled = true;
-            GuessCategoryDialog.show(
-              context,
-              file: value.first,
-            ).then((value) => _sharedFileIsHandled = false);
+            GuessCategoryDialog.show(context, file: value.first).then((value) => _sharedFileIsHandled = false);
           }
         });
       }
@@ -161,109 +143,88 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           return SssSocketListener(
             onChange: (message) async {
               if (message.type == SssSocketMessageType.householdUpdate) {
-                EasyDebounce.debounce(
-                  'household-refresh',
-                  Duration(seconds: 1),
-                  () async {
-                    await context.read<HouseholdCubit>().getData();
-                    if (context.mounted) {
-                      context.read<LastExpenseCubit>().refresh();
-                    }
-                  },
-                );
+                EasyDebounce.debounce('household-refresh', Duration(seconds: 1), () async {
+                  await context.read<HouseholdCubit>().getData();
+                  if (context.mounted) {
+                    context.read<LastExpenseCubit>().refresh();
+                  }
+                });
               }
 
               if (message.type == SssSocketMessageType.newHouseholdExpense) {
                 context.read<LastExpenseCubit>().refresh();
               }
             },
-            child:
-                BlocListener<NotificationTappedCubit, NotificationTappedState?>(
-                  listenWhen: (previous, current) => current != null,
-                  listener: (context, state) {
-                    handleAppNotification(state);
-                  },
-                  child: BlocBuilder<HouseholdCubit, HouseholdState>(
-                    builder: (context, state) {
-                      return Scaffold(
-                        floatingActionButton: Stack(
-                          children: [
-                            IconButton(
-                              onPressed: () => AutoRouter.of(context)
-                                  .push(const SettingsRoute())
-                                  .then((value) async {
-                                    if (context.mounted) {
-                                      await context
-                                          .read<HouseholdCubit>()
-                                          .getData();
-                                      if (context.mounted) {
-                                        context
-                                            .read<LastExpenseCubit>()
-                                            .refresh();
-                                      }
-                                    }
-                                  }),
-                              icon: const Icon(Icons.settings),
-                            ),
-                            if (state.invitations.isNotEmpty)
-                              Positioned(
-                                right: 5,
-                                top: 5,
-                                child: Badge(
-                                  label: Center(
-                                    child: Text(
-                                      state.invitations.length.toString(),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          ],
+            child: BlocListener<NotificationTappedCubit, NotificationTappedState?>(
+              listenWhen: (previous, current) => current != null,
+              listener: (context, state) {
+                handleAppNotification(state);
+              },
+              child: BlocBuilder<HouseholdCubit, HouseholdState>(
+                builder: (context, state) {
+                  return Scaffold(
+                    floatingActionButton: Stack(
+                      children: [
+                        IconButton(
+                          onPressed: () => AutoRouter.of(context).push(const SettingsRoute()).then((value) async {
+                            if (context.mounted) {
+                              await context.read<HouseholdCubit>().getData();
+                              if (context.mounted) {
+                                context.read<LastExpenseCubit>().refresh();
+                              }
+                            }
+                          }),
+                          icon: const Icon(Icons.settings),
                         ),
-                        body: SafeArea(
-                          bottom: false,
-                          child: Stack(
-                            children: [
-                              Positioned.fill(
-                                child: Container(
-                                  alignment: Alignment.topCenter,
-                                  child: Container(
-                                    constraints: const BoxConstraints(
-                                      maxWidth: TABLET,
-                                    ),
-                                    child: child,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                child: SizedBox(
-                                  height: 45 + safeAreaPadding,
-                                  child: Container(color: Colors.transparent),
-                                ),
-                              ),
-                              Positioned(
-                                left: menuMargin,
-                                right: menuMargin,
-                                bottom: 20,
-                                child: SafeArea(
-                                  top: false,
-                                  child: SizedBox(
-                                    height: 50,
-                                    child: Center(
-                                      child: MainMenu(tabsRouter: tabsRouter),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                        if (state.invitations.isNotEmpty)
+                          Positioned(
+                            right: 5,
+                            top: 5,
+                            child: Badge(label: Center(child: Text(state.invitations.length.toString()))),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                      ],
+                    ),
+                    body: SafeArea(
+                      bottom: false,
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: Container(
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                constraints: const BoxConstraints(maxWidth: TABLET),
+                                child: child,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            child: SizedBox(
+                              height: 45 + safeAreaPadding,
+                              child: Container(color: Colors.transparent),
+                            ),
+                          ),
+                          Positioned(
+                            left: menuMargin,
+                            right: menuMargin,
+                            bottom: 20,
+                            child: SafeArea(
+                              top: false,
+                              child: SizedBox(
+                                height: 50,
+                                child: Center(child: MainMenu(tabsRouter: tabsRouter)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           );
         },
       ),

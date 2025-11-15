@@ -4,11 +4,7 @@ class KeyPad extends StatelessWidget {
   final Function(String number) addNumber;
   final Function() removeNumber;
 
-  const KeyPad({
-    super.key,
-    required this.addNumber,
-    required this.removeNumber,
-  });
+  const KeyPad({super.key, required this.addNumber, required this.removeNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -71,11 +67,7 @@ class KeyPad extends StatelessWidget {
               onPress: () => removeNumber(),
               child: Container(
                 alignment: Alignment.center,
-                child: Icon(
-                  Icons.arrow_back,
-                  size: 30,
-                  color: colors.onSurface,
-                ),
+                child: Icon(Icons.arrow_back, size: 30, color: colors.onSurface),
               ),
             ),
             KeyPadButton(
@@ -84,11 +76,7 @@ class KeyPad extends StatelessWidget {
             ),
             KeyPadButton(
               onPress: () => addNumber('00'),
-              child: Text(
-                '00',
-                textAlign: TextAlign.center,
-                style: keyPadStyle,
-              ),
+              child: Text('00', textAlign: TextAlign.center, style: keyPadStyle),
             ),
           ],
         ),
@@ -113,10 +101,7 @@ class KeyPadButton extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: child,
-              ),
+              child: Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: child),
             ),
           ],
         ),

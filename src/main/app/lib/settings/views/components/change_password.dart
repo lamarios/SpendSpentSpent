@@ -27,20 +27,15 @@ class ChangePasswordState extends State<ChangePassword> {
 
     await service.saveUser(user);
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("Password saved")));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Password saved")));
   }
 
   valueChanged() {
     setState(() {
       invalid =
           (passwordRepeatController.text.trim().isNotEmpty &&
-          passwordRepeatController.text.trim() !=
-              passwordController.text.trim());
-      canSave =
-          passwordRepeatController.text.trim().isNotEmpty &&
-          passwordController.text.trim().isNotEmpty;
+          passwordRepeatController.text.trim() != passwordController.text.trim());
+      canSave = passwordRepeatController.text.trim().isNotEmpty && passwordController.text.trim().isNotEmpty;
     });
   }
 
@@ -54,17 +49,11 @@ class ChangePasswordState extends State<ChangePassword> {
           children: [
             const Text('New password'),
             TextField(obscureText: true, controller: passwordController),
-            const Padding(
-              padding: EdgeInsets.only(top: 20.0),
-              child: Text('Repeat new password'),
-            ),
+            const Padding(padding: EdgeInsets.only(top: 20.0), child: Text('Repeat new password')),
             TextField(obscureText: true, controller: passwordRepeatController),
             Visibility(
               visible: invalid,
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Passwords don\'t match'),
-              ),
+              child: const Padding(padding: EdgeInsets.all(8.0), child: Text('Passwords don\'t match')),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 30.0),

@@ -16,10 +16,7 @@ class DiffWithPreviousPeriodSettings extends StatelessWidget {
     return period1.year == period2.year && period1.month == period2.month;
   }
 
-  static Future<void> showModalSheet(
-    BuildContext context, {
-    required String month,
-  }) async {
+  static Future<void> showModalSheet(BuildContext context, {required String month}) async {
     await showMotorBottomSheet(
       context: context,
       child: Wrap(children: [DiffWithPreviousPeriodSettings(month: month)]),
@@ -30,11 +27,7 @@ class DiffWithPreviousPeriodSettings extends StatelessWidget {
     final now = DateTime.now();
     final currentPeriod = _df.parse(month);
 
-    var start = DateTime(
-      currentPeriod.year,
-      currentPeriod.month,
-      currentPeriod.day,
-    );
+    var start = DateTime(currentPeriod.year, currentPeriod.month, currentPeriod.day);
     if (_isSamePeriod(currentPeriod, now)) {
       return DateTimeRange(start: start, end: now);
     } else {
@@ -87,57 +80,41 @@ class DiffWithPreviousPeriodSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => DiffWithPreviousMonthSettingsCubit(
-        DiffWithPreviousMonthSettingsState(),
-      ),
-      child:
-          BlocBuilder<
-            DiffWithPreviousMonthSettingsCubit,
-            DiffWithPreviousMonthSettingsState
-          >(
-            builder: (context, state) {
-              final currentPeriod = _getCurrentPeriod();
-              final previousPeriod = _getPreviousPeriod(currentPeriod);
+      create: (context) => DiffWithPreviousMonthSettingsCubit(DiffWithPreviousMonthSettingsState()),
+      child: BlocBuilder<DiffWithPreviousMonthSettingsCubit, DiffWithPreviousMonthSettingsState>(
+        builder: (context, state) {
+          final currentPeriod = _getCurrentPeriod();
+          final previousPeriod = _getPreviousPeriod(currentPeriod);
 
-              var cubit = context.read<DiffWithPreviousMonthSettingsCubit>();
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 24,
-                  horizontal: 16,
+          var cubit = context.read<DiffWithPreviousMonthSettingsCubit>();
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+            child: Column(
+              spacing: 16,
+              children: [
+                DiffWithPreviousPeriodGraph(
+                  key: ValueKey(state.includeRecurringExpenses),
+                  currentPeriod: currentPeriod,
+                  previousPeriod: previousPeriod,
+                  includeRecurring: state.includeRecurringExpenses,
                 ),
-                child: Column(
-                  spacing: 16,
-                  children: [
-                    DiffWithPreviousPeriodGraph(
-                      key: ValueKey(state.includeRecurringExpenses),
-                      currentPeriod: currentPeriod,
-                      previousPeriod: previousPeriod,
-                      includeRecurring: state.includeRecurringExpenses,
-                    ),
-                    InkWell(
-                      onTap: () => cubit.setIncludeRecurringExpenses(
-                        !state.includeRecurringExpenses,
+                InkWell(
+                  onTap: () => cubit.setIncludeRecurringExpenses(!state.includeRecurringExpenses),
+                  child: Row(
+                    children: [
+                      Expanded(child: Text('Include recurring expenses in comparison')),
+                      Switch(
+                        value: state.includeRecurringExpenses,
+                        onChanged: (value) => cubit.setIncludeRecurringExpenses(value),
                       ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Include recurring expenses in comparison',
-                            ),
-                          ),
-                          Switch(
-                            value: state.includeRecurringExpenses,
-                            onChanged: (value) =>
-                                cubit.setIncludeRecurringExpenses(value),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              );
-            },
-          ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

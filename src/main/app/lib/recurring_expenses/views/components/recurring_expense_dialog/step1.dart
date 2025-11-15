@@ -10,13 +10,7 @@ class Step1 extends StatelessWidget {
   final Category? selected;
   final String name;
 
-  const Step1({
-    super.key,
-    required this.setCategory,
-    this.selected,
-    required this.setName,
-    required this.name,
-  });
+  const Step1({super.key, required this.setCategory, this.selected, required this.setName, required this.name});
 
   onSelect(Category e) {
     setCategory(e);
@@ -29,9 +23,7 @@ class Step1 extends StatelessWidget {
       builder: (context) {
         final cubit = context.read<AddRecurringExpenseCubit>();
 
-        final categories = context.select(
-          (AddRecurringExpenseCubit value) => cubit.state.categories,
-        );
+        final categories = context.select((AddRecurringExpenseCubit value) => cubit.state.categories);
 
         return Container(
           alignment: Alignment.topCenter,
@@ -61,9 +53,7 @@ class Step1 extends StatelessWidget {
                             child: AnimatedContainer(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: (selected?.icon ?? '') != e.icon
-                                    ? Colors.transparent
-                                    : colors.primaryContainer,
+                                color: (selected?.icon ?? '') != e.icon ? Colors.transparent : colors.primaryContainer,
                               ),
                               duration: panelTransition,
                               child: Padding(
@@ -71,9 +61,7 @@ class Step1 extends StatelessWidget {
                                 child: getIcon(
                                   e.icon!,
                                   size: 24,
-                                  color: (selected?.icon ?? '') == e.icon
-                                      ? colors.onPrimaryContainer
-                                      : colors.primary,
+                                  color: (selected?.icon ?? '') == e.icon ? colors.onPrimaryContainer : colors.primary,
                                 ),
                               ),
                             ),

@@ -19,10 +19,7 @@ class HouseholdInvitations extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            '${invitations.length} invitations',
-            style: textTheme.titleMedium,
-          ),
+          Text('${invitations.length} invitations', style: textTheme.titleMedium),
           Expanded(
             child: ListView.builder(
               itemCount: invitations.length,
@@ -30,9 +27,7 @@ class HouseholdInvitations extends StatelessWidget {
                 final invite = invitations[index];
                 return ListTile(
                   leading: UserProfileIcon(user: invite.invitedBy!, size: 50),
-                  title: Text(
-                    'From ${invite.invitedBy?.firstName} ${invite.invitedBy?.lastName}',
-                  ),
+                  title: Text('From ${invite.invitedBy?.firstName} ${invite.invitedBy?.lastName}'),
                   subtitle: Text(invite.invitedBy?.email ?? ''),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -46,9 +41,7 @@ class HouseholdInvitations extends StatelessWidget {
                               'If you accept the invitation, you will see the household expenses and the household members will see your expenses as well',
                             ),
                             onOk: () {
-                              context
-                                  .read<HouseholdManagementCubit>()
-                                  .acceptInvitation(invite.id);
+                              context.read<HouseholdManagementCubit>().acceptInvitation(invite.id);
                             },
                           );
                         },
@@ -59,13 +52,9 @@ class HouseholdInvitations extends StatelessWidget {
                           okCancelDialog(
                             context,
                             title: 'Reject invitation ?',
-                            content: Text(
-                              'You will need to be invited again if you want to join this household',
-                            ),
+                            content: Text('You will need to be invited again if you want to join this household'),
                             onOk: () {
-                              context
-                                  .read<HouseholdManagementCubit>()
-                                  .rejectInvitation(invite.id);
+                              context.read<HouseholdManagementCubit>().rejectInvitation(invite.id);
                             },
                           );
                         },

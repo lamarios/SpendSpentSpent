@@ -14,11 +14,10 @@ _Pagination _$PaginationFromJson(Map<String, dynamic> json) => _Pagination(
   totalPages: (json['totalPages'] as num).toInt(),
 );
 
-Map<String, dynamic> _$PaginationToJson(_Pagination instance) =>
-    <String, dynamic>{
-      'page': instance.page,
-      'total': instance.total,
-      'currentPageCount': instance.currentPageCount,
-      'pageSize': instance.pageSize,
-      'totalPages': instance.totalPages,
-    };
+Map<String, dynamic> _$PaginationToJson(_Pagination instance) => <String, dynamic>{
+  'page': instance.page,
+  'total': instance.total,
+  'currentPageCount': instance.currentPageCount,
+  'pageSize': instance.pageSize,
+  'totalPages': instance.totalPages,
+};

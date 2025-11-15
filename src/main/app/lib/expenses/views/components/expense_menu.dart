@@ -23,10 +23,7 @@ class ExpenseMenu extends StatelessWidget {
   const ExpenseMenu({super.key, required this.expense});
 
   static Future<void> showSheet(BuildContext context, Expense expense) async {
-    var colors = context.read<HouseholdCubit>().state.getCategoryColor(
-      context,
-      expense.category,
-    );
+    var colors = context.read<HouseholdCubit>().state.getCategoryColor(context, expense.category);
 
     await showMotorBottomSheet(
       context: context,
@@ -61,9 +58,7 @@ class ExpenseMenu extends StatelessWidget {
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Delete Expense ?'),
-        content: const Text(
-          'This will only delete this expense, it is not recoverable.',
-        ),
+        content: const Text('This will only delete this expense, it is not recoverable.'),
         actions: <Widget>[
           TextButton(
             child: Text('Cancel', style: TextStyle(color: colors.secondary)),
@@ -93,10 +88,7 @@ class ExpenseMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final expenseColors = context.read<HouseholdCubit>().state.getCategoryColor(
-      context,
-      expense.category,
-    );
+    final expenseColors = context.read<HouseholdCubit>().state.getCategoryColor(context, expense.category);
 
     return BlocProvider(
       create: (context) => ExpenseMenuCubit(ExpenseMenuState(expense: expense)),
@@ -120,11 +112,7 @@ class ExpenseMenu extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   spacing: 12,
                   children: [
-                    getIcon(
-                      expense.category.icon!,
-                      size: 32,
-                      color: colors.onSurface,
-                    ),
+                    getIcon(expense.category.icon!, size: 32, color: colors.onSurface),
                     StylizedAmount(amount: expense.amount, size: 40),
                   ],
                 ),
@@ -133,23 +121,15 @@ class ExpenseMenu extends StatelessWidget {
                     spacing: 16,
                     children: [
                       Icon(Icons.comment, color: colors.secondary),
-                      Expanded(
-                        child: Text(expense.note!, style: textTheme.bodyLarge),
-                      ),
+                      Expanded(child: Text(expense.note!, style: textTheme.bodyLarge)),
                     ],
                   ),
                 if (!state.isOwnExpense)
                   Row(
                     spacing: 16,
                     children: [
-                      UserProfileIcon(
-                        user: expense.category.user!,
-                        size: 40,
-                        colorScheme: expenseColors,
-                      ),
-                      Text(
-                        '${expense.category.user?.firstName} ${expense.category.user?.lastName}',
-                      ),
+                      UserProfileIcon(user: expense.category.user!, size: 40, colorScheme: expenseColors),
+                      Text('${expense.category.user?.firstName} ${expense.category.user?.lastName}'),
                     ],
                   ),
                 if (hasMap || expense.files.isNotEmpty)
@@ -161,40 +141,26 @@ class ExpenseMenu extends StatelessWidget {
                         if (hasMap) ...[
                           Expanded(
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                bigItemBorderRadius,
-                              ),
+                              borderRadius: BorderRadius.circular(bigItemBorderRadius),
                               child: LayoutBuilder(
                                 builder: (context, constraints) {
                                   return FlutterMap(
                                     options: MapOptions(
                                       initialZoom: 15,
-                                      initialCenter: LatLng(
-                                        (expense.latitude ?? 0),
-                                        expense.longitude ?? 0,
-                                      ),
+                                      initialCenter: LatLng((expense.latitude ?? 0), expense.longitude ?? 0),
                                     ),
                                     children: [
                                       TileLayer(
-                                        urlTemplate:
-                                            "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                        userAgentPackageName:
-                                            'com.spendspentspent.app',
+                                        urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                        userAgentPackageName: 'com.spendspentspent.app',
                                       ),
                                       MarkerLayer(
                                         markers: [
                                           Marker(
                                             width: 40.0,
                                             height: 40.0,
-                                            point: LatLng(
-                                              expense.latitude ?? 0,
-                                              expense.longitude ?? 0,
-                                            ),
-                                            child: Icon(
-                                              Icons.location_on,
-                                              color: colors.primaryContainer,
-                                              size: 50,
-                                            ),
+                                            point: LatLng(expense.latitude ?? 0, expense.longitude ?? 0),
+                                            child: Icon(Icons.location_on, color: colors.primaryContainer, size: 50),
                                           ),
                                         ],
                                       ),
@@ -207,10 +173,7 @@ class ExpenseMenu extends StatelessWidget {
                         ],
                         if (expense.files.isNotEmpty)
                           Expanded(
-                            child: ExpenseImages(
-                              key: ValueKey(expense.files),
-                              initialFiles: expense.files,
-                            ),
+                            child: ExpenseImages(key: ValueKey(expense.files), initialFiles: expense.files),
                           ),
                       ],
                     ),
@@ -222,21 +185,15 @@ class ExpenseMenu extends StatelessWidget {
                       Expanded(
                         child: FilledButton.tonalIcon(
                           icon: Icon(Icons.edit),
-                          onPressed: state.loading
-                              ? null
-                              : () => editExpense(context, expense),
+                          onPressed: state.loading ? null : () => editExpense(context, expense),
                           label: Text('Edit expense'),
                         ),
                       ),
                       IconButton.filledTonal(
                         icon: Icon(Icons.delete),
                         style: ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                            colors.errorContainer,
-                          ),
-                          foregroundColor: WidgetStatePropertyAll(
-                            colors.onErrorContainer,
-                          ),
+                          backgroundColor: WidgetStatePropertyAll(colors.errorContainer),
+                          foregroundColor: WidgetStatePropertyAll(colors.onErrorContainer),
                         ),
                         onPressed: () => showDeleteExpenseDialog(context),
                       ),

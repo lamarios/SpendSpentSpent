@@ -9,13 +9,9 @@ part 'search_categories.freezed.dart';
 
 @freezed
 sealed class SearchCategories with _$SearchCategories {
-  const factory SearchCategories({
-    required AvailableCategories results,
-    required String query,
-  }) = _SearchCategories;
+  const factory SearchCategories({required AvailableCategories results, required String query}) = _SearchCategories;
 
-  factory SearchCategories.fromJson(Map<String, dynamic> json) =>
-      _$SearchCategoriesFromJson(json);
+  factory SearchCategories.fromJson(Map<String, dynamic> json) => _$SearchCategoriesFromJson(json);
 }
 
 /*

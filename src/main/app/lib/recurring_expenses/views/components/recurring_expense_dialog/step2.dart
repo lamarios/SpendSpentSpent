@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/globals.dart';
 
-const Map<int, String> TYPES = {
-  0: 'Daily',
-  1: 'Weekly',
-  2: 'Monthly',
-  3: 'Yearly',
-};
+const Map<int, String> TYPES = {0: 'Daily', 1: 'Weekly', 2: 'Monthly', 3: 'Yearly'};
 const Map<int, String> WEEKLY_PARAMS = {
   2: 'Monday',
   3: 'Tuesday',
@@ -64,13 +59,7 @@ class Step2 extends StatelessWidget {
   final int? type, typeParam;
   final Function setType, setTypeParam;
 
-  const Step2({
-    super.key,
-    required this.setType,
-    required this.setTypeParam,
-    this.type,
-    this.typeParam,
-  });
+  const Step2({super.key, required this.setType, required this.setTypeParam, this.type, this.typeParam});
 
   Map<int, String> get typeParams => switch (type) {
     1 => WEEKLY_PARAMS,
@@ -100,9 +89,7 @@ class Step2 extends StatelessWidget {
                         child: AnimatedContainer(
                           decoration: BoxDecoration(
                             borderRadius: defaultBorder,
-                            color: (type ?? -1) != index
-                                ? Colors.transparent
-                                : colors.primaryContainer,
+                            color: (type ?? -1) != index ? Colors.transparent : colors.primaryContainer,
                           ),
                           duration: panelTransition,
                           child: Padding(
@@ -111,9 +98,7 @@ class Step2 extends StatelessWidget {
                               e,
                               style: TextStyle(
                                 fontSize: 15,
-                                color: (type ?? -1) == index
-                                    ? colors.onPrimaryContainer
-                                    : colors.primary,
+                                color: (type ?? -1) == index ? colors.onPrimaryContainer : colors.primary,
                               ),
                             ),
                           ),
@@ -141,9 +126,7 @@ class Step2 extends StatelessWidget {
                           child: AnimatedContainer(
                             decoration: BoxDecoration(
                               borderRadius: defaultBorder,
-                              color: (typeParam ?? -1) != index
-                                  ? Colors.transparent
-                                  : colors.primaryContainer,
+                              color: (typeParam ?? -1) != index ? Colors.transparent : colors.primaryContainer,
                             ),
                             duration: panelTransition,
                             child: Padding(
@@ -152,9 +135,7 @@ class Step2 extends StatelessWidget {
                                 e,
                                 style: TextStyle(
                                   fontSize: 15,
-                                  color: (typeParam ?? -1) == index
-                                      ? colors.onPrimaryContainer
-                                      : colors.primary,
+                                  color: (typeParam ?? -1) == index ? colors.onPrimaryContainer : colors.primary,
                                 ),
                               ),
                             ),

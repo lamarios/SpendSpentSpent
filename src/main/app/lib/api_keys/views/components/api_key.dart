@@ -42,15 +42,9 @@ class ApiKeyView extends StatelessWidget {
               Expanded(
                 child: Text(
                   apiKey.expiryDate != null
-                      ? _df.format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                            apiKey.expiryDate!,
-                          ),
-                        )
+                      ? _df.format(DateTime.fromMillisecondsSinceEpoch(apiKey.expiryDate!))
                       : 'Never',
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: apiKey.expiryDate == null ? colors.error : null,
-                  ),
+                  style: textTheme.bodyMedium?.copyWith(color: apiKey.expiryDate == null ? colors.error : null),
                 ),
               ),
             ],

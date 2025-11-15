@@ -16,12 +16,9 @@ class LogoutHandler extends StatelessWidget {
       listeners: [
         BlocListener<UsernamePasswordCubit, UsernamePasswordState>(
           // handling rerouting to login page if the user is not logged in
-          listenWhen: (previous, current) =>
-              previous.token != current.token && current.token == null,
+          listenWhen: (previous, current) => previous.token != current.token && current.token == null,
           listener: (BuildContext context, UsernamePasswordState state) {
-            AutoRouter.of(
-              context,
-            ).replaceAll([const LoginRoute()], updateExistingRoutes: false);
+            AutoRouter.of(context).replaceAll([const LoginRoute()], updateExistingRoutes: false);
           },
         ),
       ],

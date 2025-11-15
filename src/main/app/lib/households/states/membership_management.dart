@@ -18,8 +18,6 @@ class MembershipManagementCubit extends Cubit<MembershipManagementState> {
 
 @freezed
 sealed class MembershipManagementState with _$MembershipManagementState {
-  const factory MembershipManagementState({
-    required bool admin,
-    required HouseholdColor color,
-  }) = _MembershipManagementState;
+  const factory MembershipManagementState({required bool admin, required HouseholdColor color}) =
+      _MembershipManagementState;
 }

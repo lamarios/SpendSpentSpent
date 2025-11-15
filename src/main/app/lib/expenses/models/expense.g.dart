@@ -18,10 +18,7 @@ _Expense _$ExpenseFromJson(Map<String, dynamic> json) => _Expense(
   category: Category.fromJson(json['category'] as Map<String, dynamic>),
   id: (json['id'] as num?)?.toInt(),
   files:
-      (json['files'] as List<dynamic>?)
-          ?.map((e) => SssFile.fromJson(e as Map<String, dynamic>))
-          .toList() ??
-      const [],
+      (json['files'] as List<dynamic>?)?.map((e) => SssFile.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
 );
 
 Map<String, dynamic> _$ExpenseToJson(_Expense instance) => <String, dynamic>{

@@ -7,13 +7,7 @@ class Categories extends StatelessWidget {
   final List<String>? categories;
   final Function(String selected) onSelect;
 
-  const Categories({
-    super.key,
-    required this.label,
-    this.categories,
-    required this.onSelect,
-    required this.selected,
-  });
+  const Categories({super.key, required this.label, this.categories, required this.onSelect, required this.selected});
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +31,7 @@ class Categories extends StatelessWidget {
                           child: AnimatedContainer(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: selected == e
-                                  ? colors.primaryContainer
-                                  : Colors.transparent,
+                              color: selected == e ? colors.primaryContainer : Colors.transparent,
                             ),
                             duration: panelTransition,
                             child: Padding(
@@ -47,9 +39,7 @@ class Categories extends StatelessWidget {
                               child: getIcon(
                                 e,
                                 size: 30,
-                                color: selected == e
-                                    ? colors.onPrimaryContainer
-                                    : colors.primary,
+                                color: selected == e ? colors.onPrimaryContainer : colors.primary,
                               ),
                             ),
                           ),

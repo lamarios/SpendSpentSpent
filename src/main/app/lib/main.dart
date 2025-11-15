@@ -34,9 +34,7 @@ Future<void> main() async {
   var existingToken = await Preferences.get(Preferences.TOKEN);
 
   var userPassCubit = UsernamePasswordCubit(
-    UsernamePasswordState(
-      token: existingToken.isNotEmpty ? existingToken : null,
-    ),
+    UsernamePasswordState(token: existingToken.isNotEmpty ? existingToken : null),
   );
 
   var householdCubit = HouseholdCubit(HouseholdState());
@@ -59,9 +57,7 @@ Future<void> main() async {
     householdCubit.getData();
   }
 
-  getIt.registerSingleton<NotificationTappedCubit>(
-    NotificationTappedCubit(null),
-  );
+  getIt.registerSingleton<NotificationTappedCubit>(NotificationTappedCubit(null));
   var notificationEventListener = NotificationEventListener();
   getIt.registerSingleton<NotificationEventListener>(notificationEventListener);
   if (!kIsWeb && await Preferences.getBool(WATCH_NOTIFICATIONS)) {
@@ -78,8 +74,7 @@ class SpendSpentSpent extends StatefulWidget {
   State<SpendSpentSpent> createState() => _SpendSpentSpentState();
 }
 
-class _SpendSpentSpentState extends State<SpendSpentSpent>
-    with WidgetsBindingObserver {
+class _SpendSpentSpentState extends State<SpendSpentSpent> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -109,13 +104,9 @@ class _SpendSpentSpentState extends State<SpendSpentSpent>
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => CategoriesCubit(const CategoriesState()),
-        ),
+        BlocProvider(create: (context) => CategoriesCubit(const CategoriesState())),
         BlocProvider(create: (context) => LastExpenseCubit(0)),
-        BlocProvider(
-          create: (context) => AppSettingsCubit(const AppSettingsState()),
-        ),
+        BlocProvider(create: (context) => AppSettingsCubit(const AppSettingsState())),
         BlocProvider(create: (context) => getIt<UsernamePasswordCubit>()),
         BlocProvider(create: (context) => getIt<HouseholdCubit>()),
         BlocProvider(create: (context) => getIt<NotificationTappedCubit>()),
@@ -129,38 +120,24 @@ class _SpendSpentSpentState extends State<SpendSpentSpent>
 
               final householdCubit = context.watch<HouseholdCubit>();
 
-              if (state.materialYou &&
-                  lightDynamic != null &&
-                  darkDynamic != null) {
+              if (state.materialYou && lightDynamic != null && darkDynamic != null) {
                 lightColorScheme = lightDynamic;
                 darkColorScheme = darkDynamic;
               } else {
                 lightColorScheme = ColorScheme.fromSeed(seedColor: Colors.blue);
-                darkColorScheme = ColorScheme.fromSeed(
-                  seedColor: Colors.blue,
-                  brightness: Brightness.dark,
-                );
+                darkColorScheme = ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.dark);
               }
 
               if (state.useHouseholdColors) {
-                final currentUser = context
-                    .read<UsernamePasswordCubit>()
-                    .currentUser;
-                if (householdCubit.state.household != null &&
-                    currentUser != null) {
-                  lightColorScheme =
-                      householdCubit.state.userLightColors[currentUser.id!] ??
-                      lightColorScheme;
-                  darkColorScheme =
-                      householdCubit.state.userDarkColors[currentUser.id!] ??
-                      darkColorScheme;
+                final currentUser = context.read<UsernamePasswordCubit>().currentUser;
+                if (householdCubit.state.household != null && currentUser != null) {
+                  lightColorScheme = householdCubit.state.userLightColors[currentUser.id!] ?? lightColorScheme;
+                  darkColorScheme = householdCubit.state.userDarkColors[currentUser.id!] ?? darkColorScheme;
                 }
               }
 
               if (state.blackBackground) {
-                darkColorScheme = darkColorScheme.copyWith(
-                  surface: Colors.black,
-                );
+                darkColorScheme = darkColorScheme.copyWith(surface: Colors.black);
               }
 
               const navigationBarTheme = NavigationBarThemeData(
@@ -169,35 +146,24 @@ class _SpendSpentSpentState extends State<SpendSpentSpent>
                 labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
               );
 
-              const appBarTheme = AppBarTheme(
-                scrolledUnderElevation: 0,
-                backgroundColor: Colors.transparent,
-              );
+              const appBarTheme = AppBarTheme(scrolledUnderElevation: 0, backgroundColor: Colors.transparent);
 
               return MaterialApp.router(
                 routerConfig: _appRouter.config(),
                 localizationsDelegates: [],
                 theme: ThemeData(
                   scaffoldBackgroundColor: lightColorScheme.surface,
-                  navigationBarTheme: navigationBarTheme.copyWith(
-                    backgroundColor: lightColorScheme.surface,
-                  ),
+                  navigationBarTheme: navigationBarTheme.copyWith(backgroundColor: lightColorScheme.surface),
                   useMaterial3: true,
                   colorScheme: lightColorScheme,
-                  appBarTheme: appBarTheme.copyWith(
-                    backgroundColor: lightColorScheme.surface,
-                  ),
+                  appBarTheme: appBarTheme.copyWith(backgroundColor: lightColorScheme.surface),
                 ),
                 darkTheme: ThemeData(
                   scaffoldBackgroundColor: darkColorScheme.surface,
                   useMaterial3: true,
                   colorScheme: darkColorScheme,
-                  navigationBarTheme: navigationBarTheme.copyWith(
-                    backgroundColor: darkColorScheme.surface,
-                  ),
-                  appBarTheme: appBarTheme.copyWith(
-                    backgroundColor: darkColorScheme.surface,
-                  ),
+                  navigationBarTheme: navigationBarTheme.copyWith(backgroundColor: darkColorScheme.surface),
+                  appBarTheme: appBarTheme.copyWith(backgroundColor: darkColorScheme.surface),
                 ),
               );
             },

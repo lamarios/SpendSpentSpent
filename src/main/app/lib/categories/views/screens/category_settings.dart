@@ -24,10 +24,8 @@ class CategorySettingsScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(title: const Text('Category Settings')),
       body: BlocProvider(
-        create: (BuildContext context) => CategorySettingsCubit(
-          const CategorySettingsState(),
-          context.read<CategoriesCubit>(),
-        ),
+        create: (BuildContext context) =>
+            CategorySettingsCubit(const CategorySettingsState(), context.read<CategoriesCubit>()),
         child: ErrorHandler<CategorySettingsCubit, CategorySettingsState>(
           child: BlocBuilder<CategorySettingsCubit, CategorySettingsState>(
             builder: (context, state) {
@@ -102,21 +100,13 @@ class CategorySettingsScreen extends StatelessWidget {
                       Visibility(
                         visible: state.toDelete.isNotEmpty,
                         child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 8.0,
-                            right: 8,
-                            bottom: 8,
-                          ),
+                          padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Padding(
                                 padding: EdgeInsets.all(8.0),
-                                child: Icon(
-                                  Icons.warning_amber,
-                                  color: Colors.red,
-                                  size: 15,
-                                ),
+                                child: Icon(Icons.warning_amber, color: Colors.red, size: 15),
                               ),
                               Column(
                                 children: [

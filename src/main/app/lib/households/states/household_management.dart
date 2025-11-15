@@ -23,12 +23,7 @@ class HouseholdManagementCubit extends Cubit<HouseholdManagementState> {
       var household = service.getHousehold();
       var invitations = service.getInvitations();
 
-      emit(
-        state.copyWith(
-          invitations: await invitations,
-          household: await household,
-        ),
-      );
+      emit(state.copyWith(invitations: await invitations, household: await household));
     } catch (e, s) {
       emit(state.copyWith(error: e, stackTrace: s));
       rethrow;
@@ -57,11 +52,7 @@ class HouseholdManagementCubit extends Cubit<HouseholdManagementState> {
 
   bool get isAdmin {
     var user = getIt<UsernamePasswordCubit>().currentUser;
-    return state.household?.members
-            .where((hm) => hm.user.id == user?.id)
-            .map((e) => e.admin)
-            .firstOrNull ??
-        false;
+    return state.household?.members.where((hm) => hm.user.id == user?.id).map((e) => e.admin).firstOrNull ?? false;
   }
 
   bool isSelf(HouseholdMembers membership) {
@@ -79,10 +70,7 @@ class HouseholdManagementCubit extends Cubit<HouseholdManagementState> {
     getData(false);
   }
 
-  Future<void> setColor(
-    HouseholdMembers membership,
-    HouseholdColor color,
-  ) async {
+  Future<void> setColor(HouseholdMembers membership, HouseholdColor color) async {
     try {
       await service.setColor(color);
       getIt<HouseholdCubit>().getData();
@@ -128,9 +116,7 @@ class HouseholdManagementCubit extends Cubit<HouseholdManagementState> {
 }
 
 @freezed
-sealed class HouseholdManagementState
-    with _$HouseholdManagementState
-    implements WithError {
+sealed class HouseholdManagementState with _$HouseholdManagementState implements WithError {
   @Implements<WithError>()
   const factory HouseholdManagementState({
     Household? household,

@@ -25,15 +25,8 @@ class CurrencyConverterCubit extends Cubit<CurrencyConverterState> {
   }
 
   Future<void> setCurrency() async {
-    var rate = await service.getCurrencyRate(
-      state.fromCurrency,
-      state.toCurrency,
-    );
-    var currency = CurrencyConversion(
-      from: state.fromCurrency,
-      to: state.toCurrency,
-      rate: rate,
-    );
+    var rate = await service.getCurrencyRate(state.fromCurrency, state.toCurrency);
+    var currency = CurrencyConversion(from: state.fromCurrency, to: state.toCurrency, rate: rate);
     setCurrencyConversion(currency);
   }
 
@@ -54,8 +47,6 @@ class CurrencyConverterCubit extends Cubit<CurrencyConverterState> {
 
 @freezed
 sealed class CurrencyConverterState with _$CurrencyConverterState {
-  const factory CurrencyConverterState({
-    @Default("USD") String fromCurrency,
-    @Default("EUR") String toCurrency,
-  }) = _CurrencyConverterState;
+  const factory CurrencyConverterState({@Default("USD") String fromCurrency, @Default("EUR") String toCurrency}) =
+      _CurrencyConverterState;
 }

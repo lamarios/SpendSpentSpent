@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ import 'package:spend_spent_spent/expenses/views/components/stylized_amount.dart
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/identity/states/username_password.dart';
+import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/views/components/data_change_monitor.dart';
 import 'package:spend_spent_spent/utils/views/components/month_picker.dart';
 
@@ -30,18 +33,13 @@ class RightColumnTab extends StatelessWidget {
     return monthFormatter.format(DateFormat('yyyy-MM-dd').parse('$date-01'));
   }
 
-  Widget getExpensesWidget(
-    BuildContext context,
-    Map<String, DayExpense> expenses,
-  ) {
+  Widget getExpensesWidget(BuildContext context, Map<String, DayExpense> expenses) {
     List<String> expensesKeys = expenses.keys.toList();
     return ListView.builder(
       itemCount: expenses.length,
       itemBuilder: (context, index) {
         return Padding(
-          padding: EdgeInsets.only(
-            bottom: index == expenses.length - 1 ? bottomPadding : 0,
-          ),
+          padding: EdgeInsets.only(bottom: index == expenses.length - 1 ? bottomPadding : 0),
           child: OneDay(
             showExpense: (expense) async {
               await ExpenseMenu.showSheet(context, expense);
@@ -66,19 +64,10 @@ class RightColumnTab extends StatelessWidget {
       initialDate = DateTime.now();
     } else {
       final selectedSplit = state.selected.split('-');
-      initialDate = DateTime(
-        int.parse(selectedSplit[0]),
-        int.parse(selectedSplit[1]),
-      );
+      initialDate = DateTime(int.parse(selectedSplit[0]), int.parse(selectedSplit[1]));
     }
-    var firstDate = DateTime(
-      int.parse(firstMonthSplit[0]),
-      int.parse(firstMonthSplit[1]),
-    );
-    var lastDate = DateTime(
-      int.parse(lastMonthSplit[0]),
-      int.parse(lastMonthSplit[1]),
-    );
+    var firstDate = DateTime(int.parse(firstMonthSplit[0]), int.parse(firstMonthSplit[1]));
+    var lastDate = DateTime(int.parse(lastMonthSplit[0]), int.parse(lastMonthSplit[1]));
 
     final selected = await MonthPicker.show(
       context,
@@ -104,12 +93,12 @@ class RightColumnTab extends StatelessWidget {
     }
   }
 
-  String dateToSSSMonth(DateTime date) =>
-      '${date.year}-${date.month.toString().padLeft(2, '0')}';
+  String dateToSSSMonth(DateTime date) => '${date.year}-${date.month.toString().padLeft(2, '0')}';
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final colors = Theme.of(context).colorScheme;
 
     return BlocProvider(
       create: (context) => ExpenseListCubit(const ExpenseListState()),
@@ -152,32 +141,57 @@ class RightColumnTab extends StatelessWidget {
                           children: [
                             SingleMotionBuilder(
                               value: state.searchMode ? 8 : 50,
-                              motion:
-                                  MaterialSpringMotion.expressiveSpatialDefault(),
-                              builder:
-                                  (
-                                    BuildContext context,
-                                    double value,
-                                    Widget? child,
-                                  ) => Container(width: value),
+                              motion: MaterialSpringMotion.expressiveSpatialDefault(),
+                              builder: (BuildContext context, double value, Widget? child) => Container(width: value),
                             ),
                             Gap(4),
                             Expanded(
-                              child: AnimatedSwitcher(
-                                duration: panelTransition,
-                                child: state.searchMode
-                                    ? Search(search: cubit.search)
-                                    : state.loading
-                                    ? SizedBox.shrink()
-                                    : Center(
-                                        child: FilledButton.tonalIcon(
-                                          onPressed: () => selectMonth(context),
-                                          icon: Icon(Icons.calendar_month),
-                                          label: Text(
-                                            convertDate(state.selected),
-                                          ),
+                              child: SingleMotionBuilder(
+                                motion: MaterialSpringMotion.expressiveSpatialDefault(),
+                                builder: (context, value, child) => Center(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: .circular(bigItemBorderRadius),
+                                      color: Color.lerp(colors.secondaryContainer, getLightBackground(context), value),
+                                    ),
+
+                                    child: SizedBox(
+                                      width: lerpDouble(200, TABLET, value),
+                                      height: lerpDouble(40, 250, value),
+                                      child: child,
+                                    ),
+                                  ),
+                                ),
+                                value: state.searchMode ? 1 : 0,
+                                from: 0,
+                                child: AnimatedSwitcher(
+                                  duration: animationDuration,
+                                  child: state.searchMode
+                                      ? Center(child: Search(search: cubit.search))
+                                      : AnimatedSwitcher(
+                                          duration: animationDuration,
+                                          child: state.loading
+                                              ? SizedBox(
+                                                  height: 20,
+                                                  width: 20,
+                                                  child: Center(child: LoadingIndicator()),
+                                                )
+                                              : InkWell(
+                                                  onTap: () => selectMonth(context),
+                                                  child: Padding(
+                                                    padding: .symmetric(horizontal: 16, vertical: 8),
+                                                    child: Row(
+                                                      spacing: 8,
+                                                      mainAxisAlignment: .center,
+                                                      children: [
+                                                        Icon(Icons.calendar_month),
+                                                        Text(convertDate(state.selected)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
                                         ),
-                                      ),
+                                ),
                               ),
                             ),
                             Gap(4),
@@ -189,11 +203,7 @@ class RightColumnTab extends StatelessWidget {
                                   Center(
                                     child: IconButton.filledTonal(
                                       onPressed: cubit.switchSearch,
-                                      icon: Icon(
-                                        state.searchMode
-                                            ? Icons.clear
-                                            : Icons.search,
-                                      ),
+                                      icon: Icon(state.searchMode ? Icons.clear : Icons.search),
                                     ),
                                   ),
                                 ],
@@ -209,56 +219,36 @@ class RightColumnTab extends StatelessWidget {
                                 ? Column(
                                     children: [
                                       Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Spacer(flex: 1),
                                           Expanded(
                                             flex: 4,
                                             child: SingleMotionBuilder(
-                                              motion:
-                                                  MaterialSpringMotion.expressiveEffectsSlow(),
+                                              motion: MaterialSpringMotion.expressiveEffectsSlow(),
                                               value: !state.loading ? 1 : 0,
-                                              builder:
-                                                  (context, value, child) =>
-                                                      Opacity(
-                                                        opacity: value.clamp(
-                                                          0,
-                                                          1,
-                                                        ),
-                                                        child: Transform.scale(
-                                                          scaleY: value,
-                                                          alignment: Alignment
-                                                              .bottomCenter,
-                                                          child: child,
-                                                        ),
-                                                      ),
+                                              builder: (context, value, child) => Opacity(
+                                                opacity: value.clamp(0, 1),
+                                                child: Transform.scale(
+                                                  scaleY: value,
+                                                  alignment: Alignment.bottomCenter,
+                                                  child: child,
+                                                ),
+                                              ),
                                               child: Padding(
                                                 key: ValueKey(state.selected),
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      vertical: 8.0,
-                                                    ),
+                                                padding: const EdgeInsets.symmetric(vertical: 8.0),
                                                 child: Container(
                                                   alignment: Alignment.center,
                                                   child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
                                                     children: [
-                                                      if (!state.loading)
-                                                        StylizedAmount(
-                                                          amount: state.total,
-                                                          size: 50,
-                                                        ),
-                                                      if (!state.searchMode &&
-                                                          !state.loading) ...[
+                                                      if (!state.loading) StylizedAmount(amount: state.total, size: 50),
+                                                      if (!state.searchMode && !state.loading) ...[
                                                         Gap(4),
                                                         DiffWithPreviousPeriod(
-                                                          diff: state
-                                                              .diffWithPreviousPeriod,
-                                                          currentMonth:
-                                                              state.selected,
+                                                          diff: state.diffWithPreviousPeriod,
+                                                          currentMonth: state.selected,
                                                         ),
                                                       ],
                                                     ],
@@ -271,20 +261,13 @@ class RightColumnTab extends StatelessWidget {
                                             flex: 1,
                                             child: Padding(
                                               padding: kIsWeb
-                                                  ? const EdgeInsets.only(
-                                                      right: 6.0,
-                                                      top: 8,
-                                                    )
+                                                  ? const EdgeInsets.only(right: 6.0, top: 8)
                                                   : EdgeInsets.zero,
                                               child: Align(
-                                                alignment:
-                                                    Alignment.centerRight,
+                                                alignment: Alignment.centerRight,
                                                 child: IconButton.filledTonal(
-                                                  onPressed: () =>
-                                                      cubit.toggleMap(),
-                                                  icon: Icon(
-                                                    Icons.map_outlined,
-                                                  ),
+                                                  onPressed: () => cubit.toggleMap(),
+                                                  icon: Icon(Icons.map_outlined),
                                                 ),
                                               ),
                                             ),
@@ -295,13 +278,8 @@ class RightColumnTab extends StatelessWidget {
                                         child: AnimatedSwitcher(
                                           duration: panelTransition,
                                           child: state.loading
-                                              ? Center(
-                                                  child: LoadingIndicator(),
-                                                )
-                                              : getExpensesWidget(
-                                                  context,
-                                                  state.expenses,
-                                                ),
+                                              ? Center(child: LoadingIndicator())
+                                              : getExpensesWidget(context, state.expenses),
                                         ),
                                       ),
                                     ],
@@ -311,9 +289,7 @@ class RightColumnTab extends StatelessWidget {
                                     child: state.loading
                                         ? Center(child: LoadingIndicator())
                                         : ExpensesMap(
-                                            key: ValueKey(
-                                              '${state.searchMode}-${state.expenses}',
-                                            ),
+                                            key: ValueKey('${state.searchMode}-${state.expenses}'),
                                             expenses: state.expenses,
                                           ),
                                   ),

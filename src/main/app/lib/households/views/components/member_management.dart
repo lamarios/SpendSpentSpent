@@ -36,8 +36,7 @@ class MemberManagement extends StatelessWidget {
     required bool isSelf,
     required List<HouseholdColor> usedColors,
     required Function(HouseholdMembers membership, bool admin) setAdmin,
-    required Function(HouseholdMembers membership, HouseholdColor color)
-    setColor,
+    required Function(HouseholdMembers membership, HouseholdColor color) setColor,
     required Function(HouseholdMembers membership) removeFromHousehold,
   }) async {
     return await showMotorBottomSheet(
@@ -66,12 +65,8 @@ class MemberManagement extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: BlocProvider(
-        create: (context) => MembershipManagementCubit(
-          MembershipManagementState(
-            admin: membership.admin,
-            color: membership.color,
-          ),
-        ),
+        create: (context) =>
+            MembershipManagementCubit(MembershipManagementState(admin: membership.admin, color: membership.color)),
         child: BlocBuilder<MembershipManagementCubit, MembershipManagementState>(
           builder: (context, state) {
             var hmColor = state.color.getColor(context);
@@ -83,26 +78,16 @@ class MemberManagement extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Gap(24),
-                Text(
-                  '${membership.user.firstName} ${membership.user.lastName}',
-                  style: textTheme.titleMedium,
-                ),
+                Text('${membership.user.firstName} ${membership.user.lastName}', style: textTheme.titleMedium),
                 if (isSelf)
                   ListTile(
                     title: Text('Color'),
                     trailing: Container(
                       width: 30,
-                      decoration: BoxDecoration(
-                        color: hmColor.primaryContainer,
-                        shape: BoxShape.circle,
-                      ),
+                      decoration: BoxDecoration(color: hmColor.primaryContainer, shape: BoxShape.circle),
                     ),
                     onTap: () async {
-                      final newColor = await MemberColor.showSheet(
-                        context,
-                        value: state.color,
-                        usedColors: usedColors,
-                      );
+                      final newColor = await MemberColor.showSheet(context, value: state.color, usedColors: usedColors);
                       if (newColor != null) {
                         cubit.setColor(newColor);
                         setColor(membership, newColor);
@@ -113,8 +98,7 @@ class MemberManagement extends StatelessWidget {
                   SwitchListTile(
                     value: useHouseholdColors,
                     title: Text('Use color to theme the whole application'),
-                    onChanged: (value) =>
-                        settingsCubit.setUseHouseholdColos(value),
+                    onChanged: (value) => settingsCubit.setUseHouseholdColos(value),
                   ),
                 if (isAdmin && !isSelf) ...[
                   SwitchListTile(
@@ -140,17 +124,10 @@ class MemberManagement extends StatelessWidget {
                       );
                     },
                     label: Text('Remove from household'),
-                    icon: Icon(
-                      Icons.person_off_outlined,
-                      color: colors.onErrorContainer,
-                    ),
+                    icon: Icon(Icons.person_off_outlined, color: colors.onErrorContainer),
                     style: ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                        colors.errorContainer,
-                      ),
-                      foregroundColor: WidgetStatePropertyAll(
-                        colors.onErrorContainer,
-                      ),
+                      backgroundColor: WidgetStatePropertyAll(colors.errorContainer),
+                      foregroundColor: WidgetStatePropertyAll(colors.onErrorContainer),
                     ),
                   ),
                 ],

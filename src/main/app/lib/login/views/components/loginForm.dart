@@ -64,11 +64,7 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: getIcon(
-                          'groceries_bag',
-                          size: getIconSize(context),
-                          color: colors.primary,
-                        ),
+                        child: getIcon('groceries_bag', size: getIconSize(context), color: colors.primary),
                       ),
                       Visibility(
                         visible: (kIsWeb && !kReleaseMode) || !kIsWeb,
@@ -76,12 +72,7 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Container(
                             alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Server URL',
-                              style: TextStyle(
-                                color: colors.onPrimaryContainer,
-                              ),
-                            ),
+                            child: Text('Server URL', style: TextStyle(color: colors.onPrimaryContainer)),
                           ),
                         ),
                       ),
@@ -94,11 +85,7 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                             controller: widget.urlController,
                             keyboardType: TextInputType.url,
                             autocorrect: false,
-                            decoration: getFieldDecoration(
-                              "",
-                              "https://sss-server.example.com",
-                              colors,
-                            ),
+                            decoration: getFieldDecoration("", "https://sss-server.example.com", colors),
                           ),
                         ),
                       ),
@@ -106,10 +93,7 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Container(
                           alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Email',
-                            style: TextStyle(color: colors.onPrimaryContainer),
-                          ),
+                          child: Text('Email', style: TextStyle(color: colors.onPrimaryContainer)),
                         ),
                       ),
                       Padding(
@@ -119,21 +103,14 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                           keyboardType: TextInputType.emailAddress,
                           autofillHints: const [AutofillHints.username],
                           autocorrect: false,
-                          decoration: getFieldDecoration(
-                            "Email",
-                            "user@example.org",
-                            colors,
-                          ),
+                          decoration: getFieldDecoration("Email", "user@example.org", colors),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Container(
                           alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Password',
-                            style: TextStyle(color: colors.onPrimaryContainer),
-                          ),
+                          child: Text('Password', style: TextStyle(color: colors.onPrimaryContainer)),
                         ),
                       ),
                       Padding(
@@ -142,11 +119,7 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                           controller: passwordController,
                           autofillHints: const [AutofillHints.password],
                           obscureText: true,
-                          decoration: getFieldDecoration(
-                            "Password",
-                            "",
-                            colors,
-                          ),
+                          decoration: getFieldDecoration("Password", "", colors),
                         ),
                       ),
                       Visibility(
@@ -154,18 +127,10 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: defaultBorder,
-                              color: colors.errorContainer,
-                            ),
+                            decoration: BoxDecoration(borderRadius: defaultBorder, color: colors.errorContainer),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                widget.error,
-                                style: textTheme.bodyMedium?.copyWith(
-                                  color: colors.error,
-                                ),
-                              ),
+                              child: Text(widget.error, style: textTheme.bodyMedium?.copyWith(color: colors.error)),
                             ),
                           ),
                         ),
@@ -178,10 +143,8 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                               child: FilledButton.tonal(
                                 onPressed: widget.config == null
                                     ? null
-                                    : () => widget.logIn(
-                                        usernameController.text.trim(),
-                                        passwordController.text.trim(),
-                                      ),
+                                    : () =>
+                                          widget.logIn(usernameController.text.trim(), passwordController.text.trim()),
                                 child: const Text('Log in'),
                               ),
                             ),
@@ -197,9 +160,7 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                               const Gap(8),
                               FilledButton.tonal(
                                 onPressed: () => widget.loginWithSso(),
-                                child: Text(
-                                  'Log in with ${widget.config?.oidc?.name}',
-                                ),
+                                child: Text('Log in with ${widget.config?.oidc?.name}'),
                               ),
                             ],
                           ),
@@ -208,20 +169,14 @@ class LoginFormState extends State<LoginForm> with AfterLayoutMixin<LoginForm> {
                         visible: widget.config?.allowSignup ?? false,
                         child: TextButton(
                           onPressed: () => widget.showSignUp(),
-                          child: Text(
-                            'or Sign Up',
-                            style: TextStyle(color: colors.onPrimaryContainer),
-                          ),
+                          child: Text('or Sign Up', style: TextStyle(color: colors.onPrimaryContainer)),
                         ),
                       ),
                       Visibility(
                         visible: widget.config?.canResetPassword ?? false,
                         child: TextButton(
                           onPressed: () => widget.showResetPassword(),
-                          child: Text(
-                            'Forgot password ?',
-                            style: TextStyle(color: colors.onPrimaryContainer),
-                          ),
+                          child: Text('Forgot password ?', style: TextStyle(color: colors.onPrimaryContainer)),
                         ),
                       ),
                     ],

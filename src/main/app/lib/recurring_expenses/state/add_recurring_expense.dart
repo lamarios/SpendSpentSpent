@@ -28,10 +28,7 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
       typeParam = 0;
     }
 
-    if (state.category != null &&
-        state.type != null &&
-        typeParam != null &&
-        doubleAmount > 0) {
+    if (state.category != null && state.type != null && typeParam != null && doubleAmount > 0) {
       RecurringExpense expense = RecurringExpense(
         category: state.category!,
         amount: doubleAmount,

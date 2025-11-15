@@ -7,9 +7,6 @@ part 'expense_cluster.freezed.dart';
 
 @freezed
 sealed class ExpenseCluster with _$ExpenseCluster {
-  const factory ExpenseCluster({
-    @Default([]) List<Expense> expenses,
-    required double total,
-    required LatLng location,
-  }) = _ExpenseCluster;
+  const factory ExpenseCluster({@Default([]) List<Expense> expenses, required double total, required LatLng location}) =
+      _ExpenseCluster;
 }

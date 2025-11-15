@@ -19,10 +19,7 @@ class GuessCategoryDialog extends StatelessWidget {
 
   const GuessCategoryDialog({super.key, required this.file});
 
-  static Future<void> show(
-    BuildContext context, {
-    required SharedMediaFile file,
-  }) async {
+  static Future<void> show(BuildContext context, {required SharedMediaFile file}) async {
     return showMotorBottomSheet(
       context: context,
       child: SafeArea(
@@ -53,10 +50,7 @@ class GuessCategoryDialog extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     spacing: 8,
-                    children: [
-                      Icon(Icons.auto_awesome),
-                      Text('Analyzing image...'),
-                    ],
+                    children: [Icon(Icons.auto_awesome), Text('Analyzing image...')],
                   ),
                 ],
               ),
@@ -72,13 +66,7 @@ class GuessCategoryDialog extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Center(
-                    child: Icon(
-                      Icons.sentiment_dissatisfied,
-                      size: 50,
-                      color: colors.secondary,
-                    ),
-                  ),
+                  Center(child: Icon(Icons.sentiment_dissatisfied, size: 50, color: colors.secondary)),
                   Text('Picture guessing failed, check the server logs'),
                 ],
               ),
@@ -94,14 +82,7 @@ class GuessCategoryDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 4,
               children: [
-                Center(
-                  child: ExpenseImage(
-                    file: state.results!.file,
-                    width: 300,
-                    height: 300,
-                    showStatus: false,
-                  ),
-                ),
+                Center(child: ExpenseImage(file: state.results!.file, width: 300, height: 300, showStatus: false)),
                 if ((state.results?.file.aiTags ?? []).isNotEmpty) ...[
                   Gap(20),
                   Row(
@@ -114,9 +95,7 @@ class GuessCategoryDialog extends StatelessWidget {
                         child: Wrap(
                           spacing: 16,
                           runSpacing: 4,
-                          children: (state.results?.file.aiTags ?? [])
-                              .map((e) => Text(e))
-                              .toList(),
+                          children: (state.results?.file.aiTags ?? []).map((e) => Text(e)).toList(),
                         ),
                       ),
                     ],
@@ -134,9 +113,7 @@ class GuessCategoryDialog extends StatelessWidget {
                         child: Wrap(
                           spacing: 16,
                           runSpacing: 4,
-                          children: (state.results?.file.amounts ?? [])
-                              .map((e) => Text(formatCurrency(e)))
-                              .toList(),
+                          children: (state.results?.file.amounts ?? []).map((e) => Text(formatCurrency(e))).toList(),
                         ),
                       ),
                     ],
@@ -156,22 +133,16 @@ class GuessCategoryDialog extends StatelessWidget {
                               key: ValueKey(e),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: state.selected == e
-                                    ? colors.primaryContainer
-                                    : Colors.transparent,
+                                color: state.selected == e ? colors.primaryContainer : Colors.transparent,
                               ),
                               duration: animationDuration,
                               curve: animationCurve,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
                               child: Center(
                                 child: getIcon(
                                   e,
                                   size: 30,
-                                  color: state.selected == e
-                                      ? colors.onPrimaryContainer
-                                      : colors.primary,
+                                  color: state.selected == e ? colors.onPrimaryContainer : colors.primary,
                                 ),
                               ),
                             ),
@@ -184,9 +155,7 @@ class GuessCategoryDialog extends StatelessWidget {
                   onPressed: state.selected == null
                       ? null
                       : () {
-                          final cat = context
-                              .read<CategoriesCubit>()
-                              .findByName(state.selected!);
+                          final cat = context.read<CategoriesCubit>().findByName(state.selected!);
 
                           if (cat == null) {
                             return;
@@ -199,9 +168,7 @@ class GuessCategoryDialog extends StatelessWidget {
                           }
                           final expense = Expense(
                             amount: results.file.amounts.firstOrNull ?? 0,
-                            date: DateFormat(
-                              expenseDateFormat,
-                            ).format(DateTime.now()),
+                            date: DateFormat(expenseDateFormat).format(DateTime.now()),
                             category: cat,
                             files: [results.file],
                             note: results.file.aiTags.firstOrNull,

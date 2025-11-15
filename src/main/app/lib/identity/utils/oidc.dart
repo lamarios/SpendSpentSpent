@@ -13,14 +13,10 @@ Future<String?> oidcLogin(OidcConfig config) async {
   // PKCE handling
   if (kIsWeb) {
     final sha256 = OidcConstants_AuthorizeRequest_CodeChallengeMethod.s256;
-    override = manager.discoveryDocument.copyWith(
-      codeChallengeMethodsSupported: [sha256],
-    );
+    override = manager.discoveryDocument.copyWith(codeChallengeMethodsSupported: [sha256]);
   }
 
-  final user = await manager.loginAuthorizationCodeFlow(
-    discoveryDocumentOverride: override,
-  );
+  final user = await manager.loginAuthorizationCodeFlow(discoveryDocumentOverride: override);
 
   return user?.token.accessToken;
 }
@@ -43,27 +39,18 @@ Future<OidcUserManager> _setupClient(OidcConfig config) async {
         ? Uri.parse(webUrl)
         : Uri.parse('com.spendspentspent.app:/oidcRedirect');
     final manager = OidcUserManager.lazy(
-      discoveryDocumentUri: OidcUtils.getOpenIdConfigWellKnownUri(
-        Uri.parse(config.issuer),
-      ),
-      clientCredentials: OidcClientAuthentication.none(
-        clientId: config.clientId,
-      ),
+      discoveryDocumentUri: OidcUtils.getOpenIdConfigWellKnownUri(Uri.parse(config.issuer)),
+      clientCredentials: OidcClientAuthentication.none(clientId: config.clientId),
       store: OidcMemoryStore(),
       settings: OidcUserManagerSettings(
         postLogoutRedirectUri: redirectUri,
-        frontChannelLogoutUri: Uri(path: webUrl).replace(
-          queryParameters: {
-            ...redirectUri.queryParameters,
-            'requestType': 'front-channel-logout',
-          },
-        ),
+        frontChannelLogoutUri: Uri(
+          path: webUrl,
+        ).replace(queryParameters: {...redirectUri.queryParameters, 'requestType': 'front-channel-logout'}),
         scope: ["openid", 'profile', 'email'],
         redirectUri: redirectUri,
         options: OidcPlatformSpecificOptions(
-          web: OidcPlatformSpecificOptions_Web(
-            broadcastChannel: 'oidc_flutter_web/redirect',
-          ),
+          web: OidcPlatformSpecificOptions_Web(broadcastChannel: 'oidc_flutter_web/redirect'),
         ),
       ),
     );

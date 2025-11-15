@@ -9,10 +9,7 @@ class MapExpenseList extends StatelessWidget {
 
   const MapExpenseList({super.key, required this.cluster});
 
-  static Future<void> show(
-    BuildContext context, {
-    required ExpenseCluster cluster,
-  }) async {
+  static Future<void> show(BuildContext context, {required ExpenseCluster cluster}) async {
     showMotorBottomSheet(
       context: context,
 
@@ -35,11 +32,8 @@ class MapExpenseList extends StatelessWidget {
               shrinkWrap: true,
               padding: EdgeInsets.zero,
               itemCount: cluster.expenses.length,
-              itemBuilder: (context, index) => OneExpense(
-                expense: cluster.expenses[index],
-                showDate: true,
-                showIcons: false,
-              ),
+              itemBuilder: (context, index) =>
+                  OneExpense(expense: cluster.expenses[index], showDate: true, showIcons: false),
             ),
           ),
         ],

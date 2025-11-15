@@ -18,11 +18,7 @@ class ResetPasswordState extends State<ResetPassword> {
   Future<void> resetPassword(BuildContext context) async {
     await service.resetPassword(widget.server, usernameController.text.trim());
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          "Reset password request sent successfully, check your email for instructions",
-        ),
-      ),
+      const SnackBar(content: Text("Reset password request sent successfully, check your email for instructions")),
     );
 
     widget.onBack();
@@ -40,10 +36,7 @@ class ResetPasswordState extends State<ResetPassword> {
             padding: const EdgeInsets.only(left: 8.0),
             child: Container(
               alignment: Alignment.centerLeft,
-              child: Text(
-                'Email',
-                style: TextStyle(color: colors.onPrimaryContainer),
-              ),
+              child: Text('Email', style: TextStyle(color: colors.onPrimaryContainer)),
             ),
           ),
           Padding(
@@ -52,11 +45,7 @@ class ResetPasswordState extends State<ResetPassword> {
               controller: usernameController,
               autocorrect: false,
               keyboardType: TextInputType.emailAddress,
-              decoration: getFieldDecoration(
-                "Email",
-                "user@example.org",
-                colors,
-              ),
+              decoration: getFieldDecoration("Email", "user@example.org", colors),
             ),
           ),
           Padding(
@@ -72,10 +61,7 @@ class ResetPasswordState extends State<ResetPassword> {
               ],
             ),
           ),
-          TextButton(
-            onPressed: () => widget.onBack(),
-            child: const Text('Back'),
-          ),
+          TextButton(onPressed: () => widget.onBack(), child: const Text('Back')),
         ],
       ),
     );

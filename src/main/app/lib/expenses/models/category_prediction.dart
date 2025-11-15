@@ -6,11 +6,7 @@ part 'category_prediction.g.dart';
 
 @freezed
 sealed class CategoryPrediction with _$CategoryPrediction {
-  const factory CategoryPrediction({
-    required double probability,
-    required Category category,
-  }) = _CategoryPrediction;
+  const factory CategoryPrediction({required double probability, required Category category}) = _CategoryPrediction;
 
-  factory CategoryPrediction.fromJson(Map<String, Object?> json) =>
-      _$CategoryPredictionFromJson(json);
+  factory CategoryPrediction.fromJson(Map<String, Object?> json) => _$CategoryPredictionFromJson(json);
 }

@@ -9,9 +9,7 @@ class AddKeyCubit extends Cubit<AddKeyState> {
   final TextEditingController controller = TextEditingController();
 
   AddKeyCubit(super.initialState) {
-    controller.addListener(
-      () => emit(state.copyWith(name: controller.value.text)),
-    );
+    controller.addListener(() => emit(state.copyWith(name: controller.value.text)));
   }
 
   void setExpiry(KeyExpiryPreset? preset) {
@@ -29,8 +27,6 @@ class AddKeyCubit extends Cubit<AddKeyState> {
 
 @freezed
 sealed class AddKeyState with _$AddKeyState {
-  const factory AddKeyState({
-    @Default("") String name,
-    @Default(KeyExpiryPreset.days7) KeyExpiryPreset expiry,
-  }) = _AddKeyState;
+  const factory AddKeyState({@Default("") String name, @Default(KeyExpiryPreset.days7) KeyExpiryPreset expiry}) =
+      _AddKeyState;
 }

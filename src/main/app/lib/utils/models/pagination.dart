@@ -16,6 +16,5 @@ sealed class Pagination with _$Pagination {
     required int totalPages,
   }) = _Pagination;
 
-  factory Pagination.fromJson(Map<String, dynamic> json) =>
-      _$PaginationFromJson(json);
+  factory Pagination.fromJson(Map<String, dynamic> json) => _$PaginationFromJson(json);
 }

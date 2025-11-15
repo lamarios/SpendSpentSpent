@@ -24,8 +24,5 @@ class SingleStatsCubit extends Cubit<SingleStatsState> {
 
 @freezed
 sealed class SingleStatsState with _$SingleStatsState {
-  const factory SingleStatsState({
-    @Default(false) bool open,
-    @Default(false) bool showGraph,
-  }) = _SingleStatsState;
+  const factory SingleStatsState({@Default(false) bool open, @Default(false) bool showGraph}) = _SingleStatsState;
 }

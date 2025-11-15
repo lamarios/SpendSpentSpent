@@ -42,10 +42,7 @@ class AddUserDialogState extends State<AddUserDialog> {
 
   void randomPassword() {
     var r = Random.secure();
-    passwordController.text = randomAlpha(
-      16,
-      provider: CoreRandomProvider.from(r),
-    );
+    passwordController.text = randomAlpha(16, provider: CoreRandomProvider.from(r));
   }
 
   @override
@@ -84,10 +81,7 @@ class AddUserDialogState extends State<AddUserDialog> {
             padding: const EdgeInsets.only(bottom: 20.0),
             child: TextField(controller: passwordController),
           ),
-          TextButton(
-            onPressed: randomPassword,
-            child: const Text('Generate password'),
-          ),
+          TextButton(onPressed: randomPassword, child: const Text('Generate password')),
           const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -96,15 +90,9 @@ class AddUserDialogState extends State<AddUserDialog> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(color: Colors.grey[850]),
-                ),
+                child: Text('Cancel', style: TextStyle(color: Colors.grey[850])),
               ),
-              TextButton(
-                onPressed: () => addUser(context),
-                child: const Text('Save'),
-              ),
+              TextButton(onPressed: () => addUser(context), child: const Text('Save')),
             ],
           ),
         ],

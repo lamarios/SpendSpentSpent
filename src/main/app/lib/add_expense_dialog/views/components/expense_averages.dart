@@ -68,10 +68,7 @@ class RecurringExpenseAverages extends StatelessWidget {
                 children: [
                   Icon(Icons.bar_chart_rounded, size: 16),
                   Gap(8),
-                  Text(
-                    'Recurring cost breakdown',
-                    style: textTheme.titleMedium,
-                  ),
+                  Text('Recurring cost breakdown', style: textTheme.titleMedium),
                 ],
               ),
               Gap(16),
@@ -118,10 +115,7 @@ class _InfoTile extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Container(
-      decoration: BoxDecoration(
-        color: colors.primaryContainer,
-        borderRadius: BorderRadius.circular(8),
-      ),
+      decoration: BoxDecoration(color: colors.primaryContainer, borderRadius: BorderRadius.circular(8)),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -47,24 +47,15 @@ class Switcher extends StatelessWidget {
                       child: Center(
                         child: AnimatedContainer(
                           height: 30,
-                          margin: EdgeInsets.symmetric(
-                            horizontal: backgroundPadding,
-                          ),
+                          margin: EdgeInsets.symmetric(horizontal: backgroundPadding),
                           decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(25),
-                            ),
+                            borderRadius: const BorderRadius.all(Radius.circular(25)),
                             color: colors.secondaryContainer,
                           ),
                           duration: animationDuration,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 36),
-                            child: Text(
-                              labels[selected],
-                              style: TextStyle(
-                                color: colors.secondaryContainer,
-                              ),
-                            ),
+                            child: Text(labels[selected], style: TextStyle(color: colors.secondaryContainer)),
                           ),
                         ),
                       ),
@@ -86,11 +77,7 @@ class Switcher extends StatelessWidget {
                             alignment: Alignment.center,
                             child: Text(
                               e,
-                              style: TextStyle(
-                                color: selected == i
-                                    ? colors.onSecondaryContainer
-                                    : colors.primary,
-                              ),
+                              style: TextStyle(color: selected == i ? colors.onSecondaryContainer : colors.primary),
                             ),
                           ),
                         ),

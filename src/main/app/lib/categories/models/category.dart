@@ -13,17 +13,11 @@ part 'category.g.dart';
 
 @freezed
 sealed class Category with _$Category {
-  const factory Category({
-    String? icon,
-    int? categoryOrder,
-    int? id,
-    double? percentageOfMonthly,
-    User? user,
-  }) = _Category;
+  const factory Category({String? icon, int? categoryOrder, int? id, double? percentageOfMonthly, User? user}) =
+      _Category;
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
   /// The constructor is named after the source class, in this case, User.
-  factory Category.fromJson(Map<String, dynamic> json) =>
-      _$CategoryFromJson(json);
+  factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
 }

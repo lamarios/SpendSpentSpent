@@ -26,14 +26,9 @@ class ExpenseMenuCubit extends Cubit<ExpenseMenuState> {
 
 @freezed
 sealed class ExpenseMenuState with _$ExpenseMenuState {
-  const factory ExpenseMenuState({
-    required Expense expense,
-    @Default(true) bool loading,
-  }) = _ExpenseMenuState;
+  const factory ExpenseMenuState({required Expense expense, @Default(true) bool loading}) = _ExpenseMenuState;
 
   const ExpenseMenuState._();
 
-  bool get isOwnExpense =>
-      getIt<UsernamePasswordCubit>().currentUser?.id ==
-      expense.category.user?.id;
+  bool get isOwnExpense => getIt<UsernamePasswordCubit>().currentUser?.id == expense.category.user?.id;
 }

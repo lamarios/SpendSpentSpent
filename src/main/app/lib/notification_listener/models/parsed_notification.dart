@@ -17,6 +17,5 @@ sealed class ParsedNotification with _$ParsedNotification {
     @JsonKey(includeFromJson: false, includeToJson: false) Uint8List? icon,
   }) = _ParsedNotification;
 
-  factory ParsedNotification.fromJson(Map<String, Object?> json) =>
-      _$ParsedNotificationFromJson(json);
+  factory ParsedNotification.fromJson(Map<String, Object?> json) => _$ParsedNotificationFromJson(json);
 }

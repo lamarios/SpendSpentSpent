@@ -8,31 +8,21 @@ class ImageViewerScreen extends StatelessWidget {
   final List<SssFile> images;
   final int initiallySelected;
 
-  const ImageViewerScreen({
-    super.key,
-    required this.images,
-    this.initiallySelected = 0,
-  });
+  const ImageViewerScreen({super.key, required this.images, this.initiallySelected = 0});
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
-      ),
+      appBar: AppBar(backgroundColor: Colors.black, foregroundColor: Colors.white),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
             return PageView.builder(
               itemCount: images.length,
               scrollDirection: Axis.horizontal,
-              controller: PageController(
-                viewportFraction: 1,
-                initialPage: initiallySelected,
-              ),
+              controller: PageController(viewportFraction: 1, initialPage: initiallySelected),
               itemBuilder: (context, index) {
                 var image = images[index];
                 return Stack(
@@ -71,14 +61,7 @@ class ImageViewerScreen extends StatelessWidget {
                                   spacing: 24,
                                   runSpacing: 4,
                                   children: image.aiTags
-                                      .map(
-                                        (e) => Text(
-                                          e,
-                                          style: textTheme.bodySmall?.copyWith(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      )
+                                      .map((e) => Text(e, style: textTheme.bodySmall?.copyWith(color: Colors.white)))
                                       .toList(),
                                 ),
                               ),

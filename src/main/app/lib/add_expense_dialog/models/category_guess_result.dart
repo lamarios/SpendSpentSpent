@@ -6,11 +6,8 @@ part 'category_guess_result.g.dart';
 
 @freezed
 sealed class CategoryGuessResult with _$CategoryGuessResult {
-  const factory CategoryGuessResult({
-    @Default([]) List<String> categories,
-    required SssFile file,
-  }) = _CategoryGuessResult;
+  const factory CategoryGuessResult({@Default([]) List<String> categories, required SssFile file}) =
+      _CategoryGuessResult;
 
-  factory CategoryGuessResult.fromJson(Map<String, Object?> json) =>
-      _$CategoryGuessResultFromJson(json);
+  factory CategoryGuessResult.fromJson(Map<String, Object?> json) => _$CategoryGuessResultFromJson(json);
 }

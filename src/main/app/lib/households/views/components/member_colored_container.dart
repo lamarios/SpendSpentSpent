@@ -5,11 +5,7 @@ class MemberColorContainer extends StatelessWidget {
   final HouseholdColor color;
   final bool selected;
 
-  const MemberColorContainer({
-    super.key,
-    required this.color,
-    required this.selected,
-  });
+  const MemberColorContainer({super.key, required this.color, required this.selected});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +16,7 @@ class MemberColorContainer extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: hmColor.primaryContainer,
-        border: Border.all(
-          width: 1,
-          color: selected ? hmColor.primary : hmColor.primaryContainer,
-        ),
+        border: Border.all(width: 1, color: selected ? hmColor.primary : hmColor.primaryContainer),
       ),
     );
   }

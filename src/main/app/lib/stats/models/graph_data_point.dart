@@ -12,12 +12,11 @@ class GraphDataPoint {
       date = (json['date'] as int).toString();
     }
 
-    return GraphDataPoint(
-      date: date,
-      amount: (json['amount'] as num).toDouble(),
-    );
+    return GraphDataPoint(date: date, amount: (json['amount'] as num).toDouble());
   }
 
-  static Map<String, dynamic> toJson(GraphDataPoint instance) =>
-      <String, dynamic>{'date': instance.date, 'amount': instance.amount};
+  static Map<String, dynamic> toJson(GraphDataPoint instance) => <String, dynamic>{
+    'date': instance.date,
+    'amount': instance.amount,
+  };
 }

@@ -14,30 +14,18 @@ class BelowDateInCalendarCubit extends Cubit<BelowDateInCalendarState> {
   }
 
   Future<void> getMonthExpenses() async {
-    EasyDebounce.debounce(
-      'calendar-debounce-${date.month}',
-      Duration(milliseconds: 500),
-      () async {
-        var total = await service.getMonthTotal(
-          int.parse(
-            '${date.year}-${date.month.toString().padLeft(2, '0')}'.replaceAll(
-              '-',
-              '',
-            ),
-          ),
-        );
-        if (!isClosed) {
-          emit(state.copyWith(loading: false, amount: total));
-        }
-      },
-    );
+    EasyDebounce.debounce('calendar-debounce-${date.month}', Duration(milliseconds: 500), () async {
+      var total = await service.getMonthTotal(
+        int.parse('${date.year}-${date.month.toString().padLeft(2, '0')}'.replaceAll('-', '')),
+      );
+      if (!isClosed) {
+        emit(state.copyWith(loading: false, amount: total));
+      }
+    });
   }
 }
 
 @freezed
 sealed class BelowDateInCalendarState with _$BelowDateInCalendarState {
-  const factory BelowDateInCalendarState({
-    @Default(true) bool loading,
-    double? amount,
-  }) = _BelowDateInCalendarState;
+  const factory BelowDateInCalendarState({@Default(true) bool loading, double? amount}) = _BelowDateInCalendarState;
 }

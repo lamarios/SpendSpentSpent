@@ -50,10 +50,7 @@ class ExpenseMapCubit extends Cubit<ExpenseMapState> {
       points.add(latLng);
     }
     if (expenseList.length > 1) {
-      fit = CameraFit.bounds(
-        bounds: LatLngBounds.fromPoints(points),
-        padding: EdgeInsets.all(50),
-      );
+      fit = CameraFit.bounds(bounds: LatLngBounds.fromPoints(points), padding: EdgeInsets.all(50));
       center = null;
     } else {
       center = points[0];
@@ -66,11 +63,7 @@ class ExpenseMapCubit extends Cubit<ExpenseMapState> {
       _log.fine('event ${event.runtimeType}, zoom: ${event.camera.zoom}');
 
       if (event.camera.zoom.floor() != zoom) {
-        emit(
-          state.copyWith(
-            aggregatedData: aggregateByZoom(expenseList, event.camera.zoom),
-          ),
-        );
+        emit(state.copyWith(aggregatedData: aggregateByZoom(expenseList, event.camera.zoom)));
       }
 
       zoom = event.camera.zoom.floor();
@@ -108,15 +101,9 @@ class ExpenseMapCubit extends Cubit<ExpenseMapState> {
 
     return buckets.values.map((list) {
       final total = list.fold<double>(0, (s, w) => s + w.amount);
-      final avgLat =
-          list.map((w) => w.latitude!).reduce((a, b) => a + b) / list.length;
-      final avgLng =
-          list.map((w) => w.longitude!).reduce((a, b) => a + b) / list.length;
-      return ExpenseCluster(
-        location: LatLng(avgLat, avgLng),
-        total: total,
-        expenses: list,
-      );
+      final avgLat = list.map((w) => w.latitude!).reduce((a, b) => a + b) / list.length;
+      final avgLng = list.map((w) => w.longitude!).reduce((a, b) => a + b) / list.length;
+      return ExpenseCluster(location: LatLng(avgLat, avgLng), total: total, expenses: list);
     }).toList();
   }
 

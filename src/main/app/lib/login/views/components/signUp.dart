@@ -35,10 +35,7 @@ class SignUpState extends State<SignUp> {
       isAdmin: false,
     );
 
-    if (user.email.isEmpty ||
-        user.password?.length == 0 ||
-        user.firstName.isEmpty ||
-        user.lastName.isEmpty) {
+    if (user.email.isEmpty || user.password?.length == 0 || user.firstName.isEmpty || user.lastName.isEmpty) {
       setState(() {
         error = 'Please fill all the fields';
       });
@@ -69,9 +66,7 @@ class SignUpState extends State<SignUp> {
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Sign up successful, you can now log in")),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Sign up successful, you can now log in")));
 
     widget.onBack();
   }
@@ -88,10 +83,7 @@ class SignUpState extends State<SignUp> {
             padding: const EdgeInsets.only(left: 8.0),
             child: Container(
               alignment: Alignment.centerLeft,
-              child: Text(
-                'Email',
-                style: TextStyle(color: colors.onPrimaryContainer),
-              ),
+              child: Text('Email', style: TextStyle(color: colors.onPrimaryContainer)),
             ),
           ),
           Padding(
@@ -100,21 +92,14 @@ class SignUpState extends State<SignUp> {
               controller: usernameController,
               autocorrect: false,
               keyboardType: TextInputType.emailAddress,
-              decoration: getFieldDecoration(
-                "Email",
-                "user@example.org",
-                colors,
-              ),
+              decoration: getFieldDecoration("Email", "user@example.org", colors),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Container(
               alignment: Alignment.centerLeft,
-              child: Text(
-                'Password',
-                style: TextStyle(color: colors.onPrimaryContainer),
-              ),
+              child: Text('Password', style: TextStyle(color: colors.onPrimaryContainer)),
             ),
           ),
           Padding(
@@ -129,10 +114,7 @@ class SignUpState extends State<SignUp> {
             padding: const EdgeInsets.only(left: 8.0),
             child: Container(
               alignment: Alignment.centerLeft,
-              child: Text(
-                'Repeat Password',
-                style: TextStyle(color: colors.onPrimaryContainer),
-              ),
+              child: Text('Repeat Password', style: TextStyle(color: colors.onPrimaryContainer)),
             ),
           ),
           Padding(
@@ -147,10 +129,7 @@ class SignUpState extends State<SignUp> {
             padding: const EdgeInsets.only(left: 8.0),
             child: Container(
               alignment: Alignment.centerLeft,
-              child: Text(
-                'First name',
-                style: TextStyle(color: colors.onPrimaryContainer),
-              ),
+              child: Text('First name', style: TextStyle(color: colors.onPrimaryContainer)),
             ),
           ),
           Padding(
@@ -166,10 +145,7 @@ class SignUpState extends State<SignUp> {
             padding: const EdgeInsets.only(left: 8.0),
             child: Container(
               alignment: Alignment.centerLeft,
-              child: Text(
-                'Last name',
-                style: TextStyle(color: colors.onPrimaryContainer),
-              ),
+              child: Text('Last name', style: TextStyle(color: colors.onPrimaryContainer)),
             ),
           ),
           Padding(
@@ -186,14 +162,8 @@ class SignUpState extends State<SignUp> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: defaultBorder,
-                  color: Colors.red.shade400,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(error),
-                ),
+                decoration: BoxDecoration(borderRadius: defaultBorder, color: Colors.red.shade400),
+                child: Padding(padding: const EdgeInsets.all(8.0), child: Text(error)),
               ),
             ),
           ),
@@ -202,18 +172,12 @@ class SignUpState extends State<SignUp> {
             child: Row(
               children: [
                 Expanded(
-                  child: FilledButton.tonal(
-                    onPressed: () => signup(context),
-                    child: const Text('Sign up'),
-                  ),
+                  child: FilledButton.tonal(onPressed: () => signup(context), child: const Text('Sign up')),
                 ),
               ],
             ),
           ),
-          TextButton(
-            onPressed: () => widget.onBack(),
-            child: const Text('Back'),
-          ),
+          TextButton(onPressed: () => widget.onBack(), child: const Text('Back')),
         ],
       ),
     );

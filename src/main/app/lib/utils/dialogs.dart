@@ -4,22 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:stupid_simple_sheet/stupid_simple_sheet.dart';
 
-Future<void> showAlertDialog(
-  BuildContext context,
-  String title,
-  String text,
-) async {
+Future<void> showAlertDialog(BuildContext context, String title, String text) async {
   await showDialog(
     context: context,
     builder: (BuildContext context) => AlertDialog(
       title: Text(title),
       content: Text(text),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.pop(context, 'OK'),
-          child: const Text('OK'),
-        ),
-      ],
+      actions: <Widget>[TextButton(onPressed: () => Navigator.pop(context, 'OK'), child: const Text('OK'))],
     ),
   );
 }
@@ -37,11 +28,7 @@ Future<void> okCancelDialog(
       title: Text(title),
       content: content,
       actions: <Widget>[
-        if (showCancel)
-          TextButton(
-            onPressed: () => Navigator.pop(context, null),
-            child: const Text('Cancel'),
-          ),
+        if (showCancel) TextButton(onPressed: () => Navigator.pop(context, null), child: const Text('Cancel')),
         TextButton(
           onPressed: () {
             Navigator.pop(context, 'OK');
@@ -96,26 +83,13 @@ void showPromptDialog(
   );
 }
 
-EdgeInsetsGeometry getInsetsForMaxSize(
-  MediaQueryData data, {
-  double? maxWidth,
-  double? maxHeight,
-}) {
-  var horizontal = max<double>(
-    0,
-    (data.size.width - (maxWidth ?? data.size.width)) / 2,
-  );
-  var vertical = max<double>(
-    0,
-    (data.size.height - (maxHeight ?? data.size.height)) / 2,
-  );
+EdgeInsetsGeometry getInsetsForMaxSize(MediaQueryData data, {double? maxWidth, double? maxHeight}) {
+  var horizontal = max<double>(0, (data.size.width - (maxWidth ?? data.size.width)) / 2);
+  var vertical = max<double>(0, (data.size.height - (maxHeight ?? data.size.height)) / 2);
   return EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical);
 }
 
-Future<T?> showMotorBottomSheet<T>({
-  required BuildContext context,
-  required Widget child,
-}) async {
+Future<T?> showMotorBottomSheet<T>({required BuildContext context, required Widget child}) async {
   final colors = Theme.of(context).colorScheme;
 
   return Navigator.of(context).push(
@@ -126,10 +100,7 @@ Future<T?> showMotorBottomSheet<T>({
           return Stack(
             children: [
               Positioned.fill(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () => Navigator.of(ctx).pop(null),
-                ),
+                child: GestureDetector(behavior: HitTestBehavior.translucent, onTap: () => Navigator.of(ctx).pop(null)),
               ),
               Positioned(
                 bottom: 0,
@@ -138,15 +109,9 @@ Future<T?> showMotorBottomSheet<T>({
                 child: Center(
                   child: Container(
                     constraints: BoxConstraints(maxWidth: TABLET),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(24),
-                      ),
-                    ),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(24),
-                      ),
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                       child: Material(
                         color: colors.surfaceContainer,
                         child: SafeArea(top: false, bottom: true, child: child),

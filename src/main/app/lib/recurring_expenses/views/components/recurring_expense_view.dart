@@ -9,20 +9,14 @@ class RecurringExpenseView extends StatefulWidget {
   final RecurringExpense expense;
   final Function() refreshExpenses;
 
-  const RecurringExpenseView(
-    this.expense, {
-    super.key,
-    required this.refreshExpenses,
-  });
+  const RecurringExpenseView(this.expense, {super.key, required this.refreshExpenses});
 
   @override
   RecurringExpenseViewState createState() => RecurringExpenseViewState();
 }
 
 class RecurringExpenseViewState extends State<RecurringExpenseView> {
-  late final TextEditingController nameController = TextEditingController(
-    text: widget.expense.name,
-  );
+  late final TextEditingController nameController = TextEditingController(text: widget.expense.name);
 
   @override
   dispose() {
@@ -34,35 +28,17 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> {
     List<Widget> icons = [];
 
     for (int i = 0; i < 150; i++) {
-      icons.add(
-        getIcon(
-          widget.expense.category.icon!,
-          color: colors.onSurface,
-          size: 40,
-        ),
-      );
+      icons.add(getIcon(widget.expense.category.icon!, color: colors.onSurface, size: 40));
     }
 
-    return Opacity(
-      opacity: 0.03,
-      child: Wrap(spacing: 20, runSpacing: 20, children: icons),
-    );
+    return Opacity(opacity: 0.03, child: Wrap(spacing: 20, runSpacing: 20, children: icons));
   }
 
   setName(BuildContext context) {
-    showPromptDialog(
-      context,
-      'Change expense name',
-      "",
-      nameController,
-      () async {
-        await service.updateRecurringExpense(
-          widget.expense.copyWith(name: nameController.text),
-        );
-        widget.refreshExpenses();
-      },
-      maxLines: 1,
-    );
+    showPromptDialog(context, 'Change expense name', "", nameController, () async {
+      await service.updateRecurringExpense(widget.expense.copyWith(name: nameController.text));
+      widget.refreshExpenses();
+    }, maxLines: 1);
   }
 
   deleteExpense(BuildContext context) {
@@ -71,9 +47,7 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> {
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Delete recurring expense ?'),
-        content: const Text(
-          'This will delete the scheduling of the expense, existing expenses won\'t be deleted.',
-        ),
+        content: const Text('This will delete the scheduling of the expense, existing expenses won\'t be deleted.'),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -142,10 +116,7 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> {
                   width: 30,
                   height: 30,
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+                  decoration: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.circular(20)),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Icon(Icons.clear, color: colors.onSurface, size: 15),
@@ -165,35 +136,21 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: colors.primaryContainer,
-                ),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: colors.primaryContainer),
                 width: 100,
                 alignment: Alignment.center,
                 height: 100,
-                child: getIcon(
-                  widget.expense.category.icon!,
-                  color: colors.onPrimaryContainer,
-                  size: 50,
-                ),
+                child: getIcon(widget.expense.category.icon!, color: colors.onPrimaryContainer, size: 50),
               ),
               Visibility(
                 visible: widget.expense.name.trim().isNotEmpty,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: defaultBorder,
-                      color: Colors.transparent,
-                    ),
+                    decoration: const BoxDecoration(borderRadius: defaultBorder, color: Colors.transparent),
                     child: Text(
                       widget.expense.name,
-                      style: TextStyle(
-                        fontSize: 50,
-                        color: colors.primary,
-                        fontWeight: FontWeight.w300,
-                      ),
+                      style: TextStyle(fontSize: 50, color: colors.primary, fontWeight: FontWeight.w300),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -202,22 +159,12 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Container(
-                  decoration: const BoxDecoration(
-                    borderRadius: defaultBorder,
-                    color: Colors.transparent,
-                  ),
+                  decoration: const BoxDecoration(borderRadius: defaultBorder, color: Colors.transparent),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30.0,
-                      vertical: 10,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
                     child: Text(
                       formatCurrency(widget.expense.amount),
-                      style: TextStyle(
-                        fontSize: 50,
-                        color: colors.onSurface,
-                        fontWeight: FontWeight.w300,
-                      ),
+                      style: TextStyle(fontSize: 50, color: colors.onSurface, fontWeight: FontWeight.w300),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -227,15 +174,9 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> {
                 padding: const EdgeInsets.only(bottom: 0.0),
                 child: Container(
                   width: 300,
-                  decoration: BoxDecoration(
-                    borderRadius: defaultBorder,
-                    color: colors.tertiaryContainer,
-                  ),
+                  decoration: BoxDecoration(borderRadius: defaultBorder, color: colors.tertiaryContainer),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30.0,
-                      vertical: 10,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
                     child: Column(
                       children: [
                         Visibility(

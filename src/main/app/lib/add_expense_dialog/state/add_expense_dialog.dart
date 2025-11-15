@@ -27,11 +27,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
 
   CarouselController carouselController = CarouselController();
 
-  AddExpenseDialogCubit(
-    super.initialState, {
-    required this.lastExpenseCubit,
-    this.expense,
-  }) {
+  AddExpenseDialogCubit(super.initialState, {required this.lastExpenseCubit, this.expense}) {
     init();
   }
 
@@ -43,24 +39,20 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
   }
 
   void getNoteSuggestions(String value) {
-    EasyDebounce.debounce(
-      'new-expense-note-suggestions',
-      const Duration(milliseconds: 500),
-      () async {
-        final suggestions = await service.getNoteSuggestions(
-          Expense(
-            amount: double.parse(valueToStr(value)),
-            date: '2022-01-23',
-            category: state.category,
-            timestamp: DateTime.now().millisecondsSinceEpoch,
-          ),
-        );
-        List<String> results = suggestions.keys.toList(growable: false);
-        results.sort((a, b) => suggestions[b]!.compareTo(suggestions[a]!));
+    EasyDebounce.debounce('new-expense-note-suggestions', const Duration(milliseconds: 500), () async {
+      final suggestions = await service.getNoteSuggestions(
+        Expense(
+          amount: double.parse(valueToStr(value)),
+          date: '2022-01-23',
+          category: state.category,
+          timestamp: DateTime.now().millisecondsSinceEpoch,
+        ),
+      );
+      List<String> results = suggestions.keys.toList(growable: false);
+      results.sort((a, b) => suggestions[b]!.compareTo(suggestions[a]!));
 
-        emit(state.copyWith(noteSuggestions: results));
-      },
-    );
+      emit(state.copyWith(noteSuggestions: results));
+    });
   }
 
   Future<void> init() async {
@@ -68,33 +60,23 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     emit(state.copyWith(useLocation: useLocation));
 
     if (useLocation && (expense?.id == null)) {
-      getLocation()
-          .timeout(
-            const Duration(seconds: LOCATION_TIMEOUT),
-            onTimeout: () => null,
-          )
-          .then((loc) {
-            if (!isClosed) {
-              emit(state.copyWith(location: loc));
-            }
-          });
+      getLocation().timeout(const Duration(seconds: LOCATION_TIMEOUT), onTimeout: () => null).then((loc) {
+        if (!isClosed) {
+          emit(state.copyWith(location: loc));
+        }
+      });
     }
     if (expense != null) {
       // we init our state with the current state of our edited expense.
 
-      var value = formatCurrency(
-        expense!.amount,
-      ).replaceAll(".", "").replaceAll(",", "");
+      var value = formatCurrency(expense!.amount).replaceAll(".", "").replaceAll(",", "");
       emit(
         state.copyWith(
           files: expense!.files,
           expenseDate: DateTime.fromMillisecondsSinceEpoch(expense!.timestamp),
           value: value,
           expenseNote: expense!.note ?? '',
-          location: LocationData.fromMap({
-            'longitude': expense!.longitude,
-            'latitude': expense!.latitude,
-          }),
+          location: LocationData.fromMap({'longitude': expense!.longitude, 'latitude': expense!.latitude}),
         ),
       );
 
@@ -108,11 +90,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       getNoteSuggestions(tempValue);
       emit(state.copyWith(value: tempValue));
     } else {
-      emit(
-        state.copyWith(
-          valueFrom: (state.valueFrom + i).replaceFirst(RegExp(r'^0+'), ''),
-        ),
-      );
+      emit(state.copyWith(valueFrom: (state.valueFrom + i).replaceFirst(RegExp(r'^0+'), '')));
       calculateRateConversion();
     }
   }
@@ -142,14 +120,9 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     emit(state.copyWith(useLocation: location));
 
     if (state.useLocation) {
-      getLocation()
-          .timeout(
-            const Duration(seconds: LOCATION_TIMEOUT),
-            onTimeout: () => null,
-          )
-          .then((loc) {
-            emit(state.copyWith(location: loc));
-          });
+      getLocation().timeout(const Duration(seconds: LOCATION_TIMEOUT), onTimeout: () => null).then((loc) {
+        emit(state.copyWith(location: loc));
+      });
     }
   }
 
@@ -160,11 +133,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       emit(state.copyWith(value: tempValue));
     }
     if (state.valueFrom.isNotEmpty) {
-      emit(
-        state.copyWith(
-          valueFrom: state.valueFrom.substring(0, state.valueFrom.length - 1),
-        ),
-      );
+      emit(state.copyWith(valueFrom: state.valueFrom.substring(0, state.valueFrom.length - 1)));
     }
   }
 
@@ -183,8 +152,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       if (note.isNotEmpty) {
         note += "\n";
       }
-      note +=
-          '${state.currencyConversion?.from} ${valueToStr(state.valueFrom)} -> ${state.currencyConversion?.to}';
+      note += '${state.currencyConversion?.from} ${valueToStr(state.valueFrom)} -> ${state.currencyConversion?.to}';
     }
     var expense = Expense(
       amount: amount,
@@ -203,31 +171,20 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       try {
         LocationData? locationData =
             state.location ??
-            await getLocation().timeout(
-              const Duration(seconds: LOCATION_TIMEOUT),
-              onTimeout: () => null,
-            );
+            await getLocation().timeout(const Duration(seconds: LOCATION_TIMEOUT), onTimeout: () => null);
         if (locationData != null) {
-          expense = expense.copyWith(
-            latitude: locationData.latitude,
-            longitude: locationData.longitude,
-          );
+          expense = expense.copyWith(latitude: locationData.latitude, longitude: locationData.longitude);
         }
       } catch (e, s) {
         emit(state.copyWith(error: e, stackTrace: s));
         rethrow;
       }
     } else if (this.expense != null) {
-      expense = expense.copyWith(
-        latitude: state.location?.latitude,
-        longitude: state.location?.longitude,
-      );
+      expense = expense.copyWith(latitude: state.location?.latitude, longitude: state.location?.longitude);
     }
 
     try {
-      final result = await service.addExpense(
-        expense.copyWith(category: state.category),
-      );
+      final result = await service.addExpense(expense.copyWith(category: state.category));
       lastExpenseCubit.refresh();
       return result;
     } catch (e, s) {
@@ -282,20 +239,11 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
 
   void setNote(String note) {
     emit(state.copyWith(expenseNote: note));
-    suggestionController.animateTo(
-      0,
-      duration: animationDuration,
-      curve: animationCurve,
-    );
+    suggestionController.animateTo(0, duration: animationDuration, curve: animationCurve);
   }
 
   void enableCurrencyConversion(bool enable) {
-    emit(
-      state.copyWith(
-        showCurrencyConversion: enable,
-        currencyConversion: enable ? state.currencyConversion : null,
-      ),
-    );
+    emit(state.copyWith(showCurrencyConversion: enable, currencyConversion: enable ? state.currencyConversion : null));
   }
 
   void setImages(List<SssFile> list) {
@@ -319,9 +267,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
 }
 
 @freezed
-sealed class AddExpenseDialogState
-    with _$AddExpenseDialogState
-    implements WithError {
+sealed class AddExpenseDialogState with _$AddExpenseDialogState implements WithError {
   @Implements<WithError>()
   const factory AddExpenseDialogState({
     required Category category,
@@ -351,18 +297,10 @@ sealed class AddExpenseDialogState
   }
 
   List<double> get possiblePrices {
-    return files
-        .map((e) => e.amounts)
-        .expand((element) => element)
-        .toSet()
-        .toList();
+    return files.map((e) => e.amounts).expand((element) => element).toSet().toList();
   }
 
   List<String> get possibleTags {
-    return files
-        .map((e) => e.aiTags)
-        .expand((element) => element)
-        .toSet()
-        .toList();
+    return files.map((e) => e.aiTags).expand((element) => element).toSet().toList();
   }
 }

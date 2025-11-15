@@ -4,11 +4,7 @@ class AnimatedMenuIcon extends StatelessWidget {
   final bool selected;
   final IconData iconData;
 
-  const AnimatedMenuIcon({
-    super.key,
-    required this.selected,
-    required this.iconData,
-  });
+  const AnimatedMenuIcon({super.key, required this.selected, required this.iconData});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +16,7 @@ class AnimatedMenuIcon extends StatelessWidget {
       builder: (context, color, child) {
         return Icon(iconData, size: 36, color: color);
       },
-      tween: ColorTween(
-        begin: selected ? iconColor : selectedColor,
-        end: selected ? selectedColor : iconColor,
-      ),
+      tween: ColorTween(begin: selected ? iconColor : selectedColor, end: selected ? selectedColor : iconColor),
       duration: Duration(milliseconds: 500),
     );
   }

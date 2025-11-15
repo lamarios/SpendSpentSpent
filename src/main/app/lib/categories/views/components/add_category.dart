@@ -30,10 +30,7 @@ class AddCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return BlocProvider(
-      create: (context) => AddCategoryCubit(
-        const AddCategoryState(),
-        context.read<CategoriesCubit>(),
-      ),
+      create: (context) => AddCategoryCubit(const AddCategoryState(), context.read<CategoriesCubit>()),
       child: BlocBuilder<AddCategoryCubit, AddCategoryState>(
         builder: (context, state) {
           final cubit = context.read<AddCategoryCubit>();
@@ -50,18 +47,12 @@ class AddCategory extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.search,
-                              color: colors.onPrimaryContainer,
-                              size: 15,
-                            ),
+                            child: Icon(Icons.search, color: colors.onPrimaryContainer, size: 15),
                           ),
                           Expanded(
                             child: TextField(
                               controller: cubit.searchController,
-                              style: TextStyle(
-                                color: colors.onSecondaryContainer,
-                              ),
+                              style: TextStyle(color: colors.onSecondaryContainer),
                               decoration: InputDecoration(
                                 hintText: 'Search',
                                 filled: true,
@@ -71,11 +62,7 @@ class AddCategory extends StatelessWidget {
                                 enabledBorder: InputBorder.none,
                                 errorBorder: InputBorder.none,
                                 disabledBorder: InputBorder.none,
-                                hintStyle: TextStyle(
-                                  color: colors.onPrimaryContainer.withValues(
-                                    alpha: 0.5,
-                                  ),
-                                ),
+                                hintStyle: TextStyle(color: colors.onPrimaryContainer.withValues(alpha: 0.5)),
                               ),
                             ),
                           ),
@@ -92,64 +79,55 @@ class AddCategory extends StatelessWidget {
                               Categories(
                                 label: 'Shopping',
                                 categories: state.categories.shopping,
-                                onSelect: (selected) =>
-                                    onSelect(context, selected),
+                                onSelect: (selected) => onSelect(context, selected),
                                 selected: state.selected,
                               ),
                               Categories(
                                 label: 'Transports',
                                 categories: state.categories.transports,
-                                onSelect: (selected) =>
-                                    onSelect(context, selected),
+                                onSelect: (selected) => onSelect(context, selected),
                                 selected: state.selected,
                               ),
                               Categories(
                                 label: 'Brands',
                                 categories: state.categories.brands,
-                                onSelect: (selected) =>
-                                    onSelect(context, selected),
+                                onSelect: (selected) => onSelect(context, selected),
                                 selected: state.selected,
                               ),
                               Categories(
                                 label: 'Hobbies',
                                 categories: state.categories.hobbies,
-                                onSelect: (selected) =>
-                                    onSelect(context, selected),
+                                onSelect: (selected) => onSelect(context, selected),
                                 selected: state.selected,
                               ),
                               Categories(
                                 label: 'Health',
                                 categories: state.categories.health,
-                                onSelect: (selected) =>
-                                    onSelect(context, selected),
+                                onSelect: (selected) => onSelect(context, selected),
                                 selected: state.selected,
                               ),
                               Categories(
                                 label: 'Education',
                                 categories: state.categories.education,
-                                onSelect: (selected) =>
-                                    onSelect(context, selected),
+                                onSelect: (selected) => onSelect(context, selected),
                                 selected: state.selected,
                               ),
                               Categories(
                                 label: 'Housing',
                                 categories: state.categories.housing,
-                                onSelect: (selected) =>
-                                    onSelect(context, selected),
+                                onSelect: (selected) => onSelect(context, selected),
                                 selected: state.selected,
                               ),
                               Categories(
                                 label: 'Tech',
                                 categories: state.categories.tech,
-                                onSelect: (selected) =>
-                                    onSelect(context, selected),
+                                onSelect: (selected) => onSelect(context, selected),
                                 selected: state.selected,
                               ),
                               Categories(
                                 label: 'Documents',
                                 categories: state.categories.documents,
-                                onSelect: (selected) =>
-                                    onSelect(context, selected),
+                                onSelect: (selected) => onSelect(context, selected),
                                 selected: state.selected,
                               ),
                             ],
@@ -163,9 +141,7 @@ class AddCategory extends StatelessWidget {
                         children: [
                           Expanded(
                             child: FilledButton.tonal(
-                              onPressed: state.selected != ''
-                                  ? () => addCategory(context)
-                                  : null,
+                              onPressed: state.selected != '' ? () => addCategory(context) : null,
                               child: Text(buttonLabel ?? 'Add category'),
                             ),
                           ),
@@ -180,11 +156,7 @@ class AddCategory extends StatelessWidget {
                 top: 3,
                 child: IconButton(
                   onPressed: () => closeDialog(context),
-                  icon: Icon(
-                    Icons.clear,
-                    color: colors.onSecondaryContainer,
-                    size: 20,
-                  ),
+                  icon: Icon(Icons.clear, color: colors.onSecondaryContainer, size: 20),
                 ),
               ),
             ],

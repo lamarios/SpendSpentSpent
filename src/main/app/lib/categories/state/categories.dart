@@ -20,21 +20,14 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     try {
       emit(state.copyWith(loading: loading));
       final categories = await service.getCategories();
-      final String currentTimeZone =
-          (await FlutterTimezone.getLocalTimezone()).identifier;
+      final String currentTimeZone = (await FlutterTimezone.getLocalTimezone()).identifier;
       List<CategoryPrediction> predictions = [];
       if (currentTimeZone != 'Etc/Unknown') {
         predictions = await service.suggestExpenseCategory(currentTimeZone);
 
         predictions.sort((a, b) => b.probability.compareTo(a.probability));
       }
-      emit(
-        state.copyWith(
-          suggestions: predictions,
-          categories: categories,
-          loading: false,
-        ),
-      );
+      emit(state.copyWith(suggestions: predictions, categories: categories, loading: false));
     } catch (e) {
       _log.severe('Could not load categories');
       emit(state.copyWith(loading: false));
@@ -42,11 +35,7 @@ class CategoriesCubit extends Cubit<CategoriesState> {
   }
 
   double getProbability(Category category) {
-    return state.suggestions
-            .where((p) => p.category.id == category.id)
-            .map((c) => c.probability)
-            .firstOrNull ??
-        0;
+    return state.suggestions.where((p) => p.category.id == category.id).map((c) => c.probability).firstOrNull ?? 0;
   }
 
   void addCategory(String selected) async {
@@ -59,9 +48,7 @@ class CategoriesCubit extends Cubit<CategoriesState> {
   }
 
   Category? findByName(String name) {
-    return state.categories
-        .where((element) => element.icon == name)
-        .firstOrNull;
+    return state.categories.where((element) => element.icon == name).firstOrNull;
   }
 }
 

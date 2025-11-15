@@ -32,23 +32,13 @@ class CategoryGridItem extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: defaultBorder,
             color: brightness == Brightness.dark
-                ? brighten(
-                    colors.primaryContainer,
-                    lerpDouble(0, 0.3, value) ?? 0,
-                  )
-                : darken(
-                    colors.primaryContainer,
-                    lerpDouble(0, 0.2, value) ?? 0,
-                  ),
+                ? brighten(colors.primaryContainer, lerpDouble(0, 0.3, value) ?? 0)
+                : darken(colors.primaryContainer, lerpDouble(0, 0.2, value) ?? 0),
           ),
 
           child: Transform.scale(
             scale: lerpDouble(1, 1.5, value),
-            child: getIcon(
-              category.icon!,
-              size: 40,
-              color: colors.onPrimaryContainer,
-            ),
+            child: getIcon(category.icon!, size: 40, color: colors.onPrimaryContainer),
           ),
         ),
       ),
