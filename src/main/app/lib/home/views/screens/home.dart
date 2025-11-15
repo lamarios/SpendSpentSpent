@@ -85,7 +85,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   void handleAppNotification(NotificationTappedState? state) {
-    var cat = context.read<CategoriesCubit>().state.categories.firstOrNull;
+    var cubit = context.read<CategoriesCubit>();
+    var cat =
+        cubit.state.suggestions.firstOrNull?.category ??
+        cubit.state.categories.firstOrNull;
     // user might not have categories yet
     if (cat != null && state != null) {
       AddExpense.showDialog(

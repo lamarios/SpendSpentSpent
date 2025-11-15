@@ -202,16 +202,16 @@ class AddExpense extends StatelessWidget {
                                                                 (
                                                                   CategoriesCubit
                                                                   c,
-                                                                ) => c.state.categories.indexWhere(
-                                                                  (cat2) =>
-                                                                      c
-                                                                          .state
-                                                                          .suggestions
-                                                                          .firstOrNull
-                                                                          ?.category
-                                                                          .id ==
-                                                                      cat2.id,
-                                                                ),
+                                                                ) => c
+                                                                    .state
+                                                                    .categories
+                                                                    .indexWhere(
+                                                                      (cat2) =>
+                                                                          cat2.id ==
+                                                                          state
+                                                                              .category
+                                                                              .id,
+                                                                    ),
                                                               ),
                                                               enlargeCenterPage:
                                                                   true,
