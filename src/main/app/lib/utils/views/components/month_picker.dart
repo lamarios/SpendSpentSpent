@@ -70,12 +70,8 @@ class MonthPicker extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           BlocProvider(
-            create: (context) => MonthPickerCubit(
-              MonthPickerState(
-                selected: initialDate,
-                selectedYear: initialDate.year,
-              ),
-            ),
+            create: (context) =>
+                MonthPickerCubit(MonthPickerState(selected: initialDate, selectedYear: initialDate.year)),
             child: Container(
               margin: EdgeInsets.all(36),
               constraints: BoxConstraints(maxWidth: BIG_PHONE.toDouble()),
@@ -91,12 +87,8 @@ class MonthPicker extends StatelessWidget {
                     months.add(
                       _Month(
                         month: i,
-                        selected:
-                            state.selected.year == state.selectedYear &&
-                            state.selected.month == i,
-                        enabled: monthPredicate(
-                          DateTime(state.selectedYear, i),
-                        ),
+                        selected: state.selected.year == state.selectedYear && state.selected.month == i,
+                        enabled: monthPredicate(DateTime(state.selectedYear, i)),
                         belowDateWidget: belowDateWidget != null
                             ? belowDateWidget!(DateTime(state.selectedYear, i))
                             : null,
@@ -124,46 +116,32 @@ class MonthPicker extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
-                                    Text(
-                                      state.selectedYear.toString(),
-                                      style: textTheme.displaySmall,
-                                    ),
-                                    Text(
-                                      'Selected: ${monthFormatter.format(state.selected)}',
-                                    ),
+                                    Text(state.selectedYear.toString(), style: textTheme.displaySmall),
+                                    Text('Selected: ${monthFormatter.format(state.selected)}'),
                                   ],
                                 ),
                               ),
                               IconButton(
                                 onPressed: state.selectedYear > firstDate.year
                                     ? () {
-                                        if (state.selectedYear >
-                                            firstDate.year) {
+                                        if (state.selectedYear > firstDate.year) {
                                           cubit.setYear(state.selectedYear - 1);
                                         }
                                       }
                                     : null,
-                                icon: Icon(
-                                  Icons.chevron_left,
-                                  size: _arrowSizes,
-                                ),
+                                icon: Icon(Icons.chevron_left, size: _arrowSizes),
                               ),
                               IconButton(
                                 onPressed: state.selectedYear < lastDate.year
                                     ? () {
-                                        if (state.selectedYear <
-                                            lastDate.year) {
+                                        if (state.selectedYear < lastDate.year) {
                                           cubit.setYear(state.selectedYear + 1);
                                         }
                                       }
                                     : null,
-                                icon: Icon(
-                                  Icons.chevron_right,
-                                  size: _arrowSizes,
-                                ),
+                                icon: Icon(Icons.chevron_right, size: _arrowSizes),
                               ),
                             ],
                           ),
@@ -174,37 +152,21 @@ class MonthPicker extends StatelessWidget {
                         child:
                             GridView.count(
                                   key: ValueKey(state.selectedYear),
-                                  crossAxisCount:
-                                      isTabletFromSize(
-                                        MediaQuery.sizeOf(context),
-                                      )
-                                      ? 4
-                                      : 3,
+                                  crossAxisCount: isTabletFromSize(MediaQuery.sizeOf(context)) ? 4 : 3,
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
                                   children: months,
                                 )
                                 .animate(key: ValueKey(state.selectedYear))
                                 .fadeIn(duration: animationDuration, begin: 0)
-                                .slideY(
-                                  curve: animationCurve,
-                                  duration: animationDuration,
-                                  begin: 0.05,
-                                ),
+                                .slideY(curve: animationCurve, duration: animationDuration, begin: 0.05),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(null),
-                            child: Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () =>
-                                Navigator.of(context).pop(state.selected),
-                            child: Text('Select'),
-                          ),
+                          TextButton(onPressed: () => Navigator.of(context).pop(null), child: Text('Cancel')),
+                          TextButton(onPressed: () => Navigator.of(context).pop(state.selected), child: Text('Select')),
                         ],
                       ),
                       Gap(8),
@@ -226,12 +188,7 @@ class _Month extends StatelessWidget {
   final bool enabled;
   final Widget? belowDateWidget;
 
-  const _Month({
-    required this.month,
-    required this.selected,
-    required this.enabled,
-    this.belowDateWidget,
-  });
+  const _Month({required this.month, required this.selected, required this.enabled, this.belowDateWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -248,17 +205,14 @@ class _Month extends StatelessWidget {
       child: SingleMotionBuilder(
         motion: MaterialSpringMotion.expressiveEffectsDefault(),
         value: selected ? 115 : 100,
-        builder: (context, value, child) =>
-            Transform.scale(scale: value / 100, child: child),
+        builder: (context, value, child) => Transform.scale(scale: value / 100, child: child),
         child: AnimatedContainer(
           duration: animationDuration,
           curve: animationCurve,
           margin: EdgeInsets.all(8),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: selected
-                ? colors.primaryContainer
-                : colors.surfaceContainerHigh,
+            color: selected ? colors.primaryContainer : colors.surfaceContainerHigh,
           ),
           child: Center(
             child: ConditionalWrapper(

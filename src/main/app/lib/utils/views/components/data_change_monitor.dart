@@ -22,13 +22,8 @@ class DataChangeMonitor extends StatelessWidget {
     return MultiBlocListener(
       listeners: [
         if (monitorExpenses)
-          BlocListener<CategoriesCubit, CategoriesState>(
-            listener: (context, state) => onChange(context),
-          ),
-        if (monitorCategories)
-          BlocListener<LastExpenseCubit, int>(
-            listener: (context, state) => onChange(context),
-          ),
+          BlocListener<CategoriesCubit, CategoriesState>(listener: (context, state) => onChange(context)),
+        if (monitorCategories) BlocListener<LastExpenseCubit, int>(listener: (context, state) => onChange(context)),
       ],
       child: child,
     );

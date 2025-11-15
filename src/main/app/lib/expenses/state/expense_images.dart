@@ -19,16 +19,11 @@ class ExpenseImagesCubit extends Cubit<ExpenseImagesState> {
 
 @freezed
 sealed class ExpenseImagesState with _$ExpenseImagesState {
-  const factory ExpenseImagesState({@Default([]) List<SssFile> files}) =
-      _ExpenseImagesState;
+  const factory ExpenseImagesState({@Default([]) List<SssFile> files}) = _ExpenseImagesState;
 
   const ExpenseImagesState._();
 
   List<String> get possibleTags {
-    return files
-        .map((e) => e.aiTags)
-        .expand((element) => element)
-        .toSet()
-        .toList();
+    return files.map((e) => e.aiTags).expand((element) => element).toSet().toList();
   }
 }

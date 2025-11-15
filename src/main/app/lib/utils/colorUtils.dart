@@ -81,9 +81,7 @@ Color brighten(Color color, [double amount = .1]) {
 }
 
 Color getLightBackground(BuildContext context, [ColorScheme? usercolors]) {
-  final isMaterialYou = context.select(
-    (AppSettingsCubit c) => !c.state.blackBackground && c.state.materialYou,
-  );
+  final isMaterialYou = context.select((AppSettingsCubit c) => !c.state.blackBackground && c.state.materialYou);
 
   final colors = usercolors ?? Theme.of(context).colorScheme;
   return isMaterialYou

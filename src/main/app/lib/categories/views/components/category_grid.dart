@@ -26,11 +26,7 @@ class CategoryGrid extends StatelessWidget {
             children: [
               Icon(Icons.sentiment_neutral, size: 100),
               Gap(24),
-              Text(
-                'No expense categories yet, add one !',
-                textAlign: TextAlign.center,
-                style: textTheme.titleLarge,
-              ),
+              Text('No expense categories yet, add one !', textAlign: TextAlign.center, style: textTheme.titleLarge),
               Gap(24),
               FilledButton.tonalIcon(
                 onPressed: () => AddCategoryGridItem.showAddCategory(context),

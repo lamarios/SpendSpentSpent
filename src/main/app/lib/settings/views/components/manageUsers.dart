@@ -30,11 +30,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
 
   getUsers() async {
     print('getting users');
-    PaginatedResults<User> users = await service.getUsers(
-      searchController.text,
-      page,
-      pageSize,
-    );
+    PaginatedResults<User> users = await service.getUsers(searchController.text, page, pageSize);
     setState(() {
       this.users = users;
     });
@@ -49,11 +45,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
     showModal(
       context: context,
       builder: (context) => Card(
-        margin: getInsetsForMaxSize(
-          MediaQuery.of(context),
-          maxWidth: 350,
-          maxHeight: 250,
-        ),
+        margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 250),
         child: ChangePasswordDialog(userId: user.id!),
       ),
     );
@@ -87,11 +79,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
     showModal(
       context: context,
       builder: (context) => Card(
-        margin: getInsetsForMaxSize(
-          MediaQuery.of(context),
-          maxWidth: 350,
-          maxHeight: 600,
-        ),
+        margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 600),
         child: AddUserDialog(saveUser: saveUser),
       ),
     );
@@ -102,9 +90,7 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Delete user ?'),
-        content: const Text(
-          'This will delete the user and all its expenses, it is not recoverable.',
-        ),
+        content: const Text('This will delete the user and all its expenses, it is not recoverable.'),
         actions: <Widget>[
           TextButton(
             child: const Text('Cancel'),
@@ -138,37 +124,25 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
             TableCell(
               child: Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Email',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                child: Text('Email', style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
             TableCell(
               child: Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Name',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                child: Text('Name', style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
             TableCell(
               child: Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Admin',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                child: Text('Admin', style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
             TableCell(
               child: Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Actions',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                child: Text('Actions', style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -181,25 +155,17 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
           return TableRow(
             children: [
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(e.email),
-                ),
+                child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e.email)),
               ),
               TableCell(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('${e.firstName} ${e.lastName}'),
-                ),
+                child: Padding(padding: const EdgeInsets.all(8.0), child: Text('${e.firstName} ${e.lastName}')),
               ),
               TableCell(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Switch(
                     value: e.isAdmin,
-                    onChanged: !isCurrentUser
-                        ? (value) => toggleUserAdmin(e, value)
-                        : null,
+                    onChanged: !isCurrentUser ? (value) => toggleUserAdmin(e, value) : null,
                   ),
                 ),
               ),
@@ -218,14 +184,9 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
                           ),
                         ),
                         TextButton(
-                          style: const ButtonStyle(
-                            foregroundColor: WidgetStatePropertyAll(Colors.red),
-                          ),
+                          style: const ButtonStyle(foregroundColor: WidgetStatePropertyAll(Colors.red)),
                           onPressed: () => showDeleteUserDialog(context, e.id!),
-                          child: const Text(
-                            'Delete',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                          child: const Text('Delete', style: TextStyle(color: Colors.white)),
                         ),
                       ],
                     ),
@@ -246,29 +207,21 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                decoration: BoxDecoration(
-                  color: colors.surfaceContainer,
-                  borderRadius: BorderRadius.circular(5),
-                ),
+                decoration: BoxDecoration(color: colors.surfaceContainer, borderRadius: BorderRadius.circular(5)),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     key: Key(e.id.toString()),
                     children: [
-                      Text(
-                        '${e.firstName} ${e.lastName}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                      Text('${e.firstName} ${e.lastName}', style: const TextStyle(fontWeight: FontWeight.bold)),
                       Text(e.email),
                       Row(
                         children: [
                           const Expanded(child: Text('Admin')),
                           Switch(
                             value: e.isAdmin,
-                            onChanged: !isCurrentUser
-                                ? (value) => toggleUserAdmin(e, value)
-                                : null,
+                            onChanged: !isCurrentUser ? (value) => toggleUserAdmin(e, value) : null,
                           ),
                         ],
                       ),
@@ -284,13 +237,8 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
                               ),
                             ),
                             TextButton(
-                              style: const ButtonStyle(
-                                foregroundColor: WidgetStatePropertyAll(
-                                  Colors.red,
-                                ),
-                              ),
-                              onPressed: () =>
-                                  showDeleteUserDialog(context, e.id!),
+                              style: const ButtonStyle(foregroundColor: WidgetStatePropertyAll(Colors.red)),
+                              onPressed: () => showDeleteUserDialog(context, e.id!),
                               child: const Text('Delete'),
                             ),
                           ],
@@ -321,20 +269,11 @@ class ManageUserState extends State<ManageUsers> with AfterLayoutMixin {
           Visibility(
             visible: users != null,
             child: users != null
-                ? PaginationSwitcher(
-                    pagination: users!.pagination,
-                    previous: previous,
-                    next: next,
-                  )
+                ? PaginationSwitcher(pagination: users!.pagination, previous: previous, next: next)
                 : const SizedBox.shrink(),
           ),
           Row(
-            children: [
-              FilledButton.tonal(
-                onPressed: () => addUser(context),
-                child: const Text('Add user'),
-              ),
-            ],
+            children: [FilledButton.tonal(onPressed: () => addUser(context), child: const Text('Add user'))],
           ),
         ],
       ),

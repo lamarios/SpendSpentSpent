@@ -19,9 +19,7 @@ class CategoryListTab extends StatelessWidget {
           alignment: Alignment.topCenter,
           child: AnimatedSwitcher(
             duration: panelTransition,
-            child: state.loading
-                ? Center(child: LoadingIndicator())
-                : CategoryGrid(state.categories),
+            child: state.loading ? Center(child: LoadingIndicator()) : CategoryGrid(state.categories),
           ),
         );
       },

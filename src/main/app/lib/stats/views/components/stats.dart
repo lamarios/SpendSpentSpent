@@ -20,8 +20,7 @@ class StatsView extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return BlocProvider(
-      create: (context) =>
-          StatsListCubit(const StatsListState(), monthly: monthly),
+      create: (context) => StatsListCubit(const StatsListState(), monthly: monthly),
       child: DataChangeMonitor(
         onChange: (context) {
           if (context.read<UsernamePasswordCubit>().currentUser != null) {
@@ -56,15 +55,9 @@ class StatsView extends StatelessWidget {
                           itemCount: state.stats.length,
                           itemBuilder: (context, index) {
                             return Padding(
-                              padding: EdgeInsets.only(
-                                bottom: index == state.stats.length - 1
-                                    ? bottomPadding
-                                    : 0,
-                              ),
+                              padding: EdgeInsets.only(bottom: index == state.stats.length - 1 ? bottomPadding : 0),
                               child: SingleStats(
-                                key: Key(
-                                  state.stats[index].category.id.toString(),
-                                ),
+                                key: Key(state.stats[index].category.id.toString()),
                                 stats: state.stats[index],
                                 monthly: monthly,
                               ),

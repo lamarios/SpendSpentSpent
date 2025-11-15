@@ -6,10 +6,7 @@ class SettingsCategoryGridItem extends StatelessWidget {
   const SettingsCategoryGridItem({super.key});
 
   void showAddCategory(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const CategorySettingsScreen()),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const CategorySettingsScreen()));
   }
 
   @override
@@ -21,15 +18,9 @@ class SettingsCategoryGridItem extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: defaultBorder,
-          border: Border.all(
-            width: 3,
-            color: colors.primary.withValues(alpha: 0.5),
-          ),
+          border: Border.all(width: 3, color: colors.primary.withValues(alpha: 0.5)),
         ),
-        child: Icon(
-          Icons.settings,
-          color: colors.primary.withValues(alpha: 0.5),
-        ),
+        child: Icon(Icons.settings, color: colors.primary.withValues(alpha: 0.5)),
       ),
     );
   }

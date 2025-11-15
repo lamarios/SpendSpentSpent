@@ -19,8 +19,7 @@ sealed class AvailableCategories with _$AvailableCategories {
     @Default([]) List<String>? documents,
   }) = _AvailableCategories;
 
-  factory AvailableCategories.fromJson(Map<String, dynamic> json) =>
-      _$AvailableCategoriesFromJson(json);
+  factory AvailableCategories.fromJson(Map<String, dynamic> json) => _$AvailableCategoriesFromJson(json);
 }
 
 /*

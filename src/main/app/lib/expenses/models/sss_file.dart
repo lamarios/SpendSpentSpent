@@ -19,8 +19,7 @@ sealed class SssFile with _$SssFile {
     required int timeUpdated,
   }) = _SssFile;
 
-  factory SssFile.fromJson(Map<String, Object?> json) =>
-      _$SssFileFromJson(json);
+  factory SssFile.fromJson(Map<String, Object?> json) => _$SssFileFromJson(json);
 
   const SssFile._();
 }

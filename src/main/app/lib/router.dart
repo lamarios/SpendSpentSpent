@@ -53,14 +53,9 @@ class AppRouter extends RootStackRouter {
   ];
 
   @override
-  late final List<AutoRouteGuard> guards = [
-    AutoRouteGuard.simple(onNavigation),
-  ];
+  late final List<AutoRouteGuard> guards = [AutoRouteGuard.simple(onNavigation)];
 
-  Future<void> onNavigation(
-    NavigationResolver resolver,
-    StackRouter router,
-  ) async {
+  Future<void> onNavigation(NavigationResolver resolver, StackRouter router) async {
     bool needLogin = false;
     try {
       final url = await service.getUrl();

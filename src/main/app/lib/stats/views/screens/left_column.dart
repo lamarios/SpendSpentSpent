@@ -33,10 +33,7 @@ class LeftColumnTab extends StatelessWidget {
             ),
 */
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: child,
-              ),
+              child: Padding(padding: const EdgeInsets.only(top: 8), child: child),
             ),
           ],
         );

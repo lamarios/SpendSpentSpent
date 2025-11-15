@@ -106,8 +106,7 @@ class Service {
 
     headers['x-version'] = version ?? (await getVersion()).toString();
 
-    headers['x-timezone'] =
-        timezone ?? (await FlutterTimezone.getLocalTimezone()).identifier;
+    headers['x-timezone'] = timezone ?? (await FlutterTimezone.getLocalTimezone()).identifier;
 
     return headers;
   }
@@ -146,9 +145,7 @@ class Service {
   }
 
   Future<Uri> getWebsocketUrl() async {
-    return Uri.parse(
-      '${url.replaceFirst("http", "ws")}/ws?token=${await token}',
-    );
+    return Uri.parse('${url.replaceFirst("http", "ws")}/ws?token=${await token}');
   }
 
   Future<bool> needLogin() async {
@@ -175,11 +172,7 @@ class Service {
     return url;
   }
 
-  Future<Uri> formatUrl(
-    String url, {
-    Map<String, dynamic>? query,
-    List<String>? params,
-  }) async {
+  Future<Uri> formatUrl(String url, {Map<String, dynamic>? query, List<String>? params}) async {
     final serverUrl = await getUrl();
 
     if (serverUrl.isEmpty) {
@@ -199,9 +192,7 @@ class Service {
     List<String> formattedQuery = [];
     query.forEach((key, value) {
       if (value is List) {
-        value.forEach(
-          (element) => formattedQuery.add('$key=${element.toString()}'),
-        );
+        value.forEach((element) => formattedQuery.add('$key=${element.toString()}'));
       } else {
         formattedQuery.add('$key=${value.toString()}');
       }
@@ -218,10 +209,7 @@ class Service {
   Future<String> loginWithOidcToken(String token) async {
     final response = await http.get(
       await formatUrl(SESSION_OIDC_LOGIN),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
@@ -237,11 +225,7 @@ class Service {
     creds.putIfAbsent("email", () => username);
     creds.putIfAbsent("password", () => password);
 
-    final response = await http.post(
-      await formatUrl(SESSION_LOGIN),
-      body: jsonEncode(creds),
-      headers: await headers,
-    );
+    final response = await http.post(await formatUrl(SESSION_LOGIN), body: jsonEncode(creds), headers: await headers);
 
     if (response.body == '"Invalid username or password"') {
       throw Exception("Invalid email/password combination");
@@ -253,10 +237,7 @@ class Service {
   }
 
   Future<AvailableCategories> getAvailableCategories() async {
-    final response = await http.get(
-      await formatUrl(CATEGORY_AVAILABLE),
-      headers: await headers,
-    );
+    final response = await http.get(await formatUrl(CATEGORY_AVAILABLE), headers: await headers);
 
     processResponse(response);
     return AvailableCategories.fromJson(jsonDecode(response.body));
@@ -267,11 +248,7 @@ class Service {
       return getAvailableCategories();
     }
 
-    final response = await http.post(
-      await formatUrl(CATEGORY_SEARCH),
-      body: '"$search"',
-      headers: await headers,
-    );
+    final response = await http.post(await formatUrl(CATEGORY_SEARCH), body: '"$search"', headers: await headers);
 
     processResponse(response);
     return SearchCategories.fromJson(jsonDecode(response.body)).results;
@@ -282,11 +259,7 @@ class Service {
     data.putIfAbsent('icon', () => category);
     data.putIfAbsent('order', () => 0);
 
-    final response = await http.post(
-      await formatUrl(CATEGORY_ADD),
-      body: jsonEncode(data),
-      headers: await headers,
-    );
+    final response = await http.post(await formatUrl(CATEGORY_ADD), body: jsonEncode(data), headers: await headers);
 
     processResponse(response);
     return true;
@@ -295,30 +268,20 @@ class Service {
   Future<Expense> addExpense(Expense expense) async {
     Map map = expense.toJson();
 
-    final response = await http.post(
-      await formatUrl(EXPENSE_ADD),
-      body: jsonEncode(map),
-      headers: await headers,
-    );
+    final response = await http.post(await formatUrl(EXPENSE_ADD), body: jsonEncode(map), headers: await headers);
 
     processResponse(response);
     return Expense.fromJson(jsonDecode(response.body));
   }
 
   Future<Expense> getExpense(int id) async {
-    final response = await http.get(
-      await formatUrl('$API_URL/Expense/ById/$id'),
-      headers: await headers,
-    );
+    final response = await http.get(await formatUrl('$API_URL/Expense/ById/$id'), headers: await headers);
     processResponse(response);
     return Expense.fromJson(jsonDecode(response.body));
   }
 
   Future<ExpenseLimits> getExpenseLimits() async {
-    final response = await http.get(
-      await formatUrl(EXPENSE_GET_LIMITS),
-      headers: await headers,
-    );
+    final response = await http.get(await formatUrl(EXPENSE_GET_LIMITS), headers: await headers);
 
     processResponse(response);
     return ExpenseLimits.fromJson(jsonDecode(response.body));
@@ -355,10 +318,7 @@ class Service {
   }
 
   Future<List<Category>> getCategories() async {
-    final response = await http.get(
-      await formatUrl(CATEGORY_ALL),
-      headers: await headers,
-    );
+    final response = await http.get(await formatUrl(CATEGORY_ALL), headers: await headers);
 
     processResponse(response);
     Iterable i = jsonDecode(response.body);
@@ -366,10 +326,7 @@ class Service {
   }
 
   Future<double> getCurrencyRate(String from, String to) async {
-    final response = await http.get(
-      await formatUrl(CURRENCY_GET, params: [from, to]),
-      headers: await headers,
-    );
+    final response = await http.get(await formatUrl(CURRENCY_GET, params: [from, to]), headers: await headers);
 
     processResponse(response);
     return double.parse(response.body);
@@ -380,16 +337,11 @@ class Service {
   }
 
   Future<List<RecurringExpense>> getRecurringExpenses() async {
-    final response = await http.get(
-      await formatUrl(RECURRING_GET),
-      headers: await headers,
-    );
+    final response = await http.get(await formatUrl(RECURRING_GET), headers: await headers);
 
     processResponse(response);
     Iterable i = jsonDecode(response.body);
-    return List<RecurringExpense>.from(
-      i.map((e) => RecurringExpense.fromJson(e)),
-    );
+    return List<RecurringExpense>.from(i.map((e) => RecurringExpense.fromJson(e)));
   }
 
   Future<bool> updateRecurringExpense(RecurringExpense expense) async {
@@ -412,41 +364,28 @@ class Service {
   }
 
   Future<bool> addRecurringExpense(RecurringExpense expense) async {
-    final response = await http.post(
-      await formatUrl(RECURRING_ADD),
-      headers: await headers,
-      body: jsonEncode(expense),
-    );
+    final response = await http.post(await formatUrl(RECURRING_ADD), headers: await headers, body: jsonEncode(expense));
 
     processResponse(response);
     return true;
   }
 
   Future<List<String>> getExpensesMonths() async {
-    final response = await http.get(
-      await formatUrl(EXPENSE_GET_MONTHS),
-      headers: await headers,
-    );
+    final response = await http.get(await formatUrl(EXPENSE_GET_MONTHS), headers: await headers);
     processResponse(response);
     Iterable i = jsonDecode(response.body);
     return List<String>.from(i.map((e) => e as String));
   }
 
   Future<Map<String, DayExpense>> getMonthExpenses(String month) async {
-    final response = await http.get(
-      await formatUrl(EXPENSE_BY_MONTH, params: [month]),
-      headers: await headers,
-    );
+    final response = await http.get(await formatUrl(EXPENSE_BY_MONTH, params: [month]), headers: await headers);
     processResponse(response);
     Map<String, dynamic> map = jsonDecode(response.body);
 
     return map.map((key, value) => MapEntry(key, DayExpense.fromJson(value)));
   }
 
-  Future<double> getDiffWithPreviousPeriod(
-    String currentTime, {
-    required bool includeRecurring,
-  }) async {
+  Future<double> getDiffWithPreviousPeriod(String currentTime, {required bool includeRecurring}) async {
     final response = await http.get(
       await formatUrl(
         EXPENSE_DIFF_WITH_PREVIOUS_PERIOD,
@@ -470,39 +409,26 @@ class Service {
   }
 
   Future<List<LeftColumnStats>> getMonthStats() async {
-    final response = await http.get(
-      await formatUrl(HISTORY_OVERALL_MONTH),
-      headers: await headers,
-    );
+    final response = await http.get(await formatUrl(HISTORY_OVERALL_MONTH), headers: await headers);
 
     processResponse(response);
 
     Iterable i = jsonDecode(response.body);
-    return List<LeftColumnStats>.from(
-      i.map((e) => LeftColumnStats.fromJson(e)),
-    );
+    return List<LeftColumnStats>.from(i.map((e) => LeftColumnStats.fromJson(e)));
   }
 
   Future<List<LeftColumnStats>> getYearStats() async {
-    final response = await http.get(
-      await formatUrl(HISTORY_OVERALL_YEAR),
-      headers: await headers,
-    );
+    final response = await http.get(await formatUrl(HISTORY_OVERALL_YEAR), headers: await headers);
 
     processResponse(response);
 
     Iterable i = jsonDecode(response.body);
-    return List<LeftColumnStats>.from(
-      i.map((e) => LeftColumnStats.fromJson(e)),
-    );
+    return List<LeftColumnStats>.from(i.map((e) => LeftColumnStats.fromJson(e)));
   }
 
   Future<List<GraphDataPoint>> getMonthlyData(int categoryId, int count) async {
     final response = await http.get(
-      await formatUrl(
-        HISTORY_MONTHLY,
-        params: [categoryId.toString(), count.toString()],
-      ),
+      await formatUrl(HISTORY_MONTHLY, params: [categoryId.toString(), count.toString()]),
       headers: await headers,
     );
 
@@ -513,10 +439,7 @@ class Service {
 
   Future<List<GraphDataPoint>> getYearlyData(int categoryId, int count) async {
     final response = await http.get(
-      await formatUrl(
-        HISTORY_YEARLY,
-        params: [categoryId.toString(), count.toString()],
-      ),
+      await formatUrl(HISTORY_YEARLY, params: [categoryId.toString(), count.toString()]),
       headers: await headers,
     );
 
@@ -548,10 +471,7 @@ class Service {
   }
 
   Future<User> getCurrentUser() async {
-    final response = await http.get(
-      await formatUrl(USER_CURRENT),
-      headers: await headers,
-    );
+    final response = await http.get(await formatUrl(USER_CURRENT), headers: await headers);
 
     processResponse(response);
     Map<String, dynamic> json = jsonDecode(response.body);
@@ -569,24 +489,16 @@ class Service {
 
     String newToken = response.body;
 
-    if (await Preferences.get(Preferences.TOKEN_TYPE) ==
-        TokenType.usernamePassword.name) {
+    if (await Preferences.get(Preferences.TOKEN_TYPE) == TokenType.usernamePassword.name) {
       getIt<UsernamePasswordCubit>().setToken(url, newToken);
     }
 
     return true;
   }
 
-  Future<PaginatedResults<User>> getUsers(
-    String? search,
-    int page,
-    int pageSize,
-  ) async {
+  Future<PaginatedResults<User>> getUsers(String? search, int page, int pageSize) async {
     final response = await http.get(
-      await formatUrl(
-        USER_GET,
-        params: [search ?? '', page.toString(), pageSize.toString()],
-      ),
+      await formatUrl(USER_GET, params: [search ?? '', page.toString(), pageSize.toString()]),
       headers: await headers,
     );
 
@@ -603,11 +515,7 @@ class Service {
   }
 
   Future<User> createUser(User user) async {
-    final response = await http.put(
-      await formatUrl(USER_ADD_USER),
-      body: jsonEncode(user),
-      headers: await headers,
-    );
+    final response = await http.put(await formatUrl(USER_ADD_USER), body: jsonEncode(user), headers: await headers);
 
     processResponse(response);
 
@@ -615,10 +523,7 @@ class Service {
   }
 
   Future<bool> deleteUser(String id) async {
-    final response = await http.delete(
-      await formatUrl(USER_DELETE_USER, params: [id]),
-      headers: await headers,
-    );
+    final response = await http.delete(await formatUrl(USER_DELETE_USER, params: [id]), headers: await headers);
 
     processResponse(response);
 
@@ -656,10 +561,7 @@ class Service {
   }
 
   Future<List<Settings>> getAllSettings() async {
-    final response = await http.get(
-      await formatUrl(SETTINGS_ALL),
-      headers: await headers,
-    );
+    final response = await http.get(await formatUrl(SETTINGS_ALL), headers: await headers);
 
     processResponse(response);
     Iterable i = jsonDecode(response.body);
@@ -689,10 +591,7 @@ class Service {
 
     final version = await getVersion();
 
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {'x-version': version.toString()},
-    );
+    final response = await http.get(Uri.parse(url), headers: {'x-version': version.toString()});
     processResponse(response);
 
     var jsonDecode2 = jsonDecode(response.body);
@@ -718,10 +617,7 @@ class Service {
     final response = await http.post(
       Uri.parse(url),
       body: jsonEncode(user),
-      headers: {
-        'Content-Type': 'application/json',
-        'x-version': version.toString(),
-      },
+      headers: {'Content-Type': 'application/json', 'x-version': version.toString()},
     );
     processResponse(response);
     return true;
@@ -738,23 +634,16 @@ class Service {
     final response = await http.post(
       Uri.parse(url),
       body: jsonEncode(email),
-      headers: {
-        'Content-Type': 'application/json',
-        'x-version': version.toString(),
-      },
+      headers: {'Content-Type': 'application/json', 'x-version': version.toString()},
     );
     processResponse(response);
     return true;
   }
 
   Future<SearchParameters> getSearchParameters(int? categoryId) async {
-    String url =
-        '$SEARCH${categoryId != null ? '?category_id=$categoryId' : ''}';
+    String url = '$SEARCH${categoryId != null ? '?category_id=$categoryId' : ''}';
     print(url);
-    final response = await http.get(
-      await formatUrl(url),
-      headers: await headers,
-    );
+    final response = await http.get(await formatUrl(url), headers: await headers);
     processResponse(response);
     Map<String, dynamic> map = jsonDecode(response.body);
 
@@ -762,11 +651,7 @@ class Service {
   }
 
   Future<Map<String, DayExpense>> search(SearchParameters params) async {
-    final response = await http.post(
-      await formatUrl(SEARCH),
-      body: jsonEncode(params),
-      headers: await headers,
-    );
+    final response = await http.post(await formatUrl(SEARCH), body: jsonEncode(params), headers: await headers);
     processResponse(response);
     Map<String, dynamic> map = jsonDecode(response.body);
 
@@ -774,19 +659,10 @@ class Service {
   }
 
   Future<SssFile> uploadImage(XFile image) async {
-    final request = http.MultipartRequest(
-      "POST",
-      await formatUrl('$API_URL/Files'),
-    );
+    final request = http.MultipartRequest("POST", await formatUrl('$API_URL/Files'));
     request.headers.addAll(await headers);
 
-    request.files.add(
-      http.MultipartFile.fromBytes(
-        'file',
-        await image.readAsBytes(),
-        filename: image.name,
-      ),
-    );
+    request.files.add(http.MultipartFile.fromBytes('file', await image.readAsBytes(), filename: image.name));
 
     final response = await request.send();
     _processStatusCode(response.statusCode);
@@ -799,19 +675,10 @@ class Service {
   }
 
   Future<CategoryGuessResult> guessCategory(XFile image) async {
-    final request = http.MultipartRequest(
-      "POST",
-      await formatUrl('$API_URL/Files/find-category'),
-    );
+    final request = http.MultipartRequest("POST", await formatUrl('$API_URL/Files/find-category'));
     request.headers.addAll(await headers);
 
-    request.files.add(
-      http.MultipartFile.fromBytes(
-        'file',
-        await image.readAsBytes(),
-        filename: image.name,
-      ),
-    );
+    request.files.add(http.MultipartFile.fromBytes('file', await image.readAsBytes(), filename: image.name));
 
     final response = await request.send();
     _processStatusCode(response.statusCode);
@@ -823,9 +690,7 @@ class Service {
     return CategoryGuessResult.fromJson(map);
   }
 
-  Future<List<CategoryPrediction>> suggestExpenseCategory(
-    String timeZone,
-  ) async {
+  Future<List<CategoryPrediction>> suggestExpenseCategory(String timeZone) async {
     final response = await http.get(
       await formatUrl(EXPENSE_CATEGORY_SUGGEST, query: {'timezone': timeZone}),
       headers: await headers,
@@ -833,19 +698,13 @@ class Service {
 
     processResponse(response);
     Iterable i = jsonDecode(response.body);
-    return List<CategoryPrediction>.from(
-      i.map((e) => CategoryPrediction.fromJson(e)),
-    );
+    return List<CategoryPrediction>.from(i.map((e) => CategoryPrediction.fromJson(e)));
   }
 
   Future<Uint8List> downloadSearchCsv(SearchParameters parameters) async {
     final uri = await formatUrl('${API_URL}/Search/csv');
 
-    final response = await http.post(
-      uri,
-      headers: await headers,
-      body: jsonEncode(parameters),
-    );
+    final response = await http.post(uri, headers: await headers, body: jsonEncode(parameters));
     processResponse(response);
 
     return response.bodyBytes;
@@ -857,9 +716,7 @@ class Service {
       try {
         int versionInt = int.parse(version);
         if (versionInt < MIN_BACKEND_VERSION) {
-          print(
-            'server version: $versionInt, required version: $MIN_BACKEND_VERSION',
-          );
+          print('server version: $versionInt, required version: $MIN_BACKEND_VERSION');
           logout();
           throw BackendNeedUpgradeException();
         }

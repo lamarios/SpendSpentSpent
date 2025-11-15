@@ -12,8 +12,7 @@ class ReconnectableWebSocket {
   final bool isWeb;
 
   WebSocketChannel? _channel;
-  final StreamController<SssSocketMessage> _controller =
-      StreamController<SssSocketMessage>.broadcast();
+  final StreamController<SssSocketMessage> _controller = StreamController<SssSocketMessage>.broadcast();
 
   Stream<SssSocketMessage> get stream => _controller.stream;
 

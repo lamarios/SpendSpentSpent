@@ -30,9 +30,7 @@ class RecurringExpensesCubit extends Cubit<RecurringExpensesState> {
 }
 
 @freezed
-sealed class RecurringExpensesState
-    with _$RecurringExpensesState
-    implements WithError {
+sealed class RecurringExpensesState with _$RecurringExpensesState implements WithError {
   @Implements<WithError>()
   const factory RecurringExpensesState({
     @Default(false) bool loading,

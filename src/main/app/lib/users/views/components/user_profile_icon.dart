@@ -7,12 +7,7 @@ class UserProfileIcon extends StatelessWidget {
   final double size;
   final ColorScheme? colorScheme;
 
-  const UserProfileIcon({
-    super.key,
-    required this.user,
-    required this.size,
-    this.colorScheme,
-  });
+  const UserProfileIcon({super.key, required this.user, required this.size, this.colorScheme});
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +30,7 @@ class UserProfileIcon extends StatelessWidget {
               '${user.firstName.substring(0, 1).toUpperCase()}${user.lastName.substring(0, 1).toUpperCase()}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color:
-                    colorScheme?.onPrimaryContainer ??
-                    colors.onPrimaryContainer,
+                color: colorScheme?.onPrimaryContainer ?? colors.onPrimaryContainer,
               ),
             ),
           ),

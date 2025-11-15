@@ -34,9 +34,7 @@ ButtonStyle flatButtonStyle = TextButton.styleFrom(
   foregroundColor: Colors.white,
   backgroundColor: Colors.blue[800],
   padding: const EdgeInsets.symmetric(vertical: 5.0),
-  shape: const RoundedRectangleBorder(
-    borderRadius: BorderRadius.all(Radius.circular(2.0)),
-  ),
+  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2.0))),
 );
 
 int columnCount(MediaQueryData data) {
@@ -66,7 +64,5 @@ String formatCurrency(double amount) {
 }
 
 void setStatusBarColor(Color color, Brightness text) {
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(statusBarColor: color, statusBarIconBrightness: text),
-  );
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: color, statusBarIconBrightness: text));
 }

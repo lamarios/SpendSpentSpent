@@ -16,14 +16,11 @@ class LoginHandler extends StatelessWidget {
     return MultiBlocListener(
       listeners: [
         BlocListener<UsernamePasswordCubit, UsernamePasswordState>(
-          listenWhen: (previous, current) =>
-              previous.token != current.token && current.token != null,
+          listenWhen: (previous, current) => previous.token != current.token && current.token != null,
           listener: (context, state) async {
             if (context.mounted) {
               context.read<CategoriesCubit>().getCategories(true);
-              AutoRouter.of(
-                context,
-              ).replaceAll([const HomeRoute()], updateExistingRoutes: false);
+              AutoRouter.of(context).replaceAll([const HomeRoute()], updateExistingRoutes: false);
               context.read<HouseholdCubit>().getData();
             }
           },

@@ -8,19 +8,12 @@ class SimpleCubit<T> extends StatelessWidget {
   final Function(SimpleCubitState<T?> cubit)? onClose;
   final Widget Function(BuildContext context, T? state) builder;
 
-  const SimpleCubit({
-    super.key,
-    this.initialValue,
-    required this.builder,
-    this.init,
-    this.onClose,
-  });
+  const SimpleCubit({super.key, this.initialValue, required this.builder, this.init, this.onClose});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          SimpleCubitState<T?>(initialValue, onClose: onClose, init: init),
+      create: (context) => SimpleCubitState<T?>(initialValue, onClose: onClose, init: init),
       child: BlocBuilder<SimpleCubitState<T?>, T?>(builder: builder),
     );
   }

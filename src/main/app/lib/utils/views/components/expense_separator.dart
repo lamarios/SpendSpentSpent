@@ -21,14 +21,7 @@ class ExpenseSeparator extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           spacing: 4,
-          children: texts
-              .map(
-                (t) => Text(
-                  t,
-                  style: textTheme.bodySmall?.copyWith(color: dividerColor),
-                ),
-              )
-              .toList(),
+          children: texts.map((t) => Text(t, style: textTheme.bodySmall?.copyWith(color: dividerColor))).toList(),
         ),
       ],
     );

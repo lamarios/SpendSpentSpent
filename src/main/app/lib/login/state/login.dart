@@ -20,20 +20,13 @@ import 'package:spend_spent_spent/utils/preferences.dart';
 part 'login.freezed.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  final TextEditingController urlController = TextEditingController(
-    text: 'https://sss.ftpix.com',
-  );
+  final TextEditingController urlController = TextEditingController(text: 'https://sss.ftpix.com');
   final CategoriesCubit categoriesCubit;
   final LastExpenseCubit lastExpenseCubit;
 
   final UsernamePasswordCubit usernamePasswordCubit;
 
-  LoginCubit(
-    super.initialState,
-    this.categoriesCubit,
-    this.lastExpenseCubit,
-    this.usernamePasswordCubit,
-  ) {
+  LoginCubit(super.initialState, this.categoriesCubit, this.lastExpenseCubit, this.usernamePasswordCubit) {
     init();
   }
 
@@ -54,17 +47,11 @@ class LoginCubit extends Cubit<LoginState> {
     } on NeedUpgradeException {
       emit(
         state.copyWith(
-          error:
-              "Application needs update\nThe server requires a newer application version please upgrade",
+          error: "Application needs update\nThe server requires a newer application version please upgrade",
         ),
       );
     } on BackendNeedUpgradeException {
-      emit(
-        state.copyWith(
-          error:
-              "Backend needs update\nThe backends is out dated and needs to be updated",
-        ),
-      );
+      emit(state.copyWith(error: "Backend needs update\nThe backends is out dated and needs to be updated"));
     } catch (e, s) {
       emit(state.copyWith(config: null, error: e, stackTrace: s));
     }
@@ -75,11 +62,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   resetPassword(bool resetPassword) {
-    emit(
-      state.copyWith(
-        page: resetPassword ? LoginPage.resetPassword : LoginPage.login,
-      ),
-    );
+    emit(state.copyWith(page: resetPassword ? LoginPage.resetPassword : LoginPage.login));
   }
 
   init() async {
@@ -87,10 +70,7 @@ class LoginCubit extends Cubit<LoginState> {
     lastExpenseCubit.refresh();
 
     Uri base = Uri.base;
-    String server = await Preferences.get(
-      Preferences.SERVER_URL,
-      'https://sss.ftpix.com',
-    );
+    String server = await Preferences.get(Preferences.SERVER_URL, 'https://sss.ftpix.com');
     if (kIsWeb) {
       server = '${base.scheme}://${base.host}';
 
@@ -103,11 +83,7 @@ class LoginCubit extends Cubit<LoginState> {
 
     getConfig();
     urlController.addListener(() {
-      EasyDebounce.debounce(
-        'get-server-config',
-        const Duration(milliseconds: 500),
-        getConfig,
-      );
+      EasyDebounce.debounce('get-server-config', const Duration(milliseconds: 500), getConfig);
     });
   }
 
@@ -125,11 +101,7 @@ class LoginCubit extends Cubit<LoginState> {
 
       return true;
     } catch (e) {
-      emit(
-        state.copyWith(
-          loginError: e.toString().replaceFirst("Exception: ", ''),
-        ),
-      );
+      emit(state.copyWith(loginError: e.toString().replaceFirst("Exception: ", '')));
       return false;
     }
   }
@@ -155,11 +127,7 @@ class LoginCubit extends Cubit<LoginState> {
       }
       return false;
     } catch (e) {
-      emit(
-        state.copyWith(
-          loginError: e.toString().replaceFirst("Exception: ", ''),
-        ),
-      );
+      emit(state.copyWith(loginError: e.toString().replaceFirst("Exception: ", '')));
       return false;
     }
   }

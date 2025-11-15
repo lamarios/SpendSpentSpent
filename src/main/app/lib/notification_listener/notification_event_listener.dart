@@ -59,11 +59,9 @@ class NotificationEventListener {
     // Android 13+, you need to allow notification permission to display foreground service notification.
     //
     // iOS: If you need notification, ask for permission.
-    NotificationPermission notificationPermission =
-        await FlutterForegroundTask.checkNotificationPermission();
+    NotificationPermission notificationPermission = await FlutterForegroundTask.checkNotificationPermission();
     if (notificationPermission != NotificationPermission.granted) {
-      notificationPermission =
-          await FlutterForegroundTask.requestNotificationPermission();
+      notificationPermission = await FlutterForegroundTask.requestNotificationPermission();
     }
 
     if (notificationPermission != NotificationPermission.granted) {
@@ -76,8 +74,7 @@ class NotificationEventListener {
       // To restart the service on device reboot or unexpected problem, you need to allow below permission.
       if (!await FlutterForegroundTask.isIgnoringBatteryOptimizations) {
         // This function requires `android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` permission.
-        final canIgnoreBattery =
-            await FlutterForegroundTask.requestIgnoreBatteryOptimization();
+        final canIgnoreBattery = await FlutterForegroundTask.requestIgnoreBatteryOptimization();
         if (!canIgnoreBattery) {
           return false;
         }
@@ -91,8 +88,7 @@ class NotificationEventListener {
       if (!await FlutterForegroundTask.canScheduleExactAlarms) {
         // When you call this function, will be gone to the settings page.
         // So you need to explain to the user why set it.
-        final canOpenAlarms =
-            await FlutterForegroundTask.openAlarmsAndRemindersSettings();
+        final canOpenAlarms = await FlutterForegroundTask.openAlarmsAndRemindersSettings();
         if (!canOpenAlarms) {
           return false;
         }
@@ -110,10 +106,7 @@ class NotificationEventListener {
             'This notification appears when SpendSpentSpent is monitoring your notifications to get new expenses.',
         onlyAlertOnce: true,
       ),
-      iosNotificationOptions: const IOSNotificationOptions(
-        showNotification: false,
-        playSound: false,
-      ),
+      iosNotificationOptions: const IOSNotificationOptions(showNotification: false, playSound: false),
       foregroundTaskOptions: ForegroundTaskOptions(
         eventAction: ForegroundTaskEventAction.nothing(),
         autoRunOnBoot: true,
@@ -128,12 +121,13 @@ class NotificationEventListener {
     Function(NotificationResponse)? onNotificationTap,
   ) async {
     print('Setting up notifications, callback ? ${onNotificationTap != null}');
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    final InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
+    final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: onNotificationTap,
@@ -155,8 +149,7 @@ class NotificationEventListener {
       //   ForegroundServiceTypes.remoteMessaging,
       // ],
       notificationTitle: 'Monitoring notifications',
-      notificationText:
-          'SpendSpentSpent will watch for notifications and try to find expenses in it',
+      notificationText: 'SpendSpentSpent will watch for notifications and try to find expenses in it',
       // notificationIcon: NotificationIcon(metaDataName: "ic_launcher_foreground"),
       notificationInitialRoute: '/',
       serviceTypes: [ForegroundServiceTypes.specialUse],

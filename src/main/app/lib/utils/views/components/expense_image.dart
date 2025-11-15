@@ -37,10 +37,7 @@ class ExpenseImage extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(
-                      borderRadius ??
-                          (width > 100
-                              ? bigItemBorderRadius
-                              : smallItemBorderRadius),
+                      borderRadius ?? (width > 100 ? bigItemBorderRadius : smallItemBorderRadius),
                     ),
                     child: CachedNetworkImage(
                       imageUrl: '${service.url}/API/Files/${file.id}/download',
@@ -52,39 +49,23 @@ class ExpenseImage extends StatelessWidget {
                       fadeInDuration: animationDuration,
                       fadeOutDuration: animationDuration,
                       errorWidget: (context, url, error) => Container(
-                        decoration: BoxDecoration(
-                          color: colors.secondaryContainer,
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Icons.error_outline,
-                            size: 20,
-                            color: colors.onSecondaryContainer,
-                          ),
-                        ),
+                        decoration: BoxDecoration(color: colors.secondaryContainer),
+                        child: Center(child: Icon(Icons.error_outline, size: 20, color: colors.onSecondaryContainer)),
                       ),
                       progressIndicatorBuilder: (context, url, progress) {
                         double side = min(width, height) / 10;
                         return Center(
-                          child: SizedBox(
-                            width: side,
-                            height: side,
-                            child: LoadingIndicator(),
-                          ),
+                          child: SizedBox(width: side, height: side, child: LoadingIndicator()),
                         );
                       },
                     ),
                   ),
-                  if (showStatus &&
-                      file.status != AiProcessingStatus.NO_PROCESSING)
+                  if (showStatus && file.status != AiProcessingStatus.NO_PROCESSING)
                     Positioned(
                       bottom: 20,
                       right: 20,
                       child: Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 4,
-                          horizontal: 8,
-                        ),
+                        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                         decoration: BoxDecoration(
                           color: colors.primaryContainer,
                           borderRadius: BorderRadius.circular(20),
@@ -92,21 +73,10 @@ class ExpenseImage extends StatelessWidget {
                         child: AnimatedSwitcher(
                           duration: animationDuration,
                           child: switch (file.status) {
-                            AiProcessingStatus.NO_PROCESSING =>
-                              SizedBox.shrink(),
-                            AiProcessingStatus.DONE => Icon(
-                              Icons.auto_awesome,
-                              size: 15,
-                            ),
-                            AiProcessingStatus.ERROR => Icon(
-                              Icons.error,
-                              size: 15,
-                            ),
-                            _ => SizedBox(
-                              width: 15,
-                              height: 15,
-                              child: LoadingIndicator(),
-                            ),
+                            AiProcessingStatus.NO_PROCESSING => SizedBox.shrink(),
+                            AiProcessingStatus.DONE => Icon(Icons.auto_awesome, size: 15),
+                            AiProcessingStatus.ERROR => Icon(Icons.error, size: 15),
+                            _ => SizedBox(width: 15, height: 15, child: LoadingIndicator()),
                           },
                         ),
                       ),

@@ -33,10 +33,7 @@ class MiddleColumnTab extends StatelessWidget {
             ),
 */
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: child,
-              ),
+              child: Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0), child: child),
             ),
           ],
         );

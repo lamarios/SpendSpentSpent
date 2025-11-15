@@ -60,15 +60,10 @@ class Login extends StatelessWidget {
                 children: [
                   SingleMotionBuilder(
                     motion: MaterialSpringMotion.expressiveSpatialDefault(),
-                    value: (state.config?.announcement.trim().length ?? 0) > 0
-                        ? 0
-                        : -500,
+                    value: (state.config?.announcement.trim().length ?? 0) > 0 ? 0 : -500,
                     builder: (context, value, child) => Transform.translate(
                       offset: Offset(0, value),
-                      child: Opacity(
-                        opacity: inverseLerp(-500, 0, value).clamp(0, 1),
-                        child: child,
-                      ),
+                      child: Opacity(opacity: inverseLerp(-500, 0, value).clamp(0, 1), child: child),
                     ),
                     child: Container(
                       color: colors.tertiaryContainer,
@@ -87,25 +82,18 @@ class Login extends StatelessWidget {
                       width: width,
                       duration: panelTransition,
                       curve: Curves.easeInOutQuart,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          tablet ? bigItemBorderRadius : 0,
-                        ),
-                      ),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(tablet ? bigItemBorderRadius : 0)),
                       child: Padding(
                         padding: EdgeInsets.only(bottom: bottom),
                         child: AnimatedSwitcher(
                           duration: panelTransition,
-                          child:
-                              state.error == null &&
-                                  state.page == LoginPage.signUp
+                          child: state.error == null && state.page == LoginPage.signUp
                               ? SignUp(
                                   key: ValueKey(state.page),
                                   onBack: () => cubit.signUp(false),
                                   server: cubit.urlController.text.trim(),
                                 )
-                              : state.error == null &&
-                                    state.page == LoginPage.resetPassword
+                              : state.error == null && state.page == LoginPage.resetPassword
                               ? ResetPassword(
                                   onBack: () => cubit.resetPassword(false),
                                   server: cubit.urlController.text.trim(),
@@ -123,8 +111,7 @@ class Login extends StatelessWidget {
                                     await cubit.logInWithOidc();
                                   },
                                   showSignUp: () => cubit.signUp(true),
-                                  showResetPassword: () =>
-                                      cubit.resetPassword(true),
+                                  showResetPassword: () => cubit.resetPassword(true),
                                 ),
                         ),
                       ),
@@ -136,29 +123,17 @@ class Login extends StatelessWidget {
                       value: state.error != null ? 1 : 0,
                       builder: (context, value, child) => Transform.scale(
                         scaleY: value,
-                        child: Opacity(
-                          opacity: value.clamp(0, 1),
-                          child: child,
-                        ),
+                        child: Opacity(opacity: value.clamp(0, 1), child: child),
                       ),
                       child: Container(
-                        margin: EdgeInsets.only(
-                          left: 75,
-                          right: 75,
-                          bottom: 100,
-                        ),
+                        margin: EdgeInsets.only(left: 75, right: 75, bottom: 100),
                         width: width,
                         decoration: BoxDecoration(
                           color: colors.errorContainer,
-                          borderRadius: BorderRadius.circular(
-                            bigItemBorderRadius,
-                          ),
+                          borderRadius: BorderRadius.circular(bigItemBorderRadius),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                            vertical: 8,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
                           child: Row(
                             spacing: 16,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,13 +141,8 @@ class Login extends StatelessWidget {
                               Icon(Icons.error_outline, color: colors.error),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: ErrorDialog.buildError(
-                                    context,
-                                    state.error,
-                                    state.stackTrace,
-                                  ),
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: ErrorDialog.buildError(context, state.error, state.stackTrace),
                                 ),
                               ),
                             ],
@@ -191,21 +161,11 @@ class Login extends StatelessWidget {
   }
 }
 
-InputDecoration getFieldDecoration(
-  String label,
-  String hint,
-  ColorScheme colors,
-) {
+InputDecoration getFieldDecoration(String label, String hint, ColorScheme colors) {
   return InputDecoration(
-    border: OutlineInputBorder(
-      borderSide: BorderSide(color: colors.surfaceContainer),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: colors.surfaceContainer),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: colors.surfaceContainer),
-    ),
+    border: OutlineInputBorder(borderSide: BorderSide(color: colors.surfaceContainer)),
+    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: colors.surfaceContainer)),
+    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: colors.surfaceContainer)),
     hintText: hint,
     hintStyle: TextStyle(color: colors.onSurface.withValues(alpha: 0.3)),
     filled: true,

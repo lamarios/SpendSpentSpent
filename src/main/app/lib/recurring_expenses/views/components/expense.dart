@@ -11,11 +11,7 @@ class Expense extends StatelessWidget {
   final RecurringExpense expense;
   final Function() refreshExpenses;
 
-  const Expense({
-    super.key,
-    required this.expense,
-    required this.refreshExpenses,
-  });
+  const Expense({super.key, required this.expense, required this.refreshExpenses});
 
   getType(int type) {
     switch (type) {
@@ -36,11 +32,7 @@ class Expense extends StatelessWidget {
       context: context,
       builder: (context) => Card(
         color: colors.surface,
-        margin: getInsetsForMaxSize(
-          MediaQuery.of(context),
-          maxWidth: 550,
-          maxHeight: 950,
-        ),
+        margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 550, maxHeight: 950),
         child: RecurringExpenseView(expense, refreshExpenses: refreshExpenses),
       ),
     );
@@ -58,17 +50,10 @@ class Expense extends StatelessWidget {
         children: [
           Container(
             alignment: Alignment.center,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: colors.primaryContainer,
-            ),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: colors.primaryContainer),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
-              child: getIcon(
-                expense.category.icon!,
-                size: 20,
-                color: colors.onPrimaryContainer,
-              ),
+              child: getIcon(expense.category.icon!, size: 20, color: colors.onPrimaryContainer),
             ),
           ),
           Gap(16),
@@ -83,18 +68,13 @@ class Expense extends StatelessWidget {
                   Text(expense.name.trim()),
                   Text(
                     'Next: ${expense.nextOccurrence ?? ''}',
-                    style: TextStyle(
-                      color: colors.onSurface.withValues(alpha: 0.5),
-                    ),
+                    style: TextStyle(color: colors.onSurface.withValues(alpha: 0.5)),
                   ),
                 ],
               ),
             ),
           ),
-          Text(
-            formatCurrency(expense.amount),
-            style: TextStyle(color: colors.onSurface),
-          ),
+          Text(formatCurrency(expense.amount), style: TextStyle(color: colors.onSurface)),
         ],
       ),
     );

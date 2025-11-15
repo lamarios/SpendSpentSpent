@@ -29,34 +29,20 @@ class UploadImageButton extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return files.isEmpty
-        ? IconButton(
-            onPressed: () => showFileManagement(context),
-            icon: Icon(Icons.image_rounded),
-          )
+        ? IconButton(onPressed: () => showFileManagement(context), icon: Icon(Icons.image_rounded))
         : GestureDetector(
             onTap: () => showFileManagement(context),
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                ExpenseImage(
-                  file: files.first,
-                  width: 35,
-                  height: 35,
-                  showStatus: false,
-                ),
+                ExpenseImage(file: files.first, width: 35, height: 35, showStatus: false),
                 Positioned(
                   top: -10,
                   right: -10,
                   child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colors.primaryContainer,
-                    ),
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: colors.primaryContainer),
                     child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(files.length.toString()),
-                      ),
+                      child: Padding(padding: const EdgeInsets.all(8.0), child: Text(files.length.toString())),
                     ),
                   ),
                 ),

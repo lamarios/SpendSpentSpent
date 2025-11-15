@@ -26,25 +26,18 @@ class EditProfileState extends State<EditProfile> with AfterLayoutMixin {
 
   savePassword() async {
     User user = await service.getCurrentUser();
-    user = user.copyWith(
-      firstName: firstNameController.text,
-      lastName: lastNameController.text,
-    );
+    user = user.copyWith(firstName: firstNameController.text, lastName: lastNameController.text);
 
     await service.saveUser(user);
 
     widget.onProfileSaved();
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("Profile saved")));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Profile saved")));
   }
 
   valueChanged() {
     setState(() {
-      canSave =
-          lastNameController.text.trim().isNotEmpty &&
-          firstNameController.text.trim().isNotEmpty;
+      canSave = lastNameController.text.trim().isNotEmpty && firstNameController.text.trim().isNotEmpty;
     });
   }
 
@@ -58,20 +51,14 @@ class EditProfileState extends State<EditProfile> with AfterLayoutMixin {
           children: [
             const Text('First name'),
             TextField(controller: firstNameController),
-            const Padding(
-              padding: EdgeInsets.only(top: 20.0),
-              child: Text('Last name'),
-            ),
+            const Padding(padding: EdgeInsets.only(top: 20.0), child: Text('Last name')),
             TextField(controller: lastNameController),
             Padding(
               padding: const EdgeInsets.only(top: 30.0),
               child: Row(
                 children: [
                   Expanded(
-                    child: FilledButton.tonal(
-                      onPressed: !canSave ? null : savePassword,
-                      child: const Text('Save'),
-                    ),
+                    child: FilledButton.tonal(onPressed: !canSave ? null : savePassword, child: const Text('Save')),
                   ),
                 ],
               ),

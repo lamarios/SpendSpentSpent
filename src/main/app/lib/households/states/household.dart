@@ -27,13 +27,8 @@ class HouseholdCubit extends Cubit<HouseholdState> {
       if (household != null) {
         for (var hm in household.members) {
           if (hm.user.id != null) {
-            userLightColors[hm.user.id!] = ColorScheme.fromSeed(
-              seedColor: hm.color.color,
-            );
-            userDarkColors[hm.user.id!] = ColorScheme.fromSeed(
-              seedColor: hm.color.color,
-              brightness: Brightness.dark,
-            );
+            userLightColors[hm.user.id!] = ColorScheme.fromSeed(seedColor: hm.color.color);
+            userDarkColors[hm.user.id!] = ColorScheme.fromSeed(seedColor: hm.color.color, brightness: Brightness.dark);
           }
         }
       }
@@ -77,16 +72,11 @@ sealed class HouseholdState with _$HouseholdState implements WithError {
     }
   }
 
-  LinearGradient colorsAsGradient(
-    BuildContext context, [
-    Color Function(ColorScheme colors)? colorGetter,
-  ]) {
+  LinearGradient colorsAsGradient(BuildContext context, [Color Function(ColorScheme colors)? colorGetter]) {
     final colors = Theme.of(context).colorScheme;
 
     Map<String, ColorScheme> userColors = Map.of(
-      Theme.brightnessOf(context) == Brightness.dark
-          ? userDarkColors
-          : userLightColors,
+      Theme.brightnessOf(context) == Brightness.dark ? userDarkColors : userLightColors,
     );
 
     final currentUser = context.read<UsernamePasswordCubit>().currentUser;
@@ -95,12 +85,7 @@ sealed class HouseholdState with _$HouseholdState implements WithError {
       userColors[currentUser!.id!] = colors;
     }
 
-    var list = userColors.values
-        .map(
-          (colors) =>
-              colorGetter != null ? colorGetter(colors) : colors.primary,
-        )
-        .toList();
+    var list = userColors.values.map((colors) => colorGetter != null ? colorGetter(colors) : colors.primary).toList();
     if (list.length == 1) {
       list.add(list[0]);
     }
@@ -108,20 +93,13 @@ sealed class HouseholdState with _$HouseholdState implements WithError {
   }
 
   ColorScheme getCategoryColor(BuildContext context, Category category) {
-    final usehouseHoldColor = context
-        .read<AppSettingsCubit>()
-        .state
-        .useHouseholdColors;
+    final usehouseHoldColor = context.read<AppSettingsCubit>().state.useHouseholdColors;
     final colors = Theme.of(context).colorScheme;
 
     final currentUser = context.read<UsernamePasswordCubit>().currentUser;
     return currentUser?.id != null &&
-            (category.user == null ||
-                (currentUser!.id == category.user?.id && !usehouseHoldColor))
+            (category.user == null || (currentUser!.id == category.user?.id && !usehouseHoldColor))
         ? colors
-        : context.read<HouseholdCubit>().state.getForUser(
-            context,
-            category.user!,
-          );
+        : context.read<HouseholdCubit>().state.getForUser(context, category.user!);
   }
 }

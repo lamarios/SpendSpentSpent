@@ -42,13 +42,8 @@ class ApiKeyManagementCubit extends Cubit<ApiKeyManagementState> {
     try {
       var expiry = newKey.expiry == KeyExpiryPreset.never
           ? null
-          : DateTime.now()
-                .add(Duration(days: newKey.expiry.days!))
-                .millisecondsSinceEpoch;
-      var createdKey = await service.createKey(
-        name: newKey.name,
-        expiryDate: expiry,
-      );
+          : DateTime.now().add(Duration(days: newKey.expiry.days!)).millisecondsSinceEpoch;
+      var createdKey = await service.createKey(name: newKey.name, expiryDate: expiry);
       init(false);
       return createdKey;
     } catch (e, s) {
@@ -60,9 +55,7 @@ class ApiKeyManagementCubit extends Cubit<ApiKeyManagementState> {
 }
 
 @freezed
-sealed class ApiKeyManagementState
-    with _$ApiKeyManagementState
-    implements WithError {
+sealed class ApiKeyManagementState with _$ApiKeyManagementState implements WithError {
   @Implements<WithError>()
   const factory ApiKeyManagementState({
     @Default([]) List<ApiKey> keys,

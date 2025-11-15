@@ -8,11 +8,7 @@ class ExpenseNoteDialog extends StatelessWidget {
   final Function(String note) onChanged;
   final String initialNote;
 
-  const ExpenseNoteDialog({
-    super.key,
-    required this.onChanged,
-    required this.initialNote,
-  });
+  const ExpenseNoteDialog({super.key, required this.onChanged, required this.initialNote});
 
   static Future<String?> show(BuildContext context, String startingNote) async {
     String note = startingNote;
@@ -28,14 +24,8 @@ class ExpenseNoteDialog extends StatelessWidget {
             }),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(note),
-              child: Text("Ok"),
-            ),
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text("Cancel")),
+            TextButton(onPressed: () => Navigator.of(context).pop(note), child: Text("Ok")),
           ],
         ),
       ),
@@ -45,8 +35,7 @@ class ExpenseNoteDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          ExpenseNoteDialogCubit(ExpenseNoteDialogState(note: initialNote)),
+      create: (context) => ExpenseNoteDialogCubit(ExpenseNoteDialogState(note: initialNote)),
       child: BlocConsumer<ExpenseNoteDialogCubit, ExpenseNoteDialogState>(
         listenWhen: (previous, current) => previous.note != current.note,
         listener: (context, state) => onChanged(state.note),
@@ -74,11 +63,8 @@ class ExpenseNoteDialog extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ...state.suggestions.map(
-                      (e) => NoteSuggestionPill(
-                        current: e == state.note,
-                        text: e,
-                        tapSuggestion: cubit.selectSuggestion,
-                      ),
+                      (e) =>
+                          NoteSuggestionPill(current: e == state.note, text: e, tapSuggestion: cubit.selectSuggestion),
                     ),
                   ],
                 ),

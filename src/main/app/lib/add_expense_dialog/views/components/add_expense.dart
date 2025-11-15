@@ -30,12 +30,7 @@ class AddExpense extends StatelessWidget {
   final Expense? expense;
   final bool canChangeCategory;
 
-  const AddExpense({
-    super.key,
-    this.category,
-    this.expense,
-    required this.canChangeCategory,
-  });
+  const AddExpense({super.key, this.category, this.expense, required this.canChangeCategory});
 
   static Future<Expense?> showDialog(
     BuildContext context, {
@@ -49,11 +44,7 @@ class AddExpense extends StatelessWidget {
         builder: (context) => Card(
           color: Colors.white.withValues(alpha: 0),
           margin: EdgeInsets.zero,
-          child: AddExpense(
-            category: category,
-            expense: expense,
-            canChangeCategory: canChangeCategory,
-          ),
+          child: AddExpense(category: category, expense: expense, canChangeCategory: canChangeCategory),
         ),
       );
     } else {
@@ -61,13 +52,7 @@ class AddExpense extends StatelessWidget {
         context: context,
         // isScrollControlled: true,
         child: Wrap(
-          children: [
-            AddExpense(
-              category: category,
-              expense: expense,
-              canChangeCategory: canChangeCategory,
-            ),
-          ],
+          children: [AddExpense(category: category, expense: expense, canChangeCategory: canChangeCategory)],
         ),
       );
     }
@@ -82,11 +67,7 @@ class AddExpense extends StatelessWidget {
 
     final colors = Theme.of(context).colorScheme;
 
-    return getIcon(
-      cat.icon ?? '',
-      size: iconHeight * 0.66,
-      color: colors.onPrimaryContainer,
-    );
+    return getIcon(cat.icon ?? '', size: iconHeight * 0.66, color: colors.onPrimaryContainer);
   }
 
   double getHeaderHeight(BuildContext context) {
@@ -101,10 +82,7 @@ class AddExpense extends StatelessWidget {
       create: (context) => AddExpenseDialogCubit(
         AddExpenseDialogState(
           expenseDate: DateTime.now(),
-          category:
-              category ??
-              expense?.category ??
-              context.read<CategoriesCubit>().state.categories.first,
+          category: category ?? expense?.category ?? context.read<CategoriesCubit>().state.categories.first,
         ),
         expense: expense,
         lastExpenseCubit: context.read<LastExpenseCubit>(),
@@ -125,9 +103,7 @@ class AddExpense extends StatelessWidget {
                 decoration: const BoxDecoration(borderRadius: defaultBorder),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final availableCategories = context.select(
-                      (CategoriesCubit c) => c.state.categories,
-                    );
+                    final availableCategories = context.select((CategoriesCubit c) => c.state.categories);
 
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -137,18 +113,11 @@ class AddExpense extends StatelessWidget {
                           duration: panelTransition,
                           switchOutCurve: Curves.easeInOutQuart,
                           switchInCurve: Curves.easeInOutQuart,
-                          transitionBuilder:
-                              (Widget child, Animation<double> animation) {
-                                return ScaleTransition(
-                                  scale: animation,
-                                  child: child,
-                                );
-                              },
+                          transitionBuilder: (Widget child, Animation<double> animation) {
+                            return ScaleTransition(scale: animation, child: child);
+                          },
                           child: state.saving
-                              ? SizedBox(
-                                  height: 200,
-                                  child: Center(child: LoadingIndicator()),
-                                )
+                              ? SizedBox(height: 200, child: Center(child: LoadingIndicator()))
                               : Container(
                                   key: const Key("input"),
                                   alignment: Alignment.center,
@@ -158,8 +127,7 @@ class AddExpense extends StatelessWidget {
                                   ),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Stack(
@@ -169,69 +137,34 @@ class AddExpense extends StatelessWidget {
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
                                               color: colors.primaryContainer,
-                                              borderRadius:
-                                                  BorderRadius.vertical(
-                                                    top: defaultBorder.topLeft,
-                                                  ),
+                                              borderRadius: BorderRadius.vertical(top: defaultBorder.topLeft),
                                             ),
                                             child: RepeatedIconsBackground(
                                               icon: state.category.icon!,
                                               size: 40,
-                                              color: colors.onPrimaryContainer
-                                                  .withValues(alpha: 0.05),
+                                              color: colors.onPrimaryContainer.withValues(alpha: 0.05),
                                               child: !canChangeCategory
-                                                  ? getIconHeader(
-                                                      context,
-                                                      cat: state.category,
-                                                    )
+                                                  ? getIconHeader(context, cat: state.category)
                                                   : Row(
                                                       children: [
                                                         Expanded(
                                                           child: CarouselSlider(
                                                             items: availableCategories
-                                                                .map(
-                                                                  (e) =>
-                                                                      getIconHeader(
-                                                                        context,
-                                                                        cat: e,
-                                                                      ),
-                                                                )
+                                                                .map((e) => getIconHeader(context, cat: e))
                                                                 .toList(),
                                                             options: CarouselOptions(
                                                               initialPage: context.select(
-                                                                (
-                                                                  CategoriesCubit
-                                                                  c,
-                                                                ) => c.state.categories.indexWhere(
-                                                                  (cat2) =>
-                                                                      c
-                                                                          .state
-                                                                          .suggestions
-                                                                          .firstOrNull
-                                                                          ?.category
-                                                                          .id ==
-                                                                      cat2.id,
+                                                                (CategoriesCubit c) => c.state.categories.indexWhere(
+                                                                  (cat2) => cat2.id == state.category.id,
                                                                 ),
                                                               ),
-                                                              enlargeCenterPage:
-                                                                  true,
-                                                              enlargeFactor:
-                                                                  0.6,
-                                                              viewportFraction:
-                                                                  0.45,
-                                                              clipBehavior:
-                                                                  Clip.none,
-
-                                                              animateToClosest:
-                                                                  true,
-                                                              onPageChanged:
-                                                                  (
-                                                                    index,
-                                                                    reason,
-                                                                  ) => cubit
-                                                                      .setCategory(
-                                                                        availableCategories[index],
-                                                                      ),
+                                                              enlargeCenterPage: true,
+                                                              enlargeFactor: 0.5,
+                                                              viewportFraction: 0.35,
+                                                              clipBehavior: Clip.none,
+                                                              animateToClosest: true,
+                                                              onPageChanged: (index, reason) =>
+                                                                  cubit.setCategory(availableCategories[index]),
                                                             ),
                                                           ),
                                                         ),
@@ -247,15 +180,8 @@ class AddExpense extends StatelessWidget {
                                                 duration: panelTransition,
                                                 opacity: state.saving ? 0 : 1,
                                                 child: IconButton(
-                                                  onPressed: () => Navigator.of(
-                                                    context,
-                                                  ).pop(),
-                                                  icon: Icon(
-                                                    Icons.clear,
-                                                    color: colors
-                                                        .onPrimaryContainer,
-                                                    size: 20,
-                                                  ),
+                                                  onPressed: () => Navigator.of(context).pop(),
+                                                  icon: Icon(Icons.clear, color: colors.onPrimaryContainer, size: 20),
                                                 ),
                                               ),
                                             ),
@@ -271,26 +197,18 @@ class AddExpense extends StatelessWidget {
                                           child: Row(
                                             children: [
                                               Visibility(
-                                                visible: !state
-                                                    .showCurrencyConversion,
+                                                visible: !state.showCurrencyConversion,
                                                 child: Expanded(
                                                   child: Container(
                                                     height: 70,
-                                                    alignment:
-                                                        Alignment.centerRight,
+                                                    alignment: Alignment.centerRight,
                                                     child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                            10.0,
-                                                          ),
+                                                      padding: const EdgeInsets.all(10.0),
                                                       child: Text(
-                                                        cubit.valueToStr(
-                                                          state.value,
-                                                        ),
+                                                        cubit.valueToStr(state.value),
                                                         style: TextStyle(
                                                           fontSize: 20,
-                                                          color: colors
-                                                              .onSecondaryContainer,
+                                                          color: colors.onSecondaryContainer,
                                                         ),
                                                       ),
                                                     ),
@@ -298,18 +216,14 @@ class AddExpense extends StatelessWidget {
                                                 ),
                                               ),
                                               Visibility(
-                                                visible: state
-                                                    .showCurrencyConversion,
+                                                visible: state.showCurrencyConversion,
                                                 child: Expanded(
                                                   child: CurrencyConverter(
                                                     value: state.value,
                                                     valueFrom: state.valueFrom,
-                                                    currencyConversion: state
-                                                        .currencyConversion,
-                                                    setCurrencyConversion: cubit
-                                                        .setCurrencyConversion,
-                                                    valueToStr:
-                                                        cubit.valueToStr,
+                                                    currencyConversion: state.currencyConversion,
+                                                    setCurrencyConversion: cubit.setCurrencyConversion,
+                                                    valueToStr: cubit.valueToStr,
                                                   ),
                                                 ),
                                               ),
@@ -319,34 +233,22 @@ class AddExpense extends StatelessWidget {
                                       ),
                                       if (state.possiblePrices.isNotEmpty)
                                         SingleMotionBuilder(
-                                          motion:
-                                              MaterialSpringMotion.expressiveSpatialDefault(),
+                                          motion: MaterialSpringMotion.expressiveSpatialDefault(),
                                           from: 0,
                                           value: 100,
                                           builder: (context, value, child) =>
-                                              Transform.scale(
-                                                scaleY: value / 100,
-                                                child: child,
-                                              ),
+                                              Transform.scale(scaleY: value / 100, child: child),
                                           child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                            ),
+                                            padding: EdgeInsets.symmetric(horizontal: 8),
                                             child: SingleChildScrollView(
                                               scrollDirection: Axis.horizontal,
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
                                                 spacing: 4,
                                                 children: [
-                                                  Icon(
-                                                    Icons.auto_awesome,
-                                                    size: 20,
-                                                    color: colors.primary,
-                                                  ),
+                                                  Icon(Icons.auto_awesome, size: 20, color: colors.primary),
                                                   Gap(8),
                                                   ...state.possiblePrices.map(
                                                     (e) => NoteSuggestionPill(
@@ -362,37 +264,24 @@ class AddExpense extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                      KeyPad(
-                                        addNumber: cubit.addNumber,
-                                        removeNumber: cubit.removeNumber,
-                                      ),
+                                      KeyPad(addNumber: cubit.addNumber, removeNumber: cubit.removeNumber),
                                       const ExpenseActions(),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                               child: FilledButton.tonal(
-                                                onPressed:
-                                                    state.value.isNotEmpty
+                                                onPressed: state.value.isNotEmpty
                                                     ? () async {
-                                                        double iconHeight =
-                                                            getIconHeight(
-                                                              context,
-                                                            ) *
-                                                            0.66;
-                                                        final newExpense =
-                                                            await cubit.addExpense(
-                                                              iconHeight,
-                                                              colors
-                                                                  .onPrimaryContainer,
-                                                            );
+                                                        double iconHeight = getIconHeight(context) * 0.66;
+                                                        final newExpense = await cubit.addExpense(
+                                                          iconHeight,
+                                                          colors.onPrimaryContainer,
+                                                        );
                                                         if (context.mounted) {
-                                                          Navigator.of(
-                                                            context,
-                                                          ).pop(newExpense);
+                                                          Navigator.of(context).pop(newExpense);
                                                         }
                                                       }
                                                     : null,

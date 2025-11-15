@@ -60,20 +60,14 @@ class CurrencyConverter extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return BlocProvider(
-      create: (BuildContext context) => CurrencyConverterCubit(
-        const CurrencyConverterState(),
-        setCurrencyConversion,
-      ),
+      create: (BuildContext context) => CurrencyConverterCubit(const CurrencyConverterState(), setCurrencyConversion),
       child: BlocBuilder<CurrencyConverterCubit, CurrencyConverterState>(
         builder: (context, state) {
           final cubit = context.read<CurrencyConverterCubit>();
 
           return Container(
             height: 70,
-            decoration: BoxDecoration(
-              color: colors.secondaryContainer,
-              borderRadius: defaultBorder,
-            ),
+            decoration: BoxDecoration(color: colors.secondaryContainer, borderRadius: defaultBorder),
             alignment: Alignment.centerRight,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -87,26 +81,16 @@ class CurrencyConverter extends StatelessWidget {
                           value: state.fromCurrency,
                           onChanged: cubit.changeFromCurrency,
                           dropdownColor: colors.secondaryContainer,
-                          items: CURRENCIES.map<DropdownMenuItem<String>>((
-                            String value,
-                          ) {
+                          items: CURRENCIES.map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(
-                                value,
-                                style: TextStyle(
-                                  color: colors.onSecondaryContainer,
-                                ),
-                              ),
+                              child: Text(value, style: TextStyle(color: colors.onSecondaryContainer)),
                             );
                           }).toList(),
                         ),
                         Text(
                           '${valueToStr(valueFrom)}',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: colors.onSecondaryContainer,
-                          ),
+                          style: TextStyle(fontSize: 20, color: colors.onSecondaryContainer),
                         ),
                       ],
                     ),
@@ -119,26 +103,16 @@ class CurrencyConverter extends StatelessWidget {
                           value: state.toCurrency,
                           dropdownColor: colors.secondaryContainer,
                           onChanged: cubit.changeToCurrency,
-                          items: CURRENCIES.map<DropdownMenuItem<String>>((
-                            String value,
-                          ) {
+                          items: CURRENCIES.map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(
-                                value,
-                                style: TextStyle(
-                                  color: colors.onSecondaryContainer,
-                                ),
-                              ),
+                              child: Text(value, style: TextStyle(color: colors.onSecondaryContainer)),
                             );
                           }).toList(),
                         ),
                         Text(
                           '${valueToStr(value)}',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: colors.onSecondaryContainer,
-                          ),
+                          style: TextStyle(fontSize: 20, color: colors.onSecondaryContainer),
                         ),
                       ],
                     ),

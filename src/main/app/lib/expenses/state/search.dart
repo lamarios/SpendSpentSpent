@@ -21,12 +21,7 @@ class SearchCubit extends Cubit<SearchState> {
   }
 
   void updateRange(RangeValues range) {
-    emit(
-      state.copyWith.searchParameters(
-        minAmount: range.start.floor(),
-        maxAmount: range.end.ceil(),
-      ),
-    );
+    emit(state.copyWith.searchParameters(minAmount: range.start.floor(), maxAmount: range.end.ceil()));
 
     triggerSearch();
   }
@@ -85,9 +80,7 @@ class SearchCubit extends Cubit<SearchState> {
             maxAmount: value.maxAmount,
             minAmount: value.minAmount,
             searchQuery: state.searchParameters.searchQuery,
-            minDate:
-                state.searchParameters.minDate ??
-                DateTime.now().add(Duration(days: -7)).millisecondsSinceEpoch,
+            minDate: state.searchParameters.minDate ?? DateTime.now().add(Duration(days: -7)).millisecondsSinceEpoch,
             maxDate: state.searchParameters.maxDate ?? value.maxDate,
           ),
           searchParametersBounds: SearchParameters(
@@ -113,23 +106,9 @@ class SearchCubit extends Cubit<SearchState> {
 @freezed
 sealed class SearchState with _$SearchState {
   const factory SearchState({
-    @Default(
-      SearchParameters(
-        categories: [],
-        maxAmount: 0,
-        minAmount: 0,
-        searchQuery: "",
-      ),
-    )
+    @Default(SearchParameters(categories: [], maxAmount: 0, minAmount: 0, searchQuery: ""))
     SearchParameters searchParametersBounds,
-    @Default(
-      SearchParameters(
-        categories: [],
-        maxAmount: 0,
-        minAmount: 0,
-        searchQuery: "",
-      ),
-    )
+    @Default(SearchParameters(categories: [], maxAmount: 0, minAmount: 0, searchQuery: ""))
     SearchParameters searchParameters,
   }) = _SearchState;
 }

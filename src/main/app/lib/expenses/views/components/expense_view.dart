@@ -27,9 +27,7 @@ class ExpenseView extends StatelessWidget {
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Delete Expense ?'),
-        content: const Text(
-          'This will only delete this expense, it is not recoverable.',
-        ),
+        content: const Text('This will only delete this expense, it is not recoverable.'),
         actions: <Widget>[
           TextButton(
             child: Text('Cancel', style: TextStyle(color: colors.secondary)),
@@ -82,15 +80,11 @@ class ExpenseView extends StatelessWidget {
               child: FlutterMap(
                 options: MapOptions(
                   initialZoom: 15,
-                  initialCenter: LatLng(
-                    (expense.latitude ?? 0) - 0.013,
-                    expense.longitude ?? 0,
-                  ),
+                  initialCenter: LatLng((expense.latitude ?? 0) - 0.013, expense.longitude ?? 0),
                 ),
                 children: [
                   TileLayer(
-                    urlTemplate:
-                        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                     userAgentPackageName: 'com.spendspentspent.app',
                   ),
                   MarkerLayer(
@@ -98,15 +92,8 @@ class ExpenseView extends StatelessWidget {
                       Marker(
                         width: 40.0,
                         height: 40.0,
-                        point: LatLng(
-                          expense.latitude ?? 0,
-                          expense.longitude ?? 0,
-                        ),
-                        child: Icon(
-                          Icons.location_on,
-                          color: colors.primary,
-                          size: 50,
-                        ),
+                        point: LatLng(expense.latitude ?? 0, expense.longitude ?? 0),
+                        child: Icon(Icons.location_on, color: colors.primary, size: 50),
                       ),
                     ],
                   ),
@@ -147,18 +134,12 @@ class ExpenseView extends StatelessWidget {
                     height: 30,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: hasLocation()
-                          ? colors.surfaceContainer
-                          : Colors.transparent,
+                      color: hasLocation() ? colors.surfaceContainer : Colors.transparent,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        Icons.clear,
-                        color: colors.onSurface,
-                        size: 15,
-                      ),
+                      child: Icon(Icons.clear, color: colors.onSurface, size: 15),
                     ),
                   ),
                 ),
@@ -176,40 +157,24 @@ class ExpenseView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: colors.primaryContainer,
-                ),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: colors.primaryContainer),
                 width: 100,
                 alignment: Alignment.center,
                 height: 100,
-                child: getIcon(
-                  expense.category.icon!,
-                  color: colors.onPrimaryContainer,
-                  size: 50,
-                ),
+                child: getIcon(expense.category.icon!, color: colors.onPrimaryContainer, size: 50),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: defaultBorder,
-                    color: hasLocation()
-                        ? colors.surfaceContainer
-                        : Colors.transparent,
+                    color: hasLocation() ? colors.surfaceContainer : Colors.transparent,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30.0,
-                      vertical: 10,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
                     child: Text(
                       formatCurrency(expense.amount),
-                      style: TextStyle(
-                        fontSize: 50,
-                        color: colors.onSurface,
-                        fontWeight: FontWeight.w300,
-                      ),
+                      style: TextStyle(fontSize: 50, color: colors.onSurface, fontWeight: FontWeight.w300),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -221,23 +186,13 @@ class ExpenseView extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 0.0),
                   child: Container(
                     width: 300,
-                    decoration: BoxDecoration(
-                      borderRadius: defaultBorder,
-                      color: colors.tertiaryContainer,
-                    ),
+                    decoration: BoxDecoration(borderRadius: defaultBorder, color: colors.tertiaryContainer),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0,
-                        vertical: 10,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
                       child: Text(
                         expense.note ?? '',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w300,
-                          color: colors.onTertiaryContainer,
-                        ),
+                        style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300, color: colors.onTertiaryContainer),
                       ),
                     ),
                   ),

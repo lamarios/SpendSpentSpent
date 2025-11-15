@@ -19,6 +19,5 @@ sealed class SearchParameters with _$SearchParameters {
     int? maxDate,
   }) = _SearchParameters;
 
-  factory SearchParameters.fromJson(Map<String, dynamic> json) =>
-      _$SearchParametersFromJson(json);
+  factory SearchParameters.fromJson(Map<String, dynamic> json) => _$SearchParametersFromJson(json);
 }

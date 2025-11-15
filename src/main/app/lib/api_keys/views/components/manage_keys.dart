@@ -43,12 +43,9 @@ class ManageApiKeys extends StatelessWidget {
                       Expanded(
                         child: ListView.separated(
                           itemCount: state.keys.length,
-                          itemBuilder: (context, index) => ApiKeyView(
-                            key: ValueKey(state.keys[index].id),
-                            apiKey: state.keys[index],
-                          ),
-                          separatorBuilder: (BuildContext context, int index) =>
-                              Divider(),
+                          itemBuilder: (context, index) =>
+                              ApiKeyView(key: ValueKey(state.keys[index].id), apiKey: state.keys[index]),
+                          separatorBuilder: (BuildContext context, int index) => Divider(),
                         ),
                       ),
                     ],
@@ -72,34 +69,17 @@ class ManageApiKeys extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                Text(
-                                  'This is the only time you will see the API key, make sure to make a copy of it',
-                                ),
+                                Text('This is the only time you will see the API key, make sure to make a copy of it'),
                                 Row(
                                   children: [
-                                    Expanded(
-                                      child: TextFormField(
-                                        readOnly: true,
-                                        initialValue: createdKey.apiKey,
-                                      ),
-                                    ),
+                                    Expanded(child: TextFormField(readOnly: true, initialValue: createdKey.apiKey)),
                                     IconButton(
                                       onPressed: () async {
-                                        await Clipboard.setData(
-                                          ClipboardData(
-                                            text: createdKey.apiKey ?? '',
-                                          ),
-                                        );
+                                        await Clipboard.setData(ClipboardData(text: createdKey.apiKey ?? ''));
                                         if (context.mounted) {
                                           ScaffoldMessenger.of(
                                             context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'API key copied to the clipboard',
-                                              ),
-                                            ),
-                                          );
+                                          ).showSnackBar(SnackBar(content: Text('API key copied to the clipboard')));
                                         }
                                       },
                                       icon: Icon(Icons.copy),

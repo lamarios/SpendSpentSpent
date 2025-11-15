@@ -21,14 +21,10 @@ class HouseholdView extends StatelessWidget {
       'User email',
       textEditingController,
       () async {
-        await context.read<HouseholdManagementCubit>().inviteUser(
-          textEditingController.text,
-        );
+        await context.read<HouseholdManagementCubit>().inviteUser(textEditingController.text);
 
         if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('User invited')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User invited')));
         }
       },
       maxLines: 1,
@@ -44,9 +40,7 @@ class HouseholdView extends StatelessWidget {
 
     final isAdmin = cubit.isAdmin;
 
-    List<HouseholdColor> useColors = household.members
-        .map((hm) => hm.color)
-        .toList();
+    List<HouseholdColor> useColors = household.members.map((hm) => hm.color).toList();
 
     var members = List.of(household.members);
     members.sort((a, b) {
@@ -69,27 +63,14 @@ class HouseholdView extends StatelessWidget {
             itemBuilder: (context, index) {
               var hm = members[index];
               return ListTile(
-                leading: UserProfileIcon(
-                  user: hm.user,
-                  size: 40,
-                  colorScheme: hm.color.getColor(context),
-                ),
-                title: Text(
-                  index == 0
-                      ? 'You'
-                      : '${hm.user.firstName} ${hm.user.lastName}',
-                ),
+                leading: UserProfileIcon(user: hm.user, size: 40, colorScheme: hm.color.getColor(context)),
+                title: Text(index == 0 ? 'You' : '${hm.user.firstName} ${hm.user.lastName}'),
                 subtitle: Text(hm.user.email),
                 trailing: hm.admin
                     ? Chip(
-                        labelStyle: TextStyle(
-                          color: colors.onSecondaryContainer,
-                        ),
+                        labelStyle: TextStyle(color: colors.onSecondaryContainer),
                         label: Text('Admin'),
-                        avatar: Icon(
-                          Icons.admin_panel_settings_outlined,
-                          color: colors.onSecondaryContainer,
-                        ),
+                        avatar: Icon(Icons.admin_panel_settings_outlined, color: colors.onSecondaryContainer),
                         backgroundColor: colors.secondaryContainer,
                       )
                     : null,
@@ -97,8 +78,7 @@ class HouseholdView extends StatelessWidget {
                     ? () => MemberManagement.showSheet(
                         context,
                         membership: hm,
-                        setAdmin: (membership, admin) =>
-                            cubit.setAdmin(membership, admin),
+                        setAdmin: (membership, admin) => cubit.setAdmin(membership, admin),
                         isAdmin: isAdmin,
                         isSelf: cubit.isSelf(hm),
                         usedColors: useColors,

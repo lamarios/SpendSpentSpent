@@ -7,11 +7,8 @@ enum SssSocketMessageType { sssFile, householdUpdate, newHouseholdExpense }
 
 @freezed
 sealed class SssSocketMessage with _$SssSocketMessage {
-  const factory SssSocketMessage({
-    required Map<String, dynamic> message,
-    required SssSocketMessageType type,
-  }) = _SssSocketMessage;
+  const factory SssSocketMessage({required Map<String, dynamic> message, required SssSocketMessageType type}) =
+      _SssSocketMessage;
 
-  factory SssSocketMessage.fromJson(Map<String, Object?> json) =>
-      _$SssSocketMessageFromJson(json);
+  factory SssSocketMessage.fromJson(Map<String, Object?> json) => _$SssSocketMessageFromJson(json);
 }

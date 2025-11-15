@@ -11,10 +11,7 @@ import 'recurring_expense_dialog/step3.dart';
 class AddRecurringExpenseDialog extends StatelessWidget {
   final Function refreshRecurringExpenses;
 
-  const AddRecurringExpenseDialog({
-    super.key,
-    required this.refreshRecurringExpenses,
-  });
+  const AddRecurringExpenseDialog({super.key, required this.refreshRecurringExpenses});
 
   Future<void> forward(BuildContext context) async {
     final cubit = context.read<AddRecurringExpenseCubit>();
@@ -71,8 +68,7 @@ class AddRecurringExpenseDialog extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return BlocProvider(
-      create: (context) =>
-          AddRecurringExpenseCubit(const AddRecurringExpenseState()),
+      create: (context) => AddRecurringExpenseCubit(const AddRecurringExpenseState()),
       child: BlocBuilder<AddRecurringExpenseCubit, AddRecurringExpenseState>(
         builder: (context, state) {
           return Padding(
@@ -88,10 +84,7 @@ class AddRecurringExpenseDialog extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: AnimatedSwitcher(
                       duration: panelTransition,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: getStepWidget(context),
-                      ),
+                      child: Padding(padding: const EdgeInsets.all(8.0), child: getStepWidget(context)),
                     ),
                   ),
                 ),
@@ -100,15 +93,10 @@ class AddRecurringExpenseDialog extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () => backward(context),
-                      child: Text(
-                        state.step == 0 ? 'Cancel' : 'Back',
-                        style: TextStyle(color: colors.secondary),
-                      ),
+                      child: Text(state.step == 0 ? 'Cancel' : 'Back', style: TextStyle(color: colors.secondary)),
                     ),
                     TextButton(
-                      onPressed: state.stepValid
-                          ? () => forward(context)
-                          : null,
+                      onPressed: state.stepValid ? () => forward(context) : null,
                       child: Text(state.step == 2 ? 'Add' : 'Next'),
                     ),
                   ],

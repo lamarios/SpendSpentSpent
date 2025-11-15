@@ -24,13 +24,7 @@ class GuessCategoryCubit extends Cubit<GuessCategoryState> {
       final response = await service.guessCategory(xFile);
 
       if (!isClosed) {
-        emit(
-          state.copyWith(
-            loading: false,
-            results: response,
-            selected: response.categories.firstOrNull,
-          ),
-        );
+        emit(state.copyWith(loading: false, results: response, selected: response.categories.firstOrNull));
       }
     } catch (e, s) {
       _log.severe('Issue guessing the category', e, s);

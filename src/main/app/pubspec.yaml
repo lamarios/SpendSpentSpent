@@ -1,13 +1,13 @@
 name: 'spend_spent_spent'
-version: '2.13.1+134'
+version: '2.13.2+134'
 publish_to: none
 environment:
-  sdk: '>=3.8.0 <4.0.0'
+  sdk: '>=3.10.0 <4.0.0'
 description: Client for SpendSpentSpent self hosted expense tracker.
 dependencies:
   after_layout: 1.2.0
-  animations: 2.1.0
-  auto_route: 10.2.0
+  animations: 2.1.1
+  auto_route: 10.2.2
   cached_network_image: 3.4.1
   carousel_slider: 5.1.1
   dynamic_color: 1.8.1
@@ -21,19 +21,19 @@ dependencies:
   flutter_fadein: 2.0.0
   flutter_foreground_task: 9.1.0
   flutter_local_notifications: 19.5.0
-  flutter_map: 8.2.1
+  flutter_map: 8.2.2
   flutter_map_heatmap:
     git:
       # https://github.com/tprebs/fluttermap_heatmap/pull/23
       url: https://github.com/ThomasAunvik/fluttermap_heatmap.git
   flutter_settings_ui: 3.0.1
-  flutter_svg: 2.2.1
-  flutter_timezone: 5.0.0
+  flutter_svg: 2.2.2
+  flutter_timezone: 5.0.1
   freezed_annotation: 3.1.0
   gap: 3.0.1
-  get_it: 8.2.0
-  http: 1.5.0
-  image_picker: 1.2.0
+  get_it: 9.0.5
+  http: 1.6.0
+  image_picker: 1.2.1
   intl: 0.20.2
   json_annotation: 4.9.0
   jwt_decoder: 2.0.1
@@ -53,7 +53,7 @@ dependencies:
       url: https://github.com/KasemJaffer/receive_sharing_intent
   share_plus: 12.0.1
   shared_preferences: 2.5.3
-  stupid_simple_sheet: 0.6.0+1
+  stupid_simple_sheet: 0.6.1
   tinycolor2: 3.0.1
   web_socket_channel: 3.0.3
 dependency_overrides:
@@ -66,8 +66,8 @@ dependency_overrides:
       ref: location-v8.0.1
 dev_dependencies:
   analyzer: any
-  auto_route_generator: 10.2.5
-  build_runner: 2.10.0
+  auto_route_generator: 10.2.6
+  build_runner: 2.10.3
   flutter_launcher_icons: 0.14.4
   flutter_lints: 6.0.0
   flutter_test:

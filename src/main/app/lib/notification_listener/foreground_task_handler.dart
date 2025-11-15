@@ -63,8 +63,7 @@ class ForegroundTaskHandler extends TaskHandler {
 
     /// stream the incoming notification events
     NotificationListenerService.notificationsStream.listen((event) async {
-      flutterLocalNotificationsPlugin ??=
-          await NotificationEventListener.setupNotifications(null);
+      flutterLocalNotificationsPlugin ??= await NotificationEventListener.setupNotifications(null);
       if (event.hasRemoved ?? false) {
         print('notification removed');
         return;
@@ -86,12 +85,10 @@ class ForegroundTaskHandler extends TaskHandler {
 
         if (amount != null && !appIgnored) {
           print('Found amount $amount, sending notification');
-          const AndroidNotificationDetails
-          androidNotificationDetails = AndroidNotificationDetails(
+          const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
             'sss_suggested_expenses',
             'Suggested expenses',
-            channelDescription:
-                'SpendSpentSpent will suggest expenses based on your other app notifications',
+            channelDescription: 'SpendSpentSpent will suggest expenses based on your other app notifications',
             ticker: 'ticker',
             icon: "@mipmap/ic_launcher_foreground",
           );
@@ -110,8 +107,7 @@ class ForegroundTaskHandler extends TaskHandler {
             final dir = await getApplicationDocumentsDirectory();
             final historyDir = Directory('${dir.path}/notificationHistory');
             await historyDir.create(recursive: true);
-            final filePath =
-                '${historyDir.path}/${DateTime.now().millisecondsSinceEpoch}.json';
+            final filePath = '${historyDir.path}/${DateTime.now().millisecondsSinceEpoch}.json';
             final file = File(filePath);
             await file.writeAsString(jsonString, mode: FileMode.writeOnly);
             print('saved file ${file.absolute.path}');
@@ -119,9 +115,7 @@ class ForegroundTaskHandler extends TaskHandler {
             print('Failed to write parsed notification: $e');
           }
 
-          const NotificationDetails notificationDetails = NotificationDetails(
-            android: androidNotificationDetails,
-          );
+          const NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails);
           await flutterLocalNotificationsPlugin?.show(
             DateTime.now().secondsSinceEpoch,
             'Add expense ?',

@@ -24,10 +24,7 @@ extension ApiKeyService on Service {
   }
 
   Future<List<ApiKey>> getKeys() async {
-    final response = await http.get(
-      await formatUrl('$API_URL/ApiKey'),
-      headers: await headers,
-    );
+    final response = await http.get(await formatUrl('$API_URL/ApiKey'), headers: await headers);
 
     processResponse(response);
 
@@ -36,10 +33,7 @@ extension ApiKeyService on Service {
   }
 
   Future<bool> deleteKey(String keyId) async {
-    final response = await http.delete(
-      await formatUrl('$API_URL/ApiKey/$keyId'),
-      headers: await headers,
-    );
+    final response = await http.delete(await formatUrl('$API_URL/ApiKey/$keyId'), headers: await headers);
     processResponse(response);
     return true;
   }

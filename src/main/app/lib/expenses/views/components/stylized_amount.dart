@@ -13,14 +13,8 @@ class StylizedAmount extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     final formattedAmount = formatCurrency(amount);
 
-    final String rootAmount = formattedAmount.substring(
-      0,
-      formattedAmount.length - 3,
-    );
-    final String remainder = formattedAmount.substring(
-      formattedAmount.length - 3,
-      formattedAmount.length,
-    );
+    final String rootAmount = formattedAmount.substring(0, formattedAmount.length - 3);
+    final String remainder = formattedAmount.substring(formattedAmount.length - 3, formattedAmount.length);
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -28,18 +22,11 @@ class StylizedAmount extends StatelessWidget {
       children: [
         Text(
           rootAmount,
-          style: textTheme.bodyLarge?.copyWith(
-            color: colors.onSurface,
-            fontSize: size,
-            height: 0,
-          ),
+          style: textTheme.bodyLarge?.copyWith(color: colors.onSurface, fontSize: size, height: 0),
         ),
         Text(
           remainder,
-          style: textTheme.bodyLarge?.copyWith(
-            color: colors.onSurface.withValues(alpha: 0.5),
-            height: 1.5,
-          ),
+          style: textTheme.bodyLarge?.copyWith(color: colors.onSurface.withValues(alpha: 0.5), height: 1.5),
         ),
       ],
     );

@@ -15,16 +15,12 @@ class OneDay extends StatelessWidget {
   const OneDay({super.key, required this.expense, required this.showExpense});
 
   String displayDate() {
-    return DateFormat.yMMMMd(
-      'en_US',
-    ).format(DateFormat('yyyy-MM-dd').parse(expense.date));
+    return DateFormat.yMMMMd('en_US').format(DateFormat('yyyy-MM-dd').parse(expense.date));
   }
 
   @override
   Widget build(BuildContext context) {
-    double total = expense.expenses
-        .map((e) => e.amount)
-        .reduce((value, element) => value + element);
+    double total = expense.expenses.map((e) => e.amount).reduce((value, element) => value + element);
 
     List<Expense> expenses = List.from(expense.expenses);
     expenses.sort((a, b) => (b.timestamp).compareTo(a.timestamp));
@@ -38,13 +34,7 @@ class OneDay extends StatelessWidget {
           Column(
             spacing: 10,
             children: expenses
-                .map(
-                  (e) => OneExpense(
-                    key: ValueKey(e.id),
-                    expense: e,
-                    showExpense: showExpense,
-                  ),
-                )
+                .map((e) => OneExpense(key: ValueKey(e.id), expense: e, showExpense: showExpense))
                 .toList(),
           ),
         ],

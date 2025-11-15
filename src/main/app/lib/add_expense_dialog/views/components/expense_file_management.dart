@@ -75,172 +75,150 @@ class ExpenseFileManagement extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return BlocProvider(
-      create: (context) =>
-          ExpenseFileManagementCubit(ExpenseFileManagementState(files: files)),
-      child:
-          BlocConsumer<ExpenseFileManagementCubit, ExpenseFileManagementState>(
-            listenWhen: (previous, current) => previous.files != current.files,
-            listener: (context, state) => onFilesChanged(state.files),
-            builder: (context, state) {
-              final cubit = context.read<ExpenseFileManagementCubit>();
-              return SssFileListener(
-                onFile: cubit.onFileUpdated,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
+      create: (context) => ExpenseFileManagementCubit(ExpenseFileManagementState(files: files)),
+      child: BlocConsumer<ExpenseFileManagementCubit, ExpenseFileManagementState>(
+        listenWhen: (previous, current) => previous.files != current.files,
+        listener: (context, state) => onFilesChanged(state.files),
+        builder: (context, state) {
+          final cubit = context.read<ExpenseFileManagementCubit>();
+          return SssFileListener(
+            onFile: cubit.onFileUpdated,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: 300,
+                    child: AnimatedSwitcher(
+                      duration: animationDuration,
+                      child: !state.loading && state.files.isEmpty
+                          ? Center(child: Icon(Icons.image, size: 100, color: colors.secondary))
+                          : ImageCarousel(
+                              files: state.files,
+                              controller: cubit.carouselController,
+                              builder: (context, imageWidget) => Stack(
+                                children: [
+                                  Positioned.fill(child: imageWidget),
+                                  Positioned(
+                                    top: 10,
+                                    right: 10,
+                                    child: IconButton.filledTonal(
+                                      onPressed: () => cubit.removeFile(imageWidget.file),
+                                      icon: Icon(Icons.close),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                    ),
+                  ),
+                  Gap(24),
+                  if (state.possibleTags.isNotEmpty) ...[
+                    Row(
+                      spacing: 4,
+                      children: [
+                        Icon(Icons.local_offer, size: 16),
+                        Text('Found tags', style: textTheme.labelMedium),
+                      ],
+                    ),
+                    Gap(8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: state.possibleTags
+                          .map(
+                            (e) => InkWell(
+                              onTap: () {
+                                onTagTapped(e);
+                                Navigator.of(context).pop();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: colors.primaryContainer,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(e),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ],
+                  Gap(24),
+                  if (state.possiblePrices.isNotEmpty) ...[
+                    Row(
+                      spacing: 4,
+                      children: [
+                        Icon(Icons.attach_money, size: 16),
+                        Text('Found amounts', style: textTheme.labelMedium),
+                      ],
+                    ),
+                    Gap(8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: state.possiblePrices
+                          .map(
+                            (e) => InkWell(
+                              onTap: () {
+                                onAmountTapped(e);
+                                Navigator.of(context).pop();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: colors.primaryContainer,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(formatCurrency(e)),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ],
+                  Gap(24),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    spacing: 16,
                     children: [
-                      SizedBox(
-                        height: 300,
-                        child: AnimatedSwitcher(
-                          duration: animationDuration,
-                          child: !state.loading && state.files.isEmpty
-                              ? Center(
-                                  child: Icon(
-                                    Icons.image,
-                                    size: 100,
-                                    color: colors.secondary,
-                                  ),
-                                )
-                              : ImageCarousel(
-                                  files: state.files,
-                                  controller: cubit.carouselController,
-                                  builder: (context, imageWidget) => Stack(
-                                    children: [
-                                      Positioned.fill(child: imageWidget),
-                                      Positioned(
-                                        top: 10,
-                                        right: 10,
-                                        child: IconButton.filledTonal(
-                                          onPressed: () => cubit.removeFile(
-                                            imageWidget.file,
-                                          ),
-                                          icon: Icon(Icons.close),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                      if (kIsWeb)
+                        Expanded(
+                          child: FilledButton.tonalIcon(
+                            onPressed: state.loading ? null : () => uploadFile(context),
+                            label: Text('Upload'),
+                            icon: Icon(Icons.upload),
+                          ),
+                        )
+                      else ...[
+                        Expanded(
+                          child: FilledButton.tonalIcon(
+                            onPressed: state.loading ? null : () => takePicture(context),
+                            label: Text('Take picture'),
+                            icon: Icon(Icons.camera_alt),
+                          ),
                         ),
-                      ),
-                      Gap(24),
-                      if (state.possibleTags.isNotEmpty) ...[
-                        Row(
-                          spacing: 4,
-                          children: [
-                            Icon(Icons.local_offer, size: 16),
-                            Text('Found tags', style: textTheme.labelMedium),
-                          ],
-                        ),
-                        Gap(8),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 4,
-                          children: state.possibleTags
-                              .map(
-                                (e) => InkWell(
-                                  onTap: () {
-                                    onTagTapped(e);
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 2,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: colors.primaryContainer,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Text(e),
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                        Expanded(
+                          child: FilledButton.tonalIcon(
+                            onPressed: state.loading ? null : () => uploadFile(context),
+                            label: Text('Pick from gallery'),
+                            icon: Icon(Icons.upload),
+                          ),
                         ),
                       ],
-                      Gap(24),
-                      if (state.possiblePrices.isNotEmpty) ...[
-                        Row(
-                          spacing: 4,
-                          children: [
-                            Icon(Icons.attach_money, size: 16),
-                            Text('Found amounts', style: textTheme.labelMedium),
-                          ],
-                        ),
-                        Gap(8),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 4,
-                          children: state.possiblePrices
-                              .map(
-                                (e) => InkWell(
-                                  onTap: () {
-                                    onAmountTapped(e);
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 2,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: colors.primaryContainer,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Text(formatCurrency(e)),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ],
-                      Gap(24),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        spacing: 16,
-                        children: [
-                          if (kIsWeb)
-                            Expanded(
-                              child: FilledButton.tonalIcon(
-                                onPressed: state.loading
-                                    ? null
-                                    : () => uploadFile(context),
-                                label: Text('Upload'),
-                                icon: Icon(Icons.upload),
-                              ),
-                            )
-                          else ...[
-                            Expanded(
-                              child: FilledButton.tonalIcon(
-                                onPressed: state.loading
-                                    ? null
-                                    : () => takePicture(context),
-                                label: Text('Take picture'),
-                                icon: Icon(Icons.camera_alt),
-                              ),
-                            ),
-                            Expanded(
-                              child: FilledButton.tonalIcon(
-                                onPressed: state.loading
-                                    ? null
-                                    : () => uploadFile(context),
-                                label: Text('Pick from gallery'),
-                                icon: Icon(Icons.upload),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                      if (kIsWeb) Gap(16),
                     ],
                   ),
-                ),
-              );
-            },
-          ),
+                  if (kIsWeb) Gap(16),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -6,26 +6,22 @@ part of 'search_parameters.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_SearchParameters _$SearchParametersFromJson(Map<String, dynamic> json) =>
-    _SearchParameters(
-      categories:
-          (json['categories'] as List<dynamic>?)
-              ?.map((e) => Category.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-      minAmount: (json['minAmount'] as num).toInt(),
-      maxAmount: (json['maxAmount'] as num).toInt(),
-      searchQuery: json['searchQuery'] as String? ?? '',
-      minDate: (json['minDate'] as num?)?.toInt(),
-      maxDate: (json['maxDate'] as num?)?.toInt(),
-    );
+_SearchParameters _$SearchParametersFromJson(Map<String, dynamic> json) => _SearchParameters(
+  categories:
+      (json['categories'] as List<dynamic>?)?.map((e) => Category.fromJson(e as Map<String, dynamic>)).toList() ??
+      const [],
+  minAmount: (json['minAmount'] as num).toInt(),
+  maxAmount: (json['maxAmount'] as num).toInt(),
+  searchQuery: json['searchQuery'] as String? ?? '',
+  minDate: (json['minDate'] as num?)?.toInt(),
+  maxDate: (json['maxDate'] as num?)?.toInt(),
+);
 
-Map<String, dynamic> _$SearchParametersToJson(_SearchParameters instance) =>
-    <String, dynamic>{
-      'categories': instance.categories,
-      'minAmount': instance.minAmount,
-      'maxAmount': instance.maxAmount,
-      'searchQuery': instance.searchQuery,
-      'minDate': instance.minDate,
-      'maxDate': instance.maxDate,
-    };
+Map<String, dynamic> _$SearchParametersToJson(_SearchParameters instance) => <String, dynamic>{
+  'categories': instance.categories,
+  'minAmount': instance.minAmount,
+  'maxAmount': instance.maxAmount,
+  'searchQuery': instance.searchQuery,
+  'minDate': instance.minDate,
+  'maxDate': instance.maxDate,
+};

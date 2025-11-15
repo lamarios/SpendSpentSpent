@@ -39,12 +39,7 @@ class StatsGraph extends StatelessWidget {
               String text = avg ? "Avg: " : "";
               return LineTooltipItem(
                 text + formatCurrency(e.y),
-                TextStyle(
-                  color: avg
-                      ? Colors.white.withValues(alpha: 0.7)
-                      : Colors.white,
-                  fontSize: avg ? 12 : 20,
-                ),
+                TextStyle(color: avg ? Colors.white.withValues(alpha: 0.7) : Colors.white, fontSize: avg ? 12 : 20),
               );
             }).toList();
           },
@@ -54,23 +49,15 @@ class StatsGraph extends StatelessWidget {
         show: true,
         drawVerticalLine: true,
         getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: colors.onSurface.withValues(alpha: 0.075),
-            strokeWidth: 1,
-          );
+          return FlLine(color: colors.onSurface.withValues(alpha: 0.075), strokeWidth: 1);
         },
         getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: colors.onSurface.withValues(alpha: 0.075),
-            strokeWidth: 1,
-          );
+          return FlLine(color: colors.onSurface.withValues(alpha: 0.075), strokeWidth: 1);
         },
       ),
       titlesData: FlTitlesData(
         show: true,
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
+        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         // rightTitles: SideTitles(showTitles: false),
         topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         // topTitles: SideTitles(showTitles: false),
@@ -79,21 +66,14 @@ class StatsGraph extends StatelessWidget {
             showTitles: true,
             reservedSize: 35,
             getTitlesWidget: (value, meta) {
-              var style = TextStyle(
-                color: colors.onSurface,
-                fontWeight: FontWeight.bold,
-                fontSize: 10,
-              );
+              var style = TextStyle(color: colors.onSurface, fontWeight: FontWeight.bold, fontSize: 10);
 
               if (value == value.roundToDouble()) {
                 return Padding(
                   padding: const EdgeInsets.only(top: 12),
                   child: RotationTransition(
                     turns: const AlwaysStoppedAnimation(-45 / 360),
-                    child: Text(
-                      state.graphDataPoints[value.toInt()].date,
-                      style: style,
-                    ),
+                    child: Text(state.graphDataPoints[value.toInt()].date, style: style),
                   ),
                 );
               } else {
@@ -107,11 +87,7 @@ class StatsGraph extends StatelessWidget {
             showTitles: true,
             reservedSize: 50,
             getTitlesWidget: (value, meta) {
-              var style = TextStyle(
-                color: colors.onSurface,
-                fontWeight: FontWeight.bold,
-                fontSize: 10,
-              );
+              var style = TextStyle(color: colors.onSurface, fontWeight: FontWeight.bold, fontSize: 10);
               return Text(formatCurrency(value), style: style);
             },
           ),
@@ -119,10 +95,7 @@ class StatsGraph extends StatelessWidget {
       ),
       borderData: FlBorderData(
         show: true,
-        border: Border.all(
-          color: colors.onSurface.withValues(alpha: 0.3),
-          width: 1,
-        ),
+        border: Border.all(color: colors.onSurface.withValues(alpha: 0.3), width: 1),
       ),
       minX: 0,
       minY: state.minValue,
@@ -136,10 +109,7 @@ class StatsGraph extends StatelessWidget {
           barWidth: AVG_BAR_WIDTH,
           isStrokeCapRound: true,
           dotData: const FlDotData(show: false),
-          belowBarData: BarAreaData(
-            show: false,
-            color: colors.onSurface.withValues(alpha: 0.2),
-          ),
+          belowBarData: BarAreaData(show: false, color: colors.onSurface.withValues(alpha: 0.2)),
         ),
         LineChartBarData(
           spots: state.graphData,
@@ -148,10 +118,7 @@ class StatsGraph extends StatelessWidget {
           barWidth: 2,
           isStrokeCapRound: true,
           dotData: const FlDotData(show: false),
-          belowBarData: BarAreaData(
-            show: true,
-            color: colors.onSurface.withValues(alpha: 0.2),
-          ),
+          belowBarData: BarAreaData(show: true, color: colors.onSurface.withValues(alpha: 0.2)),
         ),
       ],
     );
@@ -180,11 +147,7 @@ class StatsGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => StatsGraphCubit(
-        const StatsGraphState(),
-        monthly: monthly,
-        categoryId: categoryId,
-      ),
+      create: (context) => StatsGraphCubit(const StatsGraphState(), monthly: monthly, categoryId: categoryId),
       child: BlocBuilder<StatsGraphCubit, StatsGraphState>(
         builder: (context, state) {
           final cubit = context.read<StatsGraphCubit>();
@@ -202,15 +165,8 @@ class StatsGraph extends StatelessWidget {
                       child: AnimatedContainer(
                         duration: panelTransition,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15.0,
-                            vertical: 5,
-                          ),
-                          child: Icon(
-                            Icons.clear,
-                            color: colors.onSurface,
-                            size: 20,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                          child: Icon(Icons.clear, color: colors.onSurface, size: 20),
                         ),
                       ),
                     ),
@@ -223,12 +179,10 @@ class StatsGraph extends StatelessWidget {
                   child: state.loading
                       ? Center(child: LoadingIndicator())
                       : SingleMotionBuilder(
-                          motion:
-                              MaterialSpringMotion.expressiveSpatialDefault(),
+                          motion: MaterialSpringMotion.expressiveSpatialDefault(),
                           from: 0,
                           value: 100,
-                          builder: (context, value, child) =>
-                              Transform.scale(scale: value / 100, child: child),
+                          builder: (context, value, child) => Transform.scale(scale: value / 100, child: child),
                           child: Column(
                             children: [
                               Expanded(
@@ -242,23 +196,18 @@ class StatsGraph extends StatelessWidget {
                               ),
                               Container(
                                 alignment: Alignment.center,
-                                child: Text(
-                                  getLabel(context),
-                                  style: TextStyle(color: colors.onSurface),
-                                ),
+                                child: Text(getLabel(context), style: TextStyle(color: colors.onSurface)),
                               ),
                               Slider.adaptive(
                                 min: 1,
                                 max: state.periodMax.toDouble(),
                                 divisions: state.periodMax - 1,
-                                onChangeEnd: (p0) =>
-                                    cubit.changeCount(p0.toInt()),
+                                onChangeEnd: (p0) => cubit.changeCount(p0.toInt()),
                                 value: state.count.toDouble(),
                                 activeColor: colors.onSurface,
                                 inactiveColor: colors.secondaryContainer,
                                 thumbColor: colors.primary.lighten(10),
-                                onChanged: (double double) =>
-                                    cubit.setLiveCount(double),
+                                onChanged: (double double) => cubit.setLiveCount(double),
                               ),
                             ],
                           ),

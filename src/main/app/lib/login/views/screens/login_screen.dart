@@ -10,12 +10,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: Login(
-          onLoginSuccess: () => AutoRouter.of(context).push(const HomeRoute()),
-        ),
-      ),
+      body: SafeArea(bottom: false, child: Login(onLoginSuccess: () => AutoRouter.of(context).push(const HomeRoute()))),
     );
   }
 }

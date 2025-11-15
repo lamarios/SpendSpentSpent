@@ -21,8 +21,7 @@ class ExpenseImages extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return BlocProvider(
-      create: (context) =>
-          ExpenseImagesCubit(ExpenseImagesState(files: initialFiles)),
+      create: (context) => ExpenseImagesCubit(ExpenseImagesState(files: initialFiles)),
       child: BlocBuilder<ExpenseImagesCubit, ExpenseImagesState>(
         builder: (context, state) {
           final cubit = context.read<ExpenseImagesCubit>();
@@ -40,12 +39,7 @@ class ExpenseImages extends StatelessWidget {
                   child: ImageCarousel(
                     files: state.files,
                     onTap: (value) {
-                      AutoRouter.of(context).push(
-                        ImageViewerRoute(
-                          images: state.files,
-                          initiallySelected: value,
-                        ),
-                      );
+                      AutoRouter.of(context).push(ImageViewerRoute(images: state.files, initiallySelected: value));
                     },
                   ),
                 ),
@@ -67,10 +61,7 @@ class ExpenseImages extends StatelessWidget {
                                     child: Container(
                                       margin: EdgeInsets.only(right: 4),
                                       key: ValueKey(e),
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 4,
-                                        horizontal: 8,
-                                      ),
+                                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                                       decoration: BoxDecoration(
                                         color: colors.primaryContainer,
                                         borderRadius: BorderRadius.circular(30),
@@ -78,9 +69,7 @@ class ExpenseImages extends StatelessWidget {
 
                                       child: Text(
                                         e,
-                                        style: textTheme.bodySmall?.copyWith(
-                                          color: colors.onPrimaryContainer,
-                                        ),
+                                        style: textTheme.bodySmall?.copyWith(color: colors.onPrimaryContainer),
                                       ),
                                     ),
                                   ),

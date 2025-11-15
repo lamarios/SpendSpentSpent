@@ -61,13 +61,8 @@ class ExpenseActions extends StatelessWidget {
                     // style: flatButtonStyle,
                     onPressed: () => selectDate(context),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 5.0,
-                        vertical: 4,
-                      ),
-                      child: Text(
-                        DateFormat('yyyy-MM-dd').format(state.expenseDate),
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 4),
+                      child: Text(DateFormat('yyyy-MM-dd').format(state.expenseDate)),
                     ),
                   ),
                   DummyFade(
@@ -76,12 +71,7 @@ class ExpenseActions extends StatelessWidget {
                       onPressed: () {
                         cubit.setLocation(!state.useLocation);
                       },
-                      icon: Icon(
-                        Icons.near_me,
-                        color: state.useLocation
-                            ? colors.primary
-                            : colors.onSurface,
-                      ),
+                      icon: Icon(Icons.near_me, color: state.useLocation ? colors.primary : colors.onSurface),
                     ),
                   ),
                   AnimatedContainer(
@@ -90,20 +80,14 @@ class ExpenseActions extends StatelessWidget {
                         topLeft: Radius.circular(15),
                         topRight: Radius.circular(15),
                       ),
-                      color: state.noteSuggestions.isEmpty
-                          ? colors.surfaceContainer
-                          : colors.surface,
+                      color: state.noteSuggestions.isEmpty ? colors.surfaceContainer : colors.surface,
                     ),
-                    duration: Duration(
-                      milliseconds: panelTransition.inMilliseconds ~/ 2,
-                    ),
+                    duration: Duration(milliseconds: panelTransition.inMilliseconds ~/ 2),
                     child: IconButton(
                       onPressed: () => showNoteDialog(context),
                       icon: Icon(
                         Icons.comment_rounded,
-                        color: state.expenseNote.isNotEmpty
-                            ? colors.primary
-                            : colors.onSurface,
+                        color: state.expenseNote.isNotEmpty ? colors.primary : colors.onSurface,
                       ),
                     ),
                   ),
@@ -113,9 +97,7 @@ class ExpenseActions extends StatelessWidget {
                       onPressed: () => enableCurrencyConversion(context),
                       icon: Icon(
                         Icons.attach_money,
-                        color: state.showCurrencyConversion
-                            ? colors.primary
-                            : colors.onSurface,
+                        color: state.showCurrencyConversion ? colors.primary : colors.onSurface,
                       ),
                     ),
                   ),
@@ -130,10 +112,7 @@ class ExpenseActions extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Container(
                       height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: defaultBorder,
-                        color: colors.surface,
-                      ),
+                      decoration: BoxDecoration(borderRadius: defaultBorder, color: colors.surface),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SingleChildScrollView(
@@ -143,19 +122,15 @@ class ExpenseActions extends StatelessWidget {
                           child: Row(
                             children:
                                 [
-                                      if (state.expenseNote.isNotEmpty)
-                                        state.expenseNote,
-                                      ...state.aiAndNoteSuggestions.where(
-                                        (e) => e != state.expenseNote,
-                                      ),
+                                      if (state.expenseNote.isNotEmpty) state.expenseNote,
+                                      ...state.aiAndNoteSuggestions.where((e) => e != state.expenseNote),
                                     ]
                                     .map(
                                       (e) => NoteSuggestionPill(
                                         key: Key(e),
                                         text: e,
                                         current: state.expenseNote == e,
-                                        tapSuggestion: (text) =>
-                                            tapSuggestion(context, text),
+                                        tapSuggestion: (text) => tapSuggestion(context, text),
                                       ),
                                     )
                                     .toList(),

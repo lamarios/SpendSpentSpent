@@ -13,18 +13,10 @@ import 'package:spend_spent_spent/utils/extensions/list_insert_between.dart';
 import 'package:spend_spent_spent/utils/views/components/expense_separator.dart';
 
 class ExpenseList extends StatelessWidget {
-  final List<RecurringExpense> expenses,
-      daily = [],
-      weekly = [],
-      monthly = [],
-      yearly = [];
+  final List<RecurringExpense> expenses, daily = [], weekly = [], monthly = [], yearly = [];
   final Function() refreshExpenses;
 
-  ExpenseList({
-    super.key,
-    required this.expenses,
-    required this.refreshExpenses,
-  }) {
+  ExpenseList({super.key, required this.expenses, required this.refreshExpenses}) {
     splitExpenses(expenses);
   }
 
@@ -32,14 +24,8 @@ class ExpenseList extends StatelessWidget {
     showModal(
       context: context,
       builder: (context) => Card(
-        margin: getInsetsForMaxSize(
-          MediaQuery.of(context),
-          maxWidth: 350,
-          maxHeight: 450,
-        ),
-        child: AddRecurringExpenseDialog(
-          refreshRecurringExpenses: refreshExpenses,
-        ),
+        margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 450),
+        child: AddRecurringExpenseDialog(refreshRecurringExpenses: refreshExpenses),
       ),
     );
   }
@@ -67,29 +53,17 @@ class ExpenseList extends StatelessWidget {
 */
   }
 
-  Widget? expensesFromSplit(
-    BuildContext context,
-    List<RecurringExpense> expenses,
-    String title,
-  ) {
+  Widget? expensesFromSplit(BuildContext context, List<RecurringExpense> expenses, String title) {
     List<Widget> results = [];
 
     if (expenses.isNotEmpty) {
-      double total = expenses
-          .map((e) => e.amount)
-          .reduce((value, element) => value + element);
+      double total = expenses.map((e) => e.amount).reduce((value, element) => value + element);
 
       results.add(ExpenseSeparator(texts: [title, formatCurrency(total)]));
 
       List<Widget> expensesWidget = [];
       for (var e in expenses) {
-        expensesWidget.add(
-          Expense(
-            key: Key(e.id.toString()),
-            expense: e,
-            refreshExpenses: refreshExpenses,
-          ),
-        );
+        expensesWidget.add(Expense(key: Key(e.id.toString()), expense: e, refreshExpenses: refreshExpenses));
       }
 
       results.add(
@@ -144,15 +118,10 @@ class ExpenseList extends StatelessWidget {
             motion: MaterialSpringMotion.expressiveSpatialDefault(),
             from: 0,
             value: 100,
-            builder: (context, value, child) =>
-                Transform.scale(scale: value / 100, child: child),
+            builder: (context, value, child) => Transform.scale(scale: value / 100, child: child),
             child: IconButton(
               iconSize: 36,
-              style: ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(
-                  colors.primaryContainer,
-                ),
-              ),
+              style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(colors.primaryContainer)),
               onPressed: () => showAddRecurringExpenseDialog(context),
               icon: Icon(Icons.add),
             ),

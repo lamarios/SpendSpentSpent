@@ -57,8 +57,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
   User? currentUser;
   GlobalKey<MasterDetailState> masterDetailKey = GlobalKey<MasterDetailState>();
   PackageInfo? packageInfo;
-  TextEditingController motdController = TextEditingController(),
-      currencyapiKey = TextEditingController();
+  TextEditingController motdController = TextEditingController(), currencyapiKey = TextEditingController();
   bool demoMode = false;
   bool allowSignUp = false;
   bool showChangePassword = false;
@@ -78,19 +77,11 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
   }
 
   void showPasswordChange(BuildContext context) {
-    masterDetailKey.currentState!.changeDetails(
-      context,
-      'Change password',
-      const ChangePassword(),
-    );
+    masterDetailKey.currentState!.changeDetails(context, 'Change password', const ChangePassword());
   }
 
   void showManageUsers(BuildContext context) {
-    masterDetailKey.currentState!.changeDetails(
-      context,
-      'Manage users',
-      const ManageUsers(),
-    );
+    masterDetailKey.currentState!.changeDetails(context, 'Manage users', const ManageUsers());
   }
 
   void setMotd() {
@@ -100,39 +91,21 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
   }
 
   void setCurrencyApiKey() {
-    showPromptDialog(
-      context,
-      'currencyapi.com api key',
-      "",
-      currencyapiKey,
-      () {
-        setSetting(CURRENCY_API_KEY, currencyapiKey.text.trim(), true);
-      },
-    );
+    showPromptDialog(context, 'currencyapi.com api key', "", currencyapiKey, () {
+      setSetting(CURRENCY_API_KEY, currencyapiKey.text.trim(), true);
+    });
   }
 
   void showEditProfile(BuildContext context) {
-    masterDetailKey.currentState!.changeDetails(
-      context,
-      'Edit profile',
-      EditProfile(onProfileSaved: refreshProfile),
-    );
+    masterDetailKey.currentState!.changeDetails(context, 'Edit profile', EditProfile(onProfileSaved: refreshProfile));
   }
 
   void showApiKeyManagement(BuildContext context) {
-    masterDetailKey.currentState!.changeDetails(
-      context,
-      'Manage API Keys',
-      ManageApiKeys(),
-    );
+    masterDetailKey.currentState!.changeDetails(context, 'Manage API Keys', ManageApiKeys());
   }
 
   void showNotificationListenerManagement(BuildContext context) {
-    masterDetailKey.currentState!.changeDetails(
-      context,
-      'Manage notification listener',
-      NotificationListenerSetup(),
-    );
+    masterDetailKey.currentState!.changeDetails(context, 'Manage notification listener', NotificationListenerSetup());
   }
 
   Future<void> refreshSettings() async {
@@ -210,25 +183,17 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                         darkTheme: theme,
                         sections: [
                           SettingsSection(
-                            title: Text(
-                              '${currentUser?.firstName ?? ""} ${currentUser?.lastName ?? ""}',
-                            ),
+                            title: Text('${currentUser?.firstName ?? ""} ${currentUser?.lastName ?? ""}'),
                             tiles: [
                               if (showChangePassword) ...[
                                 SettingsTile(
                                   title: const Text('Edit profile'),
-                                  leading: const Icon(
-                                    Icons.person,
-                                    size: iconSize,
-                                  ),
+                                  leading: const Icon(Icons.person, size: iconSize),
                                   onPressed: showEditProfile,
                                 ),
                                 SettingsTile(
                                   title: const Text('Change password'),
-                                  leading: const Icon(
-                                    Icons.key,
-                                    size: iconSize,
-                                  ),
+                                  leading: const Icon(Icons.key, size: iconSize),
                                   onPressed: showPasswordChange,
                                 ),
                               ],
@@ -240,10 +205,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                               ),
                               SettingsTile(
                                 title: const Text('Logout'),
-                                leading: const Icon(
-                                  Icons.logout,
-                                  size: iconSize,
-                                ),
+                                leading: const Icon(Icons.logout, size: iconSize),
                                 onPressed: logOut,
                               ),
                             ],
@@ -254,14 +216,9 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                               tiles: [
                                 SettingsTile(
                                   title: Text('Manage notification listener'),
-                                  leading: Icon(
-                                    Icons.notifications_active_outlined,
-                                    size: iconSize,
-                                  ),
+                                  leading: Icon(Icons.notifications_active_outlined, size: iconSize),
                                   onPressed: showNotificationListenerManagement,
-                                  description: Text(
-                                    'Watch device notifications to find expenses to add',
-                                  ),
+                                  description: Text('Watch device notifications to find expenses to add'),
                                 ),
                               ],
                             ),
@@ -274,43 +231,21 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                                   leading: Stack(
                                     children: [
                                       Icon(Icons.house_outlined),
-                                      if (householdCubit
-                                          .state
-                                          .invitations
-                                          .isNotEmpty)
-                                        Positioned(
-                                          top: 0,
-                                          right: 0,
-                                          child: Badge(smallSize: 10),
-                                        ),
+                                      if (householdCubit.state.invitations.isNotEmpty)
+                                        Positioned(top: 0, right: 0, child: Badge(smallSize: 10)),
                                     ],
                                   ),
                                   description: householdCubit.state.loading
-                                      ? SizedBox(
-                                          width: 16,
-                                          height: 16,
-                                          child: LoadingIndicator(),
-                                        )
-                                      : householdCubit.state.household ==
-                                                null &&
-                                            householdCubit
-                                                .state
-                                                .invitations
-                                                .isEmpty
+                                      ? SizedBox(width: 16, height: 16, child: LoadingIndicator())
+                                      : householdCubit.state.household == null &&
+                                            householdCubit.state.invitations.isEmpty
                                       ? Text('No household, create one.')
                                       : householdCubit.state.household != null
-                                      ? Text(
-                                          '${householdCubit.state.household!.members.length} household members',
-                                        )
-                                      : Text(
-                                          '${householdCubit.state.invitations.length} invitations',
-                                        ),
-                                  onPressed: (context) => AutoRouter.of(context)
-                                      .push(HouseholdManagementRoute())
-                                      .then(
-                                        (value) =>
-                                            householdCubit.getData(false),
-                                      ),
+                                      ? Text('${householdCubit.state.household!.members.length} household members')
+                                      : Text('${householdCubit.state.invitations.length} invitations'),
+                                  onPressed: (context) => AutoRouter.of(
+                                    context,
+                                  ).push(HouseholdManagementRoute()).then((value) => householdCubit.getData(false)),
                                 ),
                               ],
                             ),
@@ -320,47 +255,30 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                               tiles: [
                                 SettingsTile(
                                   title: const Text('Manage users'),
-                                  leading: const Icon(
-                                    Icons.people,
-                                    size: iconSize,
-                                  ),
+                                  leading: const Icon(Icons.people, size: iconSize),
                                   onPressed: showManageUsers,
                                 ),
                                 SettingsTile(
                                   title: const Text('Currencyapi.com api key'),
                                   description: Text(
-                                    (service.config?.canConvertCurrency ??
-                                            false)
+                                    (service.config?.canConvertCurrency ?? false)
                                         ? '${service.config?.convertCurrencyQuota ?? ''} remaining api calls \nthis month'
                                         : 'No api key set',
                                   ),
-                                  leading: const Icon(
-                                    Icons.attach_money,
-                                    size: iconSize,
-                                  ),
+                                  leading: const Icon(Icons.attach_money, size: iconSize),
                                   onPressed: (context) => setCurrencyApiKey(),
                                 ),
                                 SettingsTile(
                                   title: const Text('Set login screen message'),
                                   description: Text(motdController.text),
-                                  leading: const Icon(
-                                    Icons.comment_outlined,
-                                    size: iconSize,
-                                  ),
+                                  leading: const Icon(Icons.comment_outlined, size: iconSize),
                                   onPressed: (context) => setMotd(),
                                 ),
                                 SettingsTile.switchTile(
                                   title: const Text('Allow registration'),
-                                  leading: const Icon(
-                                    Icons.key,
-                                    size: iconSize,
-                                  ),
+                                  leading: const Icon(Icons.key, size: iconSize),
                                   initialValue: allowSignUp,
-                                  onToggle: (bool value) => setSetting(
-                                    ALLOW_SIGNUP,
-                                    value ? "1" : "0",
-                                    false,
-                                  ),
+                                  onToggle: (bool value) => setSetting(ALLOW_SIGNUP, value ? "1" : "0", false),
                                   // onPressed: showEditProfile,
                                 ),
                                 SettingsTile.switchTile(
@@ -368,16 +286,9 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                                   description: const Text(
                                     'Non-admin accounts cannot edit their profiles or change their passwords',
                                   ),
-                                  leading: const Icon(
-                                    Icons.lock,
-                                    size: iconSize,
-                                  ),
+                                  leading: const Icon(Icons.lock, size: iconSize),
                                   initialValue: demoMode,
-                                  onToggle: (bool value) => setSetting(
-                                    DEMO_MODE,
-                                    value ? "1" : "0",
-                                    false,
-                                  ),
+                                  onToggle: (bool value) => setSetting(DEMO_MODE, value ? "1" : "0", false),
                                   // onPressed: showEditProfile,
                                 ),
                               ],
@@ -388,29 +299,17 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                               if (!kIsWeb && Platform.isAndroid)
                                 SettingsTile.switchTile(
                                   title: const Text('Material you colors'),
-                                  description: const Text(
-                                    'Follow Material You colors, Android only',
-                                  ),
-                                  leading: const Icon(
-                                    Icons.color_lens_outlined,
-                                    size: iconSize,
-                                  ),
+                                  description: const Text('Follow Material You colors, Android only'),
+                                  leading: const Icon(Icons.color_lens_outlined, size: iconSize),
                                   initialValue: state.materialYou,
-                                  onToggle: (bool value) =>
-                                      cubit.setMaterialYou(value),
+                                  onToggle: (bool value) => cubit.setMaterialYou(value),
                                 ),
                               SettingsTile.switchTile(
                                 title: const Text('Black background'),
-                                description: const Text(
-                                  'Pure black background for dark theme',
-                                ),
-                                leading: const Icon(
-                                  Icons.color_lens_outlined,
-                                  size: iconSize,
-                                ),
+                                description: const Text('Pure black background for dark theme'),
+                                leading: const Icon(Icons.color_lens_outlined, size: iconSize),
                                 initialValue: state.blackBackground,
-                                onToggle: (bool value) =>
-                                    cubit.setBlackBackground(value),
+                                onToggle: (bool value) => cubit.setBlackBackground(value),
                               ),
                             ],
                           ),
@@ -419,12 +318,8 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                               title: Text('App info'),
                               tiles: [
                                 SettingsTile(
-                                  title: Text(
-                                    'Version: ${packageInfo?.version ?? 'n/a'}',
-                                  ),
-                                  description: Text(
-                                    'Build: ${packageInfo?.buildNumber ?? 'n/a'}',
-                                  ),
+                                  title: Text('Version: ${packageInfo?.version ?? 'n/a'}'),
+                                  description: Text('Build: ${packageInfo?.buildNumber ?? 'n/a'}'),
                                   leading: const Icon(Icons.info),
                                   // onPressed: showEditProfile,
                                 ),
@@ -435,9 +330,7 @@ class SettingsScreenState extends State<SettingsScreen> with AfterLayoutMixin {
                               title: Text('Backend info'),
                               tiles: [
                                 SettingsTile(
-                                  title: Text(
-                                    'Version: ${config?.backendVersion.toString() ?? 'n/a'}',
-                                  ),
+                                  title: Text('Version: ${config?.backendVersion.toString() ?? 'n/a'}'),
                                   leading: const Icon(Icons.dns),
                                   // onPressed: showEditProfile,
                                 ),

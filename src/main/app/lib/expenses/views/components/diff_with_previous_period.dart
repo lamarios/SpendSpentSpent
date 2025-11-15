@@ -8,11 +8,7 @@ class DiffWithPreviousPeriod extends StatelessWidget {
   final double? diff;
   final String currentMonth;
 
-  const DiffWithPreviousPeriod({
-    super.key,
-    this.diff,
-    required this.currentMonth,
-  });
+  const DiffWithPreviousPeriod({super.key, this.diff, required this.currentMonth});
 
   @override
   Widget build(BuildContext context) {
@@ -26,25 +22,18 @@ class DiffWithPreviousPeriod extends StatelessWidget {
           ? Colors.red
           : null;
       return InkWell(
-        onTap: () =>
-            DiffWithPreviousPeriodSettings.showModalSheet(
-              context,
-              month: currentMonth,
-            ).then((value) {
-              if (context.mounted) {
-                context.read<ExpenseListCubit>().getDiff();
-              }
-            }),
+        onTap: () => DiffWithPreviousPeriodSettings.showModalSheet(context, month: currentMonth).then((value) {
+          if (context.mounted) {
+            context.read<ExpenseListCubit>().getDiff();
+          }
+        }),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (diff! < 1) Icon(Icons.trending_down, color: color),
             if (diff! > 1) Icon(Icons.trending_up, color: color),
             Gap(4),
-            Text(
-              '${finalDiff.toStringAsFixed(2)}%',
-              style: textTheme.headlineSmall?.copyWith(color: color),
-            ),
+            Text('${finalDiff.toStringAsFixed(2)}%', style: textTheme.headlineSmall?.copyWith(color: color)),
           ],
         ),
       );

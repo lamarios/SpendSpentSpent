@@ -55,18 +55,13 @@ class MainMenu extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: backgroundColor,
                           borderRadius: BorderRadius.circular(50),
-                          border: Border.fromBorderSide(
-                            BorderSide(color: borderColor, width: 1),
-                          ),
+                          border: Border.fromBorderSide(BorderSide(color: borderColor, width: 1)),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(alpha: 0.25),
                               spreadRadius: 1,
                               blurRadius: 30,
-                              offset: Offset(
-                                0,
-                                0,
-                              ), // changes position of shadow
+                              offset: Offset(0, 0), // changes position of shadow
                             ),
                           ],
                         ),
@@ -77,9 +72,7 @@ class MainMenu extends StatelessWidget {
                     motion: MaterialSpringMotion.expressiveSpatialDefault(),
                     value: selectedIndex == 0 ? _selectedContainerPosition : 0,
                     builder: (context, right, child) => SingleMotionBuilder(
-                      value: selectedIndex == 2
-                          ? _selectedContainerPosition
-                          : 0,
+                      value: selectedIndex == 2 ? _selectedContainerPosition : 0,
                       motion: MaterialSpringMotion.expressiveSpatialDefault(),
                       builder: (context, left, child2) => Positioned(
                         left: left,
@@ -91,10 +84,7 @@ class MainMenu extends StatelessWidget {
                           child: Opacity(
                             opacity: opacity,
                             child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: colors.inversePrimary,
-                              ),
+                              decoration: BoxDecoration(shape: BoxShape.circle, color: colors.inversePrimary),
                             ),
                           ),
                         ),
@@ -112,10 +102,7 @@ class MainMenu extends StatelessWidget {
                             offset: Offset(lerpDouble(110, 0, value / 100)!, 0),
                             child: Opacity(
                               opacity: opacity,
-                              child: AnimatedMenuIcon(
-                                iconData: Icons.auto_graph,
-                                selected: selectedIndex == 0,
-                              ),
+                              child: AnimatedMenuIcon(iconData: Icons.auto_graph, selected: selectedIndex == 0),
                             ),
                           ),
                         ),
@@ -124,26 +111,17 @@ class MainMenu extends StatelessWidget {
                           onTap: () => tabsRouter.setActiveIndex(1),
                           child: Transform.scale(
                             scale: value / 100,
-                            child: AnimatedMenuIcon(
-                              iconData: Icons.square_rounded,
-                              selected: selectedIndex == 1,
-                            ),
+                            child: AnimatedMenuIcon(iconData: Icons.square_rounded, selected: selectedIndex == 1),
                           ),
                         ),
                         Gap(24),
                         InkWell(
                           onTap: () => tabsRouter.setActiveIndex(2),
                           child: Transform.translate(
-                            offset: Offset(
-                              lerpDouble(-110, 0, value / 100)!,
-                              0,
-                            ),
+                            offset: Offset(lerpDouble(-110, 0, value / 100)!, 0),
                             child: Opacity(
                               opacity: opacity,
-                              child: AnimatedMenuIcon(
-                                iconData: Icons.list,
-                                selected: selectedIndex == 2,
-                              ),
+                              child: AnimatedMenuIcon(iconData: Icons.list, selected: selectedIndex == 2),
                             ),
                           ),
                         ),

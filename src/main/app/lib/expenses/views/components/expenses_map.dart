@@ -35,52 +35,31 @@ class ExpensesMap extends StatelessWidget {
                       children: [
                         Icon(Icons.map_outlined, size: 100),
                         Gap(24),
-                        Text(
-                          'No expenses',
-                          textAlign: TextAlign.center,
-                          style: textTheme.titleLarge,
-                        ),
+                        Text('No expenses', textAlign: TextAlign.center, style: textTheme.titleLarge),
                       ],
                     )
                   : Padding(
-                      padding: const EdgeInsets.only(
-                        left: 8,
-                        right: 8,
-                        bottom: bottomPadding - 30,
-                        top: 16,
-                      ),
+                      padding: const EdgeInsets.only(left: 8, right: 8, bottom: bottomPadding - 30, top: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Expanded(
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                bigItemBorderRadius,
-                              ),
+                              borderRadius: BorderRadius.circular(bigItemBorderRadius),
                               child: FlutterMap(
                                 options: MapOptions(
                                   initialCameraFit: state.fit,
-                                  initialCenter:
-                                      state.center ??
-                                      state.heatmapData[0].latLng,
+                                  initialCenter: state.center ?? state.heatmapData[0].latLng,
                                 ),
-                                mapController: context
-                                    .read<ExpenseMapCubit>()
-                                    .mapController,
+                                mapController: context.read<ExpenseMapCubit>().mapController,
                                 children: [
                                   TileLayer(
-                                    urlTemplate:
-                                        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                    userAgentPackageName:
-                                        'com.spendspentspent.app',
+                                    urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                    userAgentPackageName: 'com.spendspentspent.app',
                                   ),
-                                  if (state.heatmapData.isNotEmpty &&
-                                      state.showHeatmap)
+                                  if (state.heatmapData.isNotEmpty && state.showHeatmap)
                                     HeatMapLayer(
-                                      heatMapDataSource:
-                                          InMemoryHeatMapDataSource(
-                                            data: state.heatmapData,
-                                          ),
+                                      heatMapDataSource: InMemoryHeatMapDataSource(data: state.heatmapData),
                                       heatMapOptions: HeatMapOptions(),
                                     ),
                                   if (state.showAmounts)
@@ -93,28 +72,17 @@ class ExpensesMap extends StatelessWidget {
                                           child: Container(
                                             alignment: Alignment.center,
                                             child: InkWell(
-                                              onTap: () => MapExpenseList.show(
-                                                context,
-                                                cluster: w,
-                                              ),
+                                              onTap: () => MapExpenseList.show(context, cluster: w),
                                               child: Container(
-                                                padding: const EdgeInsets.all(
-                                                  4,
-                                                ),
+                                                padding: const EdgeInsets.all(4),
                                                 decoration: BoxDecoration(
-                                                  color: colors
-                                                      .secondaryContainer
-                                                      .withValues(alpha: 0.8),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        smallItemBorderRadius,
-                                                      ),
+                                                  color: colors.secondaryContainer.withValues(alpha: 0.8),
+                                                  borderRadius: BorderRadius.circular(smallItemBorderRadius),
                                                 ),
                                                 child: Text(
                                                   formatCurrency(w.total),
                                                   style: TextStyle(
-                                                    color: colors
-                                                        .onSecondaryContainer,
+                                                    color: colors.onSecondaryContainer,
                                                     fontSize: 12,
                                                     fontWeight: FontWeight.bold,
                                                   ),
@@ -136,10 +104,7 @@ class ExpensesMap extends StatelessWidget {
                                 child: SwitchListTile(
                                   value: state.showHeatmap,
                                   visualDensity: VisualDensity.compact,
-                                  title: Text(
-                                    'Heatmap',
-                                    textAlign: TextAlign.right,
-                                  ),
+                                  title: Text('Heatmap', textAlign: TextAlign.right),
                                   onChanged: cubit.setHeatmap,
                                 ),
                               ),
@@ -148,10 +113,7 @@ class ExpensesMap extends StatelessWidget {
                                 child: SwitchListTile(
                                   value: state.showAmounts,
                                   visualDensity: VisualDensity.compact,
-                                  title: Text(
-                                    'Amounts',
-                                    textAlign: TextAlign.right,
-                                  ),
+                                  title: Text('Amounts', textAlign: TextAlign.right),
                                   onChanged: cubit.setAmounts,
                                 ),
                               ),

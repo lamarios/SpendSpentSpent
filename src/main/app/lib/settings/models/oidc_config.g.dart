@@ -16,13 +16,12 @@ _OidcConfig _$OidcConfigFromJson(Map<String, dynamic> json) => _OidcConfig(
   name: json['name'] as String,
 );
 
-Map<String, dynamic> _$OidcConfigToJson(_OidcConfig instance) =>
-    <String, dynamic>{
-      'authorization_endpoint': instance.authorizationEndpoint,
-      'jwks_uri': instance.jwksUri,
-      'issuer': instance.issuer,
-      'token_endpoint': instance.tokenUrl,
-      'clientId': instance.clientId,
-      'discoveryUrl': instance.discoveryUrl,
-      'name': instance.name,
-    };
+Map<String, dynamic> _$OidcConfigToJson(_OidcConfig instance) => <String, dynamic>{
+  'authorization_endpoint': instance.authorizationEndpoint,
+  'jwks_uri': instance.jwksUri,
+  'issuer': instance.issuer,
+  'token_endpoint': instance.tokenUrl,
+  'clientId': instance.clientId,
+  'discoveryUrl': instance.discoveryUrl,
+  'name': instance.name,
+};

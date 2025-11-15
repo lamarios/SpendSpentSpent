@@ -14,28 +14,19 @@ class ChangePasswordDialog extends StatefulWidget {
   ChangePasswordDialogState createState() => ChangePasswordDialogState();
 }
 
-class ChangePasswordDialogState extends State<ChangePasswordDialog>
-    with AfterLayoutMixin {
+class ChangePasswordDialogState extends State<ChangePasswordDialog> with AfterLayoutMixin {
   TextEditingController passwordController = TextEditingController();
 
   void randomPassword() {
     var r = Random.secure();
-    passwordController.text = randomAlpha(
-      16,
-      provider: CoreRandomProvider.from(r),
-    );
+    passwordController.text = randomAlpha(16, provider: CoreRandomProvider.from(r));
   }
 
   Future<void> savePassword(BuildContext context) async {
-    await service.setUserPassword(
-      widget.userId,
-      passwordController.text.trim(),
-    );
+    await service.setUserPassword(widget.userId, passwordController.text.trim());
     Navigator.of(context).pop();
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("Password saved")));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Password saved")));
   }
 
   @override
@@ -52,10 +43,7 @@ class ChangePasswordDialogState extends State<ChangePasswordDialog>
             padding: const EdgeInsets.only(bottom: 20.0),
             child: TextField(controller: passwordController),
           ),
-          TextButton(
-            onPressed: randomPassword,
-            child: const Text('Generate password'),
-          ),
+          TextButton(onPressed: randomPassword, child: const Text('Generate password')),
           const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -67,9 +55,7 @@ class ChangePasswordDialogState extends State<ChangePasswordDialog>
                 child: const Text('Cancel', style: TextStyle()),
               ),
               TextButton(
-                onPressed: passwordController.text.trim().isNotEmpty
-                    ? () => savePassword(context)
-                    : null,
+                onPressed: passwordController.text.trim().isNotEmpty ? () => savePassword(context) : null,
                 child: Text('Save', style: TextStyle(color: colors.primary)),
               ),
             ],

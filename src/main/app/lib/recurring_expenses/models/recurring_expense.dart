@@ -19,8 +19,7 @@ sealed class RecurringExpense with _$RecurringExpense {
     required String name,
   }) = _RecurringExpense;
 
-  factory RecurringExpense.fromJson(Map<String, dynamic> json) =>
-      _$RecurringExpenseFromJson(json);
+  factory RecurringExpense.fromJson(Map<String, dynamic> json) => _$RecurringExpenseFromJson(json);
 }
 
 /*

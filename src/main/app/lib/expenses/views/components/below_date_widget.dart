@@ -18,8 +18,7 @@ class BelowDateInCalendarWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 4),
       child: BlocProvider(
-        create: (context) =>
-            BelowDateInCalendarCubit(BelowDateInCalendarState(), month),
+        create: (context) => BelowDateInCalendarCubit(BelowDateInCalendarState(), month),
         child: BlocBuilder<BelowDateInCalendarCubit, BelowDateInCalendarState>(
           builder: (context, state) {
             return SizedBox(
@@ -34,15 +33,10 @@ class BelowDateInCalendarWidget extends StatelessWidget {
                         motion: MaterialSpringMotion.expressiveSpatialDefault(),
                         from: -50,
                         value: 0,
-                        builder: (context, value, child) => Transform.translate(
-                          offset: Offset(0, value),
-                          child: child,
-                        ),
+                        builder: (context, value, child) => Transform.translate(offset: Offset(0, value), child: child),
                         child: Text(
                           formatCurrency(state.amount ?? 0),
-                          style: textTheme.labelMedium?.copyWith(
-                            color: colors.primary,
-                          ),
+                          style: textTheme.labelMedium?.copyWith(color: colors.primary),
                         ),
                       ),
               ),

@@ -6,8 +6,7 @@ import 'package:spend_spent_spent/utils/models/with_error.dart';
 
 part 'diff_with_previous_month_settings.freezed.dart';
 
-class DiffWithPreviousMonthSettingsCubit
-    extends Cubit<DiffWithPreviousMonthSettingsState> {
+class DiffWithPreviousMonthSettingsCubit extends Cubit<DiffWithPreviousMonthSettingsState> {
   DiffWithPreviousMonthSettingsCubit(super.initialState) {
     init();
   }
@@ -26,9 +25,7 @@ class DiffWithPreviousMonthSettingsCubit
 }
 
 @freezed
-sealed class DiffWithPreviousMonthSettingsState
-    with _$DiffWithPreviousMonthSettingsState
-    implements WithError {
+sealed class DiffWithPreviousMonthSettingsState with _$DiffWithPreviousMonthSettingsState implements WithError {
   @Implements<WithError>()
   const factory DiffWithPreviousMonthSettingsState({
     @Default(true) bool includeRecurringExpenses,

@@ -27,15 +27,8 @@ class CategoryEntry extends StatelessWidget {
     showModal(
       context: context,
       builder: (context) => Card(
-        margin: getInsetsForMaxSize(
-          MediaQuery.of(context),
-          maxWidth: 350,
-          maxHeight: 600,
-        ),
-        child: AddCategory(
-          onSelected: (newIcon) => setIcon(category, newIcon),
-          buttonLabel: 'Choose new Icon',
-        ),
+        margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 600),
+        child: AddCategory(onSelected: (newIcon) => setIcon(category, newIcon), buttonLabel: 'Choose new Icon'),
       ),
     );
   }
@@ -79,10 +72,7 @@ class CategoryEntry extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Row(
             children: [
-              ReorderableDragStartListener(
-                index: index,
-                child: const Icon(Icons.drag_handle),
-              ),
+              ReorderableDragStartListener(index: index, child: const Icon(Icons.drag_handle)),
               const Gap(20),
               getIcon(category.icon!, color: colors.primary, size: 20),
               const Gap(20),
@@ -93,16 +83,9 @@ class CategoryEntry extends StatelessWidget {
                     if (expenses != null) {
                       return expenses == -1
                           ? const Icon(Icons.warning)
-                          : Text(
-                              '$expenses expenses',
-                              style: textTheme.bodySmall,
-                            );
+                          : Text('$expenses expenses', style: textTheme.bodySmall);
                     } else {
-                      return SizedBox(
-                        width: 10,
-                        height: 10,
-                        child: LoadingIndicator(),
-                      );
+                      return SizedBox(width: 10, height: 10, child: LoadingIndicator());
                     }
                   },
                 ),

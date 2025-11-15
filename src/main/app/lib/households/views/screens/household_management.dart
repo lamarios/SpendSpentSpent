@@ -73,10 +73,7 @@ class HouseholdManagementScreen extends StatelessWidget {
                         ),
                         if (cubit.isAdmin)
                           MenuItemButton(
-                            leadingIcon: Icon(
-                              Icons.delete_outline,
-                              color: colors.error,
-                            ),
+                            leadingIcon: Icon(Icons.delete_outline, color: colors.error),
                             onPressed: () => okCancelDialog(
                               context,
                               title: 'Delete household ?',
@@ -91,10 +88,7 @@ class HouseholdManagementScreen extends StatelessWidget {
                                 }
                               },
                             ),
-                            child: Text(
-                              'Delete household',
-                              style: TextStyle(color: colors.error),
-                            ),
+                            child: Text('Delete household', style: TextStyle(color: colors.error)),
                           ),
                       ],
                     ),

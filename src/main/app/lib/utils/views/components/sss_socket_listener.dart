@@ -10,11 +10,7 @@ class SssSocketListener extends StatefulWidget {
   final Widget child;
   final void Function(SssSocketMessage message) onChange;
 
-  const SssSocketListener({
-    super.key,
-    required this.child,
-    required this.onChange,
-  });
+  const SssSocketListener({super.key, required this.child, required this.onChange});
 
   @override
   State<SssSocketListener> createState() => _SssSocketListenerState();
