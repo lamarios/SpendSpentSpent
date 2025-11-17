@@ -92,6 +92,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           context: .
+          platforms: linux/amd64, linux/arm64
           push: true
           file: docker/Dockerfile.lite
           tags: |
