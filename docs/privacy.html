@@ -1,57 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SpendSpentSpent – Privacy Policy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 2rem;
-            color: #333;
+        .content-wrapper {
+            padding: 8rem 2rem 4rem;
+            max-width: 800px;
+            margin: 0 auto;
+            min-height: 80vh;
         }
 
-        h1 {
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: .5rem;
+        .content-wrapper h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #fff;
         }
 
-        ul {
+        .content-wrapper p {
+            margin-bottom: 1.5rem;
+            color: #e0e0e0;
+        }
+
+        .content-wrapper ul {
             list-style-type: disc;
             margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #e0e0e0;
         }
 
-        li strong {
-            display: inline-block;
-            width: 120px;
+        .content-wrapper li {
+            margin-bottom: 0.5rem;
         }
 
-        p + p {
-            margin-top: 1rem;
+        .content-wrapper strong {
+            color: #fff;
         }
     </style>
 </head>
+
 <body>
-<h1>SpendSpentSpent Privacy Policy</h1>
 
-<p>The SpendSpentSpent mobile application does not collect any personal data from users. User accounts are linked to the
-    server they choose to use, whether it is a self‑hosted or third‑party server. The developers of SpendSpentSpent do
-    not operate public servers except for an optional demo server.</p>
+    <header>
+        <div class="logo">SpendSpentSpent</div>
+        <div class="menu-toggle" id="menu-toggle">
+            <span></span><span></span><span></span>
+        </div>
+        <nav id="nav">
+            <a href="index.html#features">Features</a>
+            <a href="index.html#screenshots">Screenshots</a>
+            <a href="index.html#download">Get Started</a>
+            <a href="https://github.com/lamarios/SpendSpentSpent" target="_blank">GitHub</a>
+        </nav>
+    </header>
 
-<p>When using a SpendSpentSpent server, the following information may be collected:</p>
-<ul>
-    <li><strong>Email address:</strong>required solely for authentication, password recovery, and to send recurring
-        expense reports.
-    </li>
-    <li><strong>Location data:</strong>captured only when the user explicitly permits the application to use location
-        services during expense creation. This information is not used to build a user profile.
-    </li>
-</ul>
+    <div class="content-wrapper fade-in">
+        <h1>Privacy Policy</h1>
 
-<p><strong>The SpendSpentSpent developers neither own nor share the data listed above. All collected data is transmitted
-    exclusively to the host of the server and is never processed for analytics purposes.</strong></p>
+        <p>The SpendSpentSpent mobile application does not collect any personal data from users. User accounts are
+            linked to the
+            server they choose to use, whether it is a self‑hosted or third‑party server. The developers of
+            SpendSpentSpent do
+            not operate public servers except for an optional demo server.</p>
 
-<p>Enabling the notification listener does not result in any data being sent to the server; all processing occurs
-    locally on the device.</p>
+        <p>When using a SpendSpentSpent server, the following information may be collected:</p>
+        <ul>
+            <li><strong>Email address:</strong> required solely for authentication, password recovery, and to send
+                recurring
+                expense reports.
+            </li>
+            <li><strong>Location data:</strong> captured only when the user explicitly permits the application to use
+                location
+                services during expense creation. This information is not used to build a user profile.
+            </li>
+        </ul>
+
+        <p><strong>The SpendSpentSpent developers neither own nor share the data listed above. All collected data is
+                transmitted
+                exclusively to the host of the server and is never processed for analytics purposes.</strong></p>
+
+        <p>Enabling the notification listener does not result in any data being sent to the server; all processing
+            occurs
+            locally on the device.</p>
+    </div>
+
+    <footer>
+        <p>© 2025 SpendSpentSpent. Open Source & Free.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+            <a href="https://github.com/lamarios/SpendSpentSpent" target="_blank">GitHub</a> •
+            <a href="privacy.html" style="color: #fff;">Privacy Policy</a>
+        </p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
+
 </html>
