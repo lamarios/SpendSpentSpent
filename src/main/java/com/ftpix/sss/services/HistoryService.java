@@ -1,6 +1,10 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.dao.*;
+import com.ftpix.sss.dao.CategoryDao;
+import com.ftpix.sss.dao.ExpenseDao;
+import com.ftpix.sss.dao.MonthlyHistoryDao;
+import com.ftpix.sss.dao.YearlyHistoryDao;
+import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.*;
 import jakarta.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
@@ -13,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -24,28 +27,19 @@ import static com.ftpix.sss.dsl.Tables.YEARLY_HISTORY;
 @Service
 public class HistoryService {
     protected final Log logger = LogFactory.getLog(this.getClass());
-    private final CategoryService categoryService;
-    private final DateTimeFormatter historyDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMM");
-    private final DateTimeFormatter monthlyHistoryDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
-    private final DateTimeFormatter yearlyHistoryDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
-    private final ExpenseService expenseService;
 
     private final ExpenseDao expenseDaoJooq;
     private final CategoryDao categoryDaoJooq;
     private final MonthlyHistoryDao monthlyHistoryDaoJooq;
     private final YearlyHistoryDao yearlyHistoryDaoJooq;
-    private final UserDao userDao;
     private final ZoneId zoneId;
 
     @Autowired
-    public HistoryService(CategoryService categoryService, ExpenseService expenseService, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq, UserDao userDao, ZoneId zoneId) {
-        this.categoryService = categoryService;
-        this.expenseService = expenseService;
+    public HistoryService(ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq, ZoneId zoneId) {
         this.expenseDaoJooq = expenseDaoJooq;
         this.categoryDaoJooq = categoryDaoJooq;
         this.monthlyHistoryDaoJooq = monthlyHistoryDaoJooq;
         this.yearlyHistoryDaoJooq = yearlyHistoryDaoJooq;
-        this.userDao = userDao;
         this.zoneId = zoneId;
 
 //        this.expenseDaoJooq.addUserBasedListener(expenseDaoListener);
@@ -55,10 +49,10 @@ public class HistoryService {
 
     @PostConstruct
     public void recreateViews() {
-        // very dirty way to recreate the views on startup but the zimezone can change so we don't really have a choice
+        // very dirty way to recreate the views on startup but the timezone can change so we don't really have a choice
         String sql = """
-                DROP VIEW IF EXISTS monthly_history;
-                CREATE VIEW monthly_history AS
+                DROP MATERIALIZED VIEW IF EXISTS monthly_history;
+                CREATE MATERIALIZED VIEW monthly_history AS
                 SELECT category_id,
                        to_char(to_timestamp(timestamp / 1000) AT TIME ZONE '%s', 'YYYYMM')::INTEGER AS date,
                        ROUND(SUM(amount)::NUMERIC, 2)                                                     AS total,
@@ -67,28 +61,73 @@ public class HistoryService {
                 GROUP BY category_id, to_char(to_timestamp(timestamp / 1000) AT TIME ZONE '%s', 'YYYYMM')::INTEGER;
                 
                 
-                DROP VIEW IF EXISTS yearly_history;
-                CREATE or replace VIEW yearly_history AS
+                DROP MATERIALIZED VIEW IF EXISTS yearly_history;
+                CREATE MATERIALIZED VIEW yearly_history AS
                 SELECT category_id,
                        to_char(to_timestamp(timestamp / 1000) AT TIME ZONE '%s', 'YYYY')::INTEGER AS date,
                        ROUND(SUM(amount)::NUMERIC, 2)                  AS total,
                        COUNT(*)                                        AS expenses
                 FROM expense
                 GROUP BY category_id, to_char(to_timestamp(timestamp / 1000) AT TIME ZONE '%s', 'YYYY')::INTEGER;
+                
+                CREATE INDEX yearly_index on yearly_history (category_id, date);
+                CREATE INDEX monthly_index on monthly_history (category_id, date);
+                
                 """.formatted(zoneId.toString(), zoneId.toString(), zoneId.toString(), zoneId.toString());
 
         yearlyHistoryDaoJooq.getDsl().execute(sql);
 
+        expenseDaoJooq.addUserBasedListener(new DaoUserListener<>() {
+            @Override
+            public void afterInsert(User user, Expense newRecord) {
+                refreshMaterializedViews();
+            }
 
+            @Override
+            public void afterUpdate(User user, Expense newRecord) {
+                refreshMaterializedViews();
+            }
+
+            @Override
+            public void afterDelete(User user, Expense deleted) {
+                refreshMaterializedViews();
+            }
+        });
+
+        categoryDaoJooq.addUserBasedListener(new DaoUserListener<>() {
+            @Override
+            public void afterInsert(User user, Category newRecord) {
+                refreshMaterializedViews();
+            }
+
+            @Override
+            public void afterUpdate(User user, Category newRecord) {
+                refreshMaterializedViews();
+            }
+
+            @Override
+            public void afterDelete(User user, Category deleted) {
+                refreshMaterializedViews();
+            }
+        });
+    }
+
+    private void refreshMaterializedViews() {
+        String sql = """
+                REFRESH MATERIALIZED VIEW yearly_history;
+                REFRESH MATERIALIZED VIEW monthly_history;
+                """;
+
+        yearlyHistoryDaoJooq.getDsl().execute(sql);
     }
 
 
     /**
      * Gets expense sum for each categories for the current year
      *
-     * @param user
-     * @return
-     * @throws Exception
+     * @param user which user to query for
+     * @return the list of category yearly summary
+     * @throws Exception if anything goes wrong
      */
     @Transactional(readOnly = true)
     public List<CategoryOverall> yearly(User user) throws Exception {
@@ -132,10 +171,7 @@ public class HistoryService {
 
 
         return result.stream()
-                .map(c -> {
-                    c.setTotal(overall.getTotal());
-                    return c;
-                })
+                .peek(c -> c.setTotal(overall.getTotal()))
                 .sorted(Comparator.comparing(CategoryOverall::getAmount)
                         .reversed()
                         .thenComparingLong(o -> o.getCategory().getId()))
@@ -146,9 +182,9 @@ public class HistoryService {
     /**
      * Gets expense sum for each categories for the current month
      *
-     * @param user
-     * @return
-     * @throws Exception
+     * @param user which user to query for
+     * @return the list of category monthly summary
+     * @throws Exception if anything goes wrong
      */
     @Transactional(readOnly = true)
     public List<CategoryOverall> monthly(User user) throws Exception {
@@ -192,10 +228,7 @@ public class HistoryService {
 
 
         return result.stream()
-                .map(c -> {
-                    c.setTotal(overall.getTotal());
-                    return c;
-                })
+                .peek(c -> c.setTotal(overall.getTotal()))
                 .sorted(Comparator.comparing(CategoryOverall::getAmount)
                         .reversed()
                         .thenComparingLong(o -> o.getCategory().getId()))
