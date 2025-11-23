@@ -7,8 +7,8 @@ import com.ftpix.sss.dao.YearlyHistoryDao;
 import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.*;
 import jakarta.annotation.PostConstruct;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ import static com.ftpix.sss.dsl.Tables.YEARLY_HISTORY;
 
 @Service
 public class HistoryService {
-    protected final Log logger = LogFactory.getLog(this.getClass());
+    private final static Logger logger = LogManager.getLogger();
 
     private final ExpenseDao expenseDaoJooq;
     private final CategoryDao categoryDaoJooq;
@@ -70,8 +70,8 @@ public class HistoryService {
                 FROM expense
                 GROUP BY category_id, to_char(to_timestamp(timestamp / 1000) AT TIME ZONE '%s', 'YYYY')::INTEGER;
                 
-                CREATE INDEX yearly_index on yearly_history (category_id, date);
-                CREATE INDEX monthly_index on monthly_history (category_id, date);
+                CREATE UNIQUE INDEX yearly_index on yearly_history (category_id, date);
+                CREATE UNIQUE INDEX monthly_index on monthly_history (category_id, date);
                 
                 """.formatted(zoneId.toString(), zoneId.toString(), zoneId.toString(), zoneId.toString());
 
@@ -113,12 +113,14 @@ public class HistoryService {
     }
 
     private void refreshMaterializedViews() {
+        var now = System.currentTimeMillis();
         String sql = """
-                REFRESH MATERIALIZED VIEW yearly_history;
-                REFRESH MATERIALIZED VIEW monthly_history;
+                REFRESH MATERIALIZED VIEW CONCURRENTLY yearly_history;
+                REFRESH MATERIALIZED VIEW CONCURRENTLY monthly_history;
                 """;
 
         yearlyHistoryDaoJooq.getDsl().execute(sql);
+        logger.info("Refreshing materialized views in {}ms", System.currentTimeMillis() - now);
     }
 
 
@@ -236,7 +238,7 @@ public class HistoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<Map<String, Object>> getYearlyHistory(long categoryId, int count, User user) throws Exception {
+    public List<Map<String, Object>> getYearlyHistory(long categoryId, int count, User user) {
         List<Map<String, Object>> result = new ArrayList<>();
 
         LocalDate date = LocalDate.now();
@@ -274,7 +276,7 @@ public class HistoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<Map<String, Object>> getMonthlyHistory(long categoryId, int count, User user) throws Exception {
+    public List<Map<String, Object>> getMonthlyHistory(long categoryId, int count, User user) {
         List<Map<String, Object>> result = new ArrayList<>();
 
         ZonedDateTime date = ZonedDateTime.now(zoneId);
