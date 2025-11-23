@@ -146,67 +146,69 @@ class RightColumnTab extends StatelessWidget {
                             ),
                             Gap(4),
                             Expanded(
-                              child: SingleMotionBuilder(
-                                motion: MaterialSpringMotion.expressiveSpatialDefault(),
-                                builder: (context, value, child) => Center(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: .circular(bigItemBorderRadius),
-                                      color: Color.lerp(colors.secondaryContainer, getLightBackground(context), value),
-                                    ),
+                              child: Padding(
+                                padding: const .all(4.0),
+                                child: SingleMotionBuilder(
+                                  motion: MaterialSpringMotion.expressiveSpatialDefault(),
+                                  builder: (context, value, child) => Center(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: .circular(bigItemBorderRadius),
+                                        color: Color.lerp(
+                                          colors.secondaryContainer,
+                                          getLightBackground(context),
+                                          value,
+                                        ),
+                                      ),
 
-                                    child: SizedBox(
-                                      width: lerpDouble(200, TABLET, value),
-                                      height: lerpDouble(40, 250, value),
-                                      child: child,
+                                      child: SizedBox(
+                                        width: lerpDouble(200, TABLET, value),
+                                        height: lerpDouble(40, 250, value),
+                                        child: child,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                value: state.searchMode ? 1 : 0,
-                                from: 0,
-                                child: AnimatedSwitcher(
-                                  duration: animationDuration,
-                                  child: state.searchMode
-                                      ? Center(child: Search(search: cubit.search))
-                                      : AnimatedSwitcher(
-                                          duration: animationDuration,
-                                          child: state.loading
-                                              ? SizedBox(
-                                                  height: 20,
-                                                  width: 20,
-                                                  child: Center(child: LoadingIndicator()),
-                                                )
-                                              : InkWell(
-                                                  onTap: () => selectMonth(context),
-                                                  child: Padding(
-                                                    padding: .symmetric(horizontal: 16, vertical: 8),
-                                                    child: Row(
-                                                      spacing: 8,
-                                                      mainAxisAlignment: .center,
-                                                      children: [
-                                                        Icon(Icons.calendar_month),
-                                                        Text(convertDate(state.selected)),
-                                                      ],
+                                  value: state.searchMode ? 1 : 0,
+                                  from: 0,
+                                  child: AnimatedSwitcher(
+                                    duration: animationDuration,
+                                    child: state.searchMode
+                                        ? Center(child: Search(search: cubit.search))
+                                        : AnimatedSwitcher(
+                                            duration: animationDuration,
+                                            child: state.loading
+                                                ? SizedBox(
+                                                    height: 20,
+                                                    width: 20,
+                                                    child: Center(child: LoadingIndicator()),
+                                                  )
+                                                : InkWell(
+                                                    onTap: () => selectMonth(context),
+                                                    child: Padding(
+                                                      padding: .symmetric(horizontal: 16, vertical: 8),
+                                                      child: Row(
+                                                        spacing: 8,
+                                                        mainAxisAlignment: .center,
+                                                        children: [
+                                                          Icon(Icons.calendar_month),
+                                                          Text(convertDate(state.selected)),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                        ),
+                                          ),
+                                  ),
                                 ),
                               ),
                             ),
                             Gap(4),
                             SizedBox(
                               width: 50,
-                              child: Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  Center(
-                                    child: IconButton.filledTonal(
-                                      onPressed: cubit.switchSearch,
-                                      icon: Icon(state.searchMode ? Icons.clear : Icons.search),
-                                    ),
-                                  ),
-                                ],
+                              child: Center(
+                                child: IconButton.filledTonal(
+                                  onPressed: cubit.switchSearch,
+                                  icon: Icon(state.searchMode ? Icons.clear : Icons.search),
+                                ),
                               ),
                             ),
                           ],
