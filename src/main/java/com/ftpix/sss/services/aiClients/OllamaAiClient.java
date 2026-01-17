@@ -2,9 +2,9 @@ package com.ftpix.sss.services.aiClients;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ftpix.sss.models.ai_responses.OllamaResponse;
-import io.github.ollama4j.OllamaAPI;
+import io.github.ollama4j.Ollama;
+import io.github.ollama4j.models.generate.OllamaGenerateRequest;
 import io.github.ollama4j.models.response.OllamaResult;
-import io.github.ollama4j.utils.OptionsBuilder;
 
 import java.io.File;
 import java.util.List;
@@ -19,13 +19,12 @@ public class OllamaAiClient implements AiClient {
         this.ollamaApiKey = ollamaApiKey;
     }
 
-    private OllamaAPI getClient() throws Exception {
-        OllamaAPI api = new OllamaAPI(ollamaUrl);
+    private Ollama getClient() throws Exception {
+        Ollama api = new Ollama(ollamaUrl);
         if (ollamaApiKey != null && !ollamaApiKey.trim().isEmpty()) {
             api.setBearerAuth(ollamaApiKey);
         }
         api.setRequestTimeoutSeconds(120);
-        api.setVerbose(false);
 
         if (!api.ping()) {
             throw new Exception("Ollama not reachable");
@@ -38,7 +37,14 @@ public class OllamaAiClient implements AiClient {
     @Override
     public String processImage(String model, String prompt, File f) throws Exception {
         var api = getClient();
-        OllamaResult result = api.generateWithImageFiles(model, prompt, List.of(f), new OptionsBuilder().build());
+        OllamaGenerateRequest request = OllamaGenerateRequest
+                .builder()
+                .withModel(model)
+                .withPrompt(prompt)
+                .withImages(List.of(f))
+                .build();
+
+        OllamaResult result = api.generate(request.build(), null);
         return result.getResponse();
     }
 
@@ -49,7 +55,14 @@ public class OllamaAiClient implements AiClient {
         if (OllamaResponse.class.isAssignableFrom(format)) {
             var ollamaFormat = ((OllamaResponse) format.getDeclaredConstructor().newInstance()).toOllamaFormat();
 
-            var result = api.generate(model, prompt, ollamaFormat);
+            OllamaGenerateRequest request = OllamaGenerateRequest
+                    .builder()
+                    .withModel(model)
+                    .withPrompt(prompt)
+                    .withFormat(ollamaFormat)
+                    .build();
+
+            var result = api.generate(request, null);
 
             return List.of(new ObjectMapper().readValue(result.getResponse(), format));
         } else {
