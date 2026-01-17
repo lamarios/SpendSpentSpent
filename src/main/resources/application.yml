@@ -39,3 +39,7 @@ logging:
   level:
     org.springframework.boot.autoconfigure.flyway: DEBUG
     org.flywaydb: DEBUG
+    org:
+      jooq:
+        tools:
+          LoggerListener: INFO

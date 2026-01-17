@@ -1,12 +1,10 @@
 package com.ftpix.sss.controllers.api;
 
-import com.ftpix.sss.App;
 import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.TestContainerTest;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.CategoryService;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -14,9 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Import(TestConfig.class)
 public class CategoryControllerTest extends TestContainerTest {
@@ -29,8 +26,7 @@ public class CategoryControllerTest extends TestContainerTest {
     private User currentUser;
 
 
-    //TODO: when new icons are ready
-    @Ignore
+    @Disabled
     @Test
     public void testCreateUpdateDeleteCategory() throws Exception {
 
@@ -70,50 +66,19 @@ public class CategoryControllerTest extends TestContainerTest {
 
     //    @Test(expected = Exception.class)
     @Test
-    @Ignore
-    public void createNonExistentCategory() throws Exception {
+    @Disabled
+    public void createNonExistentCategory() {
         Assertions.assertThrows(Exception.class, () -> categoryService.create("icon-that-does-not-exist", currentUser));
     }
 
     //    @Test(expected = Exception.class)
     @Test
-    @Ignore
-    public void updateNonExistentCategory() throws Exception {
+    @Disabled
+    public void updateNonExistentCategory() {
         Assertions.assertThrows(Exception.class, () -> {
-            Category result = categoryService.update(423423, "furniture", 0, currentUser);
+            categoryService.update(423423, "furniture", 0, currentUser);
         });
     }
 
-
-    //TODO: to do when all the new icons are ready
-    @Test
-    @Disabled
-    public void testCategorySearch() throws Exception {
-        Map<String, Object> search = categoryService.searchAvailableIcon("sou", currentUser);
-
-        List<String> results = (List<String>) search.get("results");
-        assertEquals("There should be 7 categories", 7, results.size());
-
-        //if i add one of the categories to my collections, then it should only be left 6 from the results
-        categoryService.create(results.get(0), currentUser);
-        search = categoryService.searchAvailableIcon("sou", currentUser);
-        results = (List<String>) search.get("results");
-        assertEquals("There should be 6 categories", 6, results.size());
-
-
-        //The same thing should work with different case
-        search = categoryService.searchAvailableIcon("fiLe", currentUser);
-        results = (List<String>) search.get("results");
-        assertEquals("There should be 7 categories", 5, results.size());
-
-        results = (List<String>) search.get("results");
-        //if i add one of the categories to my collections, then it should only be left 6 from the results
-        categoryService.create(results.get(0), currentUser);
-
-        search = categoryService.searchAvailableIcon("fIle", currentUser);
-
-        results = (List<String>) search.get("results");
-        assertEquals("There should be 6 categories", 4, results.size());
-    }
 
 }

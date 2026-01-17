@@ -18,7 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import static com.ftpix.sss.dsl.Tables.*;
 
 
-@SpringBootTest(classes = App.class)
+@SpringBootTest(classes = App.class, properties = {"spring.main.allow-bean-definition-overriding=true", "ALLOW_SIGNUP=1"})
 @Testcontainers
 abstract public class TestContainerTest {
 

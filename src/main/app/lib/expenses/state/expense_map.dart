@@ -26,10 +26,7 @@ class ExpenseMapCubit extends Cubit<ExpenseMapState> {
   }
 
   void init() {
-    var expenseList = expenses.values
-        .expand((e) => e.expenses)
-        .where((exp) => exp.latitude != 0 && exp.longitude != 0)
-        .toList();
+    var expenseList = expenses.values.expand((e) => e.expenses).where((exp) => exp.hasLocation).toList();
     expenseList.sort((a, b) => a.timestamp.compareTo(b.timestamp));
 
     if (expenseList.isEmpty) {

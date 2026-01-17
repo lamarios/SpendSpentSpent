@@ -6,7 +6,7 @@ import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Field;

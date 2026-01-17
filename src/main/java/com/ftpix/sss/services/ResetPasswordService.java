@@ -36,6 +36,7 @@ public class ResetPasswordService {
         this.resetPasswordDaoJooq = resetPasswordDaoJooq;
         this.rootUrl = rootUrl;
     }
+
     private void clearExpiredRequests() throws SQLException {
         int i = resetPasswordDaoJooq.deleteWhere(RESET_PASSWORD.EXPIRYDATE.lt(System.currentTimeMillis()));
 
@@ -58,7 +59,8 @@ public class ResetPasswordService {
 
                             Map<String, Object> templateData = new HashMap<>();
 
-                            String resetPasswordUrl = rootUrl + "/reset-password?reset-id=" + resetPassword.getId().toString();
+                            String resetPasswordUrl = rootUrl + "/reset-password?reset-id=" + resetPassword.getId()
+                                    .toString();
                             templateData.put("url", resetPasswordUrl);
                             templateData.put("firstName", u.getFirstName());
 
@@ -80,7 +82,8 @@ public class ResetPasswordService {
     @Transactional
     public boolean resetPassword(ResetPasswordNew resetPasswordNew) throws Exception {
 
-        final ResetPassword resetPassword = resetPasswordDaoJooq.getById(resetPasswordNew.getResetId()).orElseThrow(() -> new Exception("Invalid password request"));
+        final ResetPassword resetPassword = resetPasswordDaoJooq.getById(resetPasswordNew.getResetId())
+                .orElseThrow(() -> new Exception("Invalid password request"));
         final LocalDateTime expiry = new Timestamp(resetPassword.getExpiryDate()).toLocalDateTime();
 
         if (expiry.isBefore(LocalDateTime.now())) {

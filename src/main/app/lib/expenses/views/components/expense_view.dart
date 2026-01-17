@@ -13,10 +13,6 @@ class ExpenseView extends StatelessWidget {
 
   const ExpenseView(this.expense, {super.key});
 
-  bool hasLocation() {
-    return expense.longitude != 0 && expense.latitude != 0;
-  }
-
   bool hasNote() {
     return (expense.note?.length ?? 0) > 0;
   }
@@ -59,14 +55,14 @@ class ExpenseView extends StatelessWidget {
     print('${expense.latitude} ${expense.longitude}');
     return Stack(
       children: [
-        if (!hasLocation())
+        if (!expense.hasLocation)
           RepeatedIconsBackground(
             icon: expense.category.icon!,
             color: colors.onSurface.withValues(alpha: 0.05),
             size: 40,
             child: const SizedBox.shrink(),
           ),
-        if (hasLocation())
+        if (expense.hasLocation)
           Positioned(
             top: 0,
             left: 0,
@@ -134,7 +130,7 @@ class ExpenseView extends StatelessWidget {
                     height: 30,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: hasLocation() ? colors.surfaceContainer : Colors.transparent,
+                      color: expense.hasLocation ? colors.surfaceContainer : Colors.transparent,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Padding(
@@ -168,7 +164,7 @@ class ExpenseView extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: defaultBorder,
-                    color: hasLocation() ? colors.surfaceContainer : Colors.transparent,
+                    color: expense.hasLocation ? colors.surfaceContainer : Colors.transparent,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),

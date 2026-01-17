@@ -70,13 +70,14 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       // we init our state with the current state of our edited expense.
 
       var value = formatCurrency(expense!.amount).replaceAll(".", "").replaceAll(",", "");
+      var fromMap = Position.fromMap({'longitude': expense!.longitude, 'latitude': expense!.latitude});
       emit(
         state.copyWith(
           files: expense!.files,
           expenseDate: DateTime.fromMillisecondsSinceEpoch(expense!.timestamp),
           value: value,
           expenseNote: expense!.note ?? '',
-          location: Position.fromMap({'longitude': expense!.longitude, 'latitude': expense!.latitude}),
+          location: fromMap,
         ),
       );
 

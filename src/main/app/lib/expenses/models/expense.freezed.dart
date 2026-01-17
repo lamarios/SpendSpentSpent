@@ -221,8 +221,8 @@ return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.not
 /// @nodoc
 @JsonSerializable()
 
-class _Expense implements Expense {
-  const _Expense({@Deprecated("date is deprecated") this.date, required this.amount, this.latitude, this.longitude, this.note, this.type = 1, required this.timestamp, this.income = false, required this.category, this.id, final  List<SssFile> files = const []}): _files = files;
+class _Expense extends Expense {
+  const _Expense({@Deprecated("date is deprecated") this.date, required this.amount, this.latitude, this.longitude, this.note, this.type = 1, required this.timestamp, this.income = false, required this.category, this.id, final  List<SssFile> files = const []}): _files = files,super._();
   factory _Expense.fromJson(Map<String, dynamic> json) => _$ExpenseFromJson(json);
 
 @override@Deprecated("date is deprecated") final  String? date;

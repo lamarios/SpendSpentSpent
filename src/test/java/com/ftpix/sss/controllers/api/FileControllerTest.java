@@ -4,13 +4,13 @@ import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.TestContainerTest;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.FileService;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
-import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
