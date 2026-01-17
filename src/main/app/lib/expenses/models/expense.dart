@@ -25,4 +25,8 @@ sealed class Expense with _$Expense {
   }) = _Expense;
 
   factory Expense.fromJson(Map<String, dynamic> json) => _$ExpenseFromJson(json);
+
+  const Expense._();
+
+  bool get hasLocation => latitude != null && longitude != null && latitude != 0 && latitude != 0;
 }

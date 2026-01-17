@@ -96,7 +96,7 @@ class ExpenseMenu extends StatelessWidget {
         builder: (context, state) {
           final expense = state.expense;
 
-          bool hasMap = expense.latitude != 0 && expense.longitude != 0;
+          bool hasMap = state.expense.hasLocation;
           final colors = Theme.of(context).colorScheme;
           final textTheme = Theme.of(context).textTheme;
           final screenSize = MediaQuery.sizeOf(context);

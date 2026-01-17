@@ -32,10 +32,6 @@ class OneExpense extends StatelessWidget {
     return (expense.note?.length ?? 0) > 0;
   }
 
-  bool hasLocation() {
-    return expense.longitude != 0 && expense.latitude != 0;
-  }
-
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -85,7 +81,7 @@ class OneExpense extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Visibility(
-                        visible: hasLocation(),
+                        visible: expense.hasLocation,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Icon(Icons.near_me, color: colors.onSurface.withValues(alpha: 0.5), size: 15),
