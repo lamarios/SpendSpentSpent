@@ -3,8 +3,8 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/add_expense.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:spend_spent_spent/expenses/models/currency_conversion.dart';
@@ -76,7 +76,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
           expenseDate: DateTime.fromMillisecondsSinceEpoch(expense!.timestamp),
           value: value,
           expenseNote: expense!.note ?? '',
-          location: LocationData.fromMap({'longitude': expense!.longitude, 'latitude': expense!.latitude}),
+          location: Position.fromMap({'longitude': expense!.longitude, 'latitude': expense!.latitude}),
         ),
       );
 
@@ -169,7 +169,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     // but only if we're not editing an expense
     if (this.expense?.id == null && state.useLocation) {
       try {
-        LocationData? locationData =
+        Position? locationData =
             state.location ??
             await getLocation().timeout(const Duration(seconds: LOCATION_TIMEOUT), onTimeout: () => null);
         if (locationData != null) {
@@ -198,32 +198,42 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
     getNoteSuggestions(state.value);
   }
 
-  Future<LocationData?> getLocation() async {
+  Future<Position?> getLocation() async {
     emit(state.copyWith(gettingLocation: true));
-    Location location = Location();
     bool serviceEnabled;
-    PermissionStatus permissionGranted;
-    LocationData locationData;
+    LocationPermission permission;
 
-    serviceEnabled = await location.serviceEnabled();
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        throw Exception('Location service not enabled');
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
       }
     }
 
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        throw Exception('Location not allowed');
-      }
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
     }
 
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
     try {
-      locationData = await location.getLocation();
-      return locationData;
+      return await Geolocator.getCurrentPosition();
     } catch (e) {
       throw Exception("Couldn't get data");
     } finally {
@@ -282,7 +292,7 @@ sealed class AddExpenseDialogState with _$AddExpenseDialogState implements WithE
     @Default(false) bool saving,
     @Default([]) List<String> noteSuggestions,
     @Default([]) List<SssFile> files,
-    LocationData? location,
+    Position? location,
     dynamic error,
     StackTrace? stackTrace,
   }) = _AddExpenseDialogState;

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AddExpenseDialogState {
 
- Category get category; String get value; String get valueFrom; DateTime get expenseDate; String get expenseNote; bool get gettingLocation; bool get useLocation; CurrencyConversion? get currencyConversion; bool get showCurrencyConversion; bool get saving; List<String> get noteSuggestions; List<SssFile> get files; LocationData? get location; dynamic get error; StackTrace? get stackTrace;
+ Category get category; String get value; String get valueFrom; DateTime get expenseDate; String get expenseNote; bool get gettingLocation; bool get useLocation; CurrencyConversion? get currencyConversion; bool get showCurrencyConversion; bool get saving; List<String> get noteSuggestions; List<SssFile> get files; Position? get location; dynamic get error; StackTrace? get stackTrace;
 /// Create a copy of AddExpenseDialogState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $AddExpenseDialogStateCopyWith<$Res>  {
   factory $AddExpenseDialogStateCopyWith(AddExpenseDialogState value, $Res Function(AddExpenseDialogState) _then) = _$AddExpenseDialogStateCopyWithImpl;
 @useResult
 $Res call({
- Category category, String value, String valueFrom, DateTime expenseDate, String expenseNote, bool gettingLocation, bool useLocation, CurrencyConversion? currencyConversion, bool showCurrencyConversion, bool saving, List<String> noteSuggestions, List<SssFile> files, LocationData? location, dynamic error, StackTrace? stackTrace
+ Category category, String value, String valueFrom, DateTime expenseDate, String expenseNote, bool gettingLocation, bool useLocation, CurrencyConversion? currencyConversion, bool showCurrencyConversion, bool saving, List<String> noteSuggestions, List<SssFile> files, Position? location, dynamic error, StackTrace? stackTrace
 });
 
 
@@ -77,7 +77,7 @@ as bool,saving: null == saving ? _self.saving : saving // ignore: cast_nullable_
 as bool,noteSuggestions: null == noteSuggestions ? _self.noteSuggestions : noteSuggestions // ignore: cast_nullable_to_non_nullable
 as List<String>,files: null == files ? _self.files : files // ignore: cast_nullable_to_non_nullable
 as List<SssFile>,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
-as LocationData?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as Position?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as dynamic,stackTrace: freezed == stackTrace ? _self.stackTrace : stackTrace // ignore: cast_nullable_to_non_nullable
 as StackTrace?,
   ));
@@ -170,7 +170,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Category category,  String value,  String valueFrom,  DateTime expenseDate,  String expenseNote,  bool gettingLocation,  bool useLocation,  CurrencyConversion? currencyConversion,  bool showCurrencyConversion,  bool saving,  List<String> noteSuggestions,  List<SssFile> files,  LocationData? location,  dynamic error,  StackTrace? stackTrace)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Category category,  String value,  String valueFrom,  DateTime expenseDate,  String expenseNote,  bool gettingLocation,  bool useLocation,  CurrencyConversion? currencyConversion,  bool showCurrencyConversion,  bool saving,  List<String> noteSuggestions,  List<SssFile> files,  Position? location,  dynamic error,  StackTrace? stackTrace)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AddExpenseDialogState() when $default != null:
 return $default(_that.category,_that.value,_that.valueFrom,_that.expenseDate,_that.expenseNote,_that.gettingLocation,_that.useLocation,_that.currencyConversion,_that.showCurrencyConversion,_that.saving,_that.noteSuggestions,_that.files,_that.location,_that.error,_that.stackTrace);case _:
@@ -191,7 +191,7 @@ return $default(_that.category,_that.value,_that.valueFrom,_that.expenseDate,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Category category,  String value,  String valueFrom,  DateTime expenseDate,  String expenseNote,  bool gettingLocation,  bool useLocation,  CurrencyConversion? currencyConversion,  bool showCurrencyConversion,  bool saving,  List<String> noteSuggestions,  List<SssFile> files,  LocationData? location,  dynamic error,  StackTrace? stackTrace)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Category category,  String value,  String valueFrom,  DateTime expenseDate,  String expenseNote,  bool gettingLocation,  bool useLocation,  CurrencyConversion? currencyConversion,  bool showCurrencyConversion,  bool saving,  List<String> noteSuggestions,  List<SssFile> files,  Position? location,  dynamic error,  StackTrace? stackTrace)  $default,) {final _that = this;
 switch (_that) {
 case _AddExpenseDialogState():
 return $default(_that.category,_that.value,_that.valueFrom,_that.expenseDate,_that.expenseNote,_that.gettingLocation,_that.useLocation,_that.currencyConversion,_that.showCurrencyConversion,_that.saving,_that.noteSuggestions,_that.files,_that.location,_that.error,_that.stackTrace);}
@@ -208,7 +208,7 @@ return $default(_that.category,_that.value,_that.valueFrom,_that.expenseDate,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Category category,  String value,  String valueFrom,  DateTime expenseDate,  String expenseNote,  bool gettingLocation,  bool useLocation,  CurrencyConversion? currencyConversion,  bool showCurrencyConversion,  bool saving,  List<String> noteSuggestions,  List<SssFile> files,  LocationData? location,  dynamic error,  StackTrace? stackTrace)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Category category,  String value,  String valueFrom,  DateTime expenseDate,  String expenseNote,  bool gettingLocation,  bool useLocation,  CurrencyConversion? currencyConversion,  bool showCurrencyConversion,  bool saving,  List<String> noteSuggestions,  List<SssFile> files,  Position? location,  dynamic error,  StackTrace? stackTrace)?  $default,) {final _that = this;
 switch (_that) {
 case _AddExpenseDialogState() when $default != null:
 return $default(_that.category,_that.value,_that.valueFrom,_that.expenseDate,_that.expenseNote,_that.gettingLocation,_that.useLocation,_that.currencyConversion,_that.showCurrencyConversion,_that.saving,_that.noteSuggestions,_that.files,_that.location,_that.error,_that.stackTrace);case _:
@@ -250,7 +250,7 @@ class _AddExpenseDialogState extends AddExpenseDialogState implements WithError 
   return EqualUnmodifiableListView(_files);
 }
 
-@override final  LocationData? location;
+@override final  Position? location;
 @override final  dynamic error;
 @override final  StackTrace? stackTrace;
 
@@ -284,7 +284,7 @@ abstract mixin class _$AddExpenseDialogStateCopyWith<$Res> implements $AddExpens
   factory _$AddExpenseDialogStateCopyWith(_AddExpenseDialogState value, $Res Function(_AddExpenseDialogState) _then) = __$AddExpenseDialogStateCopyWithImpl;
 @override @useResult
 $Res call({
- Category category, String value, String valueFrom, DateTime expenseDate, String expenseNote, bool gettingLocation, bool useLocation, CurrencyConversion? currencyConversion, bool showCurrencyConversion, bool saving, List<String> noteSuggestions, List<SssFile> files, LocationData? location, dynamic error, StackTrace? stackTrace
+ Category category, String value, String valueFrom, DateTime expenseDate, String expenseNote, bool gettingLocation, bool useLocation, CurrencyConversion? currencyConversion, bool showCurrencyConversion, bool saving, List<String> noteSuggestions, List<SssFile> files, Position? location, dynamic error, StackTrace? stackTrace
 });
 
 
@@ -316,7 +316,7 @@ as bool,saving: null == saving ? _self.saving : saving // ignore: cast_nullable_
 as bool,noteSuggestions: null == noteSuggestions ? _self._noteSuggestions : noteSuggestions // ignore: cast_nullable_to_non_nullable
 as List<String>,files: null == files ? _self._files : files // ignore: cast_nullable_to_non_nullable
 as List<SssFile>,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
-as LocationData?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as Position?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as dynamic,stackTrace: freezed == stackTrace ? _self.stackTrace : stackTrace // ignore: cast_nullable_to_non_nullable
 as StackTrace?,
   ));
