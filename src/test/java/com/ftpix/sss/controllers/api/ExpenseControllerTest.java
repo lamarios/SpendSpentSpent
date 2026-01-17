@@ -47,7 +47,7 @@ public class ExpenseControllerTest extends TestContainerTest {
     private CategoryDao categoryDaoJooq;
 
 
-    private Expense create(User user, double amount, Category cat, String date, boolean income, int expenseType, long lat, long longitude, String note) throws Exception {
+    private Expense create(User user, double amount, Category cat, String date, boolean income, int expenseType, double lat, double longitude, String note) throws Exception {
         Expense exp = new Expense();
         exp.setAmount(amount);
 
@@ -66,7 +66,7 @@ public class ExpenseControllerTest extends TestContainerTest {
         return expenseService.create(exp, user);
     }
 
-    private Expense create(double amount, long catId, String date, boolean income, int expenseType, long lat, long longitude, String note) throws Exception {
+    private Expense create(double amount, long catId, String date, boolean income, int expenseType, double lat, double longitude, String note) throws Exception {
 
         var cats = categoryDaoJooq.getWhere(currentUser);
 
