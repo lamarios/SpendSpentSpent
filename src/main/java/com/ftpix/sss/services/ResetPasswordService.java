@@ -1,7 +1,6 @@
 package com.ftpix.sss.services;
 
 import com.ftpix.sss.dao.ResetPasswordDao;
-import com.ftpix.sss.models.PaginatedResults;
 import com.ftpix.sss.models.ResetPassword;
 import com.ftpix.sss.models.ResetPasswordNew;
 import com.ftpix.sss.models.User;

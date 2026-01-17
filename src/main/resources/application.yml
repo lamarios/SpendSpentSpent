@@ -42,4 +42,4 @@ logging:
     org:
       jooq:
         tools:
-          LoggerListener: DEBUG
+          LoggerListener: INFO

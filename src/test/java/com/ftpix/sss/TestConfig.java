@@ -3,18 +3,16 @@ package com.ftpix.sss;
 import com.ftpix.sss.dao.CategoryDao;
 import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.User;
-import com.ftpix.sss.services.EmailService;
-import com.ftpix.sss.services.ExpenseService;
-import com.ftpix.sss.services.SettingsService;
-import com.ftpix.sss.services.UserService;
+import com.ftpix.sss.services.*;
+import com.ftpix.sss.utils.MockEmailService;
 import com.ftpix.sss.utils.UserServiceMock;
+import freemarker.template.Configuration;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.time.ZoneId;
 
 
@@ -29,7 +27,7 @@ public class TestConfig {
 
     @Bean
     @Primary
-    public ZoneId zoneId(){
+    public ZoneId zoneId() {
         return ZoneId.systemDefault();
     }
 
@@ -48,5 +46,11 @@ public class TestConfig {
         ((UserServiceMock) userService).setCurrentUser(user);
 
         return user;
+    }
+
+
+    @Bean
+    public EmailService emailService(Configuration templateEngine) {
+        return new MockEmailService(templateEngine);
     }
 }
