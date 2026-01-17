@@ -7,7 +7,7 @@ import com.ftpix.sss.models.HouseholdInviteStatus;
 import com.ftpix.sss.models.PaginatedResults;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.utils.PaginationUtils;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;

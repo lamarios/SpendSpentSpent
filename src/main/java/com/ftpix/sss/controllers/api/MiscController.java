@@ -3,9 +3,9 @@ package com.ftpix.sss.controllers.api;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kong.unirest.Unirest;
-import kong.unirest.UnirestException;
-import kong.unirest.json.JSONObject;
+import kong.unirest.core.Unirest;
+import kong.unirest.core.UnirestException;
+import kong.unirest.core.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.web.bind.annotation.GetMapping;

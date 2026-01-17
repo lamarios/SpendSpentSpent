@@ -1,7 +1,6 @@
 package com.ftpix.sss.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ftpix.sss.models.OIDCConfig;
 import com.ftpix.sss.models.User;
@@ -10,10 +9,10 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Jwk;
 import io.jsonwebtoken.security.Jwks;
-import kong.unirest.GetRequest;
-import kong.unirest.Unirest;
-import kong.unirest.UnirestException;
-import kong.unirest.json.JSONObject;
+import kong.unirest.core.GetRequest;
+import kong.unirest.core.Unirest;
+import kong.unirest.core.UnirestException;
+import kong.unirest.core.json.JSONObject;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

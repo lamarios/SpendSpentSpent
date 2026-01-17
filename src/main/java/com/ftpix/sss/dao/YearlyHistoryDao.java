@@ -5,7 +5,6 @@ import com.ftpix.sss.listeners.DaoListener;
 import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.YearlyHistory;
-import org.checkerframework.checker.units.qual.C;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.OrderField;
@@ -13,8 +12,10 @@ import org.jooq.impl.TableImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.Year;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.ftpix.sss.dsl.Tables.CATEGORY;
 import static com.ftpix.sss.dsl.Tables.YEARLY_HISTORY;

@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.6</version>
+        <version>4.0.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -33,7 +33,7 @@
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>testcontainers-bom</artifactId>
-                <version>1.21.0</version>
+                <version>2.0.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -65,10 +65,12 @@
             <artifactId>spring-tx</artifactId>
         </dependency>
 
+        <!-- Source: https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>4.0.4</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -80,49 +82,52 @@
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
-            <version>1.1.0-M3</version>
+            <version>1.1.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.8.13</version>
+            <version>3.0.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.18.0</version>
+            <version>3.20.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.16.1</version>
+            <version>2.21.0</version>
         </dependency>
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-            <version>0.12.3</version>
+            <version>0.13.0</version>
         </dependency>
         <!-- Handling annoying exceptions in streams
         https://github.com/pivovarit/ThrowingFunction
         -->
+        <!-- Source: https://mvnrepository.com/artifact/com.pivovarit/throwing-function -->
         <dependency>
-            <groupId>pl.touk</groupId>
+            <groupId>com.pivovarit</groupId>
             <artifactId>throwing-function</artifactId>
-            <version>1.3</version>
+            <version>1.6.1</version>
+            <scope>compile</scope>
         </dependency>
 
 
-        <!-- https://mvnrepository.com/artifact/com.konghq/unirest-java -->
+        <!-- Source: https://mvnrepository.com/artifact/com.konghq/unirest-java-core -->
         <dependency>
             <groupId>com.konghq</groupId>
-            <artifactId>unirest-java</artifactId>
-            <version>3.14.5</version>
+            <artifactId>unirest-java-core</artifactId>
+            <version>4.7.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -133,14 +138,14 @@
 
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
+            <artifactId>testcontainers-postgresql</artifactId>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.21.0</version>
+            <version>1.21.4</version>
             <scope>test</scope>
         </dependency>
 
@@ -156,14 +161,14 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.14.2</version>
+            <version>5.21.0</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
-            <version>3.1.2</version>
+            <version>3.2.3</version>
         </dependency>
         <dependency>
             <groupId>org.simplejavamail</groupId>
@@ -184,7 +189,7 @@
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
-            <version>2.3.32</version>
+            <version>2.3.34</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.jooq/jooq -->
         <dependency>
@@ -202,7 +207,7 @@
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>9.1.0</version>
+            <version>9.5.0</version>
         </dependency>
 
         <dependency>
@@ -235,7 +240,7 @@
         <dependency>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>versions-maven-plugin</artifactId>
-            <version>2.17.1</version>
+            <version>2.20.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -290,7 +295,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.14.1</version>
                 <configuration>
                     <source>21</source>
                     <target>21</target>
