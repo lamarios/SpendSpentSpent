@@ -45,7 +45,7 @@ public class UserSessionController {
     @PostMapping("/ResetPasswordRequest")
     public boolean resetPasswordRequest(@RequestBody String email) {
         try {
-            resetPasswordService.createResetPasswordRequest(email);
+            resetPasswordService.createResetPasswordRequest(email.replaceAll("\"", ""));
         } catch (Exception e) {
             logger.error("Rest password failed", e);
         }
