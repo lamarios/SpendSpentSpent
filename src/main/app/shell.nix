@@ -1,4 +1,3 @@
-# Using a fixed nix commit for maximum reproducability
 { pkgs ? import <nixpkgs> {
     config.allowUnfree = true;
     config.allowBroken = true;
@@ -16,7 +15,7 @@ let
 in
 pkgs.mkShell {
   buildInputs = with pkgs; builtins.concatLists [
-    [ flutter git http-server ]
+    [ git http-server ]
   ];
 
   # What to run when the shell starts
@@ -37,7 +36,7 @@ pkgs.mkShell {
   echo "creating useful aliases..."
 
 
-  flutter config --jdk-dir ${pkgs.corretto21}/lib/corretto
+  flutter config --jdk-dir ${pkgs.jdk21}/lib/openjdk
 
   echo -e "\nAll done 🎉 \nAvailable aliases:"
 
