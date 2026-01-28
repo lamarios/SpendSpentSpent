@@ -103,10 +103,10 @@ public class RecurringExpenseControllerTest extends TestContainerTest {
         assertEquals(lastPaymentDate.getDayOfMonth(), newDate.getDayOfMonth());
 
         //Check yearly of non passed date yet
-        lastPaymentDate = LocalDate.of(1, 3, 1);
+        lastPaymentDate = LocalDate.of(1, 1, 1);
 
         expense.setType(RecurringExpense.TYPE_YEARLY);
-        expense.setTypeParam(3);
+        expense.setTypeParam(0);
         expense.setLastOccurrence(lastPaymentDate);
 
         newDate = recurringExpenseService.calculateNextDate(expense);
@@ -114,6 +114,25 @@ public class RecurringExpenseControllerTest extends TestContainerTest {
         assertEquals(lastPaymentDate.getYear() + 1, newDate.getYear());
         assertEquals(lastPaymentDate.getMonth(), newDate.getMonth());
         assertEquals(lastPaymentDate.getDayOfMonth(), newDate.getDayOfMonth());
+
+        // now trying with no previous expense
+        expense.setLastOccurrence(null);
+        expense.setTypeParam(today.getMonth()
+                .getValue() - 1); // old way was using first month as 0, switching to local date months start at 1
+        newDate = recurringExpenseService.calculateNextDate(expense);
+
+        // when no previous expense and we check the current month, we want to add a new expense now so the next expense should be now
+        assertEquals(today, newDate);
+
+        // when we're not in the current month of the expense, the next expense should be planned for next year
+        LocalDate twoMonthAgo = today.minusMonths(2);
+        expense.setTypeParam(twoMonthAgo.getMonth()
+                .getValue() - 1); // old way was using first month as 0, switching to local date months start at 1
+        newDate = recurringExpenseService.calculateNextDate(expense);
+        assertEquals(twoMonthAgo.getMonth(), newDate.getMonth());
+        assertEquals(twoMonthAgo.getYear() + 1, newDate.getYear());
+        assertEquals(1, newDate.getDayOfMonth());
+
     }
 
     @Test

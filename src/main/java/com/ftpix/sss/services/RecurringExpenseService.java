@@ -41,7 +41,6 @@ public class RecurringExpenseService {
      * @return when is the new payment due.
      */
     public LocalDate calculateNextDate(RecurringExpense expense, LocalDate today) {
-        ChronoField calendarField;
         ChronoUnit calendarUnit;
         LocalDate cal = today;
 //        Calendar cal = new GregorianCalendar();
@@ -50,13 +49,11 @@ public class RecurringExpenseService {
             case RecurringExpense.TYPE_DAILY:
                 logger.info("Daily");
 //                calendarField = Calendar.DAY_OF_MONTH;
-                calendarField = ChronoField.DAY_OF_MONTH;
                 calendarUnit = ChronoUnit.DAYS;
                 break;
             case RecurringExpense.TYPE_MONTHLY:
                 logger.info("Monthly");
 //                calendarField = Calendar.MONTH;
-                calendarField = ChronoField.MONTH_OF_YEAR;
                 calendarUnit = ChronoUnit.MONTHS;
                 cal = cal.withDayOfMonth(expense.getTypeParam());
 //                cal.set(Calendar.DAY_OF_MONTH, expense.getTypeParam());
@@ -68,7 +65,6 @@ public class RecurringExpenseService {
                 // we migrated from gregorian calendar which starts the week on sunday, LocalDate starts on monday
                 DayOfWeek dow = DayOfWeek.of(((expense.getTypeParam() + 5) % 7) + 1);
                 cal = cal.with(ChronoField.DAY_OF_WEEK, dow.getValue());
-                calendarField = ChronoField.ALIGNED_WEEK_OF_YEAR;
                 calendarUnit = ChronoUnit.WEEKS;
                 break;
             case RecurringExpense.TYPE_YEARLY:
@@ -76,7 +72,6 @@ public class RecurringExpenseService {
                 logger.info("Yearly");
 //                calendarField = Calendar.YEAR;
 //                cal.set(Calendar.MONTH, expense.getTypeParam());
-                calendarField = ChronoField.YEAR;
                 calendarUnit = ChronoUnit.YEARS;
                 // we migrated to local date which the starts the months of the year with 1 instead of 0
                 cal = cal.withMonth(expense.getTypeParam()+1);
