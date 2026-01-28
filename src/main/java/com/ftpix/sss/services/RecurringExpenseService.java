@@ -78,7 +78,8 @@ public class RecurringExpenseService {
 //                cal.set(Calendar.MONTH, expense.getTypeParam());
                 calendarField = ChronoField.YEAR;
                 calendarUnit = ChronoUnit.YEARS;
-                cal = cal.withMonth(expense.getTypeParam());
+                // we migrated to local date which the starts the months of the year with 1 instead of 0
+                cal = cal.withMonth(expense.getTypeParam()+1);
         }
 
         logger.info("Calculated date[{}]", cal.toString());
