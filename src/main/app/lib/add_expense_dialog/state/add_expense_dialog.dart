@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:logging/logging.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/add_expense.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
 import 'package:spend_spent_spent/expenses/models/currency_conversion.dart';
@@ -70,7 +71,11 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
       // we init our state with the current state of our edited expense.
 
       var value = formatCurrency(expense!.amount).replaceAll(".", "").replaceAll(",", "");
-      var fromMap = Position.fromMap({'longitude': expense!.longitude, 'latitude': expense!.latitude});
+      Position? fromMap;
+      if (expense?.longitude != null && expense?.latitude != null) {
+        fromMap = Position.fromMap({'longitude': expense!.longitude, 'latitude': expense!.latitude});
+      }
+
       emit(
         state.copyWith(
           files: expense!.files,
