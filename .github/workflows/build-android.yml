@@ -36,9 +36,9 @@ jobs:
         with:
           java-version: '21'
           distribution: 'adopt'
-      - uses: cachix/install-nix-action@v22
+      - uses: cachix/install-nix-action@v31
         with:
-          nix_path: nixpkgs=channel:nixos-23.11
+          nix_path: nixpkgs=channel:nixos-25.11
       - name: Extract tag name
         id: extract_tag
         if: startsWith(github.ref, 'refs/tags/')
@@ -55,16 +55,15 @@ jobs:
           echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> /tmp/key.properties
           echo "storeFile=/tmp/keystore.jks" >> /tmp/key.properties
       - run: set -e
+      - name: Run tests
+        working-directory: src/main/app
+        run: |
+          nix-shell --run 'flutter test'
       - name: Build app
         working-directory: src/main/app
         run: |
-          git submodule init
-          git submodule update
-          ./submodules/flutter/bin/flutter doctor
-          ./submodules/flutter/bin/flutter config --no-analytics
-          ./submodules/flutter/bin/flutter pub get
-          ./submodules/flutter/bin/flutter build apk --split-per-abi
-          ./submodules/flutter/bin/flutter build appbundle
+          nix-shell --run 'flutter build apk --split-per-abi'
+          nix-shell --run 'flutter build appbundle'
       - name: Set up Ruby
         if: startsWith(github.ref, 'refs/tags/')
         uses: ruby/setup-ruby@v1

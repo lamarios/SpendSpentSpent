@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:spend_spent_spent/icons.dart';
@@ -20,6 +22,8 @@ class RepeatedIconsBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     final startPoint = (-size / 4) * 5;
     final distance = size * 1.75;
+    // endless animations are a problem with pump and settle during test
+    final isTest = Platform.environment.containsKey('FLUTTER_TEST');
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -31,8 +35,15 @@ class RepeatedIconsBackground extends StatelessWidget {
                 left: x,
                 top: y,
                 child: getIcon(icon, size: size, color: color)
-                    .animate(onPlay: (controller) => controller.repeat())
-                    .move(duration: const Duration(seconds: 20), end: Offset(distance, distance)),
+                    .animate(
+                      onPlay: (controller) {
+                        return isTest ? controller.stop() : controller.repeat();
+                      },
+                    )
+                    .move(
+                      duration: Duration(seconds: isTest ? 1 : 20),
+                      end: Offset(distance, distance),
+                    ),
               ),
             );
           }
