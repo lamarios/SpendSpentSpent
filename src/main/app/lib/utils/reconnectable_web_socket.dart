@@ -12,9 +12,9 @@ class ReconnectableWebSocket {
   final bool isWeb;
 
   WebSocketChannel? _channel;
-  final StreamController<SssSocketMessage> _controller = StreamController<SssSocketMessage>.broadcast();
+  final StreamController<SssSocketMessage> controller = StreamController<SssSocketMessage>.broadcast();
 
-  Stream<SssSocketMessage> get stream => _controller.stream;
+  Stream<SssSocketMessage> get stream => controller.stream;
 
   StreamSubscription? _subscription;
   Function()? onConnected;
@@ -36,7 +36,7 @@ class ReconnectableWebSocket {
         (message) {
           _log.fine("Received web socket message: $message");
           final decoded = jsonDecode(message);
-          _controller.add(SssSocketMessage.fromJson(decoded));
+          controller.add(SssSocketMessage.fromJson(decoded));
         },
         onDone: _handleDisconnect,
         onError: (error) {

@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:image_picker_platform_interface/src/platform_interface/image_picker_platform.dart';
 import 'package:logging/logging.dart';
 import 'package:nock/nock.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -18,12 +20,13 @@ import 'package:spend_spent_spent/notification_listener/notification_event_liste
 import 'package:spend_spent_spent/notification_listener/states/notification_tapped.dart';
 import 'package:spend_spent_spent/settings/models/user.dart';
 
+import 'image_picker_mock.dart';
 import 'mock_socket_username_password_cubit.dart';
 import 'path_provider.dart';
 
 final String validServerUrl = 'http://localhost:123';
 
-
+final imagePickerMock = ImagePickerMock();
 
 const testUser = User(
   id: 'cd2e4fe4-cd5f-476d-ac42-d031f6d813ea',
@@ -33,12 +36,17 @@ const testUser = User(
   isAdmin: true,
 );
 
+
 Future<void> setupTests({bool withConfig = true, bool loggedIn = false, List<Category>? categories}) async {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
 
+
+  PathProviderPlatform.instance = FakePathProviderPlatform();
+
+  ImagePickerPlatform.instance = imagePickerMock;
   await getIt.reset(dispose: true);
 
   PackageInfo.setMockInitialValues(
@@ -56,6 +64,7 @@ Future<void> setupTests({bool withConfig = true, bool loggedIn = false, List<Cat
   var householdCubit = HouseholdCubit(HouseholdState());
 
   getIt.registerSingleton<UsernamePasswordCubit>(usernamePasswordCubit);
+  getIt.registerSingleton<BaseCacheManager>(CacheManager.custom(.new('cacheKey', stalePeriod: Duration(days: 50))));
 
   if (loggedIn) {
     // nock(validServerUrl).get('/Api/User/current').reply(200, jsonEncode(testUser.toJson()));
@@ -88,13 +97,12 @@ Future<void> setupTests({bool withConfig = true, bool loggedIn = false, List<Cat
   var notificationEventListener = NotificationEventListener();
   getIt.registerSingleton<NotificationEventListener>(notificationEventListener);
 
-/*
+  /*
   if (withConfig) {
     final config = Config.fromJson(jsonDecode(loadFixture('valid_server_config.json')));
   }
 */
 
-  PathProviderPlatform.instance = FakePathProviderPlatform();
 }
 
 String loadFixture(String name) {
@@ -134,6 +142,10 @@ void _setupTimeZonePlugin() {
     }
     return null;
   });
+}
+
+void setupImagePickerPlugin() {
+  // Intercept the 'getLocalTimezone' call
 }
 
 bool catchAllQuery(Map<String, String> query) => true;

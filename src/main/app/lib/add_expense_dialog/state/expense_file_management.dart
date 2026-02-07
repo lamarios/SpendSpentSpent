@@ -12,18 +12,19 @@ class ExpenseFileManagementCubit extends Cubit<ExpenseFileManagementState> {
 
   ExpenseFileManagementCubit(super.initialState);
 
-  close() async {
+  @override
+  Future<void> close() async {
     carouselController.dispose();
     super.close();
   }
 
-  addFile(SssFile file) {
+  void addFile(SssFile file) {
     final List<SssFile> files = List.from(state.files);
     files.add(file);
     emit(state.copyWith(files: files));
   }
 
-  removeFile(SssFile file) {
+  void removeFile(SssFile file) {
     final List<SssFile> files = List.from(state.files);
     files.remove(file);
     emit(state.copyWith(files: files));
@@ -41,7 +42,7 @@ class ExpenseFileManagementCubit extends Cubit<ExpenseFileManagementState> {
     }
   }
 
-  onFileUpdated(SssFile file) {
+  void onFileUpdated(SssFile file) {
     final List<SssFile> files = List.from(state.files);
     final index = files.indexWhere((element) => element.id == file.id);
     if (index >= 0) {

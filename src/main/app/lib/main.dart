@@ -4,6 +4,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:logging/logging.dart';
 import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
@@ -39,6 +40,7 @@ Future<void> main() async {
 
   var householdCubit = HouseholdCubit(HouseholdState());
   getIt.registerSingleton<HouseholdCubit>(householdCubit);
+  getIt.registerSingleton<BaseCacheManager>(DefaultCacheManager());
 
   getIt.registerSingleton<UsernamePasswordCubit>(userPassCubit);
   // we check if we already are on  a server

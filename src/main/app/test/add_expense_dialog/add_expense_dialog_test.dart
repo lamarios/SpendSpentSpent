@@ -5,13 +5,23 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nock/nock.dart';
 import 'package:snaptest/snaptest.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/add_expense.dart';
+import 'package:spend_spent_spent/add_expense_dialog/views/components/expense_file_management.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/expense_note_dialog.dart';
 import 'package:spend_spent_spent/add_expense_dialog/views/components/note_suggestion_pill.dart';
+import 'package:spend_spent_spent/add_expense_dialog/views/components/upload_image_button.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
+import 'package:spend_spent_spent/expenses/models/ai_processing_status.dart';
 import 'package:spend_spent_spent/expenses/models/expense.dart';
+import 'package:spend_spent_spent/expenses/models/sss_file.dart';
+import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
+import 'package:spend_spent_spent/identity/states/username_password.dart';
+import 'package:spend_spent_spent/utils/models/socket_message.dart';
+import 'package:spend_spent_spent/utils/views/components/expense_image.dart';
+import 'package:spend_spent_spent/utils/views/components/image_carousell.dart';
 
 import '../helper_widget/test_app_setup_widget.dart';
+import '../utils/mock_socket.dart';
 import '../utils/test_utils.dart';
 
 void main() {
@@ -79,22 +89,136 @@ void main() {
     await tester.pump(Duration(seconds: 1));
     expect(suggestion2, findsNWidgets(0));
 
-    autoComplete = nock(validServerUrl).post('/API/Expense/notes-autocomplete', (body) => true)
-      ..reply(200, '{}');
+    autoComplete = nock(validServerUrl).post('/API/Expense/notes-autocomplete', (body) => true)..reply(200, '{}');
 
     await tester.enterText(textField, 'my note');
     await tester.pump(Duration(seconds: 1));
 
     expect(autoComplete.isDone, true);
 
-     await tester.tap(ok);
-     await tester.pumpAndSettle();
-     await snap(name: 'note_saved');
-     expect(dialog, findsNothing);
+    await tester.tap(ok);
+    await tester.pumpAndSettle();
+    await snap(name: 'note_saved');
+    expect(dialog, findsNothing);
 
-     expect(find.text('my note'), findsOneWidget);
+    expect(find.text('my note'), findsOneWidget);
+  });
 
+  testWidgets('Test picture upload dialog', (tester) async {
+    await tester.binding.setSurfaceSize(Size(1000, 1000));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
 
+    await tester.pumpWidget(TestSetup(child: AddExpense(canChangeCategory: false, category: categories.first)));
+    await tester.pump(Duration(seconds: 1));
+
+    var uploadButton = find.byType(UploadImageButton);
+
+    // the expense image button should be a standard button
+    expect(find.descendant(of: uploadButton, matching: find.byIcon(Icons.image_rounded)), findsOneWidget);
+
+    await tester.tap(uploadButton);
+    await tester.pumpAndSettle();
+    await snap(name: 'empty_picture_upload', matchToGolden: true);
+
+    var dialog = find.byType(ExpenseFileManagement);
+    expect(dialog, findsOneWidget);
+
+    var pickFromGallery = find.text('Pick from gallery');
+
+    expect(pickFromGallery, findsOneWidget);
+
+    var imageUpload = nock(validServerUrl).post('/API/Files', (body) => true)
+      ..reply(
+        200,
+        jsonEncode(
+          SssFile(
+            id: 'aaa',
+            userId: testUser.id!,
+            status: AiProcessingStatus.PROCESSING,
+            fileName: 'rick1.jpg',
+            timeCreated: DateTime.now().millisecondsSinceEpoch,
+            timeUpdated: DateTime.now().millisecondsSinceEpoch,
+          ),
+        ),
+      );
+
+    await tester.tap(pickFromGallery);
+    await tester.pump(Duration(seconds: 1));
+
+    expect(imageUpload.isDone, true);
+    final carousel = find.byType(ImageCarousel);
+    expect(carousel, findsOneWidget);
+
+    ImageCarousel carouselWidget = tester.widget(carousel);
+    expect(carouselWidget.files.length, 1);
+
+    var image1 = SssFile(
+      id: 'aaabbbb',
+      userId: testUser.id!,
+      status: AiProcessingStatus.PROCESSING,
+      fileName: 'rick2.jpg',
+      timeCreated: DateTime.now().millisecondsSinceEpoch,
+      timeUpdated: DateTime.now().millisecondsSinceEpoch,
+    );
+    var imageUpload2 = nock(validServerUrl).post('/API/Files', (body) => true)..reply(200, jsonEncode(image1));
+
+    await tester.tap(pickFromGallery);
+    await tester.pump(Duration(seconds: 1));
+
+    expect(imageUpload2.isDone, true);
+    carouselWidget = tester.widget(carousel);
+    expect(carouselWidget.files.length, 2);
+
+    await snap(name: "pick_from_gallery");
+
+    // now we set the AI tags and expense for the first picture
+    var socket = getIt.get<UsernamePasswordCubit>().socket as MockSocket;
+    socket.receiveMessage(
+      SssSocketMessage(
+        message: image1
+            .copyWith(status: AiProcessingStatus.DONE, aiTags: ['tag1', 'tag2', 'tag3'], amounts: [1111, 222])
+            .toJson(),
+        type: SssSocketMessageType.sssFile,
+      ),
+    );
+
+    await tester.pump(Duration(seconds: 10));
+    await snap(name: 'after_ai_processing', matchToGolden: true, from: dialog);
+
+    var tag1 = find.text('tag1');
+    var tag2 = find.text('tag2');
+    var tag3 = find.text('tag3');
+    final amount1 = find.text('1,111.00');
+    final amount2 = find.text('222.00');
+    expect(find.descendant(of: dialog, matching: tag1), findsOneWidget);
+    expect(find.descendant(of: dialog, matching: tag2), findsOneWidget);
+    expect(find.descendant(of: dialog, matching: tag3), findsOneWidget);
+    expect(find.descendant(of: dialog, matching: amount1), findsOneWidget);
+    expect(find.descendant(of: dialog, matching: amount2), findsOneWidget);
+
+    // closing the dialog
+    await tester.tapAt(Offset(10, 10));
+    await tester.pumpAndSettle();
+    expect(dialog, findsNothing);
+
+    expect(tag1, findsOneWidget);
+    expect(tag2, findsOneWidget);
+    expect(tag3, findsOneWidget);
+    expect(amount1, findsOneWidget);
+    expect(amount2, findsOneWidget);
+
+    // the upload button should be replaced by the first image and a badge with 2 as we uploaded 2 images
+    expect(find.descendant(of: uploadButton, matching: find.byType(ExpenseImage)), findsOneWidget);
+    expect(find.descendant(of: uploadButton, matching: find.text('2')), findsOneWidget);
+
+    await tester.tap(amount1);
+    await tester.pumpAndSettle();
+
+    // now that we tapped on it, it should be shown as the AI suggestion and in the dialog overall amount
+    // but formatting is not the same
+    expect(amount1, findsOneWidget);
+    expect(find.text('1111.00'), findsOneWidget);
+    await snap(name: 'after_ai_processing_closed', matchToGolden: true);
   });
 
   testWidgets('Test expense basic flow dialog', (tester) async {

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:material_loading_indicator/loading_indicator.dart';
 import 'package:spend_spent_spent/expenses/models/ai_processing_status.dart';
 import 'package:spend_spent_spent/expenses/models/sss_file.dart';
@@ -40,6 +41,7 @@ class ExpenseImage extends StatelessWidget {
                       borderRadius ?? (width > 100 ? bigItemBorderRadius : smallItemBorderRadius),
                     ),
                     child: CachedNetworkImage(
+                      cacheManager: getIt.get<BaseCacheManager>(),
                       imageUrl: '${service.url}/API/Files/${file.id}/download',
                       httpHeaders: {'Authorization': 'Bearer ${data.data}'},
                       imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
