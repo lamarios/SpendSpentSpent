@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:logging/logging.dart';
 import 'package:notification_listener_service/notification_event.dart';
 import 'package:notification_listener_service/notification_listener_service.dart';
 import 'package:oidc/oidc.dart';
@@ -117,10 +116,10 @@ class ForegroundTaskHandler extends TaskHandler {
 
           const NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails);
           await flutterLocalNotificationsPlugin?.show(
-            DateTime.now().secondsSinceEpoch,
-            'Add expense ?',
-            'Expense detected: ${formatCurrency(amount)}, tap to add',
-            notificationDetails,
+            id: DateTime.now().secondsSinceEpoch,
+            title: 'Add expense ?',
+            body: 'Expense detected: ${formatCurrency(amount)}, tap to add',
+            notificationDetails: notificationDetails,
             payload: '$amount',
           );
         } else {

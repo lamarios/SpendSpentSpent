@@ -9,7 +9,7 @@ dependencies:
   animations: 2.1.1
   auto_route: 11.1.0
   cached_network_image: 3.4.1
-  carousel_slider: 5.1.1
+  carousel_slider: 5.1.2
   dynamic_color: 1.8.1
   easy_debounce: 2.0.3
   fl_chart: 1.1.1
@@ -18,10 +18,10 @@ dependencies:
   flutter_animate: 4.5.2
   flutter_bloc: 9.1.1
   flutter_cache_manager: 3.4.1
-  flutter_device_apps: 0.4.0
+  flutter_device_apps: 0.6.0
   flutter_fadein: 2.0.0
   flutter_foreground_task: 9.2.0
-  flutter_local_notifications: 19.5.0
+  flutter_local_notifications: 20.1.0
   flutter_map: 8.2.2
   flutter_map_heatmap:
     git:
@@ -33,19 +33,19 @@ dependencies:
   freezed_annotation: 3.1.0
   gap: 3.0.1
   geolocator: 14.0.2
-  get_it: 9.2.0
+  get_it: 9.2.1
   http: 1.6.0
   image_picker: 1.2.1
   intl: 0.20.2
-  json_annotation: 4.9.0
+  json_annotation: 4.11.0
   jwt_decoder: 2.0.1
   latlong2: 0.9.1
   logging: 1.3.0
   material_loading_indicator: 1.0.0
   motor: 1.1.0
   notification_listener_service: 0.3.5
-  oidc: 0.13.0
-  oidc_default_store: 0.5.0
+  oidc: 0.14.0
+  oidc_default_store: 0.6.0+2
   package_info_plus: 9.0.0
   path_provider: any
   random_string: 2.3.1
@@ -54,24 +54,24 @@ dependencies:
       url: https://github.com/KasemJaffer/receive_sharing_intent
   share_plus: 12.0.1
   shared_preferences: 2.5.4
-  stupid_simple_sheet: 0.8.0+1
+  stupid_simple_sheet: 0.9.1
   tinycolor2: 3.0.1
   web_socket_channel: 3.0.3
 dev_dependencies:
-  analyzer: 9.0.0
-  auto_route_generator: 10.4.0
-  build_runner: 2.10.5
+  analyzer: 10.0.1
+  auto_route_generator: 10.5.0
+  build_runner: 2.11.1
 
   dart_jsonwebtoken: 3.3.1
   flutter_launcher_icons: 0.14.4
   flutter_lints: 6.0.0
   flutter_test:
     sdk: flutter
-  freezed: 3.2.4
-  json_serializable: 6.11.4
+  freezed: 3.2.5
+  json_serializable: 6.13.0
   nock: 1.2.3
   pubspec_dependency_sorter: 1.0.5
-  snaptest: 0.2.2+1
+  snaptest: 0.2.3
 dependency_overrides:
   test_api: 0.7.7 # Matches what flutter_test wants for NOCK to work
 flutter_icons:

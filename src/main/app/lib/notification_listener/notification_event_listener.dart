@@ -129,7 +129,7 @@ class NotificationEventListener {
       android: initializationSettingsAndroid,
     );
     await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
+      settings: initializationSettings,
       onDidReceiveNotificationResponse: onNotificationTap,
     );
 
