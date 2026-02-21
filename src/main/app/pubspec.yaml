@@ -17,6 +17,7 @@ dependencies:
     sdk: flutter
   flutter_animate: 4.5.2
   flutter_bloc: 9.1.1
+  flutter_cache_manager: 3.4.1
   flutter_device_apps: 0.4.0
   flutter_fadein: 2.0.0
   flutter_foreground_task: 9.2.0
@@ -60,13 +61,19 @@ dev_dependencies:
   analyzer: 9.0.0
   auto_route_generator: 10.4.0
   build_runner: 2.10.5
+
+  dart_jsonwebtoken: 3.3.1
   flutter_launcher_icons: 0.14.4
   flutter_lints: 6.0.0
   flutter_test:
     sdk: flutter
   freezed: 3.2.4
   json_serializable: 6.11.4
+  nock: 1.2.3
   pubspec_dependency_sorter: 1.0.5
+  snaptest: 0.2.2+1
+dependency_overrides:
+  test_api: 0.7.7 # Matches what flutter_test wants for NOCK to work
 flutter_icons:
   android: false
   ios: true

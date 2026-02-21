@@ -662,7 +662,8 @@ class Service {
     final request = http.MultipartRequest("POST", await formatUrl('$API_URL/Files'));
     request.headers.addAll(await headers);
 
-    request.files.add(http.MultipartFile.fromBytes('file', await image.readAsBytes(), filename: image.name));
+    var bytes = await image.readAsBytes();
+    request.files.add(http.MultipartFile.fromBytes('file', bytes, filename: image.name));
 
     final response = await request.send();
     _processStatusCode(response.statusCode);

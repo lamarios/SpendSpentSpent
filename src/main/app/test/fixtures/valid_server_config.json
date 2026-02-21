@@ -1,0 +1,12 @@
+{
+    "allowSignup": false,
+    "canConvertCurrency": true,
+    "canResetPassword": false,
+    "minAppVersion": "119",
+    "demoMode": true,
+    "hasSubscription": false,
+    "oidc": null,
+    "backendVersion": 142,
+    "convertCurrencyQuota": "290/300",
+    "announcement": "Welcome to SpendSpentSpent demo instance, login with demo@demo.com and demo as password."
+}

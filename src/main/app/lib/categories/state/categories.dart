@@ -50,6 +50,10 @@ class CategoriesCubit extends Cubit<CategoriesState> {
   Category? findByName(String name) {
     return state.categories.where((element) => element.icon == name).firstOrNull;
   }
+
+  void setCategories(List<Category> categories) {
+    emit(state.copyWith(categories: categories));
+  }
 }
 
 @freezed
