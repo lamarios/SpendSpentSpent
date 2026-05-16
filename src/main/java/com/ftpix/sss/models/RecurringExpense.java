@@ -1,31 +1,44 @@
 package com.ftpix.sss.models;
 
-import com.ftpix.sss.dao.HasCategory;
+import com.ftpix.sss.persistence.utils.BooleanToIntConverter;
+import com.ftpix.sss.persistence.utils.LocalDateConverter;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
-public class RecurringExpense implements HasCategory {
+@Entity
+@Table(name = "recurring_expense")
+public class RecurringExpense  {
 
     public static final int TYPE_DAILY = 0, TYPE_WEEKLY = 1, TYPE_MONTHLY = 2, TYPE_YEARLY = 3;
 
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
 
     private int type;
 
+    @Column(name = "type_param")
     private int typeParam;
 
+    @Column(name = "last_occurrence")
+    @Convert(converter = LocalDateConverter.class)
     private LocalDate lastOccurrence;
 
+    @Column(name = "next_occurrence")
+    @Convert(converter = LocalDateConverter.class)
     private LocalDate nextOccurrence;
 
     private double amount;
 
+    @Convert(converter = BooleanToIntConverter.class)
     private boolean income = false;
 
     public Long getId() {

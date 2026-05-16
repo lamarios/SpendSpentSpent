@@ -22,9 +22,6 @@ public class CategoryControllerTest extends TestContainerTest {
     @Autowired
     private CategoryService categoryService;
 
-    @Autowired
-    private User currentUser;
-
 
     @Disabled
     @Test

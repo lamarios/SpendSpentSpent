@@ -1,8 +1,14 @@
 package com.ftpix.sss;
 
-import com.ftpix.sss.dao.CategoryDao;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
+import com.ftpix.sss.persistence.CategoryRepository;
+import com.ftpix.sss.persistence.UserRepository;
+import com.ftpix.sss.services.UserService;
+import com.ftpix.sss.utils.UserServiceMock;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.jooq.impl.DefaultDSLContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -12,10 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static com.ftpix.sss.dsl.Tables.*;
+import java.security.NoSuchAlgorithmException;
+
 
 
 @SpringBootTest(classes = App.class, properties = {"spring.main.allow-bean-definition-overriding=true", "ALLOW_SIGNUP=1"})
@@ -28,14 +36,19 @@ abstract public class TestContainerTest {
         postgres.start();
     }
 
-    @Autowired
-    private DefaultDSLContext dslContext;
+    protected User currentUser;
 
     @Autowired
-    private User currentUser;
+    private UserService userService;
 
     @Autowired
-    private CategoryDao categoryDaoJooq;
+    private UserRepository userRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @DynamicPropertySource
     static void configureSQLContainer(DynamicPropertyRegistry registry) {
@@ -47,15 +60,21 @@ abstract public class TestContainerTest {
         registry.add("spring.flyway.password", postgres::getPassword);
     }
 
-    @AfterEach
-    public void cleaningDB() {
-        dslContext.truncate(EXPENSE).cascade().execute();
-        dslContext.truncate(CATEGORY).cascade().execute();
-        dslContext.truncate(RECURRING_EXPENSE).cascade().execute();
-    }
 
     @BeforeEach
-    public void insertBaseData() {
+    public void insertBaseData() throws NoSuchAlgorithmException {
+        String random = RandomStringUtils.randomAlphabetic(10); // from Apache Commons Lang
+        User user = new User();
+        user.setFirstName("Tester");
+        user.setLastName("Super");
+        user.setEmail(random+"@example.org");
+        user.setAdmin(true);
+        user.setPassword(userService.hashUserCredentials(user.getEmail(), "pass"));
+        user.setSubscriptionExpiryDate(Long.MAX_VALUE);
+        currentUser = userRepository.save(user);
+
+        ((UserServiceMock) userService).setCurrentUser(currentUser);
+
         Category house = new Category();
         house.setIcon("house");
         house.setUser(currentUser);
@@ -68,9 +87,9 @@ abstract public class TestContainerTest {
         cloud.setIcon("cloud");
         cloud.setUser(currentUser);
 
-        categoryDaoJooq.insert(currentUser, house);
-        categoryDaoJooq.insert(currentUser, cloud);
-        categoryDaoJooq.insert(currentUser, cloth);
+        categoryRepository.save(house);
+        categoryRepository.save(cloud);
+        categoryRepository.save(cloth);
     }
 
 

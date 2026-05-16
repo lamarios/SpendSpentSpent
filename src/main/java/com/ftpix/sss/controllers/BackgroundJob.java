@@ -1,10 +1,10 @@
 package com.ftpix.sss.controllers;
 
-import com.ftpix.sss.dao.ExpenseDao;
-import com.ftpix.sss.dao.RecurringExpenseDao;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
+import com.ftpix.sss.persistence.ExpenseRepository;
+import com.ftpix.sss.persistence.RecurringExpenseRepository;
 import com.ftpix.sss.services.EmailService;
 import com.ftpix.sss.services.RecurringExpenseService;
 import com.ftpix.sss.services.UserService;
@@ -26,20 +26,20 @@ public class BackgroundJob {
 
     private final Logger logger = LogManager.getLogger();
     private final RecurringExpenseService recurringExpenseService;
-    private final ExpenseDao expenseDaoJooq;
-    private final RecurringExpenseDao recurringExpenseDaoJooq;
     private final UserService userService;
     private final EmailService emailService;
     private final ZoneId zoneId;
+    private final ExpenseRepository expenseRepository;
+    private final RecurringExpenseRepository recurringExpenseRepository;
 
     @Autowired
-    public BackgroundJob(RecurringExpenseService recurringExpenseService, ExpenseDao expenseDaoJooq, RecurringExpenseDao recurringExpenseDaoJooq, UserService userService, EmailService emailService, ZoneId zoneId) {
+    public BackgroundJob(RecurringExpenseService recurringExpenseService, UserService userService, EmailService emailService, ZoneId zoneId, ExpenseRepository expenseRepository, RecurringExpenseRepository recurringExpenseRepository) {
         this.recurringExpenseService = recurringExpenseService;
-        this.expenseDaoJooq = expenseDaoJooq;
-        this.recurringExpenseDaoJooq = recurringExpenseDaoJooq;
         this.userService = userService;
         this.emailService = emailService;
         this.zoneId = zoneId;
+        this.expenseRepository = expenseRepository;
+        this.recurringExpenseRepository = recurringExpenseRepository;
     }
 
 
@@ -73,12 +73,12 @@ public class BackgroundJob {
                         expense.setNote(recurring.getName().trim());
                     }
 
-                    expenseDaoJooq.insert(user, expense);
+                    expenseRepository.save(expense);
 
                     recurring.setLastOccurrence(recurring.getNextOccurrence());
                     recurring.setNextOccurrence(recurringExpenseService.calculateNextDate(recurring));
 
-                    recurringExpenseDaoJooq.update(user, recurring);
+                    recurringExpenseRepository.save(recurring);
                     logger.info("Expense added, next occurence:[{}]", recurring.getNextOccurrence());
 
                     String type = "";

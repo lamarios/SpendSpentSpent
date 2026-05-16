@@ -2,8 +2,8 @@ package com.ftpix.sss.controllers.api;
 
 import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.TestContainerTest;
-import com.ftpix.sss.dao.CategoryDao;
 import com.ftpix.sss.models.*;
+import com.ftpix.sss.persistence.CategoryRepository;
 import com.ftpix.sss.services.ExpenseService;
 import com.ftpix.sss.services.HistoryService;
 import com.ftpix.sss.services.SettingsService;
@@ -14,10 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static com.ftpix.sss.Constants.dateFormatter;
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,11 +42,7 @@ public class ExpenseControllerTest extends TestContainerTest {
     private TestService testService;
 
     @Autowired
-    private User currentUser;
-
-    @Autowired
-    private CategoryDao categoryDaoJooq;
-
+    private CategoryRepository categoryRepository;
 
     private Expense create(User user, double amount, Category cat, String date, boolean income, int expenseType, double lat, double longitude, String note) throws Exception {
         Expense exp = new Expense();
@@ -68,7 +65,7 @@ public class ExpenseControllerTest extends TestContainerTest {
 
     private Expense create(double amount, long catId, String date, boolean income, int expenseType, double lat, double longitude, String note) throws Exception {
 
-        var cats = categoryDaoJooq.getWhere(currentUser);
+        var cats = categoryRepository.findAllByUser(currentUser);
 
         return create(currentUser, amount, cats.stream()
                 .filter(category -> category.getId() == catId)
@@ -86,7 +83,7 @@ public class ExpenseControllerTest extends TestContainerTest {
     @Test
     public void testAddDeleteExpense() throws Exception {
 
-        var cats = categoryDaoJooq.getWhere(currentUser);
+        var cats = categoryRepository.findAllByUser(currentUser);
         Expense newExpense = create(10d, cats.get(0).getId(), "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
 
         Expense fromController = expenseService.get(newExpense.getId(), currentUser);
@@ -105,7 +102,7 @@ public class ExpenseControllerTest extends TestContainerTest {
 
     @Test
     public void testCategoryByDay() throws Exception {
-        var cats = categoryDaoJooq.getWhere(currentUser);
+        var cats = categoryRepository.findAllByUser(currentUser);
 
         create(10d, cats.get(0).getId(), "2012-12-02", false, Expense.TYPE_NORMAL, 0, 0, "");
         create(20d, cats.get(0).getId(), "2012-12-24", false, Expense.TYPE_NORMAL, 0, 0, "");
@@ -148,7 +145,7 @@ public class ExpenseControllerTest extends TestContainerTest {
         String now = LocalDate.now().format(dateFormatter);
 
 
-        var cats = categoryDaoJooq.getWhere(user);
+        var cats = categoryRepository.findAllByUser(user);
 
         Expense created = create(user, 50d, cats.get(0), now, false, Expense.TYPE_NORMAL, 0, 0, "");
         monthly = historyService.monthly(user);
@@ -172,7 +169,7 @@ public class ExpenseControllerTest extends TestContainerTest {
 
     @Test
     public void testDiffWithPreviousPeriod() throws Exception {
-        var cats = categoryDaoJooq.getWhere(currentUser);
+        var cats = categoryRepository.findAllByUser(currentUser);
 
         create(10d, cats.get(0).getId(), "2025-01-12", false, Expense.TYPE_NORMAL, 0, 0, "");
         create(20d, cats.get(0).getId(), "2024-12-15", false, Expense.TYPE_NORMAL, 0, 0, "");

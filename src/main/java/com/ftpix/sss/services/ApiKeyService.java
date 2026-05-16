@@ -1,9 +1,8 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.dao.ApiKeyDao;
-import com.ftpix.sss.dsl.Tables;
 import com.ftpix.sss.models.ApiKey;
 import com.ftpix.sss.models.User;
+import com.ftpix.sss.persistence.ApiKeyRepository;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +16,13 @@ import java.util.UUID;
 
 @Service
 public class ApiKeyService {
-    private final ApiKeyDao apiKeyDao;
+    //    private final ApiKeyDao apiKeyDao;
+    private final ApiKeyRepository apiKeyRepository;
 
 
     @Autowired
-    public ApiKeyService(ApiKeyDao apiKeyDao) {
-        this.apiKeyDao = apiKeyDao;
+    public ApiKeyService(ApiKeyRepository apiKeyRepository) {
+        this.apiKeyRepository = apiKeyRepository;
     }
 
     @Transactional
@@ -38,15 +38,21 @@ public class ApiKeyService {
         key.setExpiryDate(keyBaseData.getExpiryDate());
 
 
-        apiKeyDao.insert(key);
+        apiKeyRepository.save(key);
         // when creating a key, we return the clear one so the user can see it once
-        key.setApiKey(clearKey);
-        return key;
+        // return a detached copy with the clear key, don't mutate the managed entity
+        ApiKey response = new ApiKey();
+        response.setId(key.getId());
+        response.setApiKey(clearKey); // clear key for one-time display
+        response.setKeyName(key.getKeyName());
+        response.setExpiryDate(key.getExpiryDate());
+        response.setTimeCreated(key.getTimeCreated());
+        return response;
     }
 
     @Transactional(readOnly = true)
     public List<ApiKey> getKeys(User currentUser) {
-        return apiKeyDao.getWhere(Tables.API_KEYS.USER_ID.eq(currentUser.getId().toString())).stream().map(k -> {
+        return apiKeyRepository.findByUser(currentUser).stream().map(k -> {
             k.setApiKey(null);
             return k;
         }).toList();
@@ -55,19 +61,31 @@ public class ApiKeyService {
     @Transactional()
     public Optional<User> getUserForKey(String clearKey) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return apiKeyDao.getOneWhere(Tables.API_KEYS.APIKEYHASH.eq(DigestUtils.sha256Hex(clearKey)))
-                .filter(apiKey -> apiKey.getExpiryDate() == null || apiKey.getExpiryDate() > System.currentTimeMillis())
-                .filter(apiKey -> bCryptPasswordEncoder.matches(clearKey, apiKey.getApiKey()))
+//        return apiKeyDao.getOneWhere(Tables.API_KEYS.APIKEYHASH.eq(DigestUtils.sha256Hex(clearKey)))
+        String hashedKey = DigestUtils.sha256Hex(clearKey);
+        List<ApiKey> possibleMatches = apiKeyRepository.findByApiKeyHash(hashedKey);
+        return possibleMatches
+                .stream()
+                .filter(apiKey -> {
+                    return apiKey.getExpiryDate() == null || apiKey.getExpiryDate() > System.currentTimeMillis();
+                })
+                .filter(apiKey -> {
+                    return bCryptPasswordEncoder.matches(clearKey, apiKey.getApiKey());
+                })
                 .map(apiKey1 -> {
                     apiKey1.setLastUsed(System.currentTimeMillis());
-                    apiKeyDao.update(apiKey1);
+                    apiKeyRepository.save(apiKey1);
                     return apiKey1.getUser();
-                });
+                }).findFirst();
 
     }
 
+    @Transactional
     public boolean deleteKey(User user, UUID id) {
-        return apiKeyDao.deleteWhere(Tables.API_KEYS.ID.eq(id.toString()), Tables.API_KEYS.USER_ID.eq(user.getId()
-                .toString())) == 1;
+
+        apiKeyRepository.deleteApiKeyByIdAndUser(id, user);
+//        return apiKeyDao.deleteWhere(Tables.API_KEYS.ID.eq(id.toString()), Tables.API_KEYS.USER_ID.eq(user.getId()
+//                .toString())) == 1;
+        return true;
     }
 }

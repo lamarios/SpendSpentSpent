@@ -30,9 +30,6 @@ public class FileControllerTest extends TestContainerTest {
     @Autowired
     private FileService fileService;
 
-    @Autowired
-    private User currentUser;
-
     @Value("${FILES_PATH:./files}")
     private String filePath;
 

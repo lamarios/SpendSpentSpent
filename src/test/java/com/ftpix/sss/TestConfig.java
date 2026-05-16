@@ -1,9 +1,12 @@
 package com.ftpix.sss;
 
-import com.ftpix.sss.dao.CategoryDao;
-import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.User;
-import com.ftpix.sss.services.*;
+import com.ftpix.sss.persistence.CategoryRepository;
+import com.ftpix.sss.persistence.UserRepository;
+import com.ftpix.sss.services.EmailService;
+import com.ftpix.sss.services.ExpenseService;
+import com.ftpix.sss.services.SettingsService;
+import com.ftpix.sss.services.UserService;
 import com.ftpix.sss.utils.MockEmailService;
 import com.ftpix.sss.utils.UserServiceMock;
 import freemarker.template.Configuration;
@@ -21,8 +24,8 @@ import java.time.ZoneId;
 public class TestConfig {
 
     @Bean
-    public UserService userService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, CategoryDao categoryDaoJooq, EmailService emailService, SettingsService settingsService, UserDao userDaoJooq) {
-        return new UserServiceMock(recurringExpenseService, expenseService, categoryService, categoryDaoJooq, emailService, settingsService, userDaoJooq);
+    public UserService userService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, EmailService emailService, SettingsService settingsService, CategoryRepository categoryRepository, UserRepository userRepository) {
+        return new UserServiceMock(recurringExpenseService,expenseService,categoryService,emailService,settingsService,userRepository,categoryRepository);
     }
 
     @Bean
@@ -31,8 +34,9 @@ public class TestConfig {
         return ZoneId.systemDefault();
     }
 
+/*
     @Bean
-    public User currentUser(UserService userService, UserDao userDaoJooq) throws NoSuchAlgorithmException {
+    public User currentUser(UserService userService, UserRepository userRepository) throws NoSuchAlgorithmException {
 
         User user = new User();
         user.setFirstName("Tester");
@@ -41,12 +45,13 @@ public class TestConfig {
         user.setAdmin(true);
         user.setPassword(userService.hashUserCredentials(user.getEmail(), "pass"));
         user.setSubscriptionExpiryDate(Long.MAX_VALUE);
-        userDaoJooq.insert(user);
+        userRepository.save(user);
 
         ((UserServiceMock) userService).setCurrentUser(user);
 
         return user;
     }
+*/
 
 
     @Bean

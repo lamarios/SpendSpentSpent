@@ -1,14 +1,11 @@
 package com.ftpix.sss.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ftpix.sss.dao.*;
-import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.DataExport;
-import com.ftpix.sss.models.Expense;
-import com.ftpix.sss.models.RecurringExpense;
+import com.ftpix.sss.persistence.SettingsRepository;
+import com.ftpix.sss.persistence.UserRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jooq.impl.DefaultDSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,12 +17,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import static com.ftpix.sss.Constants.ALLOW_IMPORT;
-import static com.ftpix.sss.dsl.Tables.*;
 
 
 @Service
@@ -36,14 +30,9 @@ public class DataExportImportService {
 
     private final static Logger logger = LogManager.getLogger();
 
-    private final UserDao userDaoJooq;
-    private final ExpenseDao expenseDaoJooq;
-    private final CategoryDao categoryDaoJooq;
-    private final SettingsDao settingsDaoJooq;
-    private final RecurringExpenseDao recurringExpenseDaoJooq;
-    private final YearlyHistoryDao yearlyHistoryDaoJooq;
-    private final MonthlyHistoryDao monthlyHistoryDaoJooq;
-    private final DefaultDSLContext dslContext;
+
+    private final UserRepository userRepository;
+    private final SettingsRepository settingsRepository;
 
 
     private final String importPassword;
@@ -54,15 +43,9 @@ public class DataExportImportService {
 
 
     @Autowired
-    public DataExportImportService(DefaultDSLContext dslContext, UserDao userDaoJooq, ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, SettingsDao settingsDaoJooq, RecurringExpenseDao recurringExpenseDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq, ObjectMapper objectMapper) {
-        this.userDaoJooq = userDaoJooq;
-        this.expenseDaoJooq = expenseDaoJooq;
-        this.categoryDaoJooq = categoryDaoJooq;
-        this.settingsDaoJooq = settingsDaoJooq;
-        this.recurringExpenseDaoJooq = recurringExpenseDaoJooq;
-        this.yearlyHistoryDaoJooq = yearlyHistoryDaoJooq;
-        this.monthlyHistoryDaoJooq = monthlyHistoryDaoJooq;
-        this.dslContext = dslContext;
+    public DataExportImportService(UserRepository userRepository, SettingsRepository settingsRepository, ObjectMapper objectMapper) {
+        this.userRepository = userRepository;
+        this.settingsRepository = settingsRepository;
         this.objectMapper = objectMapper;
 
         // we generate a random password at every restart to allow import
@@ -100,17 +83,9 @@ public class DataExportImportService {
     public void exportData() throws IOException {
         logger.info("Starting daily backup");
         DataExport export = new DataExport();
-        export.setUsers(userDaoJooq.getWhere());
+        export.setUsers(userRepository.findAll());
 
-        List<Category> categories = new ArrayList<>();
-        export.getUsers().forEach(user -> categories.addAll(categoryDaoJooq.getWhere(user)));
-        export.setCategories(categories);
-
-        export.setExpenses(expenseDaoJooq.queryForAll(export.getCategories()));
-        export.setSettings(settingsDaoJooq.getWhere());
-        export.setRecurringExpenses(recurringExpenseDaoJooq.queryForAll(export.getCategories()));
-        export.setYearlyHistories(yearlyHistoryDaoJooq.getWhere());
-        export.setMonthlyHistories(monthlyHistoryDaoJooq.getWhere());
+        export.setSettings(settingsRepository.findAll());
 
 
         var json = objectMapper.writeValueAsString(export);
@@ -118,8 +93,8 @@ public class DataExportImportService {
         String fileName = "SSS-backup.json";
 
         Files.writeString(Path.of(getBackupFolder() + fileName), json);
-        logger.info("Backup completed to file: {} with {} users, {} categories, {} expenses", fileName, export.getUsers()
-                .size(), export.getCategories().size(), export.getExpenses().size());
+        logger.info("Backup completed to file: {} with {} users", fileName, export.getUsers()
+                .size());
 
     }
 
@@ -137,6 +112,7 @@ public class DataExportImportService {
                 System.out.println(export);
 
                 logger.info("We can parse the file, deleting existing data");
+/*
                 dslContext.truncate(CATEGORY).execute();
                 dslContext.truncate(EXPENSE).execute();
                 dslContext.truncate(MONTHLY_HISTORY).execute();
@@ -144,22 +120,14 @@ public class DataExportImportService {
                 dslContext.truncate(SETTINGS).execute();
                 dslContext.truncate(USER).execute();
                 dslContext.truncate(YEARLY_HISTORY).execute();
+*/
 
                 logger.info("Importing users...");
-                userDaoJooq.importMany(export.getUsers());
+                userRepository.saveAll(export.getUsers());
                 logger.info("Importing settings...");
-                settingsDaoJooq.importMany(export.getSettings());
-                logger.info("Importing categories...");
-                categoryDaoJooq.importManyForUsers(export.getCategories());
-                logger.info("Importing expenses...");
-                expenseDaoJooq.importManyForUsers(export.getExpenses());
-                logger.info("Importing recurring expenses...");
-                recurringExpenseDaoJooq.importManyForUsers(export.getRecurringExpenses());
-                logger.info("Importing monthly history...");
-                monthlyHistoryDaoJooq.importMany(export.getMonthlyHistories());
-                logger.info("Importing yearly history...");
-                yearlyHistoryDaoJooq.importMany(export.getYearlyHistories());
+                settingsRepository.saveAll(export.getSettings());
 
+/*
                 // since now we're using postgres, we need to set the auto increment properly
                 long maxCategory = export.getCategories().stream().mapToLong(Category::getId).max().orElse(1L);
                 long maxExpense = export.getExpenses().stream().mapToLong(Expense::getId).max().orElse(1L);
@@ -171,6 +139,7 @@ public class DataExportImportService {
                 dslContext.alterSequence("category_id_seq").restartWith(maxCategory + 1).execute();
                 dslContext.alterSequence("expense_id_seq").restartWith(maxExpense + 1).execute();
                 dslContext.alterSequence("recurring_expense_id_seq").restartWith(maxRecurring + 1).execute();
+*/
 
             } else {
                 throw new InvalidParameterException("Invalid import password");

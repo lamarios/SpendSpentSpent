@@ -1,7 +1,7 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.dao.SettingsDao;
 import com.ftpix.sss.models.Settings;
+import com.ftpix.sss.persistence.SettingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,17 +12,17 @@ import java.util.List;
 @Service
 public class SettingsService {
     public final static String OBFUSCATED_PASSWORD = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-    private final SettingsDao settingsDaoJooq;
+    private final SettingsRepository settingsRepository;
 
     @Autowired
-    public SettingsService(SettingsDao settingsDaoJooq) {
-        this.settingsDaoJooq = settingsDaoJooq;
+    public SettingsService(SettingsRepository settingsRepository) {
+        this.settingsRepository = settingsRepository;
     }
 
 
     @Transactional(readOnly = true)
     public List<Settings> getAll() throws SQLException {
-        return settingsDaoJooq.getWhere();
+        return settingsRepository.findAll();
     }
 
     @Transactional
@@ -36,7 +36,7 @@ public class SettingsService {
 
     @Transactional(readOnly = true)
     public Settings getByName(String name) throws SQLException {
-        return settingsDaoJooq.queryForId(name);
+        return settingsRepository.findFirstByName(name);
     }
 
     @Transactional
@@ -46,7 +46,7 @@ public class SettingsService {
             return settings;
         }
 
-        settingsDaoJooq.createOrUpdate(settings);
+        settingsRepository.save(settings);
         return settings;
     }
 }

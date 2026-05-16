@@ -1,10 +1,18 @@
 package com.ftpix.sss.models;
 
+import com.ftpix.sss.persistence.utils.BooleanToIntConverter;
 import com.ftpix.sss.services.Encryption;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name="settings")
 public class Settings {
     public static final String CURRENCY_API_KEY = "currencyApiKey", ALLOW_SIGNUP = "allowSignUp", DEMO_MODE = "demoMode", MOTD = "motd", TIMESTAMP_FIXED = "timestamps_fixed";
 
+    @Id
     private String name;
 
     private String value;

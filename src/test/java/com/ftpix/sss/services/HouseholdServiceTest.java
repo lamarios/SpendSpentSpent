@@ -2,15 +2,17 @@ package com.ftpix.sss.services;
 
 import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.TestContainerTest;
-import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.*;
+import com.ftpix.sss.persistence.UserRepository;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.sql.SQLException;
 import java.time.ZoneId;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,15 +20,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class HouseholdServiceTest extends TestContainerTest {
 
     @Autowired
-    private User currentUser;
-
-    @Autowired
-    private UserDao userDao;
+    private UserRepository userRepository;
 
     @Autowired
     private HouseholdService householdService;
-    @Autowired
-    private User user;
+
 
     @Autowired
     private CategoryService categoryService;
@@ -35,6 +33,12 @@ public class HouseholdServiceTest extends TestContainerTest {
 
     @Autowired
     private HistoryService historyService;
+
+    @Autowired
+    private EntityManager entityManager;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
 
     @Test
     public void testHouseholdFlow() throws SQLException {
@@ -56,7 +60,7 @@ public class HouseholdServiceTest extends TestContainerTest {
         invitee.setLastName("test");
         invitee.setFirstName("aaaa");
 
-        userDao.insert(invitee);
+        userRepository.save(invitee);
 
         // invite the new usr to my household
         householdService.inviteUser(currentUser, invitee.getEmail());
@@ -66,11 +70,9 @@ public class HouseholdServiceTest extends TestContainerTest {
         assertEquals(hs.getId(), invitations.get(0).getHousehold().getId());
 
         // new users accepts invitation
-        Optional<Household> newHousehold = householdService.acceptInvitation(invitee, invitations.get(0).getId());
-        assertTrue(newHousehold.isPresent());
-        assertEquals(hs.getId(), newHousehold.get().getId());
-        hs = newHousehold.get();
-        assertEquals(2, hs.getMembers().size());
+        Household newHousehold = householdService.acceptInvitation(invitee, invitations.get(0).getId()).get();
+        assertEquals(hs.getId(), newHousehold.getId());
+        assertEquals(2, newHousehold.getMembers().size());
 
         // invitee shouldn't have anymore invitations
         invitations = householdService.getInvitations(invitee);
@@ -78,6 +80,9 @@ public class HouseholdServiceTest extends TestContainerTest {
 
         // user leaves the household
         householdService.leaveHousehold(invitee);
+
+        entityManager.flush();
+        entityManager.clear();
 
         var inviteeHs = householdService.getCurrentHousehold(invitee);
         assertTrue(inviteeHs.isEmpty());
@@ -115,7 +120,7 @@ public class HouseholdServiceTest extends TestContainerTest {
         //remove user from household
         householdService.removeMember(currentUser, invitee);
 
-        hs = householdService.getCurrentHousehold(user).get();
+        hs = householdService.getCurrentHousehold(currentUser).get();
 
         assertEquals(1, hs.getMembers().size());
         assertEquals(currentUser.getId(), hs.getMembers().get(0).getUser().getId());
@@ -135,7 +140,7 @@ public class HouseholdServiceTest extends TestContainerTest {
         user.setEmail("testuseraadfsf@test.com");
         user.setLastName("test");
         user.setFirstName("aaaa");
-        userDao.insert(user);
+        userRepository.save(user);
 
 
         // create a new user
@@ -144,7 +149,7 @@ public class HouseholdServiceTest extends TestContainerTest {
         invitee.setLastName("test");
         invitee.setFirstName("aaaa");
 
-        userDao.insert(invitee);
+        userRepository.save(invitee);
 
 
         var userCat = categoryService.create("food", user);

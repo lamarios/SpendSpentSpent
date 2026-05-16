@@ -1,25 +1,29 @@
 package com.ftpix.sss.models;
 
-import com.ftpix.sss.dao.HasCategory;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.Immutable;
 
-import java.util.UUID;
+@Entity
+@Table(name = "yearly_history")
+@Immutable
+public class YearlyHistory  {
 
-public class YearlyHistory implements HasCategory {
-
-    private Category category;
+    @EmbeddedId
+    private HistoryId id;
 
     private double total;
 
-    private int date;
-
-    @Override
     public Category getCategory() {
-        return category;
+        return id.getCategory();
     }
 
-    @Override
     public void setCategory(Category category) {
-        this.category = category;
+        if (id == null) {
+            id = new HistoryId();
+        }
+        id.setCategory(category);
     }
 
     public double getTotal() {
@@ -31,10 +35,14 @@ public class YearlyHistory implements HasCategory {
     }
 
     public int getDate() {
-        return date;
+        return id.getDate();
     }
 
     public void setDate(int date) {
-        this.date = date;
+        if (id == null) {
+            id = new HistoryId();
+        }
+
+        id.setDate(date);
     }
 }

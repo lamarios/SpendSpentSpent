@@ -1,12 +1,13 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.Constants;
-import com.ftpix.sss.dao.RecurringExpenseDao;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
+import com.ftpix.sss.persistence.RecurringExpenseRepository;
+import com.ftpix.sss.persistence.utils.Specifications;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,18 +17,16 @@ import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static com.ftpix.sss.dsl.Tables.RECURRING_EXPENSE;
-
 @Service
 public class RecurringExpenseService {
     private final static Logger logger = LogManager.getLogger();
     private final CategoryService categoryService;
-    private final RecurringExpenseDao recurringExpenseDaoJooq;
+    private final RecurringExpenseRepository recurringExpenseRepository;
 
     @Autowired
-    public RecurringExpenseService(CategoryService categoryService, RecurringExpenseDao recurringExpenseDaoJooq) {
+    public RecurringExpenseService(CategoryService categoryService, RecurringExpenseRepository recurringExpenseRepository) {
         this.categoryService = categoryService;
-        this.recurringExpenseDaoJooq = recurringExpenseDaoJooq;
+        this.recurringExpenseRepository = recurringExpenseRepository;
     }
 
     public LocalDate calculateNextDate(RecurringExpense expense) {
@@ -74,7 +73,7 @@ public class RecurringExpenseService {
 //                cal.set(Calendar.MONTH, expense.getTypeParam());
                 calendarUnit = ChronoUnit.YEARS;
                 // we migrated to local date which the starts the months of the year with 1 instead of 0
-                cal = cal.withMonth(expense.getTypeParam()+1);
+                cal = cal.withMonth(expense.getTypeParam() + 1);
         }
 
         logger.info("Calculated date[{}]", cal.toString());
@@ -86,7 +85,7 @@ public class RecurringExpenseService {
             logger.info("Comparing today[{}] and the set up date[{}]", today, cal);
 
             if (today.isAfter(cal)) {
-                cal = cal.plus( 1, calendarUnit);
+                cal = cal.plus(1, calendarUnit);
                 logger.info("The calculated date is expired, adding the extra time, new date[{}]", cal);
 
                 // Handling special cases
@@ -132,32 +131,45 @@ public class RecurringExpenseService {
 
     @Transactional
     public RecurringExpense create(RecurringExpense expense, User user) throws Exception {
-        expense.setNextOccurrence(calculateNextDate(expense));
-        return recurringExpenseDaoJooq.insert(user, expense);
+        if (categoryService.get(expense.getCategory().getId(), user) != null) {
+            expense.setNextOccurrence(calculateNextDate(expense));
+            return recurringExpenseRepository.save(expense);
+        } else {
+            return null;
+        }
     }
 
     @Transactional(readOnly = true)
     public List<RecurringExpense> get(User user) throws Exception {
-        return recurringExpenseDaoJooq.getWhere(user);
+        return recurringExpenseRepository.findExpenseByUser(user);
     }
 
 
     @Transactional(readOnly = true)
     public RecurringExpense getId(long id, User user) throws Exception {
-        return recurringExpenseDaoJooq.queryForId(user, id);
+        return recurringExpenseRepository.findRecurringExpenseByIdAndUser(id, user);
     }
 
 
     @Transactional
     public boolean delete(long id, User user) throws Exception {
-        recurringExpenseDaoJooq.deleteById(user, id);
-        return true;
+        if (getId(id, user) != null) {
+            recurringExpenseRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
     @Transactional(readOnly = true)
     public List<RecurringExpense> getToProcessForUser(User user) throws Exception {
-        return recurringExpenseDaoJooq.getWhere(user, RECURRING_EXPENSE.NEXT_OCCURRENCE.le(Constants.dateFormatter.format(LocalDate.now())));
+        var categories = categoryService.getAll(user);
+        Specification<RecurringExpense> spec = Specification.where(
+                Specifications.<RecurringExpense, LocalDate>lessThanOrEqual("nextOccurrence", LocalDate.now())
+        ).and(Specifications.<RecurringExpense>in("category", categories));
+        return recurringExpenseRepository.findAll(spec);
+//        return recurringExpenseDaoJooq.getWhere(user, RECURRING_EXPENSE.NEXT_OCCURRENCE.le(Constants.dateFormatter.format(LocalDate.now())));
     }
 
     @Transactional
@@ -169,7 +181,8 @@ public class RecurringExpenseService {
             // dates should only be updated by the cron job !
             expense.setNextOccurrence(existing.getNextOccurrence());
             expense.setLastOccurrence(existing.getLastOccurrence());
-            return recurringExpenseDaoJooq.update(user, expense);
+            update(expense, user);
+            return true;
         } else {
             return false;
         }

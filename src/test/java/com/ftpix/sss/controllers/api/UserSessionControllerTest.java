@@ -28,16 +28,12 @@ public class UserSessionControllerTest extends TestContainerTest {
     @Autowired
     private EmailService emailService;
 
-    @Autowired
-    private User currentUser;
-
-
     @Test
     public void testLogin() throws Exception {
 
         final UserSessionController.UserCredentials userCredentials = new UserSessionController.UserCredentials();
         userCredentials.password = "pass";
-        userCredentials.email = "test@example.org";
+        userCredentials.email = currentUser.getEmail();
         String actual = jwtAuthenticationController.generateAuthenticationToken(userCredentials);
         assertNotNull(actual);
 

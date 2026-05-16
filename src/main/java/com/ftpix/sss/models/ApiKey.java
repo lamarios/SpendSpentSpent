@@ -2,18 +2,35 @@ package com.ftpix.sss.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
+
+@Entity
+@Table(name = "api_keys")
 public class ApiKey {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
+    @Column(name = "timecreated")
     private long timeCreated;
+    @Column(name = "keyname")
     private String keyName;
+    @Column(name = "lastused")
     private Long lastUsed;
+    @Column(name = "expirydate")
     private Long expiryDate;
+    @Column(name = "apikey")
     private String apiKey;
     @JsonIgnore
+    @Column(name = "apikeyhash")
     private String apiKeyHash;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
 

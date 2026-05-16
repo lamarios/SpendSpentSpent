@@ -2,15 +2,20 @@ package com.ftpix.sss.services;
 
 
 import com.ftpix.sss.Constants;
-import com.ftpix.sss.dao.CategoryDao;
-import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.PaginatedResults;
 import com.ftpix.sss.models.Settings;
 import com.ftpix.sss.models.User;
+import com.ftpix.sss.persistence.CategoryRepository;
+import com.ftpix.sss.persistence.UserRepository;
+import com.ftpix.sss.persistence.utils.Specifications;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,8 +32,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.ftpix.sss.dsl.Tables.*;
-
 
 @Service
 public class UserService {
@@ -37,22 +40,22 @@ public class UserService {
     private final ExpenseService recurringExpenseService;
     private final ExpenseService expenseService;
     private final ExpenseService categoryService;
-    private final CategoryDao categoryDaoJooq;
     private final EmailService emailService;
     private final SettingsService settingsService;
     @Value("${SALT}")
     private String SALT;
-    private final UserDao userDaoJooq;
+    private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public UserService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, CategoryDao categoryDaoJooq, EmailService emailService, SettingsService settingsService, UserDao userDaoJooq) {
+    public UserService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, EmailService emailService, SettingsService settingsService, UserRepository userRepository, CategoryRepository categoryRepository) {
         this.recurringExpenseService = recurringExpenseService;
         this.expenseService = expenseService;
         this.categoryService = categoryService;
-        this.categoryDaoJooq = categoryDaoJooq;
+        this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
         this.emailService = emailService;
         this.settingsService = settingsService;
-        this.userDaoJooq = userDaoJooq;
     }
 
     /**
@@ -84,12 +87,14 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User getByEmail(String email) throws SQLException {
-        return userDaoJooq.getOneWhere(USER.EMAIL.eq(email)).orElse(null);
+        return userRepository.findFirstByEmail(email);
+//        return userDaoJooq.getOneWhere(USER.EMAIL.eq(email)).orElse(null);
     }
 
     @Transactional(readOnly = true)
     public User getByOidcSub(String sub) {
-        return userDaoJooq.getOneWhere(USER.OIDCSUB.eq(sub)).orElse(null);
+        return userRepository.findFirstByOidcSub(sub);
+//        return userDaoJooq.getOneWhere(USER.OIDCSUB.eq(sub)).orElse(null);
     }
 
     @Transactional(readOnly = true)
@@ -104,15 +109,25 @@ public class UserService {
     @Transactional(readOnly = true)
     public PaginatedResults<User> getAll(String search, int page, int pageSize) throws SQLException {
 
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<User> userResults;
         if (search.trim().length() > 0) {
             String searchQuery = "%" + search.trim() + "%";
 
-            return userDaoJooq.getPaginatedWhere(page, pageSize, USER.EMAIL.like(searchQuery)
-                    .or(USER.FIRSTNAME.like(searchQuery))
-                    .or(USER.LASTNAME.like(searchQuery)));
+            Specification<User> spec = Specification.where(Specifications.<User>like("email", searchQuery))
+                    .or(Specifications.like("firstName", search))
+                    .or(Specifications.like("lastName", searchQuery));
+
+            userResults = userRepository.findAll(spec, pageable);
+
+//            return userDaoJooq.getPaginatedWhere(page, pageSize, USER.EMAIL.like(searchQuery)
+//                    .or(USER.FIRSTNAME.like(searchQuery))
+//                    .or(USER.LASTNAME.like(searchQuery)));
         } else {
-            return userDaoJooq.getPaginatedWhere(page, pageSize);
+            userResults = userRepository.findAll(pageable);
         }
+
+        return new PaginatedResults<>(userResults);
     }
 
     @Transactional(readOnly = true)
@@ -122,7 +137,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User getById(UUID id) throws SQLException {
-        return userDaoJooq.getOneWhere(USER.ID.eq(id.toString())).orElse(null);
+        return userRepository.findFirstById(id);
+//        return userDaoJooq.getOneWhere(USER.ID.eq(id.toString())).orElse(null);
     }
 
     @Transactional
@@ -135,7 +151,7 @@ public class UserService {
             throw new Exception("All fields must be filled.");
         }
 
-        final long count = userDaoJooq.countUsers();
+        final long count = userRepository.count();
 
         if (count == 0) {
             user.setAdmin(true);
@@ -154,7 +170,8 @@ public class UserService {
         }
 
         // checking if user already exists
-        final long emailCheck = userDaoJooq.countUsers(USER.EMAIL.eq(user.getEmail()));
+//        final long emailCheck = userDaoJooq.countUsers(USER.EMAIL.eq(user.getEmail()));
+        final long emailCheck = userRepository.countByEmail(user.getEmail());
 
         if (emailCheck > 0) {
             throw new Exception("Email already in use");
@@ -163,7 +180,7 @@ public class UserService {
         // order is important here as the clear password gets updated after the bcrypt
         user.setPasswordBcrypt(new BCryptPasswordEncoder().encode(user.getPassword()));
         user.setPassword(hashUserCredentials(user.getEmail(), user.getPassword()));
-        User toReturn = userDaoJooq.insert(user);
+        User toReturn = userRepository.save(user);
 
 
         Map<String, Object> templateData = new HashMap<>();
@@ -174,9 +191,9 @@ public class UserService {
         // Migration code
         // migrating all existing categories to new user as it's the first one
         if (count == 0) {
-            categoryDaoJooq.queryForAll().forEach(c -> {
+            categoryRepository.findAll().forEach(c -> {
                 c.setUser(toReturn);
-                categoryDaoJooq.update(toReturn, c);
+                categoryRepository.save(c);
             });
         }
 
@@ -217,7 +234,7 @@ public class UserService {
                     }
                 });
 
-                userDaoJooq.delete(user);
+                userRepository.delete(user);
                 return true;
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -230,7 +247,8 @@ public class UserService {
         return Optional.ofNullable(getById(UUID.fromString(userId))).map(u -> {
             try {
                 u.setPassword(hashUserCredentials(u.getEmail(), newPassword));
-                userDaoJooq.update(u);
+//                userDaoJooq.update(u);
+                userRepository.save(u);
                 return true;
             } catch (NoSuchAlgorithmException e) {
                 throw new RuntimeException(e);
@@ -246,7 +264,8 @@ public class UserService {
 
         return Optional.ofNullable(getById(UUID.fromString(userId))).map(u -> {
             u.setAdmin(isAdmin);
-            userDaoJooq.update(u);
+//            userDaoJooq.update(u);
+            userRepository.save(u);
             return true;
         }).orElse(false);
     }
@@ -269,13 +288,14 @@ public class UserService {
             user.setPassword(hashUserCredentials(user.getEmail(), newUserData.getPassword()));
         }
 
-        userDaoJooq.update(user);
+//        userDaoJooq.update(user);
+        userRepository.save(user);
         return user;
     }
 
     @Transactional
     public User updateUser(User user) {
-        var updated = userDaoJooq.update(user);
+        var updated = userRepository.save(user);
         return user;
     }
 }

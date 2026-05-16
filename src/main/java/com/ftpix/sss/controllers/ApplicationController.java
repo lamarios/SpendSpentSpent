@@ -3,9 +3,9 @@ package com.ftpix.sss.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ftpix.sss.Constants;
-import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.CurrencyStatus;
 import com.ftpix.sss.models.Settings;
+import com.ftpix.sss.persistence.UserRepository;
 import com.ftpix.sss.services.*;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -42,22 +42,22 @@ public class ApplicationController {
     private final BuildProperties buildProperties;
     private final CurrencyService currencyService;
     private final DataExportImportService dataExportImportService;
+    private final UserRepository userRepository;
 
     public final static int MIN_APP_VERSION = 119;
-    private final UserDao userDaoJooq;
 
     private final OIDCService oidcService;
 
     @Autowired
-    public ApplicationController(EmailService emailService, SettingsService settingsService, Configuration templateEngine, BuildProperties buildProperties, CurrencyService currencyService, UserDao userDaoJooq, DataExportImportService dataExportImportService, OIDCService oidcService) {
+    public ApplicationController(EmailService emailService, SettingsService settingsService, Configuration templateEngine, BuildProperties buildProperties, CurrencyService currencyService, DataExportImportService dataExportImportService, UserRepository userRepository, OIDCService oidcService) {
         this.emailService = emailService;
         this.settingsService = settingsService;
 
         this.templateEngine = templateEngine;
         this.buildProperties = buildProperties;
         this.currencyService = currencyService;
-        this.userDaoJooq = userDaoJooq;
         this.dataExportImportService = dataExportImportService;
+        this.userRepository = userRepository;
         this.oidcService = oidcService;
     }
 
@@ -90,8 +90,7 @@ public class ApplicationController {
         StringBuilder sb = new StringBuilder();
 
 
-        Optional<String> motd = Optional.ofNullable(settingsService.getByName(Settings.MOTD))
-                .map(Settings::getValue);
+        Optional<String> motd = Optional.ofNullable(settingsService.getByName(Settings.MOTD)).map(Settings::getValue);
 
         if (!motd.isPresent()) {
             motd = Constants.ANNOUNCEMENT_MESSAGE;
@@ -100,7 +99,7 @@ public class ApplicationController {
         motd.ifPresent(sb::append);
 
 
-        long userCount = userDaoJooq.countUsers();
+        long userCount = userRepository.count();
 
         if (userCount == 0) {
             if (sb.length() > 0) {
