@@ -76,7 +76,7 @@ public class HouseholdService {
     }
 
     @Transactional
-    public void inviteUser(User user, String email) throws SQLException {
+    public void inviteUser(User user, String email) {
 //        var invitee = userDao.getOneWhere(USER.EMAIL.eq(email));
         Optional<User> invitee = Optional.ofNullable(userRepository.findFirstByEmail(email));
         var hs = getCurrentHousehold(user);
@@ -138,21 +138,29 @@ public class HouseholdService {
     }
 
     @Transactional
-    public void removeMember(User user, User memberId) throws SQLException {
+    public void removeMember(User user, User memberId) {
         Optional<Household> currentHousehold = getCurrentHousehold(user);
         //                    householdDao.getHouseholdMemberDao().delete(membership);
         currentHousehold.filter(hs -> isHouseholdAdmin(user, hs))
+                .ifPresent(household -> {
+                    if (household.getMembers().removeIf(m -> m.getUser().getId().equals(memberId.getId()))) {
+                        householdRepository.save(household);
+                        sendMessageToOtherUsers(household, user);
+                    }
+                });
+/*
                 .flatMap(hs -> hs.getMembers()
                         .stream()
                         .filter(m -> m.getUser().getId().equals(memberId.getId()))
                         .findFirst())
                 .ifPresent(householdMemberRepository::delete);
-
         currentHousehold.ifPresent(household -> sendMessageToOtherUsers(household, user));
+*/
+
     }
 
     @Transactional
-    public void deleteHousehold(User user) throws SQLException {
+    public void deleteHousehold(User user) {
         Optional<Household> currentHousehold = getCurrentHousehold(user);
         currentHousehold.filter(household -> isHouseholdAdmin(user, household))
                 .ifPresent(householdRepository::delete);
@@ -160,20 +168,26 @@ public class HouseholdService {
     }
 
     @Transactional
-    public boolean leaveHousehold(User user) throws SQLException {
+    public boolean leaveHousehold(User user) {
         var hs = getCurrentHousehold(user);
         if (hs.isPresent()) {
             var house = hs.get();
 
             if (house.getMembers().size() > 1) {
+                if (house.getMembers().removeIf(member -> member.getUser().getId().equals(user.getId()))) {
 
+/*
                 house.getMembers()
                         .stream()
                         .filter(member -> member.getUser().getId().equals(user.getId()))
                         .findFirst()
                         .ifPresent(householdMemberRepository::delete);
+*/
 
-                sendMessageToOtherUsers(house, user);
+                    householdRepository.save(house);
+
+                    sendMessageToOtherUsers(house, user);
+                }
 
                 return true;
             } else {
@@ -196,17 +210,11 @@ public class HouseholdService {
                         .getId()
                         .equals(invitee.getId()) && householdMember.getHousehold().getId().equals(household.getId()))
                 .findFirst()
-                .flatMap(householdMember -> {
-                    try {
-                        return acceptInvitation(invitee, householdMember.getId());
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                .flatMap(householdMember -> acceptInvitation(invitee, householdMember.getId()));
     }
 
     @Transactional
-    public Optional<Household> acceptInvitation(User invitee, UUID invitationId) throws SQLException {
+    public Optional<Household> acceptInvitation(User invitee, UUID invitationId) {
         List<HouseholdMember> invitations = getInvitations(invitee);
         Optional<HouseholdMember> invitation = invitations.stream()
                 .filter(invite -> invite.getId().equals(invitationId))
@@ -244,7 +252,7 @@ public class HouseholdService {
     }
 
     @Transactional
-    public void setAdmin(User user, User target, boolean admin) throws SQLException {
+    public void setAdmin(User user, User target, boolean admin) {
         if (user.getId().equals(target.getId())) {
             // users can't change their own statuses
             return;
@@ -269,7 +277,7 @@ public class HouseholdService {
     }
 
     @Transactional
-    public void setColor(User currentUser, HouseholdColor householdColor) throws SQLException {
+    public void setColor(User currentUser, HouseholdColor householdColor) {
         Optional<Household> currentHousehold = getCurrentHousehold(currentUser);
         currentHousehold.flatMap(household -> household.getMembers()
                 .stream()

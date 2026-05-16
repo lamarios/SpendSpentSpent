@@ -6,11 +6,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.flywaydb.core.Flyway;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
-import org.jooq.impl.DefaultDSLContext;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -58,24 +54,5 @@ public class DbConfig {
 
         flyway.migrate(); // Force migration to run
         return flyway;
-    }
-
-/*
-    @Bean
-    public String jdbcUrl() {
-        if (!dbPath.startsWith("jdbc:")) {
-            return "jdbc:h2:" + dbPath;
-        } else {
-            return dbPath;
-        }
-    }
-*/
-
-    @Bean
-    @DependsOn("flyway")
-    public DefaultDSLContext dslContext(DataSource dataSource) {
-        DefaultDSLContext using = (DefaultDSLContext) DSL.using(dataSource, SQLDialect.POSTGRES);
-        using.settings().setRenderSchema(false);
-        return using;
     }
 }

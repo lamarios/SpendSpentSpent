@@ -66,12 +66,8 @@ public class ApiKeyService {
         List<ApiKey> possibleMatches = apiKeyRepository.findByApiKeyHash(hashedKey);
         return possibleMatches
                 .stream()
-                .filter(apiKey -> {
-                    return apiKey.getExpiryDate() == null || apiKey.getExpiryDate() > System.currentTimeMillis();
-                })
-                .filter(apiKey -> {
-                    return bCryptPasswordEncoder.matches(clearKey, apiKey.getApiKey());
-                })
+                .filter(apiKey -> apiKey.getExpiryDate() == null || apiKey.getExpiryDate() > System.currentTimeMillis())
+                .filter(apiKey -> bCryptPasswordEncoder.matches(clearKey, apiKey.getApiKey()))
                 .map(apiKey1 -> {
                     apiKey1.setLastUsed(System.currentTimeMillis());
                     apiKeyRepository.save(apiKey1);

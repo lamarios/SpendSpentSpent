@@ -7,10 +7,7 @@ import com.ftpix.sss.persistence.UserRepository;
 import com.ftpix.sss.services.UserService;
 import com.ftpix.sss.utils.UserServiceMock;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.jooq.impl.DefaultDSLContext;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,12 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.security.NoSuchAlgorithmException;
-
 
 
 @SpringBootTest(classes = App.class, properties = {"spring.main.allow-bean-definition-overriding=true", "ALLOW_SIGNUP=1"})
