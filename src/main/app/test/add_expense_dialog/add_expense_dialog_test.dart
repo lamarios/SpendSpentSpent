@@ -175,9 +175,11 @@ void main() {
     var socket = getIt.get<UsernamePasswordCubit>().socket as MockSocket;
     socket.receiveMessage(
       SssSocketMessage(
-        message: image1
-            .copyWith(status: AiProcessingStatus.DONE, aiTags: ['tag1', 'tag2', 'tag3'], amounts: [1111, 222])
-            .toJson(),
+        message: jsonDecode(
+          jsonEncode(
+            image1.copyWith(status: AiProcessingStatus.DONE, aiTags: ['tag1', 'tag2', 'tag3'], amounts: [1111, 222]),
+          ),
+        ),
         type: SssSocketMessageType.sssFile,
       ),
     );
