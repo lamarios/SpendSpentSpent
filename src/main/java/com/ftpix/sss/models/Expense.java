@@ -44,8 +44,9 @@ public class Expense  {
     private String time;
 
     private long timestamp = System.currentTimeMillis();
+
     @Column(name = "timecreated")
-    private Long timeCreated;
+    private Long timeCreated= System.currentTimeMillis();
 
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SSSFile> files = new ArrayList<>();

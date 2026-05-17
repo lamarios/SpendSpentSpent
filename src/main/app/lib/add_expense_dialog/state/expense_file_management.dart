@@ -36,6 +36,7 @@ class ExpenseFileManagementCubit extends Cubit<ExpenseFileManagementState> {
     carouselController.animateToItem(state.files.length, duration: animationDuration, curve: animationCurve);
     try {
       final file = await service.uploadImage(image);
+      print('HELLO');
       addFile(file);
     } finally {
       emit(state.copyWith(loading: false));

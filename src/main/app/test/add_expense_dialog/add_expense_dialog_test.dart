@@ -133,7 +133,7 @@ void main() {
         jsonEncode(
           SssFile(
             id: 'aaa',
-            userId: testUser.id!,
+            user: testUser,
             status: AiProcessingStatus.PROCESSING,
             fileName: 'rick1.jpg',
             timeCreated: DateTime.now().millisecondsSinceEpoch,
@@ -154,7 +154,7 @@ void main() {
 
     var image1 = SssFile(
       id: 'aaabbbb',
-      userId: testUser.id!,
+      user: testUser,
       status: AiProcessingStatus.PROCESSING,
       fileName: 'rick2.jpg',
       timeCreated: DateTime.now().millisecondsSinceEpoch,

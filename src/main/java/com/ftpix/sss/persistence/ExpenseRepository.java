@@ -35,10 +35,10 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpec
     List<Expense> findFromHouseHoldForDates(@Param(USER_PARAM) User user, @Param("from") long from, @Param("to") long to);
 
     @Query("from Expense where category in " + GET_USER_CATEGORIES)
-    Slice<Expense> getSlice(@Param(":user") User user, Pageable pageable);
+    Slice<Expense> getSlice(@Param(USER_PARAM) User user, Pageable pageable);
 
     @Query("select e.timestamp from Expense e where e.category in " + GET_HOUSEHOLD_CATEGORIES)
-    List<Long> getHouseholdExpenseTimes(@Param("user") User user);
+    List<Long> getHouseholdExpenseTimes(@Param(USER_PARAM) User user);
 
     void deleteExpenseByCategory(Category category);
 

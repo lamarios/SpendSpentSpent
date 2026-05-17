@@ -72,16 +72,22 @@ public class SearchController {
             writer.println("date,category,amount,type,latitude,longitude,note,user");
 
             results.forEach(expense -> {
-                Instant t = Instant.ofEpochMilli(expense.getTimestamp());
-                var date = ZonedDateTime.ofInstant(t, zoneId);
+                try {
+                    Instant t = Instant.ofEpochMilli(expense.getTimestamp());
+                    var date = ZonedDateTime.ofInstant(t, zoneId);
 
-                var type = expense.getType() == 1 ? "normal" : "recurring";
-                var latitude = expense.getLatitude() == 0 ? "" : Double.toString(expense.getLatitude());
-                var longitude = expense.getLongitude() == 0 ? "" : Double.toString(expense.getLongitude());
+                    var type = expense.getType() == 1 ? "normal" : "recurring";
+                    var latitude = expense.getLatitude() == null || expense.getLatitude() == 0 ? "" : Double.toString(expense.getLatitude());
+                    var longitude = expense.getLongitude() == null || expense.getLongitude() == 0 ? "" : Double.toString(expense.getLongitude());
 
-                String str = "%s,%s,%s,%s,%s,%s,%s,%s".formatted(Constants.dateFormatter.format(date), expense.getCategory()
-                        .getIcon(), Double.toString(expense.getAmount()), type, latitude, longitude, escapeCsv(expense.getNote()), expense.getCategory().getUser().getEmail());
-                writer.println(str);
+                    String str = "%s,%s,%s,%s,%s,%s,%s,%s".formatted(Constants.dateFormatter.format(date), expense.getCategory()
+                            .getIcon(), Double.toString(expense.getAmount()), type, latitude, longitude, escapeCsv(expense.getNote()), expense.getCategory()
+                            .getUser()
+                            .getEmail());
+                    writer.println(str);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             });
 
         }

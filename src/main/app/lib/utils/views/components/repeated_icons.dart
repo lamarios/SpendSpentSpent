@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:spend_spent_spent/icons.dart';
@@ -23,7 +24,7 @@ class RepeatedIconsBackground extends StatelessWidget {
     final startPoint = (-size / 4) * 5;
     final distance = size * 1.75;
     // endless animations are a problem with pump and settle during test
-    final isTest = Platform.environment.containsKey('FLUTTER_TEST');
+    final isTest = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
 
     return LayoutBuilder(
       builder: (context, constraints) {

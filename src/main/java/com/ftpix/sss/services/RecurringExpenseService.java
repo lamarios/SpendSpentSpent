@@ -181,7 +181,7 @@ public class RecurringExpenseService {
             // dates should only be updated by the cron job !
             expense.setNextOccurrence(existing.getNextOccurrence());
             expense.setLastOccurrence(existing.getLastOccurrence());
-            update(expense, user);
+            recurringExpenseRepository.save(expense);
             return true;
         } else {
             return false;

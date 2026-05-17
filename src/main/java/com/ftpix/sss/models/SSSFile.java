@@ -37,7 +37,6 @@ public class SSSFile {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
 
     @JsonIgnore

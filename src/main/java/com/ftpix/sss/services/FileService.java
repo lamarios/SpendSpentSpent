@@ -104,7 +104,7 @@ public class FileService {
         Files.list(Path.of(filePath)).filter(
                 path -> {
                     var name = FilenameUtils.getBaseName(path.toString());
-                    var file = filesRepository.findFirstByFileName(name);
+                    var file = filesRepository.findFirstById(UUID.fromString(name));
                     return file == null;
 //                    var file = filesDAO.getOneWhere(FILES.ID.eq(name));
 //
@@ -157,9 +157,9 @@ public class FileService {
         sssFile.setTimeCreated(System.currentTimeMillis());
         sssFile.setTimeUpdated(System.currentTimeMillis());
         sssFile.setStatus(aiFileProcessingService.isAiEnabled() ? AiProcessingStatus.PENDING : AiProcessingStatus.NO_PROCESSING);
+        filesRepository.save(sssFile);
         String newfileName = sssFile.getId() + "." + FilenameUtils.getExtension(file.getOriginalFilename());
         File dest = File.createTempFile("sss-temp", "");
-        filesRepository.save(sssFile);
 
 
         try {

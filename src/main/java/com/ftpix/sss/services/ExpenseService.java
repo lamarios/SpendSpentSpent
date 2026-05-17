@@ -10,6 +10,7 @@ import com.ftpix.sss.utils.CategoryPredictor;
 import com.ftpix.sss.utils.DateUtils;
 import com.ftpix.sss.websockets.WebSocketSessionManager;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,10 +55,11 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final EntityManager entityManager;
 
 
     @Autowired
-    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ZoneId zoneId, FileService fileService, AiFileProcessingService aiFileProcessingService, HouseholdService householdService, ExpenseRepository expenseRepository, UserRepository userRepository, CategoryRepository categoryRepository) throws SQLException {
+    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ZoneId zoneId, FileService fileService, AiFileProcessingService aiFileProcessingService, HouseholdService householdService, ExpenseRepository expenseRepository, UserRepository userRepository, CategoryRepository categoryRepository, EntityManager entityManager) throws SQLException {
         this.categoryService = categoryService;
         this.settingsService = settingsService;
         this.zoneId = zoneId;
@@ -68,6 +71,7 @@ public class ExpenseService {
         this.expenseRepository = expenseRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
+        this.entityManager = entityManager;
     }
 
 
@@ -172,7 +176,15 @@ public class ExpenseService {
     public Expense update(Expense expense, User user) {
         if (expenseRepository.findExpenseByIdAndUser(expense.getId(), user) != null) {
 
+            List<SSSFile> managedFiles = expense.getFiles().stream().map(f -> {
+                SSSFile managed = entityManager.merge(f);
+                managed.setExpense(expense);
+                return managed;
+            }).collect(Collectors.toList());
+            expense.setFiles(managedFiles);
+
             expenseRepository.save(expense);
+
 
 /*
             fileService.clearExpenseFiles(expense.getId());
@@ -201,6 +213,14 @@ public class ExpenseService {
             expense.setType(Expense.TYPE_NORMAL);
         }
 
+        if (expense.getFiles() != null) {
+            List<SSSFile> managedFiles = expense.getFiles().stream().map(f -> {
+                SSSFile managed = entityManager.merge(f);
+                managed.setExpense(expense);
+                return managed;
+            }).collect(Collectors.toList());
+            expense.setFiles(managedFiles);
+        }
         Expense result = expenseRepository.save(expense);
 
         // we process the files

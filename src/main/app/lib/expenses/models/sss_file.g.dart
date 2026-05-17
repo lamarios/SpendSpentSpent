@@ -8,7 +8,7 @@ part of 'sss_file.dart';
 
 _SssFile _$SssFileFromJson(Map<String, dynamic> json) => _SssFile(
   id: json['id'] as String,
-  userId: json['userId'] as String,
+  user: User.fromJson(json['user'] as Map<String, dynamic>),
   expenseId: (json['expenseId'] as num?)?.toInt(),
   status: $enumDecode(_$AiProcessingStatusEnumMap, json['status']),
   aiTags: (json['aiTags'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
@@ -20,7 +20,7 @@ _SssFile _$SssFileFromJson(Map<String, dynamic> json) => _SssFile(
 
 Map<String, dynamic> _$SssFileToJson(_SssFile instance) => <String, dynamic>{
   'id': instance.id,
-  'userId': instance.userId,
+  'user': instance.user,
   'expenseId': instance.expenseId,
   'status': _$AiProcessingStatusEnumMap[instance.status]!,
   'aiTags': instance.aiTags,
