@@ -2,14 +2,19 @@ package com.ftpix.sss.controllers.api;
 
 import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.TestContainerTest;
+import com.ftpix.sss.models.AiProcessingStatus;
+import com.ftpix.sss.models.SSSFile;
 import com.ftpix.sss.models.User;
+import com.ftpix.sss.persistence.FilesRepository;
 import com.ftpix.sss.services.FileService;
+import com.sun.source.tree.AssertTree;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -17,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 import static java.nio.file.Files.readAllBytes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,6 +39,43 @@ public class FileControllerTest extends TestContainerTest {
 
     @Value("${FILES_PATH:./files}")
     private String filePath;
+
+    @Autowired
+    private FilesRepository filesRepository;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
+    @Test
+    public void testFileAmountAndTagsConverters() {
+        List<Double> amounts = List.of(0.1, 0.2, 0.2);
+        List<String> tags = List.of("a", "b", "c");
+        UUID fileId = transactionTemplate.execute(transactionStatus -> {
+
+                    SSSFile newFile = new SSSFile();
+                    newFile.setFileName("test");
+                    newFile.setStatus(AiProcessingStatus.DONE);
+                    newFile.setUser(currentUser);
+
+                    newFile.setAmounts(amounts);
+                    newFile.setAiTags(tags);
+
+                    return filesRepository.save(newFile).getId();
+                }
+        );
+
+
+        // now in a new transaction, we try to get back the file and it shouldn't fail
+        transactionTemplate.executeWithoutResult(transactionStatus -> {
+            var file = filesRepository.findFirstById(fileId);
+            assertEquals(amounts.size(), file.getAmounts().size());
+            assertTrue(amounts.containsAll(file.getAmounts()));
+
+            assertEquals(tags.size(), file.getAiTags().size());
+            assertTrue(tags.containsAll(file.getAiTags()));
+        });
+
+    }
 
     @Test
     public void testFileUpload() throws Exception {
