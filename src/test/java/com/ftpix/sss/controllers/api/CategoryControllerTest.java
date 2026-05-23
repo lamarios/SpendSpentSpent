@@ -7,11 +7,9 @@ import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.CategoryService;
 import com.ftpix.sss.services.UserService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
@@ -30,7 +28,6 @@ public class CategoryControllerTest extends TestContainerTest {
     @Autowired
     private TransactionTemplate transactionTemplate;
 
-    @Disabled
     @Test
     public void testCreateUpdateDeleteCategory() throws Exception {
 
@@ -70,18 +67,14 @@ public class CategoryControllerTest extends TestContainerTest {
 
     //    @Test(expected = Exception.class)
     @Test
-    @Disabled
     public void createNonExistentCategory() {
         Assertions.assertThrows(Exception.class, () -> categoryService.create("icon-that-does-not-exist", currentUser));
     }
 
     //    @Test(expected = Exception.class)
     @Test
-    @Disabled
     public void updateNonExistentCategory() {
-        Assertions.assertThrows(Exception.class, () -> {
-            categoryService.update(423423, "furniture", 0, currentUser);
-        });
+        Assertions.assertThrows(Exception.class, () -> categoryService.update(423423, "furniture", 0, currentUser));
     }
 
     @Test
@@ -107,9 +100,9 @@ public class CategoryControllerTest extends TestContainerTest {
 
                 assertEquals(3, all.size());
 
-                var apple = all.stream().filter(c -> c.getIcon().equals("apple")).findFirst().get();
-                var books = all.stream().filter(c -> c.getIcon().equals("books")).findFirst().get();
-                var camera = all.stream().filter(c -> c.getIcon().equals("camera")).findFirst().get();
+                var apple = all.stream().filter(c -> c.getIcon().equals("apple")).findFirst().orElseThrow();
+                var books = all.stream().filter(c -> c.getIcon().equals("books")).findFirst().orElseThrow();
+                var camera = all.stream().filter(c -> c.getIcon().equals("camera")).findFirst().orElseThrow();
 
                 camera.setCategoryOrder(0);
                 books.setCategoryOrder(1);
