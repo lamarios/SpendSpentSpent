@@ -37,6 +37,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("select coalesce(max(categoryOrder), 0) from Category where user = :user")
     long getMaxCategoryOrder(@Param(USER_PARAM) User user);
 
-    void deleteByUserAfterAndId(User userAfter, Long id);
 
 }

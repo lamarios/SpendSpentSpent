@@ -1,6 +1,7 @@
 package com.ftpix.sss.websockets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.ftpix.sss.models.WebSocketMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +18,10 @@ public class WebSocketSessionManager {
     private final static Logger log = LogManager.getLogger();
     private static final Map<String, List<WebSocketSession>> sessions = new ConcurrentHashMap<>();
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    static{
+        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+    }
 
     public static void register(String userId, WebSocketSession session) {
         sessions.putIfAbsent(userId, new ArrayList<>());

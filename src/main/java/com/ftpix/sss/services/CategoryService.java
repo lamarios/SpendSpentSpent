@@ -86,15 +86,13 @@ public class CategoryService {
 
     @Transactional
     public boolean delete(long id, User user) throws SQLException {
-        Map<String, Object> fields = new HashMap<>();
-        fields.put("CATEGORY_ID", id);
 
         final Category category = get(id, user);
         if (category.getUser().getId().equals(user.getId())) {
             expenseRepository.deleteExpenseByCategory(category);
             recurringExpenseRepository.deleteRecurringExpenseByCategory(category);
 
-            categoryRepository.deleteByUserAfterAndId(user, category.getId());
+            categoryRepository.delete(category);
             return true;
         } else {
             return false;
