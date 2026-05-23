@@ -109,7 +109,7 @@ abstract public class TestContainerTest {
         categoryRepository.deleteAll();
         userRepository.deleteAll();
         MockEmailService mockMail = (MockEmailService) emailService;
-//        mockMail.getEmails().clear();
+        mockMail.getEmails().clear();
     }
 
 }
