@@ -5,11 +5,14 @@ import com.ftpix.sss.TestContainerTest;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.CategoryService;
+import com.ftpix.sss.services.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 
@@ -21,7 +24,11 @@ public class CategoryControllerTest extends TestContainerTest {
 
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private UserService userService;
 
+    @Autowired
+    private TransactionTemplate transactionTemplate;
 
     @Disabled
     @Test
@@ -75,6 +82,59 @@ public class CategoryControllerTest extends TestContainerTest {
         Assertions.assertThrows(Exception.class, () -> {
             categoryService.update(423423, "furniture", 0, currentUser);
         });
+    }
+
+    @Test
+    public void testCategoryOrdering() throws Exception {
+        User user = new User();
+        user.setFirstName("category order user");
+        user.setLastName("category order lastname");
+        user.setEmail("category-order@gmail.com");
+        user.setPassword("aaaaa");
+
+        user = userService.createUser(user);
+        User finalUser = user;
+        transactionTemplate.executeWithoutResult(status -> {
+            try {
+
+
+                categoryService.create("apple", finalUser);
+                categoryService.create("books", finalUser);
+                categoryService.create("camera", finalUser);
+
+
+                List<Category> all = categoryService.getAll(finalUser);
+
+                assertEquals(3, all.size());
+
+                var apple = all.stream().filter(c -> c.getIcon().equals("apple")).findFirst().get();
+                var books = all.stream().filter(c -> c.getIcon().equals("books")).findFirst().get();
+                var camera = all.stream().filter(c -> c.getIcon().equals("camera")).findFirst().get();
+
+                camera.setCategoryOrder(0);
+                books.setCategoryOrder(1);
+                apple.setCategoryOrder(2);
+
+                categoryService.updateMany(List.of(camera, books, apple), finalUser);
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        // we do in a new transaction to make sure it's not using session cache or anything
+        transactionTemplate.executeWithoutResult(status -> {
+            try {
+                var all = categoryService.getAll(finalUser);
+
+                assertEquals("camera", all.get(0).getIcon());
+                assertEquals("books", all.get(1).getIcon());
+                assertEquals("apple", all.get(2).getIcon());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
     }
 
 

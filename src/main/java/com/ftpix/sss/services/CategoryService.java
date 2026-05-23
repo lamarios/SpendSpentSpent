@@ -8,6 +8,7 @@ import com.ftpix.sss.persistence.ExpenseRepository;
 import com.ftpix.sss.persistence.RecurringExpenseRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +38,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public List<Category> getAll(User user) throws SQLException {
-        return categoryRepository.findAllByUser(user);
+        return categoryRepository.findAllByUser(user, Sort.by("categoryOrder").ascending());
     }
 
     @Transactional(readOnly = true)

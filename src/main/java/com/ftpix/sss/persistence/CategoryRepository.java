@@ -2,6 +2,7 @@ package com.ftpix.sss.persistence;
 
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -38,4 +39,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     long getMaxCategoryOrder(@Param(USER_PARAM) User user);
 
 
+    List<Category> findAllByUser(User user, Sort sort);
 }
