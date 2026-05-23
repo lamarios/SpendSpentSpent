@@ -2,15 +2,13 @@ package com.ftpix.sss;
 
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
-import com.ftpix.sss.persistence.CategoryRepository;
-import com.ftpix.sss.persistence.UserRepository;
+import com.ftpix.sss.persistence.*;
 import com.ftpix.sss.services.UserService;
 import com.ftpix.sss.utils.UserServiceMock;
 import jakarta.persistence.EntityManager;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -44,6 +42,16 @@ abstract public class TestContainerTest {
 
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private ExpenseRepository expenseRepository;
+    @Autowired
+    private FilesRepository filesRepository;
+    @Autowired
+    private HouseholdMemberRepository householdMemberRepository;
+    @Autowired
+    private HouseholdRepository householdRepository;
+    @Autowired
+    private ApiKeyRepository apiKeyRepository;
 
     @DynamicPropertySource
     static void configureSQLContainer(DynamicPropertyRegistry registry) {
@@ -87,10 +95,15 @@ abstract public class TestContainerTest {
         categoryRepository.save(cloth);
     }
 
-
-    @Test
-    void test() {
-        System.out.println(postgres.getMappedPort(5432));
-        Assertions.assertTrue(postgres.isRunning());
+    @AfterEach
+    public void truncateData(){
+        apiKeyRepository.deleteAll();
+        householdMemberRepository.deleteAll();
+        householdRepository.deleteAll();
+        filesRepository.deleteAll();
+        expenseRepository.deleteAll();
+        categoryRepository.deleteAll();
+        userRepository.deleteAll();
     }
+
 }
