@@ -3,6 +3,7 @@ package com.ftpix.sss.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ftpix.sss.persistence.listeners.FileListener;
 import com.ftpix.sss.persistence.utils.CsvToListConverter;
+import com.ftpix.sss.persistence.utils.FileAmountsConverter;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -25,7 +26,7 @@ public class SSSFile {
     @Convert(converter = CsvToListConverter.class)
     @Column(name = "ai_tags")
     private List<String> aiTags;
-    @Convert(converter = CsvToListConverter.class)
+    @Convert(converter = FileAmountsConverter.class)
     private List<Double> amounts;
     private String fileName;
 

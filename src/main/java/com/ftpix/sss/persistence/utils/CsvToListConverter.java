@@ -20,6 +20,6 @@ public class CsvToListConverter implements AttributeConverter<List<String>, Stri
     @Override
     public List<String> convertToEntityAttribute(String dbValue) {
         if (dbValue == null || dbValue.trim().isEmpty()) return new ArrayList<>();
-        return new ArrayList<>(Arrays.asList(dbValue.split(DELIMITER)));
+        return new ArrayList<>(Arrays.asList(dbValue.split(DELIMITER))).stream().filter(s -> !s.isBlank()).toList();
     }
 }
