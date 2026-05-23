@@ -7,7 +7,6 @@ import com.ftpix.sss.services.EmailService;
 import com.ftpix.sss.services.UserService;
 import com.ftpix.sss.utils.MockEmailService;
 import com.ftpix.sss.utils.UserServiceMock;
-import jakarta.persistence.EntityManager;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -25,7 +24,7 @@ import java.security.NoSuchAlgorithmException;
 @Testcontainers
 abstract public class TestContainerTest {
 
-    private final static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17");
+    private final static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:17");
 
     static {
         postgres.start();
@@ -41,9 +40,6 @@ abstract public class TestContainerTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
-
-    @Autowired
-    private EntityManager entityManager;
     @Autowired
     private ExpenseRepository expenseRepository;
     @Autowired
@@ -70,7 +66,7 @@ abstract public class TestContainerTest {
 
     @BeforeEach
     public void insertBaseData() throws NoSuchAlgorithmException {
-        String random = RandomStringUtils.randomAlphabetic(10); // from Apache Commons Lang
+        String random = RandomStringUtils.secure().nextAlphabetic(10); // from Apache Commons Lang
         User user = new User();
         user.setFirstName("Tester");
         user.setLastName("Super");
