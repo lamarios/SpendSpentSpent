@@ -2,21 +2,19 @@ package com.ftpix.sss.controllers.api;
 
 import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.TestContainerTest;
-import com.ftpix.sss.dao.CategoryDao;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
+import com.ftpix.sss.persistence.CategoryRepository;
 import com.ftpix.sss.services.RecurringExpenseService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @Import(TestConfig.class)
@@ -26,12 +24,7 @@ public class RecurringExpenseControllerTest extends TestContainerTest {
     private RecurringExpenseService recurringExpenseService;
 
     @Autowired
-    private User currentUser;
-
-    @Autowired
-    private CategoryDao categoryDaoJooq;
-    @Autowired
-    private CategoryDao categoryDao;
+    private CategoryRepository categoryRepository;
 
     private RecurringExpense create(Category category, double amount, boolean income, String name, int type, int when) throws Exception {
         RecurringExpense exp = new RecurringExpense();
@@ -53,7 +46,7 @@ public class RecurringExpenseControllerTest extends TestContainerTest {
 
         int count = recurringExpenseService.get(currentUser).size();
 
-        var categories = categoryDaoJooq.getWhere(currentUser);
+        var categories = categoryRepository.findAllByUser(currentUser);
 
         RecurringExpense expense = create(categories.get(0), 10d, false, "spotify", RecurringExpense.TYPE_DAILY, 0);
 

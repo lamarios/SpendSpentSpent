@@ -1,8 +1,8 @@
 package com.ftpix.sss.utils;
 
-import com.ftpix.sss.dao.CategoryDao;
-import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.User;
+import com.ftpix.sss.persistence.CategoryRepository;
+import com.ftpix.sss.persistence.UserRepository;
 import com.ftpix.sss.services.EmailService;
 import com.ftpix.sss.services.ExpenseService;
 import com.ftpix.sss.services.SettingsService;
@@ -13,9 +13,10 @@ public class UserServiceMock extends UserService {
 
     private User currentUser;
 
-    public UserServiceMock(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, CategoryDao categoryDaoJooq, EmailService emailService, SettingsService settingsService, UserDao userDaoJooq) {
-        super(recurringExpenseService, expenseService, categoryService, categoryDaoJooq, emailService, settingsService, userDaoJooq);
+    public UserServiceMock(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, EmailService emailService, SettingsService settingsService, UserRepository userRepository, CategoryRepository categoryRepository) {
+        super(recurringExpenseService, expenseService, categoryService, emailService, settingsService, userRepository, categoryRepository);
     }
+
 
     public User getCurrentUser() {
         return currentUser;

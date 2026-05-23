@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:spend_spent_spent/expenses/models/ai_processing_status.dart';
+import 'package:spend_spent_spent/settings/models/user.dart';
 
 part 'sss_file.freezed.dart';
 
@@ -9,7 +10,7 @@ part 'sss_file.g.dart';
 sealed class SssFile with _$SssFile {
   const factory SssFile({
     required String id,
-    required String userId,
+    required User user,
     int? expenseId,
     required AiProcessingStatus status,
     @Default([]) List<String> aiTags,

@@ -1,27 +1,33 @@
 package com.ftpix.sss.models;
 
 
-import com.ftpix.sss.dao.HasCategory;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.Immutable;
 
-import java.util.UUID;
+@Entity
+@Table(name = "monthly_history")
+@Immutable
+public class MonthlyHistory {
 
-public class MonthlyHistory implements HasCategory {
+    @EmbeddedId
+    private HistoryId id;
 
-    private Category category;
 
     private double total;
 
-    // date will be of format YYYYMM for easy comparison / sorting
-    private int date;
 
-    @Override
     public Category getCategory() {
-        return category;
+        return id.getCategory();
     }
 
-    @Override
     public void setCategory(Category category) {
-        this.category = category;
+        if (id == null) {
+            id = new HistoryId();
+        }
+
+        id.setCategory(category);
     }
 
     public double getTotal() {
@@ -33,10 +39,21 @@ public class MonthlyHistory implements HasCategory {
     }
 
     public int getDate() {
-        return date;
+        return id.getDate();
     }
 
     public void setDate(int date) {
-        this.date = date;
+        if (id == null) {
+            id = new HistoryId();
+        }
+        id.setDate(date);
+    }
+
+    public HistoryId getId() {
+        return id;
+    }
+
+    public void setId(HistoryId id) {
+        this.id = id;
     }
 }

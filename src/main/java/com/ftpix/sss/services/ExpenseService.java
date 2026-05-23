@@ -1,18 +1,27 @@
 package com.ftpix.sss.services;
 
 import com.ftpix.sss.Constants;
-import com.ftpix.sss.dao.CategoryDao;
-import com.ftpix.sss.dao.ExpenseDao;
-import com.ftpix.sss.dao.UserDao;
 import com.ftpix.sss.models.*;
+import com.ftpix.sss.persistence.CategoryRepository;
+import com.ftpix.sss.persistence.ExpenseRepository;
+import com.ftpix.sss.persistence.UserRepository;
+import com.ftpix.sss.persistence.utils.Specifications;
 import com.ftpix.sss.utils.CategoryPredictor;
 import com.ftpix.sss.utils.DateUtils;
 import com.ftpix.sss.websockets.WebSocketSessionManager;
-import org.apache.commons.lang3.tuple.Pair;
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jooq.OrderField;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +35,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import static com.ftpix.sss.dsl.Tables.EXPENSE;
-import static com.ftpix.sss.dsl.Tables.FILES;
+import static com.ftpix.sss.persistence.utils.ExpenseSpecifications.*;
 
 @Service
 public class ExpenseService {
@@ -39,54 +47,47 @@ public class ExpenseService {
     private final SimpleDateFormat monthOnly = new SimpleDateFormat("yyyy-MM");
     private final ZoneId zoneId;
 
-    private final ExpenseDao expenseDaoJooq;
+    //    private final ExpenseDao expenseDaoJooq;
     private final FileService fileService;
-    private final ExpenseDao expenseDao;
+    //    private final ExpenseDao expenseDao;
     private final AiFileProcessingService aiFileProcessingService;
-    private final CategoryDao categoryDao;
-    private final UserDao userDao;
     private final HouseholdService householdService;
+    private final ExpenseRepository expenseRepository;
+    private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final EntityManager entityManager;
 
 
     @Autowired
-    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ZoneId zoneId, ExpenseDao expenseDaoJooq, FileService fileService, ExpenseDao expenseDao, AiFileProcessingService aiFileProcessingService, CategoryDao categoryDao, UserDao userDao, HouseholdService householdService) throws SQLException {
+    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ZoneId zoneId, FileService fileService, AiFileProcessingService aiFileProcessingService, HouseholdService householdService, ExpenseRepository expenseRepository, UserRepository userRepository, CategoryRepository categoryRepository, EntityManager entityManager) throws SQLException {
         this.categoryService = categoryService;
         this.settingsService = settingsService;
         this.zoneId = zoneId;
-        this.expenseDaoJooq = expenseDaoJooq;
+//        this.expenseDaoJooq = expenseDaoJooq;
         this.fileService = fileService;
-        this.expenseDao = expenseDao;
+//        this.expenseDao = expenseDao;
         this.aiFileProcessingService = aiFileProcessingService;
-        this.categoryDao = categoryDao;
-
-        this.userDao = userDao;
         this.householdService = householdService;
-        fixLegacyExpensesTimeZones();
+        this.expenseRepository = expenseRepository;
+        this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
+        this.entityManager = entityManager;
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<Expense> getAll(User user) {
+        return expenseRepository.findExpenseByUser(user);
     }
 
     @Transactional(readOnly = true)
-    public List<Expense> getAll(User user) throws Exception {
-        List<Expense> expenses = expenseDaoJooq.getWhere(user);
-        getFiles(expenses);
-        return expenses;
+    public Expense get(long id, User user) {
+        return expenseRepository.findExpenseByIdAndUser(id, user);
     }
 
-    @Transactional(readOnly = true)
-    public Expense get(long id, User user) throws Exception {
-        return expenseDaoJooq.get(user, id).map(expense -> {
-            getFiles(List.of(expense));
-            return expense;
-        }).orElse(null);
-    }
-
-    private void getFiles(List<Expense> expenses) {
-        List<SSSFile> files = fileService.getFiles(expenses);
-
-        files.forEach(file -> expenses.stream().filter(e -> Objects.equals(e.getId(), file.getExpenseId()))
-                .forEach(expense -> expense.getFiles().add(file)));
-    }
 
     @Transactional
+    @EventListener(ApplicationReadyEvent.class)
     public void fixLegacyExpensesTimeZones() throws SQLException {
 
         var migrated = settingsService.getByName(Settings.TIMESTAMP_FIXED);
@@ -95,13 +96,13 @@ public class ExpenseService {
             return;
         }
 
-        var users = userDao.getWhere();
+        var users = userRepository.findAll();
 
         logger.info("Migrating timestamps");
 
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         for (User user : users) {
-            expenseDaoJooq.getWhere(user).forEach(expense -> {
+            getAll(user).forEach(expense -> {
 
                 var localDate = LocalDateTime.parse(expense.getDate() + " " + Optional.ofNullable(expense.getTime())
                         .orElse("00:00"), dateFormatter);
@@ -110,7 +111,7 @@ public class ExpenseService {
                 logger.info("Migrating expense:" + localDate + " zoned: " + zoned + " -> " + (zoned.toEpochSecond() * 1000));
                 expense.setTimestamp(zoned.toEpochSecond() * 1000);
                 expense.setTimeCreated(expense.getTimestamp());
-                expenseDaoJooq.update(user, expense);
+                expenseRepository.save(expense);
             });
         }
 
@@ -124,7 +125,7 @@ public class ExpenseService {
         double minExpense = expense.getAmount() * 0.8;
         double maxExpense = expense.getAmount() * 1.2;
 
-        return expenseDaoJooq.getNotes(currentUser, expense.getCategory().getId(), minExpense, maxExpense)
+        return expenseRepository.findNotes(currentUser, expense.getCategory(), minExpense, maxExpense)
                 .stream()
                 .filter(Objects::nonNull)
                 .map(String::trim)
@@ -134,7 +135,7 @@ public class ExpenseService {
 
     @Transactional(readOnly = true)
     public Map<String, Long> autoCompleteNote(User currentUser, String seed) {
-        return expenseDaoJooq.autoCompleteNote(currentUser, seed)
+        return expenseRepository.autoCompleteNote(currentUser, "%" + seed + "%")
                 .stream()
                 .filter(Objects::nonNull)
                 .map(String::trim)
@@ -152,12 +153,10 @@ public class ExpenseService {
         ZonedDateTime from = zoned.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
         ZonedDateTime to = zoned.with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59);
 
-        Map<String, List<Expense>> grouped = expenseDaoJooq.getFromHouseholdWhere(user, expenseDao.getDefaultOrderBy(), EXPENSE.TIMESTAMP.ge(from.toInstant()
-                        .toEpochMilli()).and(EXPENSE.TIMESTAMP.le(to.toInstant().toEpochMilli())))
+        Map<String, List<Expense>> grouped = expenseRepository.findFromHouseHoldForDates(user, from.toInstant()
+                        .toEpochMilli(), to.toInstant().toEpochMilli())
                 .stream()
                 .collect(Collectors.groupingBy(expense -> Constants.dateFormatter.format(DateUtils.fromTimestamp(expense.getTimestamp(), zone))));
-
-        getFiles(grouped.values().stream().flatMap(Collection::stream).toList());
 
 
         Map<String, DailyExpense> result = new TreeMap<>(Collections.reverseOrder());
@@ -175,15 +174,30 @@ public class ExpenseService {
 
     @Transactional
     public Expense update(Expense expense, User user) {
-        expenseDao.update(user, expense);
+        if (expenseRepository.findExpenseByIdAndUser(expense.getId(), user) != null) {
 
-        fileService.clearExpenseFiles(expense.getId());
+            List<SSSFile> managedFiles = expense.getFiles().stream().map(f -> {
+                SSSFile managed = entityManager.merge(f);
+                managed.setExpense(expense);
+                return managed;
+            }).collect(Collectors.toList());
+            expense.setFiles(managedFiles);
 
-        expense.getFiles()
-                .forEach(file -> fileService.updateField(file, FILES.EXPENSE_ID, expense.getId()));
+            expenseRepository.save(expense);
 
-        sendMessageToOtherUsers(user);
-        return expense;
+
+/*
+            fileService.clearExpenseFiles(expense.getId());
+
+            expense.getFiles()
+                    .forEach(file -> fileService.updateField(file, FILES.EXPENSE_ID, expense.getId()));
+*/
+
+            sendMessageToOtherUsers(user);
+            return expense;
+        } else {
+            return null;
+        }
     }
 
     @Transactional
@@ -199,16 +213,26 @@ public class ExpenseService {
             expense.setType(Expense.TYPE_NORMAL);
         }
 
-        Expense result = expenseDaoJooq.insert(user, expense);
+        if (expense.getFiles() != null) {
+            List<SSSFile> managedFiles = expense.getFiles().stream().map(f -> {
+                SSSFile managed = entityManager.merge(f);
+                managed.setExpense(expense);
+                return managed;
+            }).collect(Collectors.toList());
+            expense.setFiles(managedFiles);
+        }
+        Expense result = expenseRepository.save(expense);
 
         // we process the files
         // we don't update the files with what we got as it might still be processing, we just take the DB version and assign
         // the expense id
+/*
         for (SSSFile sssFile : expense.getFiles()) {
             fileService.getfile(user, sssFile.getId().toString()).ifPresent(file -> {
                 fileService.updateField(file, FILES.EXPENSE_ID, result.getId());
             });
         }
+*/
 
         sendMessageToOtherUsers(user);
         return result;
@@ -219,7 +243,8 @@ public class ExpenseService {
         final Expense expense = get(id, user);
         if (expense.getCategory().getUser().getId().equals(user.getId())) {
             try {
-                return expenseDaoJooq.delete(user, expense);
+                expenseRepository.delete(expense);
+                return true;
             } finally {
                 sendMessageToOtherUsers(user);
             }
@@ -233,11 +258,14 @@ public class ExpenseService {
      */
     @Transactional(readOnly = true)
     public ExpenseLimits getLimits(User user) {
-        PaginatedResults<Expense> data = expenseDaoJooq.getPaginatedWhere(user, 0, 1, new OrderField[]{EXPENSE.TIMESTAMP.asc()});
-        if (data.getData().isEmpty()) {
+        Pageable pageable = PageRequest.of(0, 1, Sort.by("timestamp").ascending());
+
+        Slice<Expense> data = expenseRepository.getSlice(user, pageable);
+
+        if (data.getContent().isEmpty()) {
             return new ExpenseLimits(0, 0);
         }
-        Expense exp = data.getData().get(0);
+        Expense exp = data.getContent().get(0);
         ZonedDateTime localDate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(exp.getTimestamp()), zoneId);
         ZonedDateTime now = ZonedDateTime.now(zoneId);
 
@@ -246,18 +274,30 @@ public class ExpenseService {
 
     @Transactional(readOnly = true)
     public List<String> getMonths(User user, ZoneId zone) throws Exception {
-        return expenseDaoJooq.getMonths(user, Optional.ofNullable(zone).orElse(zoneId));
+
+        return expenseRepository.getHouseholdExpenseTimes(user)
+                .stream()
+                .map(s -> ZonedDateTime.ofInstant(Instant.ofEpochMilli(s), zoneId))
+                .map(d -> DateTimeFormatter.ofPattern("yyyy-MM").format(d))
+                .sorted()
+                .distinct()
+                .toList();
     }
 
+
     @Transactional(readOnly = true)
-    public double getSumWhere(User user, Pair<ZonedDateTime, ZonedDateTime> date, Category category) {
-        long startDate= date.getLeft()
-                .toInstant()
-                .toEpochMilli();
-        long endDate = date.getRight()
-                .toInstant()
-                .toEpochMilli();
-        return expenseDaoJooq.sumWhere(user, EXPENSE.TIMESTAMP.ge(startDate), EXPENSE.TIMESTAMP.le(endDate), EXPENSE.CATEGORY_ID.eq(category.getId()));
+    public List<Expense> getFromTo(User user, boolean includeHousehold, long from, long to, boolean includeRecurring) {
+
+        List<Category> userCategories = includeHousehold ? categoryRepository.getHouseholdCategories(user) : categoryRepository.findAllByUser(user);
+
+        Specification<Expense> spec = Specification.where(betweenTimestamps(from, to))
+                .and(inCategories(userCategories));
+
+        if (!includeRecurring) {
+            spec = spec.and(excludeRecurring());
+        }
+
+        return expenseRepository.findAll(spec);
     }
 
     /**
@@ -276,28 +316,19 @@ public class ExpenseService {
                 .atTime(23, 59, 59)
                 .atZone(Optional.ofNullable(zone).orElse(zoneId));
 
-        ZonedDateTime start = date.with(TemporalAdjusters.firstDayOfMonth())
-                .withHour(0)
-                .withMinute(0)
-                .withSecond(0);
+        ZonedDateTime start = date.with(TemporalAdjusters.firstDayOfMonth()).withHour(0).withMinute(0).withSecond(0);
 
         ZonedDateTime end = date;
 
-        var currentSum = expenseDaoJooq.getFromTo(user, true, start.toInstant().toEpochMilli(), end.toInstant()
-                        .toEpochMilli(), includeRecurring)
-                .stream()
-                .mapToDouble(Expense::getAmount)
-                .sum();
+        var currentSum = getFromTo(user, true, start.toInstant().toEpochMilli(), end.toInstant()
+                .toEpochMilli(), includeRecurring).stream().mapToDouble(Expense::getAmount).sum();
 
         start = start.minusMonths(1);
         end = end.minusMonths(1);
 
 
-        var previousSum = expenseDaoJooq.getFromTo(user, true, start.toInstant().toEpochMilli(), end.toInstant()
-                        .toEpochMilli(), includeRecurring)
-                .stream()
-                .mapToDouble(Expense::getAmount)
-                .sum();
+        var previousSum = getFromTo(user, true, start.toInstant().toEpochMilli(), end.toInstant()
+                .toEpochMilli(), includeRecurring).stream().mapToDouble(Expense::getAmount).sum();
         if (previousSum == 0) {
             return 0;
         }
@@ -308,9 +339,17 @@ public class ExpenseService {
     @Transactional(readOnly = true)
     public List<CategoryPredictor.CategoryPrediction> getExpenseCategorySuggestion(User currentUser, ZoneId timeZone, Double latitude, Double longitude) throws ExecutionException, InterruptedException {
         // we only select expenses that have been created on the spot and not back dated, backdated expenses will have a time of 00:00 of the user's timezone
-        long oneMinute = 1000 * 60L;
+
+        Specification<Expense> spec = Specification.where(createdOnTheSpot())
+                .and(Specifications.greaterThan("timestamp", System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 90));
+
+        var expenses = expenseRepository.findAll(spec, Sort.by("id").ascending());
+
+
+/*
         var expenses = expenseDaoJooq.getFromHouseholdWhere(currentUser, new OrderField[]{EXPENSE.ID.desc()}, EXPENSE.TIMESTAMP.gt(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 90), EXPENSE.TYPE.eq(1), EXPENSE.TIMESTAMP.minus(EXPENSE.TIMECREATED)
                 .between(-oneMinute, oneMinute)); // get the last 6 months of expenses
+*/
 
         CategoryPredictor categoryPredictor = new CategoryPredictor();
         categoryPredictor.train(expenses, timeZone);
@@ -323,7 +362,9 @@ public class ExpenseService {
 
     private List<User> getHouseholdOtherMembers(User user) {
         return householdService.getCurrentHousehold(user)
-                .map(household -> household.getMembers().stream().map(HouseholdMember::getUser)
+                .map(household -> household.getMembers()
+                        .stream()
+                        .map(HouseholdMember::getUser)
                         .filter(user1 -> !user1.getId().equals(user.getId()))
                         .toList())
                 .orElseGet(List::of);

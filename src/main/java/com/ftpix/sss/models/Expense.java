@@ -1,27 +1,38 @@
 package com.ftpix.sss.models;
 
-import com.ftpix.sss.dao.HasCategory;
+import com.ftpix.sss.persistence.listeners.HistoryServiceRefresher;
+import com.ftpix.sss.persistence.utils.BooleanToIntConverter;
+import com.ftpix.sss.persistence.utils.LocalDateConverter;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class Expense implements HasCategory {
+@Entity
+@Table(name = "expense")
+@EntityListeners({HistoryServiceRefresher.class})
+public class Expense  {
 
     public static final int TYPE_NORMAL = 1, TYPE_RECURRENT = 2;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private double amount;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
 
 
+    @Convert(converter = LocalDateConverter.class)
     private LocalDate date;
 
     private int type = 1;
 
+    @Convert(converter = BooleanToIntConverter.class)
     private boolean income = false;
 
     private Double latitude;
@@ -33,8 +44,11 @@ public class Expense implements HasCategory {
     private String time;
 
     private long timestamp = System.currentTimeMillis();
-    private Long timeCreated;
 
+    @Column(name = "timecreated")
+    private Long timeCreated= System.currentTimeMillis();
+
+    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SSSFile> files = new ArrayList<>();
 
 
@@ -80,12 +94,10 @@ public class Expense implements HasCategory {
         this.income = income;
     }
 
-    @Override
     public Category getCategory() {
         return category;
     }
 
-    @Override
     public void setCategory(Category category) {
         this.category = category;
     }

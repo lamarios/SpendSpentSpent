@@ -1,5 +1,7 @@
 package com.ftpix.sss.models;
 
+import org.springframework.data.domain.Page;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +16,9 @@ public class PaginatedResults<T> {
     public PaginatedResults(long page, long total, long pageSize, List<T> data) {
         this.data = data;
         this.pagination = new PaginationDetails(data.size(), page, total, pageSize);
+    }
+    public PaginatedResults(Page<T> fromRepo){
+        this(fromRepo.getPageable().getPageNumber(), fromRepo.getTotalPages(), fromRepo.getPageable().getPageSize(), fromRepo.getContent());
     }
 
     public PaginationDetails getPagination() {

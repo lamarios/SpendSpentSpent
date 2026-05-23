@@ -1,17 +1,22 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.dao.CategoryDao;
-import com.ftpix.sss.dao.ExpenseDao;
-import com.ftpix.sss.dao.MonthlyHistoryDao;
-import com.ftpix.sss.dao.YearlyHistoryDao;
-import com.ftpix.sss.listeners.DaoUserListener;
 import com.ftpix.sss.models.*;
+import com.ftpix.sss.persistence.CategoryRepository;
+import com.ftpix.sss.persistence.ExpenseRepository;
+import com.ftpix.sss.persistence.MonthlyHistoryRepository;
+import com.ftpix.sss.persistence.YearlyHistoryRepository;
+import com.ftpix.sss.persistence.utils.Specifications;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jooq.Condition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -21,37 +26,43 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.ftpix.sss.dsl.Tables.MONTHLY_HISTORY;
-import static com.ftpix.sss.dsl.Tables.YEARLY_HISTORY;
-
 @Service
 public class HistoryService {
     private final static Logger logger = LogManager.getLogger();
 
-    private final ExpenseDao expenseDaoJooq;
-    private final CategoryDao categoryDaoJooq;
-    private final MonthlyHistoryDao monthlyHistoryDaoJooq;
-    private final YearlyHistoryDao yearlyHistoryDaoJooq;
+    /*
+        private final ExpenseDao expenseDaoJooq;
+        private final CategoryDao categoryDaoJooq;
+        private final MonthlyHistoryDao monthlyHistoryDaoJooq;
+        private final YearlyHistoryDao yearlyHistoryDaoJooq;
+    */
+    private final ExpenseRepository expenseRepository;
+    private final CategoryRepository categoryRepository;
+    private final YearlyHistoryRepository yearlyHistoryRepository;
+    private final MonthlyHistoryRepository monthlyHistoryRepository;
     private final ZoneId zoneId;
+    @PersistenceContext
+    private final EntityManager entityManager;
 
     @Autowired
-    public HistoryService(ExpenseDao expenseDaoJooq, CategoryDao categoryDaoJooq, MonthlyHistoryDao monthlyHistoryDaoJooq, YearlyHistoryDao yearlyHistoryDaoJooq, ZoneId zoneId) {
-        this.expenseDaoJooq = expenseDaoJooq;
-        this.categoryDaoJooq = categoryDaoJooq;
-        this.monthlyHistoryDaoJooq = monthlyHistoryDaoJooq;
-        this.yearlyHistoryDaoJooq = yearlyHistoryDaoJooq;
+    public HistoryService(ExpenseRepository expenseRepository, CategoryRepository categoryRepository, YearlyHistoryRepository yearlyHistoryRepository, MonthlyHistoryRepository monthlyHistoryRepository, ZoneId zoneId, EntityManager entityManager) {
+        this.expenseRepository = expenseRepository;
+        this.categoryRepository = categoryRepository;
+        this.yearlyHistoryRepository = yearlyHistoryRepository;
+        this.monthlyHistoryRepository = monthlyHistoryRepository;
         this.zoneId = zoneId;
 
 //        this.expenseDaoJooq.addUserBasedListener(expenseDaoListener);
 //        this.categoryDaoJooq.addUserBasedListener(categoryDaoListener);
+        this.entityManager = entityManager;
     }
 
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional
     public void recreateViews() {
         // very dirty way to recreate the views on startup but the timezone can change so we don't really have a choice
-        String sql = """
-                DROP MATERIALIZED VIEW IF EXISTS monthly_history;
+        List.of("DROP MATERIALIZED VIEW IF EXISTS monthly_history;", """
                 CREATE MATERIALIZED VIEW monthly_history AS
                 SELECT category_id,
                        to_char(to_timestamp(timestamp / 1000) AT TIME ZONE '%s', 'YYYYMM')::INTEGER AS date,
@@ -59,9 +70,7 @@ public class HistoryService {
                        COUNT(*)                                                                           AS expenses
                 FROM expense
                 GROUP BY category_id, to_char(to_timestamp(timestamp / 1000) AT TIME ZONE '%s', 'YYYYMM')::INTEGER;
-                
-                
-                DROP MATERIALIZED VIEW IF EXISTS yearly_history;
+                """.formatted(zoneId.toString(), zoneId.toString()), "DROP MATERIALIZED VIEW IF EXISTS yearly_history;", """
                 CREATE MATERIALIZED VIEW yearly_history AS
                 SELECT category_id,
                        to_char(to_timestamp(timestamp / 1000) AT TIME ZONE '%s', 'YYYY')::INTEGER AS date,
@@ -69,57 +78,16 @@ public class HistoryService {
                        COUNT(*)                                        AS expenses
                 FROM expense
                 GROUP BY category_id, to_char(to_timestamp(timestamp / 1000) AT TIME ZONE '%s', 'YYYY')::INTEGER;
-                
-                CREATE UNIQUE INDEX yearly_index on yearly_history (category_id, date);
-                CREATE UNIQUE INDEX monthly_index on monthly_history (category_id, date);
-                
-                """.formatted(zoneId.toString(), zoneId.toString(), zoneId.toString(), zoneId.toString());
+                """.formatted(zoneId.toString(), zoneId.toString()), "CREATE UNIQUE INDEX yearly_index on yearly_history (category_id, date);", "CREATE UNIQUE INDEX monthly_index on monthly_history (category_id, date);"
 
-        yearlyHistoryDaoJooq.getDsl().execute(sql);
-
-        expenseDaoJooq.addUserBasedListener(new DaoUserListener<>() {
-            @Override
-            public void afterInsert(User user, Expense newRecord) {
-                refreshMaterializedViews();
-            }
-
-            @Override
-            public void afterUpdate(User user, Expense newRecord) {
-                refreshMaterializedViews();
-            }
-
-            @Override
-            public void afterDelete(User user, Expense deleted) {
-                refreshMaterializedViews();
-            }
-        });
-
-        categoryDaoJooq.addUserBasedListener(new DaoUserListener<>() {
-            @Override
-            public void afterInsert(User user, Category newRecord) {
-                refreshMaterializedViews();
-            }
-
-            @Override
-            public void afterUpdate(User user, Category newRecord) {
-                refreshMaterializedViews();
-            }
-
-            @Override
-            public void afterDelete(User user, Category deleted) {
-                refreshMaterializedViews();
-            }
-        });
+        ).forEach(sql -> entityManager.createNativeQuery(sql).executeUpdate());
     }
 
-    private void refreshMaterializedViews() {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void refreshMaterializedViews() {
         var now = System.currentTimeMillis();
-        String sql = """
-                REFRESH MATERIALIZED VIEW CONCURRENTLY yearly_history;
-                REFRESH MATERIALIZED VIEW CONCURRENTLY monthly_history;
-                """;
-
-        yearlyHistoryDaoJooq.getDsl().execute(sql);
+        List.of("REFRESH MATERIALIZED VIEW CONCURRENTLY yearly_history;", "REFRESH MATERIALIZED VIEW CONCURRENTLY monthly_history;")
+                .forEach(sql -> entityManager.createNativeQuery(sql).executeUpdate());
         logger.info("Refreshing materialized views in {}ms", System.currentTimeMillis() - now);
     }
 
@@ -135,7 +103,7 @@ public class HistoryService {
     public List<CategoryOverall> yearly(User user) throws Exception {
         List<CategoryOverall> result = new ArrayList<>();
 
-        List<Category> categories = yearlyHistoryDaoJooq.getHouseholdCategories(user).values().stream().toList();
+        List<Category> categories = categoryRepository.getHouseholdCategories(user);
 
         CategoryOverall overall = new CategoryOverall();
         Category categoryAll = new Category();
@@ -147,7 +115,7 @@ public class HistoryService {
         ZonedDateTime now = ZonedDateTime.now(zoneId);
         int year = now.getYear();
 
-        List<YearlyHistory> yearly = yearlyHistoryDaoJooq.getFromHouseholdWhere(user, YEARLY_HISTORY.DATE.eq(year));
+        var yearly = yearlyHistoryRepository.findAllByUserAndYear(user, year);
         Map<Long, YearlyHistory> byCategory = yearly.stream()
                 .collect(Collectors.toMap(y -> y.getCategory().getId(), Function.identity()));
         double total = yearly.stream().mapToDouble(YearlyHistory::getTotal).sum();
@@ -192,7 +160,7 @@ public class HistoryService {
     public List<CategoryOverall> monthly(User user) throws Exception {
         List<CategoryOverall> result = new ArrayList<>();
 
-        List<Category> categories = monthlyHistoryDaoJooq.getHouseholdCategories(user).values().stream().toList();
+        List<Category> categories = categoryRepository.getHouseholdCategories(user);
 
         CategoryOverall overall = new CategoryOverall();
         Category categoryAll = new Category();
@@ -204,7 +172,8 @@ public class HistoryService {
         LocalDate now = LocalDate.now();
         int date = (now.getYear() * 100) + now.getMonthValue();
 
-        List<MonthlyHistory> monthly = monthlyHistoryDaoJooq.getFromHouseholdWhere(user, MONTHLY_HISTORY.DATE.eq(date));
+//        List<MonthlyHistory> monthly = monthlyHistoryDaoJooq.getFromHouseholdWhere(user, MONTHLY_HISTORY.DATE.eq(date));
+        var monthly = monthlyHistoryRepository.findAllByUserAndMonth(user, date);
         Map<Long, MonthlyHistory> byCategory = monthly.stream()
                 .collect(Collectors.toMap(y -> y.getCategory().getId(), Function.identity()));
         double total = monthly.stream().mapToDouble(MonthlyHistory::getTotal).sum();
@@ -249,13 +218,20 @@ public class HistoryService {
             date = date.minusYears(1);
         }
 
-        List<Condition> conditions = new ArrayList<>();
-        conditions.add(YEARLY_HISTORY.DATE.in(data));
+        List<Category> householdCategories = categoryRepository.getHouseholdCategories(user);
+
+        Specification<YearlyHistory> spec = Specification.where(Specifications.<YearlyHistory>in("id.category", householdCategories))
+                .and(Specifications.in("id.date", data));
+//        List<Condition> conditions = new ArrayList<>();
+//        conditions.add(YEARLY_HISTORY.DATE.in(data));
         if (categoryId >= 0) {
-            conditions.add(YEARLY_HISTORY.CATEGORY_ID.eq(categoryId));
+            spec = spec.and(Specifications.equal("id.category.id", categoryId));
+//            conditions.add(YEARLY_HISTORY.CATEGORY_ID.eq(categoryId));
         }
 
-        Map<Integer, List<YearlyHistory>> history = yearlyHistoryDaoJooq.getFromHouseholdWhere(user, conditions.toArray(new Condition[0]))
+        ;
+//        Map<Integer, List<YearlyHistory>> history = yearlyHistoryDaoJooq.getFromHouseholdWhere(user, conditions.toArray(new Condition[0]))
+        Map<Integer, List<YearlyHistory>> history = yearlyHistoryRepository.findAll(spec)
                 .stream()
                 .collect(Collectors.groupingBy(YearlyHistory::getDate));
 
@@ -287,13 +263,19 @@ public class HistoryService {
             date = date.minusMonths(1);
         }
 
-        List<Condition> conditions = new ArrayList<>();
-        conditions.add(MONTHLY_HISTORY.DATE.in(data));
+        List<Category> householdCategories = categoryRepository.getHouseholdCategories(user);
+
+        Specification<MonthlyHistory> spec = Specification.where(Specifications.<MonthlyHistory>in("id.category", householdCategories))
+                .and(Specifications.in("id.date", data));
+//        List<Condition> conditions = new ArrayList<>();
+//        conditions.add(MONTHLY_HISTORY.DATE.in(data));
         if (categoryId >= 0) {
-            conditions.add(MONTHLY_HISTORY.CATEGORY_ID.eq(categoryId));
+            spec = spec.and(Specifications.equal("id.category.id", categoryId));
+//            conditions.add(MONTHLY_HISTORY.CATEGORY_ID.eq(categoryId));
         }
 
-        Map<Integer, List<MonthlyHistory>> history = monthlyHistoryDaoJooq.getFromHouseholdWhere(user, conditions.toArray(new Condition[0]))
+//        Map<Integer, List<MonthlyHistory>> history = monthlyHistoryDaoJooq.getFromHouseholdWhere(user, conditions.toArray(new Condition[0]))
+        Map<Integer, List<MonthlyHistory>> history = monthlyHistoryRepository.findAll(spec)
                 .stream()
                 .collect(Collectors.groupingBy(MonthlyHistory::getDate));
 
@@ -322,7 +304,8 @@ public class HistoryService {
 
     @Transactional(readOnly = true)
     public double getMonthTotal(User user, int month) {
-        var expenses = monthlyHistoryDaoJooq.getFromHouseholdWhere(user, MONTHLY_HISTORY.DATE.eq(month));
+        var expenses = monthlyHistoryRepository.findAllByUserAndMonth(user, month);
+//        var expenses = monthlyHistoryDaoJooq.getFromHouseholdWhere(user, MONTHLY_HISTORY.DATE.eq(month));
         return expenses.stream().mapToDouble(MonthlyHistory::getTotal).sum();
     }
 }

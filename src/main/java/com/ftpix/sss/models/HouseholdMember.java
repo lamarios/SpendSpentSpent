@@ -1,14 +1,40 @@
 package com.ftpix.sss.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import java.util.UUID;
 
+@Entity
+@Table(name= "household_members")
 public class HouseholdMember {
-    private UUID id = UUID.randomUUID();
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    private UUID id;
+
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "invited_by_id")
     private User invitedBy;
+
+    @Enumerated(EnumType.STRING)
     private HouseholdInviteStatus status;
+
     private boolean admin;
+
+    @Enumerated(EnumType.STRING)
     private HouseholdColor color;
+
+
+    @ManyToOne
+    @JoinColumn(name = "household_id")
+    @JsonIgnore
     private Household household;
 
     public UUID getId() {

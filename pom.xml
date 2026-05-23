@@ -197,18 +197,6 @@
             <artifactId>freemarker</artifactId>
             <version>2.3.34</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.jooq/jooq -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jooq</artifactId>
-        </dependency>
-
-<!--
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq</artifactId>
-        </dependency>
--->
         <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
         <dependency>
             <groupId>com.mysql</groupId>
@@ -335,96 +323,6 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <!-- Specify the maven code generator plugin -->
-                <!-- Use org.jooq            for the Open Source Edition
-                         org.jooq.pro        for commercial editions,
-                         org.jooq.pro-java-6 for commercial editions with Java 6 support,
-                         org.jooq.trial      for the free trial edition
-                     Note: Only the Open Source Edition is hosted on Maven Central.
-                           Import the others manually from your distribution -->
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen-maven</artifactId>
-                <version>3.19.26</version>
-
-                <executions>
-                    <execution>
-                        <id>jooq-codegen</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.20.3.xsd">
-                            <skip>${jooq.skip}</skip>
-                            <jdbc>
-                                <driver>org.postgresql.Driver</driver>
-                                <url>jdbc:postgresql://localhost:5432/sss</url>
-                                <user>postgres</user>
-                                <password>postgres</password>
-                            </jdbc>
-
-                            <generator>
-                                <database>
-                                    <!-- The database type. The format here is:
-                                         org.jooq.meta.[database].[database]Database -->
-                                    <name>org.jooq.meta.postgres.PostgresDatabase</name>
-
-                                    <!-- The database schema (or in the absence of schema support, in your RDBMS this
-                                         can be the owner, user, database name) to be generated -->
-                                    <inputSchema>public</inputSchema>
-
-                                    <!-- All elements that are generated from your schema
-                                         (A Java regular expression. Use the pipe to separate several expressions)
-                                         Watch out for case-sensitivity. Depending on your database, this might be important! -->
-                                    <includes>.*</includes>
-
-                                    <!-- All elements that are excluded from your schema
-                                         (A Java regular expression. Use the pipe to separate several expressions).
-                                         Excludes match before includes, i.e. excludes have a higher priority -->
-                                    <excludes></excludes>
-
-                                </database>
-
-                                <strategy>
-                                    <matchers>
-                                        <schemas>
-                                            <schema>
-                                                <schemaClass>
-                                                    <!-- The optional transform element lets you apply a name transformation algorithm
-                                                         to transform the actual database name into a more convenient form. Possible values are:
-
-                                                         - AS_IS               : Leave the database name as it is             : MY_name => MY_name
-                                                         - LOWER               : Transform the database name into lower case  : MY_name => my_name
-                                                         - LOWER_FIRST_LETTER  : Transform the first letter into lower case   : MY_name => mY_name
-                                                         - UPPER               : Transform the database name into upper case  : MY_name => MY_NAME
-                                                         - UPPER_FIRST_LETTER  : Transform the first letter into upper case   : my_NAME => My_NAME
-                                                         - CAMEL               : Transform the database name into camel case  : MY_name => myName
-                                                         - PASCAL              : Transform the database name into pascal case : MY_name => MyName -->
-                                                    <transform>UPPER</transform>
-
-                                                    <!-- The mandatory expression element lets you specify a replacement expression to be used when
-                                                         replacing the matcher's regular expression. You can use indexed variables $0, $1, $2. -->
-                                                    <expression>$0</expression>
-                                                </schemaClass>
-                                            </schema>
-                                        </schemas>
-                                    </matchers>
-                                </strategy>
-
-                                <generate/>
-
-                                <target>
-                                    <!-- The destination package of your generated classes (within the destination directory) -->
-                                    <packageName>com.ftpix.sss.dsl</packageName>
-
-                                    <!-- The destination directory of your generated classes. Using Maven directory layout here -->
-                                    <directory>${basedir}/src/main/java</directory>
-                                </target>
-                            </generator>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 

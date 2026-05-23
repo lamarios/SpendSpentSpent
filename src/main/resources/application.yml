@@ -5,6 +5,10 @@ spring:
   # fix sping boot 2.6 circular dependcies errors //TODO: fix those
   main:
     allow-circular-references: true
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 50
   servlet:
     multipart:
       max-file-size: 512MB

@@ -1,10 +1,11 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.dao.CategoryDao;
-import com.ftpix.sss.dao.ExpenseDao;
-import com.ftpix.sss.dao.RecurringExpenseDao;
-import com.ftpix.sss.dsl.Tables;
-import com.ftpix.sss.models.*;
+import com.ftpix.sss.models.Category;
+import com.ftpix.sss.models.NewCategoryIcon;
+import com.ftpix.sss.models.User;
+import com.ftpix.sss.persistence.CategoryRepository;
+import com.ftpix.sss.persistence.ExpenseRepository;
+import com.ftpix.sss.persistence.RecurringExpenseRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,27 +19,30 @@ import java.util.stream.Stream;
 @Service
 public class CategoryService {
 
-    private final CategoryDao categoryDaoJooq;
-    private final ExpenseDao expenseDaoJooq;
-    private final RecurringExpenseDao recurringExpenseDaoJooq;
+//    private final CategoryDao categoryDaoJooq;
+//    private final ExpenseDao expenseDaoJooq;
+//    private final RecurringExpenseDao recurringExpenseDaoJooq;
 
+    private final CategoryRepository categoryRepository;
+    private final ExpenseRepository expenseRepository;
+    private final RecurringExpenseRepository recurringExpenseRepository;
 
     @Autowired
-    public CategoryService(CategoryDao categoryDaoJooq, ExpenseDao expenseDaoJooq, RecurringExpenseDao recurringExpenseDaoJooq) {
-        this.categoryDaoJooq = categoryDaoJooq;
-        this.expenseDaoJooq = expenseDaoJooq;
-        this.recurringExpenseDaoJooq = recurringExpenseDaoJooq;
+    public CategoryService(CategoryRepository categoryRepository, ExpenseRepository expenseRepository, RecurringExpenseRepository recurringExpenseRepository) {
+        this.categoryRepository = categoryRepository;
+        this.expenseRepository = expenseRepository;
+        this.recurringExpenseRepository = recurringExpenseRepository;
     }
 
 
     @Transactional(readOnly = true)
     public List<Category> getAll(User user) throws SQLException {
-        return categoryDaoJooq.getWhere(user);
+        return categoryRepository.findAllByUser(user);
     }
 
     @Transactional(readOnly = true)
     public Category get(long id, User user) throws SQLException {
-        return categoryDaoJooq.get(user, id).orElse(null);
+        return categoryRepository.findFirstByIdAndUser(id, user);
     }
 
     @Transactional(readOnly = true)
@@ -65,31 +69,30 @@ public class CategoryService {
         if (!found) {
             throw new Exception("Icon doesn't exist");
         }
-
-        long order = categoryDaoJooq.getMaxCategoryOrder(user);
+        long order = categoryRepository.getMaxCategoryOrder(user);
         category.setCategoryOrder((int) (order + 1));
         category.setUser(user);
-        return categoryDaoJooq.insert(user, category);
+        return categoryRepository.save(category);
     }
 
     @Transactional
     public Category update(Category category, User user) throws Exception {
-        categoryDaoJooq.update(user, category);
+        if (get(category.getId(), user) != null) {
+//            categoryDaoJooq.update(user, category);
+            categoryRepository.save(category);
+        }
         return category;
     }
 
     @Transactional
     public boolean delete(long id, User user) throws SQLException {
-        Map<String, Object> fields = new HashMap<>();
-        fields.put("CATEGORY_ID", id);
 
         final Category category = get(id, user);
         if (category.getUser().getId().equals(user.getId())) {
+            expenseRepository.deleteExpenseByCategory(category);
+            recurringExpenseRepository.deleteRecurringExpenseByCategory(category);
 
-            expenseDaoJooq.deleteWhere(user, Tables.EXPENSE.CATEGORY_ID.eq(category.getId()));
-            recurringExpenseDaoJooq.deleteWhere(user, Tables.RECURRING_EXPENSE.CATEGORY_ID.eq(category.getId()));
-
-            categoryDaoJooq.delete(user, category);
+            categoryRepository.delete(category);
             return true;
         } else {
             return false;
@@ -153,7 +156,8 @@ public class CategoryService {
 
 
         Map<String, List<NewCategoryIcon>> results = Stream.of(NewCategoryIcon.values())
-                .filter(c -> Arrays.stream(c.getSearchTerms()).anyMatch(t -> StringUtils.containsIgnoreCase(t, name) || StringUtils.containsIgnoreCase(name, t)))
+                .filter(c -> Arrays.stream(c.getSearchTerms())
+                        .anyMatch(t -> StringUtils.containsIgnoreCase(t, name) || StringUtils.containsIgnoreCase(name, t)))
                 .filter(s -> categories.stream().noneMatch(c -> c.getIcon().equalsIgnoreCase(s.name())))
                 .collect(Collectors.groupingBy(NewCategoryIcon::getCategory));
 
@@ -201,7 +205,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public long countExpenses(long id, User currentUser) throws SQLException {
         return Optional.ofNullable(get(id, currentUser))
-                .map(c -> expenseDaoJooq.countExpenses(currentUser, id))
+                .map(c -> expenseRepository.countExpenses(currentUser, id))
                 .orElse(0L);
     }
 

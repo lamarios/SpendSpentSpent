@@ -19,9 +19,6 @@ public class ApiKeyServiceTest extends TestContainerTest {
 
     @Autowired
     private ApiKeyService apiKeyService;
-    @Autowired
-    private User currentUser;
-
 
     @Test
     public void testApiKeyCrud() throws InterruptedException {

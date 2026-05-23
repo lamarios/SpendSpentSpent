@@ -1,18 +1,40 @@
 package com.ftpix.sss.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ftpix.sss.dao.HasCategory;
+import com.ftpix.sss.persistence.listeners.HistoryServiceRefresher;
+import jakarta.persistence.*;
 
-public class Category implements HasCategory {
+import java.util.List;
 
+
+@Entity
+@Table(name = "category")
+@EntityListeners({HistoryServiceRefresher.class})
+public class Category {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String icon;
 
+    @Column(name = "category_order")
     private int categoryOrder;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Expense> expenses;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<RecurringExpense> recurringExpenses;
+
+
+    @Transient
     private double percentageOfMonthly = 0;
 
     public Long getId() {
@@ -53,17 +75,5 @@ public class Category implements HasCategory {
 
     public void setPercentageOfMonthly(double percentageOfMonthly) {
         this.percentageOfMonthly = percentageOfMonthly;
-    }
-
-    @Override
-    @JsonIgnore
-    public Category getCategory() {
-        return this;
-    }
-
-    @Override
-    @JsonIgnore
-    public void setCategory(Category category) {
-
     }
 }

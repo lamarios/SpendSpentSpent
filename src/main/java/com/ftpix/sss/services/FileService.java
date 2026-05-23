@@ -1,13 +1,10 @@
 package com.ftpix.sss.services;
 
-import com.ftpix.sss.dao.FileDAO;
-import com.ftpix.sss.dsl.tables.records.FilesRecord;
 import com.ftpix.sss.models.*;
-import org.apache.commons.io.FileUtils;
+import com.ftpix.sss.persistence.FilesRepository;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jooq.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,16 +21,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Function;
-
-import static com.ftpix.sss.dsl.Tables.FILES;
 
 @Service
 public class FileService {
@@ -43,10 +33,10 @@ public class FileService {
     private static final int SALT_SIZE = 16;     // 16 bytes salt// 12 bytes IV for GCM
     private static final int TAG_SIZE = 128;     // authentication tag length
     private final String filePath;
-    private final FileDAO filesDAO;
     private final AiFileProcessingService aiFileProcessingService;
     private final CategoryService categoryService;
     private final static Logger log = LogManager.getLogger();
+    private final FilesRepository filesRepository;
 
     private static final byte[] MAGIC = "ENCv1".getBytes(); // identifier
     private static final int ITERATIONS = 65536; // PBKDF2 iterations
@@ -58,10 +48,10 @@ public class FileService {
     private final HouseholdService householdService;
 
     @Autowired
-    public FileService(@Value("${FILES_PATH:./files}") String filePath, FileDAO filesDAO, AiFileProcessingService aiFileProcessingService, CategoryService categoryService, @Value("${SALT}") String salt, HouseholdService householdService) throws Exception {
-        this.filesDAO = filesDAO;
+    public FileService(@Value("${FILES_PATH:./files}") String filePath, AiFileProcessingService aiFileProcessingService, CategoryService categoryService, FilesRepository filesRepository, @Value("${SALT}") String salt, HouseholdService householdService) throws Exception {
         this.aiFileProcessingService = aiFileProcessingService;
         this.categoryService = categoryService;
+        this.filesRepository = filesRepository;
         this.householdService = householdService;
         File folder = new File(filePath);
         if (!folder.exists()) {
@@ -76,10 +66,12 @@ public class FileService {
         encryptionKey = deriveKey(salt.toCharArray(), new byte[SALT_SIZE]);
     }
 
+/*
     @Transactional
     public boolean clearExpenseFiles(Long expenseId) {
         return filesDAO.clearExpenseFiles(expenseId);
     }
+*/
 
 
     @Scheduled(fixedRate = ONE_DAY)
@@ -87,8 +79,8 @@ public class FileService {
     public void fileMaintenance() throws IOException {
         long oneDayFromNow = System.currentTimeMillis() - ONE_DAY;
         // we get all the pictures older than one day
-        filesDAO.getWhere(FILES.TIME_UPDATED.lt(oneDayFromNow)).stream().filter(file -> {
-                    boolean toDelete = file.getExpenseId() == null;
+        filesRepository.findByTimeCreatedBefore(oneDayFromNow).stream().filter(file -> {
+                    boolean toDelete = file.getExpense() == null;
 
                     if (toDelete) {
                         deleteFile(file);
@@ -102,7 +94,7 @@ public class FileService {
                 .forEach(file -> {
                     if (aiFileProcessingService.isAiEnabled()) {
                         file.setStatus(AiProcessingStatus.PENDING);
-                        filesDAO.update(file);
+                        filesRepository.save(file);
                         processFileWithAi(file);
                     }
                 });
@@ -112,9 +104,11 @@ public class FileService {
         Files.list(Path.of(filePath)).filter(
                 path -> {
                     var name = FilenameUtils.getBaseName(path.toString());
-                    var file = filesDAO.getOneWhere(FILES.ID.eq(name));
-
-                    return file.isEmpty();
+                    var file = filesRepository.findFirstById(UUID.fromString(name));
+                    return file == null;
+//                    var file = filesDAO.getOneWhere(FILES.ID.eq(name));
+//
+//                    return file.isEmpty();
                 }
         ).forEach(path -> {
             log.info("Deleting {}, it has no SssFile attached to it", path);
@@ -125,7 +119,7 @@ public class FileService {
     }
 
     @Transactional
-    private boolean deleteFile(SSSFile file) {
+    public boolean deleteFile(SSSFile file) {
         File f = new File(filePath + "/" + file.getFileName());
         if (f.exists()) {
             try {
@@ -134,7 +128,7 @@ public class FileService {
                 log.error("Couldn't delete file " + f.getAbsolutePath(), e);
             }
         }
-        filesDAO.delete(file);
+        filesRepository.delete(file);
         return true;
     }
 
@@ -157,14 +151,16 @@ public class FileService {
     }
 
     @Transactional
-    private SSSFile createFromUpload(User currentUser, MultipartFile file) throws Exception {
+    public SSSFile createFromUpload(User currentUser, MultipartFile file) throws Exception {
         SSSFile sssFile = new SSSFile();
-        sssFile.setUserId(currentUser.getId());
+        sssFile.setUser(currentUser);
         sssFile.setTimeCreated(System.currentTimeMillis());
         sssFile.setTimeUpdated(System.currentTimeMillis());
         sssFile.setStatus(aiFileProcessingService.isAiEnabled() ? AiProcessingStatus.PENDING : AiProcessingStatus.NO_PROCESSING);
+        filesRepository.save(sssFile);
         String newfileName = sssFile.getId() + "." + FilenameUtils.getExtension(file.getOriginalFilename());
         File dest = File.createTempFile("sss-temp", "");
+
 
         try {
             file.transferTo(dest);
@@ -173,7 +169,7 @@ public class FileService {
 
             sssFile.setFileName(newfileName);
 
-            filesDAO.insert(sssFile);
+            filesRepository.save(sssFile);
             return sssFile;
         } finally {
             dest.delete();
@@ -206,7 +202,7 @@ public class FileService {
                             bestCategory = new CategorySuggestionResponse(bestCategory.categories(), sssFile);
                             bestCategory.file().setStatus(AiProcessingStatus.DONE);
 
-                            filesDAO.update(bestCategory.file());
+                            filesRepository.save(bestCategory.file());
 
                             return bestCategory;
                         } catch (Exception e) {
@@ -330,23 +326,29 @@ public class FileService {
                     SSSFile toProcess;
                     try {
                         // we refresh the file before saving it to avoid issues
-                        filesDAO.updateField(file, FILES.STATUS, AiProcessingStatus.PROCESSING.name());
+//                        filesDAO.updateField(file, FILES.STATUS, AiProcessingStatus.PROCESSING.name());
+                        file.setStatus(AiProcessingStatus.PROCESSING);
                         var tags = aiFileProcessingService.getTagsForFile(f);
 
 
-                        toProcess = filesDAO.getOneWhere(FILES.ID.eq(file.getId().toString())).get();
+//                        toProcess = filesDAO.getOneWhere(FILES.ID.eq(file.getId().toString())).get();
+                        toProcess = filesRepository.findFirstById(file.getId());
                         toProcess.setAiTags(tags.tags());
                         toProcess.setAmounts(tags.amounts());
                         toProcess.setStatus(AiProcessingStatus.DONE);
 
-                        var record = filesDAO.setRecordData(new FilesRecord(), toProcess);
+                        filesRepository.save(toProcess);
+/*
                         filesDAO.updateField(file, FILES.STATUS, AiProcessingStatus.DONE.name());
                         filesDAO.updateField(file, FILES.AI_TAGS, record.getAiTags());
                         filesDAO.updateField(file, FILES.AMOUNTS, record.getAmounts());
+*/
 
                     } catch (Exception e) {
                         log.error("Error while processing file " + file.getId(), e);
-                        filesDAO.updateField(file, FILES.STATUS, AiProcessingStatus.ERROR.name());
+//                        filesDAO.updateField(file, FILES.STATUS, AiProcessingStatus.ERROR.name());
+                        file.setStatus(AiProcessingStatus.ERROR);
+                        filesRepository.save(file);
                         throw new RuntimeException(e);
                     }
 
@@ -364,42 +366,39 @@ public class FileService {
 
         // file from a household should be able to see each other files
         var household = householdService.getCurrentHousehold(user);
-        List<String> userIds = new ArrayList<>();
+        List<User> users = new ArrayList<>();
         if (household.isPresent()) {
-            userIds.addAll(household.get()
+            users.addAll(household.get()
                     .getMembers()
                     .stream()
-                    .map(householdMember -> householdMember.getUser().getId().toString())
+                    .map(HouseholdMember::getUser)
                     .toList());
         } else {
-            userIds.add(user.getId().toString());
+            users.add(user);
         }
 
 
-        return filesDAO.getOneWhere(FILES.ID.eq(fileId).and(FILES.USER_ID.in(userIds)));
+        return Optional.ofNullable(filesRepository.findFirstByIdAndUserIn(UUID.fromString(fileId), users));
+//        return filesDAO.getOneWhere(FILES.ID.eq(fileId).and(FILES.USER_ID.in(users)));
     }
 
     @Transactional(readOnly = true)
     public void updateFile(SSSFile file) {
-        filesDAO.update(file);
+        filesRepository.save(file);
     }
 
     @Transactional(readOnly = true)
     public List<SSSFile> getFiles(List<Expense> expenses) {
-        return filesDAO.getWhere(FILES.EXPENSE_ID.in(expenses.stream().map(Expense::getId).toList()));
+        return filesRepository.findAllByExpenseIn(expenses);
+//        return filesDAO.getWhere(FILES.EXPENSE_ID.in(expenses.stream().map(Expense::getId).toList()));
     }
 
     @Transactional(readOnly = true)
     public File getFileAsFile(User currentUser, String fileId) throws FileNotFoundException {
-        var sssFile = filesDAO.getOneWhere(FILES.USER_ID.eq(currentUser.getId().toString()).and(FILES.ID.eq(fileId)));
-        if (sssFile.isEmpty()) {
+        var sssFile = filesRepository.findFirstByIdAndUser(UUID.fromString(fileId), currentUser);
+        if (sssFile == null) {
             throw new FileNotFoundException();
         }
-        return new File(filePath + "/" + sssFile.get().getFileName());
-    }
-
-    @Transactional
-    public <T> boolean updateField(SSSFile file, Field<T> field, T value) {
-        return filesDAO.updateField(file, field, value);
+        return new File(filePath + "/" + sssFile.getFileName());
     }
 }

@@ -2,13 +2,7 @@ package com.ftpix.sss.services.aiClients;
 
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
-import com.openai.core.JsonValue;
-import com.openai.core.RequestOptions;
-import com.openai.models.ChatModel;
 import com.openai.models.chat.completions.*;
-import com.openai.models.conversations.ConversationCreateParams;
-import com.openai.models.responses.ResponseCreateParams;
-import org.jooq.tools.json.JSONValue;
 
 import java.io.File;
 import java.nio.file.Files;

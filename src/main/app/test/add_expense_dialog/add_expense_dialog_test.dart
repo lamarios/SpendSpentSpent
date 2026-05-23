@@ -133,7 +133,7 @@ void main() {
         jsonEncode(
           SssFile(
             id: 'aaa',
-            userId: testUser.id!,
+            user: testUser,
             status: AiProcessingStatus.PROCESSING,
             fileName: 'rick1.jpg',
             timeCreated: DateTime.now().millisecondsSinceEpoch,
@@ -154,7 +154,7 @@ void main() {
 
     var image1 = SssFile(
       id: 'aaabbbb',
-      userId: testUser.id!,
+      user: testUser,
       status: AiProcessingStatus.PROCESSING,
       fileName: 'rick2.jpg',
       timeCreated: DateTime.now().millisecondsSinceEpoch,
@@ -175,9 +175,11 @@ void main() {
     var socket = getIt.get<UsernamePasswordCubit>().socket as MockSocket;
     socket.receiveMessage(
       SssSocketMessage(
-        message: image1
-            .copyWith(status: AiProcessingStatus.DONE, aiTags: ['tag1', 'tag2', 'tag3'], amounts: [1111, 222])
-            .toJson(),
+        message: jsonDecode(
+          jsonEncode(
+            image1.copyWith(status: AiProcessingStatus.DONE, aiTags: ['tag1', 'tag2', 'tag3'], amounts: [1111, 222]),
+          ),
+        ),
         type: SssSocketMessageType.sssFile,
       ),
     );
