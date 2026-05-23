@@ -1,0 +1,15 @@
+meta {
+  name: Get Expenses by day
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{API}}/API/Expense/ByDay?month=2025-10
+  body: none
+  auth: none
+}
+
+params:query {
+  month: 2025-10
+}
