@@ -3,7 +3,9 @@ package com.ftpix.sss;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.persistence.*;
+import com.ftpix.sss.services.EmailService;
 import com.ftpix.sss.services.UserService;
+import com.ftpix.sss.utils.MockEmailService;
 import com.ftpix.sss.utils.UserServiceMock;
 import jakarta.persistence.EntityManager;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -52,6 +54,8 @@ abstract public class TestContainerTest {
     private HouseholdRepository householdRepository;
     @Autowired
     private ApiKeyRepository apiKeyRepository;
+    @Autowired
+    private EmailService emailService;
 
     @DynamicPropertySource
     static void configureSQLContainer(DynamicPropertyRegistry registry) {
@@ -104,6 +108,8 @@ abstract public class TestContainerTest {
         expenseRepository.deleteAll();
         categoryRepository.deleteAll();
         userRepository.deleteAll();
+        MockEmailService mockMail = (MockEmailService) emailService;
+//        mockMail.getEmails().clear();
     }
 
 }
