@@ -75,7 +75,7 @@ jobs:
           mvn versions:set -DnewVersion=${{ env.TAG_NAME }}
           mvn versions:commit
       - name: Build Java app
-        run: mvn clean install -Dspring.main.allow-circular-references=true
+        run: nix-shell --run 'mvn clean install'
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
