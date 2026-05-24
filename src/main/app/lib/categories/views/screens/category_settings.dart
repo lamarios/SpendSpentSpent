@@ -75,6 +75,7 @@ class CategorySettingsScreen extends StatelessWidget {
                                 key: ValueKey(e.id),
                                 setIcon: cubit.updateCategoryIcon,
                                 delete: cubit.addToDelete,
+                                count: state.expenseCount[e.id] ?? -0,
                                 category: e,
                                 index: index,
                               );

@@ -86,9 +86,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User getByEmail(String email) throws SQLException {
+    public User getByEmail(String email) {
         return userRepository.findFirstByEmail(email);
-//        return userDaoJooq.getOneWhere(USER.EMAIL.eq(email)).orElse(null);
     }
 
     @Transactional(readOnly = true)
@@ -98,7 +97,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User getCurrentUser() throws SQLException {
+    public User getCurrentUser() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();

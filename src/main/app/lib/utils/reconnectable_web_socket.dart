@@ -11,6 +11,10 @@ class ReconnectableWebSocket {
   final Map<String, dynamic>? headers;
   final bool isWeb;
 
+  bool _isConnected = false;
+
+  bool get isConnected => _isConnected;
+
   WebSocketChannel? _channel;
   final StreamController<SssSocketMessage> controller = StreamController<SssSocketMessage>.broadcast();
 
@@ -25,13 +29,17 @@ class ReconnectableWebSocket {
 
   ReconnectableWebSocket({required this.uri, this.headers, this.isWeb = false});
 
-  void connect() {
+  Future<void> connect() async {
+    if (_isConnected) {
+      return;
+    }
+
     _log.fine('connecting to socket ${uri.toString()}');
     _manuallyClosed = false;
-
     try {
       _channel = WebSocketChannel.connect(uri);
-
+      await _channel?.ready;
+      _isConnected = true;
       _subscription = _channel!.stream.listen(
         (message) {
           _log.fine("Received web socket message: $message");
@@ -51,6 +59,7 @@ class ReconnectableWebSocket {
       _reconnectDelay = 2; // reset on success
     } catch (e) {
       _log.fine("❌ Connection failed: $e");
+      _isConnected = false;
       _scheduleReconnect();
     }
   }
@@ -61,6 +70,7 @@ class ReconnectableWebSocket {
 
   Future<void> close() async {
     _manuallyClosed = true;
+    _isConnected = false;
     await _subscription?.cancel();
     await _channel?.sink.close();
     _subscription = null;
@@ -69,6 +79,7 @@ class ReconnectableWebSocket {
   }
 
   Future<void> _handleDisconnect() async {
+    _isConnected = false;
     await _subscription?.cancel();
     await _channel?.sink.close();
     _subscription = null;

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CategorySettingsState {
 
- List<Category> get categories; List<Category> get toDelete; int get expensesToDelete; dynamic get error; StackTrace? get stackTrace;
+ List<Category> get categories; List<Category> get toDelete; Map<int, int> get expenseCount; int get expensesToDelete; dynamic get error; StackTrace? get stackTrace;
 /// Create a copy of CategorySettingsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CategorySettingsStateCopyWith<CategorySettingsState> get copyWith => _$Category
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CategorySettingsState&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.toDelete, toDelete)&&(identical(other.expensesToDelete, expensesToDelete) || other.expensesToDelete == expensesToDelete)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CategorySettingsState&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.toDelete, toDelete)&&const DeepCollectionEquality().equals(other.expenseCount, expenseCount)&&(identical(other.expensesToDelete, expensesToDelete) || other.expensesToDelete == expensesToDelete)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(toDelete),expensesToDelete,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(toDelete),const DeepCollectionEquality().hash(expenseCount),expensesToDelete,const DeepCollectionEquality().hash(error),stackTrace);
 
 @override
 String toString() {
-  return 'CategorySettingsState(categories: $categories, toDelete: $toDelete, expensesToDelete: $expensesToDelete, error: $error, stackTrace: $stackTrace)';
+  return 'CategorySettingsState(categories: $categories, toDelete: $toDelete, expenseCount: $expenseCount, expensesToDelete: $expensesToDelete, error: $error, stackTrace: $stackTrace)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CategorySettingsStateCopyWith<$Res>  {
   factory $CategorySettingsStateCopyWith(CategorySettingsState value, $Res Function(CategorySettingsState) _then) = _$CategorySettingsStateCopyWithImpl;
 @useResult
 $Res call({
- List<Category> categories, List<Category> toDelete, int expensesToDelete, dynamic error, StackTrace? stackTrace
+ List<Category> categories, List<Category> toDelete, Map<int, int> expenseCount, int expensesToDelete, dynamic error, StackTrace? stackTrace
 });
 
 
@@ -62,11 +62,12 @@ class _$CategorySettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of CategorySettingsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? categories = null,Object? toDelete = null,Object? expensesToDelete = null,Object? error = freezed,Object? stackTrace = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? categories = null,Object? toDelete = null,Object? expenseCount = null,Object? expensesToDelete = null,Object? error = freezed,Object? stackTrace = freezed,}) {
   return _then(_self.copyWith(
 categories: null == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
 as List<Category>,toDelete: null == toDelete ? _self.toDelete : toDelete // ignore: cast_nullable_to_non_nullable
-as List<Category>,expensesToDelete: null == expensesToDelete ? _self.expensesToDelete : expensesToDelete // ignore: cast_nullable_to_non_nullable
+as List<Category>,expenseCount: null == expenseCount ? _self.expenseCount : expenseCount // ignore: cast_nullable_to_non_nullable
+as Map<int, int>,expensesToDelete: null == expensesToDelete ? _self.expensesToDelete : expensesToDelete // ignore: cast_nullable_to_non_nullable
 as int,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as dynamic,stackTrace: freezed == stackTrace ? _self.stackTrace : stackTrace // ignore: cast_nullable_to_non_nullable
 as StackTrace?,
@@ -151,10 +152,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Category> categories,  List<Category> toDelete,  int expensesToDelete,  dynamic error,  StackTrace? stackTrace)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Category> categories,  List<Category> toDelete,  Map<int, int> expenseCount,  int expensesToDelete,  dynamic error,  StackTrace? stackTrace)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CategorySettingsState() when $default != null:
-return $default(_that.categories,_that.toDelete,_that.expensesToDelete,_that.error,_that.stackTrace);case _:
+return $default(_that.categories,_that.toDelete,_that.expenseCount,_that.expensesToDelete,_that.error,_that.stackTrace);case _:
   return orElse();
 
 }
@@ -172,10 +173,10 @@ return $default(_that.categories,_that.toDelete,_that.expensesToDelete,_that.err
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Category> categories,  List<Category> toDelete,  int expensesToDelete,  dynamic error,  StackTrace? stackTrace)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Category> categories,  List<Category> toDelete,  Map<int, int> expenseCount,  int expensesToDelete,  dynamic error,  StackTrace? stackTrace)  $default,) {final _that = this;
 switch (_that) {
 case _CategorySettingsState():
-return $default(_that.categories,_that.toDelete,_that.expensesToDelete,_that.error,_that.stackTrace);}
+return $default(_that.categories,_that.toDelete,_that.expenseCount,_that.expensesToDelete,_that.error,_that.stackTrace);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -189,10 +190,10 @@ return $default(_that.categories,_that.toDelete,_that.expensesToDelete,_that.err
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Category> categories,  List<Category> toDelete,  int expensesToDelete,  dynamic error,  StackTrace? stackTrace)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Category> categories,  List<Category> toDelete,  Map<int, int> expenseCount,  int expensesToDelete,  dynamic error,  StackTrace? stackTrace)?  $default,) {final _that = this;
 switch (_that) {
 case _CategorySettingsState() when $default != null:
-return $default(_that.categories,_that.toDelete,_that.expensesToDelete,_that.error,_that.stackTrace);case _:
+return $default(_that.categories,_that.toDelete,_that.expenseCount,_that.expensesToDelete,_that.error,_that.stackTrace);case _:
   return null;
 
 }
@@ -204,7 +205,7 @@ return $default(_that.categories,_that.toDelete,_that.expensesToDelete,_that.err
 
 
 class _CategorySettingsState implements CategorySettingsState, WithError {
-  const _CategorySettingsState({final  List<Category> categories = const [], final  List<Category> toDelete = const [], this.expensesToDelete = 0, this.error, this.stackTrace}): _categories = categories,_toDelete = toDelete;
+  const _CategorySettingsState({final  List<Category> categories = const [], final  List<Category> toDelete = const [], final  Map<int, int> expenseCount = const {}, this.expensesToDelete = 0, this.error, this.stackTrace}): _categories = categories,_toDelete = toDelete,_expenseCount = expenseCount;
   
 
  final  List<Category> _categories;
@@ -221,6 +222,13 @@ class _CategorySettingsState implements CategorySettingsState, WithError {
   return EqualUnmodifiableListView(_toDelete);
 }
 
+ final  Map<int, int> _expenseCount;
+@override@JsonKey() Map<int, int> get expenseCount {
+  if (_expenseCount is EqualUnmodifiableMapView) return _expenseCount;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_expenseCount);
+}
+
 @override@JsonKey() final  int expensesToDelete;
 @override final  dynamic error;
 @override final  StackTrace? stackTrace;
@@ -235,16 +243,16 @@ _$CategorySettingsStateCopyWith<_CategorySettingsState> get copyWith => __$Categ
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CategorySettingsState&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._toDelete, _toDelete)&&(identical(other.expensesToDelete, expensesToDelete) || other.expensesToDelete == expensesToDelete)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CategorySettingsState&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._toDelete, _toDelete)&&const DeepCollectionEquality().equals(other._expenseCount, _expenseCount)&&(identical(other.expensesToDelete, expensesToDelete) || other.expensesToDelete == expensesToDelete)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_toDelete),expensesToDelete,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_toDelete),const DeepCollectionEquality().hash(_expenseCount),expensesToDelete,const DeepCollectionEquality().hash(error),stackTrace);
 
 @override
 String toString() {
-  return 'CategorySettingsState(categories: $categories, toDelete: $toDelete, expensesToDelete: $expensesToDelete, error: $error, stackTrace: $stackTrace)';
+  return 'CategorySettingsState(categories: $categories, toDelete: $toDelete, expenseCount: $expenseCount, expensesToDelete: $expensesToDelete, error: $error, stackTrace: $stackTrace)';
 }
 
 
@@ -255,7 +263,7 @@ abstract mixin class _$CategorySettingsStateCopyWith<$Res> implements $CategoryS
   factory _$CategorySettingsStateCopyWith(_CategorySettingsState value, $Res Function(_CategorySettingsState) _then) = __$CategorySettingsStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<Category> categories, List<Category> toDelete, int expensesToDelete, dynamic error, StackTrace? stackTrace
+ List<Category> categories, List<Category> toDelete, Map<int, int> expenseCount, int expensesToDelete, dynamic error, StackTrace? stackTrace
 });
 
 
@@ -272,11 +280,12 @@ class __$CategorySettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of CategorySettingsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? categories = null,Object? toDelete = null,Object? expensesToDelete = null,Object? error = freezed,Object? stackTrace = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? categories = null,Object? toDelete = null,Object? expenseCount = null,Object? expensesToDelete = null,Object? error = freezed,Object? stackTrace = freezed,}) {
   return _then(_CategorySettingsState(
 categories: null == categories ? _self._categories : categories // ignore: cast_nullable_to_non_nullable
 as List<Category>,toDelete: null == toDelete ? _self._toDelete : toDelete // ignore: cast_nullable_to_non_nullable
-as List<Category>,expensesToDelete: null == expensesToDelete ? _self.expensesToDelete : expensesToDelete // ignore: cast_nullable_to_non_nullable
+as List<Category>,expenseCount: null == expenseCount ? _self._expenseCount : expenseCount // ignore: cast_nullable_to_non_nullable
+as Map<int, int>,expensesToDelete: null == expensesToDelete ? _self.expensesToDelete : expensesToDelete // ignore: cast_nullable_to_non_nullable
 as int,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as dynamic,stackTrace: freezed == stackTrace ? _self.stackTrace : stackTrace // ignore: cast_nullable_to_non_nullable
 as StackTrace?,

@@ -118,6 +118,12 @@ public class CategoryController {
         return categoryService.countExpenses(id, currentUser);
     }
 
+    @GetMapping("/expenses/count")
+    public Map<Long, Long> countExpensesForEveryCategories(){
+        var user = userService.getCurrentUser();
+        return categoryService.countEveryExpenses(user);
+    }
+
 
     /**
      * Deletes a single castegory

@@ -1,6 +1,7 @@
 package com.ftpix.sss.services;
 
 import com.ftpix.sss.models.Category;
+import com.ftpix.sss.models.CategoryExpenseCount;
 import com.ftpix.sss.models.NewCategoryIcon;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.persistence.CategoryRepository;
@@ -210,4 +211,10 @@ public class CategoryService {
                 .orElse(0L);
     }
 
+    @Transactional(readOnly = true)
+    public Map<Long, Long> countEveryExpenses(User user) {
+        return expenseRepository.countExpensesForEveryCategories(user)
+                .stream()
+                .collect(Collectors.toMap(CategoryExpenseCount::categoryId, CategoryExpenseCount::count));
+    }
 }
