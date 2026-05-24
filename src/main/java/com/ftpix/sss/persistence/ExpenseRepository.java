@@ -1,6 +1,7 @@
 package com.ftpix.sss.persistence;
 
 import com.ftpix.sss.models.Category;
+import com.ftpix.sss.models.CategoryExpenseCount;
 import com.ftpix.sss.models.Expense;
 import com.ftpix.sss.models.User;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.ftpix.sss.persistence.CategoryRepository.GET_HOUSEHOLD_CATEGORIES;
 import static com.ftpix.sss.persistence.CategoryRepository.GET_USER_CATEGORIES;
@@ -45,4 +47,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpec
 
     @Query("select count(e) from Expense e where e.category.id = :category and e.category in " + GET_USER_CATEGORIES)
     long countExpenses(@Param(USER_PARAM) User user, @Param("category") long categoryId);
+
+    @Query("select e.category.id as categoryId, count(e) as count from Expense e where e.category in "+GET_USER_CATEGORIES+" group by e.category")
+    List<CategoryExpenseCount> countExpensesForEveryCategories(@Param(USER_PARAM) User user);
 }

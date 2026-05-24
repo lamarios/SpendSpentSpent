@@ -2,6 +2,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
+import 'package:spend_spent_spent/categories/services/category_service.dart';
 import 'package:spend_spent_spent/categories/state/categories.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/utils/models/with_error.dart';
@@ -13,6 +14,7 @@ class CategorySettingsCubit extends Cubit<CategorySettingsState> {
 
   CategorySettingsCubit(super.initialState, this.categoriesCubit) {
     emit(state.copyWith(categories: categoriesCubit.state.categories));
+    getCount();
   }
 
   onItemReorder(int oldItemIndex, int newItemIndex) {
@@ -28,6 +30,11 @@ class CategorySettingsCubit extends Cubit<CategorySettingsState> {
       categories[i] = categories[i].copyWith(categoryOrder: i);
     }
     emit(state.copyWith(categories: categories));
+  }
+
+  Future<void> getCount() async {
+    var counts = await service.countExpensesForAllCategories();
+    emit(state.copyWith(expenseCount: counts));
   }
 
   updateCategoryIcon(Category category, String newIcon) {
@@ -78,6 +85,7 @@ sealed class CategorySettingsState with _$CategorySettingsState implements WithE
   const factory CategorySettingsState({
     @Default([]) List<Category> categories,
     @Default([]) List<Category> toDelete,
+    @Default({}) Map<int, int> expenseCount,
     @Default(0) int expensesToDelete,
     dynamic error,
     StackTrace? stackTrace,

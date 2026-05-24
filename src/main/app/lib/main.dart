@@ -97,6 +97,7 @@ class _SpendSpentSpentState extends State<SpendSpentSpent> with WidgetsBindingOb
       _log.info("App is hiding, disconnecting from websocket");
       getIt<UsernamePasswordCubit>().socket?.close();
     } else if (state == AppLifecycleState.resumed) {
+      _log.info("reconnecting after focus gained");
       getIt<UsernamePasswordCubit>().socket?.connect();
     }
   }

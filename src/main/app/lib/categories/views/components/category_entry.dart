@@ -1,16 +1,14 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:material_loading_indicator/loading_indicator.dart';
 import 'package:spend_spent_spent/categories/models/category.dart';
-import 'package:spend_spent_spent/categories/state/category_entry.dart';
 import 'package:spend_spent_spent/categories/views/components/add_category.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';
 
 class CategoryEntry extends StatelessWidget {
   final Category category;
+  final int count;
   final int index;
   final Function(Category category, String newIcon) setIcon;
   final Function(Category category) delete;
@@ -21,6 +19,7 @@ class CategoryEntry extends StatelessWidget {
     required this.setIcon,
     required this.category,
     required this.delete,
+    required this.count,
   });
 
   editIcon(BuildContext context) {
@@ -76,21 +75,12 @@ class CategoryEntry extends StatelessWidget {
               const Gap(20),
               getIcon(category.icon!, color: colors.primary, size: 20),
               const Gap(20),
-              BlocProvider(
-                create: (context) => CategoryEntryCubit(null, category),
-                child: BlocBuilder<CategoryEntryCubit, int?>(
-                  builder: (context, expenses) {
-                    if (expenses != null) {
-                      return expenses == -1
-                          ? const Icon(Icons.warning)
-                          : Text('$expenses expenses', style: textTheme.bodySmall);
-                    } else {
-                      return SizedBox(width: 10, height: 10, child: LoadingIndicator());
-                    }
-                  },
-                ),
-              ),
               const Spacer(),
+              switch (count) {
+                -1 => Icon(Icons.warning),
+                0 => Text('No expenses', style: textTheme.bodySmall),
+                _ => Text('$count expenses', style: textTheme.bodySmall),
+              },
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () => editIcon(context),

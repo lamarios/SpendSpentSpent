@@ -11,7 +11,7 @@ class MockSocket extends ReconnectableWebSocket {
   Stream<String> get sentMessageStream => _sentMessageStreamController.stream;
 
   @override
-  void connect() {
+  Future<void> connect() async {
     print('Connected to socket');
   }
 
