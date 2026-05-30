@@ -9,3 +9,5 @@ build-runner-watch:
 	dart run build_runner watch --delete-conflicting-outputs
 send-notification-to-device:
 	adb shell cmd notification post -S bigtext -t 'Title' 'Tag' '2.30'
+update-goldens:
+	flutter test --update-goldens
