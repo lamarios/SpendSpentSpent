@@ -7,6 +7,7 @@ import com.ftpix.sss.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,12 @@ public class HistoryController {
         return historyService.yearly(user);
     }
 
+    @GetMapping("/Year/{year}/Monthly")
+    public Map<Integer, Double> getMonthlyTotalsForYear(@PathVariable int year) {
+        final User user = userService.getCurrentUser();
+        return historyService.getMonthlyTotalsForYear(user, year);
+    }
+
 
     @GetMapping("/CurrentMonth")
     public List<CategoryOverall> monthly() throws Exception {
@@ -58,7 +65,7 @@ public class HistoryController {
      */
     @GetMapping(value = "/Yearly/{category}/{count}")
     @Operation(description = "Gets the expenses for a given category for the past x years")
-    public List<Map<String, Object>> getYearlyHistory(@PathVariable("category") long categoryId, @PathVariable("count") int count) throws Exception {
+    public List<Map<String, Object>> getYearlyHistory(@PathVariable("category") long categoryId, @PathVariable int count) throws Exception {
         final User user = userService.getCurrentUser();
         return historyService.getYearlyHistory(categoryId, count, user);
     }

@@ -142,6 +142,8 @@ sealed class ExpenseListState with _$ExpenseListState implements WithError {
     @Default(false) bool searchMode,
     double? diffWithPreviousPeriod,
     @Default({}) Map<String, DayExpense> expenses,
+    @Default({}) Map<int, double> monthPickerTotals,
+    @Default(false) bool monthPickerLoading,
     dynamic error,
     StackTrace? stackTrace,
   }) = _ExpenseListState;

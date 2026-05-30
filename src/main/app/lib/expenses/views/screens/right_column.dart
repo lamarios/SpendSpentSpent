@@ -11,6 +11,7 @@ import 'package:motor/motor.dart';
 import 'package:spend_spent_spent/expenses/models/day_expense.dart';
 import 'package:spend_spent_spent/expenses/state/expense_list.dart';
 import 'package:spend_spent_spent/expenses/state/last_expense.dart';
+import 'package:spend_spent_spent/expenses/state/monthly_picker_wrapper.dart';
 import 'package:spend_spent_spent/expenses/views/components/below_date_widget.dart';
 import 'package:spend_spent_spent/expenses/views/components/diff_with_previous_period.dart';
 import 'package:spend_spent_spent/expenses/views/components/expense_menu.dart';
@@ -23,6 +24,7 @@ import 'package:spend_spent_spent/home/views/components/menu.dart';
 import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
 import 'package:spend_spent_spent/utils/views/components/data_change_monitor.dart';
+import 'package:spend_spent_spent/utils/views/components/error_listener.dart';
 import 'package:spend_spent_spent/utils/views/components/month_picker.dart';
 
 @RoutePage()
@@ -52,7 +54,8 @@ class RightColumnTab extends StatelessWidget {
   }
 
   Future<void> selectMonth(BuildContext context) async {
-    var state = context.read<ExpenseListCubit>().state;
+    var cubit = context.read<ExpenseListCubit>();
+    var state = cubit.state;
     final months = state.months;
     if (months.isEmpty) {
       return;
@@ -76,6 +79,12 @@ class RightColumnTab extends StatelessWidget {
       initialDate: initialDate,
       monthPredicate: (date) => months.contains(dateToSSSMonth(date)),
       belowDateWidget: (date) => BelowDateInCalendarWidget(month: date),
+      onYearChange: (context, year) => context.read<MonthlyPickerWrapperCubit>().onMonthPickerYearChange(year),
+      contentWrapper: (child) => BlocProvider(
+        create: (context) =>
+            MonthlyPickerWrapperCubit(MonthlyPickerWrapperState())..onMonthPickerYearChange(initialDate.year),
+        child: ErrorHandler<MonthlyPickerWrapperCubit, MonthlyPickerWrapperState>(child: child),
+      ),
     );
 
     /*
@@ -89,7 +98,7 @@ class RightColumnTab extends StatelessWidget {
 */
 
     if (selected != null && context.mounted) {
-      context.read<ExpenseListCubit>().monthChanged(dateToSSSMonth(selected));
+      cubit.monthChanged(dateToSSSMonth(selected));
     }
   }
 
