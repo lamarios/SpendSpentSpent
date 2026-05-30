@@ -30,6 +30,7 @@ class MonthPicker extends StatelessWidget {
   final DateTime initialDate;
   final bool Function(DateTime date) monthPredicate;
   final Widget Function(DateTime date)? belowDateWidget;
+  final void Function(BuildContext context, int year)? onYearChange;
 
   const MonthPicker({
     super.key,
@@ -38,6 +39,7 @@ class MonthPicker extends StatelessWidget {
     required this.initialDate,
     required this.monthPredicate,
     this.belowDateWidget,
+    this.onYearChange,
   });
 
   static Future<DateTime?> show(
@@ -46,16 +48,23 @@ class MonthPicker extends StatelessWidget {
     required DateTime lastDate,
     required DateTime initialDate,
     required bool Function(DateTime date) monthPredicate,
+    void Function(BuildContext context, int year)? onYearChange,
     Widget Function(DateTime date)? belowDateWidget,
+    Widget Function(Widget child)? contentWrapper,
   }) async {
     return showDialog<DateTime>(
       context: context,
-      builder: (context) => MonthPicker(
-        firstDate: firstDate,
-        lastDate: lastDate,
-        initialDate: initialDate,
-        monthPredicate: monthPredicate,
-        belowDateWidget: belowDateWidget,
+      builder: (context) => ConditionalWrapper(
+        wrapIf: contentWrapper != null,
+        wrapper: (child) => contentWrapper?.call(child) ?? child,
+        child: MonthPicker(
+          firstDate: firstDate,
+          lastDate: lastDate,
+          initialDate: initialDate,
+          monthPredicate: monthPredicate,
+          belowDateWidget: belowDateWidget,
+          onYearChange: onYearChange,
+        ),
       ),
     );
   }
@@ -127,7 +136,9 @@ class MonthPicker extends StatelessWidget {
                                 onPressed: state.selectedYear > firstDate.year
                                     ? () {
                                         if (state.selectedYear > firstDate.year) {
-                                          cubit.setYear(state.selectedYear - 1);
+                                          var newYear = state.selectedYear - 1;
+                                          cubit.setYear(newYear);
+                                          onYearChange?.call(context, newYear);
                                         }
                                       }
                                     : null,
@@ -137,7 +148,9 @@ class MonthPicker extends StatelessWidget {
                                 onPressed: state.selectedYear < lastDate.year
                                     ? () {
                                         if (state.selectedYear < lastDate.year) {
-                                          cubit.setYear(state.selectedYear + 1);
+                                          var newYear = state.selectedYear + 1;
+                                          cubit.setYear(newYear);
+                                          onYearChange?.call(context, newYear);
                                         }
                                       }
                                     : null,

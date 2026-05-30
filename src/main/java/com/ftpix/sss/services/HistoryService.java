@@ -6,7 +6,6 @@ import com.ftpix.sss.persistence.ExpenseRepository;
 import com.ftpix.sss.persistence.MonthlyHistoryRepository;
 import com.ftpix.sss.persistence.YearlyHistoryRepository;
 import com.ftpix.sss.persistence.utils.Specifications;
-import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.apache.logging.log4j.LogManager;
@@ -307,5 +306,12 @@ public class HistoryService {
         var expenses = monthlyHistoryRepository.findAllByUserAndMonth(user, month);
 //        var expenses = monthlyHistoryDaoJooq.getFromHouseholdWhere(user, MONTHLY_HISTORY.DATE.eq(month));
         return expenses.stream().mapToDouble(MonthlyHistory::getTotal).sum();
+    }
+
+    @Transactional(readOnly = true)
+    public Map<Integer, Double> getMonthlyTotalsForYear(User user, int year) {
+        return monthlyHistoryRepository.findTotalsByMonth(user, year)
+                .stream()
+                .collect(Collectors.toMap(MonthlyTotal::month, MonthlyTotal::total));
     }
 }

@@ -44,7 +44,7 @@ public class ApplicationController {
     private final DataExportImportService dataExportImportService;
     private final UserRepository userRepository;
 
-    public final static int MIN_APP_VERSION = 119;
+    public final static int MIN_APP_VERSION = 148;
 
     private final OIDCService oidcService;
 
