@@ -11,6 +11,8 @@ import com.ftpix.sss.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +45,20 @@ public class BackgroundJob {
     }
 
 
+    /**
+     * Expenses and recurring expenses created by older versions don't have a creator, they get attributed to
+     * the owner of their category. Runs at every start so rolling back and forth between versions stays consistent.
+     */
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional
+    public void assignMissingOwners() {
+        int expenses = expenseRepository.assignMissingOwners();
+        int recurring = recurringExpenseRepository.assignMissingOwners();
+        if (expenses > 0 || recurring > 0) {
+            logger.info("Assigned an owner to {} expenses and {} recurring expenses", expenses, recurring);
+        }
+    }
+
     @Scheduled(fixedRate = 100 * 60 * 1000, initialDelay = 60 * 60 * 1000)
 //    @Scheduled(fixedRate = 10 * 1000)
     @Transactional
@@ -60,6 +76,7 @@ public class BackgroundJob {
                     expense.setType(Expense.TYPE_RECURRENT);
                     expense.setAmount(recurring.getAmount());
                     expense.setCategory(recurring.getCategory());
+                    expense.setUser(recurring.getUser());
                     expense.setDate(recurring.getNextOccurrence());
                     expense.setIncome(false);
                     expense.setTimestamp(recurring.getNextOccurrence()

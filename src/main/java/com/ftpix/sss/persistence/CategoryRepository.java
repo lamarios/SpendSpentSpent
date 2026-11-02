@@ -24,19 +24,22 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
                                    AND hm.user <> :user
                 )
             """;
-    String GET_USER_CATEGORIES = "(from Category c where c.user = :user)";
     String GET_HOUSEHOLD_CATEGORIES = " ( " + GET_HOUSEHOLD_CATEGORIES_INNER + " ) ";
 
 
     @Query(GET_HOUSEHOLD_CATEGORIES_INNER)
     List<Category> getHouseholdCategories(@Param(USER_PARAM) User user);
 
+    @Query(GET_HOUSEHOLD_CATEGORIES_INNER + " order by c.categoryOrder asc, c.id asc")
+    List<Category> getHouseholdCategoriesOrdered(@Param(USER_PARAM) User user);
+
+    @Query("from Category cat where cat.id = :id and cat in " + GET_HOUSEHOLD_CATEGORIES)
+    Category findHouseholdCategoryById(@Param("id") long id, @Param(USER_PARAM) User user);
+
     List<Category> findAllByUser(User user);
 
-    Category findFirstByIdAndUser(Long id, User user);
-
-    @Query("select coalesce(max(categoryOrder), 0) from Category where user = :user")
-    long getMaxCategoryOrder(@Param(USER_PARAM) User user);
+    @Query("select coalesce(max(cat.categoryOrder), 0) from Category cat where cat in " + GET_HOUSEHOLD_CATEGORIES)
+    long getMaxHouseholdCategoryOrder(@Param(USER_PARAM) User user);
 
 
     List<Category> findAllByUser(User user, Sort sort);

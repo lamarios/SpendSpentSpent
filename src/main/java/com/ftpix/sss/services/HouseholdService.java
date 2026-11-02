@@ -66,6 +66,14 @@ public class HouseholdService {
         return Optional.ofNullable(householdRepository.findHouseholdByUser(user));
     }
 
+    /**
+     * @return true if the user is an admin of the household they currently belong to
+     */
+    @Transactional(readOnly = true)
+    public boolean isCurrentHouseholdAdmin(User user) {
+        return getCurrentHousehold(user).map(household -> isHouseholdAdmin(user, household)).orElse(false);
+    }
+
     private boolean isHouseholdAdmin(User user, Household household) {
         return household.getMembers()
                 .stream()

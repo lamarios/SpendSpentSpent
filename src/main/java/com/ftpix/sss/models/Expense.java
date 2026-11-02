@@ -1,5 +1,6 @@
 package com.ftpix.sss.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ftpix.sss.persistence.listeners.HistoryServiceRefresher;
 import com.ftpix.sss.persistence.utils.BooleanToIntConverter;
 import com.ftpix.sss.persistence.utils.LocalDateConverter;
@@ -26,6 +27,14 @@ public class Expense  {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    /**
+     * Who created the expense. Categories can be shared within a household, so the category owner isn't necessarily
+     * the person who spent the money.
+     */
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private User user;
 
     @Convert(converter = LocalDateConverter.class)
     private LocalDate date;
@@ -100,6 +109,14 @@ public class Expense  {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Double getLatitude() {

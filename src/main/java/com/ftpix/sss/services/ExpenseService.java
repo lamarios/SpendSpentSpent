@@ -173,8 +173,13 @@ public class ExpenseService {
     }
 
     @Transactional
-    public Expense update(Expense expense, User user) {
-        if (expenseRepository.findExpenseByIdAndUser(expense.getId(), user) != null) {
+    public Expense update(Expense expense, User user) throws SQLException {
+        Expense existing = expenseRepository.findExpenseByIdAndUser(expense.getId(), user);
+        Category category = expense.getCategory() == null ? null : categoryService.get(expense.getCategory().getId(), user);
+        if (existing != null && category != null) {
+            // the creator never changes and the category must be one of the household's
+            expense.setUser(existing.getUser());
+            expense.setCategory(category);
 
             List<SSSFile> managedFiles = expense.getFiles().stream().map(f -> {
                 SSSFile managed = entityManager.merge(f);
@@ -208,6 +213,7 @@ public class ExpenseService {
         } else {
             expense.setCategory(category);
         }
+        expense.setUser(user);
 
         if (expense.getType() == 0) {
             expense.setType(Expense.TYPE_NORMAL);
@@ -241,7 +247,8 @@ public class ExpenseService {
     @Transactional
     public boolean delete(long id, User user) throws Exception {
         final Expense expense = get(id, user);
-        if (expense.getCategory().getUser().getId().equals(user.getId())) {
+        // get() only returns expenses created by the user
+        if (expense != null) {
             try {
                 expenseRepository.delete(expense);
                 return true;
@@ -288,10 +295,8 @@ public class ExpenseService {
     @Transactional(readOnly = true)
     public List<Expense> getFromTo(User user, boolean includeHousehold, long from, long to, boolean includeRecurring) {
 
-        List<Category> userCategories = includeHousehold ? categoryRepository.getHouseholdCategories(user) : categoryRepository.findAllByUser(user);
-
         Specification<Expense> spec = Specification.where(betweenTimestamps(from, to))
-                .and(inCategories(userCategories));
+                .and(includeHousehold ? inCategories(categoryRepository.getHouseholdCategories(user)) : equal("user", user));
 
         if (!includeRecurring) {
             spec = spec.and(excludeRecurring());
@@ -340,7 +345,9 @@ public class ExpenseService {
     public List<CategoryPredictor.CategoryPrediction> getExpenseCategorySuggestion(User currentUser, ZoneId timeZone, Double latitude, Double longitude) throws ExecutionException, InterruptedException {
         // we only select expenses that have been created on the spot and not back dated, backdated expenses will have a time of 00:00 of the user's timezone
 
+        // the user's own habits only, the categories might still belong to other household members
         Specification<Expense> spec = Specification.where(createdOnTheSpot())
+                .and(equal("user", currentUser))
                 .and(Specifications.greaterThan("timestamp", System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 90));
 
         var expenses = expenseRepository.findAll(spec, Sort.by("id").ascending());

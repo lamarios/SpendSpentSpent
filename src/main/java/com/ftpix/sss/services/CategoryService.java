@@ -28,23 +28,39 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final ExpenseRepository expenseRepository;
     private final RecurringExpenseRepository recurringExpenseRepository;
+    private final HouseholdService householdService;
 
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository, ExpenseRepository expenseRepository, RecurringExpenseRepository recurringExpenseRepository) {
+    public CategoryService(CategoryRepository categoryRepository, ExpenseRepository expenseRepository, RecurringExpenseRepository recurringExpenseRepository, HouseholdService householdService) {
         this.categoryRepository = categoryRepository;
         this.expenseRepository = expenseRepository;
         this.recurringExpenseRepository = recurringExpenseRepository;
+        this.householdService = householdService;
     }
 
 
+    /**
+     * Categories are shared within a household, this returns the user's categories and the ones of the other household members.
+     */
     @Transactional(readOnly = true)
     public List<Category> getAll(User user) throws SQLException {
+        return categoryRepository.getHouseholdCategoriesOrdered(user);
+    }
+
+    /**
+     * @return only the categories created by the user, regardless of household
+     */
+    @Transactional(readOnly = true)
+    public List<Category> getOwn(User user) {
         return categoryRepository.findAllByUser(user, Sort.by("categoryOrder").ascending());
     }
 
+    /**
+     * @return the category if it belongs to the user or to a member of the user's household, null otherwise
+     */
     @Transactional(readOnly = true)
     public Category get(long id, User user) throws SQLException {
-        return categoryRepository.findFirstByIdAndUser(id, user);
+        return categoryRepository.findHouseholdCategoryById(id, user);
     }
 
     @Transactional(readOnly = true)
@@ -71,7 +87,13 @@ public class CategoryService {
         if (!found) {
             throw new Exception("Icon doesn't exist");
         }
-        long order = categoryRepository.getMaxCategoryOrder(user);
+
+        // categories are shared within the household, the same icon can't be used twice
+        if (getAll(user).stream().anyMatch(c -> category.getIcon().equalsIgnoreCase(c.getIcon()))) {
+            throw new Exception("Icon already used by another category");
+        }
+
+        long order = categoryRepository.getMaxHouseholdCategoryOrder(user);
         category.setCategoryOrder((int) (order + 1));
         category.setUser(user);
         return categoryRepository.save(category);
@@ -86,11 +108,20 @@ public class CategoryService {
         return category;
     }
 
+    /**
+     * Deleting a category deletes all of its expenses, including the ones of other household members.
+     * Only the creator of the category or a household admin can do it.
+     */
     @Transactional
     public boolean delete(long id, User user) throws SQLException {
 
         final Category category = get(id, user);
-        if (category.getUser().getId().equals(user.getId())) {
+        if (category == null) {
+            return false;
+        }
+
+        boolean isCreator = category.getUser() != null && category.getUser().getId().equals(user.getId());
+        if (isCreator || householdService.isCurrentHouseholdAdmin(user)) {
             expenseRepository.deleteExpenseByCategory(category);
             recurringExpenseRepository.deleteRecurringExpenseByCategory(category);
 
@@ -189,16 +220,12 @@ public class CategoryService {
                 throw new Exception("Icon doesn't exist");
             }
 
+            // any household member can edit a category, get() already restricts to the household
             Category category = categoryOptional.get();
-            if (category.getUser().getId().equals(currentUser.getId())) {
-                category.setId(id);
-                category.setIcon(catdiff.getIcon());
-                category.setCategoryOrder(catdiff.getCategoryOrder());
-                update(category, currentUser);
-                return true;
-            } else {
-                throw new RuntimeException("Not allowed to edit this category");
-            }
+            category.setIcon(catdiff.getIcon());
+            category.setCategoryOrder(catdiff.getCategoryOrder());
+            update(category, currentUser);
+            return true;
         } else {
             return false;
         }

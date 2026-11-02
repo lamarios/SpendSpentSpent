@@ -1,5 +1,6 @@
 package com.ftpix.sss.services;
 
+import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.persistence.RecurringExpenseRepository;
@@ -131,7 +132,10 @@ public class RecurringExpenseService {
 
     @Transactional
     public RecurringExpense create(RecurringExpense expense, User user) throws Exception {
-        if (categoryService.get(expense.getCategory().getId(), user) != null) {
+        Category category = categoryService.get(expense.getCategory().getId(), user);
+        if (category != null) {
+            expense.setCategory(category);
+            expense.setUser(user);
             expense.setNextOccurrence(calculateNextDate(expense));
             return recurringExpenseRepository.save(expense);
         } else {
@@ -139,15 +143,18 @@ public class RecurringExpenseService {
         }
     }
 
+    /**
+     * @return the recurring expenses of the user's household
+     */
     @Transactional(readOnly = true)
     public List<RecurringExpense> get(User user) throws Exception {
-        return recurringExpenseRepository.findExpenseByUser(user);
+        return recurringExpenseRepository.findHouseholdRecurringExpenses(user);
     }
 
 
     @Transactional(readOnly = true)
     public RecurringExpense getId(long id, User user) throws Exception {
-        return recurringExpenseRepository.findRecurringExpenseByIdAndUser(id, user);
+        return recurringExpenseRepository.findHouseholdRecurringExpenseById(id, user);
     }
 
 
@@ -162,12 +169,15 @@ public class RecurringExpenseService {
     }
 
 
+    /**
+     * @return the due recurring expenses created by the user. Each recurring expense is processed once, for its creator,
+     * even if its category is shared with other household members.
+     */
     @Transactional(readOnly = true)
     public List<RecurringExpense> getToProcessForUser(User user) throws Exception {
-        var categories = categoryService.getAll(user);
         Specification<RecurringExpense> spec = Specification.where(
                 Specifications.<RecurringExpense, LocalDate>lessThanOrEqual("nextOccurrence", LocalDate.now())
-        ).and(Specifications.<RecurringExpense>onlyIn("category", categories));
+        ).and(Specifications.<RecurringExpense>equal("user", user));
         return recurringExpenseRepository.findAll(spec);
 //        return recurringExpenseDaoJooq.getWhere(user, RECURRING_EXPENSE.NEXT_OCCURRENCE.le(Constants.dateFormatter.format(LocalDate.now())));
     }
@@ -175,12 +185,15 @@ public class RecurringExpenseService {
     @Transactional
     public boolean update(RecurringExpense expense, User user) throws Exception {
         RecurringExpense existing = getId(expense.getId(), user);
+        Category category = expense.getCategory() == null ? null : categoryService.get(expense.getCategory().getId(), user);
 
-
-        if (existing != null) {
+        if (existing != null && category != null) {
             // dates should only be updated by the cron job !
             expense.setNextOccurrence(existing.getNextOccurrence());
             expense.setLastOccurrence(existing.getLastOccurrence());
+            // the creator never changes and the category must be one of the household's
+            expense.setUser(existing.getUser());
+            expense.setCategory(category);
             recurringExpenseRepository.save(expense);
             return true;
         } else {
