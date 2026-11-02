@@ -26,6 +26,21 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             """;
     String GET_HOUSEHOLD_CATEGORIES = " ( " + GET_HOUSEHOLD_CATEGORIES_INNER + " ) ";
 
+    /**
+     * Condition matching entries (alias e, expense or recurring expense) created by someone who isn't in the same household
+     * as the owner of the entry's category anymore.
+     */
+    String CREATOR_OUTSIDE_CATEGORY_HOUSEHOLD = """
+            e.user is not null and e.user <> e.category.user and not exists (
+                SELECT m1 FROM HouseholdMember m1, HouseholdMember m2
+                WHERE m1.user = e.user
+                AND m2.user = e.category.user
+                AND m1.household = m2.household
+                AND m1.status = com.ftpix.sss.models.HouseholdInviteStatus.accepted
+                AND m2.status = com.ftpix.sss.models.HouseholdInviteStatus.accepted
+            )
+            """;
+
 
     @Query(GET_HOUSEHOLD_CATEGORIES_INNER)
     List<Category> getHouseholdCategories(@Param(USER_PARAM) User user);

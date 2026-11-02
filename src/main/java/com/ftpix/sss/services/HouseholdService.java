@@ -26,13 +26,15 @@ public class HouseholdService {
     private final UserRepository userRepository;
     private final HouseholdMemberRepository householdMemberRepository;
     private final EntityManager entityManager;
+    private final HouseholdSeparationService householdSeparationService;
 
     @Autowired
-    public HouseholdService(HouseholdRepository householdRepository, UserRepository userRepository, HouseholdMemberRepository householdMemberRepository, EntityManager entityManager) {
+    public HouseholdService(HouseholdRepository householdRepository, UserRepository userRepository, HouseholdMemberRepository householdMemberRepository, EntityManager entityManager, HouseholdSeparationService householdSeparationService) {
         this.householdRepository = householdRepository;
         this.userRepository = userRepository;
         this.householdMemberRepository = householdMemberRepository;
         this.entityManager = entityManager;
+        this.householdSeparationService = householdSeparationService;
     }
 
     @Transactional
@@ -152,7 +154,8 @@ public class HouseholdService {
         currentHousehold.filter(hs -> isHouseholdAdmin(user, hs))
                 .ifPresent(household -> {
                     if (household.getMembers().removeIf(m -> m.getUser().getId().equals(memberId.getId()))) {
-                        householdRepository.save(household);
+                        householdRepository.saveAndFlush(household);
+                        householdSeparationService.separateEntriesOutsideHousehold();
                         sendMessageToOtherUsers(household, user);
                     }
                 });
@@ -171,7 +174,11 @@ public class HouseholdService {
     public void deleteHousehold(User user) {
         Optional<Household> currentHousehold = getCurrentHousehold(user);
         currentHousehold.filter(household -> isHouseholdAdmin(user, household))
-                .ifPresent(householdRepository::delete);
+                .ifPresent(household -> {
+                    householdRepository.delete(household);
+                    householdRepository.flush();
+                    householdSeparationService.separateEntriesOutsideHousehold();
+                });
         currentHousehold.ifPresent(household -> sendMessageToOtherUsers(household, user));
     }
 
@@ -192,7 +199,8 @@ public class HouseholdService {
                         .ifPresent(householdMemberRepository::delete);
 */
 
-                    householdRepository.save(house);
+                    householdRepository.saveAndFlush(house);
+                    householdSeparationService.separateEntriesOutsideHousehold();
 
                     sendMessageToOtherUsers(house, user);
                 }

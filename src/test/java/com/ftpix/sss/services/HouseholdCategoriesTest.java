@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -46,6 +48,12 @@ public class HouseholdCategoriesTest extends TestContainerTest {
     private EmailService emailService;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private JsonMapper jsonMapper;
+    @Autowired
+    private com.fasterxml.jackson.databind.ObjectMapper legacyObjectMapper;
 
     // currentUser is the household admin and owns the base categories (house, cloud, cloth)
     private User partner;
@@ -278,5 +286,151 @@ public class HouseholdCategoriesTest extends TestContainerTest {
 
         assertEquals(currentUser.getId(), expenseRepository.findById(expense.getId()).orElseThrow().getUser().getId());
         assertEquals(currentUser.getId(), recurringExpenseRepository.findById(recurring.getId()).orElseThrow().getUser().getId());
+    }
+
+    /**
+     * Sets up the situation the separation has to deal with: each member booked an expense and a recurring expense on
+     * the other one's category.
+     */
+    private record CrossBookings(Category myCategory, Category partnerCategory, Expense partnerOnMine,
+                                 Expense mineOnPartner, RecurringExpense partnerRecurringOnMine) {
+    }
+
+    private CrossBookings crossBook() throws Exception {
+        Category myCategory = ownCategory(currentUser, "house");
+        Category partnerCategory = categoryService.create("food", partner);
+        return new CrossBookings(myCategory, partnerCategory,
+                expenseService.create(newExpense(myCategory, 25), partner),
+                expenseService.create(newExpense(partnerCategory, 10), currentUser),
+                recurringExpenseService.create(newRecurring(myCategory, 800, "rent"), partner));
+    }
+
+    private Category categoryOf(Expense expense) {
+        return expenseRepository.findById(expense.getId()).orElseThrow().getCategory();
+    }
+
+    private void assertSeparated(CrossBookings bookings) throws Exception {
+        // the partner's entries moved to a new "house" category of their own
+        Category partnerHouse = categoryOf(bookings.partnerOnMine());
+        assertEquals("house", partnerHouse.getIcon());
+        assertEquals(partner.getId(), partnerHouse.getUser().getId());
+        assertNotEquals(bookings.myCategory().getId(), partnerHouse.getId());
+
+        RecurringExpense rent = recurringExpenseRepository.findById(bookings.partnerRecurringOnMine().getId()).orElseThrow();
+        assertEquals(partnerHouse.getId(), rent.getCategory().getId());
+        assertEquals(partner.getId(), rent.getUser().getId());
+
+        // my expense on the partner's category moved to a new "food" category of mine
+        Category myFood = categoryOf(bookings.mineOnPartner());
+        assertEquals("food", myFood.getIcon());
+        assertEquals(currentUser.getId(), myFood.getUser().getId());
+
+        // nobody sees anything of the other one anymore
+        assertTrue(categoryService.getAll(currentUser).stream().allMatch(c -> c.getUser().getId().equals(currentUser.getId())));
+        assertTrue(categoryService.getAll(partner).stream().allMatch(c -> c.getUser().getId().equals(partner.getId())));
+        assertTrue(expenseService.getFromTo(currentUser, true, 0, Long.MAX_VALUE, true)
+                .stream()
+                .allMatch(e -> e.getUser().getId().equals(currentUser.getId())));
+        assertEquals(List.of(25d), expenseService.getFromTo(partner, true, 0, Long.MAX_VALUE, true)
+                .stream()
+                .map(Expense::getAmount)
+                .toList());
+        assertTrue(recurringExpenseService.get(currentUser).isEmpty());
+        assertEquals(1, recurringExpenseService.get(partner).size());
+
+        // nothing was lost
+        assertEquals(2, expenseRepository.count());
+    }
+
+    @Test
+    public void leavingTheHouseholdSeparatesEntries() throws Exception {
+        CrossBookings bookings = crossBook();
+        assertTrue(householdService.leaveHousehold(partner));
+        assertSeparated(bookings);
+    }
+
+    @Test
+    public void removingAMemberSeparatesEntries() throws Exception {
+        CrossBookings bookings = crossBook();
+        householdService.removeMember(currentUser, partner);
+        assertSeparated(bookings);
+    }
+
+    @Test
+    public void deletingTheHouseholdSeparatesEntries() throws Exception {
+        CrossBookings bookings = crossBook();
+        householdService.deleteHousehold(currentUser);
+        assertSeparated(bookings);
+    }
+
+    @Test
+    public void separationReusesExistingCategoriesWithTheSameIcon() throws Exception {
+        CrossBookings bookings = crossBook();
+        // the first separation creates a "food" category for me
+        householdService.leaveHousehold(partner);
+        Category myFood = categoryOf(bookings.mineOnPartner());
+
+        // the partner joins again: both of us now own a "food" category in the same household.
+        // I book on the partner's one, the partner leaves again: my existing "food" category is reused
+        householdService.inviteUser(currentUser, partner.getEmail());
+        householdService.acceptInvitation(partner, householdService.getCurrentHousehold(currentUser).orElseThrow());
+        Expense again = expenseService.create(newExpense(bookings.partnerCategory(), 5), currentUser);
+        householdService.leaveHousehold(partner);
+
+        assertEquals(myFood.getId(), categoryOf(again).getId());
+    }
+
+    @Test
+    public void deletingAUserKeepsTheOtherMembersExpenses() throws Exception {
+        CrossBookings bookings = crossBook();
+
+        assertTrue(userService.deleteUser(partner.getId().toString(), currentUser));
+
+        // the partner's data is gone
+        assertTrue(expenseRepository.findById(bookings.partnerOnMine().getId()).isEmpty());
+        assertTrue(recurringExpenseRepository.findById(bookings.partnerRecurringOnMine().getId()).isEmpty());
+        assertNull(categoryService.get(bookings.partnerCategory().getId(), currentUser));
+
+        // mine survived on a new category of mine
+        Category myFood = categoryOf(bookings.mineOnPartner());
+        assertEquals("food", myFood.getIcon());
+        assertEquals(currentUser.getId(), myFood.getUser().getId());
+        assertNotNull(categoryService.get(bookings.myCategory().getId(), currentUser));
+    }
+
+    @Test
+    public void clientsSeeTheCreatorAsCategoryUser() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        Expense created = expenseService.create(newExpense(house, 25), partner);
+        Expense expense = expenseRepository.findById(created.getId()).orElseThrow();
+        expense.setFiles(new ArrayList<>());
+
+        // HTTP responses (Jackson 3) and the legacy mapper (Jackson 2) behave the same
+        JsonNode json = jsonMapper.readTree(jsonMapper.writeValueAsString(expense));
+        com.fasterxml.jackson.databind.JsonNode legacyJson = legacyObjectMapper.readTree(legacyObjectMapper.writeValueAsString(expense));
+
+        for (String categoryUserId : List.of(json.get("category").get("user").get("id").asString(), legacyJson.get("category").get("user").get("id").asText())) {
+            assertEquals(partner.getId().toString(), categoryUserId);
+        }
+        assertEquals(house.getId().longValue(), json.get("category").get("id").asLong());
+        assertEquals("house", json.get("category").get("icon").asString());
+        assertEquals(partner.getId().toString(), json.get("user").get("id").asString());
+
+        // the entity itself still points to the real owner
+        assertEquals(currentUser.getId(), expenseRepository.findById(created.getId()).orElseThrow().getCategory().getUser().getId());
+
+        // what the app sends back when editing: the category is resolved by id, the creator can't be overridden
+        String fromApp = "{\"id\":" + created.getId() + ",\"amount\":30,\"timestamp\":" + expense.getTimestamp()
+                + ",\"category\":{\"id\":" + house.getId() + ",\"icon\":\"house\",\"user\":{\"id\":\"" + partner.getId() + "\"}},"
+                + "\"user\":{\"id\":\"" + currentUser.getId() + "\"},\"files\":[]}";
+        Expense parsed = jsonMapper.readValue(fromApp, Expense.class);
+        assertEquals(house.getId(), parsed.getCategory().getId());
+        assertNull(parsed.getUser());
+
+        expenseService.update(parsed, partner);
+        Expense saved = expenseRepository.findById(created.getId()).orElseThrow();
+        assertEquals(30, saved.getAmount());
+        assertEquals(partner.getId(), saved.getUser().getId());
+        assertEquals(currentUser.getId(), saved.getCategory().getUser().getId());
     }
 }

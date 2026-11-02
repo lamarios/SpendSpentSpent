@@ -15,6 +15,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Map;
 
+import static com.ftpix.sss.persistence.CategoryRepository.CREATOR_OUTSIDE_CATEGORY_HOUSEHOLD;
 import static com.ftpix.sss.persistence.CategoryRepository.GET_HOUSEHOLD_CATEGORIES;
 
 public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpecificationExecutor<Expense> {
@@ -52,6 +53,9 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpec
 
     @Query("select e.category.id as categoryId, count(e) as count from Expense e where e.category in " + GET_HOUSEHOLD_CATEGORIES + " group by e.category")
     List<CategoryExpenseCount> countExpensesForEveryCategories(@Param(USER_PARAM) User user);
+
+    @Query("from Expense e where " + CREATOR_OUTSIDE_CATEGORY_HOUSEHOLD)
+    List<Expense> findExpensesOnCategoriesOutsideHousehold();
 
     /**
      * Expenses created by versions that didn't track the creator get attributed to the category owner.

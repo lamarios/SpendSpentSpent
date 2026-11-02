@@ -5,6 +5,7 @@ import com.ftpix.sss.persistence.CategoryRepository;
 import com.ftpix.sss.persistence.UserRepository;
 import com.ftpix.sss.services.EmailService;
 import com.ftpix.sss.services.ExpenseService;
+import com.ftpix.sss.services.HouseholdService;
 import com.ftpix.sss.services.SettingsService;
 import com.ftpix.sss.services.UserService;
 import com.ftpix.sss.utils.MockEmailService;
@@ -24,8 +25,8 @@ import java.time.ZoneId;
 public class TestConfig {
 
     @Bean
-    public UserService userService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, EmailService emailService, SettingsService settingsService, CategoryRepository categoryRepository, UserRepository userRepository) {
-        return new UserServiceMock(recurringExpenseService,expenseService,categoryService,emailService,settingsService,userRepository,categoryRepository);
+    public UserService userService(ExpenseService expenseService, HouseholdService householdService, EmailService emailService, SettingsService settingsService, CategoryRepository categoryRepository, UserRepository userRepository) {
+        return new UserServiceMock(expenseService, householdService, emailService, settingsService, userRepository, categoryRepository);
     }
 
     @Bean

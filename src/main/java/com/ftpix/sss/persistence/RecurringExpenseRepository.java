@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+import static com.ftpix.sss.persistence.CategoryRepository.CREATOR_OUTSIDE_CATEGORY_HOUSEHOLD;
 import static com.ftpix.sss.persistence.CategoryRepository.GET_HOUSEHOLD_CATEGORIES;
 import static com.ftpix.sss.persistence.ExpenseRepository.USER_PARAM;
 
@@ -25,6 +26,9 @@ public interface RecurringExpenseRepository extends JpaRepository<RecurringExpen
 
     @Query("from RecurringExpense where category in " + GET_HOUSEHOLD_CATEGORIES)
     List<RecurringExpense> findHouseholdRecurringExpenses(@Param(USER_PARAM) User user);
+
+    @Query("from RecurringExpense e where " + CREATOR_OUTSIDE_CATEGORY_HOUSEHOLD)
+    List<RecurringExpense> findRecurringExpensesOnCategoriesOutsideHousehold();
 
     /**
      * Recurring expenses created by versions that didn't track the creator get attributed to the category owner.

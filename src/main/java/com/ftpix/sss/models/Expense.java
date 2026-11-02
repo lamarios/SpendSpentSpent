@@ -1,5 +1,6 @@
 package com.ftpix.sss.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ftpix.sss.persistence.listeners.HistoryServiceRefresher;
 import com.ftpix.sss.persistence.utils.BooleanToIntConverter;
@@ -103,12 +104,34 @@ public class Expense  {
         this.income = income;
     }
 
+    @JsonIgnore
     public Category getCategory() {
         return category;
     }
 
+    @JsonProperty("category")
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    /**
+     * Clients use category.user to show which household member an expense belongs to. As categories are shared within
+     * a household, the category owner isn't necessarily who spent the money, so clients get a copy of the category
+     * where the user is the creator of the expense.
+     */
+    @JsonProperty("category")
+    public Category getCategoryForClients() {
+        if (category == null || user == null) {
+            return category;
+        }
+
+        Category copy = new Category();
+        copy.setId(category.getId());
+        copy.setIcon(category.getIcon());
+        copy.setCategoryOrder(category.getCategoryOrder());
+        copy.setPercentageOfMonthly(category.getPercentageOfMonthly());
+        copy.setUser(user);
+        return copy;
     }
 
     public User getUser() {
