@@ -9,7 +9,6 @@ import com.ftpix.sss.persistence.ExpenseRepository;
 import com.ftpix.sss.persistence.RecurringExpenseRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,19 +47,43 @@ public class CategoryService {
     }
 
     /**
-     * @return only the categories created by the user, regardless of household
-     */
-    @Transactional(readOnly = true)
-    public List<Category> getOwn(User user) {
-        return categoryRepository.findAllByUser(user, Sort.by("categoryOrder").ascending());
-    }
-
-    /**
      * @return the category if it belongs to the user or to a member of the user's household, null otherwise
      */
     @Transactional(readOnly = true)
     public Category get(long id, User user) throws SQLException {
         return categoryRepository.findHouseholdCategoryById(id, user);
+    }
+
+    /**
+     * Resolves a category sent by a client (only its id matters) to the household category.
+     *
+     * @return the category, null if the reference has no id or the category isn't in the user's household
+     */
+    @Transactional(readOnly = true)
+    public Category resolve(Category reference, User user) throws SQLException {
+        if (reference == null || reference.getId() == null) {
+            return null;
+        }
+        return get(reference.getId(), user);
+    }
+
+    /**
+     * Categories are shared within the household, the same icon can't be used by two of them.
+     *
+     * @param category the category getting the icon, null for a new one
+     */
+    private void checkIconAvailable(String icon, Category category, User user) throws SQLException {
+        if (category != null && icon.equalsIgnoreCase(category.getIcon())) {
+            // not changing
+            return;
+        }
+
+        boolean used = getAll(user).stream()
+                .filter(c -> category == null || !c.getId().equals(category.getId()))
+                .anyMatch(c -> icon.equalsIgnoreCase(c.getIcon()));
+        if (used) {
+            throw new IllegalArgumentException("Icon already used by another category");
+        }
     }
 
     @Transactional(readOnly = true)
@@ -88,15 +111,9 @@ public class CategoryService {
             throw new Exception("Icon doesn't exist");
         }
 
-        // categories are shared within the household, the same icon can't be used twice
-        if (getAll(user).stream().anyMatch(c -> category.getIcon().equalsIgnoreCase(c.getIcon()))) {
-            throw new Exception("Icon already used by another category");
-        }
+        checkIconAvailable(category.getIcon(), null, user);
 
-        long order = categoryRepository.getMaxHouseholdCategoryOrder(user);
-        category.setCategoryOrder((int) (order + 1));
-        category.setUser(user);
-        return categoryRepository.save(category);
+        return categoryRepository.saveAtEndOfHousehold(category, user);
     }
 
     @Transactional
@@ -133,27 +150,22 @@ public class CategoryService {
     }
 
     @Transactional
-    public List<Category> updateMany(List<Category> categories, User user) throws SQLException {
-        categories.stream()
-                .map(c -> {
-                    try {
-                        final Category category = get(c.getId(), user);
+    public List<Category> updateMany(List<Category> categories, User user) throws Exception {
+        for (Category c : categories) {
+            // the client's list might be outdated (e.g. a member left the household in the meantime)
+            final Category category = resolve(c, user);
+            if (category == null) {
+                continue;
+            }
 
-                        Optional.ofNullable(c.getIcon()).ifPresent(category::setIcon);
+            if (c.getIcon() != null) {
+                checkIconAvailable(c.getIcon(), category, user);
+                category.setIcon(c.getIcon());
+            }
 
-                        category.setCategoryOrder(c.getCategoryOrder());
-                        return category;
-                    } catch (SQLException throwables) {
-                        throw new RuntimeException(throwables);
-                    }
-                })
-                .forEach(c -> {
-                    try {
-                        update(c, user);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+            category.setCategoryOrder(c.getCategoryOrder());
+            update(category, user);
+        }
 
         return getAll(user);
     }
@@ -170,6 +182,7 @@ public class CategoryService {
     @Transactional
     public Category update(long id, String icon, int order, User user) throws Exception {
         Category cat = get(id, user);
+        checkIconAvailable(icon, cat, user);
         cat.setIcon(icon);
         cat.setCategoryOrder(order);
         return update(cat, user);
@@ -222,6 +235,7 @@ public class CategoryService {
 
             // any household member can edit a category, get() already restricts to the household
             Category category = categoryOptional.get();
+            checkIconAvailable(catdiff.getIcon(), category, currentUser);
             category.setIcon(catdiff.getIcon());
             category.setCategoryOrder(catdiff.getCategoryOrder());
             update(category, currentUser);

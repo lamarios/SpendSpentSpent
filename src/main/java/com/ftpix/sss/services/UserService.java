@@ -39,7 +39,6 @@ import java.util.UUID;
 public class UserService {
     public final static String EMAIL_REGEX = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
     private final static Logger logger = LogManager.getLogger();
-    private final ExpenseService expenseService;
     private final HouseholdService householdService;
     @PersistenceContext
     private EntityManager entityManager;
@@ -51,8 +50,7 @@ public class UserService {
     private final CategoryRepository categoryRepository;
 
     @Autowired
-    public UserService(ExpenseService expenseService, HouseholdService householdService, EmailService emailService, SettingsService settingsService, UserRepository userRepository, CategoryRepository categoryRepository) {
-        this.expenseService = expenseService;
+    public UserService(HouseholdService householdService, EmailService emailService, SettingsService settingsService, UserRepository userRepository, CategoryRepository categoryRepository) {
         this.householdService = householdService;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
@@ -217,19 +215,9 @@ public class UserService {
                 // below see where they are now.
                 entityManager.flush();
                 entityManager.clear();
-                User toDelete = getById(user.getId());
 
-                // all expenses
-                expenseService.getAll(toDelete).forEach(e -> {
-                    try {
-                        expenseService.delete(e.getId(), toDelete);
-                    } catch (Exception throwables) {
-                        throw new RuntimeException(throwables);
-                    }
-                });
-
-                // categories and recurring expenses are deleted along with the user
-                userRepository.delete(toDelete);
+                // categories, expenses and recurring expenses are deleted along with the user
+                userRepository.delete(getById(user.getId()));
                 return true;
             } catch (Exception e) {
                 throw new RuntimeException(e);

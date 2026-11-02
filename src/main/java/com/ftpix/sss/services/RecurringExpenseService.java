@@ -132,7 +132,7 @@ public class RecurringExpenseService {
 
     @Transactional
     public RecurringExpense create(RecurringExpense expense, User user) throws Exception {
-        Category category = categoryService.get(expense.getCategory().getId(), user);
+        Category category = categoryService.resolve(expense.getCategory(), user);
         if (category != null) {
             expense.setCategory(category);
             expense.setUser(user);
@@ -177,7 +177,7 @@ public class RecurringExpenseService {
     public List<RecurringExpense> getToProcessForUser(User user) throws Exception {
         Specification<RecurringExpense> spec = Specification.where(
                 Specifications.<RecurringExpense, LocalDate>lessThanOrEqual("nextOccurrence", LocalDate.now())
-        ).and(Specifications.<RecurringExpense>equal("user", user));
+        ).and(Specifications.<RecurringExpense>createdBy(user));
         return recurringExpenseRepository.findAll(spec);
 //        return recurringExpenseDaoJooq.getWhere(user, RECURRING_EXPENSE.NEXT_OCCURRENCE.le(Constants.dateFormatter.format(LocalDate.now())));
     }
@@ -185,7 +185,7 @@ public class RecurringExpenseService {
     @Transactional
     public boolean update(RecurringExpense expense, User user) throws Exception {
         RecurringExpense existing = getId(expense.getId(), user);
-        Category category = expense.getCategory() == null ? null : categoryService.get(expense.getCategory().getId(), user);
+        Category category = categoryService.resolve(expense.getCategory(), user);
 
         if (existing != null && category != null) {
             // dates should only be updated by the cron job !

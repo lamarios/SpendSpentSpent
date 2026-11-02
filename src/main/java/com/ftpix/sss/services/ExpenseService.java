@@ -175,7 +175,7 @@ public class ExpenseService {
     @Transactional
     public Expense update(Expense expense, User user) throws SQLException {
         Expense existing = expenseRepository.findExpenseByIdAndUser(expense.getId(), user);
-        Category category = expense.getCategory() == null ? null : categoryService.get(expense.getCategory().getId(), user);
+        Category category = categoryService.resolve(expense.getCategory(), user);
         if (existing != null && category != null) {
             // the creator never changes and the category must be one of the household's
             expense.setUser(existing.getUser());
@@ -207,7 +207,7 @@ public class ExpenseService {
 
     @Transactional
     public Expense create(Expense expense, User user) throws Exception {
-        Category category = categoryService.get(expense.getCategory().getId(), user);
+        Category category = categoryService.resolve(expense.getCategory(), user);
         if (category == null) {
             throw new Exception("Category doesn't exist");
         } else {
@@ -296,7 +296,7 @@ public class ExpenseService {
     public List<Expense> getFromTo(User user, boolean includeHousehold, long from, long to, boolean includeRecurring) {
 
         Specification<Expense> spec = Specification.where(betweenTimestamps(from, to))
-                .and(includeHousehold ? inCategories(categoryRepository.getHouseholdCategories(user)) : equal("user", user));
+                .and(includeHousehold ? inCategories(categoryRepository.getHouseholdCategories(user)) : Specifications.<Expense>createdBy(user));
 
         if (!includeRecurring) {
             spec = spec.and(excludeRecurring());
@@ -347,7 +347,7 @@ public class ExpenseService {
 
         // the user's own habits only, the categories might still belong to other household members
         Specification<Expense> spec = Specification.where(createdOnTheSpot())
-                .and(equal("user", currentUser))
+                .and(Specifications.<Expense>createdBy(currentUser))
                 .and(Specifications.greaterThan("timestamp", System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 90));
 
         var expenses = expenseRepository.findAll(spec, Sort.by("id").ascending());

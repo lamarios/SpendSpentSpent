@@ -3,6 +3,7 @@ package com.ftpix.sss.services;
 import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.TestContainerTest;
 import com.ftpix.sss.controllers.BackgroundJob;
+import com.ftpix.sss.controllers.api.SearchController;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.persistence.ExpenseRepository;
 import com.ftpix.sss.persistence.RecurringExpenseRepository;
@@ -13,11 +14,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.mock.web.MockHttpServletResponse;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,6 +55,8 @@ public class HouseholdCategoriesTest extends TestContainerTest {
     private UserService userService;
     @Autowired
     private JsonMapper jsonMapper;
+    @Autowired
+    private SearchController searchController;
     @Autowired
     private com.fasterxml.jackson.databind.ObjectMapper legacyObjectMapper;
 
@@ -282,7 +287,7 @@ public class HouseholdCategoriesTest extends TestContainerTest {
         jdbcTemplate.update("UPDATE expense SET user_id = NULL WHERE id = ?", expense.getId());
         jdbcTemplate.update("UPDATE recurring_expense SET user_id = NULL WHERE id = ?", recurring.getId());
 
-        backgroundJob.assignMissingOwners();
+        backgroundJob.repairOwnership();
 
         assertEquals(currentUser.getId(), expenseRepository.findById(expense.getId()).orElseThrow().getUser().getId());
         assertEquals(currentUser.getId(), recurringExpenseRepository.findById(recurring.getId()).orElseThrow().getUser().getId());
@@ -432,5 +437,101 @@ public class HouseholdCategoriesTest extends TestContainerTest {
         assertEquals(30, saved.getAmount());
         assertEquals(partner.getId(), saved.getUser().getId());
         assertEquals(currentUser.getId(), saved.getCategory().getUser().getId());
+    }
+
+    @Test
+    public void iconsStayUniqueWhenEditing() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        Category gas = categoryService.create("gas", partner);
+
+        Category diff = new Category();
+        diff.setIcon("house");
+        assertThrows(IllegalArgumentException.class, () -> categoryService.mergeCategory(gas.getId(), diff, partner));
+        assertThrows(IllegalArgumentException.class, () -> categoryService.update(gas.getId(), "house", 0, partner));
+
+        // saving the list as the client has it (icons unchanged) works, reordering included
+        List<Category> list = new ArrayList<>(categoryService.getAll(partner));
+        Collections.reverse(list);
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).setCategoryOrder(i);
+        }
+        assertEquals(list.stream().map(Category::getId).toList(),
+                categoryService.updateMany(list, partner).stream().map(Category::getId).toList());
+
+        // changing an icon to one used by another household category fails
+        Category clash = new Category();
+        clash.setId(gas.getId());
+        clash.setIcon("HOUSE");
+        assertThrows(IllegalArgumentException.class, () -> categoryService.updateMany(List.of(clash), partner));
+        assertEquals("gas", categoryService.get(gas.getId(), partner).getIcon());
+        assertEquals("house", categoryService.get(house.getId(), partner).getIcon());
+    }
+
+    @Test
+    public void outdatedCategoryListsAreSaved() throws Exception {
+        Category outsiderCategory = categoryService.create("food", outsider);
+        List<Category> list = new ArrayList<>(categoryService.getAll(partner));
+        // e.g. a category of a member who left in the meantime
+        list.add(outsiderCategory);
+        list.forEach(c -> c.setCategoryOrder(7));
+
+        categoryService.updateMany(list, partner);
+
+        assertTrue(categoryService.getAll(partner).stream().allMatch(c -> c.getCategoryOrder() == 7));
+        // the category outside the household is left untouched
+        assertEquals(1, categoryService.get(outsiderCategory.getId(), outsider).getCategoryOrder());
+    }
+
+    @Test
+    public void categoryReferencesWithoutIdAreRejected() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        Category noId = new Category();
+        noId.setIcon("house");
+
+        assertThrows(Exception.class, () -> expenseService.create(newExpense(noId, 10), partner));
+        assertNull(recurringExpenseService.create(newRecurring(noId, 10, "nope"), partner));
+
+        Expense expense = expenseService.create(newExpense(house, 10), partner);
+        Expense edit = detached(expense);
+        edit.setCategory(noId);
+        assertNull(expenseService.update(edit, partner));
+
+        RecurringExpense recurring = recurringExpenseService.create(newRecurring(house, 10, "rent"), partner);
+        RecurringExpense recurringEdit = recurringExpenseRepository.findById(recurring.getId()).orElseThrow();
+        recurringEdit.setCategory(noId);
+        assertFalse(recurringExpenseService.update(recurringEdit, partner));
+    }
+
+    @Test
+    public void filteringByCreatorRequiresAUser() {
+        assertThrows(NullPointerException.class, () -> recurringExpenseService.getToProcessForUser(null));
+        assertThrows(NullPointerException.class, () -> expenseService.getFromTo(null, false, 0, Long.MAX_VALUE, true));
+    }
+
+    @Test
+    public void startupSeparatesEntriesLeftAcrossHouseholds() throws Exception {
+        CrossBookings bookings = crossBook();
+
+        // the partner left while an older version, which doesn't separate entries, was running
+        jdbcTemplate.update("DELETE FROM household_members WHERE user_id = ?", partner.getId().toString());
+
+        backgroundJob.repairOwnership();
+
+        assertSeparated(bookings);
+    }
+
+    @Test
+    public void csvExportNamesTheCreator() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        expenseService.create(newExpense(house, 25), partner);
+        expenseService.create(newExpense(house, 10), currentUser);
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        searchController.searchAsCsv(new SearchParameters(new ArrayList<>(), 0, 9999999, null, null, null), response, "");
+
+        List<String> lines = response.getContentAsString().lines().skip(1).toList();
+        assertEquals(2, lines.size());
+        assertTrue(lines.stream().anyMatch(l -> l.contains(",25.0,") && l.endsWith("," + partner.getEmail())), lines.toString());
+        assertTrue(lines.stream().anyMatch(l -> l.contains(",10.0,") && l.endsWith("," + currentUser.getEmail())), lines.toString());
     }
 }

@@ -70,9 +70,7 @@ public class HouseholdSeparationService {
                 .orElseGet(() -> {
                     Category category = new Category();
                     category.setIcon(icon);
-                    category.setUser(user);
-                    category.setCategoryOrder((int) categoryRepository.getMaxHouseholdCategoryOrder(user) + 1);
-                    return categoryRepository.save(category);
+                    return categoryRepository.saveAtEndOfHousehold(category, user);
                 }));
     }
 }

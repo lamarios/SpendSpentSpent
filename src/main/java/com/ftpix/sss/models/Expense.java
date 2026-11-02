@@ -124,14 +124,7 @@ public class Expense  {
         if (category == null || user == null) {
             return category;
         }
-
-        Category copy = new Category();
-        copy.setId(category.getId());
-        copy.setIcon(category.getIcon());
-        copy.setCategoryOrder(category.getCategoryOrder());
-        copy.setPercentageOfMonthly(category.getPercentageOfMonthly());
-        copy.setUser(user);
-        return copy;
+        return category.copyWithUser(user);
     }
 
     public User getUser() {

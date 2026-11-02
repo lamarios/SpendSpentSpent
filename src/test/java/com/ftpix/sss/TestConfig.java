@@ -4,7 +4,6 @@ import com.ftpix.sss.models.User;
 import com.ftpix.sss.persistence.CategoryRepository;
 import com.ftpix.sss.persistence.UserRepository;
 import com.ftpix.sss.services.EmailService;
-import com.ftpix.sss.services.ExpenseService;
 import com.ftpix.sss.services.HouseholdService;
 import com.ftpix.sss.services.SettingsService;
 import com.ftpix.sss.services.UserService;
@@ -25,8 +24,8 @@ import java.time.ZoneId;
 public class TestConfig {
 
     @Bean
-    public UserService userService(ExpenseService expenseService, HouseholdService householdService, EmailService emailService, SettingsService settingsService, CategoryRepository categoryRepository, UserRepository userRepository) {
-        return new UserServiceMock(expenseService, householdService, emailService, settingsService, userRepository, categoryRepository);
+    public UserService userService(HouseholdService householdService, EmailService emailService, SettingsService settingsService, CategoryRepository categoryRepository, UserRepository userRepository) {
+        return new UserServiceMock(householdService, emailService, settingsService, userRepository, categoryRepository);
     }
 
     @Bean

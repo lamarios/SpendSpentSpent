@@ -6,6 +6,7 @@ import com.ftpix.sss.models.User;
 import com.ftpix.sss.persistence.ExpenseRepository;
 import com.ftpix.sss.persistence.RecurringExpenseRepository;
 import com.ftpix.sss.services.EmailService;
+import com.ftpix.sss.services.HouseholdSeparationService;
 import com.ftpix.sss.services.RecurringExpenseService;
 import com.ftpix.sss.services.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -33,30 +34,39 @@ public class BackgroundJob {
     private final ZoneId zoneId;
     private final ExpenseRepository expenseRepository;
     private final RecurringExpenseRepository recurringExpenseRepository;
+    private final HouseholdSeparationService householdSeparationService;
 
     @Autowired
-    public BackgroundJob(RecurringExpenseService recurringExpenseService, UserService userService, EmailService emailService, ZoneId zoneId, ExpenseRepository expenseRepository, RecurringExpenseRepository recurringExpenseRepository) {
+    public BackgroundJob(RecurringExpenseService recurringExpenseService, UserService userService, EmailService emailService, ZoneId zoneId, ExpenseRepository expenseRepository, RecurringExpenseRepository recurringExpenseRepository, HouseholdSeparationService householdSeparationService) {
         this.recurringExpenseService = recurringExpenseService;
         this.userService = userService;
         this.emailService = emailService;
         this.zoneId = zoneId;
         this.expenseRepository = expenseRepository;
         this.recurringExpenseRepository = recurringExpenseRepository;
+        this.householdSeparationService = householdSeparationService;
     }
 
 
     /**
-     * Expenses and recurring expenses created by older versions don't have a creator, they get attributed to
-     * the owner of their category. Runs at every start so rolling back and forth between versions stays consistent.
+     * Runs at every start so rolling back and forth between versions stays consistent:
+     * <ul>
+     *     <li>expenses and recurring expenses created by older versions don't have a creator, they get attributed to
+     *     the owner of their category</li>
+     *     <li>older versions don't separate the entries of members leaving a household, or a separation might have
+     *     missed an entry created concurrently, this catches up</li>
+     * </ul>
      */
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
-    public void assignMissingOwners() {
+    public void repairOwnership() {
         int expenses = expenseRepository.assignMissingOwners();
         int recurring = recurringExpenseRepository.assignMissingOwners();
         if (expenses > 0 || recurring > 0) {
             logger.info("Assigned an owner to {} expenses and {} recurring expenses", expenses, recurring);
         }
+
+        householdSeparationService.separateEntriesOutsideHousehold();
     }
 
     @Scheduled(fixedRate = 100 * 60 * 1000, initialDelay = 60 * 60 * 1000)

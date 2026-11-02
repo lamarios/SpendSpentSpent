@@ -69,6 +69,19 @@ public class Category {
         this.user = user;
     }
 
+    /**
+     * @return a detached copy of this category that belongs to another user, only meant to be serialized
+     */
+    public Category copyWithUser(User user) {
+        Category copy = new Category();
+        copy.setId(id);
+        copy.setIcon(icon);
+        copy.setCategoryOrder(categoryOrder);
+        copy.setPercentageOfMonthly(percentageOfMonthly);
+        copy.setUser(user);
+        return copy;
+    }
+
     public double getPercentageOfMonthly() {
         return percentageOfMonthly;
     }

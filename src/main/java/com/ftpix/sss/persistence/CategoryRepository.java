@@ -2,7 +2,6 @@ package com.ftpix.sss.persistence;
 
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -57,5 +56,12 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     long getMaxHouseholdCategoryOrder(@Param(USER_PARAM) User user);
 
 
-    List<Category> findAllByUser(User user, Sort sort);
+    /**
+     * Saves a new category of the user, placed after all the categories of the user's household.
+     */
+    default Category saveAtEndOfHousehold(Category category, User user) {
+        category.setUser(user);
+        category.setCategoryOrder((int) getMaxHouseholdCategoryOrder(user) + 1);
+        return save(category);
+    }
 }
