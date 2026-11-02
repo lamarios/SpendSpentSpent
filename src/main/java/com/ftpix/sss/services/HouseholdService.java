@@ -5,13 +5,11 @@ import com.ftpix.sss.models.*;
 import com.ftpix.sss.persistence.HouseholdMemberRepository;
 import com.ftpix.sss.persistence.HouseholdRepository;
 import com.ftpix.sss.persistence.UserRepository;
-import com.ftpix.sss.websockets.WebSocketSessionManager;
+import com.ftpix.sss.websockets.AfterCommitMessages;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -332,28 +330,14 @@ public class HouseholdService {
      * It uses the householdUpdate message type as clients fail to parse types they don't know.
      */
     public void notifyOtherMembersAfterCommit(User user) {
-        boolean scheduled = TransactionSynchronizationManager.getSynchronizations()
-                .stream()
-                .anyMatch(NotifyAfterCommit.class::isInstance);
-        if (!scheduled) {
-            // recipients are resolved now, the household can't be loaded anymore after the commit
-            List<String> recipients = getHouseholdOtherMembers(getCurrentHousehold(user), user).stream()
-                    .map(member -> member.getId().toString())
-                    .toList();
-            TransactionSynchronizationManager.registerSynchronization(new NotifyAfterCommit(recipients));
-        }
-    }
-
-    private record NotifyAfterCommit(List<String> recipients) implements TransactionSynchronization {
-        @Override
-        public void afterCommit() {
-            recipients.forEach(userId -> WebSocketSessionManager.sendToUser(userId, new HouseholdWebsocketUpdate()));
-        }
+        sendMessageToOtherUsers(getCurrentHousehold(user).orElse(null), user);
     }
 
     public void sendMessageToOtherUsers(Household hs, User currentUser) {
-        getHouseholdOtherMembers(Optional.ofNullable(hs), currentUser).forEach(user -> WebSocketSessionManager.sendToUser(user.getId()
-                .toString(), new HouseholdWebsocketUpdate()));
+        List<String> recipients = getHouseholdOtherMembers(Optional.ofNullable(hs), currentUser).stream()
+                .map(member -> member.getId().toString())
+                .toList();
+        AfterCommitMessages.sendToUsers(recipients, new HouseholdWebsocketUpdate());
     }
 
 }

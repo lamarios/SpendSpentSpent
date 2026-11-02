@@ -68,6 +68,8 @@ public class HouseholdCategoriesTest extends TestContainerTest {
     @Autowired
     private PlatformTransactionManager transactionManager;
     @Autowired
+    private HistoryService historyService;
+    @Autowired
     private com.fasterxml.jackson.databind.ObjectMapper legacyObjectMapper;
 
     // currentUser is the household admin and owns the base categories (house, cloud, cloth)
@@ -742,6 +744,34 @@ public class HouseholdCategoriesTest extends TestContainerTest {
             WebSocketSessionManager.remove(partner.getId().toString(), partnerSession);
             WebSocketSessionManager.remove(currentUser.getId().toString(), mySession);
         }
+    }
+
+    @Test
+    public void membersAreNotifiedOfExpensesOnceTheHistoryIsUpToDate() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        // the client reloads the history as soon as it gets the message
+        List<Double> monthTotalWhenNotified = new CopyOnWriteArrayList<>();
+        WebSocketSession partnerSession = mock(WebSocketSession.class);
+        when(partnerSession.isOpen()).thenReturn(true);
+        doAnswer(invocation -> monthTotalWhenNotified.add(monthTotal(partner))).when(partnerSession).sendMessage(any());
+        WebSocketSessionManager.register(partner.getId().toString(), partnerSession);
+        try {
+            Expense expense = expenseService.create(newExpense(house, 42), currentUser);
+            assertEquals(List.of(42.0), monthTotalWhenNotified);
+
+            assertTrue(expenseService.delete(expense.getId(), currentUser));
+            assertEquals(List.of(42.0, 0.0), monthTotalWhenNotified);
+        } finally {
+            WebSocketSessionManager.remove(partner.getId().toString(), partnerSession);
+        }
+    }
+
+    private double monthTotal(User user) throws Exception {
+        return historyService.monthly(user).stream()
+                .filter(c -> c.getCategory().getId() == -1L)
+                .findFirst()
+                .orElseThrow()
+                .getAmount();
     }
 
     /**

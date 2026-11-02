@@ -8,7 +8,7 @@ import com.ftpix.sss.persistence.UserRepository;
 import com.ftpix.sss.persistence.utils.Specifications;
 import com.ftpix.sss.utils.CategoryPredictor;
 import com.ftpix.sss.utils.DateUtils;
-import com.ftpix.sss.websockets.WebSocketSessionManager;
+import com.ftpix.sss.websockets.AfterCommitMessages;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import org.apache.commons.logging.Log;
@@ -386,8 +386,13 @@ public class ExpenseService {
                 .orElseGet(List::of);
     }
 
+    /**
+     * Sent after the commit, so the other members' clients reload the new expenses and history.
+     */
     public void sendMessageToOtherUsers(User currentUser) {
-        getHouseholdOtherMembers(currentUser).forEach(user -> WebSocketSessionManager.sendToUser(user.getId()
-                .toString(), new NewHouseholdExpense()));
+        List<String> recipients = getHouseholdOtherMembers(currentUser).stream()
+                .map(user -> user.getId().toString())
+                .toList();
+        AfterCommitMessages.sendToUsers(recipients, new NewHouseholdExpense());
     }
 }
