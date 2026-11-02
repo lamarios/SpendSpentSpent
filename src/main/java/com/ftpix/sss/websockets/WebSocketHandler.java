@@ -1,5 +1,6 @@
 package com.ftpix.sss.websockets;
 
+import com.ftpix.sss.models.HouseholdWebsocketUpdate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
         String userId = (String) session.getAttributes().get("userId");
         WebSocketSessionManager.register(userId, session);
         log.info("User connected: {}", userId);
+
+        // Clients disconnect while in the background and miss what other household members did meanwhile.
+        // This makes them reload the household data, expenses and history (existing clients already do so).
+        WebSocketSessionManager.sendToSession(session, new HouseholdWebsocketUpdate());
     }
 
     @Override

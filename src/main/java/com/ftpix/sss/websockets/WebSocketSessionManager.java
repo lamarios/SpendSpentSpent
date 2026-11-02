@@ -39,20 +39,23 @@ public class WebSocketSessionManager {
 
     public static <T> void sendToUser(String userId, T content) {
         if (sessions.containsKey(userId)) {
+            List<WebSocketSession> userSessions = sessions.get(userId);
+            for (WebSocketSession session : userSessions) {
+                sendToSession(session, content);
+            }
+        }
+    }
 
+    public static <T> void sendToSession(WebSocketSession session, T content) {
+        if (session != null && session.isOpen()) {
             WebSocketMessage<T> message = new WebSocketMessage<T>();
             message.setType(WebSocketMessage.Type.getFromClass(content.getClass()));
             message.setMessage(content);
 
-            List<WebSocketSession> userSessions = sessions.get(userId);
-            for (WebSocketSession session : userSessions) {
-                if (session != null && session.isOpen()) {
-                    try {
-                        session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
-                    } catch (IOException e) {
-                        log.error("Error sending message:", e);
-                    }
-                }
+            try {
+                session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+            } catch (IOException e) {
+                log.error("Error sending message:", e);
             }
         }
     }
