@@ -31,7 +31,12 @@ public class WebSocketSessionManager {
      */
     public static WebSocketSession register(String userId, WebSocketSession session) {
         WebSocketSession concurrent = new ConcurrentWebSocketSessionDecorator(session, SEND_TIME_LIMIT_MS, SEND_BUFFER_LIMIT_BYTES);
-        sessions.computeIfAbsent(userId, id -> new ConcurrentHashMap<>()).put(session, concurrent);
+        // atomically, the last disconnect of the user removes the map in between otherwise
+        sessions.compute(userId, (id, userSessions) -> {
+            Map<WebSocketSession, WebSocketSession> result = userSessions == null ? new ConcurrentHashMap<>() : userSessions;
+            result.put(session, concurrent);
+            return result;
+        });
         return concurrent;
     }
 
