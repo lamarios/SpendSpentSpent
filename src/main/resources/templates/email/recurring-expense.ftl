@@ -8,7 +8,7 @@
 <p>
 <ul>
     <#list expenses as expense>
-        <li class="expense"><i class="cat ${expense.getCategory().getIcon()}" ></i> <span class="amount">${expense.getAmount()?string["0.00"]}</span>, <small>next occurrence: ${expense.getNextOccurrence()?string('yyyy-MM-dd')}</small></li>
+        <li class="expense"><i class="cat ${expense.getCategory().getIcon()}" ></i> <span class="amount">${expense.getAmount()?string["0.00"]}</span>, <small>next occurrence: ${expense.getNextOccurrence().toString()}</small></li>
     </#list>
 </ul>
 </p>
