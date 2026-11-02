@@ -766,6 +766,29 @@ public class HouseholdCategoriesTest extends TestContainerTest {
         }
     }
 
+    @Test
+    public void failingNotificationsDontFailCommittedChanges() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        WebSocketSession broken = mock(WebSocketSession.class);
+        when(broken.isOpen()).thenReturn(true);
+        // e.g. Tomcat when a message is sent while another one is still being sent
+        doThrow(new IllegalStateException("TEXT_FULL_WRITING")).when(broken).sendMessage(any());
+        WebSocketSession working = mock(WebSocketSession.class);
+        when(working.isOpen()).thenReturn(true);
+        WebSocketSessionManager.register(partner.getId().toString(), broken);
+        WebSocketSessionManager.register(partner.getId().toString(), working);
+        try {
+            Expense saved = expenseService.create(newExpense(house, 42), currentUser);
+
+            assertNotNull(saved.getId());
+            assertEquals(1, expenseRepository.count());
+            verify(working, times(1)).sendMessage(any());
+        } finally {
+            WebSocketSessionManager.remove(partner.getId().toString(), broken);
+            WebSocketSessionManager.remove(partner.getId().toString(), working);
+        }
+    }
+
     private double monthTotal(User user) throws Exception {
         return historyService.monthly(user).stream()
                 .filter(c -> c.getCategory().getId() == -1L)

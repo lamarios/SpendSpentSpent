@@ -16,12 +16,12 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         String userId = (String) session.getAttributes().get("userId");
-        WebSocketSessionManager.register(userId, session);
+        WebSocketSession registered = WebSocketSessionManager.register(userId, session);
         log.info("User connected: {}", userId);
 
         // Clients disconnect while in the background and miss what other household members did meanwhile.
         // This makes them reload the household data, expenses and history (existing clients already do so).
-        WebSocketSessionManager.sendToSession(session, new HouseholdWebsocketUpdate());
+        WebSocketSessionManager.sendToSession(registered, new HouseholdWebsocketUpdate());
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.ftpix.sss.persistence.listeners;
 
 import com.ftpix.sss.services.HistoryService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.PostRemove;
 import jakarta.persistence.PostUpdate;
@@ -12,6 +14,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 @Component
 public class HistoryServiceRefresher {
+    private static final Logger logger = LogManager.getLogger();
 
     private static HistoryService historyService;
 
@@ -36,7 +39,12 @@ public class HistoryServiceRefresher {
     private static class RefreshAfterCommit implements TransactionSynchronization {
         @Override
         public void afterCommit() {
-            historyService.refreshMaterializedViews();
+            // the change is committed, failing here would make it look like it failed
+            try {
+                historyService.refreshMaterializedViews();
+            } catch (RuntimeException e) {
+                logger.error("Error refreshing the history views", e);
+            }
         }
 
         @Override

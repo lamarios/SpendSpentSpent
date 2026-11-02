@@ -1,5 +1,7 @@
 package com.ftpix.sss.websockets;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -14,6 +16,7 @@ import java.util.Set;
  * Messages are sent after the other synchronizations with a higher precedence, like the refresh of the history views.
  */
 public final class AfterCommitMessages {
+    private static final Logger logger = LogManager.getLogger();
 
     private AfterCommitMessages() {
     }
@@ -51,7 +54,14 @@ public final class AfterCommitMessages {
 
         @Override
         public void afterCommit() {
-            recipients.forEach(userId -> WebSocketSessionManager.sendToUser(userId, message));
+            // the change is committed, a failing message must not make it look like it failed
+            recipients.forEach(userId -> {
+                try {
+                    WebSocketSessionManager.sendToUser(userId, message);
+                } catch (RuntimeException e) {
+                    logger.error("Error notifying user {}", userId, e);
+                }
+            });
         }
     }
 }
