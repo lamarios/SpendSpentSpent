@@ -23,11 +23,19 @@ public class HistoryServiceRefresher {
     @PostUpdate
     @PostRemove
     public void onChanged(Object entity){
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                historyService.refreshMaterializedViews();
-            }
-        });
+        // one refresh per transaction is enough, no matter how many entities changed
+        boolean alreadyScheduled = TransactionSynchronizationManager.getSynchronizations()
+                .stream()
+                .anyMatch(RefreshAfterCommit.class::isInstance);
+        if (!alreadyScheduled) {
+            TransactionSynchronizationManager.registerSynchronization(new RefreshAfterCommit());
+        }
+    }
+
+    private static class RefreshAfterCommit implements TransactionSynchronization {
+        @Override
+        public void afterCommit() {
+            historyService.refreshMaterializedViews();
+        }
     }
 }
