@@ -122,10 +122,7 @@ public class ExpenseService {
 
     @Transactional(readOnly = true)
     public Map<String, Long> suggestNotes(User currentUser, Expense expense) {
-        double minExpense = expense.getAmount() * 0.8;
-        double maxExpense = expense.getAmount() * 1.2;
-
-        return expenseRepository.findNotes(currentUser, expense.getCategory(), minExpense, maxExpense)
+        return expenseRepository.findNotes(currentUser, expense.getCategory())
                 .stream()
                 .filter(Objects::nonNull)
                 .map(String::trim)

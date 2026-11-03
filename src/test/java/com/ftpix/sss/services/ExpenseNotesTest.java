@@ -50,4 +50,20 @@ public class ExpenseNotesTest extends TestContainerTest {
         assertEquals(Map.of("Rent", 1L), expenseService.autoCompleteNote(currentUser, "RE"));
         assertEquals(Map.of("Rent", 1L), expenseService.autoCompleteNote(currentUser, "re"));
     }
+
+    private Map<String, Long> suggest(String icon, double amount) {
+        Expense expense = new Expense();
+        expense.setCategory(category(icon));
+        expense.setAmount(amount);
+        return expenseService.suggestNotes(currentUser, expense);
+    }
+
+    @Test
+    public void suggestionsDontDependOnTheAmount() throws Exception {
+        expense("house", 10, "Plumber");
+        expense("house", 1000, "Rent");
+        expense("cloth", 500, "Shoes");
+
+        assertEquals(Map.of("Plumber", 1L, "Rent", 1L), suggest("house", 500));
+    }
 }
