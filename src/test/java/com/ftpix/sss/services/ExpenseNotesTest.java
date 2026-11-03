@@ -66,4 +66,110 @@ public class ExpenseNotesTest extends TestContainerTest {
 
         assertEquals(Map.of("Plumber", 1L, "Rent", 1L), suggest("house", 500));
     }
+
+    @Test
+    public void suggestionsMergeSpellingsUnderTheMostUsedOne() throws Exception {
+        expense("house", 10, "Rent");
+        expense("house", 10, "rent");
+        expense("house", 10, " rent ");
+        expense("house", 10, "Plumber");
+        expense("house", 10, "plumber");
+
+        // a tie goes to the first spelling in alphabetical order
+        assertEquals(Map.of("rent", 3L, "Plumber", 2L), suggest("house", 10));
+    }
+
+    @Test
+    public void onlyTheMostUsedNotesAreSuggested() throws Exception {
+        for (int i = 0; i < 25; i++) {
+            expense("house", 10, "Note " + i);
+        }
+        expense("house", 10, "Rent");
+        expense("house", 10, "Rent");
+
+        Map<String, Long> suggestions = suggest("house", 10);
+
+        assertEquals(20, suggestions.size());
+        assertEquals(2L, suggestions.get("Rent"));
+    }
+
+    @Test
+    public void autoCompleteMergesSpellings() throws Exception {
+        expense("house", 10, "Rent");
+        expense("house", 10, "rent");
+        expense("house", 10, "Rent");
+
+        assertEquals(Map.of("Rent", 3L), expenseService.autoCompleteNote(currentUser, "ren"));
+    }
+
+    @Test
+    public void typedTagsAreCompletedWithTheKnownTags() throws Exception {
+        expense("house", 10, "Lidl #visa");
+        expense("house", 10, "Aldi #Visa #shared");
+        expense("cloth", 10, "Shoes #visa");
+        expense("house", 10, "Rent #bank");
+        expense("house", 10, "Plumber #VIP");
+
+        assertEquals(Map.of("Bakery #visa", 3L, "Bakery #VIP", 1L), expenseService.autoCompleteNote(currentUser, "Bakery #vi"));
+
+        Map<String, Long> onlyTag = expenseService.autoCompleteNote(currentUser, "#VI");
+        assertEquals(3L, onlyTag.get("#visa"));
+        assertEquals(1L, onlyTag.get("#VIP"));
+        // and the notes containing the text, as before
+        assertEquals(1L, onlyTag.get("Plumber #VIP"));
+    }
+
+    @Test
+    public void notesMatchingACompletedTagArentCountedTwice() throws Exception {
+        expense("house", 10, "Lidl #visa");
+        expense("house", 10, "Aldi #visa");
+        expense("house", 10, "Lidl #bank");
+
+        assertEquals(Map.of("Lidl #visa", 2L, "Lidl #bank", 1L), expenseService.autoCompleteNote(currentUser, "Lidl #"));
+    }
+
+    @Test
+    public void aCompletedTagMatchingANoteInAnotherCaseIsSuggestedOnce() throws Exception {
+        expense("house", 10, "Lidl #visa");
+
+        // as often used: the saved note wins over the typed text
+        assertEquals(Map.of("Lidl #visa", 1L), expenseService.autoCompleteNote(currentUser, "lidl #vi"));
+    }
+
+    @Test
+    public void aCompletedTagMatchingANoteWithAnotherSpellingOfTheTagIsSuggestedOnce() throws Exception {
+        expense("house", 10, "Bakery #Visa");
+        expense("house", 10, "Lidl #visa");
+        expense("house", 10, "Aldi #visa");
+
+        // the most used spelling of the tag wins
+        assertEquals(Map.of("Bakery #visa", 3L), expenseService.autoCompleteNote(currentUser, "Bakery #vi"));
+    }
+
+    @Test
+    public void completedTagsKeepTheirCombiningMarks() throws Exception {
+        expense("house", 10, "Rent #किराया");
+        expense("house", 10, "Bakery #café");
+
+        assertEquals(Map.of("Deposit #किराया", 1L), expenseService.autoCompleteNote(currentUser, "Deposit #कि"));
+        assertEquals(Map.of("Lidl #café", 1L), expenseService.autoCompleteNote(currentUser, "Lidl #caf"));
+    }
+
+    @Test
+    public void typedTagsAreCompletedWhateverTheCaseOfTheirLetters() throws Exception {
+        expense("house", 10, "Flight #İstanbul");
+        expense("house", 10, "Paint #ασπρο");
+
+        // lower casing in Java turns İ into two characters and a final Σ into ς, which don't match these tags
+        assertEquals(Map.of("Hotel #İstanbul", 1L), expenseService.autoCompleteNote(currentUser, "Hotel #İ"));
+        assertEquals(Map.of("Wall #ασπρο", 1L), expenseService.autoCompleteNote(currentUser, "Wall #ΑΣ"));
+    }
+
+    @Test
+    public void tagsAreOnlyCompletedAtTheEnd() throws Exception {
+        expense("house", 10, "Lidl #visa");
+
+        assertEquals(Map.of(), expenseService.autoCompleteNote(currentUser, "Aldi #vi groceries"));
+        assertEquals(Map.of(), expenseService.autoCompleteNote(currentUser, "Aldi#vi"));
+    }
 }
