@@ -8,7 +8,6 @@ import 'package:spend_spent_spent/recurring_expenses/models/recurring_expense.da
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/recurring_expenses/views/components/add_recurring_expense.dart';
 import 'package:spend_spent_spent/recurring_expenses/views/components/expense.dart';
-import 'package:spend_spent_spent/utils/dialogs.dart';
 import 'package:spend_spent_spent/utils/extensions/list_insert_between.dart';
 import 'package:spend_spent_spent/utils/views/components/expense_separator.dart';
 
@@ -23,9 +22,19 @@ class ExpenseList extends StatelessWidget {
   void showAddRecurringExpenseDialog(BuildContext context) {
     showModal(
       context: context,
-      builder: (context) => Card(
-        margin: getInsetsForMaxSize(MediaQuery.of(context), maxWidth: 350, maxHeight: 450),
-        child: AddRecurringExpenseDialog(refreshRecurringExpenses: refreshExpenses),
+      // as tall as its content like the expense dialog, a fixed height cut the keypad off with larger fonts.
+      // Full width on narrow screens, the step titles wrap otherwise
+      builder: (context) => SafeArea(
+        child: Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 350),
+            margin: const EdgeInsets.symmetric(vertical: 16),
+            child: Card(
+              margin: EdgeInsets.zero,
+              child: AddRecurringExpenseDialog(refreshRecurringExpenses: refreshExpenses),
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -74,13 +74,14 @@ class AddRecurringExpenseDialog extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Switcher(
                   labels: const ['What ?', 'How often ?', 'How much ?'],
                   selected: state.step,
                   onSelect: (step) {},
                 ),
-                Expanded(
+                Flexible(
                   child: SingleChildScrollView(
                     child: AnimatedSwitcher(
                       duration: panelTransition,
