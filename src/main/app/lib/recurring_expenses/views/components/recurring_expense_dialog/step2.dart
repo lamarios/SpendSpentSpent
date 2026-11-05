@@ -7,7 +7,8 @@ const Map<int, String> WEEKLY_PARAMS = {
   3: 'Tuesday',
   4: 'Wednesday',
   5: 'Thursday',
-  6: 'Saturday',
+  6: 'Friday',
+  7: 'Saturday',
   1: 'Sunday',
 };
 const Map<int, String> MONTHLY_PARAMS = {
