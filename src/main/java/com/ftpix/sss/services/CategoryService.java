@@ -117,6 +117,8 @@ public class CategoryService {
 
         checkIconAvailable(category.getIcon(), null, user);
 
+        // an id sent by the client would overwrite that category, whoever it belongs to
+        category.setId(null);
         householdService.notifyOtherMembersAfterCommit(user);
         return categoryRepository.saveAtEndOfHousehold(category, user);
     }

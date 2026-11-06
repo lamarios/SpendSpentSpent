@@ -664,6 +664,32 @@ public class HouseholdCategoriesTest extends TestContainerTest {
     }
 
     @Test
+    public void createdEntriesIgnoreTheIdSentByTheClient() throws Exception {
+        Category outsiderCategory = categoryService.create("food", outsider);
+        RecurringExpense outsiderRecurring = recurringExpenseService.create(newRecurring(outsiderCategory, 10, "outsider"), outsider);
+
+        Category stolenCategory = new Category();
+        stolenCategory.setId(outsiderCategory.getId());
+        stolenCategory.setIcon("gas");
+        Category created = categoryService.create(stolenCategory, partner);
+        assertNotEquals(outsiderCategory.getId(), created.getId());
+
+        RecurringExpense stolenRecurring = newRecurring(ownCategory(partner, "house"), 99, "partner");
+        stolenRecurring.setId(outsiderRecurring.getId());
+        RecurringExpense createdRecurring = recurringExpenseService.create(stolenRecurring, partner);
+        assertNotEquals(outsiderRecurring.getId(), createdRecurring.getId());
+
+        // the outsider's entries are untouched
+        Category category = categoryRepository.findById(outsiderCategory.getId()).orElseThrow();
+        assertEquals(outsider.getId(), category.getUser().getId());
+        assertEquals("food", category.getIcon());
+        RecurringExpense recurring = recurringExpenseRepository.findById(outsiderRecurring.getId()).orElseThrow();
+        assertEquals(outsider.getId(), recurring.getUser().getId());
+        assertEquals(outsiderCategory.getId(), recurring.getCategory().getId());
+        assertEquals(10, recurring.getAmount());
+    }
+
+    @Test
     public void filteringByCreatorRequiresAUser() {
         assertThrows(NullPointerException.class, () -> recurringExpenseService.getToProcessForUser(null));
         assertThrows(NullPointerException.class, () -> expenseService.getFromTo(null, false, 0, Long.MAX_VALUE, true));

@@ -138,6 +138,8 @@ public class RecurringExpenseService {
         householdLocks.shared();
         Category category = categoryService.resolve(expense.getCategory(), user);
         if (category != null) {
+            // an id sent by the client would overwrite that recurring expense, whoever it belongs to
+            expense.setId(null);
             expense.setCategory(category);
             expense.setUser(user);
             expense.setNextOccurrence(calculateNextDate(expense));
