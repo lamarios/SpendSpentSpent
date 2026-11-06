@@ -56,10 +56,11 @@ public class ExpenseService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final EntityManager entityManager;
+    private final HouseholdLocks householdLocks;
 
 
     @Autowired
-    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ZoneId zoneId, FileService fileService, AiFileProcessingService aiFileProcessingService, HouseholdService householdService, ExpenseRepository expenseRepository, UserRepository userRepository, CategoryRepository categoryRepository, EntityManager entityManager) throws SQLException {
+    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ZoneId zoneId, FileService fileService, AiFileProcessingService aiFileProcessingService, HouseholdService householdService, ExpenseRepository expenseRepository, UserRepository userRepository, CategoryRepository categoryRepository, EntityManager entityManager, HouseholdLocks householdLocks) throws SQLException {
         this.categoryService = categoryService;
         this.settingsService = settingsService;
         this.zoneId = zoneId;
@@ -72,6 +73,7 @@ public class ExpenseService {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.entityManager = entityManager;
+        this.householdLocks = householdLocks;
     }
 
 
@@ -89,6 +91,7 @@ public class ExpenseService {
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
     public void fixLegacyExpensesTimeZones() throws SQLException {
+        householdLocks.shared();
 
         var migrated = settingsService.getByName(Settings.TIMESTAMP_FIXED);
         if (migrated != null && migrated.getValue().equalsIgnoreCase("1")) {
@@ -174,6 +177,8 @@ public class ExpenseService {
 
     @Transactional
     public Expense update(Expense expense, User user) throws SQLException {
+        // the category might belong to a member leaving the household right now
+        householdLocks.shared();
         Expense existing = expenseRepository.findExpenseByIdAndUser(expense.getId(), user);
         Category category = categoryService.resolve(expense.getCategory(), user);
         if (existing != null && category != null) {
@@ -207,6 +212,8 @@ public class ExpenseService {
 
     @Transactional
     public Expense create(Expense expense, User user) throws Exception {
+        // the category might belong to a member leaving the household right now
+        householdLocks.shared();
         Category category = categoryService.resolve(expense.getCategory(), user);
         if (category == null) {
             throw new Exception("Category doesn't exist");
@@ -246,6 +253,8 @@ public class ExpenseService {
 
     @Transactional
     public boolean delete(long id, User user) throws Exception {
+        // a member leaving the household right now might be moving this expense
+        householdLocks.shared();
         final Expense expense = get(id, user);
         // get() only returns expenses created by the user
         if (expense != null) {

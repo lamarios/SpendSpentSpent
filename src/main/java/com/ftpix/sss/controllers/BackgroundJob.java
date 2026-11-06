@@ -6,6 +6,7 @@ import com.ftpix.sss.models.User;
 import com.ftpix.sss.persistence.ExpenseRepository;
 import com.ftpix.sss.persistence.RecurringExpenseRepository;
 import com.ftpix.sss.services.EmailService;
+import com.ftpix.sss.services.HouseholdLocks;
 import com.ftpix.sss.services.HouseholdSeparationService;
 import com.ftpix.sss.services.RecurringExpenseService;
 import com.ftpix.sss.services.UserService;
@@ -35,9 +36,10 @@ public class BackgroundJob {
     private final ExpenseRepository expenseRepository;
     private final RecurringExpenseRepository recurringExpenseRepository;
     private final HouseholdSeparationService householdSeparationService;
+    private final HouseholdLocks householdLocks;
 
     @Autowired
-    public BackgroundJob(RecurringExpenseService recurringExpenseService, UserService userService, EmailService emailService, ZoneId zoneId, ExpenseRepository expenseRepository, RecurringExpenseRepository recurringExpenseRepository, HouseholdSeparationService householdSeparationService) {
+    public BackgroundJob(RecurringExpenseService recurringExpenseService, UserService userService, EmailService emailService, ZoneId zoneId, ExpenseRepository expenseRepository, RecurringExpenseRepository recurringExpenseRepository, HouseholdSeparationService householdSeparationService, HouseholdLocks householdLocks) {
         this.recurringExpenseService = recurringExpenseService;
         this.userService = userService;
         this.emailService = emailService;
@@ -45,6 +47,7 @@ public class BackgroundJob {
         this.expenseRepository = expenseRepository;
         this.recurringExpenseRepository = recurringExpenseRepository;
         this.householdSeparationService = householdSeparationService;
+        this.householdLocks = householdLocks;
     }
 
 
@@ -53,13 +56,13 @@ public class BackgroundJob {
      * <ul>
      *     <li>expenses and recurring expenses created by older versions don't have a creator, they get attributed to
      *     the owner of their category</li>
-     *     <li>older versions don't separate the entries of members leaving a household, or a separation might have
-     *     missed an entry created concurrently, this catches up</li>
+     *     <li>older versions don't separate the entries of members leaving a household, this catches up</li>
      * </ul>
      */
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void repairOwnership() {
+        householdLocks.exclusive();
         int expenses = expenseRepository.assignMissingOwners();
         int recurring = recurringExpenseRepository.assignMissingOwners();
         if (expenses > 0 || recurring > 0) {

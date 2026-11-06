@@ -28,13 +28,15 @@ public class CategoryService {
     private final ExpenseRepository expenseRepository;
     private final RecurringExpenseRepository recurringExpenseRepository;
     private final HouseholdService householdService;
+    private final HouseholdLocks householdLocks;
 
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository, ExpenseRepository expenseRepository, RecurringExpenseRepository recurringExpenseRepository, HouseholdService householdService) {
+    public CategoryService(CategoryRepository categoryRepository, ExpenseRepository expenseRepository, RecurringExpenseRepository recurringExpenseRepository, HouseholdService householdService, HouseholdLocks householdLocks) {
         this.categoryRepository = categoryRepository;
         this.expenseRepository = expenseRepository;
         this.recurringExpenseRepository = recurringExpenseRepository;
         this.householdService = householdService;
+        this.householdLocks = householdLocks;
     }
 
 
@@ -69,6 +71,7 @@ public class CategoryService {
 
     /**
      * Categories are shared within the household, the same icon can't be used by two of them.
+     * The caller must hold the exclusive household lock, taken before loading any category.
      *
      * @param category the category getting the icon, null for a new one
      */
@@ -104,6 +107,7 @@ public class CategoryService {
 
     @Transactional
     public Category create(Category category, User user) throws Exception {
+        householdLocks.exclusive();
         boolean found = Stream.of(NewCategoryIcon.values())
                 .anyMatch(c -> category.getIcon().equalsIgnoreCase(c.name()));
 
@@ -113,14 +117,17 @@ public class CategoryService {
 
         checkIconAvailable(category.getIcon(), null, user);
 
+        householdService.notifyOtherMembersAfterCommit(user);
         return categoryRepository.saveAtEndOfHousehold(category, user);
     }
 
     @Transactional
     public Category update(Category category, User user) throws Exception {
+        householdLocks.exclusive();
         if (get(category.getId(), user) != null) {
 //            categoryDaoJooq.update(user, category);
             categoryRepository.save(category);
+            householdService.notifyOtherMembersAfterCommit(user);
         }
         return category;
     }
@@ -131,6 +138,7 @@ public class CategoryService {
      */
     @Transactional
     public boolean delete(long id, User user) throws SQLException {
+        householdLocks.exclusive();
 
         final Category category = get(id, user);
         if (category == null) {
@@ -143,6 +151,7 @@ public class CategoryService {
             recurringExpenseRepository.deleteRecurringExpenseByCategory(category);
 
             categoryRepository.delete(category);
+            householdService.notifyOtherMembersAfterCommit(user);
             return true;
         } else {
             return false;
@@ -151,6 +160,7 @@ public class CategoryService {
 
     @Transactional
     public List<Category> updateMany(List<Category> categories, User user) throws Exception {
+        householdLocks.exclusive();
         for (Category c : categories) {
             // the client's list might be outdated (e.g. a member left the household in the meantime)
             final Category category = resolve(c, user);
@@ -181,6 +191,7 @@ public class CategoryService {
 
     @Transactional
     public Category update(long id, String icon, int order, User user) throws Exception {
+        householdLocks.exclusive();
         Category cat = get(id, user);
         checkIconAvailable(icon, cat, user);
         cat.setIcon(icon);
@@ -222,6 +233,7 @@ public class CategoryService {
 
     @Transactional
     public boolean mergeCategory(long id, Category catdiff, User currentUser) throws Exception {
+        householdLocks.exclusive();
         Optional<Category> categoryOptional = Optional.ofNullable(get(id, currentUser));
 
 

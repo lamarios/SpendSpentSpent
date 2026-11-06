@@ -15,6 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import com.ftpix.sss.websockets.WebSocketSessionManager;
+import org.mockito.ArgumentCaptor;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -22,8 +28,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Categories and recurring expenses are shared within a household while expenses keep track of who created them.
@@ -57,6 +65,8 @@ public class HouseholdCategoriesTest extends TestContainerTest {
     private JsonMapper jsonMapper;
     @Autowired
     private SearchController searchController;
+    @Autowired
+    private PlatformTransactionManager transactionManager;
     @Autowired
     private com.fasterxml.jackson.databind.ObjectMapper legacyObjectMapper;
 
@@ -533,5 +543,219 @@ public class HouseholdCategoriesTest extends TestContainerTest {
         assertEquals(2, lines.size());
         assertTrue(lines.stream().anyMatch(l -> l.contains(",25.0,") && l.endsWith("," + partner.getEmail())), lines.toString());
         assertTrue(lines.stream().anyMatch(l -> l.contains(",10.0,") && l.endsWith("," + currentUser.getEmail())), lines.toString());
+    }
+
+    /**
+     * Runs the action in its own transaction on another thread and keeps the transaction open until released.
+     */
+    private class OpenTransaction<T> implements AutoCloseable {
+        private final ExecutorService executor = Executors.newSingleThreadExecutor();
+        private final CountDownLatch done = new CountDownLatch(1);
+        private final CountDownLatch release = new CountDownLatch(1);
+        private final Future<T> result;
+
+        OpenTransaction(Callable<T> action) throws InterruptedException {
+            result = executor.submit(() -> new TransactionTemplate(transactionManager).execute(status -> {
+                try {
+                    T value = action.call();
+                    done.countDown();
+                    assertTrue(release.await(15, TimeUnit.SECONDS));
+                    return value;
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }));
+            assertTrue(done.await(15, TimeUnit.SECONDS), "the action didn't complete");
+        }
+
+        T commit() throws Exception {
+            release.countDown();
+            return result.get(20, TimeUnit.SECONDS);
+        }
+
+        @Override
+        public void close() {
+            release.countDown();
+            executor.shutdownNow();
+        }
+    }
+
+    private <T> Future<T> inBackground(ExecutorService executor, Callable<T> action) {
+        return executor.submit(action);
+    }
+
+    @Test
+    public void leavingWaitsForRunningBookings() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        try (OpenTransaction<Expense> booking = new OpenTransaction<>(() -> expenseService.create(newExpense(house, 123), partner))) {
+            Future<Boolean> leaving = inBackground(executor, () -> householdService.leaveHousehold(partner));
+
+            // the separation must not run before the booking is committed
+            assertThrows(TimeoutException.class, () -> leaving.get(1, TimeUnit.SECONDS));
+
+            Expense saved = booking.commit();
+            assertTrue(leaving.get(20, TimeUnit.SECONDS));
+
+            Category moved = categoryOf(saved);
+            assertEquals(partner.getId(), moved.getUser().getId());
+            assertEquals("house", moved.getIcon());
+            assertTrue(expenseService.getFromTo(currentUser, true, 0, Long.MAX_VALUE, true).isEmpty());
+            assertEquals(1, expenseService.getFromTo(partner, true, 0, Long.MAX_VALUE, true).size());
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    @Test
+    public void leavingWaitsForRunningDeletions() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        Expense expense = expenseService.create(newExpense(house, 10), partner);
+        RecurringExpense recurring = recurringExpenseService.create(newRecurring(house, 20, "rent"), partner);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        try (OpenTransaction<Boolean> deleting = new OpenTransaction<>(() -> {
+            boolean deleted = expenseService.delete(expense.getId(), partner) && recurringExpenseService.delete(recurring.getId(), partner);
+            expenseRepository.flush();
+            return deleted;
+        })) {
+            Future<Boolean> leaving = inBackground(executor, () -> householdService.leaveHousehold(partner));
+
+            // the separation would try to move the deleted entries
+            assertThrows(TimeoutException.class, () -> leaving.get(1, TimeUnit.SECONDS));
+
+            assertTrue(deleting.commit());
+            assertTrue(leaving.get(20, TimeUnit.SECONDS));
+
+            assertTrue(householdService.getCurrentHousehold(partner).isEmpty());
+            assertTrue(expenseRepository.findById(expense.getId()).isEmpty());
+            assertTrue(recurringExpenseRepository.findById(recurring.getId()).isEmpty());
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    @Test
+    public void bookingAfterLeavingCannotUseTheFormerHouseholdCategories() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        try (OpenTransaction<Boolean> leaving = new OpenTransaction<>(() -> householdService.leaveHousehold(partner))) {
+            Future<Expense> booking = inBackground(executor, () -> expenseService.create(newExpense(house, 123), partner));
+
+            assertThrows(TimeoutException.class, () -> booking.get(1, TimeUnit.SECONDS));
+            assertTrue(leaving.commit());
+
+            // once the partner left, the category isn't theirs to use anymore
+            ExecutionException error = assertThrows(ExecutionException.class, () -> booking.get(20, TimeUnit.SECONDS));
+            assertEquals("Category doesn't exist", error.getCause().getMessage());
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    @Test
+    public void concurrentMembersCannotCreateTheSameIcon() throws Exception {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        try (OpenTransaction<Category> first = new OpenTransaction<>(() -> categoryService.create("food", currentUser))) {
+            Future<Category> second = inBackground(executor, () -> categoryService.create("food", partner));
+
+            assertThrows(TimeoutException.class, () -> second.get(1, TimeUnit.SECONDS));
+            first.commit();
+
+            ExecutionException error = assertThrows(ExecutionException.class, () -> second.get(20, TimeUnit.SECONDS));
+            assertInstanceOf(IllegalArgumentException.class, error.getCause());
+            assertEquals(1, categoryService.getAll(partner).stream().filter(c -> c.getIcon().equals("food")).count());
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    @Test
+    public void leavingMemberCannotEditTheFormerHouseholdCategories() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        try (OpenTransaction<Boolean> leaving = new OpenTransaction<>(() -> householdService.leaveHousehold(partner))) {
+            Category diff = new Category();
+            diff.setIcon("food");
+            Future<Boolean> edit = inBackground(executor, () -> categoryService.mergeCategory(house.getId(), diff, partner));
+
+            // the access check must wait until the membership change is done
+            assertThrows(TimeoutException.class, () -> edit.get(1, TimeUnit.SECONDS));
+            assertTrue(leaving.commit());
+
+            assertFalse(edit.get(20, TimeUnit.SECONDS));
+            assertEquals("house", categoryService.get(house.getId(), currentUser).getIcon());
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    @Test
+    public void bookingsDontBlockEachOther() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        try (OpenTransaction<Expense> booking = new OpenTransaction<>(() -> expenseService.create(newExpense(house, 1), partner))) {
+            // would time out if bookings took exclusive locks
+            assertNotNull(expenseService.create(newExpense(house, 2), currentUser));
+            booking.commit();
+        }
+        assertEquals(2, categoryService.countExpenses(house.getId(), currentUser));
+    }
+
+    @Test
+    public void categoryChangesNotifyTheOtherMembersAfterCommit() throws Exception {
+        WebSocketSession partnerSession = mock(WebSocketSession.class);
+        when(partnerSession.isOpen()).thenReturn(true);
+        WebSocketSession mySession = mock(WebSocketSession.class);
+        when(mySession.isOpen()).thenReturn(true);
+        WebSocketSessionManager.register(partner.getId().toString(), partnerSession);
+        WebSocketSessionManager.register(currentUser.getId().toString(), mySession);
+        try {
+            Category food = categoryService.create("food", currentUser);
+            categoryService.update(food.getId(), "gas", 5, currentUser);
+            // a whole list counts as one change
+            categoryService.updateMany(categoryService.getAll(currentUser), currentUser);
+            assertTrue(categoryService.delete(food.getId(), currentUser));
+
+            ArgumentCaptor<TextMessage> messages = ArgumentCaptor.forClass(TextMessage.class);
+            verify(partnerSession, times(4)).sendMessage(messages.capture());
+            // older clients only understand the existing message types
+            assertTrue(messages.getAllValues().stream().allMatch(m -> m.getPayload().contains("\"householdUpdate\"")), messages.getAllValues().toString());
+            verify(mySession, never()).sendMessage(any());
+
+            // nothing is sent when the change is rolled back
+            reset(partnerSession);
+            when(partnerSession.isOpen()).thenReturn(true);
+            assertThrows(Exception.class, () -> new TransactionTemplate(transactionManager).executeWithoutResult(status -> {
+                try {
+                    categoryService.create("books", currentUser);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                throw new IllegalStateException("rollback");
+            }));
+            verify(partnerSession, never()).sendMessage(any());
+        } finally {
+            WebSocketSessionManager.remove(partner.getId().toString(), partnerSession);
+            WebSocketSessionManager.remove(currentUser.getId().toString(), mySession);
+        }
+    }
+
+    /**
+     * Known limitation, to be addressed with client support (a version sent along with categories): the client always
+     * sends the whole category list, an outdated list overwrites icon changes made by another member in the meantime.
+     */
+    @Test
+    public void outdatedListOverwritesIconChangesOfOthers() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        List<Category> outdated = categoryService.getAll(partner);
+
+        categoryService.update(house.getId(), "food", house.getCategoryOrder(), currentUser);
+        categoryService.updateMany(outdated, partner);
+
+        assertEquals("house", categoryService.get(house.getId(), currentUser).getIcon());
     }
 }

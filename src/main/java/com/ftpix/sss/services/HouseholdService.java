@@ -10,6 +10,8 @@ import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -27,18 +29,21 @@ public class HouseholdService {
     private final HouseholdMemberRepository householdMemberRepository;
     private final EntityManager entityManager;
     private final HouseholdSeparationService householdSeparationService;
+    private final HouseholdLocks householdLocks;
 
     @Autowired
-    public HouseholdService(HouseholdRepository householdRepository, UserRepository userRepository, HouseholdMemberRepository householdMemberRepository, EntityManager entityManager, HouseholdSeparationService householdSeparationService) {
+    public HouseholdService(HouseholdRepository householdRepository, UserRepository userRepository, HouseholdMemberRepository householdMemberRepository, EntityManager entityManager, HouseholdSeparationService householdSeparationService, HouseholdLocks householdLocks) {
         this.householdRepository = householdRepository;
         this.userRepository = userRepository;
         this.householdMemberRepository = householdMemberRepository;
         this.entityManager = entityManager;
         this.householdSeparationService = householdSeparationService;
+        this.householdLocks = householdLocks;
     }
 
     @Transactional
     public Household createHousehold(User user) {
+        householdLocks.exclusive();
         var household = getCurrentHousehold(user);
 
         if (household.isPresent()) {
@@ -149,6 +154,8 @@ public class HouseholdService {
 
     @Transactional
     public void removeMember(User user, User memberId) {
+        // waits for running bookings so the separation sees them
+        householdLocks.exclusive();
         Optional<Household> currentHousehold = getCurrentHousehold(user);
         //                    householdDao.getHouseholdMemberDao().delete(membership);
         currentHousehold.filter(hs -> isHouseholdAdmin(user, hs))
@@ -172,6 +179,8 @@ public class HouseholdService {
 
     @Transactional
     public void deleteHousehold(User user) {
+        // waits for running bookings so the separation sees them
+        householdLocks.exclusive();
         Optional<Household> currentHousehold = getCurrentHousehold(user);
         currentHousehold.filter(household -> isHouseholdAdmin(user, household))
                 .ifPresent(household -> {
@@ -184,6 +193,8 @@ public class HouseholdService {
 
     @Transactional
     public boolean leaveHousehold(User user) {
+        // waits for running bookings so the separation sees them
+        householdLocks.exclusive();
         var hs = getCurrentHousehold(user);
         if (hs.isPresent()) {
             var house = hs.get();
@@ -231,6 +242,9 @@ public class HouseholdService {
 
     @Transactional
     public Optional<Household> acceptInvitation(User invitee, UUID invitationId) {
+        // the household's members change, nothing may rely on the current members meanwhile
+        householdLocks.exclusive();
+
         List<HouseholdMember> invitations = getInvitations(invitee);
         Optional<HouseholdMember> invitation = invitations.stream()
                 .filter(invite -> invite.getId().equals(invitationId))
@@ -310,6 +324,31 @@ public class HouseholdService {
         return hs.map(household -> household.getMembers().stream().map(HouseholdMember::getUser)
                 .filter(user1 -> !user1.getId().equals(user.getId()))
                 .toList()).orElseGet(List::of);
+    }
+
+    /**
+     * Tells the other members' clients that shared household data (e.g. categories) changed, once the current
+     * transaction is committed so they reload the new state. Only sent once per transaction.
+     * It uses the householdUpdate message type as clients fail to parse types they don't know.
+     */
+    public void notifyOtherMembersAfterCommit(User user) {
+        boolean scheduled = TransactionSynchronizationManager.getSynchronizations()
+                .stream()
+                .anyMatch(NotifyAfterCommit.class::isInstance);
+        if (!scheduled) {
+            // recipients are resolved now, the household can't be loaded anymore after the commit
+            List<String> recipients = getHouseholdOtherMembers(getCurrentHousehold(user), user).stream()
+                    .map(member -> member.getId().toString())
+                    .toList();
+            TransactionSynchronizationManager.registerSynchronization(new NotifyAfterCommit(recipients));
+        }
+    }
+
+    private record NotifyAfterCommit(List<String> recipients) implements TransactionSynchronization {
+        @Override
+        public void afterCommit() {
+            recipients.forEach(userId -> WebSocketSessionManager.sendToUser(userId, new HouseholdWebsocketUpdate()));
+        }
     }
 
     public void sendMessageToOtherUsers(Household hs, User currentUser) {
