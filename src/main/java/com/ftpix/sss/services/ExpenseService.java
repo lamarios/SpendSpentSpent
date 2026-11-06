@@ -305,7 +305,7 @@ public class ExpenseService {
     public List<Expense> getFromTo(User user, boolean includeHousehold, long from, long to, boolean includeRecurring) {
 
         Specification<Expense> spec = Specification.where(betweenTimestamps(from, to))
-                .and(includeHousehold ? inCategories(categoryRepository.getHouseholdCategories(user)) : Specifications.<Expense>createdBy(user));
+                .and(includeHousehold ? Specifications.<Expense>onlyIn("category", categoryRepository.getHouseholdCategories(user)) : Specifications.<Expense>createdBy(user));
 
         if (!includeRecurring) {
             spec = spec.and(excludeRecurring());

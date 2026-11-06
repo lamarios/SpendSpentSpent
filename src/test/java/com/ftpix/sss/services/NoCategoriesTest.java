@@ -114,6 +114,11 @@ public class NoCategoriesTest extends TestContainerTest {
     }
 
     @Test
+    public void householdExpensesAreEmpty() {
+        assertTrue(expenseService.getFromTo(userWithoutCategories, true, 0, Long.MAX_VALUE, true).isEmpty());
+    }
+
+    @Test
     public void noRecurringExpensesToProcess() throws Exception {
         assertTrue(recurringExpenseService.getToProcessForUser(userWithoutCategories).isEmpty());
     }
