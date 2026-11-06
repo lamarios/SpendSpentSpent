@@ -46,7 +46,7 @@ class ExpenseMenu extends StatelessWidget {
   }
 
   Future<void> editExpense(BuildContext context, Expense expense) async {
-    final exp = await AddExpense.showDialog(context, expense: expense);
+    final exp = await AddExpense.showDialog(context, expense: expense, canChangeCategory: true);
     if (exp != null && context.mounted) {
       context.read<ExpenseMenuCubit>().setExpense(exp);
     }
