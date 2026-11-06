@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AgentCommitMessageProject"><![CDATA[{
+  "mode": "CUSTOM",
+  "instruction": "Avoid overly verbose descriptions or unnecessary details.\nAvoid markdown code blocks in the response\nThe message should be as brief as possible\nYou will put each item in a new line"
+}]]></component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/main/app/submodules/flutter" vcs="Git" />
