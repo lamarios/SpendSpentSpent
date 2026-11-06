@@ -634,6 +634,30 @@ public class HouseholdCategoriesTest extends TestContainerTest {
     }
 
     @Test
+    public void clientsSeeTheCreatorOfRecurringExpensesAsCategoryUser() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        RecurringExpense created = recurringExpenseService.create(newRecurring(house, 800, "rent"), partner);
+        RecurringExpense recurring = recurringExpenseService.get(currentUser).get(0);
+
+        JsonNode json = jsonMapper.readTree(jsonMapper.writeValueAsString(recurring));
+        com.fasterxml.jackson.databind.JsonNode legacyJson = legacyObjectMapper.readTree(legacyObjectMapper.writeValueAsString(recurring));
+        for (String categoryUserId : List.of(json.get("category").get("user").get("id").asString(), legacyJson.get("category").get("user").get("id").asText())) {
+            assertEquals(partner.getId().toString(), categoryUserId);
+        }
+        assertEquals(house.getId().longValue(), json.get("category").get("id").asLong());
+
+        // what the app sends back when editing
+        String fromApp = "{\"id\":" + created.getId() + ",\"name\":\"rent\",\"amount\":900,\"type\":2,\"typeParam\":1,"
+                + "\"category\":{\"id\":" + house.getId() + ",\"icon\":\"house\",\"user\":{\"id\":\"" + partner.getId() + "\"}}}";
+        RecurringExpense parsed = jsonMapper.readValue(fromApp, RecurringExpense.class);
+        assertTrue(recurringExpenseService.update(parsed, currentUser));
+        RecurringExpense saved = recurringExpenseRepository.findById(created.getId()).orElseThrow();
+        assertEquals(900, saved.getAmount());
+        assertEquals(partner.getId(), saved.getUser().getId());
+        assertEquals(currentUser.getId(), saved.getCategory().getUser().getId());
+    }
+
+    @Test
     public void iconsStayUniqueWhenEditing() throws Exception {
         Category house = ownCategory(currentUser, "house");
         Category gas = categoryService.create("gas", partner);

@@ -1,5 +1,6 @@
 package com.ftpix.sss.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ftpix.sss.persistence.utils.BooleanToIntConverter;
 import com.ftpix.sss.persistence.utils.LocalDateConverter;
@@ -66,12 +67,26 @@ public class RecurringExpense  {
         this.name = name;
     }
 
+    @JsonIgnore
     public Category getCategory() {
         return category;
     }
 
+    @JsonProperty("category")
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    /**
+     * Like {@link Expense#getCategoryForClients()}, clients get a copy of the category where the user is the creator of
+     * the recurring expense.
+     */
+    @JsonProperty("category")
+    public Category getCategoryForClients() {
+        if (category == null || user == null) {
+            return category;
+        }
+        return category.copyWithUser(user);
     }
 
     public User getUser() {
