@@ -19,6 +19,8 @@ import static com.ftpix.sss.persistence.ExpenseRepository.USER_PARAM;
 public interface RecurringExpenseRepository extends JpaRepository<RecurringExpense, Long>, JpaSpecificationExecutor<RecurringExpense> {
     void deleteRecurringExpenseByCategory(Category category);
 
+    List<RecurringExpense> findRecurringExpenseByCategory(Category category);
+
 
     // recurring expenses are shared within the household, every member can see and manage them
     @Query("from RecurringExpense where id = :id and category in " + GET_HOUSEHOLD_CATEGORIES)

@@ -5,10 +5,14 @@ import com.ftpix.sss.TestContainerTest;
 import com.ftpix.sss.controllers.BackgroundJob;
 import com.ftpix.sss.controllers.api.SearchController;
 import com.ftpix.sss.models.*;
+import com.ftpix.sss.persistence.CategoryRepository;
 import com.ftpix.sss.persistence.ExpenseRepository;
+import com.ftpix.sss.persistence.FilesRepository;
 import com.ftpix.sss.persistence.RecurringExpenseRepository;
 import com.ftpix.sss.persistence.UserRepository;
 import com.ftpix.sss.utils.MockEmailService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,7 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,6 +57,14 @@ public class HouseholdCategoriesTest extends TestContainerTest {
     @Autowired
     private ExpenseRepository expenseRepository;
     @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private FilesRepository filesRepository;
+    @Autowired
+    private HouseholdLocks householdLocks;
+    @PersistenceContext
+    private EntityManager entityManager;
+    @Autowired
     private RecurringExpenseRepository recurringExpenseRepository;
     @Autowired
     private BackgroundJob backgroundJob;
@@ -69,6 +82,8 @@ public class HouseholdCategoriesTest extends TestContainerTest {
     private PlatformTransactionManager transactionManager;
     @Autowired
     private HistoryService historyService;
+    @Autowired
+    private SearchService searchService;
     @Autowired
     private com.fasterxml.jackson.databind.ObjectMapper legacyObjectMapper;
 
@@ -380,21 +395,155 @@ public class HouseholdCategoriesTest extends TestContainerTest {
         assertSeparated(bookings);
     }
 
+    /**
+     * Older versions don't check icons within the household, the category is saved as they would.
+     */
+    private Category duplicateCategory(User user, String icon) {
+        Category category = new Category();
+        category.setIcon(icon);
+        return categoryRepository.saveAtEndOfHousehold(category, user);
+    }
+
     @Test
     public void separationReusesExistingCategoriesWithTheSameIcon() throws Exception {
         CrossBookings bookings = crossBook();
-        // the first separation creates a "food" category for me
-        householdService.leaveHousehold(partner);
-        Category myFood = categoryOf(bookings.mineOnPartner());
+        // I already own a "food" category, e.g. created by an older version
+        Category myFood = duplicateCategory(currentUser, "food");
 
-        // the partner joins again: both of us now own a "food" category in the same household.
-        // I book on the partner's one, the partner leaves again: my existing "food" category is reused
-        householdService.inviteUser(currentUser, partner.getEmail());
-        householdService.acceptInvitation(partner, householdService.getCurrentHousehold(currentUser).orElseThrow());
-        Expense again = expenseService.create(newExpense(bookings.partnerCategory(), 5), currentUser);
         householdService.leaveHousehold(partner);
 
-        assertEquals(myFood.getId(), categoryOf(again).getId());
+        assertEquals(myFood.getId(), categoryOf(bookings.mineOnPartner()).getId());
+    }
+
+    @Test
+    public void joiningMergesCategoriesWithTheSameIcon() throws Exception {
+        Category myHouse = ownCategory(currentUser, "house");
+        Category partnerFood = categoryService.create("food", partner);
+
+        // the outsider has their own categories and entries before joining
+        Category outsiderHouse = categoryService.create("house", outsider);
+        Category outsiderFood = categoryService.create("food", outsider);
+        Category outsiderCar = categoryService.create("car", outsider);
+        Expense rent = expenseService.create(newExpense(outsiderHouse, 800), outsider);
+        Expense lunch = expenseService.create(newExpense(outsiderFood, 12), outsider);
+        RecurringExpense insurance = recurringExpenseService.create(newRecurring(outsiderHouse, 50, "insurance"), outsider);
+
+        householdService.inviteUser(currentUser, outsider.getEmail());
+        householdService.acceptInvitation(outsider, householdService.getCurrentHousehold(currentUser).orElseThrow());
+
+        // the admin's category is kept, then the oldest one. Unique icons stay as they are
+        List<Category> categories = categoryService.getAll(outsider);
+        assertEquals(List.of("car", "cloth", "cloud", "food", "house"), categories.stream().map(Category::getIcon).sorted().toList());
+        assertEquals(List.of(myHouse.getId(), partnerFood.getId(), outsiderCar.getId()).stream().sorted().toList(),
+                categories.stream()
+                        .filter(c -> List.of("house", "food", "car").contains(c.getIcon()))
+                        .map(Category::getId)
+                        .sorted()
+                        .toList());
+        assertTrue(categoryRepository.findById(outsiderHouse.getId()).isEmpty());
+        assertTrue(categoryRepository.findById(outsiderFood.getId()).isEmpty());
+
+        // the entries moved and keep their creator
+        assertEquals(myHouse.getId(), categoryOf(rent).getId());
+        assertEquals(outsider.getId(), expenseRepository.findById(rent.getId()).orElseThrow().getUser().getId());
+        assertEquals(partnerFood.getId(), categoryOf(lunch).getId());
+        RecurringExpense movedInsurance = recurringExpenseRepository.findById(insurance.getId()).orElseThrow();
+        assertEquals(myHouse.getId(), movedInsurance.getCategory().getId());
+        assertEquals(outsider.getId(), movedInsurance.getUser().getId());
+
+        // leaving again gives the outsider their entries back
+        householdService.leaveHousehold(outsider);
+        Category outsiderHouseAgain = categoryOf(rent);
+        assertEquals("house", outsiderHouseAgain.getIcon());
+        assertEquals(outsider.getId(), outsiderHouseAgain.getUser().getId());
+        assertEquals(outsiderHouseAgain.getId(), recurringExpenseRepository.findById(insurance.getId()).orElseThrow().getCategory().getId());
+        assertEquals("food", categoryOf(lunch).getIcon());
+        assertEquals(outsider.getId(), categoryOf(lunch).getUser().getId());
+    }
+
+    @Test
+    public void memberLeftWithoutCategoriesSeesNoDataOfOthers() throws Exception {
+        expenseService.create(newExpense(ownCategory(currentUser, "house"), 1200), currentUser);
+        // the outsider's only category is merged into mine, they leave again without booking anything
+        categoryService.create("house", outsider);
+        householdService.inviteUser(currentUser, outsider.getEmail());
+        householdService.acceptInvitation(outsider, householdService.getCurrentHousehold(currentUser).orElseThrow());
+        householdService.leaveHousehold(outsider);
+
+        assertTrue(categoryService.getAll(outsider).isEmpty());
+        assertTrue(searchService.search(outsider, new SearchParameters(List.of(), -1, -1, null, null, ""), ZoneId.systemDefault()).isEmpty());
+        historyService.getMonthlyHistory(-1, 1, outsider)
+                .forEach(month -> assertEquals(0, ((Number) month.get("amount")).doubleValue()));
+        historyService.getYearlyHistory(-1, 1, outsider)
+                .forEach(year -> assertEquals(0, ((Number) year.get("amount")).doubleValue()));
+    }
+
+    @Test
+    public void startupMergesCategoriesWithTheSameIcon() throws Exception {
+        Category myHouse = ownCategory(currentUser, "house");
+        // the household was created before categories were shared, both members have a "house" category
+        Category partnerHouse = duplicateCategory(partner, "house");
+        Expense partnerExpense = expenseService.create(newExpense(partnerHouse, 30), partner);
+        RecurringExpense partnerRecurring = recurringExpenseService.create(newRecurring(partnerHouse, 20, "cleaning"), partner);
+
+        backgroundJob.repairOwnership();
+
+        assertTrue(categoryRepository.findById(partnerHouse.getId()).isEmpty());
+        assertEquals(myHouse.getId(), categoryOf(partnerExpense).getId());
+        assertEquals(partner.getId(), expenseRepository.findById(partnerExpense.getId()).orElseThrow().getUser().getId());
+        assertEquals(myHouse.getId(), recurringExpenseRepository.findById(partnerRecurring.getId()).orElseThrow().getCategory().getId());
+        assertEquals(1, categoryService.getAll(partner).stream().filter(c -> c.getIcon().equals("house")).count());
+
+        // nothing left to merge
+        backgroundJob.repairOwnership();
+        assertEquals(myHouse.getId(), categoryOf(partnerExpense).getId());
+    }
+
+    @Test
+    public void amongAdminsTheOldestCategoryIsKept() throws Exception {
+        householdService.setAdmin(currentUser, partner, true);
+        Category partnerFood = categoryService.create("food", partner);
+        Category myFood = duplicateCategory(currentUser, "food");
+        Expense mine = expenseService.create(newExpense(myFood, 5), currentUser);
+
+        backgroundJob.repairOwnership();
+
+        assertTrue(categoryRepository.findById(myFood.getId()).isEmpty());
+        assertEquals(partnerFood.getId(), categoryOf(mine).getId());
+        assertEquals(currentUser.getId(), expenseRepository.findById(mine.getId()).orElseThrow().getUser().getId());
+    }
+
+    @Test
+    public void mergingKeepsTheEntriesOfAnAlreadyLoadedCategory() throws Exception {
+        Category myHouse = ownCategory(currentUser, "house");
+        Category partnerHouse = duplicateCategory(partner, "house");
+
+        SSSFile receipt = new SSSFile();
+        receipt.setUser(partner);
+        receipt.setFileName("receipt.png");
+        receipt.setStatus(AiProcessingStatus.NO_PROCESSING);
+        receipt = filesRepository.save(receipt);
+        Expense expense = newExpense(partnerHouse, 30);
+        expense.setFiles(new ArrayList<>(List.of(receipt)));
+        expense = expenseService.create(expense, partner);
+        RecurringExpense recurring = recurringExpenseService.create(newRecurring(partnerHouse, 20, "cleaning"), partner);
+
+        // something earlier in the transaction loaded the entries of the category being merged
+        new TransactionTemplate(transactionManager).executeWithoutResult(status -> {
+            householdLocks.exclusive();
+            entityManager.createQuery("from Category c left join fetch c.expenses where c.id = :id", Category.class)
+                    .setParameter("id", partnerHouse.getId())
+                    .getSingleResult();
+            entityManager.createQuery("from Category c left join fetch c.recurringExpenses where c.id = :id", Category.class)
+                    .setParameter("id", partnerHouse.getId())
+                    .getSingleResult();
+            backgroundJob.repairOwnership();
+        });
+
+        assertTrue(categoryRepository.findById(partnerHouse.getId()).isEmpty());
+        assertEquals(myHouse.getId(), categoryOf(expense).getId());
+        assertEquals(myHouse.getId(), recurringExpenseRepository.findById(recurring.getId()).orElseThrow().getCategory().getId());
+        assertEquals(expense.getId(), filesRepository.findById(receipt.getId()).orElseThrow().getExpense().getId());
     }
 
     @Test

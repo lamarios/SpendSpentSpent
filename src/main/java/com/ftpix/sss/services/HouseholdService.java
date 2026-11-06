@@ -28,15 +28,17 @@ public class HouseholdService {
     private final EntityManager entityManager;
     private final HouseholdSeparationService householdSeparationService;
     private final HouseholdLocks householdLocks;
+    private final HouseholdCategoryMergeService householdCategoryMergeService;
 
     @Autowired
-    public HouseholdService(HouseholdRepository householdRepository, UserRepository userRepository, HouseholdMemberRepository householdMemberRepository, EntityManager entityManager, HouseholdSeparationService householdSeparationService, HouseholdLocks householdLocks) {
+    public HouseholdService(HouseholdRepository householdRepository, UserRepository userRepository, HouseholdMemberRepository householdMemberRepository, EntityManager entityManager, HouseholdSeparationService householdSeparationService, HouseholdLocks householdLocks, HouseholdCategoryMergeService householdCategoryMergeService) {
         this.householdRepository = householdRepository;
         this.userRepository = userRepository;
         this.householdMemberRepository = householdMemberRepository;
         this.entityManager = entityManager;
         this.householdSeparationService = householdSeparationService;
         this.householdLocks = householdLocks;
+        this.householdCategoryMergeService = householdCategoryMergeService;
     }
 
     @Transactional
@@ -259,6 +261,8 @@ public class HouseholdService {
             Household household = householdMember.getHousehold();
             entityManager.refresh(household);
             householdMemberRepository.deleteAll(invitations);
+            // the new member's categories with the same icons as the household's ones are merged into them
+            householdCategoryMergeService.mergeDuplicateCategories(household);
             sendMessageToOtherUsers(household, invitee);
             return Optional.of(household);
         }

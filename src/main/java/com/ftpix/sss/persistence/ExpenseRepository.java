@@ -46,6 +46,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpec
 
     void deleteExpenseByCategory(Category category);
 
+    List<Expense> findExpenseByCategory(Category category);
+
 
     // counts include every household member's expenses as deleting a category deletes all of them
     @Query("select count(e) from Expense e where e.category.id = :category and e.category in " + GET_HOUSEHOLD_CATEGORIES)

@@ -6,6 +6,7 @@ import com.ftpix.sss.models.User;
 import com.ftpix.sss.persistence.ExpenseRepository;
 import com.ftpix.sss.persistence.RecurringExpenseRepository;
 import com.ftpix.sss.services.EmailService;
+import com.ftpix.sss.services.HouseholdCategoryMergeService;
 import com.ftpix.sss.services.HouseholdLocks;
 import com.ftpix.sss.services.HouseholdSeparationService;
 import com.ftpix.sss.services.RecurringExpenseService;
@@ -37,9 +38,10 @@ public class BackgroundJob {
     private final RecurringExpenseRepository recurringExpenseRepository;
     private final HouseholdSeparationService householdSeparationService;
     private final HouseholdLocks householdLocks;
+    private final HouseholdCategoryMergeService householdCategoryMergeService;
 
     @Autowired
-    public BackgroundJob(RecurringExpenseService recurringExpenseService, UserService userService, EmailService emailService, ZoneId zoneId, ExpenseRepository expenseRepository, RecurringExpenseRepository recurringExpenseRepository, HouseholdSeparationService householdSeparationService, HouseholdLocks householdLocks) {
+    public BackgroundJob(RecurringExpenseService recurringExpenseService, UserService userService, EmailService emailService, ZoneId zoneId, ExpenseRepository expenseRepository, RecurringExpenseRepository recurringExpenseRepository, HouseholdSeparationService householdSeparationService, HouseholdLocks householdLocks, HouseholdCategoryMergeService householdCategoryMergeService) {
         this.recurringExpenseService = recurringExpenseService;
         this.userService = userService;
         this.emailService = emailService;
@@ -48,6 +50,7 @@ public class BackgroundJob {
         this.recurringExpenseRepository = recurringExpenseRepository;
         this.householdSeparationService = householdSeparationService;
         this.householdLocks = householdLocks;
+        this.householdCategoryMergeService = householdCategoryMergeService;
     }
 
 
@@ -57,6 +60,8 @@ public class BackgroundJob {
      *     <li>expenses and recurring expenses created by older versions don't have a creator, they get attributed to
      *     the owner of their category</li>
      *     <li>older versions don't separate the entries of members leaving a household, this catches up</li>
+     *     <li>households created before categories were shared, or older versions, can have several categories with
+     *     the same icon, they are merged</li>
      * </ul>
      */
     @EventListener(ApplicationReadyEvent.class)
@@ -70,6 +75,7 @@ public class BackgroundJob {
         }
 
         householdSeparationService.separateEntriesOutsideHousehold();
+        householdCategoryMergeService.mergeDuplicateCategories();
     }
 
     @Scheduled(fixedRate = 100 * 60 * 1000, initialDelay = 60 * 60 * 1000)
