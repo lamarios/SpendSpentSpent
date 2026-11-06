@@ -167,7 +167,7 @@ public class RecurringExpenseService {
         var categories = categoryService.getAll(user);
         Specification<RecurringExpense> spec = Specification.where(
                 Specifications.<RecurringExpense, LocalDate>lessThanOrEqual("nextOccurrence", LocalDate.now())
-        ).and(Specifications.<RecurringExpense>in("category", categories));
+        ).and(Specifications.<RecurringExpense>onlyIn("category", categories));
         return recurringExpenseRepository.findAll(spec);
 //        return recurringExpenseDaoJooq.getWhere(user, RECURRING_EXPENSE.NEXT_OCCURRENCE.le(Constants.dateFormatter.format(LocalDate.now())));
     }
