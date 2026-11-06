@@ -40,8 +40,8 @@ public class HouseholdLocks {
     }
 
     private void lock(String function) {
-        // the functions return void, which can't be mapped
-        entityManager.createNativeQuery("select cast(" + function + "(:key) as text)")
+        // the functions return void, which can't be mapped, called in FROM they give a row with a plain value
+        entityManager.createNativeQuery("select 1 from " + function + "(:key)")
                 .setParameter("key", LOCK_KEY)
                 .getSingleResult();
     }
