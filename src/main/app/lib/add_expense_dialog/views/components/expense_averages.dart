@@ -72,28 +72,36 @@ class RecurringExpenseAverages extends StatelessWidget {
                 ],
               ),
               Gap(16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _InfoTile(label: 'Per Day', amount: daily),
-                  ),
-                  Gap(16),
-                  Expanded(
-                    child: _InfoTile(label: 'Per Month', amount: monthly),
-                  ),
-                ],
+              // same height for both tiles, even when one amount is scaled down
+              IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: _InfoTile(label: 'Per Day', amount: daily),
+                    ),
+                    Gap(16),
+                    Expanded(
+                      child: _InfoTile(label: 'Per Month', amount: monthly),
+                    ),
+                  ],
+                ),
               ),
               Gap(16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _InfoTile(label: 'Per Week', amount: weekly),
-                  ),
-                  Gap(16),
-                  Expanded(
-                    child: _InfoTile(label: 'Per Year', amount: yearly),
-                  ),
-                ],
+              // same height for both tiles, even when one amount is scaled down
+              IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: _InfoTile(label: 'Per Week', amount: weekly),
+                    ),
+                    Gap(16),
+                    Expanded(
+                      child: _InfoTile(label: 'Per Year', amount: yearly),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -122,7 +130,12 @@ class _InfoTile extends StatelessWidget {
         children: [
           Text(label, style: textTheme.labelSmall),
           Gap(4),
-          StylizedAmount(amount: amount, size: 32),
+          // large amounts (e.g. in currencies with small units) shrink instead of overflowing the tile
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: StylizedAmount(amount: amount, size: 32),
+          ),
         ],
       ),
     );
