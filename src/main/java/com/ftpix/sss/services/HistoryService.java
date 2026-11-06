@@ -219,7 +219,7 @@ public class HistoryService {
 
         List<Category> householdCategories = categoryRepository.getHouseholdCategories(user);
 
-        Specification<YearlyHistory> spec = Specification.where(Specifications.<YearlyHistory>in("id.category", householdCategories))
+        Specification<YearlyHistory> spec = Specification.where(Specifications.<YearlyHistory>onlyIn("id.category", householdCategories))
                 .and(Specifications.in("id.date", data));
 //        List<Condition> conditions = new ArrayList<>();
 //        conditions.add(YEARLY_HISTORY.DATE.in(data));
@@ -264,7 +264,7 @@ public class HistoryService {
 
         List<Category> householdCategories = categoryRepository.getHouseholdCategories(user);
 
-        Specification<MonthlyHistory> spec = Specification.where(Specifications.<MonthlyHistory>in("id.category", householdCategories))
+        Specification<MonthlyHistory> spec = Specification.where(Specifications.<MonthlyHistory>onlyIn("id.category", householdCategories))
                 .and(Specifications.in("id.date", data));
 //        List<Condition> conditions = new ArrayList<>();
 //        conditions.add(MONTHLY_HISTORY.DATE.in(data));
