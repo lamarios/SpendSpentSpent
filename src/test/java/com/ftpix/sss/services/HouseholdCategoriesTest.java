@@ -662,6 +662,35 @@ public class HouseholdCategoriesTest extends TestContainerTest {
     }
 
     @Test
+    public void categoriesCanSwapTheirIconsInOneList() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        Category gas = categoryService.create("gas", partner);
+
+        Category houseToGas = new Category();
+        houseToGas.setId(house.getId());
+        houseToGas.setIcon("gas");
+        houseToGas.setCategoryOrder(1);
+        Category gasToHouse = new Category();
+        gasToHouse.setId(gas.getId());
+        gasToHouse.setIcon("house");
+        gasToHouse.setCategoryOrder(0);
+        categoryService.updateMany(List.of(houseToGas, gasToHouse), partner);
+
+        assertEquals("gas", categoryService.get(house.getId(), partner).getIcon());
+        assertEquals("house", categoryService.get(gas.getId(), partner).getIcon());
+    }
+
+    @Test
+    public void editingACategoryOutsideTheHouseholdIsRejected() throws Exception {
+        Category outsiderCategory = categoryService.create("food", outsider);
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
+                () -> categoryService.update(outsiderCategory.getId(), "gas", 0, partner));
+        assertEquals("Category doesn't exist", error.getMessage());
+        assertEquals("food", categoryService.get(outsiderCategory.getId(), outsider).getIcon());
+    }
+
+    @Test
     public void outdatedCategoryListsAreSaved() throws Exception {
         Category outsiderCategory = categoryService.create("food", outsider);
         List<Category> list = new ArrayList<>(categoryService.getAll(partner));

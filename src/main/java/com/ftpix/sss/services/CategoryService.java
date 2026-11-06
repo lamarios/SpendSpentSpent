@@ -160,25 +160,41 @@ public class CategoryService {
         }
     }
 
+    /**
+     * Saves the order and icons of a whole list. The icons are checked once all changes are applied, so categories can
+     * swap their icons.
+     */
     @Transactional
     public List<Category> updateMany(List<Category> categories, User user) throws Exception {
         householdLocks.exclusive();
+        List<Category> household = getAll(user);
+        Map<Long, Category> byId = household.stream().collect(Collectors.toMap(Category::getId, c -> c));
+
+        List<Category> iconChanged = new ArrayList<>();
         for (Category c : categories) {
             // the client's list might be outdated (e.g. a member left the household in the meantime)
-            final Category category = resolve(c, user);
+            final Category category = c.getId() == null ? null : byId.get(c.getId());
             if (category == null) {
                 continue;
             }
 
-            if (c.getIcon() != null) {
-                checkIconAvailable(c.getIcon(), category, user);
+            if (c.getIcon() != null && !c.getIcon().equalsIgnoreCase(category.getIcon())) {
                 category.setIcon(c.getIcon());
+                iconChanged.add(category);
             }
-
             category.setCategoryOrder(c.getCategoryOrder());
-            update(category, user);
         }
 
+        for (Category changed : iconChanged) {
+            boolean used = household.stream()
+                    .anyMatch(c -> c != changed && c.getIcon().equalsIgnoreCase(changed.getIcon()));
+            if (used) {
+                throw new IllegalArgumentException("Icon already used by another category");
+            }
+        }
+
+        categoryRepository.saveAll(household);
+        householdService.notifyOtherMembersAfterCommit(user);
         return getAll(user);
     }
 
@@ -195,6 +211,10 @@ public class CategoryService {
     public Category update(long id, String icon, int order, User user) throws Exception {
         householdLocks.exclusive();
         Category cat = get(id, user);
+        if (cat == null) {
+            // e.g. moved away by a member leaving the household
+            throw new IllegalArgumentException("Category doesn't exist");
+        }
         checkIconAvailable(icon, cat, user);
         cat.setIcon(icon);
         cat.setCategoryOrder(order);
