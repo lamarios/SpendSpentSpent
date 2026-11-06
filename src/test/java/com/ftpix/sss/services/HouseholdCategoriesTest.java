@@ -305,6 +305,39 @@ public class HouseholdCategoriesTest extends TestContainerTest {
     }
 
     @Test
+    public void backgroundJobDoesntHoldTheHouseholdLockWhileSendingReports() throws Exception {
+        RecurringExpense rent = recurringExpenseService.create(newRecurring(ownCategory(currentUser, "house"), 800, "rent"), partner);
+        rent.setNextOccurrence(LocalDate.now().minusDays(1));
+        recurringExpenseRepository.save(rent);
+
+        // e.g. a slow mail server: a category change, which needs the exclusive lock, must not wait for it
+        List<Boolean> lockFreeWhileSending = new CopyOnWriteArrayList<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        MockEmailService mails = (MockEmailService) emailService;
+        mails.setOnSend(() -> {
+            Future<?> exclusive = executor.submit(() -> new TransactionTemplate(transactionManager)
+                    .executeWithoutResult(status -> householdLocks.exclusive()));
+            try {
+                exclusive.get(5, TimeUnit.SECONDS);
+                lockFreeWhileSending.add(true);
+            } catch (TimeoutException e) {
+                lockFreeWhileSending.add(false);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        try {
+            backgroundJob.run();
+        } finally {
+            mails.setOnSend(null);
+            executor.shutdownNow();
+        }
+
+        assertFalse(lockFreeWhileSending.isEmpty());
+        assertTrue(lockFreeWhileSending.stream().allMatch(free -> free), lockFreeWhileSending.toString());
+    }
+
+    @Test
     public void entriesWithoutCreatorAreAssignedToTheCategoryOwner() throws Exception {
         Category house = ownCategory(currentUser, "house");
         Expense expense = expenseService.create(newExpense(house, 10), partner);
