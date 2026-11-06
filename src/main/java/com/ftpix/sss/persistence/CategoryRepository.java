@@ -41,11 +41,11 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             """;
 
 
-    @Query(GET_HOUSEHOLD_CATEGORIES_INNER)
-    List<Category> getHouseholdCategories(@Param(USER_PARAM) User user);
-
+    /**
+     * @return the categories of the user's household, in their display order
+     */
     @Query(GET_HOUSEHOLD_CATEGORIES_INNER + " order by c.categoryOrder asc, c.id asc")
-    List<Category> getHouseholdCategoriesOrdered(@Param(USER_PARAM) User user);
+    List<Category> getHouseholdCategories(@Param(USER_PARAM) User user);
 
     @Query("from Category cat where cat.id = :id and cat in " + GET_HOUSEHOLD_CATEGORIES)
     Category findHouseholdCategoryById(@Param("id") long id, @Param(USER_PARAM) User user);

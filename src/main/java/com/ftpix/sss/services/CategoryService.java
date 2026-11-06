@@ -45,7 +45,7 @@ public class CategoryService {
      */
     @Transactional(readOnly = true)
     public List<Category> getAll(User user) throws SQLException {
-        return categoryRepository.getHouseholdCategoriesOrdered(user);
+        return categoryRepository.getHouseholdCategories(user);
     }
 
     /**

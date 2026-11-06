@@ -63,7 +63,7 @@ public class HouseholdSeparationService {
 
     private Category targetCategory(User user, Category current, Map<String, Category> targets) {
         String icon = current.getIcon();
-        return targets.computeIfAbsent(user.getId() + "/" + icon.toLowerCase(), key -> categoryRepository.getHouseholdCategoriesOrdered(user)
+        return targets.computeIfAbsent(user.getId() + "/" + icon.toLowerCase(), key -> categoryRepository.getHouseholdCategories(user)
                 .stream()
                 .filter(c -> c.getIcon().equalsIgnoreCase(icon))
                 .findFirst()
