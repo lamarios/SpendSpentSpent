@@ -111,8 +111,10 @@ class NotificationEventListener {
         eventAction: ForegroundTaskEventAction.nothing(),
         autoRunOnBoot: true,
         autoRunOnMyPackageReplaced: true,
-        allowWakeLock: true,
-        allowWifiLock: true,
+        // Notification events are delivered by the system binding the NotificationListenerService,
+        // which wakes the process on its own, so holding a permanent wake/wifi lock only drains battery.
+        allowWakeLock: false,
+        allowWifiLock: false,
       ),
     );
   }
