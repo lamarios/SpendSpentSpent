@@ -46,7 +46,7 @@ public class SearchService {
 //        List<Category> categories = expenseDao.getHouseholdCategories(currentUser).values().stream().toList();
         List<Category> categories = categoryRepository.getHouseholdCategories(currentUser);
 
-        Specification<Expense> categorySpec = Specification.where(Specifications.<Expense>in("category", categories));
+        Specification<Expense> categorySpec = Specification.where(Specifications.<Expense>onlyIn("category", categories));
 
         if (categoryId != null) {
             categorySpec = categorySpec.and(Specifications.<Expense>equal("category.id", categoryId));
@@ -101,7 +101,7 @@ public class SearchService {
     public Map<String, DailyExpense> search(User currentUser, SearchParameters parameters, ZoneId zone) {
         List<Category> categories = categoryRepository.getHouseholdCategories(currentUser);
 
-        Specification<Expense> spec = Specification.where(Specifications.<Expense>in("category", categories));
+        Specification<Expense> spec = Specification.where(Specifications.<Expense>onlyIn("category", categories));
 
 //        List<Condition> conditions = new ArrayList<>();
 

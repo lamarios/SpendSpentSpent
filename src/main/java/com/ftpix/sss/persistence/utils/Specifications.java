@@ -95,6 +95,16 @@ public class Specifications<T> {
                 : null;
     }
 
+    /**
+     * Like {@link #in(String, Collection)}, but an empty collection matches nothing instead of everything. Use it to
+     * restrict results to the categories a user can see, a user can have none.
+     */
+    public static <T> Specification<T> onlyIn(String field, Collection<?> values) {
+        return (root, query, cb) -> (values != null && !values.isEmpty())
+                ? resolvePath(root, field).in(values)
+                : cb.disjunction();
+    }
+
     public static <T> Specification<T> notIn(String field, Collection<?> values) {
         return (root, query, cb) -> (values != null && !values.isEmpty())
                 ? cb.not(resolvePath(root, field).in(values))
