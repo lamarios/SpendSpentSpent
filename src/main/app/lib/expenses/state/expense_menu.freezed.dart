@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'expense_menu.dart';
@@ -9,6 +9,7 @@ part of 'expense_menu.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ExpenseMenuStateCopyWith<ExpenseMenuState> get copyWith => _$ExpenseMenuStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseMenuState&&(identical(other.expense, expense) || other.expense == expense)&&(identical(other.loading, loading) || other.loading == loading));
+  final _this = this as ExpenseMenuState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseMenuState&&(identical(other.expense, _this.expense) || other.expense == _this.expense)&&(identical(other.loading, _this.loading) || other.loading == _this.loading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,expense,loading);
+int get hashCode {
+  final _this = this as ExpenseMenuState;
+  return Object.hash(runtimeType,_this.expense,_this.loading);
+}
 
 @override
 String toString() {
-  return 'ExpenseMenuState(expense: $expense, loading: $loading)';
+  final _this = this as ExpenseMenuState;
+  return 'ExpenseMenuState(expense: ${_this.expense}, loading: ${_this.loading})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ExpenseMenuStateCopyWithImpl<$Res>
 /// Create a copy of ExpenseMenuState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? expense = null,Object? loading = null,}) {
-  return _then(_self.copyWith(
+  return _then(ExpenseMenuState(
 expense: null == expense ? _self.expense : expense // ignore: cast_nullable_to_non_nullable
 as Expense,loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -226,16 +232,18 @@ _$ExpenseMenuStateCopyWith<_ExpenseMenuState> get copyWith => __$ExpenseMenuStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseMenuState&&(identical(other.expense, expense) || other.expense == expense)&&(identical(other.loading, loading) || other.loading == loading));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseMenuState&&(identical(other.expense, expense) || other.expense == expense)&&(identical(other.loading, loading) || other.loading == loading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,expense,loading);
+int get hashCode {
+    return Object.hash(runtimeType,expense,loading);
+}
 
 @override
 String toString() {
-  return 'ExpenseMenuState(expense: $expense, loading: $loading)';
+    return 'ExpenseMenuState(expense: $expense, loading: $loading)';
 }
 
 

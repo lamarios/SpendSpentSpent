@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'search.dart';
@@ -9,6 +9,7 @@ part of 'search.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $SearchStateCopyWith<SearchState> get copyWith => _$SearchStateCopyWithImpl<Sear
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchState&&(identical(other.searchParametersBounds, searchParametersBounds) || other.searchParametersBounds == searchParametersBounds)&&(identical(other.searchParameters, searchParameters) || other.searchParameters == searchParameters));
+  final _this = this as SearchState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchState&&(identical(other.searchParametersBounds, _this.searchParametersBounds) || other.searchParametersBounds == _this.searchParametersBounds)&&(identical(other.searchParameters, _this.searchParameters) || other.searchParameters == _this.searchParameters));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,searchParametersBounds,searchParameters);
+int get hashCode {
+  final _this = this as SearchState;
+  return Object.hash(runtimeType,_this.searchParametersBounds,_this.searchParameters);
+}
 
 @override
 String toString() {
-  return 'SearchState(searchParametersBounds: $searchParametersBounds, searchParameters: $searchParameters)';
+  final _this = this as SearchState;
+  return 'SearchState(searchParametersBounds: ${_this.searchParametersBounds}, searchParameters: ${_this.searchParameters})';
 }
 
 
@@ -63,7 +69,7 @@ class _$SearchStateCopyWithImpl<$Res>
 /// Create a copy of SearchState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? searchParametersBounds = null,Object? searchParameters = null,}) {
-  return _then(_self.copyWith(
+  return _then(SearchState(
 searchParametersBounds: null == searchParametersBounds ? _self.searchParametersBounds : searchParametersBounds // ignore: cast_nullable_to_non_nullable
 as SearchParameters,searchParameters: null == searchParameters ? _self.searchParameters : searchParameters // ignore: cast_nullable_to_non_nullable
 as SearchParameters,
@@ -235,16 +241,18 @@ _$SearchStateCopyWith<_SearchState> get copyWith => __$SearchStateCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchState&&(identical(other.searchParametersBounds, searchParametersBounds) || other.searchParametersBounds == searchParametersBounds)&&(identical(other.searchParameters, searchParameters) || other.searchParameters == searchParameters));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchState&&(identical(other.searchParametersBounds, searchParametersBounds) || other.searchParametersBounds == searchParametersBounds)&&(identical(other.searchParameters, searchParameters) || other.searchParameters == searchParameters));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,searchParametersBounds,searchParameters);
+int get hashCode {
+    return Object.hash(runtimeType,searchParametersBounds,searchParameters);
+}
 
 @override
 String toString() {
-  return 'SearchState(searchParametersBounds: $searchParametersBounds, searchParameters: $searchParameters)';
+    return 'SearchState(searchParametersBounds: $searchParametersBounds, searchParameters: $searchParameters)';
 }
 
 

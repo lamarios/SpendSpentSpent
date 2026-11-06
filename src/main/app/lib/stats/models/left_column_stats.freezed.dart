@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'left_column_stats.dart';
@@ -9,6 +9,7 @@ part of 'left_column_stats.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $LeftColumnStatsCopyWith<LeftColumnStats> get copyWith => _$LeftColumnStatsCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LeftColumnStats&&(identical(other.category, category) || other.category == category)&&(identical(other.total, total) || other.total == total)&&(identical(other.amount, amount) || other.amount == amount));
+  final _this = this as LeftColumnStats;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LeftColumnStats&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.amount, _this.amount) || other.amount == _this.amount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,category,total,amount);
+int get hashCode {
+  final _this = this as LeftColumnStats;
+  return Object.hash(runtimeType,_this.category,_this.total,_this.amount);
+}
 
 @override
 String toString() {
-  return 'LeftColumnStats(category: $category, total: $total, amount: $amount)';
+  final _this = this as LeftColumnStats;
+  return 'LeftColumnStats(category: ${_this.category}, total: ${_this.total}, amount: ${_this.amount})';
 }
 
 
@@ -66,7 +72,7 @@ class _$LeftColumnStatsCopyWithImpl<$Res>
 /// Create a copy of LeftColumnStats
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? category = null,Object? total = null,Object? amount = null,}) {
-  return _then(_self.copyWith(
+  return _then(LeftColumnStats(
 category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as Category,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as double,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
@@ -234,16 +240,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LeftColumnStats&&(identical(other.category, category) || other.category == category)&&(identical(other.total, total) || other.total == total)&&(identical(other.amount, amount) || other.amount == amount));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LeftColumnStats&&(identical(other.category, category) || other.category == category)&&(identical(other.total, total) || other.total == total)&&(identical(other.amount, amount) || other.amount == amount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,category,total,amount);
+int get hashCode {
+    return Object.hash(runtimeType,category,total,amount);
+}
 
 @override
 String toString() {
-  return 'LeftColumnStats(category: $category, total: $total, amount: $amount)';
+    return 'LeftColumnStats(category: $category, total: $total, amount: $amount)';
 }
 
 

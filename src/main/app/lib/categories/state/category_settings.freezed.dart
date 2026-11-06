@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'category_settings.dart';
@@ -9,6 +9,7 @@ part of 'category_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $CategorySettingsStateCopyWith<CategorySettingsState> get copyWith => _$Category
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CategorySettingsState&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.toDelete, toDelete)&&const DeepCollectionEquality().equals(other.expenseCount, expenseCount)&&(identical(other.expensesToDelete, expensesToDelete) || other.expensesToDelete == expensesToDelete)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+  final _this = this as CategorySettingsState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CategorySettingsState&&const DeepCollectionEquality().equals(other.categories, _this.categories)&&const DeepCollectionEquality().equals(other.toDelete, _this.toDelete)&&const DeepCollectionEquality().equals(other.expenseCount, _this.expenseCount)&&(identical(other.expensesToDelete, _this.expensesToDelete) || other.expensesToDelete == _this.expensesToDelete)&&const DeepCollectionEquality().equals(other.error, _this.error)&&(identical(other.stackTrace, _this.stackTrace) || other.stackTrace == _this.stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(toDelete),const DeepCollectionEquality().hash(expenseCount),expensesToDelete,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+  final _this = this as CategorySettingsState;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.categories),const DeepCollectionEquality().hash(_this.toDelete),const DeepCollectionEquality().hash(_this.expenseCount),_this.expensesToDelete,const DeepCollectionEquality().hash(_this.error),_this.stackTrace);
+}
 
 @override
 String toString() {
-  return 'CategorySettingsState(categories: $categories, toDelete: $toDelete, expenseCount: $expenseCount, expensesToDelete: $expensesToDelete, error: $error, stackTrace: $stackTrace)';
+  final _this = this as CategorySettingsState;
+  return 'CategorySettingsState(categories: ${_this.categories}, toDelete: ${_this.toDelete}, expenseCount: ${_this.expenseCount}, expensesToDelete: ${_this.expensesToDelete}, error: ${_this.error}, stackTrace: ${_this.stackTrace})';
 }
 
 
@@ -63,7 +69,7 @@ class _$CategorySettingsStateCopyWithImpl<$Res>
 /// Create a copy of CategorySettingsState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? categories = null,Object? toDelete = null,Object? expenseCount = null,Object? expensesToDelete = null,Object? error = freezed,Object? stackTrace = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CategorySettingsState(
 categories: null == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
 as List<Category>,toDelete: null == toDelete ? _self.toDelete : toDelete // ignore: cast_nullable_to_non_nullable
 as List<Category>,expenseCount: null == expenseCount ? _self.expenseCount : expenseCount // ignore: cast_nullable_to_non_nullable
@@ -205,7 +211,7 @@ return $default(_that.categories,_that.toDelete,_that.expenseCount,_that.expense
 
 
 class _CategorySettingsState implements CategorySettingsState, WithError {
-  const _CategorySettingsState({final  List<Category> categories = const [], final  List<Category> toDelete = const [], final  Map<int, int> expenseCount = const {}, this.expensesToDelete = 0, this.error, this.stackTrace}): _categories = categories,_toDelete = toDelete,_expenseCount = expenseCount;
+  const _CategorySettingsState({ List<Category> categories = const [],  List<Category> toDelete = const [],  Map<int, int> expenseCount = const {}, this.expensesToDelete = 0, this.error, this.stackTrace}): _categories = categories,_toDelete = toDelete,_expenseCount = expenseCount;
   
 
  final  List<Category> _categories;
@@ -243,16 +249,18 @@ _$CategorySettingsStateCopyWith<_CategorySettingsState> get copyWith => __$Categ
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CategorySettingsState&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._toDelete, _toDelete)&&const DeepCollectionEquality().equals(other._expenseCount, _expenseCount)&&(identical(other.expensesToDelete, expensesToDelete) || other.expensesToDelete == expensesToDelete)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CategorySettingsState&&const DeepCollectionEquality().equals(other.categories, _categories)&&const DeepCollectionEquality().equals(other.toDelete, _toDelete)&&const DeepCollectionEquality().equals(other.expenseCount, _expenseCount)&&(identical(other.expensesToDelete, expensesToDelete) || other.expensesToDelete == expensesToDelete)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_toDelete),const DeepCollectionEquality().hash(_expenseCount),expensesToDelete,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_toDelete),const DeepCollectionEquality().hash(_expenseCount),expensesToDelete,const DeepCollectionEquality().hash(error),stackTrace);
+}
 
 @override
 String toString() {
-  return 'CategorySettingsState(categories: $categories, toDelete: $toDelete, expenseCount: $expenseCount, expensesToDelete: $expensesToDelete, error: $error, stackTrace: $stackTrace)';
+    return 'CategorySettingsState(categories: $categories, toDelete: $toDelete, expenseCount: $expenseCount, expensesToDelete: $expensesToDelete, error: $error, stackTrace: $stackTrace)';
 }
 
 

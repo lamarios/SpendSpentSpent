@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'expense_note_dialog.dart';
@@ -9,6 +9,7 @@ part of 'expense_note_dialog.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ExpenseNoteDialogStateCopyWith<ExpenseNoteDialogState> get copyWith => _$Expens
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseNoteDialogState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.note, note) || other.note == note)&&const DeepCollectionEquality().equals(other.suggestions, suggestions));
+  final _this = this as ExpenseNoteDialogState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseNoteDialogState&&(identical(other.loading, _this.loading) || other.loading == _this.loading)&&(identical(other.note, _this.note) || other.note == _this.note)&&const DeepCollectionEquality().equals(other.suggestions, _this.suggestions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,note,const DeepCollectionEquality().hash(suggestions));
+int get hashCode {
+  final _this = this as ExpenseNoteDialogState;
+  return Object.hash(runtimeType,_this.loading,_this.note,const DeepCollectionEquality().hash(_this.suggestions));
+}
 
 @override
 String toString() {
-  return 'ExpenseNoteDialogState(loading: $loading, note: $note, suggestions: $suggestions)';
+  final _this = this as ExpenseNoteDialogState;
+  return 'ExpenseNoteDialogState(loading: ${_this.loading}, note: ${_this.note}, suggestions: ${_this.suggestions})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ExpenseNoteDialogStateCopyWithImpl<$Res>
 /// Create a copy of ExpenseNoteDialogState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? loading = null,Object? note = null,Object? suggestions = null,}) {
-  return _then(_self.copyWith(
+  return _then(ExpenseNoteDialogState(
 loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,note: null == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
 as String,suggestions: null == suggestions ? _self.suggestions : suggestions // ignore: cast_nullable_to_non_nullable
@@ -202,7 +208,7 @@ return $default(_that.loading,_that.note,_that.suggestions);case _:
 
 
 class _ExpenseNoteDialogState implements ExpenseNoteDialogState {
-  const _ExpenseNoteDialogState({this.loading = false, this.note = '', final  List<String> suggestions = const []}): _suggestions = suggestions;
+  const _ExpenseNoteDialogState({this.loading = false, this.note = '',  List<String> suggestions = const []}): _suggestions = suggestions;
   
 
 @override@JsonKey() final  bool loading;
@@ -225,16 +231,18 @@ _$ExpenseNoteDialogStateCopyWith<_ExpenseNoteDialogState> get copyWith => __$Exp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseNoteDialogState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.note, note) || other.note == note)&&const DeepCollectionEquality().equals(other._suggestions, _suggestions));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseNoteDialogState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.note, note) || other.note == note)&&const DeepCollectionEquality().equals(other.suggestions, _suggestions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,note,const DeepCollectionEquality().hash(_suggestions));
+int get hashCode {
+    return Object.hash(runtimeType,loading,note,const DeepCollectionEquality().hash(_suggestions));
+}
 
 @override
 String toString() {
-  return 'ExpenseNoteDialogState(loading: $loading, note: $note, suggestions: $suggestions)';
+    return 'ExpenseNoteDialogState(loading: $loading, note: $note, suggestions: $suggestions)';
 }
 
 

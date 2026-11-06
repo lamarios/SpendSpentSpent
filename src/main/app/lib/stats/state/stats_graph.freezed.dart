@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'stats_graph.dart';
@@ -9,6 +9,7 @@ part of 'stats_graph.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $StatsGraphStateCopyWith<StatsGraphState> get copyWith => _$StatsGraphStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatsGraphState&&(identical(other.periodMax, periodMax) || other.periodMax == periodMax)&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.count, count) || other.count == count)&&(identical(other.minValue, minValue) || other.minValue == minValue)&&(identical(other.maxValue, maxValue) || other.maxValue == maxValue)&&const DeepCollectionEquality().equals(other.graphData, graphData)&&const DeepCollectionEquality().equals(other.avgData, avgData)&&const DeepCollectionEquality().equals(other.graphDataPoints, graphDataPoints));
+  final _this = this as StatsGraphState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatsGraphState&&(identical(other.periodMax, _this.periodMax) || other.periodMax == _this.periodMax)&&(identical(other.loading, _this.loading) || other.loading == _this.loading)&&(identical(other.count, _this.count) || other.count == _this.count)&&(identical(other.minValue, _this.minValue) || other.minValue == _this.minValue)&&(identical(other.maxValue, _this.maxValue) || other.maxValue == _this.maxValue)&&const DeepCollectionEquality().equals(other.graphData, _this.graphData)&&const DeepCollectionEquality().equals(other.avgData, _this.avgData)&&const DeepCollectionEquality().equals(other.graphDataPoints, _this.graphDataPoints));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,periodMax,loading,count,minValue,maxValue,const DeepCollectionEquality().hash(graphData),const DeepCollectionEquality().hash(avgData),const DeepCollectionEquality().hash(graphDataPoints));
+int get hashCode {
+  final _this = this as StatsGraphState;
+  return Object.hash(runtimeType,_this.periodMax,_this.loading,_this.count,_this.minValue,_this.maxValue,const DeepCollectionEquality().hash(_this.graphData),const DeepCollectionEquality().hash(_this.avgData),const DeepCollectionEquality().hash(_this.graphDataPoints));
+}
 
 @override
 String toString() {
-  return 'StatsGraphState(periodMax: $periodMax, loading: $loading, count: $count, minValue: $minValue, maxValue: $maxValue, graphData: $graphData, avgData: $avgData, graphDataPoints: $graphDataPoints)';
+  final _this = this as StatsGraphState;
+  return 'StatsGraphState(periodMax: ${_this.periodMax}, loading: ${_this.loading}, count: ${_this.count}, minValue: ${_this.minValue}, maxValue: ${_this.maxValue}, graphData: ${_this.graphData}, avgData: ${_this.avgData}, graphDataPoints: ${_this.graphDataPoints})';
 }
 
 
@@ -63,7 +69,7 @@ class _$StatsGraphStateCopyWithImpl<$Res>
 /// Create a copy of StatsGraphState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? periodMax = null,Object? loading = null,Object? count = null,Object? minValue = null,Object? maxValue = null,Object? graphData = null,Object? avgData = null,Object? graphDataPoints = null,}) {
-  return _then(_self.copyWith(
+  return _then(StatsGraphState(
 periodMax: null == periodMax ? _self.periodMax : periodMax // ignore: cast_nullable_to_non_nullable
 as int,loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
@@ -207,7 +213,7 @@ return $default(_that.periodMax,_that.loading,_that.count,_that.minValue,_that.m
 
 
 class _StatsGraphState implements StatsGraphState {
-  const _StatsGraphState({this.periodMax = 10, this.loading = true, this.count = 5, this.minValue = 0, this.maxValue = 0, final  List<FlSpot> graphData = const [FlSpot(0, 0), FlSpot(1, 0), FlSpot(2, 0), FlSpot(3, 0), FlSpot(4, 0)], final  List<FlSpot> avgData = const [FlSpot(0, 0), FlSpot(1, 0), FlSpot(2, 0), FlSpot(3, 0), FlSpot(4, 0)], final  List<GraphDataPoint> graphDataPoints = const [GraphDataPoint(date: '2021', amount: 0), GraphDataPoint(date: '2020', amount: 0), GraphDataPoint(date: '2019', amount: 0), GraphDataPoint(date: '2018', amount: 0), GraphDataPoint(date: '2017', amount: 0)]}): _graphData = graphData,_avgData = avgData,_graphDataPoints = graphDataPoints;
+  const _StatsGraphState({this.periodMax = 10, this.loading = true, this.count = 5, this.minValue = 0, this.maxValue = 0,  List<FlSpot> graphData = const [FlSpot(0, 0), FlSpot(1, 0), FlSpot(2, 0), FlSpot(3, 0), FlSpot(4, 0)],  List<FlSpot> avgData = const [FlSpot(0, 0), FlSpot(1, 0), FlSpot(2, 0), FlSpot(3, 0), FlSpot(4, 0)],  List<GraphDataPoint> graphDataPoints = const [GraphDataPoint(date: '2021', amount: 0), GraphDataPoint(date: '2020', amount: 0), GraphDataPoint(date: '2019', amount: 0), GraphDataPoint(date: '2018', amount: 0), GraphDataPoint(date: '2017', amount: 0)]}): _graphData = graphData,_avgData = avgData,_graphDataPoints = graphDataPoints;
   
 
 @override@JsonKey() final  int periodMax;
@@ -247,16 +253,18 @@ _$StatsGraphStateCopyWith<_StatsGraphState> get copyWith => __$StatsGraphStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatsGraphState&&(identical(other.periodMax, periodMax) || other.periodMax == periodMax)&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.count, count) || other.count == count)&&(identical(other.minValue, minValue) || other.minValue == minValue)&&(identical(other.maxValue, maxValue) || other.maxValue == maxValue)&&const DeepCollectionEquality().equals(other._graphData, _graphData)&&const DeepCollectionEquality().equals(other._avgData, _avgData)&&const DeepCollectionEquality().equals(other._graphDataPoints, _graphDataPoints));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatsGraphState&&(identical(other.periodMax, periodMax) || other.periodMax == periodMax)&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.count, count) || other.count == count)&&(identical(other.minValue, minValue) || other.minValue == minValue)&&(identical(other.maxValue, maxValue) || other.maxValue == maxValue)&&const DeepCollectionEquality().equals(other.graphData, _graphData)&&const DeepCollectionEquality().equals(other.avgData, _avgData)&&const DeepCollectionEquality().equals(other.graphDataPoints, _graphDataPoints));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,periodMax,loading,count,minValue,maxValue,const DeepCollectionEquality().hash(_graphData),const DeepCollectionEquality().hash(_avgData),const DeepCollectionEquality().hash(_graphDataPoints));
+int get hashCode {
+    return Object.hash(runtimeType,periodMax,loading,count,minValue,maxValue,const DeepCollectionEquality().hash(_graphData),const DeepCollectionEquality().hash(_avgData),const DeepCollectionEquality().hash(_graphDataPoints));
+}
 
 @override
 String toString() {
-  return 'StatsGraphState(periodMax: $periodMax, loading: $loading, count: $count, minValue: $minValue, maxValue: $maxValue, graphData: $graphData, avgData: $avgData, graphDataPoints: $graphDataPoints)';
+    return 'StatsGraphState(periodMax: $periodMax, loading: $loading, count: $count, minValue: $minValue, maxValue: $maxValue, graphData: $graphData, avgData: $avgData, graphDataPoints: $graphDataPoints)';
 }
 
 

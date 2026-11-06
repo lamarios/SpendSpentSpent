@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'day_expense.dart';
@@ -9,6 +9,7 @@ part of 'day_expense.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $DayExpenseCopyWith<DayExpense> get copyWith => _$DayExpenseCopyWithImpl<DayExpe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DayExpense&&(identical(other.date, date) || other.date == date)&&(identical(other.total, total) || other.total == total)&&const DeepCollectionEquality().equals(other.expenses, expenses));
+  final _this = this as DayExpense;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DayExpense&&(identical(other.date, _this.date) || other.date == _this.date)&&(identical(other.total, _this.total) || other.total == _this.total)&&const DeepCollectionEquality().equals(other.expenses, _this.expenses));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,total,const DeepCollectionEquality().hash(expenses));
+int get hashCode {
+  final _this = this as DayExpense;
+  return Object.hash(runtimeType,_this.date,_this.total,const DeepCollectionEquality().hash(_this.expenses));
+}
 
 @override
 String toString() {
-  return 'DayExpense(date: $date, total: $total, expenses: $expenses)';
+  final _this = this as DayExpense;
+  return 'DayExpense(date: ${_this.date}, total: ${_this.total}, expenses: ${_this.expenses})';
 }
 
 
@@ -66,7 +72,7 @@ class _$DayExpenseCopyWithImpl<$Res>
 /// Create a copy of DayExpense
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? total = null,Object? expenses = null,}) {
-  return _then(_self.copyWith(
+  return _then(DayExpense(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as double,expenses: null == expenses ? _self.expenses : expenses // ignore: cast_nullable_to_non_nullable
@@ -205,7 +211,7 @@ return $default(_that.date,_that.total,_that.expenses);case _:
 @JsonSerializable()
 
 class _DayExpense implements DayExpense {
-  const _DayExpense({required this.date, required this.total, final  List<Expense> expenses = const []}): _expenses = expenses;
+  const _DayExpense({required this.date, required this.total,  List<Expense> expenses = const []}): _expenses = expenses;
   factory _DayExpense.fromJson(Map<String, dynamic> json) => _$DayExpenseFromJson(json);
 
 @override final  String date;
@@ -231,16 +237,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DayExpense&&(identical(other.date, date) || other.date == date)&&(identical(other.total, total) || other.total == total)&&const DeepCollectionEquality().equals(other._expenses, _expenses));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DayExpense&&(identical(other.date, date) || other.date == date)&&(identical(other.total, total) || other.total == total)&&const DeepCollectionEquality().equals(other.expenses, _expenses));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,total,const DeepCollectionEquality().hash(_expenses));
+int get hashCode {
+    return Object.hash(runtimeType,date,total,const DeepCollectionEquality().hash(_expenses));
+}
 
 @override
 String toString() {
-  return 'DayExpense(date: $date, total: $total, expenses: $expenses)';
+    return 'DayExpense(date: $date, total: $total, expenses: $expenses)';
 }
 
 

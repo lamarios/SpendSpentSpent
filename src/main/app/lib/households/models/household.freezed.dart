@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'household.dart';
@@ -9,6 +9,7 @@ part of 'household.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $HouseholdCopyWith<Household> get copyWith => _$HouseholdCopyWithImpl<Household>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Household&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.members, members));
+  final _this = this as Household;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Household&&(identical(other.id, _this.id) || other.id == _this.id)&&const DeepCollectionEquality().equals(other.members, _this.members));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(members));
+int get hashCode {
+  final _this = this as Household;
+  return Object.hash(runtimeType,_this.id,const DeepCollectionEquality().hash(_this.members));
+}
 
 @override
 String toString() {
-  return 'Household(id: $id, members: $members)';
+  final _this = this as Household;
+  return 'Household(id: ${_this.id}, members: ${_this.members})';
 }
 
 
@@ -66,7 +72,7 @@ class _$HouseholdCopyWithImpl<$Res>
 /// Create a copy of Household
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? members = null,}) {
-  return _then(_self.copyWith(
+  return _then(Household(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,members: null == members ? _self.members : members // ignore: cast_nullable_to_non_nullable
 as List<HouseholdMembers>,
@@ -204,7 +210,7 @@ return $default(_that.id,_that.members);case _:
 @JsonSerializable()
 
 class _Household implements Household {
-  const _Household({required this.id, final  List<HouseholdMembers> members = const []}): _members = members;
+  const _Household({required this.id,  List<HouseholdMembers> members = const []}): _members = members;
   factory _Household.fromJson(Map<String, dynamic> json) => _$HouseholdFromJson(json);
 
 @override final  String id;
@@ -229,16 +235,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Household&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._members, _members));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Household&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.members, _members));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_members));
+int get hashCode {
+    return Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_members));
+}
 
 @override
 String toString() {
-  return 'Household(id: $id, members: $members)';
+    return 'Household(id: $id, members: $members)';
 }
 
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'currency_converter.dart';
@@ -9,6 +9,7 @@ part of 'currency_converter.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $CurrencyConverterStateCopyWith<CurrencyConverterState> get copyWith => _$Curren
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrencyConverterState&&(identical(other.fromCurrency, fromCurrency) || other.fromCurrency == fromCurrency)&&(identical(other.toCurrency, toCurrency) || other.toCurrency == toCurrency));
+  final _this = this as CurrencyConverterState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrencyConverterState&&(identical(other.fromCurrency, _this.fromCurrency) || other.fromCurrency == _this.fromCurrency)&&(identical(other.toCurrency, _this.toCurrency) || other.toCurrency == _this.toCurrency));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fromCurrency,toCurrency);
+int get hashCode {
+  final _this = this as CurrencyConverterState;
+  return Object.hash(runtimeType,_this.fromCurrency,_this.toCurrency);
+}
 
 @override
 String toString() {
-  return 'CurrencyConverterState(fromCurrency: $fromCurrency, toCurrency: $toCurrency)';
+  final _this = this as CurrencyConverterState;
+  return 'CurrencyConverterState(fromCurrency: ${_this.fromCurrency}, toCurrency: ${_this.toCurrency})';
 }
 
 
@@ -63,7 +69,7 @@ class _$CurrencyConverterStateCopyWithImpl<$Res>
 /// Create a copy of CurrencyConverterState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? fromCurrency = null,Object? toCurrency = null,}) {
-  return _then(_self.copyWith(
+  return _then(CurrencyConverterState(
 fromCurrency: null == fromCurrency ? _self.fromCurrency : fromCurrency // ignore: cast_nullable_to_non_nullable
 as String,toCurrency: null == toCurrency ? _self.toCurrency : toCurrency // ignore: cast_nullable_to_non_nullable
 as String,
@@ -217,16 +223,18 @@ _$CurrencyConverterStateCopyWith<_CurrencyConverterState> get copyWith => __$Cur
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CurrencyConverterState&&(identical(other.fromCurrency, fromCurrency) || other.fromCurrency == fromCurrency)&&(identical(other.toCurrency, toCurrency) || other.toCurrency == toCurrency));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CurrencyConverterState&&(identical(other.fromCurrency, fromCurrency) || other.fromCurrency == fromCurrency)&&(identical(other.toCurrency, toCurrency) || other.toCurrency == toCurrency));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fromCurrency,toCurrency);
+int get hashCode {
+    return Object.hash(runtimeType,fromCurrency,toCurrency);
+}
 
 @override
 String toString() {
-  return 'CurrencyConverterState(fromCurrency: $fromCurrency, toCurrency: $toCurrency)';
+    return 'CurrencyConverterState(fromCurrency: $fromCurrency, toCurrency: $toCurrency)';
 }
 
 

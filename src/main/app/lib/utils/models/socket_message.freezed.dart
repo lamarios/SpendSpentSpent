@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'socket_message.dart';
@@ -9,6 +9,7 @@ part of 'socket_message.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $SssSocketMessageCopyWith<SssSocketMessage> get copyWith => _$SssSocketMessageCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SssSocketMessage&&const DeepCollectionEquality().equals(other.message, message)&&(identical(other.type, type) || other.type == type));
+  final _this = this as SssSocketMessage;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SssSocketMessage&&const DeepCollectionEquality().equals(other.message, _this.message)&&(identical(other.type, _this.type) || other.type == _this.type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(message),type);
+int get hashCode {
+  final _this = this as SssSocketMessage;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.message),_this.type);
+}
 
 @override
 String toString() {
-  return 'SssSocketMessage(message: $message, type: $type)';
+  final _this = this as SssSocketMessage;
+  return 'SssSocketMessage(message: ${_this.message}, type: ${_this.type})';
 }
 
 
@@ -66,7 +72,7 @@ class _$SssSocketMessageCopyWithImpl<$Res>
 /// Create a copy of SssSocketMessage
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? message = null,Object? type = null,}) {
-  return _then(_self.copyWith(
+  return _then(SssSocketMessage(
 message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as SssSocketMessageType,
@@ -204,7 +210,7 @@ return $default(_that.message,_that.type);case _:
 @JsonSerializable()
 
 class _SssSocketMessage implements SssSocketMessage {
-  const _SssSocketMessage({required final  Map<String, dynamic> message, required this.type}): _message = message;
+  const _SssSocketMessage({required  Map<String, dynamic> message, required this.type}): _message = message;
   factory _SssSocketMessage.fromJson(Map<String, dynamic> json) => _$SssSocketMessageFromJson(json);
 
  final  Map<String, dynamic> _message;
@@ -229,16 +235,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SssSocketMessage&&const DeepCollectionEquality().equals(other._message, _message)&&(identical(other.type, type) || other.type == type));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SssSocketMessage&&const DeepCollectionEquality().equals(other.message, _message)&&(identical(other.type, type) || other.type == type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_message),type);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_message),type);
+}
 
 @override
 String toString() {
-  return 'SssSocketMessage(message: $message, type: $type)';
+    return 'SssSocketMessage(message: $message, type: $type)';
 }
 
 

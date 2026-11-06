@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'username_password.dart';
@@ -9,6 +9,7 @@ part of 'username_password.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $UsernamePasswordStateCopyWith<UsernamePasswordState> get copyWith => _$Username
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UsernamePasswordState&&(identical(other.token, token) || other.token == token)&&(identical(other.oidcConfig, oidcConfig) || other.oidcConfig == oidcConfig)&&(identical(other.user, user) || other.user == user));
+  final _this = this as UsernamePasswordState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UsernamePasswordState&&(identical(other.token, _this.token) || other.token == _this.token)&&(identical(other.oidcConfig, _this.oidcConfig) || other.oidcConfig == _this.oidcConfig)&&(identical(other.user, _this.user) || other.user == _this.user));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,token,oidcConfig,user);
+int get hashCode {
+  final _this = this as UsernamePasswordState;
+  return Object.hash(runtimeType,_this.token,_this.oidcConfig,_this.user);
+}
 
 @override
 String toString() {
-  return 'UsernamePasswordState(token: $token, oidcConfig: $oidcConfig, user: $user)';
+  final _this = this as UsernamePasswordState;
+  return 'UsernamePasswordState(token: ${_this.token}, oidcConfig: ${_this.oidcConfig}, user: ${_this.user})';
 }
 
 
@@ -63,7 +69,7 @@ class _$UsernamePasswordStateCopyWithImpl<$Res>
 /// Create a copy of UsernamePasswordState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? token = freezed,Object? oidcConfig = freezed,Object? user = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(UsernamePasswordState(
 token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String?,oidcConfig: freezed == oidcConfig ? _self.oidcConfig : oidcConfig // ignore: cast_nullable_to_non_nullable
 as OidcConfig?,user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
@@ -243,16 +249,18 @@ _$UsernamePasswordStateCopyWith<_UsernamePasswordState> get copyWith => __$Usern
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UsernamePasswordState&&(identical(other.token, token) || other.token == token)&&(identical(other.oidcConfig, oidcConfig) || other.oidcConfig == oidcConfig)&&(identical(other.user, user) || other.user == user));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UsernamePasswordState&&(identical(other.token, token) || other.token == token)&&(identical(other.oidcConfig, oidcConfig) || other.oidcConfig == oidcConfig)&&(identical(other.user, user) || other.user == user));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,token,oidcConfig,user);
+int get hashCode {
+    return Object.hash(runtimeType,token,oidcConfig,user);
+}
 
 @override
 String toString() {
-  return 'UsernamePasswordState(token: $token, oidcConfig: $oidcConfig, user: $user)';
+    return 'UsernamePasswordState(token: $token, oidcConfig: $oidcConfig, user: $user)';
 }
 
 

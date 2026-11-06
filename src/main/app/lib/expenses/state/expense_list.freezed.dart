@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'expense_list.dart';
@@ -9,6 +9,7 @@ part of 'expense_list.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ExpenseListStateCopyWith<ExpenseListState> get copyWith => _$ExpenseListStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseListState&&const DeepCollectionEquality().equals(other.months, months)&&(identical(other.selected, selected) || other.selected == selected)&&(identical(other.total, total) || other.total == total)&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.mapMode, mapMode) || other.mapMode == mapMode)&&(identical(other.searchMode, searchMode) || other.searchMode == searchMode)&&(identical(other.diffWithPreviousPeriod, diffWithPreviousPeriod) || other.diffWithPreviousPeriod == diffWithPreviousPeriod)&&const DeepCollectionEquality().equals(other.expenses, expenses)&&const DeepCollectionEquality().equals(other.monthPickerTotals, monthPickerTotals)&&(identical(other.monthPickerLoading, monthPickerLoading) || other.monthPickerLoading == monthPickerLoading)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+  final _this = this as ExpenseListState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseListState&&const DeepCollectionEquality().equals(other.months, _this.months)&&(identical(other.selected, _this.selected) || other.selected == _this.selected)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.loading, _this.loading) || other.loading == _this.loading)&&(identical(other.mapMode, _this.mapMode) || other.mapMode == _this.mapMode)&&(identical(other.searchMode, _this.searchMode) || other.searchMode == _this.searchMode)&&(identical(other.diffWithPreviousPeriod, _this.diffWithPreviousPeriod) || other.diffWithPreviousPeriod == _this.diffWithPreviousPeriod)&&const DeepCollectionEquality().equals(other.expenses, _this.expenses)&&const DeepCollectionEquality().equals(other.monthPickerTotals, _this.monthPickerTotals)&&(identical(other.monthPickerLoading, _this.monthPickerLoading) || other.monthPickerLoading == _this.monthPickerLoading)&&const DeepCollectionEquality().equals(other.error, _this.error)&&(identical(other.stackTrace, _this.stackTrace) || other.stackTrace == _this.stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(months),selected,total,loading,mapMode,searchMode,diffWithPreviousPeriod,const DeepCollectionEquality().hash(expenses),const DeepCollectionEquality().hash(monthPickerTotals),monthPickerLoading,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+  final _this = this as ExpenseListState;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.months),_this.selected,_this.total,_this.loading,_this.mapMode,_this.searchMode,_this.diffWithPreviousPeriod,const DeepCollectionEquality().hash(_this.expenses),const DeepCollectionEquality().hash(_this.monthPickerTotals),_this.monthPickerLoading,const DeepCollectionEquality().hash(_this.error),_this.stackTrace);
+}
 
 @override
 String toString() {
-  return 'ExpenseListState(months: $months, selected: $selected, total: $total, loading: $loading, mapMode: $mapMode, searchMode: $searchMode, diffWithPreviousPeriod: $diffWithPreviousPeriod, expenses: $expenses, monthPickerTotals: $monthPickerTotals, monthPickerLoading: $monthPickerLoading, error: $error, stackTrace: $stackTrace)';
+  final _this = this as ExpenseListState;
+  return 'ExpenseListState(months: ${_this.months}, selected: ${_this.selected}, total: ${_this.total}, loading: ${_this.loading}, mapMode: ${_this.mapMode}, searchMode: ${_this.searchMode}, diffWithPreviousPeriod: ${_this.diffWithPreviousPeriod}, expenses: ${_this.expenses}, monthPickerTotals: ${_this.monthPickerTotals}, monthPickerLoading: ${_this.monthPickerLoading}, error: ${_this.error}, stackTrace: ${_this.stackTrace})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ExpenseListStateCopyWithImpl<$Res>
 /// Create a copy of ExpenseListState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? months = null,Object? selected = null,Object? total = null,Object? loading = null,Object? mapMode = null,Object? searchMode = null,Object? diffWithPreviousPeriod = freezed,Object? expenses = null,Object? monthPickerTotals = null,Object? monthPickerLoading = null,Object? error = freezed,Object? stackTrace = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ExpenseListState(
 months: null == months ? _self.months : months // ignore: cast_nullable_to_non_nullable
 as List<String>,selected: null == selected ? _self.selected : selected // ignore: cast_nullable_to_non_nullable
 as String,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
@@ -211,7 +217,7 @@ return $default(_that.months,_that.selected,_that.total,_that.loading,_that.mapM
 
 
 class _ExpenseListState implements ExpenseListState, WithError {
-  const _ExpenseListState({final  List<String> months = const [], this.selected = '', this.total = 0, this.loading = false, this.mapMode = false, this.searchMode = false, this.diffWithPreviousPeriod, final  Map<String, DayExpense> expenses = const {}, final  Map<int, double> monthPickerTotals = const {}, this.monthPickerLoading = false, this.error, this.stackTrace}): _months = months,_expenses = expenses,_monthPickerTotals = monthPickerTotals;
+  const _ExpenseListState({ List<String> months = const [], this.selected = '', this.total = 0, this.loading = false, this.mapMode = false, this.searchMode = false, this.diffWithPreviousPeriod,  Map<String, DayExpense> expenses = const {},  Map<int, double> monthPickerTotals = const {}, this.monthPickerLoading = false, this.error, this.stackTrace}): _months = months,_expenses = expenses,_monthPickerTotals = monthPickerTotals;
   
 
  final  List<String> _months;
@@ -255,16 +261,18 @@ _$ExpenseListStateCopyWith<_ExpenseListState> get copyWith => __$ExpenseListStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseListState&&const DeepCollectionEquality().equals(other._months, _months)&&(identical(other.selected, selected) || other.selected == selected)&&(identical(other.total, total) || other.total == total)&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.mapMode, mapMode) || other.mapMode == mapMode)&&(identical(other.searchMode, searchMode) || other.searchMode == searchMode)&&(identical(other.diffWithPreviousPeriod, diffWithPreviousPeriod) || other.diffWithPreviousPeriod == diffWithPreviousPeriod)&&const DeepCollectionEquality().equals(other._expenses, _expenses)&&const DeepCollectionEquality().equals(other._monthPickerTotals, _monthPickerTotals)&&(identical(other.monthPickerLoading, monthPickerLoading) || other.monthPickerLoading == monthPickerLoading)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseListState&&const DeepCollectionEquality().equals(other.months, _months)&&(identical(other.selected, selected) || other.selected == selected)&&(identical(other.total, total) || other.total == total)&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.mapMode, mapMode) || other.mapMode == mapMode)&&(identical(other.searchMode, searchMode) || other.searchMode == searchMode)&&(identical(other.diffWithPreviousPeriod, diffWithPreviousPeriod) || other.diffWithPreviousPeriod == diffWithPreviousPeriod)&&const DeepCollectionEquality().equals(other.expenses, _expenses)&&const DeepCollectionEquality().equals(other.monthPickerTotals, _monthPickerTotals)&&(identical(other.monthPickerLoading, monthPickerLoading) || other.monthPickerLoading == monthPickerLoading)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_months),selected,total,loading,mapMode,searchMode,diffWithPreviousPeriod,const DeepCollectionEquality().hash(_expenses),const DeepCollectionEquality().hash(_monthPickerTotals),monthPickerLoading,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_months),selected,total,loading,mapMode,searchMode,diffWithPreviousPeriod,const DeepCollectionEquality().hash(_expenses),const DeepCollectionEquality().hash(_monthPickerTotals),monthPickerLoading,const DeepCollectionEquality().hash(error),stackTrace);
+}
 
 @override
 String toString() {
-  return 'ExpenseListState(months: $months, selected: $selected, total: $total, loading: $loading, mapMode: $mapMode, searchMode: $searchMode, diffWithPreviousPeriod: $diffWithPreviousPeriod, expenses: $expenses, monthPickerTotals: $monthPickerTotals, monthPickerLoading: $monthPickerLoading, error: $error, stackTrace: $stackTrace)';
+    return 'ExpenseListState(months: $months, selected: $selected, total: $total, loading: $loading, mapMode: $mapMode, searchMode: $searchMode, diffWithPreviousPeriod: $diffWithPreviousPeriod, expenses: $expenses, monthPickerTotals: $monthPickerTotals, monthPickerLoading: $monthPickerLoading, error: $error, stackTrace: $stackTrace)';
 }
 
 

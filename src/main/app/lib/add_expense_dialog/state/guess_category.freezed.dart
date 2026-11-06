@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'guess_category.dart';
@@ -9,6 +9,7 @@ part of 'guess_category.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $GuessCategoryStateCopyWith<GuessCategoryState> get copyWith => _$GuessCategoryS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GuessCategoryState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.results, results) || other.results == results)&&(identical(other.selected, selected) || other.selected == selected)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+  final _this = this as GuessCategoryState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GuessCategoryState&&(identical(other.loading, _this.loading) || other.loading == _this.loading)&&(identical(other.results, _this.results) || other.results == _this.results)&&(identical(other.selected, _this.selected) || other.selected == _this.selected)&&const DeepCollectionEquality().equals(other.error, _this.error)&&(identical(other.stackTrace, _this.stackTrace) || other.stackTrace == _this.stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,results,selected,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+  final _this = this as GuessCategoryState;
+  return Object.hash(runtimeType,_this.loading,_this.results,_this.selected,const DeepCollectionEquality().hash(_this.error),_this.stackTrace);
+}
 
 @override
 String toString() {
-  return 'GuessCategoryState(loading: $loading, results: $results, selected: $selected, error: $error, stackTrace: $stackTrace)';
+  final _this = this as GuessCategoryState;
+  return 'GuessCategoryState(loading: ${_this.loading}, results: ${_this.results}, selected: ${_this.selected}, error: ${_this.error}, stackTrace: ${_this.stackTrace})';
 }
 
 
@@ -63,7 +69,7 @@ class _$GuessCategoryStateCopyWithImpl<$Res>
 /// Create a copy of GuessCategoryState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? loading = null,Object? results = freezed,Object? selected = freezed,Object? error = freezed,Object? stackTrace = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(GuessCategoryState(
 loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,results: freezed == results ? _self.results : results // ignore: cast_nullable_to_non_nullable
 as CategoryGuessResult?,selected: freezed == selected ? _self.selected : selected // ignore: cast_nullable_to_non_nullable
@@ -235,16 +241,18 @@ _$GuessCategoryStateCopyWith<_GuessCategoryState> get copyWith => __$GuessCatego
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GuessCategoryState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.results, results) || other.results == results)&&(identical(other.selected, selected) || other.selected == selected)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _GuessCategoryState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.results, results) || other.results == results)&&(identical(other.selected, selected) || other.selected == selected)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,results,selected,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+    return Object.hash(runtimeType,loading,results,selected,const DeepCollectionEquality().hash(error),stackTrace);
+}
 
 @override
 String toString() {
-  return 'GuessCategoryState(loading: $loading, results: $results, selected: $selected, error: $error, stackTrace: $stackTrace)';
+    return 'GuessCategoryState(loading: $loading, results: $results, selected: $selected, error: $error, stackTrace: $stackTrace)';
 }
 
 

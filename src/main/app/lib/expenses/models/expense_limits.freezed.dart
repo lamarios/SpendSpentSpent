@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'expense_limits.dart';
@@ -9,6 +9,7 @@ part of 'expense_limits.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $ExpenseLimitsCopyWith<ExpenseLimits> get copyWith => _$ExpenseLimitsCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseLimits&&(identical(other.years, years) || other.years == years)&&(identical(other.months, months) || other.months == months));
+  final _this = this as ExpenseLimits;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseLimits&&(identical(other.years, _this.years) || other.years == _this.years)&&(identical(other.months, _this.months) || other.months == _this.months));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,years,months);
+int get hashCode {
+  final _this = this as ExpenseLimits;
+  return Object.hash(runtimeType,_this.years,_this.months);
+}
 
 @override
 String toString() {
-  return 'ExpenseLimits(years: $years, months: $months)';
+  final _this = this as ExpenseLimits;
+  return 'ExpenseLimits(years: ${_this.years}, months: ${_this.months})';
 }
 
 
@@ -66,7 +72,7 @@ class _$ExpenseLimitsCopyWithImpl<$Res>
 /// Create a copy of ExpenseLimits
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? years = null,Object? months = null,}) {
-  return _then(_self.copyWith(
+  return _then(ExpenseLimits(
 years: null == years ? _self.years : years // ignore: cast_nullable_to_non_nullable
 as int,months: null == months ? _self.months : months // ignore: cast_nullable_to_non_nullable
 as int,
@@ -223,16 +229,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseLimits&&(identical(other.years, years) || other.years == years)&&(identical(other.months, months) || other.months == months));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseLimits&&(identical(other.years, years) || other.years == years)&&(identical(other.months, months) || other.months == months));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,years,months);
+int get hashCode {
+    return Object.hash(runtimeType,years,months);
+}
 
 @override
 String toString() {
-  return 'ExpenseLimits(years: $years, months: $months)';
+    return 'ExpenseLimits(years: $years, months: $months)';
 }
 
 

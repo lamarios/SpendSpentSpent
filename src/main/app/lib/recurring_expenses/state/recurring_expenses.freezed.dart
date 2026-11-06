@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'recurring_expenses.dart';
@@ -9,6 +9,7 @@ part of 'recurring_expenses.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $RecurringExpensesStateCopyWith<RecurringExpensesState> get copyWith => _$Recurr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecurringExpensesState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace)&&const DeepCollectionEquality().equals(other.expenses, expenses));
+  final _this = this as RecurringExpensesState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecurringExpensesState&&(identical(other.loading, _this.loading) || other.loading == _this.loading)&&const DeepCollectionEquality().equals(other.error, _this.error)&&(identical(other.stackTrace, _this.stackTrace) || other.stackTrace == _this.stackTrace)&&const DeepCollectionEquality().equals(other.expenses, _this.expenses));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(error),stackTrace,const DeepCollectionEquality().hash(expenses));
+int get hashCode {
+  final _this = this as RecurringExpensesState;
+  return Object.hash(runtimeType,_this.loading,const DeepCollectionEquality().hash(_this.error),_this.stackTrace,const DeepCollectionEquality().hash(_this.expenses));
+}
 
 @override
 String toString() {
-  return 'RecurringExpensesState(loading: $loading, error: $error, stackTrace: $stackTrace, expenses: $expenses)';
+  final _this = this as RecurringExpensesState;
+  return 'RecurringExpensesState(loading: ${_this.loading}, error: ${_this.error}, stackTrace: ${_this.stackTrace}, expenses: ${_this.expenses})';
 }
 
 
@@ -63,7 +69,7 @@ class _$RecurringExpensesStateCopyWithImpl<$Res>
 /// Create a copy of RecurringExpensesState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? loading = null,Object? error = freezed,Object? stackTrace = freezed,Object? expenses = null,}) {
-  return _then(_self.copyWith(
+  return _then(RecurringExpensesState(
 loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as dynamic,stackTrace: freezed == stackTrace ? _self.stackTrace : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -203,7 +209,7 @@ return $default(_that.loading,_that.error,_that.stackTrace,_that.expenses);case 
 
 
 class _RecurringExpensesState implements RecurringExpensesState, WithError {
-  const _RecurringExpensesState({this.loading = false, this.error, this.stackTrace, final  List<RecurringExpense> expenses = const []}): _expenses = expenses;
+  const _RecurringExpensesState({this.loading = false, this.error, this.stackTrace,  List<RecurringExpense> expenses = const []}): _expenses = expenses;
   
 
 @override@JsonKey() final  bool loading;
@@ -227,16 +233,18 @@ _$RecurringExpensesStateCopyWith<_RecurringExpensesState> get copyWith => __$Rec
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecurringExpensesState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace)&&const DeepCollectionEquality().equals(other._expenses, _expenses));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecurringExpensesState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace)&&const DeepCollectionEquality().equals(other.expenses, _expenses));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(error),stackTrace,const DeepCollectionEquality().hash(_expenses));
+int get hashCode {
+    return Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(error),stackTrace,const DeepCollectionEquality().hash(_expenses));
+}
 
 @override
 String toString() {
-  return 'RecurringExpensesState(loading: $loading, error: $error, stackTrace: $stackTrace, expenses: $expenses)';
+    return 'RecurringExpensesState(loading: $loading, error: $error, stackTrace: $stackTrace, expenses: $expenses)';
 }
 
 

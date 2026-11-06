@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'household.dart';
@@ -9,6 +9,7 @@ part of 'household.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $HouseholdStateCopyWith<HouseholdState> get copyWith => _$HouseholdStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HouseholdState&&(identical(other.household, household) || other.household == household)&&const DeepCollectionEquality().equals(other.invitations, invitations)&&const DeepCollectionEquality().equals(other.userLightColors, userLightColors)&&const DeepCollectionEquality().equals(other.userDarkColors, userDarkColors)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+  final _this = this as HouseholdState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HouseholdState&&(identical(other.household, _this.household) || other.household == _this.household)&&const DeepCollectionEquality().equals(other.invitations, _this.invitations)&&const DeepCollectionEquality().equals(other.userLightColors, _this.userLightColors)&&const DeepCollectionEquality().equals(other.userDarkColors, _this.userDarkColors)&&const DeepCollectionEquality().equals(other.error, _this.error)&&(identical(other.stackTrace, _this.stackTrace) || other.stackTrace == _this.stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,household,const DeepCollectionEquality().hash(invitations),const DeepCollectionEquality().hash(userLightColors),const DeepCollectionEquality().hash(userDarkColors),const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+  final _this = this as HouseholdState;
+  return Object.hash(runtimeType,_this.household,const DeepCollectionEquality().hash(_this.invitations),const DeepCollectionEquality().hash(_this.userLightColors),const DeepCollectionEquality().hash(_this.userDarkColors),const DeepCollectionEquality().hash(_this.error),_this.stackTrace);
+}
 
 @override
 String toString() {
-  return 'HouseholdState(household: $household, invitations: $invitations, userLightColors: $userLightColors, userDarkColors: $userDarkColors, error: $error, stackTrace: $stackTrace)';
+  final _this = this as HouseholdState;
+  return 'HouseholdState(household: ${_this.household}, invitations: ${_this.invitations}, userLightColors: ${_this.userLightColors}, userDarkColors: ${_this.userDarkColors}, error: ${_this.error}, stackTrace: ${_this.stackTrace})';
 }
 
 
@@ -63,7 +69,7 @@ class _$HouseholdStateCopyWithImpl<$Res>
 /// Create a copy of HouseholdState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? household = freezed,Object? invitations = null,Object? userLightColors = null,Object? userDarkColors = null,Object? error = freezed,Object? stackTrace = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(HouseholdState(
 household: freezed == household ? _self.household : household // ignore: cast_nullable_to_non_nullable
 as Household?,invitations: null == invitations ? _self.invitations : invitations // ignore: cast_nullable_to_non_nullable
 as List<HouseholdMembers>,userLightColors: null == userLightColors ? _self.userLightColors : userLightColors // ignore: cast_nullable_to_non_nullable
@@ -217,7 +223,7 @@ return $default(_that.household,_that.invitations,_that.userLightColors,_that.us
 
 
 class _HouseholdState extends HouseholdState implements WithError {
-  const _HouseholdState({this.household, final  List<HouseholdMembers> invitations = const [], final  Map<String, ColorScheme> userLightColors = const {}, final  Map<String, ColorScheme> userDarkColors = const {}, this.error, this.stackTrace}): _invitations = invitations,_userLightColors = userLightColors,_userDarkColors = userDarkColors,super._();
+  const _HouseholdState({this.household,  List<HouseholdMembers> invitations = const [],  Map<String, ColorScheme> userLightColors = const {},  Map<String, ColorScheme> userDarkColors = const {}, this.error, this.stackTrace}): _invitations = invitations,_userLightColors = userLightColors,_userDarkColors = userDarkColors,super._();
   
 
 @override final  Household? household;
@@ -255,16 +261,18 @@ _$HouseholdStateCopyWith<_HouseholdState> get copyWith => __$HouseholdStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HouseholdState&&(identical(other.household, household) || other.household == household)&&const DeepCollectionEquality().equals(other._invitations, _invitations)&&const DeepCollectionEquality().equals(other._userLightColors, _userLightColors)&&const DeepCollectionEquality().equals(other._userDarkColors, _userDarkColors)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _HouseholdState&&(identical(other.household, household) || other.household == household)&&const DeepCollectionEquality().equals(other.invitations, _invitations)&&const DeepCollectionEquality().equals(other.userLightColors, _userLightColors)&&const DeepCollectionEquality().equals(other.userDarkColors, _userDarkColors)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,household,const DeepCollectionEquality().hash(_invitations),const DeepCollectionEquality().hash(_userLightColors),const DeepCollectionEquality().hash(_userDarkColors),const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+    return Object.hash(runtimeType,household,const DeepCollectionEquality().hash(_invitations),const DeepCollectionEquality().hash(_userLightColors),const DeepCollectionEquality().hash(_userDarkColors),const DeepCollectionEquality().hash(error),stackTrace);
+}
 
 @override
 String toString() {
-  return 'HouseholdState(household: $household, invitations: $invitations, userLightColors: $userLightColors, userDarkColors: $userDarkColors, error: $error, stackTrace: $stackTrace)';
+    return 'HouseholdState(household: $household, invitations: $invitations, userLightColors: $userLightColors, userDarkColors: $userDarkColors, error: $error, stackTrace: $stackTrace)';
 }
 
 

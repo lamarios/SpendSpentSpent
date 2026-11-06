@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'membership_management.dart';
@@ -9,6 +9,7 @@ part of 'membership_management.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $MembershipManagementStateCopyWith<MembershipManagementState> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MembershipManagementState&&(identical(other.admin, admin) || other.admin == admin)&&(identical(other.color, color) || other.color == color));
+  final _this = this as MembershipManagementState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MembershipManagementState&&(identical(other.admin, _this.admin) || other.admin == _this.admin)&&(identical(other.color, _this.color) || other.color == _this.color));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,admin,color);
+int get hashCode {
+  final _this = this as MembershipManagementState;
+  return Object.hash(runtimeType,_this.admin,_this.color);
+}
 
 @override
 String toString() {
-  return 'MembershipManagementState(admin: $admin, color: $color)';
+  final _this = this as MembershipManagementState;
+  return 'MembershipManagementState(admin: ${_this.admin}, color: ${_this.color})';
 }
 
 
@@ -63,7 +69,7 @@ class _$MembershipManagementStateCopyWithImpl<$Res>
 /// Create a copy of MembershipManagementState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? admin = null,Object? color = null,}) {
-  return _then(_self.copyWith(
+  return _then(MembershipManagementState(
 admin: null == admin ? _self.admin : admin // ignore: cast_nullable_to_non_nullable
 as bool,color: null == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
 as HouseholdColor,
@@ -217,16 +223,18 @@ _$MembershipManagementStateCopyWith<_MembershipManagementState> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MembershipManagementState&&(identical(other.admin, admin) || other.admin == admin)&&(identical(other.color, color) || other.color == color));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MembershipManagementState&&(identical(other.admin, admin) || other.admin == admin)&&(identical(other.color, color) || other.color == color));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,admin,color);
+int get hashCode {
+    return Object.hash(runtimeType,admin,color);
+}
 
 @override
 String toString() {
-  return 'MembershipManagementState(admin: $admin, color: $color)';
+    return 'MembershipManagementState(admin: $admin, color: $color)';
 }
 
 

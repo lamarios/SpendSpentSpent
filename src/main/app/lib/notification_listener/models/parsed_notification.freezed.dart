@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'parsed_notification.dart';
@@ -9,6 +9,7 @@ part of 'parsed_notification.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -27,23 +28,29 @@ $ParsedNotificationCopyWith<ParsedNotification> get copyWith => _$ParsedNotifica
 
 @override
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  final _this = this as ParsedNotification;
   properties
     ..add(DiagnosticsProperty('type', 'ParsedNotification'))
-    ..add(DiagnosticsProperty('package', package))..add(DiagnosticsProperty('title', title))..add(DiagnosticsProperty('content', content))..add(DiagnosticsProperty('time', time))..add(DiagnosticsProperty('amountFound', amountFound))..add(DiagnosticsProperty('appName', appName))..add(DiagnosticsProperty('icon', icon));
+    ..add(DiagnosticsProperty('package', _this.package))..add(DiagnosticsProperty('title', _this.title))..add(DiagnosticsProperty('content', _this.content))..add(DiagnosticsProperty('time', _this.time))..add(DiagnosticsProperty('amountFound', _this.amountFound))..add(DiagnosticsProperty('appName', _this.appName))..add(DiagnosticsProperty('icon', _this.icon));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParsedNotification&&(identical(other.package, package) || other.package == package)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.time, time) || other.time == time)&&(identical(other.amountFound, amountFound) || other.amountFound == amountFound)&&(identical(other.appName, appName) || other.appName == appName)&&const DeepCollectionEquality().equals(other.icon, icon));
+  final _this = this as ParsedNotification;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParsedNotification&&(identical(other.package, _this.package) || other.package == _this.package)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.content, _this.content) || other.content == _this.content)&&(identical(other.time, _this.time) || other.time == _this.time)&&(identical(other.amountFound, _this.amountFound) || other.amountFound == _this.amountFound)&&(identical(other.appName, _this.appName) || other.appName == _this.appName)&&const DeepCollectionEquality().equals(other.icon, _this.icon));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,package,title,content,time,amountFound,appName,const DeepCollectionEquality().hash(icon));
+int get hashCode {
+  final _this = this as ParsedNotification;
+  return Object.hash(runtimeType,_this.package,_this.title,_this.content,_this.time,_this.amountFound,_this.appName,const DeepCollectionEquality().hash(_this.icon));
+}
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'ParsedNotification(package: $package, title: $title, content: $content, time: $time, amountFound: $amountFound, appName: $appName, icon: $icon)';
+  final _this = this as ParsedNotification;
+  return 'ParsedNotification(package: ${_this.package}, title: ${_this.title}, content: ${_this.content}, time: ${_this.time}, amountFound: ${_this.amountFound}, appName: ${_this.appName}, icon: ${_this.icon})';
 }
 
 
@@ -72,7 +79,7 @@ class _$ParsedNotificationCopyWithImpl<$Res>
 /// Create a copy of ParsedNotification
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? package = freezed,Object? title = freezed,Object? content = freezed,Object? time = null,Object? amountFound = null,Object? appName = freezed,Object? icon = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ParsedNotification(
 package: freezed == package ? _self.package : package // ignore: cast_nullable_to_non_nullable
 as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String?,content: freezed == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
@@ -238,23 +245,25 @@ Map<String, dynamic> toJson() {
 }
 @override
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  properties
+    properties
     ..add(DiagnosticsProperty('type', 'ParsedNotification'))
     ..add(DiagnosticsProperty('package', package))..add(DiagnosticsProperty('title', title))..add(DiagnosticsProperty('content', content))..add(DiagnosticsProperty('time', time))..add(DiagnosticsProperty('amountFound', amountFound))..add(DiagnosticsProperty('appName', appName))..add(DiagnosticsProperty('icon', icon));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParsedNotification&&(identical(other.package, package) || other.package == package)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.time, time) || other.time == time)&&(identical(other.amountFound, amountFound) || other.amountFound == amountFound)&&(identical(other.appName, appName) || other.appName == appName)&&const DeepCollectionEquality().equals(other.icon, icon));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParsedNotification&&(identical(other.package, package) || other.package == package)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.time, time) || other.time == time)&&(identical(other.amountFound, amountFound) || other.amountFound == amountFound)&&(identical(other.appName, appName) || other.appName == appName)&&const DeepCollectionEquality().equals(other.icon, icon));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,package,title,content,time,amountFound,appName,const DeepCollectionEquality().hash(icon));
+int get hashCode {
+    return Object.hash(runtimeType,package,title,content,time,amountFound,appName,const DeepCollectionEquality().hash(icon));
+}
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'ParsedNotification(package: $package, title: $title, content: $content, time: $time, amountFound: $amountFound, appName: $appName, icon: $icon)';
+    return 'ParsedNotification(package: $package, title: $title, content: $content, time: $time, amountFound: $amountFound, appName: $appName, icon: $icon)';
 }
 
 

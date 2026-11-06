@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'add_expense_dialog.dart';
@@ -9,6 +9,7 @@ part of 'add_expense_dialog.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $AddExpenseDialogStateCopyWith<AddExpenseDialogState> get copyWith => _$AddExpen
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddExpenseDialogState&&(identical(other.category, category) || other.category == category)&&(identical(other.value, value) || other.value == value)&&(identical(other.valueFrom, valueFrom) || other.valueFrom == valueFrom)&&(identical(other.expenseDate, expenseDate) || other.expenseDate == expenseDate)&&(identical(other.expenseNote, expenseNote) || other.expenseNote == expenseNote)&&(identical(other.gettingLocation, gettingLocation) || other.gettingLocation == gettingLocation)&&(identical(other.useLocation, useLocation) || other.useLocation == useLocation)&&(identical(other.currencyConversion, currencyConversion) || other.currencyConversion == currencyConversion)&&(identical(other.showCurrencyConversion, showCurrencyConversion) || other.showCurrencyConversion == showCurrencyConversion)&&(identical(other.saving, saving) || other.saving == saving)&&const DeepCollectionEquality().equals(other.noteSuggestions, noteSuggestions)&&const DeepCollectionEquality().equals(other.files, files)&&(identical(other.location, location) || other.location == location)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+  final _this = this as AddExpenseDialogState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddExpenseDialogState&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.value, _this.value) || other.value == _this.value)&&(identical(other.valueFrom, _this.valueFrom) || other.valueFrom == _this.valueFrom)&&(identical(other.expenseDate, _this.expenseDate) || other.expenseDate == _this.expenseDate)&&(identical(other.expenseNote, _this.expenseNote) || other.expenseNote == _this.expenseNote)&&(identical(other.gettingLocation, _this.gettingLocation) || other.gettingLocation == _this.gettingLocation)&&(identical(other.useLocation, _this.useLocation) || other.useLocation == _this.useLocation)&&(identical(other.currencyConversion, _this.currencyConversion) || other.currencyConversion == _this.currencyConversion)&&(identical(other.showCurrencyConversion, _this.showCurrencyConversion) || other.showCurrencyConversion == _this.showCurrencyConversion)&&(identical(other.saving, _this.saving) || other.saving == _this.saving)&&const DeepCollectionEquality().equals(other.noteSuggestions, _this.noteSuggestions)&&const DeepCollectionEquality().equals(other.files, _this.files)&&(identical(other.location, _this.location) || other.location == _this.location)&&const DeepCollectionEquality().equals(other.error, _this.error)&&(identical(other.stackTrace, _this.stackTrace) || other.stackTrace == _this.stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,category,value,valueFrom,expenseDate,expenseNote,gettingLocation,useLocation,currencyConversion,showCurrencyConversion,saving,const DeepCollectionEquality().hash(noteSuggestions),const DeepCollectionEquality().hash(files),location,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+  final _this = this as AddExpenseDialogState;
+  return Object.hash(runtimeType,_this.category,_this.value,_this.valueFrom,_this.expenseDate,_this.expenseNote,_this.gettingLocation,_this.useLocation,_this.currencyConversion,_this.showCurrencyConversion,_this.saving,const DeepCollectionEquality().hash(_this.noteSuggestions),const DeepCollectionEquality().hash(_this.files),_this.location,const DeepCollectionEquality().hash(_this.error),_this.stackTrace);
+}
 
 @override
 String toString() {
-  return 'AddExpenseDialogState(category: $category, value: $value, valueFrom: $valueFrom, expenseDate: $expenseDate, expenseNote: $expenseNote, gettingLocation: $gettingLocation, useLocation: $useLocation, currencyConversion: $currencyConversion, showCurrencyConversion: $showCurrencyConversion, saving: $saving, noteSuggestions: $noteSuggestions, files: $files, location: $location, error: $error, stackTrace: $stackTrace)';
+  final _this = this as AddExpenseDialogState;
+  return 'AddExpenseDialogState(category: ${_this.category}, value: ${_this.value}, valueFrom: ${_this.valueFrom}, expenseDate: ${_this.expenseDate}, expenseNote: ${_this.expenseNote}, gettingLocation: ${_this.gettingLocation}, useLocation: ${_this.useLocation}, currencyConversion: ${_this.currencyConversion}, showCurrencyConversion: ${_this.showCurrencyConversion}, saving: ${_this.saving}, noteSuggestions: ${_this.noteSuggestions}, files: ${_this.files}, location: ${_this.location}, error: ${_this.error}, stackTrace: ${_this.stackTrace})';
 }
 
 
@@ -63,7 +69,7 @@ class _$AddExpenseDialogStateCopyWithImpl<$Res>
 /// Create a copy of AddExpenseDialogState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? category = null,Object? value = null,Object? valueFrom = null,Object? expenseDate = null,Object? expenseNote = null,Object? gettingLocation = null,Object? useLocation = null,Object? currencyConversion = freezed,Object? showCurrencyConversion = null,Object? saving = null,Object? noteSuggestions = null,Object? files = null,Object? location = freezed,Object? error = freezed,Object? stackTrace = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(AddExpenseDialogState(
 category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as Category,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as String,valueFrom: null == valueFrom ? _self.valueFrom : valueFrom // ignore: cast_nullable_to_non_nullable
@@ -223,7 +229,7 @@ return $default(_that.category,_that.value,_that.valueFrom,_that.expenseDate,_th
 
 
 class _AddExpenseDialogState extends AddExpenseDialogState implements WithError {
-  const _AddExpenseDialogState({required this.category, this.value = "", this.valueFrom = "", required this.expenseDate, this.expenseNote = '', this.gettingLocation = false, this.useLocation = false, this.currencyConversion, this.showCurrencyConversion = false, this.saving = false, final  List<String> noteSuggestions = const [], final  List<SssFile> files = const [], this.location, this.error, this.stackTrace}): _noteSuggestions = noteSuggestions,_files = files,super._();
+  const _AddExpenseDialogState({required this.category, this.value = "", this.valueFrom = "", required this.expenseDate, this.expenseNote = '', this.gettingLocation = false, this.useLocation = false, this.currencyConversion, this.showCurrencyConversion = false, this.saving = false,  List<String> noteSuggestions = const [],  List<SssFile> files = const [], this.location, this.error, this.stackTrace}): _noteSuggestions = noteSuggestions,_files = files,super._();
   
 
 @override final  Category category;
@@ -264,16 +270,18 @@ _$AddExpenseDialogStateCopyWith<_AddExpenseDialogState> get copyWith => __$AddEx
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddExpenseDialogState&&(identical(other.category, category) || other.category == category)&&(identical(other.value, value) || other.value == value)&&(identical(other.valueFrom, valueFrom) || other.valueFrom == valueFrom)&&(identical(other.expenseDate, expenseDate) || other.expenseDate == expenseDate)&&(identical(other.expenseNote, expenseNote) || other.expenseNote == expenseNote)&&(identical(other.gettingLocation, gettingLocation) || other.gettingLocation == gettingLocation)&&(identical(other.useLocation, useLocation) || other.useLocation == useLocation)&&(identical(other.currencyConversion, currencyConversion) || other.currencyConversion == currencyConversion)&&(identical(other.showCurrencyConversion, showCurrencyConversion) || other.showCurrencyConversion == showCurrencyConversion)&&(identical(other.saving, saving) || other.saving == saving)&&const DeepCollectionEquality().equals(other._noteSuggestions, _noteSuggestions)&&const DeepCollectionEquality().equals(other._files, _files)&&(identical(other.location, location) || other.location == location)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddExpenseDialogState&&(identical(other.category, category) || other.category == category)&&(identical(other.value, value) || other.value == value)&&(identical(other.valueFrom, valueFrom) || other.valueFrom == valueFrom)&&(identical(other.expenseDate, expenseDate) || other.expenseDate == expenseDate)&&(identical(other.expenseNote, expenseNote) || other.expenseNote == expenseNote)&&(identical(other.gettingLocation, gettingLocation) || other.gettingLocation == gettingLocation)&&(identical(other.useLocation, useLocation) || other.useLocation == useLocation)&&(identical(other.currencyConversion, currencyConversion) || other.currencyConversion == currencyConversion)&&(identical(other.showCurrencyConversion, showCurrencyConversion) || other.showCurrencyConversion == showCurrencyConversion)&&(identical(other.saving, saving) || other.saving == saving)&&const DeepCollectionEquality().equals(other.noteSuggestions, _noteSuggestions)&&const DeepCollectionEquality().equals(other.files, _files)&&(identical(other.location, location) || other.location == location)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,category,value,valueFrom,expenseDate,expenseNote,gettingLocation,useLocation,currencyConversion,showCurrencyConversion,saving,const DeepCollectionEquality().hash(_noteSuggestions),const DeepCollectionEquality().hash(_files),location,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+    return Object.hash(runtimeType,category,value,valueFrom,expenseDate,expenseNote,gettingLocation,useLocation,currencyConversion,showCurrencyConversion,saving,const DeepCollectionEquality().hash(_noteSuggestions),const DeepCollectionEquality().hash(_files),location,const DeepCollectionEquality().hash(error),stackTrace);
+}
 
 @override
 String toString() {
-  return 'AddExpenseDialogState(category: $category, value: $value, valueFrom: $valueFrom, expenseDate: $expenseDate, expenseNote: $expenseNote, gettingLocation: $gettingLocation, useLocation: $useLocation, currencyConversion: $currencyConversion, showCurrencyConversion: $showCurrencyConversion, saving: $saving, noteSuggestions: $noteSuggestions, files: $files, location: $location, error: $error, stackTrace: $stackTrace)';
+    return 'AddExpenseDialogState(category: $category, value: $value, valueFrom: $valueFrom, expenseDate: $expenseDate, expenseNote: $expenseNote, gettingLocation: $gettingLocation, useLocation: $useLocation, currencyConversion: $currencyConversion, showCurrencyConversion: $showCurrencyConversion, saving: $saving, noteSuggestions: $noteSuggestions, files: $files, location: $location, error: $error, stackTrace: $stackTrace)';
 }
 
 

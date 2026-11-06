@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'notification_listener_settings.dart';
@@ -9,6 +9,7 @@ part of 'notification_listener_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $NotificationListenerSettingsStateCopyWith<NotificationListenerSettingsState> ge
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationListenerSettingsState&&(identical(other.enabled, enabled) || other.enabled == enabled)&&const DeepCollectionEquality().equals(other.history, history)&&const DeepCollectionEquality().equals(other.ignoreList, ignoreList)&&(identical(other.page, page) || other.page == page)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.loading, loading) || other.loading == loading));
+  final _this = this as NotificationListenerSettingsState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationListenerSettingsState&&(identical(other.enabled, _this.enabled) || other.enabled == _this.enabled)&&const DeepCollectionEquality().equals(other.history, _this.history)&&const DeepCollectionEquality().equals(other.ignoreList, _this.ignoreList)&&(identical(other.page, _this.page) || other.page == _this.page)&&(identical(other.hasMore, _this.hasMore) || other.hasMore == _this.hasMore)&&(identical(other.loading, _this.loading) || other.loading == _this.loading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,enabled,const DeepCollectionEquality().hash(history),const DeepCollectionEquality().hash(ignoreList),page,hasMore,loading);
+int get hashCode {
+  final _this = this as NotificationListenerSettingsState;
+  return Object.hash(runtimeType,_this.enabled,const DeepCollectionEquality().hash(_this.history),const DeepCollectionEquality().hash(_this.ignoreList),_this.page,_this.hasMore,_this.loading);
+}
 
 @override
 String toString() {
-  return 'NotificationListenerSettingsState(enabled: $enabled, history: $history, ignoreList: $ignoreList, page: $page, hasMore: $hasMore, loading: $loading)';
+  final _this = this as NotificationListenerSettingsState;
+  return 'NotificationListenerSettingsState(enabled: ${_this.enabled}, history: ${_this.history}, ignoreList: ${_this.ignoreList}, page: ${_this.page}, hasMore: ${_this.hasMore}, loading: ${_this.loading})';
 }
 
 
@@ -63,7 +69,7 @@ class _$NotificationListenerSettingsStateCopyWithImpl<$Res>
 /// Create a copy of NotificationListenerSettingsState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? enabled = null,Object? history = null,Object? ignoreList = null,Object? page = null,Object? hasMore = null,Object? loading = null,}) {
-  return _then(_self.copyWith(
+  return _then(NotificationListenerSettingsState(
 enabled: null == enabled ? _self.enabled : enabled // ignore: cast_nullable_to_non_nullable
 as bool,history: null == history ? _self.history : history // ignore: cast_nullable_to_non_nullable
 as List<ParsedNotification>,ignoreList: null == ignoreList ? _self.ignoreList : ignoreList // ignore: cast_nullable_to_non_nullable
@@ -205,7 +211,7 @@ return $default(_that.enabled,_that.history,_that.ignoreList,_that.page,_that.ha
 
 
 class _NotificationListenerSettingsState implements NotificationListenerSettingsState {
-  const _NotificationListenerSettingsState({this.enabled = false, final  List<ParsedNotification> history = const [], final  List<String> ignoreList = const [], this.page = 0, this.hasMore = false, this.loading = true}): _history = history,_ignoreList = ignoreList;
+  const _NotificationListenerSettingsState({this.enabled = false,  List<ParsedNotification> history = const [],  List<String> ignoreList = const [], this.page = 0, this.hasMore = false, this.loading = true}): _history = history,_ignoreList = ignoreList;
   
 
 @override@JsonKey() final  bool enabled;
@@ -237,16 +243,18 @@ _$NotificationListenerSettingsStateCopyWith<_NotificationListenerSettingsState> 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationListenerSettingsState&&(identical(other.enabled, enabled) || other.enabled == enabled)&&const DeepCollectionEquality().equals(other._history, _history)&&const DeepCollectionEquality().equals(other._ignoreList, _ignoreList)&&(identical(other.page, page) || other.page == page)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.loading, loading) || other.loading == loading));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationListenerSettingsState&&(identical(other.enabled, enabled) || other.enabled == enabled)&&const DeepCollectionEquality().equals(other.history, _history)&&const DeepCollectionEquality().equals(other.ignoreList, _ignoreList)&&(identical(other.page, page) || other.page == page)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.loading, loading) || other.loading == loading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,enabled,const DeepCollectionEquality().hash(_history),const DeepCollectionEquality().hash(_ignoreList),page,hasMore,loading);
+int get hashCode {
+    return Object.hash(runtimeType,enabled,const DeepCollectionEquality().hash(_history),const DeepCollectionEquality().hash(_ignoreList),page,hasMore,loading);
+}
 
 @override
 String toString() {
-  return 'NotificationListenerSettingsState(enabled: $enabled, history: $history, ignoreList: $ignoreList, page: $page, hasMore: $hasMore, loading: $loading)';
+    return 'NotificationListenerSettingsState(enabled: $enabled, history: $history, ignoreList: $ignoreList, page: $page, hasMore: $hasMore, loading: $loading)';
 }
 
 

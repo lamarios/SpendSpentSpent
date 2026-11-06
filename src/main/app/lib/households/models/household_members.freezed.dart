@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'household_members.dart';
@@ -9,6 +9,7 @@ part of 'household_members.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $HouseholdMembersCopyWith<HouseholdMembers> get copyWith => _$HouseholdMembersCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HouseholdMembers&&(identical(other.id, id) || other.id == id)&&(identical(other.user, user) || other.user == user)&&(identical(other.invitedBy, invitedBy) || other.invitedBy == invitedBy)&&(identical(other.status, status) || other.status == status)&&(identical(other.color, color) || other.color == color)&&(identical(other.admin, admin) || other.admin == admin));
+  final _this = this as HouseholdMembers;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HouseholdMembers&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.user, _this.user) || other.user == _this.user)&&(identical(other.invitedBy, _this.invitedBy) || other.invitedBy == _this.invitedBy)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.admin, _this.admin) || other.admin == _this.admin));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,user,invitedBy,status,color,admin);
+int get hashCode {
+  final _this = this as HouseholdMembers;
+  return Object.hash(runtimeType,_this.id,_this.user,_this.invitedBy,_this.status,_this.color,_this.admin);
+}
 
 @override
 String toString() {
-  return 'HouseholdMembers(id: $id, user: $user, invitedBy: $invitedBy, status: $status, color: $color, admin: $admin)';
+  final _this = this as HouseholdMembers;
+  return 'HouseholdMembers(id: ${_this.id}, user: ${_this.user}, invitedBy: ${_this.invitedBy}, status: ${_this.status}, color: ${_this.color}, admin: ${_this.admin})';
 }
 
 
@@ -66,7 +72,7 @@ class _$HouseholdMembersCopyWithImpl<$Res>
 /// Create a copy of HouseholdMembers
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? user = null,Object? invitedBy = freezed,Object? status = null,Object? color = null,Object? admin = null,}) {
-  return _then(_self.copyWith(
+  return _then(HouseholdMembers(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
 as User,invitedBy: freezed == invitedBy ? _self.invitedBy : invitedBy // ignore: cast_nullable_to_non_nullable
@@ -252,16 +258,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HouseholdMembers&&(identical(other.id, id) || other.id == id)&&(identical(other.user, user) || other.user == user)&&(identical(other.invitedBy, invitedBy) || other.invitedBy == invitedBy)&&(identical(other.status, status) || other.status == status)&&(identical(other.color, color) || other.color == color)&&(identical(other.admin, admin) || other.admin == admin));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _HouseholdMembers&&(identical(other.id, id) || other.id == id)&&(identical(other.user, user) || other.user == user)&&(identical(other.invitedBy, invitedBy) || other.invitedBy == invitedBy)&&(identical(other.status, status) || other.status == status)&&(identical(other.color, color) || other.color == color)&&(identical(other.admin, admin) || other.admin == admin));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,user,invitedBy,status,color,admin);
+int get hashCode {
+    return Object.hash(runtimeType,id,user,invitedBy,status,color,admin);
+}
 
 @override
 String toString() {
-  return 'HouseholdMembers(id: $id, user: $user, invitedBy: $invitedBy, status: $status, color: $color, admin: $admin)';
+    return 'HouseholdMembers(id: $id, user: $user, invitedBy: $invitedBy, status: $status, color: $color, admin: $admin)';
 }
 
 

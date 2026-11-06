@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'add_recurring_expense.dart';
@@ -9,6 +9,7 @@ part of 'add_recurring_expense.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $AddRecurringExpenseStateCopyWith<AddRecurringExpenseState> get copyWith => _$Ad
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddRecurringExpenseState&&(identical(other.step, step) || other.step == step)&&(identical(other.category, category) || other.category == category)&&(identical(other.type, type) || other.type == type)&&(identical(other.typeParam, typeParam) || other.typeParam == typeParam)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.categories, categories));
+  final _this = this as AddRecurringExpenseState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddRecurringExpenseState&&(identical(other.step, _this.step) || other.step == _this.step)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.typeParam, _this.typeParam) || other.typeParam == _this.typeParam)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.name, _this.name) || other.name == _this.name)&&const DeepCollectionEquality().equals(other.categories, _this.categories));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,step,category,type,typeParam,amount,name,const DeepCollectionEquality().hash(categories));
+int get hashCode {
+  final _this = this as AddRecurringExpenseState;
+  return Object.hash(runtimeType,_this.step,_this.category,_this.type,_this.typeParam,_this.amount,_this.name,const DeepCollectionEquality().hash(_this.categories));
+}
 
 @override
 String toString() {
-  return 'AddRecurringExpenseState(step: $step, category: $category, type: $type, typeParam: $typeParam, amount: $amount, name: $name, categories: $categories)';
+  final _this = this as AddRecurringExpenseState;
+  return 'AddRecurringExpenseState(step: ${_this.step}, category: ${_this.category}, type: ${_this.type}, typeParam: ${_this.typeParam}, amount: ${_this.amount}, name: ${_this.name}, categories: ${_this.categories})';
 }
 
 
@@ -63,7 +69,7 @@ class _$AddRecurringExpenseStateCopyWithImpl<$Res>
 /// Create a copy of AddRecurringExpenseState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? step = null,Object? category = freezed,Object? type = freezed,Object? typeParam = freezed,Object? amount = null,Object? name = null,Object? categories = null,}) {
-  return _then(_self.copyWith(
+  return _then(AddRecurringExpenseState(
 step: null == step ? _self.step : step // ignore: cast_nullable_to_non_nullable
 as int,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as Category?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -218,7 +224,7 @@ return $default(_that.step,_that.category,_that.type,_that.typeParam,_that.amoun
 
 
 class _AddRecurringExpenseState extends AddRecurringExpenseState {
-  const _AddRecurringExpenseState({this.step = 0, this.category, this.type, this.typeParam, this.amount = '', this.name = '', final  List<Category> categories = const []}): _categories = categories,super._();
+  const _AddRecurringExpenseState({this.step = 0, this.category, this.type, this.typeParam, this.amount = '', this.name = '',  List<Category> categories = const []}): _categories = categories,super._();
   
 
 @override@JsonKey() final  int step;
@@ -245,16 +251,18 @@ _$AddRecurringExpenseStateCopyWith<_AddRecurringExpenseState> get copyWith => __
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddRecurringExpenseState&&(identical(other.step, step) || other.step == step)&&(identical(other.category, category) || other.category == category)&&(identical(other.type, type) || other.type == type)&&(identical(other.typeParam, typeParam) || other.typeParam == typeParam)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other._categories, _categories));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddRecurringExpenseState&&(identical(other.step, step) || other.step == step)&&(identical(other.category, category) || other.category == category)&&(identical(other.type, type) || other.type == type)&&(identical(other.typeParam, typeParam) || other.typeParam == typeParam)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.categories, _categories));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,step,category,type,typeParam,amount,name,const DeepCollectionEquality().hash(_categories));
+int get hashCode {
+    return Object.hash(runtimeType,step,category,type,typeParam,amount,name,const DeepCollectionEquality().hash(_categories));
+}
 
 @override
 String toString() {
-  return 'AddRecurringExpenseState(step: $step, category: $category, type: $type, typeParam: $typeParam, amount: $amount, name: $name, categories: $categories)';
+    return 'AddRecurringExpenseState(step: $step, category: $category, type: $type, typeParam: $typeParam, amount: $amount, name: $name, categories: $categories)';
 }
 
 

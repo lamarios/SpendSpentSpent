@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'expense_images.dart';
@@ -9,6 +9,7 @@ part of 'expense_images.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ExpenseImagesStateCopyWith<ExpenseImagesState> get copyWith => _$ExpenseImagesS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseImagesState&&const DeepCollectionEquality().equals(other.files, files));
+  final _this = this as ExpenseImagesState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseImagesState&&const DeepCollectionEquality().equals(other.files, _this.files));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(files));
+int get hashCode {
+  final _this = this as ExpenseImagesState;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.files));
+}
 
 @override
 String toString() {
-  return 'ExpenseImagesState(files: $files)';
+  final _this = this as ExpenseImagesState;
+  return 'ExpenseImagesState(files: ${_this.files})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ExpenseImagesStateCopyWithImpl<$Res>
 /// Create a copy of ExpenseImagesState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? files = null,}) {
-  return _then(_self.copyWith(
+  return _then(ExpenseImagesState(
 files: null == files ? _self.files : files // ignore: cast_nullable_to_non_nullable
 as List<SssFile>,
   ));
@@ -200,7 +206,7 @@ return $default(_that.files);case _:
 
 
 class _ExpenseImagesState extends ExpenseImagesState {
-  const _ExpenseImagesState({final  List<SssFile> files = const []}): _files = files,super._();
+  const _ExpenseImagesState({ List<SssFile> files = const []}): _files = files,super._();
   
 
  final  List<SssFile> _files;
@@ -221,16 +227,18 @@ _$ExpenseImagesStateCopyWith<_ExpenseImagesState> get copyWith => __$ExpenseImag
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseImagesState&&const DeepCollectionEquality().equals(other._files, _files));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseImagesState&&const DeepCollectionEquality().equals(other.files, _files));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_files));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_files));
+}
 
 @override
 String toString() {
-  return 'ExpenseImagesState(files: $files)';
+    return 'ExpenseImagesState(files: $files)';
 }
 
 

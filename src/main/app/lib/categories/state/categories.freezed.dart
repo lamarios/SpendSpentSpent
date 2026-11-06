@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'categories.dart';
@@ -9,6 +9,7 @@ part of 'categories.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $CategoriesStateCopyWith<CategoriesState> get copyWith => _$CategoriesStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CategoriesState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.suggestions, suggestions));
+  final _this = this as CategoriesState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CategoriesState&&(identical(other.loading, _this.loading) || other.loading == _this.loading)&&const DeepCollectionEquality().equals(other.categories, _this.categories)&&const DeepCollectionEquality().equals(other.suggestions, _this.suggestions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(suggestions));
+int get hashCode {
+  final _this = this as CategoriesState;
+  return Object.hash(runtimeType,_this.loading,const DeepCollectionEquality().hash(_this.categories),const DeepCollectionEquality().hash(_this.suggestions));
+}
 
 @override
 String toString() {
-  return 'CategoriesState(loading: $loading, categories: $categories, suggestions: $suggestions)';
+  final _this = this as CategoriesState;
+  return 'CategoriesState(loading: ${_this.loading}, categories: ${_this.categories}, suggestions: ${_this.suggestions})';
 }
 
 
@@ -63,7 +69,7 @@ class _$CategoriesStateCopyWithImpl<$Res>
 /// Create a copy of CategoriesState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? loading = null,Object? categories = null,Object? suggestions = null,}) {
-  return _then(_self.copyWith(
+  return _then(CategoriesState(
 loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,categories: null == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
 as List<Category>,suggestions: null == suggestions ? _self.suggestions : suggestions // ignore: cast_nullable_to_non_nullable
@@ -202,7 +208,7 @@ return $default(_that.loading,_that.categories,_that.suggestions);case _:
 
 
 class _CategoriesState implements CategoriesState {
-  const _CategoriesState({this.loading = true, final  List<Category> categories = const [], final  List<CategoryPrediction> suggestions = const []}): _categories = categories,_suggestions = suggestions;
+  const _CategoriesState({this.loading = true,  List<Category> categories = const [],  List<CategoryPrediction> suggestions = const []}): _categories = categories,_suggestions = suggestions;
   
 
 @override@JsonKey() final  bool loading;
@@ -231,16 +237,18 @@ _$CategoriesStateCopyWith<_CategoriesState> get copyWith => __$CategoriesStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CategoriesState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._suggestions, _suggestions));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CategoriesState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.categories, _categories)&&const DeepCollectionEquality().equals(other.suggestions, _suggestions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_suggestions));
+int get hashCode {
+    return Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_suggestions));
+}
 
 @override
 String toString() {
-  return 'CategoriesState(loading: $loading, categories: $categories, suggestions: $suggestions)';
+    return 'CategoriesState(loading: $loading, categories: $categories, suggestions: $suggestions)';
 }
 
 

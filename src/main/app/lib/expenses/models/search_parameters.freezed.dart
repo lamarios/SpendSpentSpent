@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'search_parameters.dart';
@@ -9,6 +9,7 @@ part of 'search_parameters.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $SearchParametersCopyWith<SearchParameters> get copyWith => _$SearchParametersCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchParameters&&const DeepCollectionEquality().equals(other.categories, categories)&&(identical(other.minAmount, minAmount) || other.minAmount == minAmount)&&(identical(other.maxAmount, maxAmount) || other.maxAmount == maxAmount)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.minDate, minDate) || other.minDate == minDate)&&(identical(other.maxDate, maxDate) || other.maxDate == maxDate));
+  final _this = this as SearchParameters;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchParameters&&const DeepCollectionEquality().equals(other.categories, _this.categories)&&(identical(other.minAmount, _this.minAmount) || other.minAmount == _this.minAmount)&&(identical(other.maxAmount, _this.maxAmount) || other.maxAmount == _this.maxAmount)&&(identical(other.searchQuery, _this.searchQuery) || other.searchQuery == _this.searchQuery)&&(identical(other.minDate, _this.minDate) || other.minDate == _this.minDate)&&(identical(other.maxDate, _this.maxDate) || other.maxDate == _this.maxDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(categories),minAmount,maxAmount,searchQuery,minDate,maxDate);
+int get hashCode {
+  final _this = this as SearchParameters;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.categories),_this.minAmount,_this.maxAmount,_this.searchQuery,_this.minDate,_this.maxDate);
+}
 
 @override
 String toString() {
-  return 'SearchParameters(categories: $categories, minAmount: $minAmount, maxAmount: $maxAmount, searchQuery: $searchQuery, minDate: $minDate, maxDate: $maxDate)';
+  final _this = this as SearchParameters;
+  return 'SearchParameters(categories: ${_this.categories}, minAmount: ${_this.minAmount}, maxAmount: ${_this.maxAmount}, searchQuery: ${_this.searchQuery}, minDate: ${_this.minDate}, maxDate: ${_this.maxDate})';
 }
 
 
@@ -66,7 +72,7 @@ class _$SearchParametersCopyWithImpl<$Res>
 /// Create a copy of SearchParameters
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? categories = null,Object? minAmount = null,Object? maxAmount = null,Object? searchQuery = null,Object? minDate = freezed,Object? maxDate = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(SearchParameters(
 categories: null == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
 as List<Category>,minAmount: null == minAmount ? _self.minAmount : minAmount // ignore: cast_nullable_to_non_nullable
 as int,maxAmount: null == maxAmount ? _self.maxAmount : maxAmount // ignore: cast_nullable_to_non_nullable
@@ -208,7 +214,7 @@ return $default(_that.categories,_that.minAmount,_that.maxAmount,_that.searchQue
 @JsonSerializable()
 
 class _SearchParameters implements SearchParameters {
-  const _SearchParameters({final  List<Category> categories = const [], required this.minAmount, required this.maxAmount, this.searchQuery = '', this.minDate, this.maxDate}): _categories = categories;
+  const _SearchParameters({ List<Category> categories = const [], required this.minAmount, required this.maxAmount, this.searchQuery = '', this.minDate, this.maxDate}): _categories = categories;
   factory _SearchParameters.fromJson(Map<String, dynamic> json) => _$SearchParametersFromJson(json);
 
  final  List<Category> _categories;
@@ -237,16 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchParameters&&const DeepCollectionEquality().equals(other._categories, _categories)&&(identical(other.minAmount, minAmount) || other.minAmount == minAmount)&&(identical(other.maxAmount, maxAmount) || other.maxAmount == maxAmount)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.minDate, minDate) || other.minDate == minDate)&&(identical(other.maxDate, maxDate) || other.maxDate == maxDate));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchParameters&&const DeepCollectionEquality().equals(other.categories, _categories)&&(identical(other.minAmount, minAmount) || other.minAmount == minAmount)&&(identical(other.maxAmount, maxAmount) || other.maxAmount == maxAmount)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.minDate, minDate) || other.minDate == minDate)&&(identical(other.maxDate, maxDate) || other.maxDate == maxDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_categories),minAmount,maxAmount,searchQuery,minDate,maxDate);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_categories),minAmount,maxAmount,searchQuery,minDate,maxDate);
+}
 
 @override
 String toString() {
-  return 'SearchParameters(categories: $categories, minAmount: $minAmount, maxAmount: $maxAmount, searchQuery: $searchQuery, minDate: $minDate, maxDate: $maxDate)';
+    return 'SearchParameters(categories: $categories, minAmount: $minAmount, maxAmount: $maxAmount, searchQuery: $searchQuery, minDate: $minDate, maxDate: $maxDate)';
 }
 
 

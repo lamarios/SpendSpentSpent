@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'diff_with_previous_month_graph.dart';
@@ -9,12 +9,13 @@ part of 'diff_with_previous_month_graph.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DiffWithPreviousMonthGraphState {
 
- bool get loading; bool get includeRecurring; DateTimeRange get currentPeriod; List<List<FlSpot>> get spots; DateTimeRange get previousPeriod;
+ bool get loading; bool get includeRecurring; DateTimeRange<DateTime> get currentPeriod; List<List<FlSpot>> get spots; DateTimeRange<DateTime> get previousPeriod;
 /// Create a copy of DiffWithPreviousMonthGraphState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +26,21 @@ $DiffWithPreviousMonthGraphStateCopyWith<DiffWithPreviousMonthGraphState> get co
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DiffWithPreviousMonthGraphState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.includeRecurring, includeRecurring) || other.includeRecurring == includeRecurring)&&(identical(other.currentPeriod, currentPeriod) || other.currentPeriod == currentPeriod)&&const DeepCollectionEquality().equals(other.spots, spots)&&(identical(other.previousPeriod, previousPeriod) || other.previousPeriod == previousPeriod));
+  final _this = this as DiffWithPreviousMonthGraphState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DiffWithPreviousMonthGraphState&&(identical(other.loading, _this.loading) || other.loading == _this.loading)&&(identical(other.includeRecurring, _this.includeRecurring) || other.includeRecurring == _this.includeRecurring)&&(identical(other.currentPeriod, _this.currentPeriod) || other.currentPeriod == _this.currentPeriod)&&const DeepCollectionEquality().equals(other.spots, _this.spots)&&(identical(other.previousPeriod, _this.previousPeriod) || other.previousPeriod == _this.previousPeriod));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,includeRecurring,currentPeriod,const DeepCollectionEquality().hash(spots),previousPeriod);
+int get hashCode {
+  final _this = this as DiffWithPreviousMonthGraphState;
+  return Object.hash(runtimeType,_this.loading,_this.includeRecurring,_this.currentPeriod,const DeepCollectionEquality().hash(_this.spots),_this.previousPeriod);
+}
 
 @override
 String toString() {
-  return 'DiffWithPreviousMonthGraphState(loading: $loading, includeRecurring: $includeRecurring, currentPeriod: $currentPeriod, spots: $spots, previousPeriod: $previousPeriod)';
+  final _this = this as DiffWithPreviousMonthGraphState;
+  return 'DiffWithPreviousMonthGraphState(loading: ${_this.loading}, includeRecurring: ${_this.includeRecurring}, currentPeriod: ${_this.currentPeriod}, spots: ${_this.spots}, previousPeriod: ${_this.previousPeriod})';
 }
 
 
@@ -45,7 +51,7 @@ abstract mixin class $DiffWithPreviousMonthGraphStateCopyWith<$Res>  {
   factory $DiffWithPreviousMonthGraphStateCopyWith(DiffWithPreviousMonthGraphState value, $Res Function(DiffWithPreviousMonthGraphState) _then) = _$DiffWithPreviousMonthGraphStateCopyWithImpl;
 @useResult
 $Res call({
- bool loading, bool includeRecurring, DateTimeRange currentPeriod, List<List<FlSpot>> spots, DateTimeRange previousPeriod
+ bool loading, bool includeRecurring, DateTimeRange<DateTime> currentPeriod, List<List<FlSpot>> spots, DateTimeRange<DateTime> previousPeriod
 });
 
 
@@ -63,13 +69,13 @@ class _$DiffWithPreviousMonthGraphStateCopyWithImpl<$Res>
 /// Create a copy of DiffWithPreviousMonthGraphState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? loading = null,Object? includeRecurring = null,Object? currentPeriod = null,Object? spots = null,Object? previousPeriod = null,}) {
-  return _then(_self.copyWith(
+  return _then(DiffWithPreviousMonthGraphState(
 loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,includeRecurring: null == includeRecurring ? _self.includeRecurring : includeRecurring // ignore: cast_nullable_to_non_nullable
 as bool,currentPeriod: null == currentPeriod ? _self.currentPeriod : currentPeriod // ignore: cast_nullable_to_non_nullable
-as DateTimeRange,spots: null == spots ? _self.spots : spots // ignore: cast_nullable_to_non_nullable
+as DateTimeRange<DateTime>,spots: null == spots ? _self.spots : spots // ignore: cast_nullable_to_non_nullable
 as List<List<FlSpot>>,previousPeriod: null == previousPeriod ? _self.previousPeriod : previousPeriod // ignore: cast_nullable_to_non_nullable
-as DateTimeRange,
+as DateTimeRange<DateTime>,
   ));
 }
 
@@ -151,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool loading,  bool includeRecurring,  DateTimeRange currentPeriod,  List<List<FlSpot>> spots,  DateTimeRange previousPeriod)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool loading,  bool includeRecurring,  DateTimeRange<DateTime> currentPeriod,  List<List<FlSpot>> spots,  DateTimeRange<DateTime> previousPeriod)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DiffWithPreviousMonthGraphState() when $default != null:
 return $default(_that.loading,_that.includeRecurring,_that.currentPeriod,_that.spots,_that.previousPeriod);case _:
@@ -172,7 +178,7 @@ return $default(_that.loading,_that.includeRecurring,_that.currentPeriod,_that.s
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool loading,  bool includeRecurring,  DateTimeRange currentPeriod,  List<List<FlSpot>> spots,  DateTimeRange previousPeriod)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool loading,  bool includeRecurring,  DateTimeRange<DateTime> currentPeriod,  List<List<FlSpot>> spots,  DateTimeRange<DateTime> previousPeriod)  $default,) {final _that = this;
 switch (_that) {
 case _DiffWithPreviousMonthGraphState():
 return $default(_that.loading,_that.includeRecurring,_that.currentPeriod,_that.spots,_that.previousPeriod);}
@@ -189,7 +195,7 @@ return $default(_that.loading,_that.includeRecurring,_that.currentPeriod,_that.s
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool loading,  bool includeRecurring,  DateTimeRange currentPeriod,  List<List<FlSpot>> spots,  DateTimeRange previousPeriod)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool loading,  bool includeRecurring,  DateTimeRange<DateTime> currentPeriod,  List<List<FlSpot>> spots,  DateTimeRange<DateTime> previousPeriod)?  $default,) {final _that = this;
 switch (_that) {
 case _DiffWithPreviousMonthGraphState() when $default != null:
 return $default(_that.loading,_that.includeRecurring,_that.currentPeriod,_that.spots,_that.previousPeriod);case _:
@@ -204,12 +210,12 @@ return $default(_that.loading,_that.includeRecurring,_that.currentPeriod,_that.s
 
 
 class _DiffWithPreviousMonthGraphState implements DiffWithPreviousMonthGraphState {
-  const _DiffWithPreviousMonthGraphState({this.loading = true, required this.includeRecurring, required this.currentPeriod, final  List<List<FlSpot>> spots = const [], required this.previousPeriod}): _spots = spots;
+  const _DiffWithPreviousMonthGraphState({this.loading = true, required this.includeRecurring, required this.currentPeriod,  List<List<FlSpot>> spots = const [], required this.previousPeriod}): _spots = spots;
   
 
 @override@JsonKey() final  bool loading;
 @override final  bool includeRecurring;
-@override final  DateTimeRange currentPeriod;
+@override final  DateTimeRange<DateTime> currentPeriod;
  final  List<List<FlSpot>> _spots;
 @override@JsonKey() List<List<FlSpot>> get spots {
   if (_spots is EqualUnmodifiableListView) return _spots;
@@ -217,7 +223,7 @@ class _DiffWithPreviousMonthGraphState implements DiffWithPreviousMonthGraphStat
   return EqualUnmodifiableListView(_spots);
 }
 
-@override final  DateTimeRange previousPeriod;
+@override final  DateTimeRange<DateTime> previousPeriod;
 
 /// Create a copy of DiffWithPreviousMonthGraphState
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +235,18 @@ _$DiffWithPreviousMonthGraphStateCopyWith<_DiffWithPreviousMonthGraphState> get 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DiffWithPreviousMonthGraphState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.includeRecurring, includeRecurring) || other.includeRecurring == includeRecurring)&&(identical(other.currentPeriod, currentPeriod) || other.currentPeriod == currentPeriod)&&const DeepCollectionEquality().equals(other._spots, _spots)&&(identical(other.previousPeriod, previousPeriod) || other.previousPeriod == previousPeriod));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DiffWithPreviousMonthGraphState&&(identical(other.loading, loading) || other.loading == loading)&&(identical(other.includeRecurring, includeRecurring) || other.includeRecurring == includeRecurring)&&(identical(other.currentPeriod, currentPeriod) || other.currentPeriod == currentPeriod)&&const DeepCollectionEquality().equals(other.spots, _spots)&&(identical(other.previousPeriod, previousPeriod) || other.previousPeriod == previousPeriod));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,includeRecurring,currentPeriod,const DeepCollectionEquality().hash(_spots),previousPeriod);
+int get hashCode {
+    return Object.hash(runtimeType,loading,includeRecurring,currentPeriod,const DeepCollectionEquality().hash(_spots),previousPeriod);
+}
 
 @override
 String toString() {
-  return 'DiffWithPreviousMonthGraphState(loading: $loading, includeRecurring: $includeRecurring, currentPeriod: $currentPeriod, spots: $spots, previousPeriod: $previousPeriod)';
+    return 'DiffWithPreviousMonthGraphState(loading: $loading, includeRecurring: $includeRecurring, currentPeriod: $currentPeriod, spots: $spots, previousPeriod: $previousPeriod)';
 }
 
 
@@ -249,7 +257,7 @@ abstract mixin class _$DiffWithPreviousMonthGraphStateCopyWith<$Res> implements 
   factory _$DiffWithPreviousMonthGraphStateCopyWith(_DiffWithPreviousMonthGraphState value, $Res Function(_DiffWithPreviousMonthGraphState) _then) = __$DiffWithPreviousMonthGraphStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool loading, bool includeRecurring, DateTimeRange currentPeriod, List<List<FlSpot>> spots, DateTimeRange previousPeriod
+ bool loading, bool includeRecurring, DateTimeRange<DateTime> currentPeriod, List<List<FlSpot>> spots, DateTimeRange<DateTime> previousPeriod
 });
 
 
@@ -271,9 +279,9 @@ class __$DiffWithPreviousMonthGraphStateCopyWithImpl<$Res>
 loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,includeRecurring: null == includeRecurring ? _self.includeRecurring : includeRecurring // ignore: cast_nullable_to_non_nullable
 as bool,currentPeriod: null == currentPeriod ? _self.currentPeriod : currentPeriod // ignore: cast_nullable_to_non_nullable
-as DateTimeRange,spots: null == spots ? _self._spots : spots // ignore: cast_nullable_to_non_nullable
+as DateTimeRange<DateTime>,spots: null == spots ? _self._spots : spots // ignore: cast_nullable_to_non_nullable
 as List<List<FlSpot>>,previousPeriod: null == previousPeriod ? _self.previousPeriod : previousPeriod // ignore: cast_nullable_to_non_nullable
-as DateTimeRange,
+as DateTimeRange<DateTime>,
   ));
 }
 

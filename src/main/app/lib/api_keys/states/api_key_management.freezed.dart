@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'api_key_management.dart';
@@ -9,6 +9,7 @@ part of 'api_key_management.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ApiKeyManagementStateCopyWith<ApiKeyManagementState> get copyWith => _$ApiKeyMa
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApiKeyManagementState&&const DeepCollectionEquality().equals(other.keys, keys)&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+  final _this = this as ApiKeyManagementState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApiKeyManagementState&&const DeepCollectionEquality().equals(other.keys, _this.keys)&&(identical(other.loading, _this.loading) || other.loading == _this.loading)&&const DeepCollectionEquality().equals(other.error, _this.error)&&(identical(other.stackTrace, _this.stackTrace) || other.stackTrace == _this.stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(keys),loading,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+  final _this = this as ApiKeyManagementState;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.keys),_this.loading,const DeepCollectionEquality().hash(_this.error),_this.stackTrace);
+}
 
 @override
 String toString() {
-  return 'ApiKeyManagementState(keys: $keys, loading: $loading, error: $error, stackTrace: $stackTrace)';
+  final _this = this as ApiKeyManagementState;
+  return 'ApiKeyManagementState(keys: ${_this.keys}, loading: ${_this.loading}, error: ${_this.error}, stackTrace: ${_this.stackTrace})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ApiKeyManagementStateCopyWithImpl<$Res>
 /// Create a copy of ApiKeyManagementState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? keys = null,Object? loading = null,Object? error = freezed,Object? stackTrace = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ApiKeyManagementState(
 keys: null == keys ? _self.keys : keys // ignore: cast_nullable_to_non_nullable
 as List<ApiKey>,loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
@@ -203,7 +209,7 @@ return $default(_that.keys,_that.loading,_that.error,_that.stackTrace);case _:
 
 
 class _ApiKeyManagementState implements ApiKeyManagementState, WithError {
-  const _ApiKeyManagementState({final  List<ApiKey> keys = const [], this.loading = true, this.error, this.stackTrace}): _keys = keys;
+  const _ApiKeyManagementState({ List<ApiKey> keys = const [], this.loading = true, this.error, this.stackTrace}): _keys = keys;
   
 
  final  List<ApiKey> _keys;
@@ -227,16 +233,18 @@ _$ApiKeyManagementStateCopyWith<_ApiKeyManagementState> get copyWith => __$ApiKe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApiKeyManagementState&&const DeepCollectionEquality().equals(other._keys, _keys)&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApiKeyManagementState&&const DeepCollectionEquality().equals(other.keys, _keys)&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_keys),loading,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_keys),loading,const DeepCollectionEquality().hash(error),stackTrace);
+}
 
 @override
 String toString() {
-  return 'ApiKeyManagementState(keys: $keys, loading: $loading, error: $error, stackTrace: $stackTrace)';
+    return 'ApiKeyManagementState(keys: $keys, loading: $loading, error: $error, stackTrace: $stackTrace)';
 }
 
 

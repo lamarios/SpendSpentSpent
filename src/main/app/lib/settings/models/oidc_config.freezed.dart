@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'oidc_config.dart';
@@ -9,6 +9,7 @@ part of 'oidc_config.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $OidcConfigCopyWith<OidcConfig> get copyWith => _$OidcConfigCopyWithImpl<OidcCon
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is OidcConfig&&(identical(other.authorizationEndpoint, authorizationEndpoint) || other.authorizationEndpoint == authorizationEndpoint)&&(identical(other.jwksUri, jwksUri) || other.jwksUri == jwksUri)&&(identical(other.issuer, issuer) || other.issuer == issuer)&&(identical(other.tokenUrl, tokenUrl) || other.tokenUrl == tokenUrl)&&(identical(other.clientId, clientId) || other.clientId == clientId)&&(identical(other.discoveryUrl, discoveryUrl) || other.discoveryUrl == discoveryUrl)&&(identical(other.name, name) || other.name == name));
+  final _this = this as OidcConfig;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OidcConfig&&(identical(other.authorizationEndpoint, _this.authorizationEndpoint) || other.authorizationEndpoint == _this.authorizationEndpoint)&&(identical(other.jwksUri, _this.jwksUri) || other.jwksUri == _this.jwksUri)&&(identical(other.issuer, _this.issuer) || other.issuer == _this.issuer)&&(identical(other.tokenUrl, _this.tokenUrl) || other.tokenUrl == _this.tokenUrl)&&(identical(other.clientId, _this.clientId) || other.clientId == _this.clientId)&&(identical(other.discoveryUrl, _this.discoveryUrl) || other.discoveryUrl == _this.discoveryUrl)&&(identical(other.name, _this.name) || other.name == _this.name));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,authorizationEndpoint,jwksUri,issuer,tokenUrl,clientId,discoveryUrl,name);
+int get hashCode {
+  final _this = this as OidcConfig;
+  return Object.hash(runtimeType,_this.authorizationEndpoint,_this.jwksUri,_this.issuer,_this.tokenUrl,_this.clientId,_this.discoveryUrl,_this.name);
+}
 
 @override
 String toString() {
-  return 'OidcConfig(authorizationEndpoint: $authorizationEndpoint, jwksUri: $jwksUri, issuer: $issuer, tokenUrl: $tokenUrl, clientId: $clientId, discoveryUrl: $discoveryUrl, name: $name)';
+  final _this = this as OidcConfig;
+  return 'OidcConfig(authorizationEndpoint: ${_this.authorizationEndpoint}, jwksUri: ${_this.jwksUri}, issuer: ${_this.issuer}, tokenUrl: ${_this.tokenUrl}, clientId: ${_this.clientId}, discoveryUrl: ${_this.discoveryUrl}, name: ${_this.name})';
 }
 
 
@@ -66,7 +72,7 @@ class _$OidcConfigCopyWithImpl<$Res>
 /// Create a copy of OidcConfig
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? authorizationEndpoint = null,Object? jwksUri = null,Object? issuer = null,Object? tokenUrl = null,Object? clientId = null,Object? discoveryUrl = null,Object? name = null,}) {
-  return _then(_self.copyWith(
+  return _then(OidcConfig(
 authorizationEndpoint: null == authorizationEndpoint ? _self.authorizationEndpoint : authorizationEndpoint // ignore: cast_nullable_to_non_nullable
 as String,jwksUri: null == jwksUri ? _self.jwksUri : jwksUri // ignore: cast_nullable_to_non_nullable
 as String,issuer: null == issuer ? _self.issuer : issuer // ignore: cast_nullable_to_non_nullable
@@ -233,16 +239,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OidcConfig&&(identical(other.authorizationEndpoint, authorizationEndpoint) || other.authorizationEndpoint == authorizationEndpoint)&&(identical(other.jwksUri, jwksUri) || other.jwksUri == jwksUri)&&(identical(other.issuer, issuer) || other.issuer == issuer)&&(identical(other.tokenUrl, tokenUrl) || other.tokenUrl == tokenUrl)&&(identical(other.clientId, clientId) || other.clientId == clientId)&&(identical(other.discoveryUrl, discoveryUrl) || other.discoveryUrl == discoveryUrl)&&(identical(other.name, name) || other.name == name));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _OidcConfig&&(identical(other.authorizationEndpoint, authorizationEndpoint) || other.authorizationEndpoint == authorizationEndpoint)&&(identical(other.jwksUri, jwksUri) || other.jwksUri == jwksUri)&&(identical(other.issuer, issuer) || other.issuer == issuer)&&(identical(other.tokenUrl, tokenUrl) || other.tokenUrl == tokenUrl)&&(identical(other.clientId, clientId) || other.clientId == clientId)&&(identical(other.discoveryUrl, discoveryUrl) || other.discoveryUrl == discoveryUrl)&&(identical(other.name, name) || other.name == name));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,authorizationEndpoint,jwksUri,issuer,tokenUrl,clientId,discoveryUrl,name);
+int get hashCode {
+    return Object.hash(runtimeType,authorizationEndpoint,jwksUri,issuer,tokenUrl,clientId,discoveryUrl,name);
+}
 
 @override
 String toString() {
-  return 'OidcConfig(authorizationEndpoint: $authorizationEndpoint, jwksUri: $jwksUri, issuer: $issuer, tokenUrl: $tokenUrl, clientId: $clientId, discoveryUrl: $discoveryUrl, name: $name)';
+    return 'OidcConfig(authorizationEndpoint: $authorizationEndpoint, jwksUri: $jwksUri, issuer: $issuer, tokenUrl: $tokenUrl, clientId: $clientId, discoveryUrl: $discoveryUrl, name: $name)';
 }
 
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'category_prediction.dart';
@@ -9,6 +9,7 @@ part of 'category_prediction.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $CategoryPredictionCopyWith<CategoryPrediction> get copyWith => _$CategoryPredic
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CategoryPrediction&&(identical(other.probability, probability) || other.probability == probability)&&(identical(other.category, category) || other.category == category));
+  final _this = this as CategoryPrediction;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CategoryPrediction&&(identical(other.probability, _this.probability) || other.probability == _this.probability)&&(identical(other.category, _this.category) || other.category == _this.category));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,probability,category);
+int get hashCode {
+  final _this = this as CategoryPrediction;
+  return Object.hash(runtimeType,_this.probability,_this.category);
+}
 
 @override
 String toString() {
-  return 'CategoryPrediction(probability: $probability, category: $category)';
+  final _this = this as CategoryPrediction;
+  return 'CategoryPrediction(probability: ${_this.probability}, category: ${_this.category})';
 }
 
 
@@ -66,7 +72,7 @@ class _$CategoryPredictionCopyWithImpl<$Res>
 /// Create a copy of CategoryPrediction
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? probability = null,Object? category = null,}) {
-  return _then(_self.copyWith(
+  return _then(CategoryPrediction(
 probability: null == probability ? _self.probability : probability // ignore: cast_nullable_to_non_nullable
 as double,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as Category,
@@ -232,16 +238,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CategoryPrediction&&(identical(other.probability, probability) || other.probability == probability)&&(identical(other.category, category) || other.category == category));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CategoryPrediction&&(identical(other.probability, probability) || other.probability == probability)&&(identical(other.category, category) || other.category == category));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,probability,category);
+int get hashCode {
+    return Object.hash(runtimeType,probability,category);
+}
 
 @override
 String toString() {
-  return 'CategoryPrediction(probability: $probability, category: $category)';
+    return 'CategoryPrediction(probability: $probability, category: $category)';
 }
 
 

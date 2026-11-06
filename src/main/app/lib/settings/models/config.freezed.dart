@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'config.dart';
@@ -9,6 +9,7 @@ part of 'config.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $ConfigCopyWith<Config> get copyWith => _$ConfigCopyWithImpl<Config>(this as Con
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Config&&(identical(other.allowSignup, allowSignup) || other.allowSignup == allowSignup)&&(identical(other.canResetPassword, canResetPassword) || other.canResetPassword == canResetPassword)&&(identical(other.demoMode, demoMode) || other.demoMode == demoMode)&&(identical(other.hasSubscription, hasSubscription) || other.hasSubscription == hasSubscription)&&(identical(other.canConvertCurrency, canConvertCurrency) || other.canConvertCurrency == canConvertCurrency)&&(identical(other.announcement, announcement) || other.announcement == announcement)&&(identical(other.convertCurrencyQuota, convertCurrencyQuota) || other.convertCurrencyQuota == convertCurrencyQuota)&&(identical(other.minAppVersion, minAppVersion) || other.minAppVersion == minAppVersion)&&(identical(other.backendVersion, backendVersion) || other.backendVersion == backendVersion)&&(identical(other.oidc, oidc) || other.oidc == oidc));
+  final _this = this as Config;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Config&&(identical(other.allowSignup, _this.allowSignup) || other.allowSignup == _this.allowSignup)&&(identical(other.canResetPassword, _this.canResetPassword) || other.canResetPassword == _this.canResetPassword)&&(identical(other.demoMode, _this.demoMode) || other.demoMode == _this.demoMode)&&(identical(other.hasSubscription, _this.hasSubscription) || other.hasSubscription == _this.hasSubscription)&&(identical(other.canConvertCurrency, _this.canConvertCurrency) || other.canConvertCurrency == _this.canConvertCurrency)&&(identical(other.announcement, _this.announcement) || other.announcement == _this.announcement)&&(identical(other.convertCurrencyQuota, _this.convertCurrencyQuota) || other.convertCurrencyQuota == _this.convertCurrencyQuota)&&(identical(other.minAppVersion, _this.minAppVersion) || other.minAppVersion == _this.minAppVersion)&&(identical(other.backendVersion, _this.backendVersion) || other.backendVersion == _this.backendVersion)&&(identical(other.oidc, _this.oidc) || other.oidc == _this.oidc));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,allowSignup,canResetPassword,demoMode,hasSubscription,canConvertCurrency,announcement,convertCurrencyQuota,minAppVersion,backendVersion,oidc);
+int get hashCode {
+  final _this = this as Config;
+  return Object.hash(runtimeType,_this.allowSignup,_this.canResetPassword,_this.demoMode,_this.hasSubscription,_this.canConvertCurrency,_this.announcement,_this.convertCurrencyQuota,_this.minAppVersion,_this.backendVersion,_this.oidc);
+}
 
 @override
 String toString() {
-  return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc)';
+  final _this = this as Config;
+  return 'Config(allowSignup: ${_this.allowSignup}, canResetPassword: ${_this.canResetPassword}, demoMode: ${_this.demoMode}, hasSubscription: ${_this.hasSubscription}, canConvertCurrency: ${_this.canConvertCurrency}, announcement: ${_this.announcement}, convertCurrencyQuota: ${_this.convertCurrencyQuota}, minAppVersion: ${_this.minAppVersion}, backendVersion: ${_this.backendVersion}, oidc: ${_this.oidc})';
 }
 
 
@@ -66,7 +72,7 @@ class _$ConfigCopyWithImpl<$Res>
 /// Create a copy of Config
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? allowSignup = null,Object? canResetPassword = null,Object? demoMode = null,Object? hasSubscription = null,Object? canConvertCurrency = null,Object? announcement = null,Object? convertCurrencyQuota = null,Object? minAppVersion = freezed,Object? backendVersion = null,Object? oidc = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Config(
 allowSignup: null == allowSignup ? _self.allowSignup : allowSignup // ignore: cast_nullable_to_non_nullable
 as bool,canResetPassword: null == canResetPassword ? _self.canResetPassword : canResetPassword // ignore: cast_nullable_to_non_nullable
 as bool,demoMode: null == demoMode ? _self.demoMode : demoMode // ignore: cast_nullable_to_non_nullable
@@ -251,16 +257,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Config&&(identical(other.allowSignup, allowSignup) || other.allowSignup == allowSignup)&&(identical(other.canResetPassword, canResetPassword) || other.canResetPassword == canResetPassword)&&(identical(other.demoMode, demoMode) || other.demoMode == demoMode)&&(identical(other.hasSubscription, hasSubscription) || other.hasSubscription == hasSubscription)&&(identical(other.canConvertCurrency, canConvertCurrency) || other.canConvertCurrency == canConvertCurrency)&&(identical(other.announcement, announcement) || other.announcement == announcement)&&(identical(other.convertCurrencyQuota, convertCurrencyQuota) || other.convertCurrencyQuota == convertCurrencyQuota)&&(identical(other.minAppVersion, minAppVersion) || other.minAppVersion == minAppVersion)&&(identical(other.backendVersion, backendVersion) || other.backendVersion == backendVersion)&&(identical(other.oidc, oidc) || other.oidc == oidc));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Config&&(identical(other.allowSignup, allowSignup) || other.allowSignup == allowSignup)&&(identical(other.canResetPassword, canResetPassword) || other.canResetPassword == canResetPassword)&&(identical(other.demoMode, demoMode) || other.demoMode == demoMode)&&(identical(other.hasSubscription, hasSubscription) || other.hasSubscription == hasSubscription)&&(identical(other.canConvertCurrency, canConvertCurrency) || other.canConvertCurrency == canConvertCurrency)&&(identical(other.announcement, announcement) || other.announcement == announcement)&&(identical(other.convertCurrencyQuota, convertCurrencyQuota) || other.convertCurrencyQuota == convertCurrencyQuota)&&(identical(other.minAppVersion, minAppVersion) || other.minAppVersion == minAppVersion)&&(identical(other.backendVersion, backendVersion) || other.backendVersion == backendVersion)&&(identical(other.oidc, oidc) || other.oidc == oidc));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,allowSignup,canResetPassword,demoMode,hasSubscription,canConvertCurrency,announcement,convertCurrencyQuota,minAppVersion,backendVersion,oidc);
+int get hashCode {
+    return Object.hash(runtimeType,allowSignup,canResetPassword,demoMode,hasSubscription,canConvertCurrency,announcement,convertCurrencyQuota,minAppVersion,backendVersion,oidc);
+}
 
 @override
 String toString() {
-  return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc)';
+    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc)';
 }
 
 

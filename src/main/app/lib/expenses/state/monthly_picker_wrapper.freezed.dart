@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'monthly_picker_wrapper.dart';
@@ -9,6 +9,7 @@ part of 'monthly_picker_wrapper.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $MonthlyPickerWrapperStateCopyWith<MonthlyPickerWrapperState> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MonthlyPickerWrapperState&&const DeepCollectionEquality().equals(other.totals, totals)&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+  final _this = this as MonthlyPickerWrapperState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MonthlyPickerWrapperState&&const DeepCollectionEquality().equals(other.totals, _this.totals)&&(identical(other.loading, _this.loading) || other.loading == _this.loading)&&const DeepCollectionEquality().equals(other.error, _this.error)&&(identical(other.stackTrace, _this.stackTrace) || other.stackTrace == _this.stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(totals),loading,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+  final _this = this as MonthlyPickerWrapperState;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.totals),_this.loading,const DeepCollectionEquality().hash(_this.error),_this.stackTrace);
+}
 
 @override
 String toString() {
-  return 'MonthlyPickerWrapperState(totals: $totals, loading: $loading, error: $error, stackTrace: $stackTrace)';
+  final _this = this as MonthlyPickerWrapperState;
+  return 'MonthlyPickerWrapperState(totals: ${_this.totals}, loading: ${_this.loading}, error: ${_this.error}, stackTrace: ${_this.stackTrace})';
 }
 
 
@@ -63,7 +69,7 @@ class _$MonthlyPickerWrapperStateCopyWithImpl<$Res>
 /// Create a copy of MonthlyPickerWrapperState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? totals = null,Object? loading = null,Object? error = freezed,Object? stackTrace = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(MonthlyPickerWrapperState(
 totals: null == totals ? _self.totals : totals // ignore: cast_nullable_to_non_nullable
 as Map<int, double>,loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
@@ -203,7 +209,7 @@ return $default(_that.totals,_that.loading,_that.error,_that.stackTrace);case _:
 
 
 class _MonthlyPickerWrapperState implements MonthlyPickerWrapperState, WithError {
-  const _MonthlyPickerWrapperState({final  Map<int, double> totals = const {}, this.loading = false, this.error, this.stackTrace}): _totals = totals;
+  const _MonthlyPickerWrapperState({ Map<int, double> totals = const {}, this.loading = false, this.error, this.stackTrace}): _totals = totals;
   
 
  final  Map<int, double> _totals;
@@ -227,16 +233,18 @@ _$MonthlyPickerWrapperStateCopyWith<_MonthlyPickerWrapperState> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MonthlyPickerWrapperState&&const DeepCollectionEquality().equals(other._totals, _totals)&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MonthlyPickerWrapperState&&const DeepCollectionEquality().equals(other.totals, _totals)&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_totals),loading,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_totals),loading,const DeepCollectionEquality().hash(error),stackTrace);
+}
 
 @override
 String toString() {
-  return 'MonthlyPickerWrapperState(totals: $totals, loading: $loading, error: $error, stackTrace: $stackTrace)';
+    return 'MonthlyPickerWrapperState(totals: $totals, loading: $loading, error: $error, stackTrace: $stackTrace)';
 }
 
 

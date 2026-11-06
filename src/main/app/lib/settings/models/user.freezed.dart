@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user.dart';
@@ -9,6 +9,7 @@ part of 'user.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $UserCopyWith<User> get copyWith => _$UserCopyWithImpl<User>(this as User, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.email, email) || other.email == email)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.id, id) || other.id == id)&&(identical(other.password, password) || other.password == password)&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.subscriptionExpiry, subscriptionExpiry) || other.subscriptionExpiry == subscriptionExpiry));
+  final _this = this as User;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.firstName, _this.firstName) || other.firstName == _this.firstName)&&(identical(other.lastName, _this.lastName) || other.lastName == _this.lastName)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.password, _this.password) || other.password == _this.password)&&(identical(other.isAdmin, _this.isAdmin) || other.isAdmin == _this.isAdmin)&&(identical(other.subscriptionExpiry, _this.subscriptionExpiry) || other.subscriptionExpiry == _this.subscriptionExpiry));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,email,firstName,lastName,id,password,isAdmin,subscriptionExpiry);
+int get hashCode {
+  final _this = this as User;
+  return Object.hash(runtimeType,_this.email,_this.firstName,_this.lastName,_this.id,_this.password,_this.isAdmin,_this.subscriptionExpiry);
+}
 
 @override
 String toString() {
-  return 'User(email: $email, firstName: $firstName, lastName: $lastName, id: $id, password: $password, isAdmin: $isAdmin, subscriptionExpiry: $subscriptionExpiry)';
+  final _this = this as User;
+  return 'User(email: ${_this.email}, firstName: ${_this.firstName}, lastName: ${_this.lastName}, id: ${_this.id}, password: ${_this.password}, isAdmin: ${_this.isAdmin}, subscriptionExpiry: ${_this.subscriptionExpiry})';
 }
 
 
@@ -66,7 +72,7 @@ class _$UserCopyWithImpl<$Res>
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? email = null,Object? firstName = null,Object? lastName = null,Object? id = freezed,Object? password = freezed,Object? isAdmin = null,Object? subscriptionExpiry = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(User(
 email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
@@ -233,16 +239,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.email, email) || other.email == email)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.id, id) || other.id == id)&&(identical(other.password, password) || other.password == password)&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.subscriptionExpiry, subscriptionExpiry) || other.subscriptionExpiry == subscriptionExpiry));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.email, email) || other.email == email)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.id, id) || other.id == id)&&(identical(other.password, password) || other.password == password)&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.subscriptionExpiry, subscriptionExpiry) || other.subscriptionExpiry == subscriptionExpiry));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,email,firstName,lastName,id,password,isAdmin,subscriptionExpiry);
+int get hashCode {
+    return Object.hash(runtimeType,email,firstName,lastName,id,password,isAdmin,subscriptionExpiry);
+}
 
 @override
 String toString() {
-  return 'User(email: $email, firstName: $firstName, lastName: $lastName, id: $id, password: $password, isAdmin: $isAdmin, subscriptionExpiry: $subscriptionExpiry)';
+    return 'User(email: $email, firstName: $firstName, lastName: $lastName, id: $id, password: $password, isAdmin: $isAdmin, subscriptionExpiry: $subscriptionExpiry)';
 }
 
 

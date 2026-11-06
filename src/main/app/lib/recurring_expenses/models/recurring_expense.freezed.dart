@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'recurring_expense.dart';
@@ -9,6 +9,7 @@ part of 'recurring_expense.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $RecurringExpenseCopyWith<RecurringExpense> get copyWith => _$RecurringExpenseCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecurringExpense&&(identical(other.nextOccurrence, nextOccurrence) || other.nextOccurrence == nextOccurrence)&&(identical(other.lastOccurrence, lastOccurrence) || other.lastOccurrence == lastOccurrence)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.type, type) || other.type == type)&&(identical(other.income, income) || other.income == income)&&(identical(other.category, category) || other.category == category)&&(identical(other.typeParam, typeParam) || other.typeParam == typeParam)&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+  final _this = this as RecurringExpense;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecurringExpense&&(identical(other.nextOccurrence, _this.nextOccurrence) || other.nextOccurrence == _this.nextOccurrence)&&(identical(other.lastOccurrence, _this.lastOccurrence) || other.lastOccurrence == _this.lastOccurrence)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.income, _this.income) || other.income == _this.income)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.typeParam, _this.typeParam) || other.typeParam == _this.typeParam)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,nextOccurrence,lastOccurrence,amount,type,income,category,typeParam,id,name);
+int get hashCode {
+  final _this = this as RecurringExpense;
+  return Object.hash(runtimeType,_this.nextOccurrence,_this.lastOccurrence,_this.amount,_this.type,_this.income,_this.category,_this.typeParam,_this.id,_this.name);
+}
 
 @override
 String toString() {
-  return 'RecurringExpense(nextOccurrence: $nextOccurrence, lastOccurrence: $lastOccurrence, amount: $amount, type: $type, income: $income, category: $category, typeParam: $typeParam, id: $id, name: $name)';
+  final _this = this as RecurringExpense;
+  return 'RecurringExpense(nextOccurrence: ${_this.nextOccurrence}, lastOccurrence: ${_this.lastOccurrence}, amount: ${_this.amount}, type: ${_this.type}, income: ${_this.income}, category: ${_this.category}, typeParam: ${_this.typeParam}, id: ${_this.id}, name: ${_this.name})';
 }
 
 
@@ -66,7 +72,7 @@ class _$RecurringExpenseCopyWithImpl<$Res>
 /// Create a copy of RecurringExpense
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? nextOccurrence = freezed,Object? lastOccurrence = freezed,Object? amount = null,Object? type = null,Object? income = null,Object? category = null,Object? typeParam = null,Object? id = freezed,Object? name = null,}) {
-  return _then(_self.copyWith(
+  return _then(RecurringExpense(
 nextOccurrence: freezed == nextOccurrence ? _self.nextOccurrence : nextOccurrence // ignore: cast_nullable_to_non_nullable
 as String?,lastOccurrence: freezed == lastOccurrence ? _self.lastOccurrence : lastOccurrence // ignore: cast_nullable_to_non_nullable
 as String?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
@@ -246,16 +252,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecurringExpense&&(identical(other.nextOccurrence, nextOccurrence) || other.nextOccurrence == nextOccurrence)&&(identical(other.lastOccurrence, lastOccurrence) || other.lastOccurrence == lastOccurrence)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.type, type) || other.type == type)&&(identical(other.income, income) || other.income == income)&&(identical(other.category, category) || other.category == category)&&(identical(other.typeParam, typeParam) || other.typeParam == typeParam)&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecurringExpense&&(identical(other.nextOccurrence, nextOccurrence) || other.nextOccurrence == nextOccurrence)&&(identical(other.lastOccurrence, lastOccurrence) || other.lastOccurrence == lastOccurrence)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.type, type) || other.type == type)&&(identical(other.income, income) || other.income == income)&&(identical(other.category, category) || other.category == category)&&(identical(other.typeParam, typeParam) || other.typeParam == typeParam)&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,nextOccurrence,lastOccurrence,amount,type,income,category,typeParam,id,name);
+int get hashCode {
+    return Object.hash(runtimeType,nextOccurrence,lastOccurrence,amount,type,income,category,typeParam,id,name);
+}
 
 @override
 String toString() {
-  return 'RecurringExpense(nextOccurrence: $nextOccurrence, lastOccurrence: $lastOccurrence, amount: $amount, type: $type, income: $income, category: $category, typeParam: $typeParam, id: $id, name: $name)';
+    return 'RecurringExpense(nextOccurrence: $nextOccurrence, lastOccurrence: $lastOccurrence, amount: $amount, type: $type, income: $income, category: $category, typeParam: $typeParam, id: $id, name: $name)';
 }
 
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'sss_file.dart';
@@ -9,6 +9,7 @@ part of 'sss_file.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $SssFileCopyWith<SssFile> get copyWith => _$SssFileCopyWithImpl<SssFile>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SssFile&&(identical(other.id, id) || other.id == id)&&(identical(other.user, user) || other.user == user)&&(identical(other.expenseId, expenseId) || other.expenseId == expenseId)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.aiTags, aiTags)&&const DeepCollectionEquality().equals(other.amounts, amounts)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.timeCreated, timeCreated) || other.timeCreated == timeCreated)&&(identical(other.timeUpdated, timeUpdated) || other.timeUpdated == timeUpdated));
+  final _this = this as SssFile;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SssFile&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.user, _this.user) || other.user == _this.user)&&(identical(other.expenseId, _this.expenseId) || other.expenseId == _this.expenseId)&&(identical(other.status, _this.status) || other.status == _this.status)&&const DeepCollectionEquality().equals(other.aiTags, _this.aiTags)&&const DeepCollectionEquality().equals(other.amounts, _this.amounts)&&(identical(other.fileName, _this.fileName) || other.fileName == _this.fileName)&&(identical(other.timeCreated, _this.timeCreated) || other.timeCreated == _this.timeCreated)&&(identical(other.timeUpdated, _this.timeUpdated) || other.timeUpdated == _this.timeUpdated));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,user,expenseId,status,const DeepCollectionEquality().hash(aiTags),const DeepCollectionEquality().hash(amounts),fileName,timeCreated,timeUpdated);
+int get hashCode {
+  final _this = this as SssFile;
+  return Object.hash(runtimeType,_this.id,_this.user,_this.expenseId,_this.status,const DeepCollectionEquality().hash(_this.aiTags),const DeepCollectionEquality().hash(_this.amounts),_this.fileName,_this.timeCreated,_this.timeUpdated);
+}
 
 @override
 String toString() {
-  return 'SssFile(id: $id, user: $user, expenseId: $expenseId, status: $status, aiTags: $aiTags, amounts: $amounts, fileName: $fileName, timeCreated: $timeCreated, timeUpdated: $timeUpdated)';
+  final _this = this as SssFile;
+  return 'SssFile(id: ${_this.id}, user: ${_this.user}, expenseId: ${_this.expenseId}, status: ${_this.status}, aiTags: ${_this.aiTags}, amounts: ${_this.amounts}, fileName: ${_this.fileName}, timeCreated: ${_this.timeCreated}, timeUpdated: ${_this.timeUpdated})';
 }
 
 
@@ -66,7 +72,7 @@ class _$SssFileCopyWithImpl<$Res>
 /// Create a copy of SssFile
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? user = null,Object? expenseId = freezed,Object? status = null,Object? aiTags = null,Object? amounts = null,Object? fileName = null,Object? timeCreated = null,Object? timeUpdated = null,}) {
-  return _then(_self.copyWith(
+  return _then(SssFile(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
 as User,expenseId: freezed == expenseId ? _self.expenseId : expenseId // ignore: cast_nullable_to_non_nullable
@@ -220,7 +226,7 @@ return $default(_that.id,_that.user,_that.expenseId,_that.status,_that.aiTags,_t
 @JsonSerializable()
 
 class _SssFile extends SssFile {
-  const _SssFile({required this.id, required this.user, this.expenseId, required this.status, final  List<String> aiTags = const [], final  List<double> amounts = const [], required this.fileName, required this.timeCreated, required this.timeUpdated}): _aiTags = aiTags,_amounts = amounts,super._();
+  const _SssFile({required this.id, required this.user, this.expenseId, required this.status,  List<String> aiTags = const [],  List<double> amounts = const [], required this.fileName, required this.timeCreated, required this.timeUpdated}): _aiTags = aiTags,_amounts = amounts,super._();
   factory _SssFile.fromJson(Map<String, dynamic> json) => _$SssFileFromJson(json);
 
 @override final  String id;
@@ -258,16 +264,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SssFile&&(identical(other.id, id) || other.id == id)&&(identical(other.user, user) || other.user == user)&&(identical(other.expenseId, expenseId) || other.expenseId == expenseId)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._aiTags, _aiTags)&&const DeepCollectionEquality().equals(other._amounts, _amounts)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.timeCreated, timeCreated) || other.timeCreated == timeCreated)&&(identical(other.timeUpdated, timeUpdated) || other.timeUpdated == timeUpdated));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SssFile&&(identical(other.id, id) || other.id == id)&&(identical(other.user, user) || other.user == user)&&(identical(other.expenseId, expenseId) || other.expenseId == expenseId)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.aiTags, _aiTags)&&const DeepCollectionEquality().equals(other.amounts, _amounts)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.timeCreated, timeCreated) || other.timeCreated == timeCreated)&&(identical(other.timeUpdated, timeUpdated) || other.timeUpdated == timeUpdated));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,user,expenseId,status,const DeepCollectionEquality().hash(_aiTags),const DeepCollectionEquality().hash(_amounts),fileName,timeCreated,timeUpdated);
+int get hashCode {
+    return Object.hash(runtimeType,id,user,expenseId,status,const DeepCollectionEquality().hash(_aiTags),const DeepCollectionEquality().hash(_amounts),fileName,timeCreated,timeUpdated);
+}
 
 @override
 String toString() {
-  return 'SssFile(id: $id, user: $user, expenseId: $expenseId, status: $status, aiTags: $aiTags, amounts: $amounts, fileName: $fileName, timeCreated: $timeCreated, timeUpdated: $timeUpdated)';
+    return 'SssFile(id: $id, user: $user, expenseId: $expenseId, status: $status, aiTags: $aiTags, amounts: $amounts, fileName: $fileName, timeCreated: $timeCreated, timeUpdated: $timeUpdated)';
 }
 
 

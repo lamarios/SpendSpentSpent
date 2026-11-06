@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'app_settings.dart';
@@ -9,6 +9,7 @@ part of 'app_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $AppSettingsStateCopyWith<AppSettingsState> get copyWith => _$AppSettingsStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettingsState&&(identical(other.materialYou, materialYou) || other.materialYou == materialYou)&&(identical(other.blackBackground, blackBackground) || other.blackBackground == blackBackground)&&(identical(other.useHouseholdColors, useHouseholdColors) || other.useHouseholdColors == useHouseholdColors)&&(identical(other.watchNotifications, watchNotifications) || other.watchNotifications == watchNotifications));
+  final _this = this as AppSettingsState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettingsState&&(identical(other.materialYou, _this.materialYou) || other.materialYou == _this.materialYou)&&(identical(other.blackBackground, _this.blackBackground) || other.blackBackground == _this.blackBackground)&&(identical(other.useHouseholdColors, _this.useHouseholdColors) || other.useHouseholdColors == _this.useHouseholdColors)&&(identical(other.watchNotifications, _this.watchNotifications) || other.watchNotifications == _this.watchNotifications));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,materialYou,blackBackground,useHouseholdColors,watchNotifications);
+int get hashCode {
+  final _this = this as AppSettingsState;
+  return Object.hash(runtimeType,_this.materialYou,_this.blackBackground,_this.useHouseholdColors,_this.watchNotifications);
+}
 
 @override
 String toString() {
-  return 'AppSettingsState(materialYou: $materialYou, blackBackground: $blackBackground, useHouseholdColors: $useHouseholdColors, watchNotifications: $watchNotifications)';
+  final _this = this as AppSettingsState;
+  return 'AppSettingsState(materialYou: ${_this.materialYou}, blackBackground: ${_this.blackBackground}, useHouseholdColors: ${_this.useHouseholdColors}, watchNotifications: ${_this.watchNotifications})';
 }
 
 
@@ -63,7 +69,7 @@ class _$AppSettingsStateCopyWithImpl<$Res>
 /// Create a copy of AppSettingsState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? materialYou = null,Object? blackBackground = null,Object? useHouseholdColors = null,Object? watchNotifications = null,}) {
-  return _then(_self.copyWith(
+  return _then(AppSettingsState(
 materialYou: null == materialYou ? _self.materialYou : materialYou // ignore: cast_nullable_to_non_nullable
 as bool,blackBackground: null == blackBackground ? _self.blackBackground : blackBackground // ignore: cast_nullable_to_non_nullable
 as bool,useHouseholdColors: null == useHouseholdColors ? _self.useHouseholdColors : useHouseholdColors // ignore: cast_nullable_to_non_nullable
@@ -221,16 +227,18 @@ _$AppSettingsStateCopyWith<_AppSettingsState> get copyWith => __$AppSettingsStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettingsState&&(identical(other.materialYou, materialYou) || other.materialYou == materialYou)&&(identical(other.blackBackground, blackBackground) || other.blackBackground == blackBackground)&&(identical(other.useHouseholdColors, useHouseholdColors) || other.useHouseholdColors == useHouseholdColors)&&(identical(other.watchNotifications, watchNotifications) || other.watchNotifications == watchNotifications));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettingsState&&(identical(other.materialYou, materialYou) || other.materialYou == materialYou)&&(identical(other.blackBackground, blackBackground) || other.blackBackground == blackBackground)&&(identical(other.useHouseholdColors, useHouseholdColors) || other.useHouseholdColors == useHouseholdColors)&&(identical(other.watchNotifications, watchNotifications) || other.watchNotifications == watchNotifications));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,materialYou,blackBackground,useHouseholdColors,watchNotifications);
+int get hashCode {
+    return Object.hash(runtimeType,materialYou,blackBackground,useHouseholdColors,watchNotifications);
+}
 
 @override
 String toString() {
-  return 'AppSettingsState(materialYou: $materialYou, blackBackground: $blackBackground, useHouseholdColors: $useHouseholdColors, watchNotifications: $watchNotifications)';
+    return 'AppSettingsState(materialYou: $materialYou, blackBackground: $blackBackground, useHouseholdColors: $useHouseholdColors, watchNotifications: $watchNotifications)';
 }
 
 

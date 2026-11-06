@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'category.dart';
@@ -9,6 +9,7 @@ part of 'category.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $CategoryCopyWith<Category> get copyWith => _$CategoryCopyWithImpl<Category>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Category&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.categoryOrder, categoryOrder) || other.categoryOrder == categoryOrder)&&(identical(other.id, id) || other.id == id)&&(identical(other.percentageOfMonthly, percentageOfMonthly) || other.percentageOfMonthly == percentageOfMonthly)&&(identical(other.user, user) || other.user == user));
+  final _this = this as Category;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Category&&(identical(other.icon, _this.icon) || other.icon == _this.icon)&&(identical(other.categoryOrder, _this.categoryOrder) || other.categoryOrder == _this.categoryOrder)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.percentageOfMonthly, _this.percentageOfMonthly) || other.percentageOfMonthly == _this.percentageOfMonthly)&&(identical(other.user, _this.user) || other.user == _this.user));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,icon,categoryOrder,id,percentageOfMonthly,user);
+int get hashCode {
+  final _this = this as Category;
+  return Object.hash(runtimeType,_this.icon,_this.categoryOrder,_this.id,_this.percentageOfMonthly,_this.user);
+}
 
 @override
 String toString() {
-  return 'Category(icon: $icon, categoryOrder: $categoryOrder, id: $id, percentageOfMonthly: $percentageOfMonthly, user: $user)';
+  final _this = this as Category;
+  return 'Category(icon: ${_this.icon}, categoryOrder: ${_this.categoryOrder}, id: ${_this.id}, percentageOfMonthly: ${_this.percentageOfMonthly}, user: ${_this.user})';
 }
 
 
@@ -66,7 +72,7 @@ class _$CategoryCopyWithImpl<$Res>
 /// Create a copy of Category
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? icon = freezed,Object? categoryOrder = freezed,Object? id = freezed,Object? percentageOfMonthly = freezed,Object? user = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Category(
 icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
 as String?,categoryOrder: freezed == categoryOrder ? _self.categoryOrder : categoryOrder // ignore: cast_nullable_to_non_nullable
 as int?,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
@@ -241,16 +247,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Category&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.categoryOrder, categoryOrder) || other.categoryOrder == categoryOrder)&&(identical(other.id, id) || other.id == id)&&(identical(other.percentageOfMonthly, percentageOfMonthly) || other.percentageOfMonthly == percentageOfMonthly)&&(identical(other.user, user) || other.user == user));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Category&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.categoryOrder, categoryOrder) || other.categoryOrder == categoryOrder)&&(identical(other.id, id) || other.id == id)&&(identical(other.percentageOfMonthly, percentageOfMonthly) || other.percentageOfMonthly == percentageOfMonthly)&&(identical(other.user, user) || other.user == user));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,icon,categoryOrder,id,percentageOfMonthly,user);
+int get hashCode {
+    return Object.hash(runtimeType,icon,categoryOrder,id,percentageOfMonthly,user);
+}
 
 @override
 String toString() {
-  return 'Category(icon: $icon, categoryOrder: $categoryOrder, id: $id, percentageOfMonthly: $percentageOfMonthly, user: $user)';
+    return 'Category(icon: $icon, categoryOrder: $categoryOrder, id: $id, percentageOfMonthly: $percentageOfMonthly, user: $user)';
 }
 
 

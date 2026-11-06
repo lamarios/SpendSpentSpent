@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'api_key.dart';
@@ -9,6 +9,7 @@ part of 'api_key.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $ApiKeyCopyWith<ApiKey> get copyWith => _$ApiKeyCopyWithImpl<ApiKey>(this as Api
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApiKey&&(identical(other.id, id) || other.id == id)&&(identical(other.timeCreated, timeCreated) || other.timeCreated == timeCreated)&&(identical(other.keyName, keyName) || other.keyName == keyName)&&(identical(other.lastUsed, lastUsed) || other.lastUsed == lastUsed)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.apiKey, apiKey) || other.apiKey == apiKey));
+  final _this = this as ApiKey;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApiKey&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.timeCreated, _this.timeCreated) || other.timeCreated == _this.timeCreated)&&(identical(other.keyName, _this.keyName) || other.keyName == _this.keyName)&&(identical(other.lastUsed, _this.lastUsed) || other.lastUsed == _this.lastUsed)&&(identical(other.expiryDate, _this.expiryDate) || other.expiryDate == _this.expiryDate)&&(identical(other.apiKey, _this.apiKey) || other.apiKey == _this.apiKey));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,timeCreated,keyName,lastUsed,expiryDate,apiKey);
+int get hashCode {
+  final _this = this as ApiKey;
+  return Object.hash(runtimeType,_this.id,_this.timeCreated,_this.keyName,_this.lastUsed,_this.expiryDate,_this.apiKey);
+}
 
 @override
 String toString() {
-  return 'ApiKey(id: $id, timeCreated: $timeCreated, keyName: $keyName, lastUsed: $lastUsed, expiryDate: $expiryDate, apiKey: $apiKey)';
+  final _this = this as ApiKey;
+  return 'ApiKey(id: ${_this.id}, timeCreated: ${_this.timeCreated}, keyName: ${_this.keyName}, lastUsed: ${_this.lastUsed}, expiryDate: ${_this.expiryDate}, apiKey: ${_this.apiKey})';
 }
 
 
@@ -66,7 +72,7 @@ class _$ApiKeyCopyWithImpl<$Res>
 /// Create a copy of ApiKey
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? timeCreated = null,Object? keyName = null,Object? lastUsed = freezed,Object? expiryDate = freezed,Object? apiKey = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ApiKey(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,timeCreated: null == timeCreated ? _self.timeCreated : timeCreated // ignore: cast_nullable_to_non_nullable
 as int,keyName: null == keyName ? _self.keyName : keyName // ignore: cast_nullable_to_non_nullable
@@ -231,16 +237,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApiKey&&(identical(other.id, id) || other.id == id)&&(identical(other.timeCreated, timeCreated) || other.timeCreated == timeCreated)&&(identical(other.keyName, keyName) || other.keyName == keyName)&&(identical(other.lastUsed, lastUsed) || other.lastUsed == lastUsed)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.apiKey, apiKey) || other.apiKey == apiKey));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApiKey&&(identical(other.id, id) || other.id == id)&&(identical(other.timeCreated, timeCreated) || other.timeCreated == timeCreated)&&(identical(other.keyName, keyName) || other.keyName == keyName)&&(identical(other.lastUsed, lastUsed) || other.lastUsed == lastUsed)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.apiKey, apiKey) || other.apiKey == apiKey));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,timeCreated,keyName,lastUsed,expiryDate,apiKey);
+int get hashCode {
+    return Object.hash(runtimeType,id,timeCreated,keyName,lastUsed,expiryDate,apiKey);
+}
 
 @override
 String toString() {
-  return 'ApiKey(id: $id, timeCreated: $timeCreated, keyName: $keyName, lastUsed: $lastUsed, expiryDate: $expiryDate, apiKey: $apiKey)';
+    return 'ApiKey(id: $id, timeCreated: $timeCreated, keyName: $keyName, lastUsed: $lastUsed, expiryDate: $expiryDate, apiKey: $apiKey)';
 }
 
 

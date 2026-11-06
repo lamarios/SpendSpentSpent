@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'pagination.dart';
@@ -9,6 +9,7 @@ part of 'pagination.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $PaginationCopyWith<Pagination> get copyWith => _$PaginationCopyWithImpl<Paginat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Pagination&&(identical(other.page, page) || other.page == page)&&(identical(other.total, total) || other.total == total)&&(identical(other.currentPageCount, currentPageCount) || other.currentPageCount == currentPageCount)&&(identical(other.pageSize, pageSize) || other.pageSize == pageSize)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
+  final _this = this as Pagination;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Pagination&&(identical(other.page, _this.page) || other.page == _this.page)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.currentPageCount, _this.currentPageCount) || other.currentPageCount == _this.currentPageCount)&&(identical(other.pageSize, _this.pageSize) || other.pageSize == _this.pageSize)&&(identical(other.totalPages, _this.totalPages) || other.totalPages == _this.totalPages));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,page,total,currentPageCount,pageSize,totalPages);
+int get hashCode {
+  final _this = this as Pagination;
+  return Object.hash(runtimeType,_this.page,_this.total,_this.currentPageCount,_this.pageSize,_this.totalPages);
+}
 
 @override
 String toString() {
-  return 'Pagination(page: $page, total: $total, currentPageCount: $currentPageCount, pageSize: $pageSize, totalPages: $totalPages)';
+  final _this = this as Pagination;
+  return 'Pagination(page: ${_this.page}, total: ${_this.total}, currentPageCount: ${_this.currentPageCount}, pageSize: ${_this.pageSize}, totalPages: ${_this.totalPages})';
 }
 
 
@@ -66,7 +72,7 @@ class _$PaginationCopyWithImpl<$Res>
 /// Create a copy of Pagination
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? page = null,Object? total = null,Object? currentPageCount = null,Object? pageSize = null,Object? totalPages = null,}) {
-  return _then(_self.copyWith(
+  return _then(Pagination(
 page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
 as int,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as int,currentPageCount: null == currentPageCount ? _self.currentPageCount : currentPageCount // ignore: cast_nullable_to_non_nullable
@@ -229,16 +235,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Pagination&&(identical(other.page, page) || other.page == page)&&(identical(other.total, total) || other.total == total)&&(identical(other.currentPageCount, currentPageCount) || other.currentPageCount == currentPageCount)&&(identical(other.pageSize, pageSize) || other.pageSize == pageSize)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Pagination&&(identical(other.page, page) || other.page == page)&&(identical(other.total, total) || other.total == total)&&(identical(other.currentPageCount, currentPageCount) || other.currentPageCount == currentPageCount)&&(identical(other.pageSize, pageSize) || other.pageSize == pageSize)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,page,total,currentPageCount,pageSize,totalPages);
+int get hashCode {
+    return Object.hash(runtimeType,page,total,currentPageCount,pageSize,totalPages);
+}
 
 @override
 String toString() {
-  return 'Pagination(page: $page, total: $total, currentPageCount: $currentPageCount, pageSize: $pageSize, totalPages: $totalPages)';
+    return 'Pagination(page: $page, total: $total, currentPageCount: $currentPageCount, pageSize: $pageSize, totalPages: $totalPages)';
 }
 
 

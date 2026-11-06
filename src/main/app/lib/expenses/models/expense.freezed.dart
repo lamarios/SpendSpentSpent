@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'expense.dart';
@@ -9,6 +9,7 @@ part of 'expense.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $ExpenseCopyWith<Expense> get copyWith => _$ExpenseCopyWithImpl<Expense>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Expense&&(identical(other.date, date) || other.date == date)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.note, note) || other.note == note)&&(identical(other.type, type) || other.type == type)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.income, income) || other.income == income)&&(identical(other.category, category) || other.category == category)&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.files, files));
+  final _this = this as Expense;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Expense&&(identical(other.date, _this.date) || other.date == _this.date)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.latitude, _this.latitude) || other.latitude == _this.latitude)&&(identical(other.longitude, _this.longitude) || other.longitude == _this.longitude)&&(identical(other.note, _this.note) || other.note == _this.note)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.timestamp, _this.timestamp) || other.timestamp == _this.timestamp)&&(identical(other.income, _this.income) || other.income == _this.income)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.id, _this.id) || other.id == _this.id)&&const DeepCollectionEquality().equals(other.files, _this.files));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,amount,latitude,longitude,note,type,timestamp,income,category,id,const DeepCollectionEquality().hash(files));
+int get hashCode {
+  final _this = this as Expense;
+  return Object.hash(runtimeType,_this.date,_this.amount,_this.latitude,_this.longitude,_this.note,_this.type,_this.timestamp,_this.income,_this.category,_this.id,const DeepCollectionEquality().hash(_this.files));
+}
 
 @override
 String toString() {
-  return 'Expense(date: $date, amount: $amount, latitude: $latitude, longitude: $longitude, note: $note, type: $type, timestamp: $timestamp, income: $income, category: $category, id: $id, files: $files)';
+  final _this = this as Expense;
+  return 'Expense(date: ${_this.date}, amount: ${_this.amount}, latitude: ${_this.latitude}, longitude: ${_this.longitude}, note: ${_this.note}, type: ${_this.type}, timestamp: ${_this.timestamp}, income: ${_this.income}, category: ${_this.category}, id: ${_this.id}, files: ${_this.files})';
 }
 
 
@@ -66,7 +72,7 @@ class _$ExpenseCopyWithImpl<$Res>
 /// Create a copy of Expense
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? date = freezed,Object? amount = null,Object? latitude = freezed,Object? longitude = freezed,Object? note = freezed,Object? type = null,Object? timestamp = null,Object? income = null,Object? category = null,Object? id = freezed,Object? files = null,}) {
-  return _then(_self.copyWith(
+  return _then(Expense(
 date: freezed == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as double,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
@@ -222,7 +228,7 @@ return $default(_that.date,_that.amount,_that.latitude,_that.longitude,_that.not
 @JsonSerializable()
 
 class _Expense extends Expense {
-  const _Expense({@Deprecated("date is deprecated") this.date, required this.amount, this.latitude, this.longitude, this.note, this.type = 1, required this.timestamp, this.income = false, required this.category, this.id, final  List<SssFile> files = const []}): _files = files,super._();
+  const _Expense({@Deprecated("date is deprecated") this.date, required this.amount, this.latitude, this.longitude, this.note, this.type = 1, required this.timestamp, this.income = false, required this.category, this.id,  List<SssFile> files = const []}): _files = files,super._();
   factory _Expense.fromJson(Map<String, dynamic> json) => _$ExpenseFromJson(json);
 
 @override@Deprecated("date is deprecated") final  String? date;
@@ -256,16 +262,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Expense&&(identical(other.date, date) || other.date == date)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.note, note) || other.note == note)&&(identical(other.type, type) || other.type == type)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.income, income) || other.income == income)&&(identical(other.category, category) || other.category == category)&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._files, _files));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Expense&&(identical(other.date, date) || other.date == date)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.note, note) || other.note == note)&&(identical(other.type, type) || other.type == type)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.income, income) || other.income == income)&&(identical(other.category, category) || other.category == category)&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.files, _files));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,amount,latitude,longitude,note,type,timestamp,income,category,id,const DeepCollectionEquality().hash(_files));
+int get hashCode {
+    return Object.hash(runtimeType,date,amount,latitude,longitude,note,type,timestamp,income,category,id,const DeepCollectionEquality().hash(_files));
+}
 
 @override
 String toString() {
-  return 'Expense(date: $date, amount: $amount, latitude: $latitude, longitude: $longitude, note: $note, type: $type, timestamp: $timestamp, income: $income, category: $category, id: $id, files: $files)';
+    return 'Expense(date: $date, amount: $amount, latitude: $latitude, longitude: $longitude, note: $note, type: $type, timestamp: $timestamp, income: $income, category: $category, id: $id, files: $files)';
 }
 
 

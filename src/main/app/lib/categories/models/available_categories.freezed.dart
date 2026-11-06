@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'available_categories.dart';
@@ -9,6 +9,7 @@ part of 'available_categories.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $AvailableCategoriesCopyWith<AvailableCategories> get copyWith => _$AvailableCat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AvailableCategories&&const DeepCollectionEquality().equals(other.shopping, shopping)&&const DeepCollectionEquality().equals(other.transports, transports)&&const DeepCollectionEquality().equals(other.brands, brands)&&const DeepCollectionEquality().equals(other.hobbies, hobbies)&&const DeepCollectionEquality().equals(other.health, health)&&const DeepCollectionEquality().equals(other.education, education)&&const DeepCollectionEquality().equals(other.housing, housing)&&const DeepCollectionEquality().equals(other.tech, tech)&&const DeepCollectionEquality().equals(other.documents, documents));
+  final _this = this as AvailableCategories;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AvailableCategories&&const DeepCollectionEquality().equals(other.shopping, _this.shopping)&&const DeepCollectionEquality().equals(other.transports, _this.transports)&&const DeepCollectionEquality().equals(other.brands, _this.brands)&&const DeepCollectionEquality().equals(other.hobbies, _this.hobbies)&&const DeepCollectionEquality().equals(other.health, _this.health)&&const DeepCollectionEquality().equals(other.education, _this.education)&&const DeepCollectionEquality().equals(other.housing, _this.housing)&&const DeepCollectionEquality().equals(other.tech, _this.tech)&&const DeepCollectionEquality().equals(other.documents, _this.documents));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(shopping),const DeepCollectionEquality().hash(transports),const DeepCollectionEquality().hash(brands),const DeepCollectionEquality().hash(hobbies),const DeepCollectionEquality().hash(health),const DeepCollectionEquality().hash(education),const DeepCollectionEquality().hash(housing),const DeepCollectionEquality().hash(tech),const DeepCollectionEquality().hash(documents));
+int get hashCode {
+  final _this = this as AvailableCategories;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.shopping),const DeepCollectionEquality().hash(_this.transports),const DeepCollectionEquality().hash(_this.brands),const DeepCollectionEquality().hash(_this.hobbies),const DeepCollectionEquality().hash(_this.health),const DeepCollectionEquality().hash(_this.education),const DeepCollectionEquality().hash(_this.housing),const DeepCollectionEquality().hash(_this.tech),const DeepCollectionEquality().hash(_this.documents));
+}
 
 @override
 String toString() {
-  return 'AvailableCategories(shopping: $shopping, transports: $transports, brands: $brands, hobbies: $hobbies, health: $health, education: $education, housing: $housing, tech: $tech, documents: $documents)';
+  final _this = this as AvailableCategories;
+  return 'AvailableCategories(shopping: ${_this.shopping}, transports: ${_this.transports}, brands: ${_this.brands}, hobbies: ${_this.hobbies}, health: ${_this.health}, education: ${_this.education}, housing: ${_this.housing}, tech: ${_this.tech}, documents: ${_this.documents})';
 }
 
 
@@ -66,7 +72,7 @@ class _$AvailableCategoriesCopyWithImpl<$Res>
 /// Create a copy of AvailableCategories
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? shopping = freezed,Object? transports = freezed,Object? brands = freezed,Object? hobbies = freezed,Object? health = freezed,Object? education = freezed,Object? housing = freezed,Object? tech = freezed,Object? documents = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(AvailableCategories(
 shopping: freezed == shopping ? _self.shopping : shopping // ignore: cast_nullable_to_non_nullable
 as List<String>?,transports: freezed == transports ? _self.transports : transports // ignore: cast_nullable_to_non_nullable
 as List<String>?,brands: freezed == brands ? _self.brands : brands // ignore: cast_nullable_to_non_nullable
@@ -211,7 +217,7 @@ return $default(_that.shopping,_that.transports,_that.brands,_that.hobbies,_that
 @JsonSerializable()
 
 class _AvailableCategories implements AvailableCategories {
-  const _AvailableCategories({final  List<String>? shopping = const [], final  List<String>? transports = const [], final  List<String>? brands = const [], final  List<String>? hobbies = const [], final  List<String>? health = const [], final  List<String>? education = const [], final  List<String>? housing = const [], final  List<String>? tech = const [], final  List<String>? documents = const []}): _shopping = shopping,_transports = transports,_brands = brands,_hobbies = hobbies,_health = health,_education = education,_housing = housing,_tech = tech,_documents = documents;
+  const _AvailableCategories({ List<String>? shopping = const [],  List<String>? transports = const [],  List<String>? brands = const [],  List<String>? hobbies = const [],  List<String>? health = const [],  List<String>? education = const [],  List<String>? housing = const [],  List<String>? tech = const [],  List<String>? documents = const []}): _shopping = shopping,_transports = transports,_brands = brands,_hobbies = hobbies,_health = health,_education = education,_housing = housing,_tech = tech,_documents = documents;
   factory _AvailableCategories.fromJson(Map<String, dynamic> json) => _$AvailableCategoriesFromJson(json);
 
  final  List<String>? _shopping;
@@ -309,16 +315,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AvailableCategories&&const DeepCollectionEquality().equals(other._shopping, _shopping)&&const DeepCollectionEquality().equals(other._transports, _transports)&&const DeepCollectionEquality().equals(other._brands, _brands)&&const DeepCollectionEquality().equals(other._hobbies, _hobbies)&&const DeepCollectionEquality().equals(other._health, _health)&&const DeepCollectionEquality().equals(other._education, _education)&&const DeepCollectionEquality().equals(other._housing, _housing)&&const DeepCollectionEquality().equals(other._tech, _tech)&&const DeepCollectionEquality().equals(other._documents, _documents));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AvailableCategories&&const DeepCollectionEquality().equals(other.shopping, _shopping)&&const DeepCollectionEquality().equals(other.transports, _transports)&&const DeepCollectionEquality().equals(other.brands, _brands)&&const DeepCollectionEquality().equals(other.hobbies, _hobbies)&&const DeepCollectionEquality().equals(other.health, _health)&&const DeepCollectionEquality().equals(other.education, _education)&&const DeepCollectionEquality().equals(other.housing, _housing)&&const DeepCollectionEquality().equals(other.tech, _tech)&&const DeepCollectionEquality().equals(other.documents, _documents));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_shopping),const DeepCollectionEquality().hash(_transports),const DeepCollectionEquality().hash(_brands),const DeepCollectionEquality().hash(_hobbies),const DeepCollectionEquality().hash(_health),const DeepCollectionEquality().hash(_education),const DeepCollectionEquality().hash(_housing),const DeepCollectionEquality().hash(_tech),const DeepCollectionEquality().hash(_documents));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_shopping),const DeepCollectionEquality().hash(_transports),const DeepCollectionEquality().hash(_brands),const DeepCollectionEquality().hash(_hobbies),const DeepCollectionEquality().hash(_health),const DeepCollectionEquality().hash(_education),const DeepCollectionEquality().hash(_housing),const DeepCollectionEquality().hash(_tech),const DeepCollectionEquality().hash(_documents));
+}
 
 @override
 String toString() {
-  return 'AvailableCategories(shopping: $shopping, transports: $transports, brands: $brands, hobbies: $hobbies, health: $health, education: $education, housing: $housing, tech: $tech, documents: $documents)';
+    return 'AvailableCategories(shopping: $shopping, transports: $transports, brands: $brands, hobbies: $hobbies, health: $health, education: $education, housing: $housing, tech: $tech, documents: $documents)';
 }
 
 

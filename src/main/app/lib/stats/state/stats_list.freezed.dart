@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'stats_list.dart';
@@ -9,6 +9,7 @@ part of 'stats_list.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $StatsListStateCopyWith<StatsListState> get copyWith => _$StatsListStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatsListState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.stats, stats)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+  final _this = this as StatsListState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatsListState&&(identical(other.loading, _this.loading) || other.loading == _this.loading)&&const DeepCollectionEquality().equals(other.stats, _this.stats)&&const DeepCollectionEquality().equals(other.error, _this.error)&&(identical(other.stackTrace, _this.stackTrace) || other.stackTrace == _this.stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(stats),const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+  final _this = this as StatsListState;
+  return Object.hash(runtimeType,_this.loading,const DeepCollectionEquality().hash(_this.stats),const DeepCollectionEquality().hash(_this.error),_this.stackTrace);
+}
 
 @override
 String toString() {
-  return 'StatsListState(loading: $loading, stats: $stats, error: $error, stackTrace: $stackTrace)';
+  final _this = this as StatsListState;
+  return 'StatsListState(loading: ${_this.loading}, stats: ${_this.stats}, error: ${_this.error}, stackTrace: ${_this.stackTrace})';
 }
 
 
@@ -63,7 +69,7 @@ class _$StatsListStateCopyWithImpl<$Res>
 /// Create a copy of StatsListState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? loading = null,Object? stats = null,Object? error = freezed,Object? stackTrace = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(StatsListState(
 loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,stats: null == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as List<LeftColumnStats>,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
@@ -203,7 +209,7 @@ return $default(_that.loading,_that.stats,_that.error,_that.stackTrace);case _:
 
 
 class _StatsListState implements StatsListState, WithError {
-  const _StatsListState({this.loading = false, final  List<LeftColumnStats> stats = const [], this.error, this.stackTrace}): _stats = stats;
+  const _StatsListState({this.loading = false,  List<LeftColumnStats> stats = const [], this.error, this.stackTrace}): _stats = stats;
   
 
 @override@JsonKey() final  bool loading;
@@ -227,16 +233,18 @@ _$StatsListStateCopyWith<_StatsListState> get copyWith => __$StatsListStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatsListState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other._stats, _stats)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatsListState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.stats, _stats)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(_stats),const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+    return Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(_stats),const DeepCollectionEquality().hash(error),stackTrace);
+}
 
 @override
 String toString() {
-  return 'StatsListState(loading: $loading, stats: $stats, error: $error, stackTrace: $stackTrace)';
+    return 'StatsListState(loading: $loading, stats: $stats, error: $error, stackTrace: $stackTrace)';
 }
 
 

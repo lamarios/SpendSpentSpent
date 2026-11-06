@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'login.dart';
@@ -9,6 +9,7 @@ part of 'login.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -24,23 +25,29 @@ $LoginStateCopyWith<LoginState> get copyWith => _$LoginStateCopyWithImpl<LoginSt
 
 @override
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  final _this = this as LoginState;
   properties
     ..add(DiagnosticsProperty('type', 'LoginState'))
-    ..add(DiagnosticsProperty('config', config))..add(DiagnosticsProperty('loginError', loginError))..add(DiagnosticsProperty('page', page))..add(DiagnosticsProperty('error', error))..add(DiagnosticsProperty('stackTrace', stackTrace));
+    ..add(DiagnosticsProperty('config', _this.config))..add(DiagnosticsProperty('loginError', _this.loginError))..add(DiagnosticsProperty('page', _this.page))..add(DiagnosticsProperty('error', _this.error))..add(DiagnosticsProperty('stackTrace', _this.stackTrace));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginState&&(identical(other.config, config) || other.config == config)&&(identical(other.loginError, loginError) || other.loginError == loginError)&&(identical(other.page, page) || other.page == page)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+  final _this = this as LoginState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginState&&(identical(other.config, _this.config) || other.config == _this.config)&&(identical(other.loginError, _this.loginError) || other.loginError == _this.loginError)&&(identical(other.page, _this.page) || other.page == _this.page)&&const DeepCollectionEquality().equals(other.error, _this.error)&&(identical(other.stackTrace, _this.stackTrace) || other.stackTrace == _this.stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,config,loginError,page,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+  final _this = this as LoginState;
+  return Object.hash(runtimeType,_this.config,_this.loginError,_this.page,const DeepCollectionEquality().hash(_this.error),_this.stackTrace);
+}
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'LoginState(config: $config, loginError: $loginError, page: $page, error: $error, stackTrace: $stackTrace)';
+  final _this = this as LoginState;
+  return 'LoginState(config: ${_this.config}, loginError: ${_this.loginError}, page: ${_this.page}, error: ${_this.error}, stackTrace: ${_this.stackTrace})';
 }
 
 
@@ -69,7 +76,7 @@ class _$LoginStateCopyWithImpl<$Res>
 /// Create a copy of LoginState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? config = freezed,Object? loginError = null,Object? page = null,Object? error = freezed,Object? stackTrace = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(LoginState(
 config: freezed == config ? _self.config : config // ignore: cast_nullable_to_non_nullable
 as Config?,loginError: null == loginError ? _self.loginError : loginError // ignore: cast_nullable_to_non_nullable
 as String,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
@@ -240,23 +247,25 @@ _$LoginStateCopyWith<_LoginState> get copyWith => __$LoginStateCopyWithImpl<_Log
 
 @override
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  properties
+    properties
     ..add(DiagnosticsProperty('type', 'LoginState'))
     ..add(DiagnosticsProperty('config', config))..add(DiagnosticsProperty('loginError', loginError))..add(DiagnosticsProperty('page', page))..add(DiagnosticsProperty('error', error))..add(DiagnosticsProperty('stackTrace', stackTrace));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginState&&(identical(other.config, config) || other.config == config)&&(identical(other.loginError, loginError) || other.loginError == loginError)&&(identical(other.page, page) || other.page == page)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginState&&(identical(other.config, config) || other.config == config)&&(identical(other.loginError, loginError) || other.loginError == loginError)&&(identical(other.page, page) || other.page == page)&&const DeepCollectionEquality().equals(other.error, error)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,config,loginError,page,const DeepCollectionEquality().hash(error),stackTrace);
+int get hashCode {
+    return Object.hash(runtimeType,config,loginError,page,const DeepCollectionEquality().hash(error),stackTrace);
+}
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'LoginState(config: $config, loginError: $loginError, page: $page, error: $error, stackTrace: $stackTrace)';
+    return 'LoginState(config: $config, loginError: $loginError, page: $page, error: $error, stackTrace: $stackTrace)';
 }
 
 

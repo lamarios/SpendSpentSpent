@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'single_stats.dart';
@@ -9,6 +9,7 @@ part of 'single_stats.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $SingleStatsStateCopyWith<SingleStatsState> get copyWith => _$SingleStatsStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SingleStatsState&&(identical(other.open, open) || other.open == open)&&(identical(other.showGraph, showGraph) || other.showGraph == showGraph));
+  final _this = this as SingleStatsState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SingleStatsState&&(identical(other.open, _this.open) || other.open == _this.open)&&(identical(other.showGraph, _this.showGraph) || other.showGraph == _this.showGraph));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,open,showGraph);
+int get hashCode {
+  final _this = this as SingleStatsState;
+  return Object.hash(runtimeType,_this.open,_this.showGraph);
+}
 
 @override
 String toString() {
-  return 'SingleStatsState(open: $open, showGraph: $showGraph)';
+  final _this = this as SingleStatsState;
+  return 'SingleStatsState(open: ${_this.open}, showGraph: ${_this.showGraph})';
 }
 
 
@@ -63,7 +69,7 @@ class _$SingleStatsStateCopyWithImpl<$Res>
 /// Create a copy of SingleStatsState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? open = null,Object? showGraph = null,}) {
-  return _then(_self.copyWith(
+  return _then(SingleStatsState(
 open: null == open ? _self.open : open // ignore: cast_nullable_to_non_nullable
 as bool,showGraph: null == showGraph ? _self.showGraph : showGraph // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -217,16 +223,18 @@ _$SingleStatsStateCopyWith<_SingleStatsState> get copyWith => __$SingleStatsStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SingleStatsState&&(identical(other.open, open) || other.open == open)&&(identical(other.showGraph, showGraph) || other.showGraph == showGraph));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SingleStatsState&&(identical(other.open, open) || other.open == open)&&(identical(other.showGraph, showGraph) || other.showGraph == showGraph));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,open,showGraph);
+int get hashCode {
+    return Object.hash(runtimeType,open,showGraph);
+}
 
 @override
 String toString() {
-  return 'SingleStatsState(open: $open, showGraph: $showGraph)';
+    return 'SingleStatsState(open: $open, showGraph: $showGraph)';
 }
 
 

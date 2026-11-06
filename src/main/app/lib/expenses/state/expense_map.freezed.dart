@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'expense_map.dart';
@@ -9,6 +9,7 @@ part of 'expense_map.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ExpenseMapStateCopyWith<ExpenseMapState> get copyWith => _$ExpenseMapStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseMapState&&const DeepCollectionEquality().equals(other.aggregatedData, aggregatedData)&&const DeepCollectionEquality().equals(other.heatmapData, heatmapData)&&(identical(other.showHeatmap, showHeatmap) || other.showHeatmap == showHeatmap)&&(identical(other.showAmounts, showAmounts) || other.showAmounts == showAmounts)&&(identical(other.fit, fit) || other.fit == fit)&&(identical(other.center, center) || other.center == center));
+  final _this = this as ExpenseMapState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseMapState&&const DeepCollectionEquality().equals(other.aggregatedData, _this.aggregatedData)&&const DeepCollectionEquality().equals(other.heatmapData, _this.heatmapData)&&(identical(other.showHeatmap, _this.showHeatmap) || other.showHeatmap == _this.showHeatmap)&&(identical(other.showAmounts, _this.showAmounts) || other.showAmounts == _this.showAmounts)&&(identical(other.fit, _this.fit) || other.fit == _this.fit)&&(identical(other.center, _this.center) || other.center == _this.center));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(aggregatedData),const DeepCollectionEquality().hash(heatmapData),showHeatmap,showAmounts,fit,center);
+int get hashCode {
+  final _this = this as ExpenseMapState;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.aggregatedData),const DeepCollectionEquality().hash(_this.heatmapData),_this.showHeatmap,_this.showAmounts,_this.fit,_this.center);
+}
 
 @override
 String toString() {
-  return 'ExpenseMapState(aggregatedData: $aggregatedData, heatmapData: $heatmapData, showHeatmap: $showHeatmap, showAmounts: $showAmounts, fit: $fit, center: $center)';
+  final _this = this as ExpenseMapState;
+  return 'ExpenseMapState(aggregatedData: ${_this.aggregatedData}, heatmapData: ${_this.heatmapData}, showHeatmap: ${_this.showHeatmap}, showAmounts: ${_this.showAmounts}, fit: ${_this.fit}, center: ${_this.center})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ExpenseMapStateCopyWithImpl<$Res>
 /// Create a copy of ExpenseMapState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? aggregatedData = null,Object? heatmapData = null,Object? showHeatmap = null,Object? showAmounts = null,Object? fit = freezed,Object? center = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ExpenseMapState(
 aggregatedData: null == aggregatedData ? _self.aggregatedData : aggregatedData // ignore: cast_nullable_to_non_nullable
 as List<ExpenseCluster>,heatmapData: null == heatmapData ? _self.heatmapData : heatmapData // ignore: cast_nullable_to_non_nullable
 as List<WeightedLatLng>,showHeatmap: null == showHeatmap ? _self.showHeatmap : showHeatmap // ignore: cast_nullable_to_non_nullable
@@ -205,7 +211,7 @@ return $default(_that.aggregatedData,_that.heatmapData,_that.showHeatmap,_that.s
 
 
 class _ExpenseMapState implements ExpenseMapState {
-  const _ExpenseMapState({final  List<ExpenseCluster> aggregatedData = const [], final  List<WeightedLatLng> heatmapData = const [], this.showHeatmap = true, this.showAmounts = true, this.fit, this.center}): _aggregatedData = aggregatedData,_heatmapData = heatmapData;
+  const _ExpenseMapState({ List<ExpenseCluster> aggregatedData = const [],  List<WeightedLatLng> heatmapData = const [], this.showHeatmap = true, this.showAmounts = true, this.fit, this.center}): _aggregatedData = aggregatedData,_heatmapData = heatmapData;
   
 
  final  List<ExpenseCluster> _aggregatedData;
@@ -237,16 +243,18 @@ _$ExpenseMapStateCopyWith<_ExpenseMapState> get copyWith => __$ExpenseMapStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseMapState&&const DeepCollectionEquality().equals(other._aggregatedData, _aggregatedData)&&const DeepCollectionEquality().equals(other._heatmapData, _heatmapData)&&(identical(other.showHeatmap, showHeatmap) || other.showHeatmap == showHeatmap)&&(identical(other.showAmounts, showAmounts) || other.showAmounts == showAmounts)&&(identical(other.fit, fit) || other.fit == fit)&&(identical(other.center, center) || other.center == center));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseMapState&&const DeepCollectionEquality().equals(other.aggregatedData, _aggregatedData)&&const DeepCollectionEquality().equals(other.heatmapData, _heatmapData)&&(identical(other.showHeatmap, showHeatmap) || other.showHeatmap == showHeatmap)&&(identical(other.showAmounts, showAmounts) || other.showAmounts == showAmounts)&&(identical(other.fit, fit) || other.fit == fit)&&(identical(other.center, center) || other.center == center));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_aggregatedData),const DeepCollectionEquality().hash(_heatmapData),showHeatmap,showAmounts,fit,center);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_aggregatedData),const DeepCollectionEquality().hash(_heatmapData),showHeatmap,showAmounts,fit,center);
+}
 
 @override
 String toString() {
-  return 'ExpenseMapState(aggregatedData: $aggregatedData, heatmapData: $heatmapData, showHeatmap: $showHeatmap, showAmounts: $showAmounts, fit: $fit, center: $center)';
+    return 'ExpenseMapState(aggregatedData: $aggregatedData, heatmapData: $heatmapData, showHeatmap: $showHeatmap, showAmounts: $showAmounts, fit: $fit, center: $center)';
 }
 
 

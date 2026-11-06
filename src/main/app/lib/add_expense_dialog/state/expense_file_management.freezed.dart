@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'expense_file_management.dart';
@@ -9,6 +9,7 @@ part of 'expense_file_management.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ExpenseFileManagementStateCopyWith<ExpenseFileManagementState> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseFileManagementState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.files, files));
+  final _this = this as ExpenseFileManagementState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseFileManagementState&&(identical(other.loading, _this.loading) || other.loading == _this.loading)&&const DeepCollectionEquality().equals(other.files, _this.files));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(files));
+int get hashCode {
+  final _this = this as ExpenseFileManagementState;
+  return Object.hash(runtimeType,_this.loading,const DeepCollectionEquality().hash(_this.files));
+}
 
 @override
 String toString() {
-  return 'ExpenseFileManagementState(loading: $loading, files: $files)';
+  final _this = this as ExpenseFileManagementState;
+  return 'ExpenseFileManagementState(loading: ${_this.loading}, files: ${_this.files})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ExpenseFileManagementStateCopyWithImpl<$Res>
 /// Create a copy of ExpenseFileManagementState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? loading = null,Object? files = null,}) {
-  return _then(_self.copyWith(
+  return _then(ExpenseFileManagementState(
 loading: null == loading ? _self.loading : loading // ignore: cast_nullable_to_non_nullable
 as bool,files: null == files ? _self.files : files // ignore: cast_nullable_to_non_nullable
 as List<SssFile>,
@@ -201,7 +207,7 @@ return $default(_that.loading,_that.files);case _:
 
 
 class _ExpenseFileManagementState extends ExpenseFileManagementState {
-  const _ExpenseFileManagementState({this.loading = false, final  List<SssFile> files = const []}): _files = files,super._();
+  const _ExpenseFileManagementState({this.loading = false,  List<SssFile> files = const []}): _files = files,super._();
   
 
 @override@JsonKey() final  bool loading;
@@ -223,16 +229,18 @@ _$ExpenseFileManagementStateCopyWith<_ExpenseFileManagementState> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseFileManagementState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other._files, _files));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseFileManagementState&&(identical(other.loading, loading) || other.loading == loading)&&const DeepCollectionEquality().equals(other.files, _files));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(_files));
+int get hashCode {
+    return Object.hash(runtimeType,loading,const DeepCollectionEquality().hash(_files));
+}
 
 @override
 String toString() {
-  return 'ExpenseFileManagementState(loading: $loading, files: $files)';
+    return 'ExpenseFileManagementState(loading: $loading, files: $files)';
 }
 
 

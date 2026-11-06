@@ -27,6 +27,12 @@ linter:
   # producing the lint.
   rules:
     - sort_pub_dependencies
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 

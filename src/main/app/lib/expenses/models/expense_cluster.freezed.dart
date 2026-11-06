@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'expense_cluster.dart';
@@ -9,6 +9,7 @@ part of 'expense_cluster.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ExpenseClusterCopyWith<ExpenseCluster> get copyWith => _$ExpenseClusterCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseCluster&&const DeepCollectionEquality().equals(other.expenses, expenses)&&(identical(other.total, total) || other.total == total)&&(identical(other.location, location) || other.location == location));
+  final _this = this as ExpenseCluster;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExpenseCluster&&const DeepCollectionEquality().equals(other.expenses, _this.expenses)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.location, _this.location) || other.location == _this.location));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(expenses),total,location);
+int get hashCode {
+  final _this = this as ExpenseCluster;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.expenses),_this.total,_this.location);
+}
 
 @override
 String toString() {
-  return 'ExpenseCluster(expenses: $expenses, total: $total, location: $location)';
+  final _this = this as ExpenseCluster;
+  return 'ExpenseCluster(expenses: ${_this.expenses}, total: ${_this.total}, location: ${_this.location})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ExpenseClusterCopyWithImpl<$Res>
 /// Create a copy of ExpenseCluster
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? expenses = null,Object? total = null,Object? location = null,}) {
-  return _then(_self.copyWith(
+  return _then(ExpenseCluster(
 expenses: null == expenses ? _self.expenses : expenses // ignore: cast_nullable_to_non_nullable
 as List<Expense>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as double,location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
@@ -202,7 +208,7 @@ return $default(_that.expenses,_that.total,_that.location);case _:
 
 
 class _ExpenseCluster implements ExpenseCluster {
-  const _ExpenseCluster({final  List<Expense> expenses = const [], required this.total, required this.location}): _expenses = expenses;
+  const _ExpenseCluster({ List<Expense> expenses = const [], required this.total, required this.location}): _expenses = expenses;
   
 
  final  List<Expense> _expenses;
@@ -225,16 +231,18 @@ _$ExpenseClusterCopyWith<_ExpenseCluster> get copyWith => __$ExpenseClusterCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseCluster&&const DeepCollectionEquality().equals(other._expenses, _expenses)&&(identical(other.total, total) || other.total == total)&&(identical(other.location, location) || other.location == location));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExpenseCluster&&const DeepCollectionEquality().equals(other.expenses, _expenses)&&(identical(other.total, total) || other.total == total)&&(identical(other.location, location) || other.location == location));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_expenses),total,location);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_expenses),total,location);
+}
 
 @override
 String toString() {
-  return 'ExpenseCluster(expenses: $expenses, total: $total, location: $location)';
+    return 'ExpenseCluster(expenses: $expenses, total: $total, location: $location)';
 }
 
 
