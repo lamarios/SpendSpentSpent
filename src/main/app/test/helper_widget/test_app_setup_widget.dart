@@ -9,6 +9,15 @@ import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/settings/state/app_settings.dart';
 
+/// with their type arguments, the cubits are looked up by their type
+List<BlocProvider> _providers() => [
+  BlocProvider<CategoriesCubit>(create: (context) => getIt.get<CategoriesCubit>()),
+  BlocProvider<LastExpenseCubit>(create: (context) => LastExpenseCubit(0)),
+  BlocProvider<AppSettingsCubit>(create: (context) => AppSettingsCubit(const AppSettingsState())),
+  BlocProvider<UsernamePasswordCubit>(create: (context) => getIt.get<UsernamePasswordCubit>()),
+  BlocProvider<HouseholdCubit>(create: (context) => getIt.get<HouseholdCubit>()),
+];
+
 class TestSetup extends StatelessWidget {
   final Widget child;
 
@@ -17,13 +26,7 @@ class TestSetup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => getIt.get<CategoriesCubit>()),
-        BlocProvider(create: (context) => LastExpenseCubit(0)),
-        BlocProvider(create: (context) => AppSettingsCubit(const AppSettingsState())),
-        BlocProvider(create: (context) => getIt.get<UsernamePasswordCubit>()),
-        BlocProvider(create: (context) => getIt.get<HouseholdCubit>()),
-      ],
+      providers: _providers(),
       child: MaterialApp(
         // localizationsDelegates: AppLocalizations.localizationsDelegates,
         // supportedLocales: AppLocalizations.supportedLocales,
@@ -45,18 +48,26 @@ class DeepLinkTestSetup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => getIt.get<CategoriesCubit>()),
-        BlocProvider(create: (context) => LastExpenseCubit(0)),
-        BlocProvider(create: (context) => AppSettingsCubit(const AppSettingsState())),
-        BlocProvider(create: (context) => getIt.get<UsernamePasswordCubit>()),
-        BlocProvider(create: (context) => getIt.get<HouseholdCubit>()),
-      ],
+      providers: _providers(),
       child: MaterialApp.router(
         // localizationsDelegates: AppLocalizations.localizationsDelegates,
         // supportedLocales: AppLocalizations.supportedLocales,
         routerConfig: AppRouter().config(deepLinkBuilder: (deepLink) => DeepLink.single(route)),
       ),
+    );
+  }
+}
+
+class RouterTestSetup extends StatelessWidget {
+  final RootStackRouter router;
+
+  const RouterTestSetup({super.key, required this.router});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: _providers(),
+      child: MaterialApp.router(routerConfig: router.config()),
     );
   }
 }
