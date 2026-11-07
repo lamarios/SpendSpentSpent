@@ -17,13 +17,17 @@ class RecurringExpensesCubit extends Cubit<RecurringExpensesState> {
   }
 
   int _latestRequest = 0;
+  int _shownRequest = 0;
 
   /// With [showLoading] false, the list is refreshed in the background: the current one stays shown and a failure is
   /// only logged.
   ///
-  /// Only the answer to the latest request is kept, an older one could bring back an expense deleted in the meantime.
+  /// An answer is dropped once the answer to a newer request is shown, it could bring back an expense deleted in the
+  /// meantime. A failed request doesn't drop an older answer, the first load would be lost otherwise. Only a failure of
+  /// the latest request is shown.
   Future<void> getRecurringExpenses({bool showLoading = true}) async {
     final request = ++_latestRequest;
+    bool isNewest() => !isClosed && request > _shownRequest;
     bool isLatest() => !isClosed && request == _latestRequest;
 
     if (showLoading) {
@@ -31,8 +35,9 @@ class RecurringExpensesCubit extends Cubit<RecurringExpensesState> {
     }
     try {
       final expenses = await service.getRecurringExpenses();
-      if (isLatest()) {
-        emit(state.copyWith(expenses: expenses));
+      if (isNewest()) {
+        _shownRequest = request;
+        emit(state.copyWith(expenses: expenses, loading: false));
       }
     } catch (e, s) {
       if (!showLoading || !isLatest()) {
@@ -42,7 +47,7 @@ class RecurringExpensesCubit extends Cubit<RecurringExpensesState> {
       emit(state.copyWith(error: e, stackTrace: s));
       rethrow;
     } finally {
-      // the loading indicator stays until the latest request is answered
+      // after a failure, the loading indicator stays until the latest request is answered
       if (isLatest() && state.loading) {
         emit(state.copyWith(loading: false));
       }

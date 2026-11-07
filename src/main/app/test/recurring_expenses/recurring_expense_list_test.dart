@@ -118,6 +118,71 @@ void main() {
     expect(find.text('Next: 2026-11-05'), findsNothing);
   });
 
+  testWidgets('A failed background refresh does not drop the first load', (tester) async {
+    final rentExpenses = (jsonDecode(rent('2026-11-05')) as List).map((e) => RecurringExpense.fromJson(e)).toList();
+    final answers = <Completer<List<RecurringExpense>>>[];
+    final previousService = service;
+    service = _AnsweredLaterService(answers)
+      ..url = previousService.url
+      ..version = previousService.version;
+    addTearDown(() => service = previousService);
+
+    // the app comes back to the foreground while the list is loaded for the first time
+    await tester.pumpWidget(TestSetup(child: RecurringExpenseListTab()));
+    await resumeApp(tester);
+    expect(answers.length, 2);
+
+    answers[1].completeError(Exception('offline'));
+    await tester.pump();
+    answers[0].complete(rentExpenses);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Next: 2026-11-05'), findsOneWidget);
+    expect(find.byType(AlertDialog), findsNothing);
+  });
+
+  testWidgets('An older failure is not shown once a newer request is running', (tester) async {
+    final rentExpenses = (jsonDecode(rent('2026-11-05')) as List).map((e) => RecurringExpense.fromJson(e)).toList();
+    final answers = <Completer<List<RecurringExpense>>>[];
+    final previousService = service;
+    service = _AnsweredLaterService(answers)
+      ..url = previousService.url
+      ..version = previousService.version;
+    addTearDown(() => service = previousService);
+
+    // the first load fails while the background refresh started after it is still running
+    await tester.pumpWidget(TestSetup(child: RecurringExpenseListTab()));
+    await resumeApp(tester);
+    expect(answers.length, 2);
+
+    answers[0].completeError(Exception('offline'));
+    await tester.pump();
+    expect(find.byType(LoadingIndicator), findsOneWidget);
+    answers[1].complete(rentExpenses);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Next: 2026-11-05'), findsOneWidget);
+    expect(find.byType(AlertDialog), findsNothing);
+  });
+
+  testWidgets('The loading indicator ends when all requests failed', (tester) async {
+    final answers = <Completer<List<RecurringExpense>>>[];
+    final previousService = service;
+    service = _AnsweredLaterService(answers)
+      ..url = previousService.url
+      ..version = previousService.version;
+    addTearDown(() => service = previousService);
+
+    await tester.pumpWidget(TestSetup(child: RecurringExpenseListTab()));
+    await resumeApp(tester);
+    answers[0].completeError(Exception('offline'));
+    await tester.pump();
+    answers[1].completeError(Exception('offline'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LoadingIndicator), findsNothing);
+  });
+
   testWidgets('The list is refreshed when it is shown again from the main menu', (tester) async {
     final router = _TestRouter();
     await tester.pumpWidget(RouterTestSetup(router: router));

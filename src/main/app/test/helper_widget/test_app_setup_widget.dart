@@ -9,7 +9,7 @@ import 'package:spend_spent_spent/identity/states/username_password.dart';
 import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/settings/state/app_settings.dart';
 
-/// with their type arguments, the cubits are looked up by their type
+/// With their type arguments, the cubits are looked up by their type.
 List<BlocProvider> _providers() => [
   BlocProvider<CategoriesCubit>(create: (context) => getIt.get<CategoriesCubit>()),
   BlocProvider<LastExpenseCubit>(create: (context) => LastExpenseCubit(0)),
