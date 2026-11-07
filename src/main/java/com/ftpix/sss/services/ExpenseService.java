@@ -33,7 +33,11 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.ftpix.sss.persistence.utils.ExpenseSpecifications.*;
 
@@ -41,6 +45,11 @@ import static com.ftpix.sss.persistence.utils.ExpenseSpecifications.*;
 public class ExpenseService {
     public static final String DATE = "date";
     private static final String CATEGORY_ID = "CATEGORY_ID";
+    private static final int MAX_NOTE_SUGGESTIONS = 20;
+    // a tag in a note, e.g. #visa, letters can carry combining marks (accents, vowel signs)
+    private static final Pattern TAG = Pattern.compile("#[\\p{L}\\p{M}\\p{N}_-]+");
+    // a tag being typed at the end of a note, possibly only the #
+    private static final Pattern TYPED_TAG = Pattern.compile("(?:^|\\s)(#[\\p{L}\\p{M}\\p{N}_-]*)$");
     public final CategoryService categoryService;
     public final SettingsService settingsService;
     protected final Log logger = LogFactory.getLog(this.getClass());
@@ -120,27 +129,78 @@ public class ExpenseService {
 
     }
 
+    /**
+     * The most used notes of the category, whatever the amount.
+     */
     @Transactional(readOnly = true)
     public Map<String, Long> suggestNotes(User currentUser, Expense expense) {
-        double minExpense = expense.getAmount() * 0.8;
-        double maxExpense = expense.getAmount() * 1.2;
-
-        return expenseRepository.findNotes(currentUser, expense.getCategory(), minExpense, maxExpense)
-                .stream()
-                .filter(Objects::nonNull)
-                .map(String::trim)
-                .filter(s -> !s.isBlank())
-                .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+        return countIgnoringCase(expenseRepository.findNotes(currentUser, expense.getCategory()).stream(), MAX_NOTE_SUGGESTIONS);
     }
 
+    /**
+     * Notes containing the text. If the text ends with a tag being typed (e.g. "Groceries #vi"), the known tags it
+     * could be are suggested as well, as the full note ("Groceries #visa") because picking a suggestion replaces the
+     * note.
+     */
     @Transactional(readOnly = true)
     public Map<String, Long> autoCompleteNote(User currentUser, String seed) {
-        return expenseRepository.autoCompleteNote(currentUser, "%" + seed + "%")
-                .stream()
-                .filter(Objects::nonNull)
+        Map<String, Long> suggestions = countIgnoringCase(expenseRepository.autoCompleteNote(currentUser, "%" + seed + "%").stream(), Integer.MAX_VALUE);
+
+        Matcher typedTag = TYPED_TAG.matcher(seed);
+        if (typedTag.find()) {
+            String beforeTag = seed.substring(0, typedTag.start(1));
+            String start = typedTag.group(1);
+
+            // compared character by character: lower casing the whole text can change its length (İ) or depend on
+            // the position (Σ), so it wouldn't match what the database finds
+            Stream<String> tags = expenseRepository.autoCompleteNote(currentUser, "%" + start + "%")
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .flatMap(note -> TAG.matcher(note).results().map(MatchResult::group))
+                    .filter(tag -> tag.regionMatches(true, 0, start, 0, start.length()));
+
+            // a completed tag can be a note already suggested, possibly spelled differently: it's suggested once, under
+            // the most used spelling, the existing note when both are used as often. Counts aren't added as they overlap.
+            Map<String, String> spellings = suggestions.keySet()
+                    .stream()
+                    .collect(Collectors.toMap(s -> s.toLowerCase(Locale.ROOT), s -> s));
+            countIgnoringCase(tags, Integer.MAX_VALUE).forEach((tag, count) -> {
+                String completed = beforeTag + tag;
+                String suggested = spellings.get(completed.toLowerCase(Locale.ROOT));
+                if (suggested == null) {
+                    suggestions.put(completed, count);
+                } else if (count > suggestions.get(suggested)) {
+                    suggestions.remove(suggested);
+                    suggestions.put(completed, count);
+                }
+            });
+        }
+
+        return suggestions;
+    }
+
+    /**
+     * Counts the texts, merging the ones only differing by their case under their most used spelling, so a single
+     * spelling ends up being suggested.
+     *
+     * @return the most used texts and how often they're used
+     */
+    private Map<String, Long> countIgnoringCase(Stream<String> texts, int limit) {
+        Map<String, Map<String, Long>> spellings = texts.filter(Objects::nonNull)
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
-                .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+                .collect(Collectors.groupingBy(s -> s.toLowerCase(Locale.ROOT), Collectors.groupingBy(s -> s, Collectors.counting())));
+
+        return spellings.values()
+                .stream()
+                .map(counts -> Map.entry(
+                        // the first one in alphabetical order when several are used as often
+                        Collections.max(counts.entrySet(), Map.Entry.<String, Long>comparingByValue()
+                                .thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder()))).getKey(),
+                        counts.values().stream().mapToLong(Long::longValue).sum()))
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(limit)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, Long::sum, HashMap::new));
     }
 
     @Transactional(readOnly = true)
