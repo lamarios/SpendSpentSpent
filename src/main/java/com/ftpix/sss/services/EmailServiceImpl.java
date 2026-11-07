@@ -6,7 +6,9 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import jakarta.mail.Message;
 import org.simplejavamail.api.email.Email;
+import org.simplejavamail.api.email.Recipient;
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.email.EmailBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +54,7 @@ public class EmailServiceImpl implements EmailService {
                     .ifPresent(m -> {
                         logger.info("Sending email [{}]", subject);
                         Email email = EmailBuilder.startingBlank()
-                                .to(to)
+                                .withRecipients(new Recipient(null, to, Message.RecipientType.TO, null))
                                 .from(smtpFrom)
                                 .withSubject(subject)
                                 .withHTMLText(message)

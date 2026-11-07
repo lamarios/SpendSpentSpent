@@ -58,12 +58,12 @@ jobs:
       - name: Run tests
         working-directory: src/main/app
         run: |
-          nix-shell --run 'flutter test'
+          nix-shell "$GITHUB_WORKSPACE/shell.nix" --run 'flutter test'
       - name: Build app
         working-directory: src/main/app
         run: |
-          nix-shell --run 'flutter build apk --split-per-abi'
-          nix-shell --run 'flutter build appbundle'
+          nix-shell "$GITHUB_WORKSPACE/shell.nix" --run 'flutter build apk --split-per-abi'
+          nix-shell "$GITHUB_WORKSPACE/shell.nix" --run 'flutter build appbundle'
       - name: Set up Ruby
         if: startsWith(github.ref, 'refs/tags/')
         uses: ruby/setup-ruby@v1

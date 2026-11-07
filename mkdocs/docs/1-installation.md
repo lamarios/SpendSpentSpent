@@ -39,7 +39,7 @@ With docker compose:
 
 ## From the JAR file
 
-You will need to have *Java 21* to be installed on your machine to be able to run SSS
+You will need to have *Java 25* to be installed on your machine to be able to run SSS
 
 ```
  SALT=somerandomestring DB_PATH=<jdbc url>  DB_USER=xxx DB_PASSWORD=yyyy TIMEZONE=Europe/Paris java -Dserver.port=9001 -jar /app/SpendSpentSpent.jar

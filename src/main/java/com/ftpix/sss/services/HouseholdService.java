@@ -224,7 +224,7 @@ public class HouseholdService {
             HouseholdMember householdMember = invitation.get();
             householdMember.setStatus(HouseholdInviteStatus.accepted);
 //            householdDao.getHouseholdMemberDao().update(invite);
-            householdMemberRepository.save(householdMember);
+            householdMemberRepository.saveAndFlush(householdMember);
             invitations.remove(householdMember);
 
             // we delete remaining invitations
