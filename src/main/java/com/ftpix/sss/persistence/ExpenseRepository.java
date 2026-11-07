@@ -26,7 +26,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpec
     @Query("from Expense where category in " + GET_USER_CATEGORIES)
     List<Expense> findExpenseByUser(@Param(USER_PARAM) User user);
 
-    @Query("select e.note from Expense e where e.category = :category and e.category in " + GET_USER_CATEGORIES)
+    @Query("select e.note from Expense e where e.category = :category and e.note is not null and trim(e.note) <> '' and e.category in " + GET_USER_CATEGORIES)
     List<String> findNotes(@Param(USER_PARAM) User user, @Param("category") Category category);
 
     @Query("select e.note from Expense e where lower(e.note) like lower(:seed) and e.category in " + GET_USER_CATEGORIES)
