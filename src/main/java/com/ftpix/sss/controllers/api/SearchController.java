@@ -21,6 +21,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.ftpix.sss.Constants.TIMEZONE_HEADER;
@@ -81,8 +82,8 @@ public class SearchController {
                     var longitude = expense.getLongitude() == null || expense.getLongitude() == 0 ? "" : Double.toString(expense.getLongitude());
 
                     String str = "%s,%s,%s,%s,%s,%s,%s,%s".formatted(Constants.dateFormatter.format(date), expense.getCategory()
-                            .getIcon(), Double.toString(expense.getAmount()), type, latitude, longitude, escapeCsv(expense.getNote()), expense.getCategory()
-                            .getUser()
+                            .getIcon(), Double.toString(expense.getAmount()), type, latitude, longitude, escapeCsv(expense.getNote()), Optional.ofNullable(expense.getUser())
+                            .orElseGet(() -> expense.getCategory().getUser())
                             .getEmail());
                     writer.println(str);
                 } catch (Exception e) {

@@ -19,6 +19,8 @@ public class MockEmailService implements EmailService {
 
     private final Configuration templateEngine;
 
+    private Runnable onSend;
+
     @Autowired
     public MockEmailService(Configuration templateEngine) {
         this.templateEngine = templateEngine;
@@ -36,6 +38,9 @@ public class MockEmailService implements EmailService {
 
     @Override
     public void sendTemplate(String to, String subject, String template, Map<String, Object> data) throws IOException, TemplateException {
+        if (onSend != null) {
+            onSend.run();
+        }
         String rootUrl = "http://test.com";
         data.put("footerUrl", rootUrl);
         final String s = processTemplate(template, data);
@@ -50,6 +55,13 @@ public class MockEmailService implements EmailService {
 
             return templateStr.toString();
         }
+    }
+
+    /**
+     * @param onSend runs whenever a templated email is sent, null to remove it
+     */
+    public void setOnSend(Runnable onSend) {
+        this.onSend = onSend;
     }
 
     public Queue<TemplatedEmailData> getEmails() {

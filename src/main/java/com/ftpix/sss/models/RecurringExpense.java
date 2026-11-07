@@ -1,5 +1,7 @@
 package com.ftpix.sss.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ftpix.sss.persistence.utils.BooleanToIntConverter;
 import com.ftpix.sss.persistence.utils.LocalDateConverter;
 import jakarta.persistence.*;
@@ -22,6 +24,14 @@ public class RecurringExpense  {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    /**
+     * Who created the recurring expense, generated expenses are attributed to this user.
+     */
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private User user;
 
     private int type;
 
@@ -57,12 +67,34 @@ public class RecurringExpense  {
         this.name = name;
     }
 
+    @JsonIgnore
     public Category getCategory() {
         return category;
     }
 
+    @JsonProperty("category")
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    /**
+     * Like {@link Expense#getCategoryForClients()}, clients get a copy of the category where the user is the creator of
+     * the recurring expense.
+     */
+    @JsonProperty("category")
+    public Category getCategoryForClients() {
+        if (category == null || user == null) {
+            return category;
+        }
+        return category.copyWithUser(user);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public int getType() {

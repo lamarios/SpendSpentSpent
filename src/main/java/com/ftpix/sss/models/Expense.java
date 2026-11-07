@@ -1,5 +1,7 @@
 package com.ftpix.sss.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ftpix.sss.persistence.listeners.HistoryServiceRefresher;
 import com.ftpix.sss.persistence.utils.BooleanToIntConverter;
 import com.ftpix.sss.persistence.utils.LocalDateConverter;
@@ -26,6 +28,14 @@ public class Expense  {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    /**
+     * Who created the expense. Categories can be shared within a household, so the category owner isn't necessarily
+     * the person who spent the money.
+     */
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private User user;
 
     @Convert(converter = LocalDateConverter.class)
     private LocalDate date;
@@ -94,12 +104,35 @@ public class Expense  {
         this.income = income;
     }
 
+    @JsonIgnore
     public Category getCategory() {
         return category;
     }
 
+    @JsonProperty("category")
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    /**
+     * Clients use category.user to show which household member an expense belongs to. As categories are shared within
+     * a household, the category owner isn't necessarily who spent the money, so clients get a copy of the category
+     * where the user is the creator of the expense.
+     */
+    @JsonProperty("category")
+    public Category getCategoryForClients() {
+        if (category == null || user == null) {
+            return category;
+        }
+        return category.copyWithUser(user);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Double getLatitude() {
