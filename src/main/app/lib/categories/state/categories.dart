@@ -17,11 +17,14 @@ class CategoriesCubit extends Cubit<CategoriesState> {
   }
 
   int _latestRequest = 0;
+  int _shownRequest = 0;
 
-  /// Only the answer to the latest request is kept, an older one could bring back the categories of a household left in
-  /// the meantime.
+  /// An answer is dropped once the answer to a newer request is shown, it could bring back the categories of a household
+  /// left in the meantime. A failed request doesn't drop an older answer, the first load would be lost otherwise. Only a
+  /// failure of the latest request ends the loading.
   Future<void> getCategories(bool loading) async {
     final request = ++_latestRequest;
+    bool isNewest() => !isClosed && request > _shownRequest;
     bool isLatest() => !isClosed && request == _latestRequest;
 
     try {
@@ -34,7 +37,8 @@ class CategoriesCubit extends Cubit<CategoriesState> {
 
         predictions.sort((a, b) => b.probability.compareTo(a.probability));
       }
-      if (isLatest()) {
+      if (isNewest()) {
+        _shownRequest = request;
         emit(state.copyWith(suggestions: predictions, categories: categories, loading: false));
       }
     } catch (e) {

@@ -51,6 +51,52 @@ void main() {
     expect(cubit.state.loading, false);
     await cubit.close();
   });
+
+  test('A failed refresh does not drop the first load', () async {
+    final answers = <Completer<List<Category>>>[];
+    final previousService = service;
+    service = _AnsweredLaterService(answers)
+      ..url = previousService.url
+      ..version = previousService.version;
+    addTearDown(() => service = previousService);
+
+    // a household update arrives while the categories are loaded for the first time
+    final cubit = CategoriesCubit(const CategoriesState());
+    final refresh = cubit.getCategories(false);
+    expect(answers.length, 2);
+
+    answers[1].completeError(Exception('offline'));
+    await refresh;
+    answers[0].complete([shared, own]);
+    await pumpEventQueue();
+
+    expect(cubit.state.categories, [shared, own]);
+    expect(cubit.state.loading, false);
+    await cubit.close();
+  });
+
+  test('An older failure does not end the loading of a newer request', () async {
+    final answers = <Completer<List<Category>>>[];
+    final previousService = service;
+    service = _AnsweredLaterService(answers)
+      ..url = previousService.url
+      ..version = previousService.version;
+    addTearDown(() => service = previousService);
+
+    final cubit = CategoriesCubit(const CategoriesState());
+    final newer = cubit.getCategories(true);
+    expect(answers.length, 2);
+
+    answers[0].completeError(Exception('offline'));
+    await pumpEventQueue();
+    expect(cubit.state.loading, true);
+
+    answers[1].complete([shared, own]);
+    await newer;
+    expect(cubit.state.categories, [shared, own]);
+    expect(cubit.state.loading, false);
+    await cubit.close();
+  });
 }
 
 /// Answers the requests for the categories when the test completes them.
