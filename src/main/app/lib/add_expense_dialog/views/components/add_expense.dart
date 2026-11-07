@@ -104,6 +104,9 @@ class AddExpense extends StatelessWidget {
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     final availableCategories = context.select((CategoriesCubit c) => c.state.categories);
+                    // the carousel can only start on a category the user has
+                    final showCarousel =
+                        canChangeCategory && availableCategories.any((cat) => cat.id == state.category.id);
 
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -143,7 +146,7 @@ class AddExpense extends StatelessWidget {
                                               icon: state.category.icon!,
                                               size: 40,
                                               color: colors.onPrimaryContainer.withValues(alpha: 0.05),
-                                              child: !canChangeCategory
+                                              child: !showCarousel
                                                   ? getIconHeader(context, cat: state.category)
                                                   : Row(
                                                       children: [
