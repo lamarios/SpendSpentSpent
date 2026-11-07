@@ -78,6 +78,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
   }
 
+  /// Reloads what depends on the household: the categories shared within it, its members and the latest expenses.
+  Future<void> refreshHouseholdData() async {
+    if (!mounted) {
+      return;
+    }
+    context.read<CategoriesCubit>().getCategories(false);
+    await context.read<HouseholdCubit>().getData();
+    if (mounted) {
+      context.read<LastExpenseCubit>().refresh();
+    }
+  }
+
   void handleAppNotification(NotificationTappedState? state) {
     var cubit = context.read<CategoriesCubit>();
     var cat = cubit.state.suggestions.firstOrNull?.category ?? cubit.state.categories.firstOrNull;
@@ -143,12 +155,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           return SssSocketListener(
             onChange: (message) async {
               if (message.type == SssSocketMessageType.householdUpdate) {
-                EasyDebounce.debounce('household-refresh', Duration(seconds: 1), () async {
-                  await context.read<HouseholdCubit>().getData();
-                  if (context.mounted) {
-                    context.read<LastExpenseCubit>().refresh();
-                  }
-                });
+                EasyDebounce.debounce('household-refresh', Duration(seconds: 1), refreshHouseholdData);
               }
 
               if (message.type == SssSocketMessageType.newHouseholdExpense) {
@@ -166,14 +173,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     floatingActionButton: Stack(
                       children: [
                         IconButton(
-                          onPressed: () => AutoRouter.of(context).push(const SettingsRoute()).then((value) async {
-                            if (context.mounted) {
-                              await context.read<HouseholdCubit>().getData();
-                              if (context.mounted) {
-                                context.read<LastExpenseCubit>().refresh();
-                              }
-                            }
-                          }),
+                          onPressed: () async {
+                            await AutoRouter.of(context).push(const SettingsRoute());
+                            // the household may have been joined or left in the settings
+                            await refreshHouseholdData();
+                          },
                           icon: const Icon(Icons.settings),
                         ),
                         if (state.invitations.isNotEmpty)

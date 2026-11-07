@@ -164,6 +164,8 @@ public class HouseholdService {
                         householdRepository.saveAndFlush(household);
                         householdSeparationService.separateEntriesOutsideHousehold();
                         sendMessageToOtherUsers(household, user);
+                        // the removed member isn't in the household anymore but still shows its categories
+                        AfterCommitMessages.sendToUsers(List.of(memberId.getId().toString()), new HouseholdWebsocketUpdate());
                     }
                 });
 /*
