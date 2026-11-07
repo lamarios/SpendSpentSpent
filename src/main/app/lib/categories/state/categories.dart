@@ -16,7 +16,14 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     getCategories(true);
   }
 
+  int _latestRequest = 0;
+
+  /// Only the answer to the latest request is kept, an older one could bring back the categories of a household left in
+  /// the meantime.
   Future<void> getCategories(bool loading) async {
+    final request = ++_latestRequest;
+    bool isLatest() => !isClosed && request == _latestRequest;
+
     try {
       emit(state.copyWith(loading: loading));
       final categories = await service.getCategories();
@@ -27,10 +34,14 @@ class CategoriesCubit extends Cubit<CategoriesState> {
 
         predictions.sort((a, b) => b.probability.compareTo(a.probability));
       }
-      emit(state.copyWith(suggestions: predictions, categories: categories, loading: false));
+      if (isLatest()) {
+        emit(state.copyWith(suggestions: predictions, categories: categories, loading: false));
+      }
     } catch (e) {
       _log.severe('Could not load categories');
-      emit(state.copyWith(loading: false));
+      if (isLatest()) {
+        emit(state.copyWith(loading: false));
+      }
     }
   }
 
