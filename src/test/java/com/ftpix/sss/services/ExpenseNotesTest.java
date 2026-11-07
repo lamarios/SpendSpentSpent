@@ -68,6 +68,16 @@ public class ExpenseNotesTest extends TestContainerTest {
     }
 
     @Test
+    public void emptyNotesAreNotSuggested() throws Exception {
+        expense("house", 10, null);
+        expense("house", 10, "");
+        expense("house", 10, "  ");
+        expense("house", 10, "Rent");
+
+        assertEquals(Map.of("Rent", 1L), suggest("house", 10));
+    }
+
+    @Test
     public void suggestionsMergeSpellingsUnderTheMostUsedOne() throws Exception {
         expense("house", 10, "Rent");
         expense("house", 10, "rent");
