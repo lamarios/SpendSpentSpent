@@ -52,6 +52,7 @@ const EXPENSE_BY_MONTH = '$API_URL/Expense/ByDay?month={0}';
 const EXPENSE_GET_MONTHS = '$API_URL/Expense/GetMonths';
 const EXPENSE_DELETE = '$API_URL/Expense/{0}';
 const EXPENSE_GET_NOTE_SUGGESTIONS = '$API_URL/Expense/suggest-notes';
+const EXPENSE_GET_RANKED_NOTE_SUGGESTIONS = '$API_URL/Expense/suggest-notes-ranked';
 const EXPENSE_GET_NOTE_AUTOCOMPLETE = '$API_URL/Expense/notes-autocomplete';
 const EXPENSE_GET_LIMITS = '$API_URL/Expense/limits';
 const EXPENSE_DIFF_WITH_PREVIOUS_PERIOD = '$API_URL/Expense/diff/{0}';
@@ -285,6 +286,18 @@ class Service {
 
     processResponse(response);
     return ExpenseLimits.fromJson(jsonDecode(response.body));
+  }
+
+  /// The most relevant notes of the category for the amount, in their order. Older servers don't have it.
+  Future<List<String>> getRankedNoteSuggestions(Expense expense) async {
+    final response = await http.post(
+      await formatUrl(EXPENSE_GET_RANKED_NOTE_SUGGESTIONS),
+      body: jsonEncode(expense.toJson()),
+      headers: await headers,
+    );
+
+    processResponse(response);
+    return List<String>.from(jsonDecode(response.body));
   }
 
   Future<Map<String, int>> getNoteSuggestions(Expense expense) async {
