@@ -3,6 +3,7 @@ package com.ftpix.sss.persistence;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.CategoryExpenseCount;
 import com.ftpix.sss.models.Expense;
+import com.ftpix.sss.models.NoteUse;
 import com.ftpix.sss.models.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -28,8 +29,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpec
     @Query("from Expense e where e.user = :user")
     List<Expense> findExpenseByUser(@Param(USER_PARAM) User user);
 
-    @Query("select e.note from Expense e where e.category = :category and e.note is not null and trim(e.note) <> '' and e.category in " + GET_HOUSEHOLD_CATEGORIES)
-    List<String> findNotes(@Param(USER_PARAM) User user, @Param("category") Category category);
+    @Query("select new com.ftpix.sss.models.NoteUse(e.note, e.amount) from Expense e where e.category = :category and e.note is not null and trim(e.note) <> '' and e.category in " + GET_HOUSEHOLD_CATEGORIES)
+    List<NoteUse> findNotes(@Param(USER_PARAM) User user, @Param("category") Category category);
 
     @Query("select e.note from Expense e where lower(e.note) like lower(:seed) and e.category in " + GET_HOUSEHOLD_CATEGORIES)
     List<String> autoCompleteNote(@Param(USER_PARAM) User user, @Param("seed") String seed);

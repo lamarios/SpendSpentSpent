@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,13 +59,82 @@ public class ExpenseNotesTest extends TestContainerTest {
         return expenseService.suggestNotes(currentUser, expense);
     }
 
+    private List<String> suggestRanked(String icon, double amount) {
+        Expense expense = new Expense();
+        expense.setCategory(category(icon));
+        expense.setAmount(amount);
+        return expenseService.suggestNotesRanked(currentUser, expense);
+    }
+
     @Test
-    public void suggestionsDontDependOnTheAmount() throws Exception {
-        expense("house", 10, "Plumber");
+    public void suggestionsOnlyContainNotesOfCloseAmounts() throws Exception {
+        expense("house", 400, "Deposit");
+        expense("house", 600, "Deposit");
+        expense("house", 399, "Plumber");
         expense("house", 1000, "Rent");
         expense("cloth", 500, "Shoes");
 
-        assertEquals(Map.of("Plumber", 1L, "Rent", 1L), suggest("house", 500));
+        assertEquals(Map.of("Deposit", 2L), suggest("house", 500));
+    }
+
+    @Test
+    public void rankedSuggestionsPutTheCloseAmountsFirst() throws Exception {
+        for (int i = 0; i < 10; i++) {
+            expense("house", 200, "Far");
+        }
+        for (int i = 0; i < 5; i++) {
+            expense("house", 130, "Middle");
+        }
+        expense("house", 110, "Close");
+        expense("cloth", 100, "Shoes");
+
+        assertEquals(List.of("Close", "Middle", "Far"), suggestRanked("house", 100));
+    }
+
+    @Test
+    public void rankedSuggestionsUseBracketsOf20And40Percent() throws Exception {
+        expense("house", 80, "a 80");
+        expense("house", 120, "b 120");
+        expense("house", 60, "c 60");
+        expense("house", 140, "d 140");
+        expense("house", 59, "e 59");
+        expense("house", 141, "f 141");
+
+        // within a bracket, as often used: alphabetical order
+        assertEquals(List.of("a 80", "b 120", "c 60", "d 140", "e 59", "f 141"), suggestRanked("house", 100));
+    }
+
+    @Test
+    public void centAmountsAtTheBracketLimitsAreInTheBracket() throws Exception {
+        expense("house", 1.74, "20% away");
+        expense("house", 2.03, "40% away");
+        expense("house", 3, "Far");
+        expense("house", 3, "Far");
+
+        assertEquals(Map.of("20% away", 1L), suggest("house", 1.45));
+        assertEquals(List.of("20% away", "40% away", "Far"), suggestRanked("house", 1.45));
+    }
+
+    @Test
+    public void aNoteIsRankedByItsClosestAmountAndHowOftenItWasUsedForIt() throws Exception {
+        for (int i = 0; i < 5; i++) {
+            expense("house", 300, "Lidl");
+        }
+        expense("house", 105, "Lidl");
+        expense("house", 95, "Bakery");
+        expense("house", 98, "Bakery");
+
+        assertEquals(List.of("Bakery", "Lidl"), suggestRanked("house", 100));
+        assertEquals(Map.of("Bakery", 2L, "Lidl", 1L), suggest("house", 100));
+    }
+
+    @Test
+    public void rankedSuggestionsMergeSpellingsUnderTheMostUsedOne() throws Exception {
+        expense("house", 10, "Rent");
+        expense("house", 10, "rent");
+        expense("house", 500, " rent ");
+
+        assertEquals(List.of("rent"), suggestRanked("house", 10));
     }
 
     @Test
@@ -72,9 +142,13 @@ public class ExpenseNotesTest extends TestContainerTest {
         expense("house", 10, null);
         expense("house", 10, "");
         expense("house", 10, "  ");
+        expense("house", 10, "\t");
+        expense("house", 10, " \r\n ");
+        expense("house", 10, "\u2003");
         expense("house", 10, "Rent");
 
         assertEquals(Map.of("Rent", 1L), suggest("house", 10));
+        assertEquals(List.of("Rent"), suggestRanked("house", 10));
     }
 
     @Test
@@ -90,17 +164,17 @@ public class ExpenseNotesTest extends TestContainerTest {
     }
 
     @Test
-    public void onlyTheMostUsedNotesAreSuggested() throws Exception {
+    public void onlyTheMostRelevantNotesAreSuggestedRanked() throws Exception {
         for (int i = 0; i < 25; i++) {
             expense("house", 10, "Note " + i);
         }
         expense("house", 10, "Rent");
         expense("house", 10, "Rent");
 
-        Map<String, Long> suggestions = suggest("house", 10);
+        List<String> suggestions = suggestRanked("house", 10);
 
         assertEquals(20, suggestions.size());
-        assertEquals(2L, suggestions.get("Rent"));
+        assertEquals("Rent", suggestions.getFirst());
     }
 
     @Test

@@ -137,6 +137,12 @@ public class ExpenseController {
         return expenseService.suggestNotes(currentUser, expense);
     }
 
+    @PostMapping("/suggest-notes-ranked")
+    public List<String> suggestNotesRanked(@RequestBody Expense expense) throws Exception {
+        final User currentUser = userService.getCurrentUser();
+        return expenseService.suggestNotesRanked(currentUser, expense);
+    }
+
     @PostMapping("/notes-autocomplete")
     public Map<String, Long> noteAutoComplete(@RequestBody String text) throws SQLException {
         if (text.isBlank()) {

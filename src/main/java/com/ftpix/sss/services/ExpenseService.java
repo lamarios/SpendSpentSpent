@@ -25,6 +25,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -46,6 +47,8 @@ public class ExpenseService {
     public static final String DATE = "date";
     private static final String CATEGORY_ID = "CATEGORY_ID";
     private static final int MAX_NOTE_SUGGESTIONS = 20;
+    // how far from the amount the amounts of a note can be, as a share of the amount, from the closest bracket on
+    private static final BigDecimal[] AMOUNT_BRACKETS = {new BigDecimal("0.2"), new BigDecimal("0.4")};
     // a tag in a note, e.g. #visa, letters can carry combining marks (accents, vowel signs)
     private static final Pattern TAG = Pattern.compile("#[\\p{L}\\p{M}\\p{N}_-]+");
     // a tag being typed at the end of a note, possibly only the #
@@ -133,11 +136,75 @@ public class ExpenseService {
     }
 
     /**
-     * The most used notes of the category, whatever the amount.
+     * The notes of the category used for an amount within 20% of the amount, with how often they were.
      */
     @Transactional(readOnly = true)
     public Map<String, Long> suggestNotes(User currentUser, Expense expense) {
-        return countIgnoringCase(expenseRepository.findNotes(currentUser, expense.getCategory()).stream(), MAX_NOTE_SUGGESTIONS);
+        Map<String, Long> suggestions = new HashMap<>();
+        rankNotes(currentUser, expense).stream()
+                .takeWhile(suggestion -> suggestion.bracket() == 0)
+                .forEach(suggestion -> suggestions.put(suggestion.note(), suggestion.uses()));
+        return suggestions;
+    }
+
+    /**
+     * The most relevant notes of the category, in their order: first the notes used for an amount within 20% of the
+     * amount, then within 40%, then the others, each time the most used first.
+     */
+    @Transactional(readOnly = true)
+    public List<String> suggestNotesRanked(User currentUser, Expense expense) {
+        return rankNotes(currentUser, expense).stream()
+                .limit(MAX_NOTE_SUGGESTIONS)
+                .map(NoteSuggestion::note)
+                .toList();
+    }
+
+    /**
+     * A suggested note, in the closest amount bracket it was used in, with how often it was used in it.
+     */
+    private record NoteSuggestion(String note, int bracket, long uses) {
+    }
+
+    /**
+     * The notes of the category, spellings only differing by their case merged under the most used one, ranked by the
+     * closest amount bracket they were used in, then by how often they were used in it.
+     */
+    private List<NoteSuggestion> rankNotes(User currentUser, Expense expense) {
+        Map<String, List<NoteUse>> uses = expenseRepository.findNotes(currentUser, expense.getCategory())
+                .stream()
+                .map(use -> new NoteUse(use.note().trim(), use.amount()))
+                .filter(use -> !use.note().isBlank())
+                .collect(Collectors.groupingBy(use -> use.note().toLowerCase(Locale.ROOT)));
+
+        return uses.values()
+                .stream()
+                .map(sameNote -> {
+                    Map<Integer, Long> usesPerBracket = sameNote.stream()
+                            .collect(Collectors.groupingBy(use -> amountBracket(use.amount(), expense.getAmount()), Collectors.counting()));
+                    int bracket = Collections.min(usesPerBracket.keySet());
+                    String spelling = mostUsedSpelling(sameNote.stream()
+                            .collect(Collectors.groupingBy(NoteUse::note, Collectors.counting())));
+                    return new NoteSuggestion(spelling, bracket, usesPerBracket.get(bracket));
+                })
+                .sorted(Comparator.comparingInt(NoteSuggestion::bracket)
+                        .thenComparing(NoteSuggestion::uses, Comparator.reverseOrder())
+                        .thenComparing(NoteSuggestion::note))
+                .toList();
+    }
+
+    /**
+     * The closest bracket of {@link #AMOUNT_BRACKETS} the amount of a use falls into, the number of brackets when it
+     * falls into none.
+     */
+    private int amountBracket(double used, double amount) {
+        // compared as decimals, 1.74 is exactly 20% away from 1.45 but not as doubles
+        BigDecimal distance = BigDecimal.valueOf(used).subtract(BigDecimal.valueOf(amount)).abs();
+        for (int i = 0; i < AMOUNT_BRACKETS.length; i++) {
+            if (distance.compareTo(BigDecimal.valueOf(amount).multiply(AMOUNT_BRACKETS[i])) <= 0) {
+                return i;
+            }
+        }
+        return AMOUNT_BRACKETS.length;
     }
 
     /**
@@ -147,7 +214,7 @@ public class ExpenseService {
      */
     @Transactional(readOnly = true)
     public Map<String, Long> autoCompleteNote(User currentUser, String seed) {
-        Map<String, Long> suggestions = countIgnoringCase(expenseRepository.autoCompleteNote(currentUser, "%" + seed + "%").stream(), Integer.MAX_VALUE);
+        Map<String, Long> suggestions = countIgnoringCase(expenseRepository.autoCompleteNote(currentUser, "%" + seed + "%").stream());
 
         Matcher typedTag = TYPED_TAG.matcher(seed);
         if (typedTag.find()) {
@@ -167,7 +234,7 @@ public class ExpenseService {
             Map<String, String> spellings = suggestions.keySet()
                     .stream()
                     .collect(Collectors.toMap(s -> s.toLowerCase(Locale.ROOT), s -> s));
-            countIgnoringCase(tags, Integer.MAX_VALUE).forEach((tag, count) -> {
+            countIgnoringCase(tags).forEach((tag, count) -> {
                 String completed = beforeTag + tag;
                 String suggested = spellings.get(completed.toLowerCase(Locale.ROOT));
                 if (suggested == null) {
@@ -186,9 +253,9 @@ public class ExpenseService {
      * Counts the texts, merging the ones only differing by their case under their most used spelling, so a single
      * spelling ends up being suggested.
      *
-     * @return the most used texts and how often they're used
+     * @return the texts and how often they're used
      */
-    private Map<String, Long> countIgnoringCase(Stream<String> texts, int limit) {
+    private Map<String, Long> countIgnoringCase(Stream<String> texts) {
         Map<String, Map<String, Long>> spellings = texts.filter(Objects::nonNull)
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
@@ -196,14 +263,15 @@ public class ExpenseService {
 
         return spellings.values()
                 .stream()
-                .map(counts -> Map.entry(
-                        // the first one in alphabetical order when several are used as often
-                        Collections.max(counts.entrySet(), Map.Entry.<String, Long>comparingByValue()
-                                .thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder()))).getKey(),
-                        counts.values().stream().mapToLong(Long::longValue).sum()))
-                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-                .limit(limit)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, Long::sum, HashMap::new));
+                .collect(Collectors.toMap(this::mostUsedSpelling, counts -> counts.values().stream().mapToLong(Long::longValue).sum(), Long::sum, HashMap::new));
+    }
+
+    /**
+     * The most used of the spellings of a text, the first one in alphabetical order when several are used as often.
+     */
+    private String mostUsedSpelling(Map<String, Long> countPerSpelling) {
+        return Collections.max(countPerSpelling.entrySet(), Map.Entry.<String, Long>comparingByValue()
+                .thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder()))).getKey();
     }
 
     @Transactional(readOnly = true)
