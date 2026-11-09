@@ -64,18 +64,23 @@ class CategorySettingsCubit extends Cubit<CategorySettingsState> {
     emit(state.copyWith(categories: categories));
   }
 
-  saveCategories() async {
+  /// Returns how many of the categories to delete the server refused to delete.
+  Future<int> saveCategories() async {
+    var refused = 0;
     try {
       await service.saveAllCategories(state.categories);
 
       for (final category in state.toDelete) {
-        await service.deleteCategory(category.id!);
+        if (!await service.deleteCategory(category.id!)) {
+          refused++;
+        }
       }
 
       categoriesCubit.getCategories(true);
     } catch (e, s) {
       emit(state.copyWith(error: e, stackTrace: s));
     }
+    return refused;
   }
 }
 

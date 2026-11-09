@@ -89,8 +89,20 @@ class CategorySettingsScreen extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: FilledButton.tonal(
                                 onPressed: () async {
-                                  await cubit.saveCategories();
+                                  final messenger = ScaffoldMessenger.of(context);
+                                  final refused = await cubit.saveCategories();
                                   Navigator.of(context).pop();
+                                  if (refused > 0) {
+                                    messenger.showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          refused == 1
+                                              ? '1 category was not deleted, only its creator or a household admin can delete it.'
+                                              : '$refused categories were not deleted, only their creator or a household admin can delete them.',
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 },
                                 child: const Text('Save'),
                               ),
