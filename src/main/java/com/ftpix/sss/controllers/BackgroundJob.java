@@ -11,7 +11,9 @@ import com.ftpix.sss.services.HouseholdLocks;
 import com.ftpix.sss.services.HouseholdSeparationService;
 import com.ftpix.sss.services.RecurringExpenseService;
 import com.ftpix.sss.services.UserService;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +103,7 @@ public class BackgroundJob {
     final List<User> users = userService.getAll().getData();
     for (User user : users) {
       try {
-        List<RecurringExpense> processed =
+        List<RecurringExpenseReport> processed =
             transactionTemplate.execute(status -> processRecurringExpenses(user));
         if (processed != null && !processed.isEmpty()) {
           Map<String, Object> templateData = new HashMap<>();
@@ -119,7 +121,10 @@ public class BackgroundJob {
     }
   }
 
-  private List<RecurringExpense> processRecurringExpenses(User user) {
+  /** A recurring expense in the report, with how many of its occurrences were booked. */
+  public record RecurringExpenseReport(RecurringExpense expense, int bookings) {}
+
+  private List<RecurringExpenseReport> processRecurringExpenses(User user) {
     List<RecurringExpense> recurringExpenses;
     try {
       recurringExpenses = recurringExpenseService.getToProcessForUser(user);
@@ -127,40 +132,53 @@ public class BackgroundJob {
       throw new IllegalStateException(e);
     }
     logger.info("{} Recurring expense process for user {}", recurringExpenses.size(), user.getId());
+    LocalDate today = LocalDate.now();
+    List<RecurringExpenseReport> processed = new ArrayList<>();
     for (RecurringExpense recurring : recurringExpenses) {
       try {
-        logger.info(
-            "Recurring payment: category[{}], amount[{}], lastOccurrence[{}], nextOccurence[{}]",
-            recurring.getCategory().getIcon(),
-            recurring.getAmount(),
-            recurring.getLastOccurrence(),
-            recurring.getNextOccurrence());
-        Expense expense = new Expense();
-        expense.setType(Expense.TYPE_RECURRENT);
-        expense.setAmount(recurring.getAmount());
-        expense.setCategory(recurring.getCategory());
-        expense.setUser(recurring.getUser());
-        expense.setDate(recurring.getNextOccurrence());
-        expense.setIncome(false);
-        expense.setTimestamp(
-            recurring.getNextOccurrence().atStartOfDay().atZone(zoneId).toInstant().toEpochMilli());
-
-        if (recurring.getName() != null && recurring.getName().trim().length() > 0) {
-          expense.setNote(recurring.getName().trim());
+        // every due occurrence is booked, e.g. a first occurrence in the past or while the server
+        // was down
+        int bookings = 0;
+        while (!recurring.getNextOccurrence().isAfter(today)) {
+          book(recurring);
+          bookings++;
         }
-
-        expenseRepository.save(expense);
-
-        recurring.setLastOccurrence(recurring.getNextOccurrence());
-        recurring.setNextOccurrence(recurringExpenseService.calculateNextDate(recurring));
-
         recurringExpenseRepository.save(recurring);
+        processed.add(new RecurringExpenseReport(recurring, bookings));
         logger.info("Expense added, next occurence:[{}]", recurring.getNextOccurrence());
 
       } catch (Exception e) {
         logger.info("Error processing the occurrences", e);
       }
     }
-    return recurringExpenses;
+    return processed;
+  }
+
+  /** Books the next occurrence of the recurring expense and moves it to the following one. */
+  private void book(RecurringExpense recurring) {
+    logger.info(
+        "Recurring payment: category[{}], amount[{}], lastOccurrence[{}], nextOccurence[{}]",
+        recurring.getCategory().getIcon(),
+        recurring.getAmount(),
+        recurring.getLastOccurrence(),
+        recurring.getNextOccurrence());
+    Expense expense = new Expense();
+    expense.setType(Expense.TYPE_RECURRENT);
+    expense.setAmount(recurring.getAmount());
+    expense.setCategory(recurring.getCategory());
+    expense.setUser(recurring.getUser());
+    expense.setDate(recurring.getNextOccurrence());
+    expense.setIncome(false);
+    expense.setTimestamp(
+        recurring.getNextOccurrence().atStartOfDay().atZone(zoneId).toInstant().toEpochMilli());
+
+    if (recurring.getName() != null && recurring.getName().trim().length() > 0) {
+      expense.setNote(recurring.getName().trim());
+    }
+
+    expenseRepository.save(expense);
+
+    recurring.setLastOccurrence(recurring.getNextOccurrence());
+    recurring.setNextOccurrence(recurringExpenseService.calculateNextDate(recurring));
   }
 }
