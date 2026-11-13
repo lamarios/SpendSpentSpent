@@ -605,9 +605,15 @@ class Service {
     return config!;
   }
 
+  Future<Config>? _loadingCurrentServerConfig;
+
+  /// The config is loaded at start up without being waited for. Those loading it meanwhile share that request, so
+  /// they all get its result.
   Future<Config> getCurrentServerConfig() async {
     if (url.trim() != "") {
-      return getServerConfig(url);
+      return _loadingCurrentServerConfig ??= getServerConfig(
+        url,
+      ).whenComplete(() => _loadingCurrentServerConfig = null);
     }
 
     throw Exception("No server url set");
