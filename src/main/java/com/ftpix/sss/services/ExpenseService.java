@@ -8,7 +8,7 @@ import com.ftpix.sss.persistence.UserRepository;
 import com.ftpix.sss.persistence.utils.Specifications;
 import com.ftpix.sss.utils.CategoryPredictor;
 import com.ftpix.sss.utils.DateUtils;
-import com.ftpix.sss.websockets.WebSocketSessionManager;
+import com.ftpix.sss.websockets.AfterCommitMessages;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import org.apache.commons.logging.Log;
@@ -56,10 +56,11 @@ public class ExpenseService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final EntityManager entityManager;
+    private final HouseholdLocks householdLocks;
 
 
     @Autowired
-    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ZoneId zoneId, FileService fileService, AiFileProcessingService aiFileProcessingService, HouseholdService householdService, ExpenseRepository expenseRepository, UserRepository userRepository, CategoryRepository categoryRepository, EntityManager entityManager) throws SQLException {
+    public ExpenseService(CategoryService categoryService, SettingsService settingsService, ZoneId zoneId, FileService fileService, AiFileProcessingService aiFileProcessingService, HouseholdService householdService, ExpenseRepository expenseRepository, UserRepository userRepository, CategoryRepository categoryRepository, EntityManager entityManager, HouseholdLocks householdLocks) throws SQLException {
         this.categoryService = categoryService;
         this.settingsService = settingsService;
         this.zoneId = zoneId;
@@ -72,6 +73,7 @@ public class ExpenseService {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.entityManager = entityManager;
+        this.householdLocks = householdLocks;
     }
 
 
@@ -89,6 +91,7 @@ public class ExpenseService {
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
     public void fixLegacyExpensesTimeZones() throws SQLException {
+        householdLocks.shared();
 
         var migrated = settingsService.getByName(Settings.TIMESTAMP_FIXED);
         if (migrated != null && migrated.getValue().equalsIgnoreCase("1")) {
@@ -173,8 +176,15 @@ public class ExpenseService {
     }
 
     @Transactional
-    public Expense update(Expense expense, User user) {
-        if (expenseRepository.findExpenseByIdAndUser(expense.getId(), user) != null) {
+    public Expense update(Expense expense, User user) throws SQLException {
+        // the category might belong to a member leaving the household right now
+        householdLocks.shared();
+        Expense existing = expenseRepository.findExpenseByIdAndUser(expense.getId(), user);
+        Category category = categoryService.resolve(expense.getCategory(), user);
+        if (existing != null && category != null) {
+            // the creator never changes and the category must be one of the household's
+            expense.setUser(existing.getUser());
+            expense.setCategory(category);
 
             List<SSSFile> managedFiles = expense.getFiles().stream().map(f -> {
                 SSSFile managed = entityManager.merge(f);
@@ -202,12 +212,15 @@ public class ExpenseService {
 
     @Transactional
     public Expense create(Expense expense, User user) throws Exception {
-        Category category = categoryService.get(expense.getCategory().getId(), user);
+        // the category might belong to a member leaving the household right now
+        householdLocks.shared();
+        Category category = categoryService.resolve(expense.getCategory(), user);
         if (category == null) {
             throw new Exception("Category doesn't exist");
         } else {
             expense.setCategory(category);
         }
+        expense.setUser(user);
 
         if (expense.getType() == 0) {
             expense.setType(Expense.TYPE_NORMAL);
@@ -240,8 +253,11 @@ public class ExpenseService {
 
     @Transactional
     public boolean delete(long id, User user) throws Exception {
+        // a member leaving the household right now might be moving this expense
+        householdLocks.shared();
         final Expense expense = get(id, user);
-        if (expense.getCategory().getUser().getId().equals(user.getId())) {
+        // get() only returns expenses created by the user
+        if (expense != null) {
             try {
                 expenseRepository.delete(expense);
                 return true;
@@ -288,10 +304,8 @@ public class ExpenseService {
     @Transactional(readOnly = true)
     public List<Expense> getFromTo(User user, boolean includeHousehold, long from, long to, boolean includeRecurring) {
 
-        List<Category> userCategories = includeHousehold ? categoryRepository.getHouseholdCategories(user) : categoryRepository.findAllByUser(user);
-
         Specification<Expense> spec = Specification.where(betweenTimestamps(from, to))
-                .and(inCategories(userCategories));
+                .and(includeHousehold ? Specifications.<Expense>onlyIn("category", categoryRepository.getHouseholdCategories(user)) : Specifications.<Expense>createdBy(user));
 
         if (!includeRecurring) {
             spec = spec.and(excludeRecurring());
@@ -340,7 +354,9 @@ public class ExpenseService {
     public List<CategoryPredictor.CategoryPrediction> getExpenseCategorySuggestion(User currentUser, ZoneId timeZone, Double latitude, Double longitude) throws ExecutionException, InterruptedException {
         // we only select expenses that have been created on the spot and not back dated, backdated expenses will have a time of 00:00 of the user's timezone
 
+        // the user's own habits only, the categories might still belong to other household members
         Specification<Expense> spec = Specification.where(createdOnTheSpot())
+                .and(Specifications.<Expense>createdBy(currentUser))
                 .and(Specifications.greaterThan("timestamp", System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 90));
 
         var expenses = expenseRepository.findAll(spec, Sort.by("id").ascending());
@@ -370,8 +386,13 @@ public class ExpenseService {
                 .orElseGet(List::of);
     }
 
+    /**
+     * Sent after the commit, so the other members' clients reload the new expenses and history.
+     */
     public void sendMessageToOtherUsers(User currentUser) {
-        getHouseholdOtherMembers(currentUser).forEach(user -> WebSocketSessionManager.sendToUser(user.getId()
-                .toString(), new NewHouseholdExpense()));
+        List<String> recipients = getHouseholdOtherMembers(currentUser).stream()
+                .map(user -> user.getId().toString())
+                .toList();
+        AfterCommitMessages.sendToUsers(recipients, new NewHouseholdExpense());
     }
 }

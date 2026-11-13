@@ -2,6 +2,8 @@ package com.ftpix.sss.services;
 
 
 import com.ftpix.sss.Constants;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import com.ftpix.sss.models.PaginatedResults;
 import com.ftpix.sss.models.Settings;
 import com.ftpix.sss.models.User;
@@ -37,9 +39,9 @@ import java.util.UUID;
 public class UserService {
     public final static String EMAIL_REGEX = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
     private final static Logger logger = LogManager.getLogger();
-    private final ExpenseService recurringExpenseService;
-    private final ExpenseService expenseService;
-    private final ExpenseService categoryService;
+    private final HouseholdService householdService;
+    @PersistenceContext
+    private EntityManager entityManager;
     private final EmailService emailService;
     private final SettingsService settingsService;
     @Value("${SALT}")
@@ -48,10 +50,8 @@ public class UserService {
     private final CategoryRepository categoryRepository;
 
     @Autowired
-    public UserService(ExpenseService recurringExpenseService, ExpenseService expenseService, ExpenseService categoryService, EmailService emailService, SettingsService settingsService, UserRepository userRepository, CategoryRepository categoryRepository) {
-        this.recurringExpenseService = recurringExpenseService;
-        this.expenseService = expenseService;
-        this.categoryService = categoryService;
+    public UserService(HouseholdService householdService, EmailService emailService, SettingsService settingsService, UserRepository userRepository, CategoryRepository categoryRepository) {
+        this.householdService = householdService;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.emailService = emailService;
@@ -207,33 +207,17 @@ public class UserService {
 
         return Optional.ofNullable(getById(UUID.fromString(userId))).map(user -> {
             try {
-                // deleting recurring expenses
-                recurringExpenseService.getAll(user).forEach(e -> {
-                    try {
-                        recurringExpenseService.delete(e.getId(), user);
-                    } catch (Exception throwables) {
-                        throw new RuntimeException(throwables);
-                    }
-                });
+                // leaving the household first moves the user's entries on other members' categories to their own ones
+                // and the other members' entries on the user's categories to theirs, so they don't get deleted below.
+                householdService.leaveHousehold(user);
 
-                // all expenses
-                expenseService.getAll(user).forEach(e -> {
-                    try {
-                        expenseService.delete(e.getId(), user);
-                    } catch (Exception throwables) {
-                        throw new RuntimeException(throwables);
-                    }
-                });
-                // all categories
-                categoryService.getAll(user).forEach(c -> {
-                    try {
-                        categoryService.delete(c.getId(), user);
-                    } catch (Exception throwables) {
-                        throw new RuntimeException(throwables);
-                    }
-                });
+                // entries were moved between categories, start from a fresh persistence context so the cascades
+                // below see where they are now.
+                entityManager.flush();
+                entityManager.clear();
 
-                userRepository.delete(user);
+                // categories, expenses and recurring expenses are deleted along with the user
+                userRepository.delete(getById(user.getId()));
                 return true;
             } catch (Exception e) {
                 throw new RuntimeException(e);

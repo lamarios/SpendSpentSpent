@@ -1,5 +1,6 @@
 package com.ftpix.sss.services;
 
+import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.persistence.RecurringExpenseRepository;
@@ -22,11 +23,13 @@ public class RecurringExpenseService {
     private final static Logger logger = LogManager.getLogger();
     private final CategoryService categoryService;
     private final RecurringExpenseRepository recurringExpenseRepository;
+    private final HouseholdLocks householdLocks;
 
     @Autowired
-    public RecurringExpenseService(CategoryService categoryService, RecurringExpenseRepository recurringExpenseRepository) {
+    public RecurringExpenseService(CategoryService categoryService, RecurringExpenseRepository recurringExpenseRepository, HouseholdLocks householdLocks) {
         this.categoryService = categoryService;
         this.recurringExpenseRepository = recurringExpenseRepository;
+        this.householdLocks = householdLocks;
     }
 
     public LocalDate calculateNextDate(RecurringExpense expense) {
@@ -131,7 +134,14 @@ public class RecurringExpenseService {
 
     @Transactional
     public RecurringExpense create(RecurringExpense expense, User user) throws Exception {
-        if (categoryService.get(expense.getCategory().getId(), user) != null) {
+        // the category might belong to a member leaving the household right now
+        householdLocks.shared();
+        Category category = categoryService.resolve(expense.getCategory(), user);
+        if (category != null) {
+            // an id sent by the client would overwrite that recurring expense, whoever it belongs to
+            expense.setId(null);
+            expense.setCategory(category);
+            expense.setUser(user);
             expense.setNextOccurrence(calculateNextDate(expense));
             return recurringExpenseRepository.save(expense);
         } else {
@@ -139,20 +149,25 @@ public class RecurringExpenseService {
         }
     }
 
+    /**
+     * @return the recurring expenses of the user's household
+     */
     @Transactional(readOnly = true)
     public List<RecurringExpense> get(User user) throws Exception {
-        return recurringExpenseRepository.findExpenseByUser(user);
+        return recurringExpenseRepository.findHouseholdRecurringExpenses(user);
     }
 
 
     @Transactional(readOnly = true)
     public RecurringExpense getId(long id, User user) throws Exception {
-        return recurringExpenseRepository.findRecurringExpenseByIdAndUser(id, user);
+        return recurringExpenseRepository.findHouseholdRecurringExpenseById(id, user);
     }
 
 
     @Transactional
     public boolean delete(long id, User user) throws Exception {
+        // a member leaving the household right now might be moving this recurring expense
+        householdLocks.shared();
         if (getId(id, user) != null) {
             recurringExpenseRepository.deleteById(id);
             return true;
@@ -162,25 +177,35 @@ public class RecurringExpenseService {
     }
 
 
-    @Transactional(readOnly = true)
+    /**
+     * @return the due recurring expenses created by the user. Each recurring expense is processed once, for its creator,
+     * even if its category is shared with other household members.
+     */
+    @Transactional
     public List<RecurringExpense> getToProcessForUser(User user) throws Exception {
-        var categories = categoryService.getAll(user);
+        // expenses get created on these categories, which might belong to a member leaving the household right now
+        householdLocks.shared();
         Specification<RecurringExpense> spec = Specification.where(
                 Specifications.<RecurringExpense, LocalDate>lessThanOrEqual("nextOccurrence", LocalDate.now())
-        ).and(Specifications.<RecurringExpense>onlyIn("category", categories));
+        ).and(Specifications.<RecurringExpense>createdBy(user));
         return recurringExpenseRepository.findAll(spec);
 //        return recurringExpenseDaoJooq.getWhere(user, RECURRING_EXPENSE.NEXT_OCCURRENCE.le(Constants.dateFormatter.format(LocalDate.now())));
     }
 
     @Transactional
     public boolean update(RecurringExpense expense, User user) throws Exception {
+        // the category might belong to a member leaving the household right now
+        householdLocks.shared();
         RecurringExpense existing = getId(expense.getId(), user);
+        Category category = categoryService.resolve(expense.getCategory(), user);
 
-
-        if (existing != null) {
+        if (existing != null && category != null) {
             // dates should only be updated by the cron job !
             expense.setNextOccurrence(existing.getNextOccurrence());
             expense.setLastOccurrence(existing.getLastOccurrence());
+            // the creator never changes and the category must be one of the household's
+            expense.setUser(existing.getUser());
+            expense.setCategory(category);
             recurringExpenseRepository.save(expense);
             return true;
         } else {

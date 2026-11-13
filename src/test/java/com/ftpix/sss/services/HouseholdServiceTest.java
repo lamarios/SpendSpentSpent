@@ -4,8 +4,10 @@ import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.TestContainerTest;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.persistence.UserRepository;
+import com.ftpix.sss.websockets.WebSocketSessionManager;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import java.sql.SQLException;
 import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @Import(TestConfig.class)
 public class HouseholdServiceTest extends TestContainerTest {
@@ -140,6 +143,35 @@ public class HouseholdServiceTest extends TestContainerTest {
             newHs = householdService.getCurrentHousehold(currentUser).get();
             assertEquals(HouseholdColor.cyan, newHs.getMembers().get(0).getColor());
         });
+    }
+
+    @Test
+    public void membersAreNotifiedWhenTheMembersChange() {
+        householdService.createHousehold(currentUser);
+        User member = new User();
+        member.setEmail("member@test.com");
+        member.setLastName("test");
+        member.setFirstName("member");
+        userRepository.save(member);
+        String admin = currentUser.getId().toString(), joining = member.getId().toString();
+        HouseholdWebsocketUpdate update = new HouseholdWebsocketUpdate();
+
+        try (MockedStatic<WebSocketSessionManager> manager = mockStatic(WebSocketSessionManager.class)) {
+            // the clients reload the categories shared within the household on this message
+            householdService.inviteUser(currentUser, member.getEmail());
+            householdService.acceptInvitation(member, householdService.getInvitations(member).getFirst().getId());
+            manager.verify(() -> WebSocketSessionManager.sendToUser(admin, update));
+
+            manager.clearInvocations();
+            householdService.leaveHousehold(member);
+            manager.verify(() -> WebSocketSessionManager.sendToUser(admin, update));
+
+            householdService.inviteUser(currentUser, member.getEmail());
+            householdService.acceptInvitation(member, householdService.getInvitations(member).getFirst().getId());
+            manager.clearInvocations();
+            householdService.removeMember(currentUser, member);
+            manager.verify(() -> WebSocketSessionManager.sendToUser(joining, update));
+        }
     }
 
     @Test

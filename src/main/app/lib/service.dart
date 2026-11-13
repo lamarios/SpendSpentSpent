@@ -459,6 +459,7 @@ class Service {
     return true;
   }
 
+  /// Returns false when the server refused to delete the category, only its creator or a household admin can.
   Future<bool> deleteCategory(int id) async {
     print('id $id');
     final response = await http.delete(
@@ -467,7 +468,7 @@ class Service {
     );
 
     processResponse(response);
-    return true;
+    return jsonDecode(response.body) == true;
   }
 
   Future<User> getCurrentUser() async {

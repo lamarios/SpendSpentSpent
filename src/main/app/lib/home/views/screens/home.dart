@@ -17,6 +17,7 @@ import 'package:spend_spent_spent/households/states/household.dart';
 import 'package:spend_spent_spent/identity/views/components/logout_handler.dart';
 import 'package:spend_spent_spent/notification_listener/notification_event_listener.dart';
 import 'package:spend_spent_spent/notification_listener/states/notification_tapped.dart';
+import 'package:spend_spent_spent/recurring_expenses/state/recurring_expenses.dart';
 import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/utils/models/socket_message.dart';
 import 'package:spend_spent_spent/utils/views/components/sss_socket_listener.dart';
@@ -36,6 +37,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   late StreamSubscription _intentSub;
   bool _sharedFileIsHandled = false;
+
+  /// Created when the recurring tab is first shown, it loads the list then.
+  RecurringExpensesCubit? _recurringExpenses;
 
   @override
   void dispose() {
@@ -75,6 +79,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       context.read<CategoriesCubit>().getCategories(false);
+    }
+  }
+
+  /// Reloads what depends on the household: the categories and recurring expenses shared within it, its members and the
+  /// latest expenses.
+  Future<void> refreshHouseholdData() async {
+    if (!mounted) {
+      return;
+    }
+    context.read<CategoriesCubit>().getCategories(false);
+    _recurringExpenses?.getRecurringExpenses(showLoading: false);
+    await context.read<HouseholdCubit>().getData();
+    if (mounted) {
+      context.read<LastExpenseCubit>().refresh();
     }
   }
 
@@ -143,12 +161,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           return SssSocketListener(
             onChange: (message) async {
               if (message.type == SssSocketMessageType.householdUpdate) {
-                EasyDebounce.debounce('household-refresh', Duration(seconds: 1), () async {
-                  await context.read<HouseholdCubit>().getData();
-                  if (context.mounted) {
-                    context.read<LastExpenseCubit>().refresh();
-                  }
-                });
+                EasyDebounce.debounce('household-refresh', Duration(seconds: 1), refreshHouseholdData);
               }
 
               if (message.type == SssSocketMessageType.newHouseholdExpense) {
@@ -166,14 +179,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     floatingActionButton: Stack(
                       children: [
                         IconButton(
-                          onPressed: () => AutoRouter.of(context).push(const SettingsRoute()).then((value) async {
-                            if (context.mounted) {
-                              await context.read<HouseholdCubit>().getData();
-                              if (context.mounted) {
-                                context.read<LastExpenseCubit>().refresh();
-                              }
-                            }
-                          }),
+                          onPressed: () async {
+                            await AutoRouter.of(context).push(const SettingsRoute());
+                            // the household may have been joined or left in the settings
+                            await refreshHouseholdData();
+                          },
                           icon: const Icon(Icons.settings),
                         ),
                         if (state.invitations.isNotEmpty)
@@ -193,7 +203,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                               alignment: Alignment.topCenter,
                               child: Container(
                                 constraints: const BoxConstraints(maxWidth: TABLET),
-                                child: child,
+                                // here and not next to the categories: the next user to log in must not see this list
+                                child: BlocProvider(
+                                  create: (context) =>
+                                      _recurringExpenses = RecurringExpensesCubit(const RecurringExpensesState()),
+                                  child: child,
+                                ),
                               ),
                             ),
                           ),

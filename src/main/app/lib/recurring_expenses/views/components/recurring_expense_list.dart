@@ -14,21 +14,18 @@ class RecurringExpenseListTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => RecurringExpensesCubit(const RecurringExpensesState()),
-      child: ErrorHandler<RecurringExpensesCubit, RecurringExpensesState>(
-        child: BlocBuilder<RecurringExpensesCubit, RecurringExpensesState>(
-          builder: (context, state) {
-            final cubit = context.read<RecurringExpensesCubit>();
+    return ErrorHandler<RecurringExpensesCubit, RecurringExpensesState>(
+      child: BlocBuilder<RecurringExpensesCubit, RecurringExpensesState>(
+        builder: (context, state) {
+          final cubit = context.read<RecurringExpensesCubit>();
 
-            return AnimatedSwitcher(
-              duration: panelTransition,
-              child: state.loading
-                  ? Center(child: LoadingIndicator())
-                  : ExpenseList(expenses: state.expenses, refreshExpenses: cubit.getRecurringExpenses),
-            );
-          },
-        ),
+          return AnimatedSwitcher(
+            duration: panelTransition,
+            child: state.loading
+                ? Center(child: LoadingIndicator())
+                : ExpenseList(expenses: state.expenses, refreshExpenses: cubit.getRecurringExpenses),
+          );
+        },
       ),
     );
   }

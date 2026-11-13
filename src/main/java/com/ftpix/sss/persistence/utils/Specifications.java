@@ -1,5 +1,6 @@
 package com.ftpix.sss.persistence.utils;
 
+import com.ftpix.sss.models.User;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
@@ -7,6 +8,7 @@ import jakarta.persistence.criteria.Path;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Collection;
+import java.util.Objects;
 
 public class Specifications<T> {
 
@@ -17,6 +19,15 @@ public class Specifications<T> {
             path = path.get(parts[i]);
         }
         return path;
+    }
+
+    /**
+     * Restricts to entities created by the given user. Unlike {@link #equal(String, Object)} it never turns into
+     * "no filter", a missing user is an error.
+     */
+    public static <T> Specification<T> createdBy(User user) {
+        Objects.requireNonNull(user, "user is required to filter by creator");
+        return (root, query, cb) -> cb.equal(root.get("user"), user);
     }
 
     public static <T> Specification<T> equal(String field, Object value) {

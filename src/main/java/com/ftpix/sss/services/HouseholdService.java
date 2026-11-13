@@ -5,7 +5,7 @@ import com.ftpix.sss.models.*;
 import com.ftpix.sss.persistence.HouseholdMemberRepository;
 import com.ftpix.sss.persistence.HouseholdRepository;
 import com.ftpix.sss.persistence.UserRepository;
-import com.ftpix.sss.websockets.WebSocketSessionManager;
+import com.ftpix.sss.websockets.AfterCommitMessages;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,17 +26,24 @@ public class HouseholdService {
     private final UserRepository userRepository;
     private final HouseholdMemberRepository householdMemberRepository;
     private final EntityManager entityManager;
+    private final HouseholdSeparationService householdSeparationService;
+    private final HouseholdLocks householdLocks;
+    private final HouseholdCategoryMergeService householdCategoryMergeService;
 
     @Autowired
-    public HouseholdService(HouseholdRepository householdRepository, UserRepository userRepository, HouseholdMemberRepository householdMemberRepository, EntityManager entityManager) {
+    public HouseholdService(HouseholdRepository householdRepository, UserRepository userRepository, HouseholdMemberRepository householdMemberRepository, EntityManager entityManager, HouseholdSeparationService householdSeparationService, HouseholdLocks householdLocks, HouseholdCategoryMergeService householdCategoryMergeService) {
         this.householdRepository = householdRepository;
         this.userRepository = userRepository;
         this.householdMemberRepository = householdMemberRepository;
         this.entityManager = entityManager;
+        this.householdSeparationService = householdSeparationService;
+        this.householdLocks = householdLocks;
+        this.householdCategoryMergeService = householdCategoryMergeService;
     }
 
     @Transactional
     public Household createHousehold(User user) {
+        householdLocks.exclusive();
         var household = getCurrentHousehold(user);
 
         if (household.isPresent()) {
@@ -64,6 +71,14 @@ public class HouseholdService {
     @Transactional(readOnly = true)
     public Optional<Household> getCurrentHousehold(User user) {
         return Optional.ofNullable(householdRepository.findHouseholdByUser(user));
+    }
+
+    /**
+     * @return true if the user is an admin of the household they currently belong to
+     */
+    @Transactional(readOnly = true)
+    public boolean isCurrentHouseholdAdmin(User user) {
+        return getCurrentHousehold(user).map(household -> isHouseholdAdmin(user, household)).orElse(false);
     }
 
     private boolean isHouseholdAdmin(User user, Household household) {
@@ -139,13 +154,18 @@ public class HouseholdService {
 
     @Transactional
     public void removeMember(User user, User memberId) {
+        // waits for running bookings so the separation sees them
+        householdLocks.exclusive();
         Optional<Household> currentHousehold = getCurrentHousehold(user);
         //                    householdDao.getHouseholdMemberDao().delete(membership);
         currentHousehold.filter(hs -> isHouseholdAdmin(user, hs))
                 .ifPresent(household -> {
                     if (household.getMembers().removeIf(m -> m.getUser().getId().equals(memberId.getId()))) {
-                        householdRepository.save(household);
+                        householdRepository.saveAndFlush(household);
+                        householdSeparationService.separateEntriesOutsideHousehold();
                         sendMessageToOtherUsers(household, user);
+                        // the removed member isn't in the household anymore but still shows its categories
+                        AfterCommitMessages.sendToUsers(List.of(memberId.getId().toString()), new HouseholdWebsocketUpdate());
                     }
                 });
 /*
@@ -161,14 +181,22 @@ public class HouseholdService {
 
     @Transactional
     public void deleteHousehold(User user) {
+        // waits for running bookings so the separation sees them
+        householdLocks.exclusive();
         Optional<Household> currentHousehold = getCurrentHousehold(user);
         currentHousehold.filter(household -> isHouseholdAdmin(user, household))
-                .ifPresent(householdRepository::delete);
+                .ifPresent(household -> {
+                    householdRepository.delete(household);
+                    householdRepository.flush();
+                    householdSeparationService.separateEntriesOutsideHousehold();
+                });
         currentHousehold.ifPresent(household -> sendMessageToOtherUsers(household, user));
     }
 
     @Transactional
     public boolean leaveHousehold(User user) {
+        // waits for running bookings so the separation sees them
+        householdLocks.exclusive();
         var hs = getCurrentHousehold(user);
         if (hs.isPresent()) {
             var house = hs.get();
@@ -184,7 +212,8 @@ public class HouseholdService {
                         .ifPresent(householdMemberRepository::delete);
 */
 
-                    householdRepository.save(house);
+                    householdRepository.saveAndFlush(house);
+                    householdSeparationService.separateEntriesOutsideHousehold();
 
                     sendMessageToOtherUsers(house, user);
                 }
@@ -215,6 +244,9 @@ public class HouseholdService {
 
     @Transactional
     public Optional<Household> acceptInvitation(User invitee, UUID invitationId) {
+        // the household's members change, nothing may rely on the current members meanwhile
+        householdLocks.exclusive();
+
         List<HouseholdMember> invitations = getInvitations(invitee);
         Optional<HouseholdMember> invitation = invitations.stream()
                 .filter(invite -> invite.getId().equals(invitationId))
@@ -231,6 +263,8 @@ public class HouseholdService {
             Household household = householdMember.getHousehold();
             entityManager.refresh(household);
             householdMemberRepository.deleteAll(invitations);
+            // the new member's categories with the same icons as the household's ones are merged into them
+            householdCategoryMergeService.mergeDuplicateCategories(household);
             sendMessageToOtherUsers(household, invitee);
             return Optional.of(household);
         }
@@ -296,9 +330,20 @@ public class HouseholdService {
                 .toList()).orElseGet(List::of);
     }
 
+    /**
+     * Tells the other members' clients that shared household data (e.g. categories) changed, once the current
+     * transaction is committed so they reload the new state. Only sent once per transaction.
+     * It uses the householdUpdate message type as clients fail to parse types they don't know.
+     */
+    public void notifyOtherMembersAfterCommit(User user) {
+        sendMessageToOtherUsers(getCurrentHousehold(user).orElse(null), user);
+    }
+
     public void sendMessageToOtherUsers(Household hs, User currentUser) {
-        getHouseholdOtherMembers(Optional.ofNullable(hs), currentUser).forEach(user -> WebSocketSessionManager.sendToUser(user.getId()
-                .toString(), new HouseholdWebsocketUpdate()));
+        List<String> recipients = getHouseholdOtherMembers(Optional.ofNullable(hs), currentUser).stream()
+                .map(member -> member.getId().toString())
+                .toList();
+        AfterCommitMessages.sendToUsers(recipients, new HouseholdWebsocketUpdate());
     }
 
 }
