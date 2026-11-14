@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Config {
 
- bool get allowSignup; bool get canResetPassword; bool get demoMode; bool get hasSubscription; bool get canConvertCurrency; String get announcement; String get convertCurrencyQuota; String? get minAppVersion; int get backendVersion; OidcConfig? get oidc;
+ bool get allowSignup; bool get canResetPassword; bool get demoMode; bool get hasSubscription; bool get canConvertCurrency; String get announcement; String get convertCurrencyQuota; String? get minAppVersion; String get backendVersion; OidcConfig? get oidc;
 /// Create a copy of Config
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -54,7 +54,7 @@ abstract mixin class $ConfigCopyWith<$Res>  {
   factory $ConfigCopyWith(Config value, $Res Function(Config) _then) = _$ConfigCopyWithImpl;
 @useResult
 $Res call({
- bool allowSignup, bool canResetPassword, bool demoMode, bool hasSubscription, bool canConvertCurrency, String announcement, String convertCurrencyQuota, String? minAppVersion, int backendVersion, OidcConfig? oidc
+ bool allowSignup, bool canResetPassword, bool demoMode, bool hasSubscription, bool canConvertCurrency, String announcement, String convertCurrencyQuota, String? minAppVersion, String backendVersion, OidcConfig? oidc
 });
 
 
@@ -82,7 +82,7 @@ as bool,announcement: null == announcement ? _self.announcement : announcement /
 as String,convertCurrencyQuota: null == convertCurrencyQuota ? _self.convertCurrencyQuota : convertCurrencyQuota // ignore: cast_nullable_to_non_nullable
 as String,minAppVersion: freezed == minAppVersion ? _self.minAppVersion : minAppVersion // ignore: cast_nullable_to_non_nullable
 as String?,backendVersion: null == backendVersion ? _self.backendVersion : backendVersion // ignore: cast_nullable_to_non_nullable
-as int,oidc: freezed == oidc ? _self.oidc : oidc // ignore: cast_nullable_to_non_nullable
+as String,oidc: freezed == oidc ? _self.oidc : oidc // ignore: cast_nullable_to_non_nullable
 as OidcConfig?,
   ));
 }
@@ -177,7 +177,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  int backendVersion,  OidcConfig? oidc)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  String backendVersion,  OidcConfig? oidc)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Config() when $default != null:
 return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.hasSubscription,_that.canConvertCurrency,_that.announcement,_that.convertCurrencyQuota,_that.minAppVersion,_that.backendVersion,_that.oidc);case _:
@@ -198,7 +198,7 @@ return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.ha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  int backendVersion,  OidcConfig? oidc)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  String backendVersion,  OidcConfig? oidc)  $default,) {final _that = this;
 switch (_that) {
 case _Config():
 return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.hasSubscription,_that.canConvertCurrency,_that.announcement,_that.convertCurrencyQuota,_that.minAppVersion,_that.backendVersion,_that.oidc);}
@@ -215,7 +215,7 @@ return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.ha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  int backendVersion,  OidcConfig? oidc)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  String backendVersion,  OidcConfig? oidc)?  $default,) {final _that = this;
 switch (_that) {
 case _Config() when $default != null:
 return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.hasSubscription,_that.canConvertCurrency,_that.announcement,_that.convertCurrencyQuota,_that.minAppVersion,_that.backendVersion,_that.oidc);case _:
@@ -241,7 +241,7 @@ class _Config implements Config {
 @override final  String announcement;
 @override final  String convertCurrencyQuota;
 @override final  String? minAppVersion;
-@override final  int backendVersion;
+@override final  String backendVersion;
 @override final  OidcConfig? oidc;
 
 /// Create a copy of Config
@@ -279,7 +279,7 @@ abstract mixin class _$ConfigCopyWith<$Res> implements $ConfigCopyWith<$Res> {
   factory _$ConfigCopyWith(_Config value, $Res Function(_Config) _then) = __$ConfigCopyWithImpl;
 @override @useResult
 $Res call({
- bool allowSignup, bool canResetPassword, bool demoMode, bool hasSubscription, bool canConvertCurrency, String announcement, String convertCurrencyQuota, String? minAppVersion, int backendVersion, OidcConfig? oidc
+ bool allowSignup, bool canResetPassword, bool demoMode, bool hasSubscription, bool canConvertCurrency, String announcement, String convertCurrencyQuota, String? minAppVersion, String backendVersion, OidcConfig? oidc
 });
 
 
@@ -307,7 +307,7 @@ as bool,announcement: null == announcement ? _self.announcement : announcement /
 as String,convertCurrencyQuota: null == convertCurrencyQuota ? _self.convertCurrencyQuota : convertCurrencyQuota // ignore: cast_nullable_to_non_nullable
 as String,minAppVersion: freezed == minAppVersion ? _self.minAppVersion : minAppVersion // ignore: cast_nullable_to_non_nullable
 as String?,backendVersion: null == backendVersion ? _self.backendVersion : backendVersion // ignore: cast_nullable_to_non_nullable
-as int,oidc: freezed == oidc ? _self.oidc : oidc // ignore: cast_nullable_to_non_nullable
+as String,oidc: freezed == oidc ? _self.oidc : oidc // ignore: cast_nullable_to_non_nullable
 as OidcConfig?,
   ));
 }

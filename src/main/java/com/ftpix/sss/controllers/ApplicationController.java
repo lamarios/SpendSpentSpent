@@ -6,6 +6,7 @@ import com.ftpix.sss.models.CurrencyStatus;
 import com.ftpix.sss.models.Settings;
 import com.ftpix.sss.persistence.UserRepository;
 import com.ftpix.sss.services.*;
+import com.ftpix.sss.utils.Version;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -41,7 +42,7 @@ public class ApplicationController {
   private final DataExportImportService dataExportImportService;
   private final UserRepository userRepository;
 
-  public static final int MIN_APP_VERSION = 148;
+  public static final Version MIN_APP_VERSION = new Version(2, 14, 0);
 
   private final OIDCService oidcService;
 
@@ -134,8 +135,8 @@ public class ApplicationController {
 
     results.put("canResetPassword", emailService.isEnabled());
 
-    results.put("backendVersion", Integer.parseInt(buildProperties.getVersion()));
-    results.put("minAppVersion", Integer.toString(MIN_APP_VERSION));
+    results.put("backendVersion", buildProperties.getVersion());
+    results.put("minAppVersion", MIN_APP_VERSION.toString());
 
     results.put("canConvertCurrency", currencyService.canUseCurrencyConversion());
 

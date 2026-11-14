@@ -33,6 +33,7 @@ import 'utils/models/exceptions/BackendNeedUpgradeException.dart';
 import 'utils/models/exceptions/NeedUpgradeException.dart';
 import 'utils/models/pagination.dart';
 import 'utils/preferences.dart';
+import 'utils/version.dart';
 
 const API_ROOT = "{apiUrl}";
 const API_URL = '$API_ROOT/API';
@@ -105,7 +106,7 @@ class Service {
       headers['Authorization'] = token;
     }
 
-    headers['x-version'] = version ?? (await getVersion()).toString();
+    headers['x-version'] = await getVersion();
 
     headers['x-timezone'] = timezone ?? (await FlutterTimezone.getLocalTimezone()).identifier;
 
@@ -122,8 +123,6 @@ class Service {
     return null;
   }
 
-  int? appBuildVersion;
-
   Config? config;
 
   Service([url]);
@@ -133,16 +132,9 @@ class Service {
     this.url = url;
   }
 
-  Future<int> getVersion() async {
-    // ugly but that should work
-    if (appBuildVersion == null) {
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      appBuildVersion = int.parse(packageInfo.buildNumber) % 1000;
-      version = appBuildVersion!.toString();
-      return appBuildVersion!;
-    } else {
-      return appBuildVersion!;
-    }
+  /// The app's x.y.z version name, sent to the backend for the compatibility check.
+  Future<String> getVersion() async {
+    return version ??= (await PackageInfo.fromPlatform()).version;
   }
 
   Future<Uri> getWebsocketUrl() async {
@@ -605,7 +597,7 @@ class Service {
 
     final version = await getVersion();
 
-    final response = await http.get(Uri.parse(url), headers: {'x-version': version.toString()});
+    final response = await http.get(Uri.parse(url), headers: {'x-version': version});
     processResponse(response);
 
     var jsonDecode2 = jsonDecode(response.body);
@@ -627,11 +619,11 @@ class Service {
     }
 
     url += 'SignUp';
-    int version = await getVersion();
+    final version = await getVersion();
     final response = await http.post(
       Uri.parse(url),
       body: jsonEncode(user),
-      headers: {'Content-Type': 'application/json', 'x-version': version.toString()},
+      headers: {'Content-Type': 'application/json', 'x-version': version},
     );
     processResponse(response);
     return true;
@@ -644,11 +636,11 @@ class Service {
 
     url += 'ResetPasswordRequest';
 
-    int version = await getVersion();
+    final version = await getVersion();
     final response = await http.post(
       Uri.parse(url),
       body: jsonEncode(email),
-      headers: {'Content-Type': 'application/json', 'x-version': version.toString()},
+      headers: {'Content-Type': 'application/json', 'x-version': version},
     );
     processResponse(response);
     return true;
@@ -727,15 +719,11 @@ class Service {
 
   void processResponse(Response response) {
     if (response.headers.containsKey("x-version")) {
-      String version = response.headers['x-version']!;
-      try {
-        int versionInt = int.parse(version);
-        if (versionInt < MIN_BACKEND_VERSION) {
-          print('server version: $versionInt, required version: $MIN_BACKEND_VERSION');
-          logout();
-          throw BackendNeedUpgradeException();
-        }
-      } catch (e) {
+      final version = response.headers['x-version']!;
+      // backends older than 2.14.0 send an integer build number, which won't parse
+      final backendVersion = Version.tryParse(version);
+      if (backendVersion == null || !backendVersion.isAtLeast(MIN_BACKEND_VERSION)) {
+        _log.info('server version: $version, required version: $MIN_BACKEND_VERSION');
         logout();
         throw BackendNeedUpgradeException();
       }

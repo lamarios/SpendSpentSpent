@@ -18,7 +18,7 @@ sealed class Config with _$Config {
     required String announcement,
     required String convertCurrencyQuota,
     String? minAppVersion,
-    required int backendVersion,
+    required String backendVersion,
     OidcConfig? oidc,
   }) = _Config;
 

@@ -5,9 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/service.dart';
+import 'package:spend_spent_spent/utils/version.dart';
 
 Service service = Service();
-const MIN_BACKEND_VERSION = 148;
+const MIN_BACKEND_VERSION = Version(2, 14, 0);
 final getIt = GetIt.instance;
 
 const BorderRadius defaultBorder = BorderRadius.all(Radius.circular(15));
