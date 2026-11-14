@@ -24,12 +24,14 @@ public class RecurringExpenseService {
     private final CategoryService categoryService;
     private final RecurringExpenseRepository recurringExpenseRepository;
     private final HouseholdLocks householdLocks;
+    private final HouseholdService householdService;
 
     @Autowired
-    public RecurringExpenseService(CategoryService categoryService, RecurringExpenseRepository recurringExpenseRepository, HouseholdLocks householdLocks) {
+    public RecurringExpenseService(CategoryService categoryService, RecurringExpenseRepository recurringExpenseRepository, HouseholdLocks householdLocks, HouseholdService householdService) {
         this.categoryService = categoryService;
         this.recurringExpenseRepository = recurringExpenseRepository;
         this.householdLocks = householdLocks;
+        this.householdService = householdService;
     }
 
     public LocalDate calculateNextDate(RecurringExpense expense) {
@@ -143,7 +145,10 @@ public class RecurringExpenseService {
             expense.setCategory(category);
             expense.setUser(user);
             expense.setNextOccurrence(calculateNextDate(expense));
-            return recurringExpenseRepository.save(expense);
+            RecurringExpense saved = recurringExpenseRepository.save(expense);
+            // the recurring expenses are shared within the household
+            householdService.notifyOtherMembersAfterCommit(user);
+            return saved;
         } else {
             return null;
         }
@@ -170,6 +175,7 @@ public class RecurringExpenseService {
         householdLocks.shared();
         if (getId(id, user) != null) {
             recurringExpenseRepository.deleteById(id);
+            householdService.notifyOtherMembersAfterCommit(user);
             return true;
         } else {
             return false;
@@ -207,6 +213,7 @@ public class RecurringExpenseService {
             expense.setUser(existing.getUser());
             expense.setCategory(category);
             recurringExpenseRepository.save(expense);
+            householdService.notifyOtherMembersAfterCommit(user);
             return true;
         } else {
             return false;

@@ -1008,6 +1008,38 @@ public class HouseholdCategoriesTest extends TestContainerTest {
     }
 
     @Test
+    public void recurringExpenseChangesNotifyTheOtherMembersAfterCommit() throws Exception {
+        Category house = ownCategory(currentUser, "house");
+        WebSocketSession partnerSession = mock(WebSocketSession.class);
+        when(partnerSession.isOpen()).thenReturn(true);
+        WebSocketSession mySession = mock(WebSocketSession.class);
+        when(mySession.isOpen()).thenReturn(true);
+        WebSocketSessionManager.register(partner.getId().toString(), partnerSession);
+        WebSocketSessionManager.register(currentUser.getId().toString(), mySession);
+        try {
+            RecurringExpense rent = recurringExpenseService.create(newRecurring(house, 800, "rent"), currentUser);
+            rent.setAmount(850);
+            assertTrue(recurringExpenseService.update(rent, currentUser));
+            assertTrue(recurringExpenseService.delete(rent.getId(), currentUser));
+
+            ArgumentCaptor<TextMessage> messages = ArgumentCaptor.forClass(TextMessage.class);
+            verify(partnerSession, times(3)).sendMessage(messages.capture());
+            // the clients reload the recurring expenses on this message
+            assertTrue(messages.getAllValues().stream().allMatch(m -> m.getPayload().contains("\"householdUpdate\"")), messages.getAllValues().toString());
+            verify(mySession, never()).sendMessage(any());
+
+            // nothing changes, nothing is sent
+            reset(partnerSession);
+            when(partnerSession.isOpen()).thenReturn(true);
+            assertFalse(recurringExpenseService.delete(rent.getId(), currentUser));
+            verify(partnerSession, never()).sendMessage(any());
+        } finally {
+            WebSocketSessionManager.remove(partner.getId().toString(), partnerSession);
+            WebSocketSessionManager.remove(currentUser.getId().toString(), mySession);
+        }
+    }
+
+    @Test
     public void membersAreNotifiedOfExpensesOnceTheHistoryIsUpToDate() throws Exception {
         Category house = ownCategory(currentUser, "house");
         // the client reloads the history as soon as it gets the message
