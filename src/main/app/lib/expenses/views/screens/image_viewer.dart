@@ -1,5 +1,5 @@
 import 'package:auto_route/annotations.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:spend_spent_spent/expenses/models/sss_file.dart';
 import 'package:spend_spent_spent/utils/views/components/expense_image.dart';
 

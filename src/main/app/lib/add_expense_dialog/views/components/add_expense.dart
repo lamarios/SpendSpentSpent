@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:animations/animations.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart' as foundation;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:material_loading_indicator/loading_indicator.dart';

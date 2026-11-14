@@ -8,5 +8,8 @@
         </set>
       </option>
     </inspection_tool>
+    <inspection_tool class="PointlessBooleanExpression" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_ignoreExpressionsContainingConstants" value="true" />
+    </inspection_tool>
   </profile>
 </component>

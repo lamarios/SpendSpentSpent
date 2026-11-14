@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:spend_spent_spent/globals.dart';
 
 const Map<int, String> TYPES = {0: 'Daily', 1: 'Weekly', 2: 'Monthly', 3: 'Yearly'};

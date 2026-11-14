@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:spend_spent_spent/households/models/household_enums.dart';
 import 'package:spend_spent_spent/households/views/components/member_colored_container.dart';
 import 'package:spend_spent_spent/utils/dialogs.dart';

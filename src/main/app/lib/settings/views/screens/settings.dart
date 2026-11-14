@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:after_layout/after_layout.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
 import 'package:gap/gap.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:spend_spent_spent/expenses/views/components/expense.dart';
