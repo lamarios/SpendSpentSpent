@@ -62,7 +62,25 @@ pkgs.mkShell {
     fi
 
     echo "Setting up pre-commit hook"
-    (cd "$APP_DIR" && dart run tools/setup_git_hooks.dart)
+    PRE_COMMIT_HOOK="$(git rev-parse --git-path hooks)/pre-commit"
+    mkdir -p "$(dirname "$PRE_COMMIT_HOOK")"
+    cat > "$PRE_COMMIT_HOOK" <<'EOF'
+    #!/bin/sh
+    set -e
+
+    # Flutter app
+    ./src/main/app/submodules/flutter/bin/dart format --set-exit-if-changed ./src/main/app/lib
+    ./src/main/app/submodules/flutter/bin/dart analyze ./src/main/app/lib
+
+    # Java backend: only run spotless when Java files are staged
+    if git diff --cached --name-only --diff-filter=ACMR | grep -q '\.java$'; then
+        mvn -q spotless:check || {
+            echo "Spotless found formatting issues. Run 'mvn spotless:apply' and re-stage your changes."
+            exit 1
+        }
+    fi
+    EOF
+    chmod a+x "$PRE_COMMIT_HOOK"
 
     flutter config --jdk-dir ${pkgs.jdk21}/lib/openjdk
 

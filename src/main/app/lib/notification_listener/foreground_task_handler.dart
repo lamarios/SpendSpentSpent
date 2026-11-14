@@ -29,7 +29,7 @@ class ForegroundTaskHandler extends TaskHandler {
 
   // Find a numeric amount in the notification title and content.
   double? findAmountInNotification(ServiceNotificationEvent event) {
-    final text = '${event.title ?? ''} ${event.content ?? ''}'.trim();
+    final text = '${event.title} ${event.content}'.trim();
     print('finding amount in:\n$text');
 
     final regex = RegExp(r'\d+([,.]?\d{3})*[,.]\d{2}');
@@ -63,7 +63,7 @@ class ForegroundTaskHandler extends TaskHandler {
     /// stream the incoming notification events
     NotificationListenerService.notificationsStream.listen((event) async {
       flutterLocalNotificationsPlugin ??= await NotificationEventListener.setupNotifications(null);
-      if (event.hasRemoved ?? false) {
+      if (event.hasRemoved) {
         print('notification removed');
         return;
       }
@@ -76,7 +76,7 @@ class ForegroundTaskHandler extends TaskHandler {
 
         final amount = findAmountInNotification(event);
 
-        final appIgnored = await isAppIgnored(event.packageName ?? '');
+        final appIgnored = await isAppIgnored(event.packageName);
 
         if (appIgnored) {
           print('Package: ${event.packageName} is ignored, skipping');

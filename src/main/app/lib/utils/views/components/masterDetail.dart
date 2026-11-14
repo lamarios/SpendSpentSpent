@@ -4,20 +4,10 @@ import 'package:spend_spent_spent/globals.dart';
 class MasterDetail extends StatefulWidget {
   final Widget master;
 
-  MasterDetail({super.key, required this.master});
-
-  late MasterDetailState state;
-
-  setDetails(Widget details, String title, BuildContext context) {
-    details = details;
-    state.changeDetails(context, title, details);
-  }
+  const MasterDetail({super.key, required this.master});
 
   @override
-  MasterDetailState createState() {
-    state = MasterDetailState();
-    return state;
-  }
+  MasterDetailState createState() => MasterDetailState();
 }
 
 class MasterDetailState extends State<MasterDetail> {
