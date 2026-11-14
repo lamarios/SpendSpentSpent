@@ -227,8 +227,8 @@ void main() {
     await tester.pumpWidget(TestSetup(child: AddExpense(canChangeCategory: false, category: categories.first)));
 
     // for this test we don't care about suggestions
-    var suggestions = nock(validServerUrl).post('/API/Expense/suggest-notes', (body) => true)
-      ..reply(200, '{"google drive": 11}');
+    var suggestions = nock(validServerUrl).post('/API/Expense/suggest-notes-ranked', (body) => true)
+      ..reply(200, '["google drive"]');
 
     await tester.pumpAndSettle();
     await tester.pump(Duration(seconds: 1));
@@ -342,7 +342,7 @@ void main() {
     );
 
     // for this test we don't care about suggestions
-    nock(validServerUrl).post('/API/Expense/suggest-notes', (body) => true).reply(200, '{}');
+    nock(validServerUrl).post('/API/Expense/suggest-notes-ranked', (body) => true).reply(200, '[]');
 
     await tester.pumpAndSettle();
     await tester.pump(Duration(seconds: 1));
@@ -355,5 +355,40 @@ void main() {
 
     // we make sure that the date is respected
     expect(find.text('2026-01-23'), findsOneWidget);
+  });
+
+  List<String> shownSuggestions(WidgetTester tester) =>
+      tester.widgetList<NoteSuggestionPill>(find.byType(NoteSuggestionPill)).map((pill) => pill.text).toList();
+
+  testWidgets('The note suggestions keep the order of the server', (tester) async {
+    await tester.pumpWidget(TestSetup(child: AddExpense(canChangeCategory: false, category: categories.first)));
+    final ranked = nock(validServerUrl).post('/API/Expense/suggest-notes-ranked', (body) => true)
+      ..reply(200, '["Close", "Far"]')
+      ..persist(true);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('5'));
+    await tester.pump(Duration(seconds: 1));
+
+    expect(ranked.isDone, true);
+    expect(shownSuggestions(tester), ['Close', 'Far']);
+  });
+
+  testWidgets('Older servers suggest the most used notes', (tester) async {
+    await tester.pumpWidget(TestSetup(child: AddExpense(canChangeCategory: false, category: categories.first)));
+    // what a server without the ranked suggestions answers
+    nock(validServerUrl).post('/API/Expense/suggest-notes-ranked', (body) => true)
+      ..reply(500, "Request method 'POST' is not supported")
+      ..persist(true);
+    final mostUsed = nock(validServerUrl).post('/API/Expense/suggest-notes', (body) => true)
+      ..reply(200, '{"Rare": 1, "Often": 5}')
+      ..persist(true);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('5'));
+    await tester.pump(Duration(seconds: 1));
+
+    expect(mostUsed.isDone, true);
+    expect(shownSuggestions(tester), ['Often', 'Rare']);
   });
 }

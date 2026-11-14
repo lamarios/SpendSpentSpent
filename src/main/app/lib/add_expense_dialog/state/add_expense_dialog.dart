@@ -21,6 +21,8 @@ part 'add_expense_dialog.freezed.dart';
 
 const expenseDateFormat = 'yyyy-MM-dd';
 
+final _log = Logger('AddExpenseDialogCubit');
+
 class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
   final LastExpenseCubit lastExpenseCubit;
   final suggestionController = ScrollController();
@@ -41,7 +43,7 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
 
   void getNoteSuggestions(String value) {
     EasyDebounce.debounce('new-expense-note-suggestions', const Duration(milliseconds: 500), () async {
-      final suggestions = await service.getNoteSuggestions(
+      final suggestions = await _rankedNoteSuggestions(
         Expense(
           amount: double.parse(valueToStr(value)),
           date: '2022-01-23',
@@ -49,11 +51,20 @@ class AddExpenseDialogCubit extends Cubit<AddExpenseDialogState> {
           timestamp: DateTime.now().millisecondsSinceEpoch,
         ),
       );
-      List<String> results = suggestions.keys.toList(growable: false);
-      results.sort((a, b) => suggestions[b]!.compareTo(suggestions[a]!));
 
-      emit(state.copyWith(noteSuggestions: results));
+      emit(state.copyWith(noteSuggestions: suggestions));
     });
+  }
+
+  /// Older servers don't rank the notes, their suggestions are then sorted by how often they were used.
+  Future<List<String>> _rankedNoteSuggestions(Expense expense) async {
+    try {
+      return await service.getRankedNoteSuggestions(expense);
+    } catch (e) {
+      _log.fine('No ranked note suggestions, using the most used notes', e);
+      final suggestions = await service.getNoteSuggestions(expense);
+      return suggestions.keys.toList()..sort((a, b) => suggestions[b]!.compareTo(suggestions[a]!));
+    }
   }
 
   Future<void> init() async {
