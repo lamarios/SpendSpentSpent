@@ -1,70 +1,71 @@
 package com.ftpix.sss.models;
 
-import org.springframework.data.domain.Page;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 public class PaginatedResults<T> {
-    private final List<T> data;
-    private final PaginationDetails pagination;
+  private final List<T> data;
+  private final PaginationDetails pagination;
 
-    public static <T> PaginatedResults<T> empty(long pageSize) {
-        return new PaginatedResults<T>(0, 0, pageSize, new ArrayList<T>());
+  public static <T> PaginatedResults<T> empty(long pageSize) {
+    return new PaginatedResults<T>(0, 0, pageSize, new ArrayList<T>());
+  }
+
+  public PaginatedResults(long page, long total, long pageSize, List<T> data) {
+    this.data = data;
+    this.pagination = new PaginationDetails(data.size(), page, total, pageSize);
+  }
+
+  public PaginatedResults(Page<T> fromRepo) {
+    this(
+        fromRepo.getPageable().getPageNumber(),
+        fromRepo.getTotalPages(),
+        fromRepo.getPageable().getPageSize(),
+        fromRepo.getContent());
+  }
+
+  public PaginationDetails getPagination() {
+    return pagination;
+  }
+
+  public List<T> getData() {
+    return data;
+  }
+
+  public static class PaginationDetails {
+
+    private final long totalPages, currentPageCount;
+    private final long page;
+    private final long total;
+    private final long pageSize;
+
+    public PaginationDetails(long currentPageCount, long page, long total, long pageSize) {
+      this.totalPages = (long) Math.ceil(total / pageSize);
+      this.currentPageCount = currentPageCount;
+      this.page = page;
+      this.total = total;
+      this.pageSize = pageSize;
     }
 
-    public PaginatedResults(long page, long total, long pageSize, List<T> data) {
-        this.data = data;
-        this.pagination = new PaginationDetails(data.size(), page, total, pageSize);
-    }
-    public PaginatedResults(Page<T> fromRepo){
-        this(fromRepo.getPageable().getPageNumber(), fromRepo.getTotalPages(), fromRepo.getPageable().getPageSize(), fromRepo.getContent());
+    public long getTotalPages() {
+      return totalPages;
     }
 
-    public PaginationDetails getPagination() {
-        return pagination;
+    public long getCurrentPageCount() {
+      return currentPageCount;
     }
 
-    public List<T> getData() {
-        return data;
+    public long getPage() {
+      return page;
     }
 
-
-    public static class PaginationDetails {
-
-
-        private final long totalPages, currentPageCount;
-        private final long page;
-        private final long total;
-        private final long pageSize;
-
-        public PaginationDetails(long currentPageCount, long page, long total, long pageSize) {
-            this.totalPages = (long) Math.ceil(total / pageSize);
-            this.currentPageCount = currentPageCount;
-            this.page = page;
-            this.total = total;
-            this.pageSize = pageSize;
-        }
-
-        public long getTotalPages() {
-            return totalPages;
-        }
-
-        public long getCurrentPageCount() {
-            return currentPageCount;
-        }
-
-        public long getPage() {
-            return page;
-        }
-
-        public long getTotal() {
-            return total;
-        }
-
-        public long getPageSize() {
-            return pageSize;
-        }
+    public long getTotal() {
+      return total;
     }
+
+    public long getPageSize() {
+      return pageSize;
+    }
+  }
 }
-

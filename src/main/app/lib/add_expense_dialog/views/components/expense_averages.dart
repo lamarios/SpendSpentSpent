@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 import 'package:spend_spent_spent/expenses/views/components/stylized_amount.dart';
 import 'package:spend_spent_spent/recurring_expenses/models/recurring_expense.dart';
-import 'package:spend_spent_spent/settings/state/app_settings.dart';
 import 'package:spend_spent_spent/utils/colorUtils.dart';
 
 class RecurringExpenseAverages extends StatelessWidget {

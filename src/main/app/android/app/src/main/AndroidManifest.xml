@@ -67,6 +67,12 @@
                 android:name="flutterEmbedding"
                 android:value="2"/>
 
+        <!-- Hybrid Composition++ for platform views. Needs Impeller (Vulkan) and Android 14+;
+             other devices fall back to each platform view's own mode. -->
+        <meta-data
+                android:name="io.flutter.embedding.android.EnableHcpp"
+                android:value="true"/>
+
         <!-- Warning: Do not change service name. -->
         <service
                 android:name="com.pravera.flutter_foreground_task.service.ForegroundService"

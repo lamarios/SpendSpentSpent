@@ -1,13 +1,10 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spend_spent_spent/expenses/models/sss_file.dart';
 import 'package:spend_spent_spent/expenses/state/expense_images.dart';
-import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/router.dart';
 import 'package:spend_spent_spent/sss_files/views/components/sss_file_listener.dart';
-import 'package:spend_spent_spent/utils/all_scroll_behavior.dart';
-import 'package:spend_spent_spent/utils/views/components/expense_image.dart';
 import 'package:spend_spent_spent/utils/views/components/image_carousell.dart';
 
 class ExpenseImages extends StatelessWidget {

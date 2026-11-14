@@ -1,9 +1,7 @@
 package com.ftpix.sss.listeners;
 
-import com.ftpix.sss.models.User;
-
 public interface DaoListener<T> {
-    void afterInsert(T newRecord);
+  void afterInsert(T newRecord);
 
-    void afterDelete(T deleted);
+  void afterDelete(T deleted);
 }

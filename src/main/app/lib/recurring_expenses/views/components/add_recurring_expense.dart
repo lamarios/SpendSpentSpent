@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/recurring_expenses/state/add_recurring_expense.dart';

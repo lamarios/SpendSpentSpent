@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:logging/logging.dart';
@@ -154,6 +154,11 @@ class _SpendSpentSpentState extends State<SpendSpentSpent> with WidgetsBindingOb
               return MaterialApp.router(
                 routerConfig: _appRouter.config(),
                 localizationsDelegates: [],
+                // Some dependencies (flutter_settings_ui, material_loading_indicator, fl_chart, flutter_map...)
+                // still use the legacy package:flutter/material.dart, which has its own Theme that doesn't see ours.
+                // The bridge maps our material_ui theme onto the legacy one. Remove once they migrate to material_ui.
+                // ignore: deprecated_member_use
+                builder: (context, child) => MaterialUiCompatibilityBridge(child: child!),
                 theme: ThemeData(
                   scaffoldBackgroundColor: lightColorScheme.surface,
                   navigationBarTheme: navigationBarTheme.copyWith(backgroundColor: lightColorScheme.surface),

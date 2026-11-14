@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:after_layout/after_layout.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:random_string/random_string.dart';
 import 'package:spend_spent_spent/globals.dart';
 

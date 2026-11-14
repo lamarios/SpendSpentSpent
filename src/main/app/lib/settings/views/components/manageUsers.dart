@@ -1,6 +1,6 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:animations/animations.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:spend_spent_spent/utils/views/components/paginationSwitcher.dart';
 import 'package:spend_spent_spent/settings/views/components/add_user_dialog.dart';
 import 'package:spend_spent_spent/settings/views/components/change_password_dialog.dart';

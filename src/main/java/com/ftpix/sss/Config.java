@@ -1,6 +1,5 @@
 package com.ftpix.sss;
 
-
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.StreamReadFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -16,6 +15,9 @@ import freemarker.template.TemplateExceptionHandler;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.api.mailer.config.TransportStrategy;
 import org.simplejavamail.mailer.MailerBuilder;
@@ -29,141 +31,140 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-
 @Configuration
 @SecurityScheme(
-        name = "bearerAuth",
-        description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-        scheme = "bearer",
-        type = SecuritySchemeType.HTTP,
-        bearerFormat = "JWT",
-        in = SecuritySchemeIn.HEADER
-)
+    name = "bearerAuth",
+    description =
+        "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+    scheme = "bearer",
+    type = SecuritySchemeType.HTTP,
+    bearerFormat = "JWT",
+    in = SecuritySchemeIn.HEADER)
 public class Config {
 
-    @Value("${SMTP_USERNAME:}")
-    private String smtpUsername;
-    @Value("${SMTP_PASSWORD:}")
-    private String smtpPassword;
-    @Value("${SMTP_HOST:}")
-    private String smtpHost;
-    @Value("${SMTP_PORT:0}")
-    private int smtpPort;
-    @Value("${SMTP_TRANSPORT_STRATEGY:SMTP}")
-    private TransportStrategy transportStrategy;
+  @Value("${SMTP_USERNAME:}")
+  private String smtpUsername;
 
-    @Value("${ROOT_URL:http://localhost:8080}")
-    private String rootUrl;
+  @Value("${SMTP_PASSWORD:}")
+  private String smtpPassword;
 
-    @Bean
-    public String rootUrl() {
-        return rootUrl;
+  @Value("${SMTP_HOST:}")
+  private String smtpHost;
+
+  @Value("${SMTP_PORT:0}")
+  private int smtpPort;
+
+  @Value("${SMTP_TRANSPORT_STRATEGY:SMTP}")
+  private TransportStrategy transportStrategy;
+
+  @Value("${ROOT_URL:http://localhost:8080}")
+  private String rootUrl;
+
+  @Bean
+  public String rootUrl() {
+    return rootUrl;
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(ZoneId.class)
+  public ZoneId zoneId(@Value("${TIMEZONE}") String timeZone) {
+    return ZoneId.of(timeZone);
+  }
+
+  @Bean
+  public Mailer mailer() {
+    MailerRegularBuilderImpl mailer;
+    if (smtpHost == null || smtpPort == 0 || smtpHost.trim().isEmpty()) {
+      return null;
     }
 
-
-    @Bean
-    @ConditionalOnMissingBean(ZoneId.class)
-    public ZoneId zoneId(@Value("${TIMEZONE}") String timeZone) {
-        return ZoneId.of(timeZone);
+    if (smtpUsername != null && !smtpUsername.isEmpty()) {
+      if (smtpPassword == null || smtpPassword.trim().isEmpty()) {
+        mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort, smtpUsername);
+      } else {
+        mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort, smtpUsername, smtpPassword);
+      }
+    } else {
+      mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort);
     }
 
-    @Bean
-    public Mailer mailer() {
-        MailerRegularBuilderImpl mailer;
-        if (smtpHost == null || smtpPort == 0 || smtpHost.trim().isEmpty()) {
-            return null;
-        }
+    mailer = mailer.withTransportStrategy(transportStrategy);
 
-        if (smtpUsername != null && !smtpUsername.isEmpty()) {
-            if (smtpPassword == null || smtpPassword.trim().isEmpty()) {
-                mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort, smtpUsername);
-            } else {
-                mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort, smtpUsername, smtpPassword);
-            }
-        } else {
-            mailer = MailerBuilder.withSMTPServer(smtpHost, smtpPort);
-        }
+    return mailer.buildMailer();
+  }
 
+  @Bean
+  public WebMvcConfigurer corsConfigurer() {
+    return new WebMvcConfigurer() {
+      @Override
+      public void addCorsMappings(CorsRegistry registry) {
+        registry
+            .addMapping("/**") // apply to all endpoints
+            .allowedOriginPatterns("*") // frontend URLs
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .allowCredentials(true);
+      }
+    };
+  }
 
-        mailer = mailer.withTransportStrategy(transportStrategy);
+  @Bean
+  public freemarker.template.Configuration templateEngine() throws IOException {
+    // Create your Configuration instance, and specify if up to what FreeMarker
+    // version (here 2.3.29) do you want to apply the fixes that are not 100%
+    // backward-compatible. See the Configuration JavaDoc for details.
+    freemarker.template.Configuration cfg =
+        new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_29);
 
-        return mailer.buildMailer();
-    }
+    // Specify the source where the template files come from. Here I set a
+    // plain directory for it, but non-file-system sources are possible too:
+    cfg.setClassForTemplateLoading(this.getClass(), "/templates/");
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // apply to all endpoints
-                        .allowedOriginPatterns("*") // frontend URLs
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
-            }
-        };
-    }
+    // From here we will set the settings recommended for new projects. These
+    // aren't the defaults for backward compatibilty.
 
-    @Bean
-    public freemarker.template.Configuration templateEngine() throws IOException {
-        // Create your Configuration instance, and specify if up to what FreeMarker
-        // version (here 2.3.29) do you want to apply the fixes that are not 100%
-        // backward-compatible. See the Configuration JavaDoc for details.
-        freemarker.template.Configuration cfg = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_29);
+    // Set the preferred charset template files are stored in. UTF-8 is
+    // a good choice in most applications:
+    cfg.setDefaultEncoding("UTF-8");
 
-        // Specify the source where the template files come from. Here I set a
-        // plain directory for it, but non-file-system sources are possible too:
-        cfg.setClassForTemplateLoading(this.getClass(), "/templates/");
+    // Sets how errors will appear.
+    // During web page *development* TemplateExceptionHandler.HTML_DEBUG_HANDLER is better.
+    cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
 
-        // From here we will set the settings recommended for new projects. These
-        // aren't the defaults for backward compatibilty.
+    // Don't log exceptions inside FreeMarker that it will thrown at you anyway:
+    cfg.setLogTemplateExceptions(false);
 
-        // Set the preferred charset template files are stored in. UTF-8 is
-        // a good choice in most applications:
-        cfg.setDefaultEncoding("UTF-8");
+    // Wrap unchecked exceptions thrown during template processing into TemplateException-s:
+    cfg.setWrapUncheckedExceptions(true);
 
-        // Sets how errors will appear.
-        // During web page *development* TemplateExceptionHandler.HTML_DEBUG_HANDLER is better.
-        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+    // Do not fall back to higher scopes when reading a null loop variable:
+    cfg.setFallbackOnNullLoopVariable(false);
 
-        // Don't log exceptions inside FreeMarker that it will thrown at you anyway:
-        cfg.setLogTemplateExceptions(false);
+    return cfg;
+  }
 
-        // Wrap unchecked exceptions thrown during template processing into TemplateException-s:
-        cfg.setWrapUncheckedExceptions(true);
+  @Bean
+  ToolCallbackProvider mcpToolCallbackProvider(MCPTools mcpTools) {
+    return MethodToolCallbackProvider.builder().toolObjects(mcpTools).build();
+  }
 
-        // Do not fall back to higher scopes when reading a null loop variable:
-        cfg.setFallbackOnNullLoopVariable(false);
+  @Bean
+  public ObjectMapper objectMapper() {
 
-        return cfg;
-    }
+    JsonFactory factory =
+        JsonFactory.builder().enable(StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION).build();
 
+    ObjectMapper mapper = new ObjectMapper(factory);
+    SimpleModule module = new SimpleModule();
+    module.addSerializer(Settings.class, new SettingsSerializer());
+    module.addDeserializer(Settings.class, new SettingsDeserializer());
+    module.addSerializer(LocalDate.class, new LocalDateSerializer());
+    module.addDeserializer(LocalDate.class, new LocalDateDeserializer());
+    mapper.disable(
+        DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES,
+        DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    mapper.registerModule(module);
 
-    @Bean
-    ToolCallbackProvider mcpToolCallbackProvider(MCPTools mcpTools) {
-        return MethodToolCallbackProvider.builder().toolObjects(mcpTools)
-                .build();
-    }
-
-    @Bean
-    public ObjectMapper objectMapper() {
-
-        JsonFactory factory = JsonFactory.builder()
-                .enable(StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION).build();
-
-        ObjectMapper mapper = new ObjectMapper(factory);
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(Settings.class, new SettingsSerializer());
-        module.addDeserializer(Settings.class, new SettingsDeserializer());
-        module.addSerializer(LocalDate.class, new LocalDateSerializer());
-        module.addDeserializer(LocalDate.class, new LocalDateDeserializer());
-        mapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.registerModule(module);
-
-        return mapper;
-    }
-
+    return mapper;
+  }
 }

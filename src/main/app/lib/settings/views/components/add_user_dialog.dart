@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:random_string/random_string.dart';
 import 'package:spend_spent_spent/settings/models/user.dart';
 import 'package:spend_spent_spent/utils/stringUtils.dart';

@@ -1,18 +1,19 @@
 name: 'spend_spent_spent'
-version: '2.13.6+148'
+version: '2.14.0+148'
 publish_to: none
 environment:
   sdk: '>=3.10.0 <4.0.0'
 description: Client for SpendSpentSpent self hosted expense tracker.
 dependencies:
   after_layout: 1.2.0
-  animations: 2.2.0
-  auto_route: 11.1.0
-  cached_network_image: 3.4.1
+  animations: 3.0.0
+  auto_route: 11.2.0
+  cached_network_image: 4.0.7
   carousel_slider: 5.1.2
-  dynamic_color: 1.9.0
+  cupertino_ui: 1.1.6
+  dynamic_color: 2.1.0
   easy_debounce: 2.0.3
-  fl_chart: 1.3.0
+  fl_chart: 1.3.1
   flutter:
     sdk: flutter
   flutter_animate: 4.5.2
@@ -21,14 +22,14 @@ dependencies:
   flutter_device_apps: 1.1.0
   flutter_fadein: 2.0.0
   flutter_foreground_task: 11.0.3
-  flutter_local_notifications: 23.0.0
+  flutter_local_notifications: 23.0.2
   flutter_map: 8.3.2
   flutter_map_heatmap:
     git:
       # https://github.com/tprebs/fluttermap_heatmap/pull/23
       url: https://github.com/ThomasAunvik/fluttermap_heatmap.git
   flutter_settings_ui: 3.1.0
-  flutter_svg: 2.3.2
+  flutter_svg: 2.4.0
   flutter_timezone: 5.1.1
   freezed_annotation: 3.1.0
   gap: 3.1.0
@@ -42,6 +43,7 @@ dependencies:
   latlong2: 0.9.1
   logging: 1.3.0
   material_loading_indicator: 1.0.0
+  material_ui: 1.11.0
   motor: 1.1.0
   notification_listener_service: 1.0.0
   oidc: 5.0.2
@@ -72,8 +74,8 @@ dev_dependencies:
   pubspec_dependency_sorter: 1.0.5
   snaptest: 0.3.1
 dependency_overrides:
-  test: 1.31.1 # Pinned so test_core matches the test_api below
-  test_api: 0.7.12 # Matches what flutter_test wants for NOCK to work
+  test: 1.32.0 # Pinned so test_core matches the test_api below
+  test_api: 0.7.14 # Matches what flutter_test wants for NOCK to work
 flutter_icons:
   android: false
   ios: true

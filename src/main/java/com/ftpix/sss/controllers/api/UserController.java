@@ -8,6 +8,7 @@ import com.ftpix.sss.services.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,80 +16,83 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
-
 @RestController
 @RequestMapping("/API/User")
 @Tag(name = "Users")
 @SecurityRequirement(name = "bearerAuth")
 public class UserController {
-    private final static Logger logger = LogManager.getLogger();
+  private static final Logger logger = LogManager.getLogger();
 
-    private final UserService userService;
-    private final JwtTokenUtil jwtTokenUtil;
-    private final JwtUserDetailsService jwtUserDetailsService;
+  private final UserService userService;
+  private final JwtTokenUtil jwtTokenUtil;
+  private final JwtUserDetailsService jwtUserDetailsService;
 
+  @Autowired
+  public UserController(
+      UserService userService,
+      JwtTokenUtil jwtTokenUtil,
+      JwtUserDetailsService jwtUserDetailsService) {
+    this.userService = userService;
+    this.jwtTokenUtil = jwtTokenUtil;
+    this.jwtUserDetailsService = jwtUserDetailsService;
+  }
 
-    @Autowired
-    public UserController(UserService userService, JwtTokenUtil jwtTokenUtil, JwtUserDetailsService jwtUserDetailsService) {
-        this.userService = userService;
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.jwtUserDetailsService = jwtUserDetailsService;
-    }
+  @PostMapping
+  public String updateProfile(@RequestBody User user) throws Exception {
+    final User currentUser = userService.getCurrentUser();
 
-    @PostMapping
-    public String updateProfile(@RequestBody User user) throws Exception {
-        final User currentUser = userService.getCurrentUser();
+    userService.updateUserProfile(currentUser, user);
 
-        userService.updateUserProfile(currentUser, user);
+    final UserDetails userDetails =
+        jwtUserDetailsService.loadUserByUsername(currentUser.getEmail());
 
-        final UserDetails userDetails = jwtUserDetailsService
-                .loadUserByUsername(currentUser.getEmail());
+    final String token = jwtTokenUtil.generateToken(userDetails);
+    return token;
+  }
 
-        final String token = jwtTokenUtil.generateToken(userDetails);
-        return token;
-    }
+  @GetMapping
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  public PaginatedResults<User> getUsers(
+      @Parameter(description = "Page starts from 0") @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "20") int pageSize,
+      @RequestParam(defaultValue = "") String search)
+      throws Exception {
+    return userService.getAll(search, page, pageSize);
+  }
 
-    @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public PaginatedResults<User> getUsers(@Parameter(description = "Page starts from 0") @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int pageSize, @RequestParam(defaultValue = "") String search) throws Exception {
-        return userService.getAll(search, page, pageSize);
-    }
+  @GetMapping(value = "/{userId}/setAdmin/{isAdmin}")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  public boolean setAdmin(
+      @PathVariable("userId") String userId, @PathVariable("isAdmin") boolean isAdmin)
+      throws Exception {
+    final User user = userService.getCurrentUser();
 
-    @GetMapping(value = "/{userId}/setAdmin/{isAdmin}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public boolean setAdmin(@PathVariable("userId") String userId, @PathVariable("isAdmin") boolean isAdmin) throws Exception {
-        final User user = userService.getCurrentUser();
+    return userService.setUserAdmin(userId, isAdmin, user);
+  }
 
-        return userService.setUserAdmin(userId, isAdmin, user);
+  @PostMapping("/{userId}/setPassword")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  public boolean setPassword(@PathVariable("userId") String userId, @RequestBody String newPassword)
+      throws Exception {
+    return userService.setUserPassword(userId, newPassword);
+  }
 
-    }
+  @PutMapping
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  public User addUser(@RequestBody User user) throws Exception {
+    return userService.createUser(user);
+  }
 
-    @PostMapping("/{userId}/setPassword")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public boolean setPassword(@PathVariable("userId") String userId, @RequestBody String newPassword) throws Exception {
-        return userService.setUserPassword(userId, newPassword);
-    }
+  @DeleteMapping(value = "/{userId}")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  public boolean deleteUser(@PathVariable("userId") String userId) throws Exception {
+    User currentUser = userService.getCurrentUser();
+    // deleting all the data
+    return userService.deleteUser(userId, currentUser);
+  }
 
-    @PutMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public User addUser(@RequestBody User user) throws Exception {
-        return userService.createUser(user);
-    }
-
-
-    @DeleteMapping(value = "/{userId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public boolean deleteUser(@PathVariable("userId") String userId) throws Exception {
-        User currentUser = userService.getCurrentUser();
-        // deleting all the data
-        return userService.deleteUser(userId, currentUser);
-
-    }
-
-    @GetMapping("/current")
-    public User getcurrentUser() throws SQLException {
-        return userService.getCurrentUser();
-    }
-
+  @GetMapping("/current")
+  public User getcurrentUser() throws SQLException {
+    return userService.getCurrentUser();
+  }
 }

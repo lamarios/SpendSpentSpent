@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';

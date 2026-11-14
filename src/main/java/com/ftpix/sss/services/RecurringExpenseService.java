@@ -5,6 +5,11 @@ import com.ftpix.sss.models.RecurringExpense;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.persistence.RecurringExpenseRepository;
 import com.ftpix.sss.persistence.utils.Specifications;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,211 +17,210 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-
 @Service
 public class RecurringExpenseService {
-    private final static Logger logger = LogManager.getLogger();
-    private final CategoryService categoryService;
-    private final RecurringExpenseRepository recurringExpenseRepository;
-    private final HouseholdLocks householdLocks;
-    private final HouseholdService householdService;
+  private static final Logger logger = LogManager.getLogger();
+  private final CategoryService categoryService;
+  private final RecurringExpenseRepository recurringExpenseRepository;
+  private final HouseholdLocks householdLocks;
+  private final HouseholdService householdService;
 
-    @Autowired
-    public RecurringExpenseService(CategoryService categoryService, RecurringExpenseRepository recurringExpenseRepository, HouseholdLocks householdLocks, HouseholdService householdService) {
-        this.categoryService = categoryService;
-        this.recurringExpenseRepository = recurringExpenseRepository;
-        this.householdLocks = householdLocks;
-        this.householdService = householdService;
+  @Autowired
+  public RecurringExpenseService(
+      CategoryService categoryService,
+      RecurringExpenseRepository recurringExpenseRepository,
+      HouseholdLocks householdLocks,
+      HouseholdService householdService) {
+    this.categoryService = categoryService;
+    this.recurringExpenseRepository = recurringExpenseRepository;
+    this.householdLocks = householdLocks;
+    this.householdService = householdService;
+  }
+
+  public LocalDate calculateNextDate(RecurringExpense expense) {
+    return calculateNextDate(expense, LocalDate.now());
+  }
+
+  /**
+   * Calculate the next instance of a recurring expense
+   *
+   * @param expense the expense we want to check.
+   * @return when is the new payment due.
+   */
+  public LocalDate calculateNextDate(RecurringExpense expense, LocalDate today) {
+    ChronoUnit calendarUnit;
+    LocalDate cal = today;
+    //        Calendar cal = new GregorianCalendar();
+    //        Calendar today = new GregorianCalendar();
+    switch (expense.getType()) {
+      case RecurringExpense.TYPE_DAILY:
+        logger.info("Daily");
+        //                calendarField = Calendar.DAY_OF_MONTH;
+        calendarUnit = ChronoUnit.DAYS;
+        break;
+      case RecurringExpense.TYPE_MONTHLY:
+        logger.info("Monthly");
+        //                calendarField = Calendar.MONTH;
+        calendarUnit = ChronoUnit.MONTHS;
+        cal = cal.withDayOfMonth(expense.getTypeParam());
+        //                cal.set(Calendar.DAY_OF_MONTH, expense.getTypeParam());
+        break;
+      case RecurringExpense.TYPE_WEEKLY:
+        logger.info("Weekly");
+        //                calendarField = Calendar.WEEK_OF_YEAR;
+        //                cal.set(Calendar.DAY_OF_WEEK, expense.getTypeParam());
+        // we migrated from gregorian calendar which starts the week on sunday, LocalDate starts on
+        // monday
+        DayOfWeek dow = DayOfWeek.of(((expense.getTypeParam() + 5) % 7) + 1);
+        cal = cal.with(ChronoField.DAY_OF_WEEK, dow.getValue());
+        calendarUnit = ChronoUnit.WEEKS;
+        break;
+      case RecurringExpense.TYPE_YEARLY:
+      default:
+        logger.info("Yearly");
+        //                calendarField = Calendar.YEAR;
+        //                cal.set(Calendar.MONTH, expense.getTypeParam());
+        calendarUnit = ChronoUnit.YEARS;
+        // we migrated to local date which the starts the months of the year with 1 instead of 0
+        cal = cal.withMonth(expense.getTypeParam() + 1);
     }
 
-    public LocalDate calculateNextDate(RecurringExpense expense) {
-        return calculateNextDate(expense, LocalDate.now());
-    }
+    logger.info("Calculated date[{}]", cal.toString());
 
-    /**
-     * Calculate the next instance of a recurring expense
-     *
-     * @param expense the expense we want to check.
-     * @return when is the new payment due.
-     */
-    public LocalDate calculateNextDate(RecurringExpense expense, LocalDate today) {
-        ChronoUnit calendarUnit;
-        LocalDate cal = today;
-//        Calendar cal = new GregorianCalendar();
-//        Calendar today = new GregorianCalendar();
+    // We don't have a date
+    if (expense.getLastOccurrence() == null) {
+
+      logger.info(
+          "No date, must be new recurring expense: let's check if the set date is already past");
+      logger.info("Comparing today[{}] and the set up date[{}]", today, cal);
+
+      if (today.isAfter(cal)) {
+        cal = cal.plus(1, calendarUnit);
+        logger.info("The calculated date is expired, adding the extra time, new date[{}]", cal);
+
+        // Handling special cases
         switch (expense.getType()) {
-            case RecurringExpense.TYPE_DAILY:
-                logger.info("Daily");
-//                calendarField = Calendar.DAY_OF_MONTH;
-                calendarUnit = ChronoUnit.DAYS;
-                break;
-            case RecurringExpense.TYPE_MONTHLY:
-                logger.info("Monthly");
-//                calendarField = Calendar.MONTH;
-                calendarUnit = ChronoUnit.MONTHS;
-                cal = cal.withDayOfMonth(expense.getTypeParam());
-//                cal.set(Calendar.DAY_OF_MONTH, expense.getTypeParam());
-                break;
-            case RecurringExpense.TYPE_WEEKLY:
-                logger.info("Weekly");
-//                calendarField = Calendar.WEEK_OF_YEAR;
-//                cal.set(Calendar.DAY_OF_WEEK, expense.getTypeParam());
-                // we migrated from gregorian calendar which starts the week on sunday, LocalDate starts on monday
-                DayOfWeek dow = DayOfWeek.of(((expense.getTypeParam() + 5) % 7) + 1);
-                cal = cal.with(ChronoField.DAY_OF_WEEK, dow.getValue());
-                calendarUnit = ChronoUnit.WEEKS;
-                break;
-            case RecurringExpense.TYPE_YEARLY:
-            default:
-                logger.info("Yearly");
-//                calendarField = Calendar.YEAR;
-//                cal.set(Calendar.MONTH, expense.getTypeParam());
-                calendarUnit = ChronoUnit.YEARS;
-                // we migrated to local date which the starts the months of the year with 1 instead of 0
-                cal = cal.withMonth(expense.getTypeParam() + 1);
+          case RecurringExpense.TYPE_YEARLY:
+            cal = cal.withDayOfMonth(1);
+            break;
         }
 
-        logger.info("Calculated date[{}]", cal.toString());
-
-        // We don't have a date
-        if (expense.getLastOccurrence() == null) {
-
-            logger.info("No date, must be new recurring expense: let's check if the set date is already past");
-            logger.info("Comparing today[{}] and the set up date[{}]", today, cal);
-
-            if (today.isAfter(cal)) {
-                cal = cal.plus(1, calendarUnit);
-                logger.info("The calculated date is expired, adding the extra time, new date[{}]", cal);
-
-                // Handling special cases
-                switch (expense.getType()) {
-                    case RecurringExpense.TYPE_YEARLY:
-                        cal = cal.withDayOfMonth(1);
-                        break;
-                }
-
-            } else {
-                // Handling special cases
-                switch (expense.getType()) {
-                    case RecurringExpense.TYPE_YEARLY:
-                        if (today.getMonth().getValue() < cal.getMonth().getValue()) {
-                            cal = cal.withDayOfMonth(1);
-                        }
-                        break;
-                }
-
+      } else {
+        // Handling special cases
+        switch (expense.getType()) {
+          case RecurringExpense.TYPE_YEARLY:
+            if (today.getMonth().getValue() < cal.getMonth().getValue()) {
+              cal = cal.withDayOfMonth(1);
             }
-
-            return cal;
-
-        } else {
-            logger.info("We already have a preceding payment, just handling the special cases");
-//            GregorianCalendar last = new GregorianCalendar();
-//            last.setTime(expense.getLastOccurrence());
-//            last.add(calendarField, 1);
-            LocalDate last = expense.getLastOccurrence();
-            last = last.plus(1, calendarUnit);
-
-            // Handling special cases
-            switch (expense.getType()) {
-                case RecurringExpense.TYPE_YEARLY:
-                    cal = cal.withDayOfMonth(1);
-                    break;
-            }
-
-            return last;
+            break;
         }
+      }
 
+      return cal;
+
+    } else {
+      logger.info("We already have a preceding payment, just handling the special cases");
+      //            GregorianCalendar last = new GregorianCalendar();
+      //            last.setTime(expense.getLastOccurrence());
+      //            last.add(calendarField, 1);
+      LocalDate last = expense.getLastOccurrence();
+      last = last.plus(1, calendarUnit);
+
+      // Handling special cases
+      switch (expense.getType()) {
+        case RecurringExpense.TYPE_YEARLY:
+          cal = cal.withDayOfMonth(1);
+          break;
+      }
+
+      return last;
     }
+  }
 
-    @Transactional
-    public RecurringExpense create(RecurringExpense expense, User user) throws Exception {
-        // the category might belong to a member leaving the household right now
-        householdLocks.shared();
-        Category category = categoryService.resolve(expense.getCategory(), user);
-        if (category != null) {
-            // an id sent by the client would overwrite that recurring expense, whoever it belongs to
-            expense.setId(null);
-            expense.setCategory(category);
-            expense.setUser(user);
-            expense.setNextOccurrence(calculateNextDate(expense));
-            RecurringExpense saved = recurringExpenseRepository.save(expense);
-            // the recurring expenses are shared within the household
-            householdService.notifyOtherMembersAfterCommit(user);
-            return saved;
-        } else {
-            return null;
-        }
+  @Transactional
+  public RecurringExpense create(RecurringExpense expense, User user) throws Exception {
+    // the category might belong to a member leaving the household right now
+    householdLocks.shared();
+    Category category = categoryService.resolve(expense.getCategory(), user);
+    if (category != null) {
+      // an id sent by the client would overwrite that recurring expense, whoever it belongs to
+      expense.setId(null);
+      expense.setCategory(category);
+      expense.setUser(user);
+      expense.setNextOccurrence(calculateNextDate(expense));
+      RecurringExpense saved = recurringExpenseRepository.save(expense);
+      // the recurring expenses are shared within the household
+      householdService.notifyOtherMembersAfterCommit(user);
+      return saved;
+    } else {
+      return null;
     }
+  }
 
-    /**
-     * @return the recurring expenses of the user's household
-     */
-    @Transactional(readOnly = true)
-    public List<RecurringExpense> get(User user) throws Exception {
-        return recurringExpenseRepository.findHouseholdRecurringExpenses(user);
+  /**
+   * @return the recurring expenses of the user's household
+   */
+  @Transactional(readOnly = true)
+  public List<RecurringExpense> get(User user) throws Exception {
+    return recurringExpenseRepository.findHouseholdRecurringExpenses(user);
+  }
+
+  @Transactional(readOnly = true)
+  public RecurringExpense getId(long id, User user) throws Exception {
+    return recurringExpenseRepository.findHouseholdRecurringExpenseById(id, user);
+  }
+
+  @Transactional
+  public boolean delete(long id, User user) throws Exception {
+    // a member leaving the household right now might be moving this recurring expense
+    householdLocks.shared();
+    if (getId(id, user) != null) {
+      recurringExpenseRepository.deleteById(id);
+      householdService.notifyOtherMembersAfterCommit(user);
+      return true;
+    } else {
+      return false;
     }
+  }
 
+  /**
+   * @return the due recurring expenses created by the user. Each recurring expense is processed
+   *     once, for its creator, even if its category is shared with other household members.
+   */
+  @Transactional
+  public List<RecurringExpense> getToProcessForUser(User user) throws Exception {
+    // expenses get created on these categories, which might belong to a member leaving the
+    // household right now
+    householdLocks.shared();
+    Specification<RecurringExpense> spec =
+        Specification.where(
+                Specifications.<RecurringExpense, LocalDate>lessThanOrEqual(
+                    "nextOccurrence", LocalDate.now()))
+            .and(Specifications.<RecurringExpense>createdBy(user));
+    return recurringExpenseRepository.findAll(spec);
+    //        return recurringExpenseDaoJooq.getWhere(user,
+    // RECURRING_EXPENSE.NEXT_OCCURRENCE.le(Constants.dateFormatter.format(LocalDate.now())));
+  }
 
-    @Transactional(readOnly = true)
-    public RecurringExpense getId(long id, User user) throws Exception {
-        return recurringExpenseRepository.findHouseholdRecurringExpenseById(id, user);
+  @Transactional
+  public boolean update(RecurringExpense expense, User user) throws Exception {
+    // the category might belong to a member leaving the household right now
+    householdLocks.shared();
+    RecurringExpense existing = getId(expense.getId(), user);
+    Category category = categoryService.resolve(expense.getCategory(), user);
+
+    if (existing != null && category != null) {
+      // dates should only be updated by the cron job !
+      expense.setNextOccurrence(existing.getNextOccurrence());
+      expense.setLastOccurrence(existing.getLastOccurrence());
+      // the creator never changes and the category must be one of the household's
+      expense.setUser(existing.getUser());
+      expense.setCategory(category);
+      recurringExpenseRepository.save(expense);
+      householdService.notifyOtherMembersAfterCommit(user);
+      return true;
+    } else {
+      return false;
     }
-
-
-    @Transactional
-    public boolean delete(long id, User user) throws Exception {
-        // a member leaving the household right now might be moving this recurring expense
-        householdLocks.shared();
-        if (getId(id, user) != null) {
-            recurringExpenseRepository.deleteById(id);
-            householdService.notifyOtherMembersAfterCommit(user);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    /**
-     * @return the due recurring expenses created by the user. Each recurring expense is processed once, for its creator,
-     * even if its category is shared with other household members.
-     */
-    @Transactional
-    public List<RecurringExpense> getToProcessForUser(User user) throws Exception {
-        // expenses get created on these categories, which might belong to a member leaving the household right now
-        householdLocks.shared();
-        Specification<RecurringExpense> spec = Specification.where(
-                Specifications.<RecurringExpense, LocalDate>lessThanOrEqual("nextOccurrence", LocalDate.now())
-        ).and(Specifications.<RecurringExpense>createdBy(user));
-        return recurringExpenseRepository.findAll(spec);
-//        return recurringExpenseDaoJooq.getWhere(user, RECURRING_EXPENSE.NEXT_OCCURRENCE.le(Constants.dateFormatter.format(LocalDate.now())));
-    }
-
-    @Transactional
-    public boolean update(RecurringExpense expense, User user) throws Exception {
-        // the category might belong to a member leaving the household right now
-        householdLocks.shared();
-        RecurringExpense existing = getId(expense.getId(), user);
-        Category category = categoryService.resolve(expense.getCategory(), user);
-
-        if (existing != null && category != null) {
-            // dates should only be updated by the cron job !
-            expense.setNextOccurrence(existing.getNextOccurrence());
-            expense.setLastOccurrence(existing.getLastOccurrence());
-            // the creator never changes and the category must be one of the household's
-            expense.setUser(existing.getUser());
-            expense.setCategory(category);
-            recurringExpenseRepository.save(expense);
-            householdService.notifyOtherMembersAfterCommit(user);
-            return true;
-        } else {
-            return false;
-        }
-    }
+  }
 }

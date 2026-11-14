@@ -1,305 +1,298 @@
 package com.ftpix.sss.services;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.TestContainerTest;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.persistence.UserRepository;
 import com.ftpix.sss.websockets.WebSocketSessionManager;
 import jakarta.persistence.EntityManager;
+import java.sql.SQLException;
+import java.time.ZoneId;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
-
-import java.sql.SQLException;
-import java.time.ZoneId;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @Import(TestConfig.class)
 public class HouseholdServiceTest extends TestContainerTest {
 
-    @Autowired
-    private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
-    @Autowired
-    private HouseholdService householdService;
+  @Autowired private HouseholdService householdService;
 
+  @Autowired private CategoryService categoryService;
+  @Autowired private ExpenseService expenseService;
 
-    @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private ExpenseService expenseService;
+  @Autowired private HistoryService historyService;
 
-    @Autowired
-    private HistoryService historyService;
+  @Autowired private EntityManager entityManager;
 
-    @Autowired
-    private EntityManager entityManager;
+  @Autowired private TransactionTemplate transactionTemplate;
 
-    @Autowired
-    private TransactionTemplate transactionTemplate;
+  @Test
+  public void testHouseholdFlow() throws SQLException {
+    // create a household
+    var hs = householdService.createHousehold(currentUser);
+    // verify that iam in my own household as an admin
+    assertNotNull(hs.getId());
+    assertEquals(1, hs.getMembers().size());
+    assertEquals(currentUser.getId(), hs.getMembers().get(0).getUser().getId());
 
-    @Test
-    public void testHouseholdFlow() throws SQLException {
-        // create a household
-        var hs = householdService.createHousehold(currentUser);
-        // verify that iam in my own household as an admin
-        assertNotNull(hs.getId());
-        assertEquals(1, hs.getMembers().size());
-        assertEquals(currentUser.getId(), hs.getMembers().get(0).getUser().getId());
-
-        transactionTemplate.executeWithoutResult(transactionStatus -> {
-            var newhs = householdService.getCurrentHousehold(currentUser).get();
-            assertNotNull(newhs.getId());
-            assertEquals(1, newhs.getMembers().size());
-            assertEquals(currentUser.getId(), newhs.getMembers().get(0).getUser().getId());
+    transactionTemplate.executeWithoutResult(
+        transactionStatus -> {
+          var newhs = householdService.getCurrentHousehold(currentUser).get();
+          assertNotNull(newhs.getId());
+          assertEquals(1, newhs.getMembers().size());
+          assertEquals(currentUser.getId(), newhs.getMembers().get(0).getUser().getId());
         });
 
-        // create a new user
-        User invitee = new User();
-        invitee.setEmail("invitee@test.com");
-        invitee.setLastName("test");
-        invitee.setFirstName("aaaa");
+    // create a new user
+    User invitee = new User();
+    invitee.setEmail("invitee@test.com");
+    invitee.setLastName("test");
+    invitee.setFirstName("aaaa");
 
-        userRepository.save(invitee);
+    userRepository.save(invitee);
 
-        // invite the new usr to my household
-        householdService.inviteUser(currentUser, invitee.getEmail());
+    // invite the new usr to my household
+    householdService.inviteUser(currentUser, invitee.getEmail());
 
-        var invitations = householdService.getInvitations(invitee);
-        assertEquals(1, invitations.size());
-        assertEquals(hs.getId(), invitations.get(0).getHousehold().getId());
+    var invitations = householdService.getInvitations(invitee);
+    assertEquals(1, invitations.size());
+    assertEquals(hs.getId(), invitations.get(0).getHousehold().getId());
 
-        // new users accepts invitation
-        Household newHousehold = householdService.acceptInvitation(invitee, invitations.get(0).getId()).get();
-        assertEquals(hs.getId(), newHousehold.getId());
-        assertEquals(2, newHousehold.getMembers().size());
+    // new users accepts invitation
+    Household newHousehold =
+        householdService.acceptInvitation(invitee, invitations.get(0).getId()).get();
+    assertEquals(hs.getId(), newHousehold.getId());
+    assertEquals(2, newHousehold.getMembers().size());
 
-        // invitee shouldn't have anymore invitations
-        invitations = householdService.getInvitations(invitee);
-        assertEquals(0, invitations.size());
+    // invitee shouldn't have anymore invitations
+    invitations = householdService.getInvitations(invitee);
+    assertEquals(0, invitations.size());
 
-        // user leaves the household
-        householdService.leaveHousehold(invitee);
+    // user leaves the household
+    householdService.leaveHousehold(invitee);
 
-        var inviteeHs = householdService.getCurrentHousehold(invitee);
-        assertTrue(inviteeHs.isEmpty());
+    var inviteeHs = householdService.getCurrentHousehold(invitee);
+    assertTrue(inviteeHs.isEmpty());
 
-
-        transactionTemplate.executeWithoutResult(transactionStatus -> {
-            var newhs = householdService.getCurrentHousehold(currentUser).get();
-            assertNotNull(newhs.getId());
-            assertEquals(1, newhs.getMembers().size());
-            assertEquals(currentUser.getId(), newhs.getMembers().get(0).getUser().getId());
+    transactionTemplate.executeWithoutResult(
+        transactionStatus -> {
+          var newhs = householdService.getCurrentHousehold(currentUser).get();
+          assertNotNull(newhs.getId());
+          assertEquals(1, newhs.getMembers().size());
+          assertEquals(currentUser.getId(), newhs.getMembers().get(0).getUser().getId());
         });
 
-        // reinvite
-        householdService.inviteUser(currentUser, invitee.getEmail());
-        //re-accept
-        householdService.acceptInvitation(invitee, hs);
-        // set user as admin
-        householdService.setAdmin(currentUser, invitee, true);
+    // reinvite
+    householdService.inviteUser(currentUser, invitee.getEmail());
+    // re-accept
+    householdService.acceptInvitation(invitee, hs);
+    // set user as admin
+    householdService.setAdmin(currentUser, invitee, true);
 
+    transactionTemplate.executeWithoutResult(
+        status -> {
+          var membership =
+              householdService
+                  .getCurrentHousehold(invitee)
+                  .flatMap(
+                      household ->
+                          household.getMembers().stream()
+                              .filter(member -> member.getUser().getId().equals(invitee.getId()))
+                              .findFirst())
+                  .get();
+          assertTrue(membership.isAdmin());
 
-        transactionTemplate.executeWithoutResult(status -> {
+          // set user as admin
+          householdService.setAdmin(currentUser, invitee, false);
+          membership =
+              householdService
+                  .getCurrentHousehold(invitee)
+                  .flatMap(
+                      household ->
+                          household.getMembers().stream()
+                              .filter(member -> member.getUser().getId().equals(invitee.getId()))
+                              .findFirst())
+                  .get();
 
-            var membership = householdService.getCurrentHousehold(invitee)
-                    .flatMap(household -> household.getMembers()
-                            .stream()
-                            .filter(member -> member.getUser().getId().equals(invitee.getId()))
-                            .findFirst())
-                    .get();
-            assertTrue(membership.isAdmin());
+          assertFalse(membership.isAdmin());
 
-            // set user as admin
-            householdService.setAdmin(currentUser, invitee, false);
-            membership = householdService.getCurrentHousehold(invitee)
-                    .flatMap(household -> household.getMembers()
-                            .stream()
-                            .filter(member -> member.getUser().getId().equals(invitee.getId()))
-                            .findFirst())
-                    .get();
-
-            assertFalse(membership.isAdmin());
-
-            //remove user from household
-            householdService.removeMember(currentUser, invitee);
-
+          // remove user from household
+          householdService.removeMember(currentUser, invitee);
         });
 
-        transactionTemplate.executeWithoutResult(status -> {
-            var newHs = householdService.getCurrentHousehold(currentUser).get();
+    transactionTemplate.executeWithoutResult(
+        status -> {
+          var newHs = householdService.getCurrentHousehold(currentUser).get();
 
-            assertEquals(1, newHs.getMembers().size());
-            assertEquals(currentUser.getId(), newHs.getMembers().get(0).getUser().getId());
+          assertEquals(1, newHs.getMembers().size());
+          assertEquals(currentUser.getId(), newHs.getMembers().get(0).getUser().getId());
 
-            // user updates his color
-            householdService.setColor(currentUser, HouseholdColor.cyan);
+          // user updates his color
+          householdService.setColor(currentUser, HouseholdColor.cyan);
 
-            newHs = householdService.getCurrentHousehold(currentUser).get();
-            assertEquals(HouseholdColor.cyan, newHs.getMembers().get(0).getColor());
+          newHs = householdService.getCurrentHousehold(currentUser).get();
+          assertEquals(HouseholdColor.cyan, newHs.getMembers().get(0).getColor());
         });
+  }
+
+  @Test
+  public void membersAreNotifiedWhenTheMembersChange() {
+    householdService.createHousehold(currentUser);
+    User member = new User();
+    member.setEmail("member@test.com");
+    member.setLastName("test");
+    member.setFirstName("member");
+    userRepository.save(member);
+    String admin = currentUser.getId().toString(), joining = member.getId().toString();
+    HouseholdWebsocketUpdate update = new HouseholdWebsocketUpdate();
+
+    try (MockedStatic<WebSocketSessionManager> manager =
+        mockStatic(WebSocketSessionManager.class)) {
+      // the clients reload the categories shared within the household on this message
+      householdService.inviteUser(currentUser, member.getEmail());
+      householdService.acceptInvitation(
+          member, householdService.getInvitations(member).getFirst().getId());
+      manager.verify(() -> WebSocketSessionManager.sendToUser(admin, update));
+
+      manager.clearInvocations();
+      householdService.leaveHousehold(member);
+      manager.verify(() -> WebSocketSessionManager.sendToUser(admin, update));
+
+      householdService.inviteUser(currentUser, member.getEmail());
+      householdService.acceptInvitation(
+          member, householdService.getInvitations(member).getFirst().getId());
+      manager.clearInvocations();
+      householdService.removeMember(currentUser, member);
+      manager.verify(() -> WebSocketSessionManager.sendToUser(joining, update));
     }
+  }
 
-    @Test
-    public void membersAreNotifiedWhenTheMembersChange() {
-        householdService.createHousehold(currentUser);
-        User member = new User();
-        member.setEmail("member@test.com");
-        member.setLastName("test");
-        member.setFirstName("member");
-        userRepository.save(member);
-        String admin = currentUser.getId().toString(), joining = member.getId().toString();
-        HouseholdWebsocketUpdate update = new HouseholdWebsocketUpdate();
+  @Test
+  public void testExpenseWithinHousehold() throws Exception {
 
-        try (MockedStatic<WebSocketSessionManager> manager = mockStatic(WebSocketSessionManager.class)) {
-            // the clients reload the categories shared within the household on this message
-            householdService.inviteUser(currentUser, member.getEmail());
-            householdService.acceptInvitation(member, householdService.getInvitations(member).getFirst().getId());
-            manager.verify(() -> WebSocketSessionManager.sendToUser(admin, update));
+    // create a new user
+    User user = new User();
+    user.setEmail("testuseraadfsf@test.com");
+    user.setLastName("test");
+    user.setFirstName("aaaa");
+    userRepository.save(user);
 
-            manager.clearInvocations();
-            householdService.leaveHousehold(member);
-            manager.verify(() -> WebSocketSessionManager.sendToUser(admin, update));
+    // create a new user
+    User invitee = new User();
+    invitee.setEmail("invitee2@test.com");
+    invitee.setLastName("test");
+    invitee.setFirstName("aaaa");
 
-            householdService.inviteUser(currentUser, member.getEmail());
-            householdService.acceptInvitation(member, householdService.getInvitations(member).getFirst().getId());
-            manager.clearInvocations();
-            householdService.removeMember(currentUser, member);
-            manager.verify(() -> WebSocketSessionManager.sendToUser(joining, update));
-        }
-    }
+    userRepository.save(invitee);
 
-    @Test
-    public void testExpenseWithinHousehold() throws Exception {
+    var userCat = categoryService.create("food", user);
+    var inviteeCat = categoryService.create("gas", invitee);
 
-        // create a new user
-        User user = new User();
-        user.setEmail("testuseraadfsf@test.com");
-        user.setLastName("test");
-        user.setFirstName("aaaa");
-        userRepository.save(user);
+    var categories = categoryService.getAll(user);
 
+    // user categories should still return 1, only when getting expenses we include the ones from
+    // the household
+    assertEquals(1, categories.size());
 
-        // create a new user
-        User invitee = new User();
-        invitee.setEmail("invitee2@test.com");
-        invitee.setLastName("test");
-        invitee.setFirstName("aaaa");
+    var exp1 = new Expense();
+    exp1.setCategory(userCat);
+    exp1.setAmount(10);
+    expenseService.create(exp1, user);
 
-        userRepository.save(invitee);
+    var exp2 = new Expense();
+    exp2.setCategory(inviteeCat);
+    exp2.setAmount(30);
+    expenseService.create(exp2, invitee);
 
+    // we check before we add the users to the household to see if we broke anything
+    var months = expenseService.getMonths(user, ZoneId.systemDefault());
+    var expenses = expenseService.getByDay(months.get(0), user, ZoneId.systemDefault());
 
-        var userCat = categoryService.create("food", user);
-        var inviteeCat = categoryService.create("gas", invitee);
+    assertEquals(1, expenses.size());
+    DailyExpense dayExpenses = expenses.get(expenses.keySet().stream().findFirst().get());
+    assertEquals(1, dayExpenses.getExpenses().size());
+    assertEquals(10, dayExpenses.getTotal());
 
-        var categories = categoryService.getAll(user);
+    var yearly = historyService.yearly(user);
+    assertEquals(2, yearly.size());
+    assertEquals(10, yearly.get(0).getAmount());
+    assertEquals(10, yearly.get(1).getAmount());
 
-        // user categories should still return 1, only when getting expenses we include the ones from the household
-        assertEquals(1, categories.size());
+    var monthly = historyService.yearly(user);
+    assertEquals(2, monthly.size());
+    assertEquals(10, monthly.get(0).getAmount());
+    assertEquals(10, monthly.get(1).getAmount());
 
-        var exp1 = new Expense();
-        exp1.setCategory(userCat);
-        exp1.setAmount(10);
-        expenseService.create(exp1, user);
+    var catMonthly = historyService.getMonthlyHistory(userCat.getId(), 1, user);
+    assertEquals(10d, catMonthly.get(0).get("amount"));
 
-        var exp2 = new Expense();
-        exp2.setCategory(inviteeCat);
-        exp2.setAmount(30);
-        expenseService.create(exp2, invitee);
+    // now if i try the category of the other user i should just see 0 as I don't have access
+    catMonthly = historyService.getMonthlyHistory(inviteeCat.getId(), 1, user);
+    assertEquals(0, catMonthly.get(0).get("amount"));
 
+    var catYearly = historyService.getYearlyHistory(userCat.getId(), 1, user);
+    assertEquals(10d, catYearly.get(0).get("amount"));
 
-        // we check before we add the users to the household to see if we broke anything
-        var months = expenseService.getMonths(user, ZoneId.systemDefault());
-        var expenses = expenseService.getByDay(months.get(0), user, ZoneId.systemDefault());
+    // now if i try the category of the other user i should just see 0 as I don't have access
+    catYearly = historyService.getYearlyHistory(inviteeCat.getId(), 1, user);
+    assertEquals(0, catYearly.get(0).get("amount"));
 
-        assertEquals(1, expenses.size());
-        DailyExpense dayExpenses = expenses.get(expenses.keySet().stream().findFirst().get());
-        assertEquals(1, dayExpenses.getExpenses().size());
-        assertEquals(10, dayExpenses.getTotal());
+    // setting up the household
+    var hs = householdService.createHousehold(user);
+    // invite the new usr to my household
+    householdService.inviteUser(user, invitee.getEmail());
+    householdService.acceptInvitation(invitee, hs);
+    // now if i get todays expenses, i should have a total of 10 + 30 = 40
+    months = expenseService.getMonths(user, ZoneId.systemDefault());
+    expenses = expenseService.getByDay(months.get(0), user, ZoneId.systemDefault());
 
+    assertEquals(1, expenses.size());
+    dayExpenses = expenses.get(expenses.keySet().stream().findFirst().get());
+    assertEquals(2, dayExpenses.getExpenses().size());
+    assertEquals(40, dayExpenses.getTotal());
 
-        var yearly = historyService.yearly(user);
-        assertEquals(2, yearly.size());
-        assertEquals(10, yearly.get(0).getAmount());
-        assertEquals(10, yearly.get(1).getAmount());
+    // we should have a mix of categories from all the users
+    yearly = historyService.yearly(user);
+    assertEquals(3, yearly.size());
+    assertEquals(40, yearly.get(0).getAmount());
+    assertEquals(-1, yearly.get(0).getCategory().getId());
+    assertEquals(30, yearly.get(1).getAmount());
+    assertEquals(inviteeCat.getId(), yearly.get(1).getCategory().getId());
+    assertEquals(invitee.getId(), yearly.get(1).getCategory().getUser().getId());
+    assertEquals(10, yearly.get(2).getAmount());
+    assertEquals(userCat.getId(), yearly.get(2).getCategory().getId());
+    assertEquals(user.getId(), yearly.get(2).getCategory().getUser().getId());
 
-        var monthly = historyService.yearly(user);
-        assertEquals(2, monthly.size());
-        assertEquals(10, monthly.get(0).getAmount());
-        assertEquals(10, monthly.get(1).getAmount());
+    monthly = historyService.yearly(user);
+    assertEquals(3, monthly.size());
+    assertEquals(40, monthly.get(0).getAmount());
+    assertEquals(-1, monthly.get(0).getCategory().getId());
+    assertEquals(30, monthly.get(1).getAmount());
+    assertEquals(inviteeCat.getId(), monthly.get(1).getCategory().getId());
+    assertEquals(invitee.getId(), monthly.get(1).getCategory().getUser().getId());
+    assertEquals(10, monthly.get(2).getAmount());
+    assertEquals(userCat.getId(), monthly.get(2).getCategory().getId());
+    assertEquals(user.getId(), monthly.get(2).getCategory().getUser().getId());
 
+    catMonthly = historyService.getMonthlyHistory(userCat.getId(), 1, user);
+    assertEquals(10d, catMonthly.get(0).get("amount"));
 
-        var catMonthly = historyService.getMonthlyHistory(userCat.getId(), 1, user);
-        assertEquals(10d, catMonthly.get(0).get("amount"));
+    // now if i try the category of the other user i should be able to see it properly
+    catMonthly = historyService.getMonthlyHistory(inviteeCat.getId(), 1, user);
+    assertEquals(30d, catMonthly.get(0).get("amount"));
 
-        // now if i try the category of the other user i should just see 0 as I don't have access
-        catMonthly = historyService.getMonthlyHistory(inviteeCat.getId(), 1, user);
-        assertEquals(0, catMonthly.get(0).get("amount"));
+    catYearly = historyService.getYearlyHistory(userCat.getId(), 1, user);
+    assertEquals(10d, catYearly.get(0).get("amount"));
 
-        var catYearly = historyService.getYearlyHistory(userCat.getId(), 1, user);
-        assertEquals(10d, catYearly.get(0).get("amount"));
-
-        // now if i try the category of the other user i should just see 0 as I don't have access
-        catYearly = historyService.getYearlyHistory(inviteeCat.getId(), 1, user);
-        assertEquals(0, catYearly.get(0).get("amount"));
-
-        // setting up the household
-        var hs = householdService.createHousehold(user);
-        // invite the new usr to my household
-        householdService.inviteUser(user, invitee.getEmail());
-        householdService.acceptInvitation(invitee, hs);
-        // now if i get todays expenses, i should have a total of 10 + 30 = 40
-        months = expenseService.getMonths(user, ZoneId.systemDefault());
-        expenses = expenseService.getByDay(months.get(0), user, ZoneId.systemDefault());
-
-        assertEquals(1, expenses.size());
-        dayExpenses = expenses.get(expenses.keySet().stream().findFirst().get());
-        assertEquals(2, dayExpenses.getExpenses().size());
-        assertEquals(40, dayExpenses.getTotal());
-
-
-        // we should have a mix of categories from all the users
-        yearly = historyService.yearly(user);
-        assertEquals(3, yearly.size());
-        assertEquals(40, yearly.get(0).getAmount());
-        assertEquals(-1, yearly.get(0).getCategory().getId());
-        assertEquals(30, yearly.get(1).getAmount());
-        assertEquals(inviteeCat.getId(), yearly.get(1).getCategory().getId());
-        assertEquals(invitee.getId(), yearly.get(1).getCategory().getUser().getId());
-        assertEquals(10, yearly.get(2).getAmount());
-        assertEquals(userCat.getId(), yearly.get(2).getCategory().getId());
-        assertEquals(user.getId(), yearly.get(2).getCategory().getUser().getId());
-
-        monthly = historyService.yearly(user);
-        assertEquals(3, monthly.size());
-        assertEquals(40, monthly.get(0).getAmount());
-        assertEquals(-1, monthly.get(0).getCategory().getId());
-        assertEquals(30, monthly.get(1).getAmount());
-        assertEquals(inviteeCat.getId(), monthly.get(1).getCategory().getId());
-        assertEquals(invitee.getId(), monthly.get(1).getCategory().getUser().getId());
-        assertEquals(10, monthly.get(2).getAmount());
-        assertEquals(userCat.getId(), monthly.get(2).getCategory().getId());
-        assertEquals(user.getId(), monthly.get(2).getCategory().getUser().getId());
-
-
-        catMonthly = historyService.getMonthlyHistory(userCat.getId(), 1, user);
-        assertEquals(10d, catMonthly.get(0).get("amount"));
-
-        // now if i try the category of the other user i should be able to see it properly
-        catMonthly = historyService.getMonthlyHistory(inviteeCat.getId(), 1, user);
-        assertEquals(30d, catMonthly.get(0).get("amount"));
-
-        catYearly = historyService.getYearlyHistory(userCat.getId(), 1, user);
-        assertEquals(10d, catYearly.get(0).get("amount"));
-
-        // now if i try the category of the other user i should be able to see it properly
-        catYearly = historyService.getYearlyHistory(inviteeCat.getId(), 1, user);
-        assertEquals(30d, catYearly.get(0).get("amount"));
-    }
-
+    // now if i try the category of the other user i should be able to see it properly
+    catYearly = historyService.getYearlyHistory(inviteeCat.getId(), 1, user);
+    assertEquals(30d, catYearly.get(0).get("amount"));
+  }
 }

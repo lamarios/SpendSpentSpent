@@ -15,7 +15,7 @@ _Config _$ConfigFromJson(Map<String, dynamic> json) => _Config(
   announcement: json['announcement'] as String,
   convertCurrencyQuota: json['convertCurrencyQuota'] as String,
   minAppVersion: json['minAppVersion'] as String?,
-  backendVersion: (json['backendVersion'] as num).toInt(),
+  backendVersion: json['backendVersion'] as String,
   oidc: json['oidc'] == null ? null : OidcConfig.fromJson(json['oidc'] as Map<String, dynamic>),
 );
 

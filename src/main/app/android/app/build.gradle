@@ -29,10 +29,9 @@ if (keyFile == null) {
     keyFile = '/home/gz/dev/android/keys/key.properties'
 }
 
+// versionCode/versionName are injected by `flutter build --build-number/--build-name`
+// (written to local.properties), see .github/workflows/build-android.yml
 def buildNumber = flutterVersionCode.toInteger()
-if (ENV['TAG_NAME'] != null) {
-    buildNumber = ENV['TAG_NAME'].toInteger()
-}
 /*
 if (ENV['DRONE_BUILD_NUMBER'] != null) {
     buildNumber = ENV['DRONE_BUILD_NUMBER'].toInteger()

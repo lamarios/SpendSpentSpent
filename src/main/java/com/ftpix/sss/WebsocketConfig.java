@@ -10,19 +10,20 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @Configuration
 @EnableWebSocket
 public class WebsocketConfig implements WebSocketConfigurer {
-    private final JwtHandshakeInterceptor jwtHandshakeInterceptor;
-    private final WebSocketHandler customWebSocketHandler;
+  private final JwtHandshakeInterceptor jwtHandshakeInterceptor;
+  private final WebSocketHandler customWebSocketHandler;
 
-    public WebsocketConfig(JwtHandshakeInterceptor jwtHandshakeInterceptor,
-                           WebSocketHandler customWebSocketHandler) {
-        this.jwtHandshakeInterceptor = jwtHandshakeInterceptor;
-        this.customWebSocketHandler = customWebSocketHandler;
-    }
+  public WebsocketConfig(
+      JwtHandshakeInterceptor jwtHandshakeInterceptor, WebSocketHandler customWebSocketHandler) {
+    this.jwtHandshakeInterceptor = jwtHandshakeInterceptor;
+    this.customWebSocketHandler = customWebSocketHandler;
+  }
 
-    @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(customWebSocketHandler, "/ws")
-                .addInterceptors(jwtHandshakeInterceptor)
-                .setAllowedOrigins("*"); // TODO: tighten in prod
-    }
+  @Override
+  public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+    registry
+        .addHandler(customWebSocketHandler, "/ws")
+        .addInterceptors(jwtHandshakeInterceptor)
+        .setAllowedOrigins("*"); // TODO: tighten in prod
+  }
 }

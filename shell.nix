@@ -62,7 +62,45 @@ pkgs.mkShell {
     fi
 
     echo "Setting up pre-commit hook"
-    (cd "$APP_DIR" && dart run tools/setup_git_hooks.dart)
+    PRE_COMMIT_HOOK="$(git rev-parse --git-path hooks)/pre-commit"
+    mkdir -p "$(dirname "$PRE_COMMIT_HOOK")"
+    cat > "$PRE_COMMIT_HOOK" <<'EOF'
+    #!/bin/sh
+    set -e
+
+    DART="${toString ./.}/src/main/app/submodules/flutter/bin/dart"
+
+    STAGED=$(git diff --cached --name-only --diff-filter=ACMR)
+    UNSTAGED=$(git diff --name-only)
+
+    # Fully staged files can be formatted and re-added safely.
+    # Partially staged files are only checked (re-adding would commit unstaged hunks).
+    FULL=$(echo "$STAGED" | grep -vxF -e "$UNSTAGED" || true)
+    PARTIAL=$(echo "$STAGED" | grep -xF -e "$UNSTAGED" || true)
+    [ -z "$UNSTAGED" ] && FULL="$STAGED" && PARTIAL=""
+
+    DART_RE='^src/main/app/lib/.*\.dart$'
+    DART_FULL=$(echo "$FULL" | grep -E "$DART_RE" || true)
+    DART_PARTIAL=$(echo "$PARTIAL" | grep -E "$DART_RE" || true)
+    JAVA_FULL=$(echo "$FULL" | grep -E '\.java$' || true)
+
+    # Flutter app
+    if [ -n "$DART_FULL" ]; then
+      "$DART" format $DART_FULL > /dev/null
+      git add -- $DART_FULL
+    fi
+    if [ -n "$DART_PARTIAL" ]; then
+      "$DART" format --output=none --set-exit-if-changed $DART_PARTIAL
+    fi
+    "$DART" analyze ./src/main/app/lib
+
+    # Java backend: only format staged Java files
+    if [ -n "$JAVA_FULL" ]; then
+      mvn -q spotless:apply -DspotlessFiles="$(echo "$JAVA_FULL" | sed 's/^/.*/' | paste -sd, -)"
+      git add -- $JAVA_FULL
+    fi
+    EOF
+    chmod a+x "$PRE_COMMIT_HOOK"
 
     flutter config --jdk-dir ${pkgs.jdk21}/lib/openjdk
 

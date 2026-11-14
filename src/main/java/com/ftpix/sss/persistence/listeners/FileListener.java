@@ -8,10 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class FileListener {
 
-    @PostUpdate
-    public void onChanged(Object object){
-        var file = (SSSFile) object;
-        WebSocketSessionManager.sendToUser(file.getUser().getId().toString(), file);
-
-    }
+  @PostUpdate
+  public void onChanged(Object object) {
+    var file = (SSSFile) object;
+    WebSocketSessionManager.sendToUser(file.getUser().getId().toString(), file);
+  }
 }
