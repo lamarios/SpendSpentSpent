@@ -8,21 +8,24 @@ import com.ftpix.sss.services.HouseholdService;
 import com.ftpix.sss.services.SettingsService;
 import com.ftpix.sss.services.UserService;
 
-
 public class UserServiceMock extends UserService {
 
-    private User currentUser;
+  private User currentUser;
 
-    public UserServiceMock(HouseholdService householdService, EmailService emailService, SettingsService settingsService, UserRepository userRepository, CategoryRepository categoryRepository) {
-        super(householdService, emailService, settingsService, userRepository, categoryRepository);
-    }
+  public UserServiceMock(
+      HouseholdService householdService,
+      EmailService emailService,
+      SettingsService settingsService,
+      UserRepository userRepository,
+      CategoryRepository categoryRepository) {
+    super(householdService, emailService, settingsService, userRepository, categoryRepository);
+  }
 
+  public User getCurrentUser() {
+    return currentUser;
+  }
 
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
-    }
+  public void setCurrentUser(User currentUser) {
+    this.currentUser = currentUser;
+  }
 }

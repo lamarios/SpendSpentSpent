@@ -5,144 +5,139 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ftpix.sss.persistence.utils.BooleanToIntConverter;
 import com.ftpix.sss.persistence.utils.LocalDateConverter;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "recurring_expense")
-public class RecurringExpense  {
+public class RecurringExpense {
 
-    public static final int TYPE_DAILY = 0, TYPE_WEEKLY = 1, TYPE_MONTHLY = 2, TYPE_YEARLY = 3;
+  public static final int TYPE_DAILY = 0, TYPE_WEEKLY = 1, TYPE_MONTHLY = 2, TYPE_YEARLY = 3;
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  private String name;
 
-    private String name;
+  @ManyToOne
+  @JoinColumn(name = "category_id")
+  private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+  /** Who created the recurring expense, generated expenses are attributed to this user. */
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+  private User user;
 
-    /**
-     * Who created the recurring expense, generated expenses are attributed to this user.
-     */
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private User user;
+  private int type;
 
-    private int type;
+  @Column(name = "type_param")
+  private int typeParam;
 
-    @Column(name = "type_param")
-    private int typeParam;
+  @Column(name = "last_occurrence")
+  @Convert(converter = LocalDateConverter.class)
+  private LocalDate lastOccurrence;
 
-    @Column(name = "last_occurrence")
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate lastOccurrence;
+  @Column(name = "next_occurrence")
+  @Convert(converter = LocalDateConverter.class)
+  private LocalDate nextOccurrence;
 
-    @Column(name = "next_occurrence")
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate nextOccurrence;
+  private double amount;
 
-    private double amount;
+  @Convert(converter = BooleanToIntConverter.class)
+  private boolean income = false;
 
-    @Convert(converter = BooleanToIntConverter.class)
-    private boolean income = false;
+  public Long getId() {
+    return id;
+  }
 
-    public Long getId() {
-        return id;
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  @JsonIgnore
+  public Category getCategory() {
+    return category;
+  }
+
+  @JsonProperty("category")
+  public void setCategory(Category category) {
+    this.category = category;
+  }
+
+  /**
+   * Like {@link Expense#getCategoryForClients()}, clients get a copy of the category where the user
+   * is the creator of the recurring expense.
+   */
+  @JsonProperty("category")
+  public Category getCategoryForClients() {
+    if (category == null || user == null) {
+      return category;
     }
+    return category.copyWithUser(user);
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public User getUser() {
+    return user;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public int getType() {
+    return type;
+  }
 
-    @JsonIgnore
-    public Category getCategory() {
-        return category;
-    }
+  public void setType(int type) {
+    this.type = type;
+  }
 
-    @JsonProperty("category")
-    public void setCategory(Category category) {
-        this.category = category;
-    }
+  public int getTypeParam() {
+    return typeParam;
+  }
 
-    /**
-     * Like {@link Expense#getCategoryForClients()}, clients get a copy of the category where the user is the creator of
-     * the recurring expense.
-     */
-    @JsonProperty("category")
-    public Category getCategoryForClients() {
-        if (category == null || user == null) {
-            return category;
-        }
-        return category.copyWithUser(user);
-    }
+  public void setTypeParam(int typeParam) {
+    this.typeParam = typeParam;
+  }
 
-    public User getUser() {
-        return user;
-    }
+  public LocalDate getLastOccurrence() {
+    return lastOccurrence;
+  }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+  public void setLastOccurrence(LocalDate lastOccurrence) {
+    this.lastOccurrence = lastOccurrence;
+  }
 
-    public int getType() {
-        return type;
-    }
+  public LocalDate getNextOccurrence() {
+    return nextOccurrence;
+  }
 
-    public void setType(int type) {
-        this.type = type;
-    }
+  public void setNextOccurrence(LocalDate nextOccurrence) {
+    this.nextOccurrence = nextOccurrence;
+  }
 
-    public int getTypeParam() {
-        return typeParam;
-    }
+  public double getAmount() {
+    return amount;
+  }
 
-    public void setTypeParam(int typeParam) {
-        this.typeParam = typeParam;
-    }
+  public void setAmount(double amount) {
+    this.amount = amount;
+  }
 
-    public LocalDate getLastOccurrence() {
-        return lastOccurrence;
-    }
+  public boolean isIncome() {
+    return income;
+  }
 
-    public void setLastOccurrence(LocalDate lastOccurrence) {
-        this.lastOccurrence = lastOccurrence;
-    }
-
-    public LocalDate getNextOccurrence() {
-        return nextOccurrence;
-    }
-
-    public void setNextOccurrence(LocalDate nextOccurrence) {
-        this.nextOccurrence = nextOccurrence;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public boolean isIncome() {
-        return income;
-    }
-
-    public void setIncome(boolean income) {
-        this.income = income;
-    }
-
+  public void setIncome(boolean income) {
+    this.income = income;
+  }
 }

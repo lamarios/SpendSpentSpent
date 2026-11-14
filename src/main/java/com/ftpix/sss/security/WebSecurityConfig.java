@@ -20,77 +20,66 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true
-)
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig {
 
-    @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+  @Autowired private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    @Autowired
-    private UserDetailsService jwtUserDetailsService;
+  @Autowired private UserDetailsService jwtUserDetailsService;
 
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
+  @Autowired private JwtRequestFilter jwtRequestFilter;
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        // configure AuthenticationManager so that it knows from where to load
-        // user for matching credentials
-        // Use BCryptPasswordEncoder
-        auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
-    }
+  @Autowired
+  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    // configure AuthenticationManager so that it knows from where to load
+    // user for matching credentials
+    // Use BCryptPasswordEncoder
+    auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
+  }
 
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  //    @Bean
+  //    @Override
+  //    public AuthenticationManager authenticationManagerBean() throws Exception {
+  //        return super.authenticationManagerBean();
+  //    }
 
-//    @Bean
-//    @Override
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    final CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+    corsConfiguration.addAllowedMethod("DELETE");
+    corsConfiguration.addAllowedMethod("PUT");
+    corsConfiguration.addAllowedHeader("x-version");
+    source.registerCorsConfiguration("/**", corsConfiguration);
+    return source;
+  }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        final CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
-        corsConfiguration.addAllowedMethod("DELETE");
-        corsConfiguration.addAllowedMethod("PUT");
-        corsConfiguration.addAllowedHeader("x-version");
-        source.registerCorsConfiguration("/**", corsConfiguration);
-        return source;
-    }
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    httpSecurity
+        .csrf(AbstractHttpConfigurer::disable)
+        .cors(AbstractHttpConfigurer::disable)
+        .securityContext(context -> context.requireExplicitSave(false))
+        .authorizeHttpRequests(
+            authz ->
+                authz
+                    .requestMatchers(request -> request.getMethod().equalsIgnoreCase("OPTIONS"))
+                    .permitAll()
+                    .requestMatchers("/API/**")
+                    .authenticated()
+                    .anyRequest()
+                    .permitAll())
+        .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+    // Add a filter to validate the tokens with every request
+    httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
-                .securityContext(context -> context
-                        .requireExplicitSave(false))
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers(request -> request.getMethod().equalsIgnoreCase("OPTIONS")).permitAll()
-                        .requestMatchers("/API/**").authenticated()
-                        .anyRequest().permitAll()
-                )
-                .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                )
-                .sessionManagement(sess -> sess
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
-
-        // Add a filter to validate the tokens with every request
-        httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
-
-        return httpSecurity.build();
-    }
+    return httpSecurity.build();
+  }
 }
-

@@ -1,4 +1,3 @@
 package com.ftpix.sss.models;
 
-public record CategoryExpenseCount(long categoryId, long count) {
-}
+public record CategoryExpenseCount(long categoryId, long count) {}

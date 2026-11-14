@@ -5,123 +5,121 @@ import com.ftpix.sss.persistence.listeners.FileListener;
 import com.ftpix.sss.persistence.utils.CsvToListConverter;
 import com.ftpix.sss.persistence.utils.FileAmountsConverter;
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
 import java.util.List;
 import java.util.UUID;
-
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "files")
 @EntityListeners({FileListener.class})
 public class SSSFile {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  @JdbcTypeCode(SqlTypes.VARCHAR)
+  private UUID id;
 
-    @Enumerated(EnumType.STRING)
-    private AiProcessingStatus status;
-    @Convert(converter = CsvToListConverter.class)
-    @Column(name = "ai_tags")
-    private List<String> aiTags;
-    @Convert(converter = FileAmountsConverter.class)
-    private List<Double> amounts;
-    private String fileName;
+  @Enumerated(EnumType.STRING)
+  private AiProcessingStatus status;
 
-    @Column(name = "time_created")
-    private long timeCreated;
-    @Column(name = "time_updated")
-    private long timeUpdated;
+  @Convert(converter = CsvToListConverter.class)
+  @Column(name = "ai_tags")
+  private List<String> aiTags;
 
+  @Convert(converter = FileAmountsConverter.class)
+  private List<Double> amounts;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+  private String fileName;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "expense_id")
-    private Expense expense;
+  @Column(name = "time_created")
+  private long timeCreated;
 
-    public User getUser() {
-        return user;
-    }
+  @Column(name = "time_updated")
+  private long timeUpdated;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
+  @JsonIgnore
+  @ManyToOne
+  @JoinColumn(name = "expense_id")
+  private Expense expense;
 
-    public AiProcessingStatus getStatus() {
-        return status;
-    }
+  public User getUser() {
+    return user;
+  }
 
-    @Transient
-    public String getEncryptedFileName() {
-        return id.toString() + ".bin";
-    }
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-    public void setStatus(AiProcessingStatus status) {
-        this.status = status;
-    }
+  public AiProcessingStatus getStatus() {
+    return status;
+  }
 
-    public List<String> getAiTags() {
-        return aiTags;
-    }
+  @Transient
+  public String getEncryptedFileName() {
+    return id.toString() + ".bin";
+  }
 
-    public void setAiTags(List<String> aiTags) {
-        this.aiTags = aiTags;
-    }
+  public void setStatus(AiProcessingStatus status) {
+    this.status = status;
+  }
 
-    public long getTimeCreated() {
-        return timeCreated;
-    }
+  public List<String> getAiTags() {
+    return aiTags;
+  }
 
-    public void setTimeCreated(long timeCreated) {
-        this.timeCreated = timeCreated;
-    }
+  public void setAiTags(List<String> aiTags) {
+    this.aiTags = aiTags;
+  }
 
-    public long getTimeUpdated() {
-        return timeUpdated;
-    }
+  public long getTimeCreated() {
+    return timeCreated;
+  }
 
-    public void setTimeUpdated(long timeUpdated) {
-        this.timeUpdated = timeUpdated;
-    }
+  public void setTimeCreated(long timeCreated) {
+    this.timeCreated = timeCreated;
+  }
 
-    public UUID getId() {
-        return id;
-    }
+  public long getTimeUpdated() {
+    return timeUpdated;
+  }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  public void setTimeUpdated(long timeUpdated) {
+    this.timeUpdated = timeUpdated;
+  }
 
-    public String getFileName() {
-        return fileName;
-    }
+  public UUID getId() {
+    return id;
+  }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public List<Double> getAmounts() {
-        return amounts;
-    }
+  public String getFileName() {
+    return fileName;
+  }
 
-    public void setAmounts(List<Double> amounts) {
-        this.amounts = amounts;
-    }
+  public void setFileName(String fileName) {
+    this.fileName = fileName;
+  }
 
-    public Expense getExpense() {
-        return expense;
-    }
+  public List<Double> getAmounts() {
+    return amounts;
+  }
 
-    public void setExpense(Expense expense) {
-        this.expense = expense;
-    }
+  public void setAmounts(List<Double> amounts) {
+    this.amounts = amounts;
+  }
 
+  public Expense getExpense() {
+    return expense;
+  }
 
+  public void setExpense(Expense expense) {
+    this.expense = expense;
+  }
 }

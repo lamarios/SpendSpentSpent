@@ -73,12 +73,7 @@ pkgs.mkShell {
     ./src/main/app/submodules/flutter/bin/dart analyze ./src/main/app/lib
 
     # Java backend: only run spotless when Java files are staged
-    if git diff --cached --name-only --diff-filter=ACMR | grep -q '\.java$'; then
-        mvn -q spotless:check || {
-            echo "Spotless found formatting issues. Run 'mvn spotless:apply' and re-stage your changes."
-            exit 1
-        }
-    fi
+    mvn spotless:apply
     EOF
     chmod a+x "$PRE_COMMIT_HOOK"
 

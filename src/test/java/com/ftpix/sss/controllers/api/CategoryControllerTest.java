@@ -1,134 +1,128 @@
 package com.ftpix.sss.controllers.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.ftpix.sss.TestConfig;
 import com.ftpix.sss.TestContainerTest;
 import com.ftpix.sss.models.Category;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.services.CategoryService;
 import com.ftpix.sss.services.UserService;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 @Import(TestConfig.class)
 public class CategoryControllerTest extends TestContainerTest {
 
+  @Autowired private CategoryService categoryService;
+  @Autowired private UserService userService;
 
-    @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private UserService userService;
+  @Autowired private TransactionTemplate transactionTemplate;
 
-    @Autowired
-    private TransactionTemplate transactionTemplate;
+  @Test
+  public void testCreateUpdateDeleteCategory() throws Exception {
 
-    @Test
-    public void testCreateUpdateDeleteCategory() throws Exception {
+    // count is for the created categories
+    int count = categoryService.getAll(currentUser).size();
+    // count of available categories from all the available icons
+    long available = countAvailableCategories();
 
-        //count is for the created categories
-        int count = categoryService.getAll(currentUser).size();
-        // count of available categories from all the available icons
-        long available = countAvailableCategories();
+    Category cat = categoryService.create("spotify", currentUser);
 
+    int newCount = categoryService.getAll(currentUser).size();
+    long newAvailable = countAvailableCategories();
 
-        Category cat = categoryService.create("spotify", currentUser);
+    assertEquals("spotify", cat.getIcon());
+    assertEquals(count + 1, newCount);
+    assertEquals(available - 1, newAvailable);
 
-        int newCount = categoryService.getAll(currentUser).size();
-        long newAvailable = countAvailableCategories();
+    categoryService.update(cat.getId(), "gas", 0, currentUser);
+    cat = categoryService.get(cat.getId(), currentUser);
 
-        assertEquals("spotify", cat.getIcon());
-        assertEquals(count + 1, newCount);
-        assertEquals(available - 1, newAvailable);
+    assertEquals("gas", cat.getIcon());
 
-        categoryService.update(cat.getId(), "gas", 0, currentUser);
-        cat = categoryService.get(cat.getId(), currentUser);
+    categoryService.delete(cat.getId(), currentUser);
+    newCount = categoryService.getAll(currentUser).size();
+    newAvailable = countAvailableCategories();
 
-        assertEquals("gas", cat.getIcon());
+    assertEquals(count, newCount);
+    assertEquals(available, newAvailable);
+  }
 
+  private long countAvailableCategories() throws Exception {
+    return categoryService.getAvailable(currentUser).values().stream().mapToInt(List::size).sum();
+  }
 
-        categoryService.delete(cat.getId(), currentUser);
-        newCount = categoryService.getAll(currentUser).size();
-        newAvailable = countAvailableCategories();
+  //    @Test(expected = Exception.class)
+  @Test
+  public void createNonExistentCategory() {
+    Assertions.assertThrows(
+        Exception.class, () -> categoryService.create("icon-that-does-not-exist", currentUser));
+  }
 
-        assertEquals(count, newCount);
-        assertEquals(available, newAvailable);
-    }
+  //    @Test(expected = Exception.class)
+  @Test
+  public void updateNonExistentCategory() {
+    Assertions.assertThrows(
+        Exception.class, () -> categoryService.update(423423, "furniture", 0, currentUser));
+  }
 
-    private long countAvailableCategories() throws Exception {
-        return categoryService.getAvailable(currentUser).values().stream().mapToInt(List::size).sum();
-    }
+  @Test
+  public void testCategoryOrdering() throws Exception {
+    User user = new User();
+    user.setFirstName("category order user");
+    user.setLastName("category order lastname");
+    user.setEmail("category-order@gmail.com");
+    user.setPassword("aaaaa");
 
+    user = userService.createUser(user);
+    User finalUser = user;
+    transactionTemplate.executeWithoutResult(
+        status -> {
+          try {
 
-    //    @Test(expected = Exception.class)
-    @Test
-    public void createNonExistentCategory() {
-        Assertions.assertThrows(Exception.class, () -> categoryService.create("icon-that-does-not-exist", currentUser));
-    }
+            categoryService.create("apple", finalUser);
+            categoryService.create("books", finalUser);
+            categoryService.create("camera", finalUser);
 
-    //    @Test(expected = Exception.class)
-    @Test
-    public void updateNonExistentCategory() {
-        Assertions.assertThrows(Exception.class, () -> categoryService.update(423423, "furniture", 0, currentUser));
-    }
+            List<Category> all = categoryService.getAll(finalUser);
 
-    @Test
-    public void testCategoryOrdering() throws Exception {
-        User user = new User();
-        user.setFirstName("category order user");
-        user.setLastName("category order lastname");
-        user.setEmail("category-order@gmail.com");
-        user.setPassword("aaaaa");
+            assertEquals(3, all.size());
 
-        user = userService.createUser(user);
-        User finalUser = user;
-        transactionTemplate.executeWithoutResult(status -> {
-            try {
+            var apple =
+                all.stream().filter(c -> c.getIcon().equals("apple")).findFirst().orElseThrow();
+            var books =
+                all.stream().filter(c -> c.getIcon().equals("books")).findFirst().orElseThrow();
+            var camera =
+                all.stream().filter(c -> c.getIcon().equals("camera")).findFirst().orElseThrow();
 
+            camera.setCategoryOrder(0);
+            books.setCategoryOrder(1);
+            apple.setCategoryOrder(2);
 
-                categoryService.create("apple", finalUser);
-                categoryService.create("books", finalUser);
-                categoryService.create("camera", finalUser);
+            categoryService.updateMany(List.of(camera, books, apple), finalUser);
 
-
-                List<Category> all = categoryService.getAll(finalUser);
-
-                assertEquals(3, all.size());
-
-                var apple = all.stream().filter(c -> c.getIcon().equals("apple")).findFirst().orElseThrow();
-                var books = all.stream().filter(c -> c.getIcon().equals("books")).findFirst().orElseThrow();
-                var camera = all.stream().filter(c -> c.getIcon().equals("camera")).findFirst().orElseThrow();
-
-                camera.setCategoryOrder(0);
-                books.setCategoryOrder(1);
-                apple.setCategoryOrder(2);
-
-                categoryService.updateMany(List.of(camera, books, apple), finalUser);
-
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+          } catch (Exception e) {
+            throw new RuntimeException(e);
+          }
         });
 
-        // we do in a new transaction to make sure it's not using session cache or anything
-        transactionTemplate.executeWithoutResult(status -> {
-            try {
-                var all = categoryService.getAll(finalUser);
+    // we do in a new transaction to make sure it's not using session cache or anything
+    transactionTemplate.executeWithoutResult(
+        status -> {
+          try {
+            var all = categoryService.getAll(finalUser);
 
-                assertEquals("camera", all.get(0).getIcon());
-                assertEquals("books", all.get(1).getIcon());
-                assertEquals("apple", all.get(2).getIcon());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            assertEquals("camera", all.get(0).getIcon());
+            assertEquals("books", all.get(1).getIcon());
+            assertEquals("apple", all.get(2).getIcon());
+          } catch (Exception e) {
+            throw new RuntimeException(e);
+          }
         });
-
-    }
-
-
+  }
 }

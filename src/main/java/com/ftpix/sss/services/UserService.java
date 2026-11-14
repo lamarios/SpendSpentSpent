@@ -1,15 +1,23 @@
 package com.ftpix.sss.services;
 
-
 import com.ftpix.sss.Constants;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import com.ftpix.sss.models.PaginatedResults;
 import com.ftpix.sss.models.Settings;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.persistence.CategoryRepository;
 import com.ftpix.sss.persistence.UserRepository;
 import com.ftpix.sss.persistence.utils.Specifications;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,194 +32,204 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
-
 @Service
 public class UserService {
-    public final static String EMAIL_REGEX = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
-    private final static Logger logger = LogManager.getLogger();
-    private final HouseholdService householdService;
-    @PersistenceContext
-    private EntityManager entityManager;
-    private final EmailService emailService;
-    private final SettingsService settingsService;
-    @Value("${SALT}")
-    private String SALT;
-    private final UserRepository userRepository;
-    private final CategoryRepository categoryRepository;
+  public static final String EMAIL_REGEX =
+      "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+  private static final Logger logger = LogManager.getLogger();
+  private final HouseholdService householdService;
+  @PersistenceContext private EntityManager entityManager;
+  private final EmailService emailService;
+  private final SettingsService settingsService;
 
-    @Autowired
-    public UserService(HouseholdService householdService, EmailService emailService, SettingsService settingsService, UserRepository userRepository, CategoryRepository categoryRepository) {
-        this.householdService = householdService;
-        this.userRepository = userRepository;
-        this.categoryRepository = categoryRepository;
-        this.emailService = emailService;
-        this.settingsService = settingsService;
+  @Value("${SALT}")
+  private String SALT;
+
+  private final UserRepository userRepository;
+  private final CategoryRepository categoryRepository;
+
+  @Autowired
+  public UserService(
+      HouseholdService householdService,
+      EmailService emailService,
+      SettingsService settingsService,
+      UserRepository userRepository,
+      CategoryRepository categoryRepository) {
+    this.householdService = householdService;
+    this.userRepository = userRepository;
+    this.categoryRepository = categoryRepository;
+    this.emailService = emailService;
+    this.settingsService = settingsService;
+  }
+
+  /**
+   * String hash for passowrds
+   *
+   * @param str the string to hash
+   * @return the new string
+   * @throws NoSuchAlgorithmException
+   */
+  public String hashString(String str) throws NoSuchAlgorithmException {
+    MessageDigest md5;
+    md5 = MessageDigest.getInstance("MD5");
+    str += SALT;
+
+    md5.update(str.getBytes());
+
+    byte[] byteData = md5.digest();
+    StringBuffer sb = new StringBuffer();
+    for (int i = 0; i < byteData.length; i++) {
+      sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
     }
 
-    /**
-     * String hash for passowrds
-     *
-     * @param str the string to hash
-     * @return the new string
-     * @throws NoSuchAlgorithmException
-     */
-    public String hashString(String str) throws NoSuchAlgorithmException {
-        MessageDigest md5;
-        md5 = MessageDigest.getInstance("MD5");
-        str += SALT;
+    return sb.toString();
+  }
 
-        md5.update(str.getBytes());
+  public String hashUserCredentials(String email, String password) throws NoSuchAlgorithmException {
+    return hashString(email + password);
+  }
 
-        byte[] byteData = md5.digest();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < byteData.length; i++) {
-            sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
-        }
+  @Transactional(readOnly = true)
+  public User getByEmail(String email) {
+    return userRepository.findFirstByEmail(email);
+  }
 
-        return sb.toString();
+  @Transactional(readOnly = true)
+  public User getByOidcSub(String sub) {
+    return userRepository.findFirstByOidcSub(sub);
+    //        return userDaoJooq.getOneWhere(USER.OIDCSUB.eq(sub)).orElse(null);
+  }
+
+  @Transactional(readOnly = true)
+  public User getCurrentUser() {
+    final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    org.springframework.security.core.userdetails.User user =
+        (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+
+    return getByEmail(user.getUsername());
+  }
+
+  @Transactional(readOnly = true)
+  public PaginatedResults<User> getAll(String search, int page, int pageSize) throws SQLException {
+
+    Pageable pageable = PageRequest.of(page, pageSize);
+    Page<User> userResults;
+    if (search.trim().length() > 0) {
+      String searchQuery = "%" + search.trim() + "%";
+
+      Specification<User> spec =
+          Specification.where(Specifications.<User>like("email", searchQuery))
+              .or(Specifications.like("firstName", search))
+              .or(Specifications.like("lastName", searchQuery));
+
+      userResults = userRepository.findAll(spec, pageable);
+
+      //            return userDaoJooq.getPaginatedWhere(page, pageSize,
+      // USER.EMAIL.like(searchQuery)
+      //                    .or(USER.FIRSTNAME.like(searchQuery))
+      //                    .or(USER.LASTNAME.like(searchQuery)));
+    } else {
+      userResults = userRepository.findAll(pageable);
     }
 
-    public String hashUserCredentials(String email, String password) throws NoSuchAlgorithmException {
-        return hashString(email + password);
+    return new PaginatedResults<>(userResults);
+  }
+
+  @Transactional(readOnly = true)
+  public PaginatedResults<User> getAll() throws SQLException {
+    return getAll("", 0, Integer.MAX_VALUE);
+  }
+
+  @Transactional(readOnly = true)
+  public User getById(UUID id) throws SQLException {
+    return userRepository.findFirstById(id);
+    //        return userDaoJooq.getOneWhere(USER.ID.eq(id.toString())).orElse(null);
+  }
+
+  @Transactional
+  public User createUser(User user) throws Exception {
+    if (user.getFirstName() == null
+        || user.getFirstName().isEmpty()
+        || user.getLastName() == null
+        || user.getLastName().isEmpty()
+        || user.getEmail() == null
+        || user.getEmail().isEmpty()
+        || ((user.getPassword() == null || user.getPassword().isEmpty())
+            && user.getOidcSub() == null)) {
+      throw new Exception("All fields must be filled.");
     }
 
-    @Transactional(readOnly = true)
-    public User getByEmail(String email) {
-        return userRepository.findFirstByEmail(email);
+    final long count = userRepository.count();
+
+    if (count == 0) {
+      user.setAdmin(true);
     }
 
-    @Transactional(readOnly = true)
-    public User getByOidcSub(String sub) {
-        return userRepository.findFirstByOidcSub(sub);
-//        return userDaoJooq.getOneWhere(USER.OIDCSUB.eq(sub)).orElse(null);
+    if (!user.getEmail().matches(EMAIL_REGEX)) {
+      throw new Exception("Invalid email");
     }
 
-    @Transactional(readOnly = true)
-    public User getCurrentUser() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-
-        return getByEmail(user.getUsername());
+    if (Constants.HAS_SUBSCRIPTIONS && !user.isAdmin()) {
+      // give one month subscription to new users
+      final LocalDateTime expiry = LocalDateTime.now().plusMonths(1);
+      user.setSubscriptionExpiryDate(Timestamp.valueOf(expiry).getTime());
+    } else {
+      user.setSubscriptionExpiryDate(User.NEVER);
     }
 
-    @Transactional(readOnly = true)
-    public PaginatedResults<User> getAll(String search, int page, int pageSize) throws SQLException {
+    // checking if user already exists
+    //        final long emailCheck = userDaoJooq.countUsers(USER.EMAIL.eq(user.getEmail()));
+    final long emailCheck = userRepository.countByEmail(user.getEmail());
 
-        Pageable pageable = PageRequest.of(page, pageSize);
-        Page<User> userResults;
-        if (search.trim().length() > 0) {
-            String searchQuery = "%" + search.trim() + "%";
-
-            Specification<User> spec = Specification.where(Specifications.<User>like("email", searchQuery))
-                    .or(Specifications.like("firstName", search))
-                    .or(Specifications.like("lastName", searchQuery));
-
-            userResults = userRepository.findAll(spec, pageable);
-
-//            return userDaoJooq.getPaginatedWhere(page, pageSize, USER.EMAIL.like(searchQuery)
-//                    .or(USER.FIRSTNAME.like(searchQuery))
-//                    .or(USER.LASTNAME.like(searchQuery)));
-        } else {
-            userResults = userRepository.findAll(pageable);
-        }
-
-        return new PaginatedResults<>(userResults);
+    if (emailCheck > 0) {
+      throw new Exception("Email already in use");
     }
 
-    @Transactional(readOnly = true)
-    public PaginatedResults<User> getAll() throws SQLException {
-        return getAll("", 0, Integer.MAX_VALUE);
-    }
+    // order is important here as the clear password gets updated after the bcrypt
+    user.setPasswordBcrypt(new BCryptPasswordEncoder().encode(user.getPassword()));
+    user.setPassword(hashUserCredentials(user.getEmail(), user.getPassword()));
+    User toReturn = userRepository.save(user);
 
-    @Transactional(readOnly = true)
-    public User getById(UUID id) throws SQLException {
-        return userRepository.findFirstById(id);
-//        return userDaoJooq.getOneWhere(USER.ID.eq(id.toString())).orElse(null);
-    }
+    Map<String, Object> templateData = new HashMap<>();
+    templateData.put("firstName", user.getFirstName());
 
-    @Transactional
-    public User createUser(User user) throws Exception {
-        if (user.getFirstName() == null || user.getFirstName()
-                .isEmpty() || user.getLastName() == null || user.getLastName()
-                .isEmpty() || user.getEmail() == null || user.getEmail()
-                .isEmpty() || ((user.getPassword() == null || user.getPassword()
-                .isEmpty()) && user.getOidcSub() == null)) {
-            throw new Exception("All fields must be filled.");
-        }
+    emailService.sendTemplate(
+        user.getEmail(), "Welcome to SpendSpentSpent !", "email/user-registered.ftl", templateData);
 
-        final long count = userRepository.count();
-
-        if (count == 0) {
-            user.setAdmin(true);
-        }
-
-        if (!user.getEmail().matches(EMAIL_REGEX)) {
-            throw new Exception("Invalid email");
-        }
-
-        if (Constants.HAS_SUBSCRIPTIONS && !user.isAdmin()) {
-            // give one month subscription to new users
-            final LocalDateTime expiry = LocalDateTime.now().plusMonths(1);
-            user.setSubscriptionExpiryDate(Timestamp.valueOf(expiry).getTime());
-        } else {
-            user.setSubscriptionExpiryDate(User.NEVER);
-        }
-
-        // checking if user already exists
-//        final long emailCheck = userDaoJooq.countUsers(USER.EMAIL.eq(user.getEmail()));
-        final long emailCheck = userRepository.countByEmail(user.getEmail());
-
-        if (emailCheck > 0) {
-            throw new Exception("Email already in use");
-        }
-
-        // order is important here as the clear password gets updated after the bcrypt
-        user.setPasswordBcrypt(new BCryptPasswordEncoder().encode(user.getPassword()));
-        user.setPassword(hashUserCredentials(user.getEmail(), user.getPassword()));
-        User toReturn = userRepository.save(user);
-
-
-        Map<String, Object> templateData = new HashMap<>();
-        templateData.put("firstName", user.getFirstName());
-
-        emailService.sendTemplate(user.getEmail(), "Welcome to SpendSpentSpent !", "email/user-registered.ftl", templateData);
-
-        // Migration code
-        // migrating all existing categories to new user as it's the first one
-        if (count == 0) {
-            categoryRepository.findAll().forEach(c -> {
+    // Migration code
+    // migrating all existing categories to new user as it's the first one
+    if (count == 0) {
+      categoryRepository
+          .findAll()
+          .forEach(
+              c -> {
                 c.setUser(toReturn);
                 categoryRepository.save(c);
-            });
-        }
-
-        return toReturn;
+              });
     }
 
-    @Transactional
-    public boolean deleteUser(String userId, User currentUser) throws Exception {
-        if (currentUser.getId().toString().equalsIgnoreCase(userId)) {
-            throw new Exception("You can't delete yourself");
-        }
+    return toReturn;
+  }
 
-        return Optional.ofNullable(getById(UUID.fromString(userId))).map(user -> {
-            try {
-                // leaving the household first moves the user's entries on other members' categories to their own ones
-                // and the other members' entries on the user's categories to theirs, so they don't get deleted below.
+  @Transactional
+  public boolean deleteUser(String userId, User currentUser) throws Exception {
+    if (currentUser.getId().toString().equalsIgnoreCase(userId)) {
+      throw new Exception("You can't delete yourself");
+    }
+
+    return Optional.ofNullable(getById(UUID.fromString(userId)))
+        .map(
+            user -> {
+              try {
+                // leaving the household first moves the user's entries on other members' categories
+                // to their own ones
+                // and the other members' entries on the user's categories to theirs, so they don't
+                // get deleted below.
                 householdService.leaveHousehold(user);
 
-                // entries were moved between categories, start from a fresh persistence context so the cascades
+                // entries were moved between categories, start from a fresh persistence context so
+                // the cascades
                 // below see where they are now.
                 entityManager.flush();
                 entityManager.clear();
@@ -219,66 +237,76 @@ public class UserService {
                 // categories, expenses and recurring expenses are deleted along with the user
                 userRepository.delete(getById(user.getId()));
                 return true;
-            } catch (Exception e) {
+              } catch (Exception e) {
                 throw new RuntimeException(e);
-            }
-        }).orElse(false);
-    }
+              }
+            })
+        .orElse(false);
+  }
 
-    @Transactional
-    public boolean setUserPassword(String userId, String newPassword) throws SQLException {
-        return Optional.ofNullable(getById(UUID.fromString(userId))).map(u -> {
-            try {
+  @Transactional
+  public boolean setUserPassword(String userId, String newPassword) throws SQLException {
+    return Optional.ofNullable(getById(UUID.fromString(userId)))
+        .map(
+            u -> {
+              try {
                 u.setPassword(hashUserCredentials(u.getEmail(), newPassword));
-//                userDaoJooq.update(u);
+                //                userDaoJooq.update(u);
                 userRepository.save(u);
                 return true;
-            } catch (NoSuchAlgorithmException e) {
+              } catch (NoSuchAlgorithmException e) {
                 throw new RuntimeException(e);
-            }
-        }).orElse(false);
+              }
+            })
+        .orElse(false);
+  }
+
+  @Transactional
+  public boolean setUserAdmin(String userId, boolean isAdmin, User requester) throws Exception {
+    if (requester.getId().toString().equals(userId) && !isAdmin) {
+      throw new Exception("You can't remove admin rights to yourself");
     }
 
-    @Transactional
-    public boolean setUserAdmin(String userId, boolean isAdmin, User requester) throws Exception {
-        if (requester.getId().toString().equals(userId) && !isAdmin) {
-            throw new Exception("You can't remove admin rights to yourself");
-        }
+    return Optional.ofNullable(getById(UUID.fromString(userId)))
+        .map(
+            u -> {
+              u.setAdmin(isAdmin);
+              //            userDaoJooq.update(u);
+              userRepository.save(u);
+              return true;
+            })
+        .orElse(false);
+  }
 
-        return Optional.ofNullable(getById(UUID.fromString(userId))).map(u -> {
-            u.setAdmin(isAdmin);
-//            userDaoJooq.update(u);
-            userRepository.save(u);
-            return true;
-        }).orElse(false);
+  @Transactional
+  public User updateUserProfile(User user, User newUserData) throws Exception {
+    if (newUserData.getFirstName() == null
+        || newUserData.getFirstName().length() == 0
+        || newUserData.getLastName() == null
+        || newUserData.getLastName().length() == 0) {
+      throw new Exception("first name and lat name can't be empty");
     }
 
-    @Transactional
-    public User updateUserProfile(User user, User newUserData) throws Exception {
-        if (newUserData.getFirstName() == null || newUserData.getFirstName()
-                .length() == 0 || newUserData.getLastName() == null || newUserData.getLastName().length() == 0) {
-            throw new Exception("first name and lat name can't be empty");
-        }
+    user.setFirstName(newUserData.getFirstName());
+    user.setLastName(newUserData.getLastName());
 
-        user.setFirstName(newUserData.getFirstName());
-        user.setLastName(newUserData.getLastName());
+    final String value = settingsService.getByName(Settings.DEMO_MODE).getValue();
+    boolean demo = value.equalsIgnoreCase("1");
 
-        final String value = settingsService.getByName(Settings.DEMO_MODE).getValue();
-        boolean demo = value.equalsIgnoreCase("1");
-
-        if ((!demo || demo && user.isAdmin()) && newUserData.getPassword() != null && !newUserData.getPassword()
-                .isEmpty()) {
-            user.setPassword(hashUserCredentials(user.getEmail(), newUserData.getPassword()));
-        }
-
-//        userDaoJooq.update(user);
-        userRepository.save(user);
-        return user;
+    if ((!demo || demo && user.isAdmin())
+        && newUserData.getPassword() != null
+        && !newUserData.getPassword().isEmpty()) {
+      user.setPassword(hashUserCredentials(user.getEmail(), newUserData.getPassword()));
     }
 
-    @Transactional
-    public User updateUser(User user) {
-        var updated = userRepository.save(user);
-        return user;
-    }
+    //        userDaoJooq.update(user);
+    userRepository.save(user);
+    return user;
+  }
+
+  @Transactional
+  public User updateUser(User user) {
+    var updated = userRepository.save(user);
+    return user;
+  }
 }
