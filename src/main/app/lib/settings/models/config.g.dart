@@ -17,6 +17,7 @@ _Config _$ConfigFromJson(Map<String, dynamic> json) => _Config(
   minAppVersion: json['minAppVersion'] as String?,
   backendVersion: json['backendVersion'] as String,
   oidc: json['oidc'] == null ? null : OidcConfig.fromJson(json['oidc'] as Map<String, dynamic>),
+  canChooseRecurringFirstOccurrence: json['canChooseRecurringFirstOccurrence'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$ConfigToJson(_Config instance) => <String, dynamic>{
@@ -30,4 +31,5 @@ Map<String, dynamic> _$ConfigToJson(_Config instance) => <String, dynamic>{
   'minAppVersion': instance.minAppVersion,
   'backendVersion': instance.backendVersion,
   'oidc': instance.oidc,
+  'canChooseRecurringFirstOccurrence': instance.canChooseRecurringFirstOccurrence,
 };

@@ -140,6 +140,10 @@ public class ApplicationController {
 
     results.put("canConvertCurrency", currencyService.canUseCurrencyConversion());
 
+    // clients only offer a first occurrence when creating a recurring expense if the server says
+    // it takes it into account
+    results.put("canChooseRecurringFirstOccurrence", true);
+
     if (oidcService.getOidcDiscoveryUrl() != null) {
       results.put("oidc", oidcService.getOidcConfig());
     }

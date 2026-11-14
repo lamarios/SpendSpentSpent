@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AddRecurringExpenseState {
 
- int get step; Category? get category; int? get type; int? get typeParam; String get amount; String get name; List<Category> get categories;
+ int get step; Category? get category; int? get type; int? get typeParam; String get amount; String get name; List<Category> get categories; DateTime? get firstOccurrence; bool get firstOccurrenceChosen;
 /// Create a copy of AddRecurringExpenseState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $AddRecurringExpenseStateCopyWith<AddRecurringExpenseState> get copyWith => _$Ad
 @override
 bool operator ==(Object other) {
   final _this = this as AddRecurringExpenseState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddRecurringExpenseState&&(identical(other.step, _this.step) || other.step == _this.step)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.typeParam, _this.typeParam) || other.typeParam == _this.typeParam)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.name, _this.name) || other.name == _this.name)&&const DeepCollectionEquality().equals(other.categories, _this.categories));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddRecurringExpenseState&&(identical(other.step, _this.step) || other.step == _this.step)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.typeParam, _this.typeParam) || other.typeParam == _this.typeParam)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.name, _this.name) || other.name == _this.name)&&const DeepCollectionEquality().equals(other.categories, _this.categories)&&(identical(other.firstOccurrence, _this.firstOccurrence) || other.firstOccurrence == _this.firstOccurrence)&&(identical(other.firstOccurrenceChosen, _this.firstOccurrenceChosen) || other.firstOccurrenceChosen == _this.firstOccurrenceChosen));
 }
 
 
 @override
 int get hashCode {
   final _this = this as AddRecurringExpenseState;
-  return Object.hash(runtimeType,_this.step,_this.category,_this.type,_this.typeParam,_this.amount,_this.name,const DeepCollectionEquality().hash(_this.categories));
+  return Object.hash(runtimeType,_this.step,_this.category,_this.type,_this.typeParam,_this.amount,_this.name,const DeepCollectionEquality().hash(_this.categories),_this.firstOccurrence,_this.firstOccurrenceChosen);
 }
 
 @override
 String toString() {
   final _this = this as AddRecurringExpenseState;
-  return 'AddRecurringExpenseState(step: ${_this.step}, category: ${_this.category}, type: ${_this.type}, typeParam: ${_this.typeParam}, amount: ${_this.amount}, name: ${_this.name}, categories: ${_this.categories})';
+  return 'AddRecurringExpenseState(step: ${_this.step}, category: ${_this.category}, type: ${_this.type}, typeParam: ${_this.typeParam}, amount: ${_this.amount}, name: ${_this.name}, categories: ${_this.categories}, firstOccurrence: ${_this.firstOccurrence}, firstOccurrenceChosen: ${_this.firstOccurrenceChosen})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $AddRecurringExpenseStateCopyWith<$Res>  {
   factory $AddRecurringExpenseStateCopyWith(AddRecurringExpenseState value, $Res Function(AddRecurringExpenseState) _then) = _$AddRecurringExpenseStateCopyWithImpl;
 @useResult
 $Res call({
- int step, Category? category, int? type, int? typeParam, String amount, String name, List<Category> categories
+ int step, Category? category, int? type, int? typeParam, String amount, String name, List<Category> categories, DateTime? firstOccurrence, bool firstOccurrenceChosen
 });
 
 
@@ -68,7 +68,7 @@ class _$AddRecurringExpenseStateCopyWithImpl<$Res>
 
 /// Create a copy of AddRecurringExpenseState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? step = null,Object? category = freezed,Object? type = freezed,Object? typeParam = freezed,Object? amount = null,Object? name = null,Object? categories = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? step = null,Object? category = freezed,Object? type = freezed,Object? typeParam = freezed,Object? amount = null,Object? name = null,Object? categories = null,Object? firstOccurrence = freezed,Object? firstOccurrenceChosen = null,}) {
   return _then(AddRecurringExpenseState(
 step: null == step ? _self.step : step // ignore: cast_nullable_to_non_nullable
 as int,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
@@ -77,7 +77,9 @@ as int?,typeParam: freezed == typeParam ? _self.typeParam : typeParam // ignore:
 as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,categories: null == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
-as List<Category>,
+as List<Category>,firstOccurrence: freezed == firstOccurrence ? _self.firstOccurrence : firstOccurrence // ignore: cast_nullable_to_non_nullable
+as DateTime?,firstOccurrenceChosen: null == firstOccurrenceChosen ? _self.firstOccurrenceChosen : firstOccurrenceChosen // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 /// Create a copy of AddRecurringExpenseState
@@ -171,10 +173,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int step,  Category? category,  int? type,  int? typeParam,  String amount,  String name,  List<Category> categories)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int step,  Category? category,  int? type,  int? typeParam,  String amount,  String name,  List<Category> categories,  DateTime? firstOccurrence,  bool firstOccurrenceChosen)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AddRecurringExpenseState() when $default != null:
-return $default(_that.step,_that.category,_that.type,_that.typeParam,_that.amount,_that.name,_that.categories);case _:
+return $default(_that.step,_that.category,_that.type,_that.typeParam,_that.amount,_that.name,_that.categories,_that.firstOccurrence,_that.firstOccurrenceChosen);case _:
   return orElse();
 
 }
@@ -192,10 +194,10 @@ return $default(_that.step,_that.category,_that.type,_that.typeParam,_that.amoun
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int step,  Category? category,  int? type,  int? typeParam,  String amount,  String name,  List<Category> categories)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int step,  Category? category,  int? type,  int? typeParam,  String amount,  String name,  List<Category> categories,  DateTime? firstOccurrence,  bool firstOccurrenceChosen)  $default,) {final _that = this;
 switch (_that) {
 case _AddRecurringExpenseState():
-return $default(_that.step,_that.category,_that.type,_that.typeParam,_that.amount,_that.name,_that.categories);}
+return $default(_that.step,_that.category,_that.type,_that.typeParam,_that.amount,_that.name,_that.categories,_that.firstOccurrence,_that.firstOccurrenceChosen);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -209,10 +211,10 @@ return $default(_that.step,_that.category,_that.type,_that.typeParam,_that.amoun
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int step,  Category? category,  int? type,  int? typeParam,  String amount,  String name,  List<Category> categories)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int step,  Category? category,  int? type,  int? typeParam,  String amount,  String name,  List<Category> categories,  DateTime? firstOccurrence,  bool firstOccurrenceChosen)?  $default,) {final _that = this;
 switch (_that) {
 case _AddRecurringExpenseState() when $default != null:
-return $default(_that.step,_that.category,_that.type,_that.typeParam,_that.amount,_that.name,_that.categories);case _:
+return $default(_that.step,_that.category,_that.type,_that.typeParam,_that.amount,_that.name,_that.categories,_that.firstOccurrence,_that.firstOccurrenceChosen);case _:
   return null;
 
 }
@@ -224,7 +226,7 @@ return $default(_that.step,_that.category,_that.type,_that.typeParam,_that.amoun
 
 
 class _AddRecurringExpenseState extends AddRecurringExpenseState {
-  const _AddRecurringExpenseState({this.step = 0, this.category, this.type, this.typeParam, this.amount = '', this.name = '',  List<Category> categories = const []}): _categories = categories,super._();
+  const _AddRecurringExpenseState({this.step = 0, this.category, this.type, this.typeParam, this.amount = '', this.name = '',  List<Category> categories = const [], this.firstOccurrence, this.firstOccurrenceChosen = false}): _categories = categories,super._();
   
 
 @override@JsonKey() final  int step;
@@ -240,6 +242,8 @@ class _AddRecurringExpenseState extends AddRecurringExpenseState {
   return EqualUnmodifiableListView(_categories);
 }
 
+@override final  DateTime? firstOccurrence;
+@override@JsonKey() final  bool firstOccurrenceChosen;
 
 /// Create a copy of AddRecurringExpenseState
 /// with the given fields replaced by the non-null parameter values.
@@ -251,18 +255,18 @@ _$AddRecurringExpenseStateCopyWith<_AddRecurringExpenseState> get copyWith => __
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddRecurringExpenseState&&(identical(other.step, step) || other.step == step)&&(identical(other.category, category) || other.category == category)&&(identical(other.type, type) || other.type == type)&&(identical(other.typeParam, typeParam) || other.typeParam == typeParam)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.categories, _categories));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddRecurringExpenseState&&(identical(other.step, step) || other.step == step)&&(identical(other.category, category) || other.category == category)&&(identical(other.type, type) || other.type == type)&&(identical(other.typeParam, typeParam) || other.typeParam == typeParam)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.categories, _categories)&&(identical(other.firstOccurrence, firstOccurrence) || other.firstOccurrence == firstOccurrence)&&(identical(other.firstOccurrenceChosen, firstOccurrenceChosen) || other.firstOccurrenceChosen == firstOccurrenceChosen));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,step,category,type,typeParam,amount,name,const DeepCollectionEquality().hash(_categories));
+    return Object.hash(runtimeType,step,category,type,typeParam,amount,name,const DeepCollectionEquality().hash(_categories),firstOccurrence,firstOccurrenceChosen);
 }
 
 @override
 String toString() {
-    return 'AddRecurringExpenseState(step: $step, category: $category, type: $type, typeParam: $typeParam, amount: $amount, name: $name, categories: $categories)';
+    return 'AddRecurringExpenseState(step: $step, category: $category, type: $type, typeParam: $typeParam, amount: $amount, name: $name, categories: $categories, firstOccurrence: $firstOccurrence, firstOccurrenceChosen: $firstOccurrenceChosen)';
 }
 
 
@@ -273,7 +277,7 @@ abstract mixin class _$AddRecurringExpenseStateCopyWith<$Res> implements $AddRec
   factory _$AddRecurringExpenseStateCopyWith(_AddRecurringExpenseState value, $Res Function(_AddRecurringExpenseState) _then) = __$AddRecurringExpenseStateCopyWithImpl;
 @override @useResult
 $Res call({
- int step, Category? category, int? type, int? typeParam, String amount, String name, List<Category> categories
+ int step, Category? category, int? type, int? typeParam, String amount, String name, List<Category> categories, DateTime? firstOccurrence, bool firstOccurrenceChosen
 });
 
 
@@ -290,7 +294,7 @@ class __$AddRecurringExpenseStateCopyWithImpl<$Res>
 
 /// Create a copy of AddRecurringExpenseState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? step = null,Object? category = freezed,Object? type = freezed,Object? typeParam = freezed,Object? amount = null,Object? name = null,Object? categories = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? step = null,Object? category = freezed,Object? type = freezed,Object? typeParam = freezed,Object? amount = null,Object? name = null,Object? categories = null,Object? firstOccurrence = freezed,Object? firstOccurrenceChosen = null,}) {
   return _then(_AddRecurringExpenseState(
 step: null == step ? _self.step : step // ignore: cast_nullable_to_non_nullable
 as int,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
@@ -299,7 +303,9 @@ as int?,typeParam: freezed == typeParam ? _self.typeParam : typeParam // ignore:
 as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,categories: null == categories ? _self._categories : categories // ignore: cast_nullable_to_non_nullable
-as List<Category>,
+as List<Category>,firstOccurrence: freezed == firstOccurrence ? _self.firstOccurrence : firstOccurrence // ignore: cast_nullable_to_non_nullable
+as DateTime?,firstOccurrenceChosen: null == firstOccurrenceChosen ? _self.firstOccurrenceChosen : firstOccurrenceChosen // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

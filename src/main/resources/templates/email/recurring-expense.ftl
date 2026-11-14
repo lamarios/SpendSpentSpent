@@ -7,8 +7,9 @@
 </p>
 <p>
 <ul>
-    <#list expenses as expense>
-        <li class="expense"><i class="cat ${expense.getCategory().getIcon()}" ></i> <span class="amount">${expense.getAmount()?string["0.00"]}</span>, <small>next occurrence: ${expense.getNextOccurrence().toString()}</small></li>
+    <#list expenses as report>
+        <#assign expense = report.expense()>
+        <li class="expense"><i class="cat ${expense.getCategory().getIcon()}" ></i> <span class="amount">${expense.getAmount()?string["0.00"]}</span><#if (report.bookings() > 1)> &times; ${report.bookings()}</#if>, <small>next occurrence: ${expense.getNextOccurrence().toString()}</small></li>
     </#list>
 </ul>
 </p>
