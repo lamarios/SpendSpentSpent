@@ -7,7 +7,7 @@ on:
   push:
     branches: [ master ]
     tags:
-      - '*'
+      - '[0-9]+.[0-9]+.[0-9]+'
     paths-ignore:
       - '**/README.md'
   pull_request:
@@ -53,26 +53,30 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Extract tag name
-        id: extract_tag
-        if: startsWith(github.ref, 'refs/tags/')
-        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-      - name: Set build number
-        id: set_build_number
-        if: ${{ ! startsWith(github.ref, 'refs/tags/') }}
-        run: echo "TAG_NAME=1" >> $GITHUB_ENV
+      - name: Set version
+        run: |
+          echo "BUILD_NUMBER=${{ github.run_number }}" >> $GITHUB_ENV
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/}"
+            if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Tag '$VERSION' is not a valid x.y.z version" >&2
+              exit 1
+            fi
+            echo "VERSION_NAME=$VERSION" >> $GITHUB_ENV
+            echo "BUILD_NAME_ARG=--build-name $VERSION" >> $GITHUB_ENV
+          fi
       # Build web app
       - name: build web
         working-directory: src/main/app
         run: |
-          nix-shell "$GITHUB_WORKSPACE/shell.nix" --run 'flutter build web --wasm --release --build-number ${{ env.TAG_NAME }}'
+          nix-shell "$GITHUB_WORKSPACE/shell.nix" --run "flutter build web --wasm --release --build-number $BUILD_NUMBER $BUILD_NAME_ARG"
           cp -R build/web ../resources/public
       # build backend
 
       - name: Set application version
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          mvn versions:set -DnewVersion=${{ env.TAG_NAME }}
+          mvn versions:set -DnewVersion=${{ env.VERSION_NAME }}
           mvn versions:commit
       - name: Build Java app
         run: nix-shell --run 'mvn clean install'
@@ -96,7 +100,7 @@ jobs:
           file: docker/Dockerfile.lite
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/spendspentspent:latest
-            ${{ secrets.DOCKER_USERNAME }}/spendspentspent:${{ env.TAG_NAME }}
+            ${{ secrets.DOCKER_USERNAME }}/spendspentspent:${{ env.VERSION_NAME }}
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         if: startsWith(github.ref, 'refs/tags/')
