@@ -12,6 +12,9 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.InvalidMediaTypeException;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -72,9 +75,29 @@ public class UserController {
 
   @PostMapping("/{userId}/setPassword")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  public boolean setPassword(@PathVariable("userId") String userId, @RequestBody String newPassword)
+  public boolean setPassword(
+      @PathVariable("userId") String userId,
+      @RequestBody String newPassword,
+      @RequestHeader(value = HttpHeaders.CONTENT_TYPE, required = false) String contentType)
       throws Exception {
+    // the app sends the password as JSON, in quotes without escaping what's inside, while a plain
+    // text password is taken as it is
+    if (isJson(contentType)
+        && newPassword.length() >= 2
+        && newPassword.startsWith("\"")
+        && newPassword.endsWith("\"")) {
+      newPassword = newPassword.substring(1, newPassword.length() - 1);
+    }
     return userService.setUserPassword(userId, newPassword);
+  }
+
+  private static boolean isJson(String contentType) {
+    try {
+      return contentType != null
+          && MediaType.APPLICATION_JSON.isCompatibleWith(MediaType.parseMediaType(contentType));
+    } catch (InvalidMediaTypeException e) {
+      return false;
+    }
   }
 
   @PutMapping

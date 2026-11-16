@@ -186,9 +186,7 @@ public class UserService {
       throw new Exception("Email already in use");
     }
 
-    // order is important here as the clear password gets updated after the bcrypt
-    user.setPasswordBcrypt(new BCryptPasswordEncoder().encode(user.getPassword()));
-    user.setPassword(hashUserCredentials(user.getEmail(), user.getPassword()));
+    setPassword(user, user.getPassword());
     User toReturn = userRepository.save(user);
 
     Map<String, Object> templateData = new HashMap<>();
@@ -250,7 +248,7 @@ public class UserService {
         .map(
             u -> {
               try {
-                u.setPassword(hashUserCredentials(u.getEmail(), newPassword));
+                setPassword(u, newPassword);
                 //                userDaoJooq.update(u);
                 userRepository.save(u);
                 return true;
@@ -290,18 +288,30 @@ public class UserService {
     user.setFirstName(newUserData.getFirstName());
     user.setLastName(newUserData.getLastName());
 
-    final String value = settingsService.getByName(Settings.DEMO_MODE).getValue();
-    boolean demo = value.equalsIgnoreCase("1");
+    // the setting only exists once it was saved
+    boolean demo =
+        Optional.ofNullable(settingsService.getByName(Settings.DEMO_MODE))
+            .map(s -> s.getValue().equalsIgnoreCase("1"))
+            .orElse(false);
 
     if ((!demo || demo && user.isAdmin())
         && newUserData.getPassword() != null
         && !newUserData.getPassword().isEmpty()) {
-      user.setPassword(hashUserCredentials(user.getEmail(), newUserData.getPassword()));
+      setPassword(user, newUserData.getPassword());
     }
 
     //        userDaoJooq.update(user);
     userRepository.save(user);
     return user;
+  }
+
+  /**
+   * Sets the bcrypt hash checked on login, and the legacy hash along with it so both are the new
+   * password.
+   */
+  private void setPassword(User user, String clearPassword) throws NoSuchAlgorithmException {
+    user.setPasswordBcrypt(new BCryptPasswordEncoder().encode(clearPassword));
+    user.setPassword(hashUserCredentials(user.getEmail(), clearPassword));
   }
 
   @Transactional
