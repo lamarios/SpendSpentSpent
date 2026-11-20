@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:spend_spent_spent/globals.dart';
 import 'package:spend_spent_spent/icons.dart';
 import 'package:spend_spent_spent/recurring_expenses/models/recurring_expense.dart';
-import 'package:spend_spent_spent/utils/dialogs.dart';
+import 'package:spend_spent_spent/recurring_expenses/views/components/add_recurring_expense.dart';
 import 'package:spend_spent_spent/utils/views/components/repeated_icons.dart';
 
 class RecurringExpenseView extends StatefulWidget {
@@ -16,14 +16,6 @@ class RecurringExpenseView extends StatefulWidget {
 }
 
 class RecurringExpenseViewState extends State<RecurringExpenseView> {
-  late final TextEditingController nameController = TextEditingController(text: widget.expense.name);
-
-  @override
-  dispose() {
-    nameController.dispose();
-    super.dispose();
-  }
-
   Widget getRepeatedIcon(ColorScheme colors) {
     List<Widget> icons = [];
 
@@ -34,11 +26,18 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> {
     return Opacity(opacity: 0.03, child: Wrap(spacing: 20, runSpacing: 20, children: icons));
   }
 
-  setName(BuildContext context) {
-    showPromptDialog(context, 'Change expense name', "", nameController, () async {
-      await service.updateRecurringExpense(widget.expense.copyWith(name: nameController.text));
-      widget.refreshExpenses();
-    }, maxLines: 1);
+  edit(BuildContext context) {
+    showRecurringExpenseDialog(
+      context,
+      expense: widget.expense,
+      onSaved: () {
+        widget.refreshExpenses();
+        // it shows the recurring expense as it was
+        if (context.mounted) {
+          Navigator.pop(context);
+        }
+      },
+    );
   }
 
   deleteExpense(BuildContext context) {
@@ -86,7 +85,7 @@ class RecurringExpenseViewState extends State<RecurringExpenseView> {
             children: [
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTap: () => setName(context),
+                onTap: () => edit(context),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: Icon(Icons.edit, color: colors.onSurface),

@@ -22,6 +22,8 @@ sealed class Config with _$Config {
     OidcConfig? oidc,
     // older servers don't send it, they ignore the first occurrence of a new recurring expense
     @Default(false) bool canChooseRecurringFirstOccurrence,
+    // older servers don't send it, they keep the next occurrence of a recurring expense when its schedule changes
+    @Default(false) bool canEditRecurringSchedule,
   }) = _Config;
 
   factory Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);

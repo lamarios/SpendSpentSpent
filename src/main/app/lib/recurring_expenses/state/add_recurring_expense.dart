@@ -52,28 +52,50 @@ DateTime? defaultFirstOccurrence(int? type, int? typeParam, DateTime now) {
 }
 
 /// The dates the first occurrence can be chosen from. The server books every occurrence since then and accepts up to a
-/// year ago. One chosen before midnight stays included after it, the date picker fails when its initial date is out of
-/// the range.
-({DateTime first, DateTime last}) firstOccurrenceRange(DateTime? firstOccurrence, DateTime now) {
-  final first = DateTime(now.year - 1, now.month, now.day + 1);
+/// year ago, and when editing only after the last occurrence, which is booked already. One chosen before midnight stays
+/// included after it, the date picker fails when its initial date is out of the range.
+({DateTime first, DateTime last}) firstOccurrenceRange(DateTime? firstOccurrence, DateTime now, {DateTime? after}) {
+  var first = DateTime(now.year - 1, now.month, now.day + 1);
+  if (after != null && !after.isBefore(first)) {
+    first = DateTime(after.year, after.month, after.day + 1);
+  }
   return (
     first: firstOccurrence != null && firstOccurrence.isBefore(first) ? firstOccurrence : first,
     last: DateTime(now.year + 2, 12, 31),
   );
 }
 
-class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
-  final TextEditingController nameController = TextEditingController(text: '');
+/// The dialog's state to edit the recurring expense.
+AddRecurringExpenseState editRecurringExpenseState(RecurringExpense expense) => AddRecurringExpenseState(
+  category: expense.category,
+  type: expense.type,
+  typeParam: expense.typeParam,
+  amount: (expense.amount * 100).round().toString(),
+  name: expense.name,
+);
 
-  AddRecurringExpenseCubit(super.initialState) {
+class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
+  /// The recurring expense being edited, none when adding one.
+  final RecurringExpense? editing;
+  late final TextEditingController nameController = TextEditingController(text: state.name);
+
+  AddRecurringExpenseCubit(super.initialState, {this.editing}) {
     getCategories();
     if (service.config == null) {
       _loadConfig();
+    } else if (editing != null) {
+      emit(state.copyWith(firstOccurrence: _defaultFirstOccurrence(state.type, state.typeParam)));
     }
 
     nameController.addListener(() {
       setName(nameController.value.text);
     });
+  }
+
+  @override
+  Future<void> close() async {
+    nameController.dispose();
+    await super.close();
   }
 
   /// The server config is loaded at start up without being waited for, so the schedule can be chosen before it's
@@ -91,14 +113,87 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
     }
   }
 
-  /// None when the server doesn't say it takes the first occurrence into account, older ones ignore it and start at
-  /// the next occurrence from today on. Without one it isn't shown.
-  DateTime? _defaultFirstOccurrence(int? type, int? typeParam) =>
-      (service.config?.canChooseRecurringFirstOccurrence ?? false)
-      ? defaultFirstOccurrence(type, typeParam, DateTime.now())
-      : null;
+  /// Whether the schedule can be changed: older servers keep the next occurrence of a recurring expense when it
+  /// changes.
+  bool get canEditSchedule => editing == null || (service.config?.canEditRecurringSchedule ?? false);
 
-  Future<void> addRecurringExpense() async {
+  bool _scheduleChanged(int? type, int? typeParam) =>
+      type != editing!.type || (type != 0 && typeParam != editing!.typeParam);
+
+  /// None when the server doesn't say it takes the first occurrence into account, older ones ignore it and start at
+  /// the next occurrence from today on. Without one it isn't shown. When editing, the server keeps the next occurrence
+  /// as long as the schedule stays, and starts a new one at its next occurrence from today on, like a new recurring
+  /// expense, but after the last one, which might be today.
+  DateTime? _defaultFirstOccurrence(int? type, int? typeParam) {
+    final expense = editing;
+    if (expense == null) {
+      return (service.config?.canChooseRecurringFirstOccurrence ?? false)
+          ? defaultFirstOccurrence(type, typeParam, DateTime.now())
+          : null;
+    }
+    // older servers keep it, it's shown without the date picker then
+    if (!canEditSchedule || !_scheduleChanged(type, typeParam)) {
+      return expense.nextOccurrence != null ? DateTime.parse(expense.nextOccurrence!) : null;
+    }
+    final now = DateTime.now();
+    final last = lastOccurrence;
+    return defaultFirstOccurrence(
+      type,
+      typeParam,
+      last != null && !last.isBefore(_day(now)) ? DateTime(last.year, last.month, last.day + 1) : now,
+    );
+  }
+
+  /// The last occurrence of the recurring expense being edited, the next one must be after it.
+  DateTime? get lastOccurrence => editing?.lastOccurrence != null ? DateTime.parse(editing!.lastOccurrence!) : null;
+
+  /// Whether it was saved. It can't be saved again meanwhile, nor afterwards while the dialog closes: a slow server
+  /// would let it be saved twice, and the dialog be closed twice.
+  Future<bool> save() async {
+    if (state.saving) {
+      return false;
+    }
+    emit(state.copyWith(saving: true));
+    var saved = false;
+    try {
+      saved = await (editing == null ? addRecurringExpense() : updateRecurringExpense());
+      return saved;
+    } finally {
+      if (!saved && !isClosed) {
+        emit(state.copyWith(saving: false));
+      }
+    }
+  }
+
+  Future<bool> updateRecurringExpense() async {
+    final expense = editing!;
+    double doubleAmount = double.parse(state.amount) / 100;
+    int? typeParam = state.type == 0 ? 0 : state.typeParam;
+
+    if (state.category != null && state.type != null && typeParam != null && doubleAmount > 0) {
+      // without a chosen one, the server keeps its own, which the background job might have moved meanwhile, or
+      // calculates it for a new schedule
+      final nextOccurrence = state.firstOccurrenceChosen && state.firstOccurrence != null
+          ? _dateFormat.format(state.firstOccurrence!)
+          : null;
+      await service.updateRecurringExpense(
+        expense.copyWith(
+          category: state.category!,
+          amount: doubleAmount,
+          name: state.name,
+          type: state.type!,
+          typeParam: typeParam,
+          nextOccurrence: nextOccurrence,
+        ),
+      );
+      return true;
+    } else {
+      print('Missing parameters');
+      return false;
+    }
+  }
+
+  Future<bool> addRecurringExpense() async {
     double doubleAmount = double.parse(state.amount) / 100;
     int? typeParam = state.typeParam;
     if (state.type != null && state.type == 0) {
@@ -119,8 +214,10 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
             : null,
       );
       await service.addRecurringExpense(expense);
+      return true;
     } else {
       print('Missing parameters');
+      return false;
     }
   }
 
@@ -144,6 +241,9 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
   }
 
   setType(int type) {
+    if (!canEditSchedule) {
+      return;
+    }
     emit(
       state.copyWith(
         type: type,
@@ -162,6 +262,9 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
   }
 
   setTypeParam(int typeParam) {
+    if (!canEditSchedule) {
+      return;
+    }
     emit(
       state.copyWith(
         typeParam: typeParam,
@@ -208,6 +311,7 @@ sealed class AddRecurringExpenseState with _$AddRecurringExpenseState {
     @Default([]) List<Category> categories,
     DateTime? firstOccurrence,
     @Default(false) bool firstOccurrenceChosen,
+    @Default(false) bool saving,
   }) = _AddRecurringExpenseState;
 
   const AddRecurringExpenseState._();
@@ -215,7 +319,8 @@ sealed class AddRecurringExpenseState with _$AddRecurringExpenseState {
   bool get stepValid => switch (step) {
     0 => category != null,
     1 => (type != null && typeParam != null) || (type == 0),
-    2 => amount.isNotEmpty,
+    // the keypad's cents, saving ignores 0
+    2 => (int.tryParse(amount) ?? 0) > 0,
     _ => false,
   };
 }

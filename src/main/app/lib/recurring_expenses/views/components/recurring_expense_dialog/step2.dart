@@ -61,8 +61,12 @@ const Map<int, String> YEARLY_PARAMS = {
 class Step2 extends StatelessWidget {
   final int? type, typeParam;
   final DateTime? firstOccurrence;
+
+  /// When editing, the next occurrence must be after the last one.
+  final DateTime? lastOccurrence;
   final Function setType, setTypeParam;
   final void Function(DateTime) setFirstOccurrence;
+  final bool editing, scheduleEditable;
 
   const Step2({
     super.key,
@@ -72,10 +76,13 @@ class Step2 extends StatelessWidget {
     this.type,
     this.typeParam,
     this.firstOccurrence,
+    this.lastOccurrence,
+    this.editing = false,
+    this.scheduleEditable = true,
   });
 
   Future<void> selectFirstOccurrence(BuildContext context) async {
-    final range = firstOccurrenceRange(firstOccurrence, DateTime.now());
+    final range = firstOccurrenceRange(firstOccurrence, DateTime.now(), after: lastOccurrence);
     final date = await showDatePicker(
       context: context,
       // the next yearly occurrence can be today, the 29th or later, which can't be chosen
@@ -103,6 +110,12 @@ class Step2 extends StatelessWidget {
       alignment: Alignment.topCenter,
       child: Column(
         children: [
+          if (!scheduleEditable)
+            Text(
+              'The schedule can only be changed with a newer server',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: colors.secondary, fontSize: 12),
+            ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Wrap(
@@ -180,11 +193,18 @@ class Step2 extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('First payment', style: TextStyle(color: colors.secondary)),
-                TextButton(
-                  onPressed: () => selectFirstOccurrence(context),
-                  child: Text(DateFormat('yyyy-MM-dd').format(firstOccurrence!)),
-                ),
+                Text(editing ? 'Next payment' : 'First payment', style: TextStyle(color: colors.secondary)),
+                // an older server keeps it, so it can't be chosen
+                if (scheduleEditable)
+                  TextButton(
+                    onPressed: () => selectFirstOccurrence(context),
+                    child: Text(DateFormat('yyyy-MM-dd').format(firstOccurrence!)),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(DateFormat('yyyy-MM-dd').format(firstOccurrence!)),
+                  ),
               ],
             ),
             if (firstOccurrence!.isBefore(DateUtils.dateOnly(DateTime.now())))
