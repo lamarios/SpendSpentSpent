@@ -6,6 +6,7 @@ import com.ftpix.sss.mcp.mcpmodels.McpRecurringExpense;
 import com.ftpix.sss.models.*;
 import com.ftpix.sss.services.*;
 import java.sql.SQLException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -81,10 +82,17 @@ public class MCPTools {
       @ToolParam(
               required = false,
               description = "List of categories to filter filter the expenses on")
-          List<String> categories)
+          List<String> categories,
+      @ToolParam(
+              required = false,
+              description =
+                  "Zone the date boundaries are interpreted in, e.g. Europe/Paris or Asia/Kuala_Lumpur."
+                      + " Defaults to the configured server timezone when not given")
+          String timezone)
       throws SQLException {
-    var fromTime = parseToEpochMillis(fromDate, zoneId, START_OF_DAY);
-    var toTime = parseToEpochMillis(toDate, zoneId, END_OF_DAY);
+    ZoneId zone = resolveZone(timezone, zoneId);
+    var fromTime = parseToEpochMillis(fromDate, zone, START_OF_DAY);
+    var toTime = parseToEpochMillis(toDate, zone, END_OF_DAY);
 
     User currentMcpUser = userService.getCurrentUser();
     var categoryFilter =
@@ -98,7 +106,7 @@ public class MCPTools {
     SearchParameters params =
         new SearchParameters(categoryFilter, 0, Integer.MAX_VALUE, fromTime, toTime, null);
 
-    return searchService.search(currentMcpUser, params, zoneId).values().stream()
+    return searchService.search(currentMcpUser, params, zone).values().stream()
         .flatMap(dailyExpense -> dailyExpense.getExpenses().stream())
         .map(
             e ->
@@ -117,8 +125,7 @@ public class MCPTools {
    */
   static long parseToEpochMillis(String value, ZoneId zone, LocalTime defaultTime) {
     if (value == null || value.isBlank()) {
-      throw new IllegalArgumentException(
-          "Missing date, expected one of: " + ACCEPTED_DATE_FORMATS);
+      throw new IllegalArgumentException("Missing date, expected one of: " + ACCEPTED_DATE_FORMATS);
     }
 
     String trimmed = value.trim();
@@ -138,6 +145,27 @@ public class MCPTools {
     }
 
     return dateTime.atZone(zone).toInstant().toEpochMilli();
+  }
+
+  /**
+   * Resolves the zone an MCP call should interpret its dates in, falling back to the configured
+   * server zone when no zone is supplied.
+   *
+   * @throws IllegalArgumentException if the supplied value isn't a valid zone id
+   */
+  static ZoneId resolveZone(String timezone, ZoneId defaultZone) {
+    if (timezone == null || timezone.isBlank()) {
+      return defaultZone;
+    }
+    try {
+      return ZoneId.of(timezone.trim());
+    } catch (DateTimeException e) {
+      throw new IllegalArgumentException(
+          "Invalid timezone '"
+              + timezone
+              + "', expected a zone id such as Europe/Paris or Asia/Kuala_Lumpur",
+          e);
+    }
   }
 
   @Tool(name = "add_expense", description = "Add an expense for the user")

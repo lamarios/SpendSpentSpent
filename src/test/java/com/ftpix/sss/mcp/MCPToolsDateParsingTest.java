@@ -110,4 +110,42 @@ public class MCPToolsDateParsingTest {
         IllegalArgumentException.class,
         () -> MCPTools.parseToEpochMillis(null, ZONE, MCPTools.START_OF_DAY));
   }
+
+  @Test
+  public void testResolveZoneDefaultsToConfiguredZone() {
+    assertEquals(ZONE, MCPTools.resolveZone(null, ZONE));
+    assertEquals(ZONE, MCPTools.resolveZone("", ZONE));
+    assertEquals(ZONE, MCPTools.resolveZone("   ", ZONE));
+  }
+
+  @Test
+  public void testResolveZoneUsesGivenZone() {
+    assertEquals(ZoneId.of("UTC"), MCPTools.resolveZone("UTC", ZONE));
+    assertEquals(ZoneId.of("Asia/Kuala_Lumpur"), MCPTools.resolveZone("Asia/Kuala_Lumpur", ZONE));
+    // surrounding whitespace is tolerated
+    assertEquals(ZoneId.of("UTC"), MCPTools.resolveZone(" UTC ", ZONE));
+  }
+
+  @Test
+  public void testResolvedZoneDrivesDateBoundaries() {
+    // Same date, different zones -> different epoch millis.
+    assertEquals(
+        1710460800000L,
+        MCPTools.parseToEpochMillis(
+            "2024-03-15", MCPTools.resolveZone("UTC", ZONE), MCPTools.START_OF_DAY));
+    assertEquals(
+        1710457200000L,
+        MCPTools.parseToEpochMillis(
+            "2024-03-15", MCPTools.resolveZone(null, ZONE), MCPTools.START_OF_DAY));
+  }
+
+  @Test
+  public void testInvalidZone() {
+    for (String invalid : List.of("Nowhere/Paris", "Europe Paris", "UTC++1")) {
+      IllegalArgumentException e =
+          assertThrows(
+              IllegalArgumentException.class, () -> MCPTools.resolveZone(invalid, ZONE), invalid);
+      assertTrue(e.getMessage().contains(invalid), e.getMessage());
+    }
+  }
 }
