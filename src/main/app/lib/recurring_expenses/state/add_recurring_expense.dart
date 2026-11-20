@@ -92,6 +92,12 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
     });
   }
 
+  @override
+  Future<void> close() async {
+    nameController.dispose();
+    await super.close();
+  }
+
   /// The server config is loaded at start up without being waited for, so the schedule can be chosen before it's
   /// there. The first occurrence is then shown once it arrives.
   Future<void> _loadConfig() async {
@@ -125,10 +131,8 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
           ? defaultFirstOccurrence(type, typeParam, DateTime.now())
           : null;
     }
-    if (!canEditSchedule) {
-      return null;
-    }
-    if (!_scheduleChanged(type, typeParam)) {
+    // older servers keep it, it's shown without the date picker then
+    if (!canEditSchedule || !_scheduleChanged(type, typeParam)) {
       return expense.nextOccurrence != null ? DateTime.parse(expense.nextOccurrence!) : null;
     }
     final now = DateTime.now();
@@ -294,7 +298,8 @@ sealed class AddRecurringExpenseState with _$AddRecurringExpenseState {
   bool get stepValid => switch (step) {
     0 => category != null,
     1 => (type != null && typeParam != null) || (type == 0),
-    2 => amount.isNotEmpty,
+    // the keypad's cents, saving ignores 0
+    2 => (int.tryParse(amount) ?? 0) > 0,
     _ => false,
   };
 }

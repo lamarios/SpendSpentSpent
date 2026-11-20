@@ -11,7 +11,7 @@ import 'recurring_expense_dialog/step2.dart';
 import 'recurring_expense_dialog/step3.dart';
 
 /// Shows the dialog to add a recurring expense, or to edit the given one.
-void showRecurringExpenseDialog(BuildContext context, {RecurringExpense? expense, required Function onSaved}) {
+void showRecurringExpenseDialog(BuildContext context, {RecurringExpense? expense, required VoidCallback onSaved}) {
   showModal(
     context: context,
     // as tall as its content like the expense dialog, a fixed height cut the keypad off with larger fonts.
@@ -32,7 +32,7 @@ void showRecurringExpenseDialog(BuildContext context, {RecurringExpense? expense
 }
 
 class AddRecurringExpenseDialog extends StatelessWidget {
-  final Function refreshRecurringExpenses;
+  final VoidCallback refreshRecurringExpenses;
 
   /// The recurring expense to edit, none to add one.
   final RecurringExpense? expense;

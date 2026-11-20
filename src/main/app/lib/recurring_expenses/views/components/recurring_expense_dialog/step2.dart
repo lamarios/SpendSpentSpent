@@ -194,10 +194,17 @@ class Step2 extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(editing ? 'Next payment' : 'First payment', style: TextStyle(color: colors.secondary)),
-                TextButton(
-                  onPressed: () => selectFirstOccurrence(context),
-                  child: Text(DateFormat('yyyy-MM-dd').format(firstOccurrence!)),
-                ),
+                // an older server keeps it, so it can't be chosen
+                if (scheduleEditable)
+                  TextButton(
+                    onPressed: () => selectFirstOccurrence(context),
+                    child: Text(DateFormat('yyyy-MM-dd').format(firstOccurrence!)),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(DateFormat('yyyy-MM-dd').format(firstOccurrence!)),
+                  ),
               ],
             ),
             if (firstOccurrence!.isBefore(DateUtils.dateOnly(DateTime.now())))

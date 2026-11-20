@@ -48,11 +48,27 @@ public class RecurringExpenseService {
    * @return when is the new payment due.
    */
   public LocalDate calculateNextDate(RecurringExpense expense, LocalDate today) {
+    return calculateNextDate(
+        expense.getType(), expense.getTypeParam(), expense.getLastOccurrence(), today);
+  }
+
+  /**
+   * The next occurrence of a schedule from that day on, as for a new recurring expense.
+   *
+   * @param type the type of the schedule, one of the RecurringExpense.TYPE_ constants
+   * @param typeParam the weekday, day of the month or month of the schedule
+   */
+  public LocalDate calculateNextDate(int type, int typeParam, LocalDate from) {
+    return calculateNextDate(type, typeParam, null, from);
+  }
+
+  private LocalDate calculateNextDate(
+      int type, int typeParam, LocalDate lastOccurrence, LocalDate today) {
     ChronoUnit calendarUnit;
     LocalDate cal = today;
     //        Calendar cal = new GregorianCalendar();
     //        Calendar today = new GregorianCalendar();
-    switch (expense.getType()) {
+    switch (type) {
       case RecurringExpense.TYPE_DAILY:
         logger.info("Daily");
         //                calendarField = Calendar.DAY_OF_MONTH;
@@ -62,7 +78,7 @@ public class RecurringExpenseService {
         logger.info("Monthly");
         //                calendarField = Calendar.MONTH;
         calendarUnit = ChronoUnit.MONTHS;
-        cal = cal.withDayOfMonth(expense.getTypeParam());
+        cal = cal.withDayOfMonth(typeParam);
         //                cal.set(Calendar.DAY_OF_MONTH, expense.getTypeParam());
         break;
       case RecurringExpense.TYPE_WEEKLY:
@@ -71,7 +87,7 @@ public class RecurringExpenseService {
         //                cal.set(Calendar.DAY_OF_WEEK, expense.getTypeParam());
         // we migrated from gregorian calendar which starts the week on sunday, LocalDate starts on
         // monday
-        DayOfWeek dow = DayOfWeek.of(((expense.getTypeParam() + 5) % 7) + 1);
+        DayOfWeek dow = DayOfWeek.of(((typeParam + 5) % 7) + 1);
         cal = cal.with(ChronoField.DAY_OF_WEEK, dow.getValue());
         calendarUnit = ChronoUnit.WEEKS;
         break;
@@ -82,13 +98,13 @@ public class RecurringExpenseService {
         //                cal.set(Calendar.MONTH, expense.getTypeParam());
         calendarUnit = ChronoUnit.YEARS;
         // we migrated to local date which the starts the months of the year with 1 instead of 0
-        cal = cal.withMonth(expense.getTypeParam() + 1);
+        cal = cal.withMonth(typeParam + 1);
     }
 
     logger.info("Calculated date[{}]", cal.toString());
 
     // We don't have a date
-    if (expense.getLastOccurrence() == null) {
+    if (lastOccurrence == null) {
 
       logger.info(
           "No date, must be new recurring expense: let's check if the set date is already past");
@@ -99,7 +115,7 @@ public class RecurringExpenseService {
         logger.info("The calculated date is expired, adding the extra time, new date[{}]", cal);
 
         // Handling special cases
-        switch (expense.getType()) {
+        switch (type) {
           case RecurringExpense.TYPE_YEARLY:
             cal = cal.withDayOfMonth(1);
             break;
@@ -107,7 +123,7 @@ public class RecurringExpenseService {
 
       } else {
         // Handling special cases
-        switch (expense.getType()) {
+        switch (type) {
           case RecurringExpense.TYPE_YEARLY:
             if (today.getMonth().getValue() < cal.getMonth().getValue()) {
               cal = cal.withDayOfMonth(1);
@@ -123,11 +139,11 @@ public class RecurringExpenseService {
       //            GregorianCalendar last = new GregorianCalendar();
       //            last.setTime(expense.getLastOccurrence());
       //            last.add(calendarField, 1);
-      LocalDate last = expense.getLastOccurrence();
+      LocalDate last = lastOccurrence;
       last = last.plus(1, calendarUnit);
 
       // Handling special cases
-      switch (expense.getType()) {
+      switch (type) {
         case RecurringExpense.TYPE_YEARLY:
           cal = cal.withDayOfMonth(1);
           break;
@@ -157,10 +173,7 @@ public class RecurringExpenseService {
     if (lastOccurrence != null && !lastOccurrence.isBefore(from)) {
       from = lastOccurrence.plusDays(1);
     }
-    RecurringExpense schedule = new RecurringExpense();
-    schedule.setType(expense.getType());
-    schedule.setTypeParam(expense.getTypeParam());
-    return calculateNextDate(schedule, from);
+    return calculateNextDate(expense.getType(), expense.getTypeParam(), from);
   }
 
   /**
@@ -268,10 +281,10 @@ public class RecurringExpenseService {
    * then moves to the next occurrence of the new schedule from today on, as for a new recurring
    * expense, but after the last one.
    *
-   * <p>One the client sends is taken like the first one of a new recurring expense, but it must be
-   * after the last occurrence, which is booked already. Older clients send it back as they got it
-   * along with the same schedule. It stays as it is then, also when the background job booked it
-   * meanwhile.
+   * <p>One the client sends is taken like the first one of a new recurring expense. Older clients
+   * send it back as they got it along with the same schedule, it stays as it is then. One that is
+   * booked already, which the background job might have done while the client had it, is handled
+   * like none, so the rest of the change is still saved.
    */
   @Transactional
   public boolean update(RecurringExpense expense, User user) throws Exception {
@@ -289,18 +302,14 @@ public class RecurringExpenseService {
       LocalDate next;
       LocalDate last = existing.getLastOccurrence();
       boolean booked = requested != null && last != null && !requested.isAfter(last);
-      if (requested == null) {
+      if (requested == null || booked) {
         next =
             scheduleChanged ? nextOccurrenceFromToday(expense, last) : existing.getNextOccurrence();
-      } else if (!scheduleChanged && (requested.equals(existing.getNextOccurrence()) || booked)) {
-        // sent back as the client got it, maybe before the background job booked it
-        next = existing.getNextOccurrence();
+      } else if (!scheduleChanged && requested.equals(existing.getNextOccurrence())) {
+        // sent back as the client got it
+        next = requested;
       } else {
         checkNextOccurrence(expense, requested);
-        if (booked) {
-          throw new IllegalArgumentException(
-              "The next occurrence must be after the last one, it's already booked");
-        }
         next = requested;
       }
       expense.setNextOccurrence(next);
