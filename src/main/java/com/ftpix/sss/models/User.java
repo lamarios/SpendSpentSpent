@@ -28,6 +28,7 @@ public class User {
   @Column(name = "firstname")
   private String firstName;
 
+  @Transient
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 

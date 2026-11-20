@@ -133,7 +133,9 @@ public class ApplicationController {
 
     results.put("allowSignup", allowSignups);
 
-    results.put("canResetPassword", emailService.isEnabled());
+    // without SMTP the reset link is printed in the server logs instead of emailed
+    results.put("canResetPassword", true);
+    results.put("resetPasswordViaLogs", !emailService.isEnabled());
 
     results.put("backendVersion", buildProperties.getVersion());
     results.put("minAppVersion", MIN_APP_VERSION.toString());

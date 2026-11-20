@@ -410,6 +410,11 @@
       <excludeFolder url="file://$MODULE_DIR$/src/main/app/submodules/flutter/packages/integration_test/integration_test_macos/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/app/submodules/flutter/packages/integration_test/integration_test_macos/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/app/submodules/flutter/packages/integration_test/integration_test_macos/build" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/app/android" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/app/applicationSupportPath" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/app/ios" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/app/submodules" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/app/web" />
     </content>
   </component>
   <component name="FacetManager">

@@ -64,25 +64,16 @@ public class JwtAuthenticationController {
     Objects.requireNonNull(email);
     Objects.requireNonNull(password);
     final User byEmail = userService.getByEmail(email);
-    final String hash = userService.hashUserCredentials(email, password);
 
     if (byEmail == null) {
       throw new BadCredentialsException("Invalid username or password");
     }
 
-    boolean hashMatch =
-        byEmail.getPasswordBcrypt() == null && byEmail.getPassword().equalsIgnoreCase(hash);
     boolean cryptMatch =
         byEmail.getPasswordBcrypt() != null
             && new BCryptPasswordEncoder().matches(password, byEmail.getPasswordBcrypt());
-    if (!hashMatch && !cryptMatch) {
+    if (!cryptMatch) {
       throw new BadCredentialsException("Invalid username or password");
-    }
-
-    // we have correct credentials for legacy passwords we want to switch to bcrypt
-    if (byEmail.getPasswordBcrypt() == null) {
-      byEmail.setPasswordBcrypt(new BCryptPasswordEncoder().encode(password));
-      userService.updateUser(byEmail);
     }
   }
 }

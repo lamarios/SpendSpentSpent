@@ -27,9 +27,16 @@ public class MockEmailService implements EmailService {
   @Override
   public void sendHtml(String to, String subject, String message) {}
 
+  private boolean enabled = true;
+
   @Override
   public boolean isEnabled() {
-    return true;
+    return enabled;
+  }
+
+  /** Simulates an instance with or without SMTP configured. */
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
   }
 
   @Override

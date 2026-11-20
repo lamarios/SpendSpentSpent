@@ -8,6 +8,7 @@ import com.ftpix.sss.services.UserService;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,7 +34,7 @@ public class TestService {
     user.setLastName("Super");
     user.setEmail(email);
     user.setAdmin(admin);
-    user.setPassword(userService.hashUserCredentials(user.getEmail(), "pass"));
+    user.setPasswordBcrypt(new BCryptPasswordEncoder().encode("pass"));
     user.setSubscriptionExpiryDate(Long.MAX_VALUE);
     user = userRepository.save(user);
 

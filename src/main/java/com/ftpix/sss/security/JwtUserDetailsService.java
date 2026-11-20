@@ -52,7 +52,10 @@ public class JwtUserDetailsService implements UserDetailsService {
                 if (u.isAdmin()) {
                   authorityList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
                 }
-                return new User(u.getEmail(), u.getPassword(), authorityList);
+                return new User(
+                    u.getEmail(),
+                    u.getPasswordBcrypt() == null ? "" : u.getPasswordBcrypt(),
+                    authorityList);
               })
           .orElseThrow(() -> new UsernameNotFoundException("No user with email " + email));
     } catch (Exception e) {

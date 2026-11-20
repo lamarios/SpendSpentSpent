@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Config {
 
- bool get allowSignup; bool get canResetPassword; bool get demoMode; bool get hasSubscription; bool get canConvertCurrency; String get announcement; String get convertCurrencyQuota; String? get minAppVersion; String get backendVersion; OidcConfig? get oidc; bool get canChooseRecurringFirstOccurrence; bool get canEditRecurringSchedule;
+ bool get allowSignup; bool get canResetPassword; bool get demoMode; bool get hasSubscription; bool get canConvertCurrency; String get announcement; String get convertCurrencyQuota; String? get minAppVersion; String get backendVersion; OidcConfig? get oidc; bool get canChooseRecurringFirstOccurrence; bool get canEditRecurringSchedule; bool get resetPasswordViaLogs;
 /// Create a copy of Config
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $ConfigCopyWith<Config> get copyWith => _$ConfigCopyWithImpl<Config>(this as Con
 @override
 bool operator ==(Object other) {
   final _this = this as Config;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Config&&(identical(other.allowSignup, _this.allowSignup) || other.allowSignup == _this.allowSignup)&&(identical(other.canResetPassword, _this.canResetPassword) || other.canResetPassword == _this.canResetPassword)&&(identical(other.demoMode, _this.demoMode) || other.demoMode == _this.demoMode)&&(identical(other.hasSubscription, _this.hasSubscription) || other.hasSubscription == _this.hasSubscription)&&(identical(other.canConvertCurrency, _this.canConvertCurrency) || other.canConvertCurrency == _this.canConvertCurrency)&&(identical(other.announcement, _this.announcement) || other.announcement == _this.announcement)&&(identical(other.convertCurrencyQuota, _this.convertCurrencyQuota) || other.convertCurrencyQuota == _this.convertCurrencyQuota)&&(identical(other.minAppVersion, _this.minAppVersion) || other.minAppVersion == _this.minAppVersion)&&(identical(other.backendVersion, _this.backendVersion) || other.backendVersion == _this.backendVersion)&&(identical(other.oidc, _this.oidc) || other.oidc == _this.oidc)&&(identical(other.canChooseRecurringFirstOccurrence, _this.canChooseRecurringFirstOccurrence) || other.canChooseRecurringFirstOccurrence == _this.canChooseRecurringFirstOccurrence)&&(identical(other.canEditRecurringSchedule, _this.canEditRecurringSchedule) || other.canEditRecurringSchedule == _this.canEditRecurringSchedule));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Config&&(identical(other.allowSignup, _this.allowSignup) || other.allowSignup == _this.allowSignup)&&(identical(other.canResetPassword, _this.canResetPassword) || other.canResetPassword == _this.canResetPassword)&&(identical(other.demoMode, _this.demoMode) || other.demoMode == _this.demoMode)&&(identical(other.hasSubscription, _this.hasSubscription) || other.hasSubscription == _this.hasSubscription)&&(identical(other.canConvertCurrency, _this.canConvertCurrency) || other.canConvertCurrency == _this.canConvertCurrency)&&(identical(other.announcement, _this.announcement) || other.announcement == _this.announcement)&&(identical(other.convertCurrencyQuota, _this.convertCurrencyQuota) || other.convertCurrencyQuota == _this.convertCurrencyQuota)&&(identical(other.minAppVersion, _this.minAppVersion) || other.minAppVersion == _this.minAppVersion)&&(identical(other.backendVersion, _this.backendVersion) || other.backendVersion == _this.backendVersion)&&(identical(other.oidc, _this.oidc) || other.oidc == _this.oidc)&&(identical(other.canChooseRecurringFirstOccurrence, _this.canChooseRecurringFirstOccurrence) || other.canChooseRecurringFirstOccurrence == _this.canChooseRecurringFirstOccurrence)&&(identical(other.canEditRecurringSchedule, _this.canEditRecurringSchedule) || other.canEditRecurringSchedule == _this.canEditRecurringSchedule)&&(identical(other.resetPasswordViaLogs, _this.resetPasswordViaLogs) || other.resetPasswordViaLogs == _this.resetPasswordViaLogs));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Config;
-  return Object.hash(runtimeType,_this.allowSignup,_this.canResetPassword,_this.demoMode,_this.hasSubscription,_this.canConvertCurrency,_this.announcement,_this.convertCurrencyQuota,_this.minAppVersion,_this.backendVersion,_this.oidc,_this.canChooseRecurringFirstOccurrence,_this.canEditRecurringSchedule);
+  return Object.hash(runtimeType,_this.allowSignup,_this.canResetPassword,_this.demoMode,_this.hasSubscription,_this.canConvertCurrency,_this.announcement,_this.convertCurrencyQuota,_this.minAppVersion,_this.backendVersion,_this.oidc,_this.canChooseRecurringFirstOccurrence,_this.canEditRecurringSchedule,_this.resetPasswordViaLogs);
 }
 
 @override
 String toString() {
   final _this = this as Config;
-  return 'Config(allowSignup: ${_this.allowSignup}, canResetPassword: ${_this.canResetPassword}, demoMode: ${_this.demoMode}, hasSubscription: ${_this.hasSubscription}, canConvertCurrency: ${_this.canConvertCurrency}, announcement: ${_this.announcement}, convertCurrencyQuota: ${_this.convertCurrencyQuota}, minAppVersion: ${_this.minAppVersion}, backendVersion: ${_this.backendVersion}, oidc: ${_this.oidc}, canChooseRecurringFirstOccurrence: ${_this.canChooseRecurringFirstOccurrence}, canEditRecurringSchedule: ${_this.canEditRecurringSchedule})';
+  return 'Config(allowSignup: ${_this.allowSignup}, canResetPassword: ${_this.canResetPassword}, demoMode: ${_this.demoMode}, hasSubscription: ${_this.hasSubscription}, canConvertCurrency: ${_this.canConvertCurrency}, announcement: ${_this.announcement}, convertCurrencyQuota: ${_this.convertCurrencyQuota}, minAppVersion: ${_this.minAppVersion}, backendVersion: ${_this.backendVersion}, oidc: ${_this.oidc}, canChooseRecurringFirstOccurrence: ${_this.canChooseRecurringFirstOccurrence}, canEditRecurringSchedule: ${_this.canEditRecurringSchedule}, resetPasswordViaLogs: ${_this.resetPasswordViaLogs})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $ConfigCopyWith<$Res>  {
   factory $ConfigCopyWith(Config value, $Res Function(Config) _then) = _$ConfigCopyWithImpl;
 @useResult
 $Res call({
- bool allowSignup, bool canResetPassword, bool demoMode, bool hasSubscription, bool canConvertCurrency, String announcement, String convertCurrencyQuota, String? minAppVersion, String backendVersion, OidcConfig? oidc, bool canChooseRecurringFirstOccurrence, bool canEditRecurringSchedule
+ bool allowSignup, bool canResetPassword, bool demoMode, bool hasSubscription, bool canConvertCurrency, String announcement, String convertCurrencyQuota, String? minAppVersion, String backendVersion, OidcConfig? oidc, bool canChooseRecurringFirstOccurrence, bool canEditRecurringSchedule, bool resetPasswordViaLogs
 });
 
 
@@ -71,7 +71,7 @@ class _$ConfigCopyWithImpl<$Res>
 
 /// Create a copy of Config
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? allowSignup = null,Object? canResetPassword = null,Object? demoMode = null,Object? hasSubscription = null,Object? canConvertCurrency = null,Object? announcement = null,Object? convertCurrencyQuota = null,Object? minAppVersion = freezed,Object? backendVersion = null,Object? oidc = freezed,Object? canChooseRecurringFirstOccurrence = null,Object? canEditRecurringSchedule = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? allowSignup = null,Object? canResetPassword = null,Object? demoMode = null,Object? hasSubscription = null,Object? canConvertCurrency = null,Object? announcement = null,Object? convertCurrencyQuota = null,Object? minAppVersion = freezed,Object? backendVersion = null,Object? oidc = freezed,Object? canChooseRecurringFirstOccurrence = null,Object? canEditRecurringSchedule = null,Object? resetPasswordViaLogs = null,}) {
   return _then(Config(
 allowSignup: null == allowSignup ? _self.allowSignup : allowSignup // ignore: cast_nullable_to_non_nullable
 as bool,canResetPassword: null == canResetPassword ? _self.canResetPassword : canResetPassword // ignore: cast_nullable_to_non_nullable
@@ -85,6 +85,7 @@ as String?,backendVersion: null == backendVersion ? _self.backendVersion : backe
 as String,oidc: freezed == oidc ? _self.oidc : oidc // ignore: cast_nullable_to_non_nullable
 as OidcConfig?,canChooseRecurringFirstOccurrence: null == canChooseRecurringFirstOccurrence ? _self.canChooseRecurringFirstOccurrence : canChooseRecurringFirstOccurrence // ignore: cast_nullable_to_non_nullable
 as bool,canEditRecurringSchedule: null == canEditRecurringSchedule ? _self.canEditRecurringSchedule : canEditRecurringSchedule // ignore: cast_nullable_to_non_nullable
+as bool,resetPasswordViaLogs: null == resetPasswordViaLogs ? _self.resetPasswordViaLogs : resetPasswordViaLogs // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -179,10 +180,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  String backendVersion,  OidcConfig? oidc,  bool canChooseRecurringFirstOccurrence,  bool canEditRecurringSchedule)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  String backendVersion,  OidcConfig? oidc,  bool canChooseRecurringFirstOccurrence,  bool canEditRecurringSchedule,  bool resetPasswordViaLogs)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Config() when $default != null:
-return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.hasSubscription,_that.canConvertCurrency,_that.announcement,_that.convertCurrencyQuota,_that.minAppVersion,_that.backendVersion,_that.oidc,_that.canChooseRecurringFirstOccurrence,_that.canEditRecurringSchedule);case _:
+return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.hasSubscription,_that.canConvertCurrency,_that.announcement,_that.convertCurrencyQuota,_that.minAppVersion,_that.backendVersion,_that.oidc,_that.canChooseRecurringFirstOccurrence,_that.canEditRecurringSchedule,_that.resetPasswordViaLogs);case _:
   return orElse();
 
 }
@@ -200,10 +201,10 @@ return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.ha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  String backendVersion,  OidcConfig? oidc,  bool canChooseRecurringFirstOccurrence,  bool canEditRecurringSchedule)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  String backendVersion,  OidcConfig? oidc,  bool canChooseRecurringFirstOccurrence,  bool canEditRecurringSchedule,  bool resetPasswordViaLogs)  $default,) {final _that = this;
 switch (_that) {
 case _Config():
-return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.hasSubscription,_that.canConvertCurrency,_that.announcement,_that.convertCurrencyQuota,_that.minAppVersion,_that.backendVersion,_that.oidc,_that.canChooseRecurringFirstOccurrence,_that.canEditRecurringSchedule);}
+return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.hasSubscription,_that.canConvertCurrency,_that.announcement,_that.convertCurrencyQuota,_that.minAppVersion,_that.backendVersion,_that.oidc,_that.canChooseRecurringFirstOccurrence,_that.canEditRecurringSchedule,_that.resetPasswordViaLogs);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -217,10 +218,10 @@ return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.ha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  String backendVersion,  OidcConfig? oidc,  bool canChooseRecurringFirstOccurrence,  bool canEditRecurringSchedule)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool allowSignup,  bool canResetPassword,  bool demoMode,  bool hasSubscription,  bool canConvertCurrency,  String announcement,  String convertCurrencyQuota,  String? minAppVersion,  String backendVersion,  OidcConfig? oidc,  bool canChooseRecurringFirstOccurrence,  bool canEditRecurringSchedule,  bool resetPasswordViaLogs)?  $default,) {final _that = this;
 switch (_that) {
 case _Config() when $default != null:
-return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.hasSubscription,_that.canConvertCurrency,_that.announcement,_that.convertCurrencyQuota,_that.minAppVersion,_that.backendVersion,_that.oidc,_that.canChooseRecurringFirstOccurrence,_that.canEditRecurringSchedule);case _:
+return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.hasSubscription,_that.canConvertCurrency,_that.announcement,_that.convertCurrencyQuota,_that.minAppVersion,_that.backendVersion,_that.oidc,_that.canChooseRecurringFirstOccurrence,_that.canEditRecurringSchedule,_that.resetPasswordViaLogs);case _:
   return null;
 
 }
@@ -232,7 +233,7 @@ return $default(_that.allowSignup,_that.canResetPassword,_that.demoMode,_that.ha
 @JsonSerializable()
 
 class _Config implements Config {
-  const _Config({required this.allowSignup, required this.canResetPassword, required this.demoMode, required this.hasSubscription, required this.canConvertCurrency, required this.announcement, required this.convertCurrencyQuota, this.minAppVersion, required this.backendVersion, this.oidc, this.canChooseRecurringFirstOccurrence = false, this.canEditRecurringSchedule = false});
+  const _Config({required this.allowSignup, required this.canResetPassword, required this.demoMode, required this.hasSubscription, required this.canConvertCurrency, required this.announcement, required this.convertCurrencyQuota, this.minAppVersion, required this.backendVersion, this.oidc, this.canChooseRecurringFirstOccurrence = false, this.canEditRecurringSchedule = false, this.resetPasswordViaLogs = false});
   factory _Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);
 
 @override final  bool allowSignup;
@@ -247,6 +248,7 @@ class _Config implements Config {
 @override final  OidcConfig? oidc;
 @override@JsonKey() final  bool canChooseRecurringFirstOccurrence;
 @override@JsonKey() final  bool canEditRecurringSchedule;
+@override@JsonKey() final  bool resetPasswordViaLogs;
 
 /// Create a copy of Config
 /// with the given fields replaced by the non-null parameter values.
@@ -261,18 +263,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Config&&(identical(other.allowSignup, allowSignup) || other.allowSignup == allowSignup)&&(identical(other.canResetPassword, canResetPassword) || other.canResetPassword == canResetPassword)&&(identical(other.demoMode, demoMode) || other.demoMode == demoMode)&&(identical(other.hasSubscription, hasSubscription) || other.hasSubscription == hasSubscription)&&(identical(other.canConvertCurrency, canConvertCurrency) || other.canConvertCurrency == canConvertCurrency)&&(identical(other.announcement, announcement) || other.announcement == announcement)&&(identical(other.convertCurrencyQuota, convertCurrencyQuota) || other.convertCurrencyQuota == convertCurrencyQuota)&&(identical(other.minAppVersion, minAppVersion) || other.minAppVersion == minAppVersion)&&(identical(other.backendVersion, backendVersion) || other.backendVersion == backendVersion)&&(identical(other.oidc, oidc) || other.oidc == oidc)&&(identical(other.canChooseRecurringFirstOccurrence, canChooseRecurringFirstOccurrence) || other.canChooseRecurringFirstOccurrence == canChooseRecurringFirstOccurrence)&&(identical(other.canEditRecurringSchedule, canEditRecurringSchedule) || other.canEditRecurringSchedule == canEditRecurringSchedule));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Config&&(identical(other.allowSignup, allowSignup) || other.allowSignup == allowSignup)&&(identical(other.canResetPassword, canResetPassword) || other.canResetPassword == canResetPassword)&&(identical(other.demoMode, demoMode) || other.demoMode == demoMode)&&(identical(other.hasSubscription, hasSubscription) || other.hasSubscription == hasSubscription)&&(identical(other.canConvertCurrency, canConvertCurrency) || other.canConvertCurrency == canConvertCurrency)&&(identical(other.announcement, announcement) || other.announcement == announcement)&&(identical(other.convertCurrencyQuota, convertCurrencyQuota) || other.convertCurrencyQuota == convertCurrencyQuota)&&(identical(other.minAppVersion, minAppVersion) || other.minAppVersion == minAppVersion)&&(identical(other.backendVersion, backendVersion) || other.backendVersion == backendVersion)&&(identical(other.oidc, oidc) || other.oidc == oidc)&&(identical(other.canChooseRecurringFirstOccurrence, canChooseRecurringFirstOccurrence) || other.canChooseRecurringFirstOccurrence == canChooseRecurringFirstOccurrence)&&(identical(other.canEditRecurringSchedule, canEditRecurringSchedule) || other.canEditRecurringSchedule == canEditRecurringSchedule)&&(identical(other.resetPasswordViaLogs, resetPasswordViaLogs) || other.resetPasswordViaLogs == resetPasswordViaLogs));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,allowSignup,canResetPassword,demoMode,hasSubscription,canConvertCurrency,announcement,convertCurrencyQuota,minAppVersion,backendVersion,oidc,canChooseRecurringFirstOccurrence,canEditRecurringSchedule);
+    return Object.hash(runtimeType,allowSignup,canResetPassword,demoMode,hasSubscription,canConvertCurrency,announcement,convertCurrencyQuota,minAppVersion,backendVersion,oidc,canChooseRecurringFirstOccurrence,canEditRecurringSchedule,resetPasswordViaLogs);
 }
 
 @override
 String toString() {
-    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc, canChooseRecurringFirstOccurrence: $canChooseRecurringFirstOccurrence, canEditRecurringSchedule: $canEditRecurringSchedule)';
+    return 'Config(allowSignup: $allowSignup, canResetPassword: $canResetPassword, demoMode: $demoMode, hasSubscription: $hasSubscription, canConvertCurrency: $canConvertCurrency, announcement: $announcement, convertCurrencyQuota: $convertCurrencyQuota, minAppVersion: $minAppVersion, backendVersion: $backendVersion, oidc: $oidc, canChooseRecurringFirstOccurrence: $canChooseRecurringFirstOccurrence, canEditRecurringSchedule: $canEditRecurringSchedule, resetPasswordViaLogs: $resetPasswordViaLogs)';
 }
 
 
@@ -283,7 +285,7 @@ abstract mixin class _$ConfigCopyWith<$Res> implements $ConfigCopyWith<$Res> {
   factory _$ConfigCopyWith(_Config value, $Res Function(_Config) _then) = __$ConfigCopyWithImpl;
 @override @useResult
 $Res call({
- bool allowSignup, bool canResetPassword, bool demoMode, bool hasSubscription, bool canConvertCurrency, String announcement, String convertCurrencyQuota, String? minAppVersion, String backendVersion, OidcConfig? oidc, bool canChooseRecurringFirstOccurrence, bool canEditRecurringSchedule
+ bool allowSignup, bool canResetPassword, bool demoMode, bool hasSubscription, bool canConvertCurrency, String announcement, String convertCurrencyQuota, String? minAppVersion, String backendVersion, OidcConfig? oidc, bool canChooseRecurringFirstOccurrence, bool canEditRecurringSchedule, bool resetPasswordViaLogs
 });
 
 
@@ -300,7 +302,7 @@ class __$ConfigCopyWithImpl<$Res>
 
 /// Create a copy of Config
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? allowSignup = null,Object? canResetPassword = null,Object? demoMode = null,Object? hasSubscription = null,Object? canConvertCurrency = null,Object? announcement = null,Object? convertCurrencyQuota = null,Object? minAppVersion = freezed,Object? backendVersion = null,Object? oidc = freezed,Object? canChooseRecurringFirstOccurrence = null,Object? canEditRecurringSchedule = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? allowSignup = null,Object? canResetPassword = null,Object? demoMode = null,Object? hasSubscription = null,Object? canConvertCurrency = null,Object? announcement = null,Object? convertCurrencyQuota = null,Object? minAppVersion = freezed,Object? backendVersion = null,Object? oidc = freezed,Object? canChooseRecurringFirstOccurrence = null,Object? canEditRecurringSchedule = null,Object? resetPasswordViaLogs = null,}) {
   return _then(_Config(
 allowSignup: null == allowSignup ? _self.allowSignup : allowSignup // ignore: cast_nullable_to_non_nullable
 as bool,canResetPassword: null == canResetPassword ? _self.canResetPassword : canResetPassword // ignore: cast_nullable_to_non_nullable
@@ -314,6 +316,7 @@ as String?,backendVersion: null == backendVersion ? _self.backendVersion : backe
 as String,oidc: freezed == oidc ? _self.oidc : oidc // ignore: cast_nullable_to_non_nullable
 as OidcConfig?,canChooseRecurringFirstOccurrence: null == canChooseRecurringFirstOccurrence ? _self.canChooseRecurringFirstOccurrence : canChooseRecurringFirstOccurrence // ignore: cast_nullable_to_non_nullable
 as bool,canEditRecurringSchedule: null == canEditRecurringSchedule ? _self.canEditRecurringSchedule : canEditRecurringSchedule // ignore: cast_nullable_to_non_nullable
+as bool,resetPasswordViaLogs: null == resetPasswordViaLogs ? _self.resetPasswordViaLogs : resetPasswordViaLogs // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

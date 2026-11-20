@@ -4,6 +4,7 @@ import com.ftpix.sss.models.ResetPassword;
 import com.ftpix.sss.models.ResetPasswordNew;
 import com.ftpix.sss.models.User;
 import com.ftpix.sss.persistence.ResetPasswordRepository;
+import com.ftpix.sss.persistence.UserRepository;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class ResetPasswordService {
   private final UserService userService;
   private final EmailService emailService;
   private final ResetPasswordRepository resetPasswordRepository;
+  private final UserRepository userRepository;
 
   private final String rootUrl;
 
@@ -31,10 +33,12 @@ public class ResetPasswordService {
       UserService userService,
       EmailService emailService,
       ResetPasswordRepository resetPasswordRepository,
+      UserRepository userRepository,
       String rootUrl) {
     this.userService = userService;
     this.emailService = emailService;
     this.resetPasswordRepository = resetPasswordRepository;
+    this.userRepository = userRepository;
     this.rootUrl = rootUrl;
   }
 
@@ -49,6 +53,40 @@ public class ResetPasswordService {
     logger.info("Deleted {} expired password requests", expiredRequests.size());
   }
 
+  /** Creates a reset request valid for a day and returns the link to use it. */
+  private String createResetUrl(User user) {
+    ResetPassword resetPassword = new ResetPassword();
+    resetPassword.setUser(user);
+    LocalDateTime expiry = LocalDateTime.now().plusDays(1);
+    resetPassword.setExpiryDate(Timestamp.valueOf(expiry).getTime());
+    resetPasswordRepository.save(resetPassword);
+
+    return rootUrl + "/reset-password?reset-id=" + resetPassword.getId().toString();
+  }
+
+  /**
+   * Local users without a bcrypt hash (legacy MD5 users who never logged in before the MD5 column
+   * was dropped) can't log in. Self-hosted admins can read the logs, so we print a reset link for
+   * each of them. Runs at every startup, so a restart gives fresh links once the old ones expire.
+   */
+  @Transactional
+  public void logResetLinksForUsersWithoutPassword() throws SQLException {
+    List<User> users = userRepository.findAllByPasswordBcryptIsNullAndOidcSubIsNull();
+    if (users.isEmpty()) {
+      return;
+    }
+
+    clearExpiredRequests();
+    logger.warn(
+        "{} user(s) have no password set (their legacy MD5 password hash was removed). They"
+            + " need to reset their password using the links below, valid for 24h. Restart the"
+            + " app to generate new links.",
+        users.size());
+    for (User user : users) {
+      logger.warn("Password reset for {}: {}", user.getEmail(), createResetUrl(user));
+    }
+  }
+
   @Transactional
   public boolean createResetPasswordRequest(String email) throws SQLException {
     try {
@@ -56,17 +94,18 @@ public class ResetPasswordService {
           .ifPresent(
               u -> {
                 try {
-                  ResetPassword resetPassword = new ResetPassword();
-                  resetPassword.setUser(u);
-                  // it expires in a day
-                  LocalDateTime expiry = LocalDateTime.now().plusDays(1);
-                  resetPassword.setExpiryDate(Timestamp.valueOf(expiry).getTime());
-                  resetPasswordRepository.save(resetPassword);
+                  String resetPasswordUrl = createResetUrl(u);
+
+                  if (!emailService.isEnabled()) {
+                    // no SMTP: self-hosted admins hand the link over from the logs
+                    logger.warn(
+                        "Password reset requested for {}, link valid for 24h: {}",
+                        u.getEmail(),
+                        resetPasswordUrl);
+                    return;
+                  }
 
                   Map<String, Object> templateData = new HashMap<>();
-
-                  String resetPasswordUrl =
-                      rootUrl + "/reset-password?reset-id=" + resetPassword.getId().toString();
                   templateData.put("url", resetPasswordUrl);
                   templateData.put("firstName", u.getFirstName());
 

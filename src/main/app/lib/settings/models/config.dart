@@ -24,6 +24,8 @@ sealed class Config with _$Config {
     @Default(false) bool canChooseRecurringFirstOccurrence,
     // older servers don't send it, they keep the next occurrence of a recurring expense when its schedule changes
     @Default(false) bool canEditRecurringSchedule,
+    // older servers don't send it, they only allow resetting a password by email
+    @Default(false) bool resetPasswordViaLogs,
   }) = _Config;
 
   factory Config.fromJson(Map<String, dynamic> json) => _$ConfigFromJson(json);

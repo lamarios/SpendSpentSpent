@@ -13,6 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -62,7 +63,7 @@ public abstract class TestContainerTest {
     user.setLastName("Super");
     user.setEmail(random + "@example.org");
     user.setAdmin(true);
-    user.setPassword(userService.hashUserCredentials(user.getEmail(), "pass"));
+    user.setPasswordBcrypt(new BCryptPasswordEncoder().encode("pass"));
     user.setSubscriptionExpiryDate(Long.MAX_VALUE);
     currentUser = userRepository.save(user);
 

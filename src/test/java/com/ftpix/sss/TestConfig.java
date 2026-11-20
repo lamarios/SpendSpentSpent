@@ -45,7 +45,7 @@ public class TestConfig {
           user.setLastName("Super");
           user.setEmail("test@example.org");
           user.setAdmin(true);
-          user.setPassword(userService.hashUserCredentials(user.getEmail(), "pass"));
+          user.setPasswordBcrypt(new BCryptPasswordEncoder().encode("pass"));
           user.setSubscriptionExpiryDate(Long.MAX_VALUE);
           userRepository.save(user);
 
