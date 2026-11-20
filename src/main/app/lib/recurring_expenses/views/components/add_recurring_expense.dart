@@ -1,6 +1,8 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:animations/animations.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/recurring_expenses/models/recurring_expense.dart';
 import 'package:spend_spent_spent/recurring_expenses/state/add_recurring_expense.dart';
 import 'package:spend_spent_spent/utils/views/components/switcher.dart';
 
@@ -8,17 +10,40 @@ import 'recurring_expense_dialog/step1.dart';
 import 'recurring_expense_dialog/step2.dart';
 import 'recurring_expense_dialog/step3.dart';
 
+/// Shows the dialog to add a recurring expense, or to edit the given one.
+void showRecurringExpenseDialog(BuildContext context, {RecurringExpense? expense, required Function onSaved}) {
+  showModal(
+    context: context,
+    // as tall as its content like the expense dialog, a fixed height cut the keypad off with larger fonts.
+    // Full width on narrow screens, the step titles wrap otherwise
+    builder: (context) => SafeArea(
+      child: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 350),
+          margin: const EdgeInsets.symmetric(vertical: 16),
+          child: Card(
+            margin: EdgeInsets.zero,
+            child: AddRecurringExpenseDialog(expense: expense, refreshRecurringExpenses: onSaved),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 class AddRecurringExpenseDialog extends StatelessWidget {
   final Function refreshRecurringExpenses;
 
-  const AddRecurringExpenseDialog({super.key, required this.refreshRecurringExpenses});
+  /// The recurring expense to edit, none to add one.
+  final RecurringExpense? expense;
+
+  const AddRecurringExpenseDialog({super.key, required this.refreshRecurringExpenses, this.expense});
 
   Future<void> forward(BuildContext context) async {
     final cubit = context.read<AddRecurringExpenseCubit>();
 
     if (cubit.state.step == 2) {
-      // add expense
-      await cubit.addRecurringExpense();
+      await cubit.save();
       if (context.mounted) {
         Navigator.of(context).pop();
         refreshRecurringExpenses();
@@ -44,6 +69,9 @@ class AddRecurringExpenseDialog extends StatelessWidget {
           type: state.type,
           typeParam: state.typeParam,
           firstOccurrence: state.firstOccurrence,
+          lastOccurrence: cubit.lastOccurrence,
+          editing: expense != null,
+          scheduleEditable: cubit.canEditSchedule,
           setType: cubit.setType,
           setTypeParam: cubit.setTypeParam,
           setFirstOccurrence: cubit.setFirstOccurrence,
@@ -70,7 +98,9 @@ class AddRecurringExpenseDialog extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return BlocProvider(
-      create: (context) => AddRecurringExpenseCubit(const AddRecurringExpenseState()),
+      create: (context) => expense == null
+          ? AddRecurringExpenseCubit(const AddRecurringExpenseState())
+          : AddRecurringExpenseCubit(editRecurringExpenseState(expense!), editing: expense),
       child: BlocBuilder<AddRecurringExpenseCubit, AddRecurringExpenseState>(
         builder: (context, state) {
           return Padding(
@@ -100,7 +130,7 @@ class AddRecurringExpenseDialog extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: state.stepValid ? () => forward(context) : null,
-                      child: Text(state.step == 2 ? 'Add' : 'Next'),
+                      child: Text(state.step < 2 ? 'Next' : (expense == null ? 'Add' : 'Save')),
                     ),
                   ],
                 ),

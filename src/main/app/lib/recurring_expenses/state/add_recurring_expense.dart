@@ -52,23 +52,39 @@ DateTime? defaultFirstOccurrence(int? type, int? typeParam, DateTime now) {
 }
 
 /// The dates the first occurrence can be chosen from. The server books every occurrence since then and accepts up to a
-/// year ago. One chosen before midnight stays included after it, the date picker fails when its initial date is out of
-/// the range.
-({DateTime first, DateTime last}) firstOccurrenceRange(DateTime? firstOccurrence, DateTime now) {
-  final first = DateTime(now.year - 1, now.month, now.day + 1);
+/// year ago, and when editing only after the last occurrence, which is booked already. One chosen before midnight stays
+/// included after it, the date picker fails when its initial date is out of the range.
+({DateTime first, DateTime last}) firstOccurrenceRange(DateTime? firstOccurrence, DateTime now, {DateTime? after}) {
+  var first = DateTime(now.year - 1, now.month, now.day + 1);
+  if (after != null && !after.isBefore(first)) {
+    first = DateTime(after.year, after.month, after.day + 1);
+  }
   return (
     first: firstOccurrence != null && firstOccurrence.isBefore(first) ? firstOccurrence : first,
     last: DateTime(now.year + 2, 12, 31),
   );
 }
 
-class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
-  final TextEditingController nameController = TextEditingController(text: '');
+/// The dialog's state to edit the recurring expense.
+AddRecurringExpenseState editRecurringExpenseState(RecurringExpense expense) => AddRecurringExpenseState(
+  category: expense.category,
+  type: expense.type,
+  typeParam: expense.typeParam,
+  amount: (expense.amount * 100).round().toString(),
+  name: expense.name,
+);
 
-  AddRecurringExpenseCubit(super.initialState) {
+class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
+  /// The recurring expense being edited, none when adding one.
+  final RecurringExpense? editing;
+  late final TextEditingController nameController = TextEditingController(text: state.name);
+
+  AddRecurringExpenseCubit(super.initialState, {this.editing}) {
     getCategories();
     if (service.config == null) {
       _loadConfig();
+    } else if (editing != null) {
+      emit(state.copyWith(firstOccurrence: _defaultFirstOccurrence(state.type, state.typeParam)));
     }
 
     nameController.addListener(() {
@@ -91,12 +107,68 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
     }
   }
 
+  /// Whether the schedule can be changed: older servers keep the next occurrence of a recurring expense when it
+  /// changes.
+  bool get canEditSchedule => editing == null || (service.config?.canEditRecurringSchedule ?? false);
+
+  bool _scheduleChanged(int? type, int? typeParam) =>
+      type != editing!.type || (type != 0 && typeParam != editing!.typeParam);
+
   /// None when the server doesn't say it takes the first occurrence into account, older ones ignore it and start at
-  /// the next occurrence from today on. Without one it isn't shown.
-  DateTime? _defaultFirstOccurrence(int? type, int? typeParam) =>
-      (service.config?.canChooseRecurringFirstOccurrence ?? false)
-      ? defaultFirstOccurrence(type, typeParam, DateTime.now())
-      : null;
+  /// the next occurrence from today on. Without one it isn't shown. When editing, the server keeps the next occurrence
+  /// as long as the schedule stays, and starts a new one at its next occurrence from today on, like a new recurring
+  /// expense.
+  DateTime? _defaultFirstOccurrence(int? type, int? typeParam) {
+    final expense = editing;
+    if (expense == null) {
+      return (service.config?.canChooseRecurringFirstOccurrence ?? false)
+          ? defaultFirstOccurrence(type, typeParam, DateTime.now())
+          : null;
+    }
+    if (!canEditSchedule) {
+      return null;
+    }
+    if (!_scheduleChanged(type, typeParam)) {
+      return expense.nextOccurrence != null ? DateTime.parse(expense.nextOccurrence!) : null;
+    }
+    return defaultFirstOccurrence(type, typeParam, DateTime.now());
+  }
+
+  /// The last occurrence of the recurring expense being edited, the next one must be after it.
+  DateTime? get lastOccurrence => editing?.lastOccurrence != null ? DateTime.parse(editing!.lastOccurrence!) : null;
+
+  Future<void> save() => editing == null ? addRecurringExpense() : updateRecurringExpense();
+
+  Future<void> updateRecurringExpense() async {
+    final expense = editing!;
+    double doubleAmount = double.parse(state.amount) / 100;
+    int? typeParam = state.type == 0 ? 0 : state.typeParam;
+
+    if (state.category != null && state.type != null && typeParam != null && doubleAmount > 0) {
+      final String? nextOccurrence;
+      if (state.firstOccurrenceChosen && state.firstOccurrence != null) {
+        nextOccurrence = _dateFormat.format(state.firstOccurrence!);
+      } else if (_scheduleChanged(state.type, typeParam)) {
+        // the server starts the new schedule at its next occurrence from today on
+        nextOccurrence = null;
+      } else {
+        // sent back as it came, the server keeps it
+        nextOccurrence = expense.nextOccurrence;
+      }
+      await service.updateRecurringExpense(
+        expense.copyWith(
+          category: state.category!,
+          amount: doubleAmount,
+          name: state.name,
+          type: state.type!,
+          typeParam: typeParam,
+          nextOccurrence: nextOccurrence,
+        ),
+      );
+    } else {
+      print('Missing parameters');
+    }
+  }
 
   Future<void> addRecurringExpense() async {
     double doubleAmount = double.parse(state.amount) / 100;
@@ -144,6 +216,9 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
   }
 
   setType(int type) {
+    if (!canEditSchedule) {
+      return;
+    }
     emit(
       state.copyWith(
         type: type,
@@ -162,6 +237,9 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
   }
 
   setTypeParam(int typeParam) {
+    if (!canEditSchedule) {
+      return;
+    }
     emit(
       state.copyWith(
         typeParam: typeParam,

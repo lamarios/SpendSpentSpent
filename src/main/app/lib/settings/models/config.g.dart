@@ -18,6 +18,7 @@ _Config _$ConfigFromJson(Map<String, dynamic> json) => _Config(
   backendVersion: json['backendVersion'] as String,
   oidc: json['oidc'] == null ? null : OidcConfig.fromJson(json['oidc'] as Map<String, dynamic>),
   canChooseRecurringFirstOccurrence: json['canChooseRecurringFirstOccurrence'] as bool? ?? false,
+  canEditRecurringSchedule: json['canEditRecurringSchedule'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$ConfigToJson(_Config instance) => <String, dynamic>{
@@ -32,4 +33,5 @@ Map<String, dynamic> _$ConfigToJson(_Config instance) => <String, dynamic>{
   'backendVersion': instance.backendVersion,
   'oidc': instance.oidc,
   'canChooseRecurringFirstOccurrence': instance.canChooseRecurringFirstOccurrence,
+  'canEditRecurringSchedule': instance.canEditRecurringSchedule,
 };
