@@ -148,12 +148,19 @@ public class RecurringExpenseService {
     }
   }
 
-  /** The next occurrence of the schedule from today on, whatever was booked before. */
-  private LocalDate nextOccurrenceFromToday(RecurringExpense expense) {
+  /**
+   * The next occurrence of the schedule from today on, as for a new recurring expense, but after
+   * the last occurrence, which is booked already and might be today.
+   */
+  private LocalDate nextOccurrenceFromToday(RecurringExpense expense, LocalDate lastOccurrence) {
+    LocalDate from = LocalDate.now();
+    if (lastOccurrence != null && !lastOccurrence.isBefore(from)) {
+      from = lastOccurrence.plusDays(1);
+    }
     RecurringExpense schedule = new RecurringExpense();
     schedule.setType(expense.getType());
     schedule.setTypeParam(expense.getTypeParam());
-    return calculateNextDate(schedule);
+    return calculateNextDate(schedule, from);
   }
 
   /**
@@ -257,10 +264,14 @@ public class RecurringExpenseService {
   }
 
   /**
-   * The next occurrence a client sends is taken like the first one of a new recurring expense, but
-   * after the last one, which is already booked. Older clients send it back as they got it, along
-   * with the same schedule, so it stays as it is. Without one, it stays too, unless the schedule
-   * changes: it then moves to the next occurrence from today on, as for a new recurring expense.
+   * Without a next occurrence from the client, it stays as it is, unless the schedule changes: it
+   * then moves to the next occurrence of the new schedule from today on, as for a new recurring
+   * expense, but after the last one.
+   *
+   * <p>One the client sends is taken like the first one of a new recurring expense, but it must be
+   * after the last occurrence, which is booked already. Older clients send it back as they got it
+   * along with the same schedule. It stays as it is then, also when the background job booked it
+   * meanwhile.
    */
   @Transactional
   public boolean update(RecurringExpense expense, User user) throws Exception {
@@ -276,14 +287,17 @@ public class RecurringExpenseService {
                   && expense.getTypeParam() != existing.getTypeParam());
       LocalDate requested = expense.getNextOccurrence();
       LocalDate next;
+      LocalDate last = existing.getLastOccurrence();
+      boolean booked = requested != null && last != null && !requested.isAfter(last);
       if (requested == null) {
-        next = scheduleChanged ? nextOccurrenceFromToday(expense) : existing.getNextOccurrence();
-      } else if (!scheduleChanged && requested.equals(existing.getNextOccurrence())) {
-        next = requested;
+        next =
+            scheduleChanged ? nextOccurrenceFromToday(expense, last) : existing.getNextOccurrence();
+      } else if (!scheduleChanged && (requested.equals(existing.getNextOccurrence()) || booked)) {
+        // sent back as the client got it, maybe before the background job booked it
+        next = existing.getNextOccurrence();
       } else {
         checkNextOccurrence(expense, requested);
-        if (existing.getLastOccurrence() != null
-            && !requested.isAfter(existing.getLastOccurrence())) {
+        if (booked) {
           throw new IllegalArgumentException(
               "The next occurrence must be after the last one, it's already booked");
         }

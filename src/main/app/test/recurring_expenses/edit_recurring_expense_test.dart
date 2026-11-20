@@ -87,7 +87,7 @@ void main() {
       expect(cubit.lastOccurrence, DateTime.parse(lastOccurrence));
     });
 
-    test('the rest is changed and the dates are sent back as they came', () async {
+    test('the rest is changed and the server keeps its next occurrence', () async {
       final cubit = await open();
       cubit.setCategory(cloud);
       cubit.nameController.text = 'swimming';
@@ -101,8 +101,8 @@ void main() {
       expect(sent['amount'], 25.0);
       expect(sent['type'], 2);
       expect(sent['typeParam'], 15);
-      expect(sent['nextOccurrence'], nextOccurrence);
-      expect(sent['lastOccurrence'], lastOccurrence);
+      // the background job might have booked it since the dialog was opened
+      expect(sent['nextOccurrence'], isNull);
     });
 
     test('a new schedule shows where the server starts it, and sends none', () async {
@@ -123,7 +123,7 @@ void main() {
       cubit.setTypeParam(15);
 
       expect(cubit.state.firstOccurrence, DateTime.parse(nextOccurrence));
-      expect((await save(cubit))['nextOccurrence'], nextOccurrence);
+      expect((await save(cubit))['nextOccurrence'], isNull);
     });
 
     test('a chosen next occurrence is sent', () async {
@@ -168,8 +168,26 @@ void main() {
       final sent = await save(cubit);
       expect(sent['type'], 2);
       expect(sent['typeParam'], 15);
-      expect(sent['nextOccurrence'], nextOccurrence);
+      expect(sent['nextOccurrence'], isNull);
       expect(sent['amount'], 9.99);
+    });
+
+    test('a new schedule starts after the last occurrence when that was today', () async {
+      final now = DateTime.now();
+      final today = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+      final bookedToday = gym.copyWith(type: 1, typeParam: now.weekday % 7 + 1, lastOccurrence: today);
+      await setupTests(loggedIn: true, categories: [house, cloud]);
+      service.config = current;
+      final cubit = AddRecurringExpenseCubit(editRecurringExpenseState(bookedToday), editing: bookedToday);
+      await pumpEventQueue();
+
+      cubit.setType(0);
+
+      expect(cubit.state.firstOccurrence, DateTime(now.year, now.month, now.day + 1));
+      expect(
+        firstOccurrenceRange(cubit.state.firstOccurrence, now, after: cubit.lastOccurrence).first,
+        DateTime(now.year, now.month, now.day + 1),
+      );
     });
 
     test('the next occurrence is shown when the server config arrives', () async {

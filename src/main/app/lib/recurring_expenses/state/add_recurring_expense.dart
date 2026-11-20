@@ -117,7 +117,7 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
   /// None when the server doesn't say it takes the first occurrence into account, older ones ignore it and start at
   /// the next occurrence from today on. Without one it isn't shown. When editing, the server keeps the next occurrence
   /// as long as the schedule stays, and starts a new one at its next occurrence from today on, like a new recurring
-  /// expense.
+  /// expense, but after the last one, which might be today.
   DateTime? _defaultFirstOccurrence(int? type, int? typeParam) {
     final expense = editing;
     if (expense == null) {
@@ -131,7 +131,13 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
     if (!_scheduleChanged(type, typeParam)) {
       return expense.nextOccurrence != null ? DateTime.parse(expense.nextOccurrence!) : null;
     }
-    return defaultFirstOccurrence(type, typeParam, DateTime.now());
+    final now = DateTime.now();
+    final last = lastOccurrence;
+    return defaultFirstOccurrence(
+      type,
+      typeParam,
+      last != null && !last.isBefore(_day(now)) ? DateTime(last.year, last.month, last.day + 1) : now,
+    );
   }
 
   /// The last occurrence of the recurring expense being edited, the next one must be after it.
@@ -145,16 +151,11 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
     int? typeParam = state.type == 0 ? 0 : state.typeParam;
 
     if (state.category != null && state.type != null && typeParam != null && doubleAmount > 0) {
-      final String? nextOccurrence;
-      if (state.firstOccurrenceChosen && state.firstOccurrence != null) {
-        nextOccurrence = _dateFormat.format(state.firstOccurrence!);
-      } else if (_scheduleChanged(state.type, typeParam)) {
-        // the server starts the new schedule at its next occurrence from today on
-        nextOccurrence = null;
-      } else {
-        // sent back as it came, the server keeps it
-        nextOccurrence = expense.nextOccurrence;
-      }
+      // without a chosen one, the server keeps its own, which the background job might have moved meanwhile, or
+      // calculates it for a new schedule
+      final nextOccurrence = state.firstOccurrenceChosen && state.firstOccurrence != null
+          ? _dateFormat.format(state.firstOccurrence!)
+          : null;
       await service.updateRecurringExpense(
         expense.copyWith(
           category: state.category!,

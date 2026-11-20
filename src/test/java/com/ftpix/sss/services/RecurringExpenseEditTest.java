@@ -239,14 +239,58 @@ public class RecurringExpenseEditTest extends TestContainerTest {
     RecurringExpense booked = bookedWeekly();
 
     // booked already
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> edit(booked, e -> e.setNextOccurrence(booked.getLastOccurrence())));
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> edit(booked, e -> e.setNextOccurrence(booked.getLastOccurrence().minusWeeks(1))));
+    for (LocalDate date : List.of(booked.getLastOccurrence(), LocalDate.now().minusDays(1))) {
+      assertThrows(
+          IllegalArgumentException.class,
+          () ->
+              edit(
+                  booked,
+                  e -> {
+                    e.setType(RecurringExpense.TYPE_DAILY);
+                    e.setTypeParam(0);
+                    e.setNextOccurrence(date);
+                  }));
+    }
     assertEquals(booked.getNextOccurrence(), stored(booked).getNextOccurrence());
+    assertEquals(RecurringExpense.TYPE_WEEKLY, stored(booked).getType());
 
+    backgroundJob.run();
+    assertEquals(2, bookedDates().size());
+  }
+
+  @Test
+  public void aNextOccurrenceBookedSinceTheClientGotItIsIgnored() throws Exception {
+    LocalDate today = LocalDate.now();
+    RecurringExpense due =
+        create(RecurringExpense.TYPE_WEEKLY, weeklyParam(today.getDayOfWeek()), today);
+    // the client got it before the background job booked it
+    RecurringExpense asTheClientGotIt = stored(due);
+    backgroundJob.run();
+
+    asTheClientGotIt.setName("swimming");
+    assertTrue(recurringExpenseService.update(asTheClientGotIt, currentUser));
+
+    RecurringExpense edited = stored(due);
+    assertEquals("swimming", edited.getName());
+    assertEquals(today, edited.getLastOccurrence());
+    assertEquals(today.plusWeeks(1), edited.getNextOccurrence());
+    backgroundJob.run();
+    assertEquals(List.of(today), bookedDates());
+  }
+
+  @Test
+  public void aNewScheduleDoesntBookTodayAgain() throws Exception {
+    RecurringExpense booked = bookedWeekly();
+
+    edit(
+        booked,
+        e -> {
+          e.setType(RecurringExpense.TYPE_DAILY);
+          e.setTypeParam(0);
+          e.setNextOccurrence(null);
+        });
+
+    assertEquals(LocalDate.now().plusDays(1), stored(booked).getNextOccurrence());
     backgroundJob.run();
     assertEquals(2, bookedDates().size());
   }
