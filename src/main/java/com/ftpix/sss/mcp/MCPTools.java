@@ -7,8 +7,11 @@ import com.ftpix.sss.models.*;
 import com.ftpix.sss.services.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
@@ -17,6 +20,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MCPTools {
+
+  static final LocalTime START_OF_DAY = LocalTime.of(0, 0, 0);
+  static final LocalTime END_OF_DAY = LocalTime.of(23, 59, 59);
+  private static final String ACCEPTED_DATE_FORMATS =
+      "yyyy-MM-dd, yyyy-MM-dd'T'HH:mm:ss[.SSS] or yyyy-MM-dd HH:mm:ss[.SSS]";
 
   private final CategoryService categoryService;
   private final UserService userService;
@@ -60,19 +68,23 @@ public class MCPTools {
   public List<McpExpense> searchExpenses(
       @ToolParam(
               description =
-                  "lower inclusive date boundary for expense search, date format yyyy-MM-dd")
+                  "lower inclusive date boundary for expense search. Accepted formats: yyyy-MM-dd,"
+                      + " yyyy-MM-dd'T'HH:mm:ss[.SSS] or yyyy-MM-dd HH:mm:ss[.SSS]. If no time is"
+                      + " given, 00:00:00 is used")
           String fromDate,
       @ToolParam(
               description =
-                  "upper inclusive date boundary for expense search in, date format yyyy-MM-dd")
+                  "upper inclusive date boundary for expense search. Accepted formats: yyyy-MM-dd,"
+                      + " yyyy-MM-dd'T'HH:mm:ss[.SSS] or yyyy-MM-dd HH:mm:ss[.SSS]. If no time is"
+                      + " given, 23:59:59 is used")
           String toDate,
       @ToolParam(
               required = false,
               description = "List of categories to filter filter the expenses on")
           List<String> categories)
       throws SQLException {
-    var fromTime = LocalDate.parse(fromDate).atTime(0, 0, 0).atZone(zoneId).toEpochSecond() * 1000;
-    var toTime = LocalDate.parse(toDate).atTime(23, 59, 59).atZone(zoneId).toEpochSecond() * 1000;
+    var fromTime = parseToEpochMillis(fromDate, zoneId, START_OF_DAY);
+    var toTime = parseToEpochMillis(toDate, zoneId, END_OF_DAY);
 
     User currentMcpUser = userService.getCurrentUser();
     var categoryFilter =
@@ -93,6 +105,39 @@ public class MCPTools {
                 new McpExpense(
                     e.getAmount(), e.getTimestamp(), e.getCategory().getIcon(), e.getNote()))
         .toList();
+  }
+
+  /**
+   * Parses a date with an optional time of day into epoch milliseconds in the given zone.
+   *
+   * <p>Accepted formats: {@code yyyy-MM-dd}, {@code yyyy-MM-dd'T'HH:mm:ss[.SSS]} and {@code
+   * yyyy-MM-dd HH:mm:ss[.SSS]}. When only a date is given, {@code defaultTime} is used.
+   *
+   * @throws IllegalArgumentException if the value doesn't match any accepted format
+   */
+  static long parseToEpochMillis(String value, ZoneId zone, LocalTime defaultTime) {
+    if (value == null || value.isBlank()) {
+      throw new IllegalArgumentException(
+          "Missing date, expected one of: " + ACCEPTED_DATE_FORMATS);
+    }
+
+    String trimmed = value.trim();
+    LocalDateTime dateTime;
+    try {
+      if (trimmed.length() == 10) {
+        dateTime = LocalDate.parse(trimmed).atTime(defaultTime);
+      } else {
+        if (trimmed.length() > 10 && trimmed.charAt(10) == ' ') {
+          trimmed = trimmed.substring(0, 10) + 'T' + trimmed.substring(11);
+        }
+        dateTime = LocalDateTime.parse(trimmed);
+      }
+    } catch (DateTimeParseException e) {
+      throw new IllegalArgumentException(
+          "Invalid date '" + value + "', expected one of: " + ACCEPTED_DATE_FORMATS, e);
+    }
+
+    return dateTime.atZone(zone).toInstant().toEpochMilli();
   }
 
   @Tool(name = "add_expense", description = "Add an expense for the user")
