@@ -173,6 +173,28 @@ void main() {
       expect(sent['amount'], 9.99);
     });
 
+    test('it isn\'t saved again while it\'s saved, nor afterwards while the dialog closes', () async {
+      final cubit = await open();
+      final request = nock(validServerUrl).post('/API/RecurringExpense/7', anything)..reply(200, 'true');
+
+      final first = cubit.save();
+      expect(cubit.state.saving, isTrue);
+      expect(await cubit.save(), isFalse);
+
+      expect(await first, isTrue);
+      expect(request.isDone, isTrue);
+      expect(cubit.state.saving, isTrue);
+      expect(await cubit.save(), isFalse);
+    });
+
+    test('it can be saved again when it wasn\'t saved', () async {
+      final cubit = await open();
+      cubit.setAmount('0');
+
+      expect(await cubit.save(), isFalse);
+      expect(cubit.state.saving, isFalse);
+    });
+
     test('an amount of 0 can\'t be saved', () async {
       final cubit = await open();
       cubit.setStep(2);

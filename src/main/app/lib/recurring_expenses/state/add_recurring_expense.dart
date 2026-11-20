@@ -147,9 +147,25 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
   /// The last occurrence of the recurring expense being edited, the next one must be after it.
   DateTime? get lastOccurrence => editing?.lastOccurrence != null ? DateTime.parse(editing!.lastOccurrence!) : null;
 
-  Future<void> save() => editing == null ? addRecurringExpense() : updateRecurringExpense();
+  /// Whether it was saved. It can't be saved again meanwhile, nor afterwards while the dialog closes: a slow server
+  /// would let it be saved twice, and the dialog be closed twice.
+  Future<bool> save() async {
+    if (state.saving) {
+      return false;
+    }
+    emit(state.copyWith(saving: true));
+    var saved = false;
+    try {
+      saved = await (editing == null ? addRecurringExpense() : updateRecurringExpense());
+      return saved;
+    } finally {
+      if (!saved && !isClosed) {
+        emit(state.copyWith(saving: false));
+      }
+    }
+  }
 
-  Future<void> updateRecurringExpense() async {
+  Future<bool> updateRecurringExpense() async {
     final expense = editing!;
     double doubleAmount = double.parse(state.amount) / 100;
     int? typeParam = state.type == 0 ? 0 : state.typeParam;
@@ -170,12 +186,14 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
           nextOccurrence: nextOccurrence,
         ),
       );
+      return true;
     } else {
       print('Missing parameters');
+      return false;
     }
   }
 
-  Future<void> addRecurringExpense() async {
+  Future<bool> addRecurringExpense() async {
     double doubleAmount = double.parse(state.amount) / 100;
     int? typeParam = state.typeParam;
     if (state.type != null && state.type == 0) {
@@ -196,8 +214,10 @@ class AddRecurringExpenseCubit extends Cubit<AddRecurringExpenseState> {
             : null,
       );
       await service.addRecurringExpense(expense);
+      return true;
     } else {
       print('Missing parameters');
+      return false;
     }
   }
 
@@ -291,6 +311,7 @@ sealed class AddRecurringExpenseState with _$AddRecurringExpenseState {
     @Default([]) List<Category> categories,
     DateTime? firstOccurrence,
     @Default(false) bool firstOccurrenceChosen,
+    @Default(false) bool saving,
   }) = _AddRecurringExpenseState;
 
   const AddRecurringExpenseState._();

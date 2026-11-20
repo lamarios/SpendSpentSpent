@@ -43,8 +43,7 @@ class AddRecurringExpenseDialog extends StatelessWidget {
     final cubit = context.read<AddRecurringExpenseCubit>();
 
     if (cubit.state.step == 2) {
-      await cubit.save();
-      if (context.mounted) {
+      if (await cubit.save() && context.mounted) {
         Navigator.of(context).pop();
         refreshRecurringExpenses();
       }
@@ -125,11 +124,11 @@ class AddRecurringExpenseDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () => backward(context),
+                      onPressed: state.saving ? null : () => backward(context),
                       child: Text(state.step == 0 ? 'Cancel' : 'Back', style: TextStyle(color: colors.secondary)),
                     ),
                     TextButton(
-                      onPressed: state.stepValid ? () => forward(context) : null,
+                      onPressed: state.stepValid && !state.saving ? () => forward(context) : null,
                       child: Text(state.step < 2 ? 'Next' : (expense == null ? 'Add' : 'Save')),
                     ),
                   ],
