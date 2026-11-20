@@ -6,7 +6,10 @@ class ResetPassword extends StatefulWidget {
   final Function onBack;
   final String server;
 
-  const ResetPassword({super.key, required this.onBack, required this.server});
+  /// The server has no SMTP configured, the reset link is printed in its logs instead of emailed.
+  final bool viaLogs;
+
+  const ResetPassword({super.key, required this.onBack, required this.server, this.viaLogs = false});
 
   @override
   ResetPasswordState createState() => ResetPasswordState();
@@ -18,7 +21,13 @@ class ResetPasswordState extends State<ResetPassword> {
   Future<void> resetPassword(BuildContext context) async {
     await service.resetPassword(widget.server, usernameController.text.trim());
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Reset password request sent successfully, check your email for instructions")),
+      SnackBar(
+        content: Text(
+          widget.viaLogs
+              ? "Reset password request sent. Ask your server administrator for the reset link, it's in the server logs"
+              : "Reset password request sent successfully, check your email for instructions",
+        ),
+      ),
     );
 
     widget.onBack();
@@ -32,6 +41,15 @@ class ResetPasswordState extends State<ResetPassword> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          if (widget.viaLogs)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'This server does not send emails. After requesting a reset, your server administrator '
+                'will find a reset link (valid for 24h) in the server logs.',
+                style: TextStyle(color: colors.onPrimaryContainer),
+              ),
+            ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Container(

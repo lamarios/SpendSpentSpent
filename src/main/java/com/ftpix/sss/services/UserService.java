@@ -9,8 +9,6 @@ import com.ftpix.sss.persistence.UserRepository;
 import com.ftpix.sss.persistence.utils.Specifications;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -21,7 +19,6 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,9 +39,6 @@ public class UserService {
   private final EmailService emailService;
   private final SettingsService settingsService;
 
-  @Value("${SALT}")
-  private String SALT;
-
   private final UserRepository userRepository;
   private final CategoryRepository categoryRepository;
 
@@ -60,33 +54,6 @@ public class UserService {
     this.categoryRepository = categoryRepository;
     this.emailService = emailService;
     this.settingsService = settingsService;
-  }
-
-  /**
-   * String hash for passowrds
-   *
-   * @param str the string to hash
-   * @return the new string
-   * @throws NoSuchAlgorithmException
-   */
-  public String hashString(String str) throws NoSuchAlgorithmException {
-    MessageDigest md5;
-    md5 = MessageDigest.getInstance("MD5");
-    str += SALT;
-
-    md5.update(str.getBytes());
-
-    byte[] byteData = md5.digest();
-    StringBuffer sb = new StringBuffer();
-    for (int i = 0; i < byteData.length; i++) {
-      sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
-    }
-
-    return sb.toString();
-  }
-
-  public String hashUserCredentials(String email, String password) throws NoSuchAlgorithmException {
-    return hashString(email + password);
   }
 
   @Transactional(readOnly = true)
@@ -247,14 +214,9 @@ public class UserService {
     return Optional.ofNullable(getById(UUID.fromString(userId)))
         .map(
             u -> {
-              try {
-                setPassword(u, newPassword);
-                //                userDaoJooq.update(u);
-                userRepository.save(u);
-                return true;
-              } catch (NoSuchAlgorithmException e) {
-                throw new RuntimeException(e);
-              }
+              setPassword(u, newPassword);
+              userRepository.save(u);
+              return true;
             })
         .orElse(false);
   }
@@ -305,13 +267,9 @@ public class UserService {
     return user;
   }
 
-  /**
-   * Sets the bcrypt hash checked on login, and the legacy hash along with it so both are the new
-   * password.
-   */
-  private void setPassword(User user, String clearPassword) throws NoSuchAlgorithmException {
+  /** Sets the bcrypt hash checked on login. */
+  private void setPassword(User user, String clearPassword) {
     user.setPasswordBcrypt(new BCryptPasswordEncoder().encode(clearPassword));
-    user.setPassword(hashUserCredentials(user.getEmail(), clearPassword));
   }
 
   @Transactional

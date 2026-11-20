@@ -161,8 +161,11 @@
 </tbody>
 </table>
 <h3 id="email">Email</h3>
-<p>SMTP environment variables are necessary if you want to enable the forgot password function and recurring expense
-notification emails.</p>
+<p>SMTP environment variables are necessary if you want to send forgot password and recurring expense notification
+emails.</p>
+<p>Without SMTP, the forgot password function still works: the reset link is printed in the application logs instead of
+being emailed, and the user is told to ask the server administrator for it.
+See <a href="../5-trouble-shooting/#resetting-a-password-without-email">Resetting a password without email</a>.</p>
 <table>
 <thead>
 <tr>
@@ -177,7 +180,7 @@ notification emails.</p>
 <td>ROOT_URL</td>
 <td>http://localhost:8080</td>
 <td>No</td>
-<td>The base URL used in the links in email sent to users</td>
+<td>The base URL used in links sent to users, by email or printed in the logs for password resets</td>
 </tr>
 <tr>
 <td>SMTP_HOST</td>

@@ -15,12 +15,16 @@
 
 ### Email
 
-SMTP environment variables are necessary if you want to enable the forgot password function and recurring expense
-notification emails.
+SMTP environment variables are necessary if you want to send forgot password and recurring expense notification
+emails.
 
-| Name                    | Default               | Required (based on if you want SMTP services enabled) | Comments                                              |
-|-------------------------|-----------------------|-------------------------------------------------------|-------------------------------------------------------|
-| ROOT_URL                | http://localhost:8080 | No                                                    | The base URL used in the links in email sent to users |
+Without SMTP, the forgot password function still works: the reset link is printed in the application logs instead of
+being emailed, and the user is told to ask the server administrator for it.
+See [Resetting a password without email](5-trouble-shooting.md#resetting-a-password-without-email).
+
+| Name                    | Default               | Required (based on if you want SMTP services enabled) | Comments                                                                                          |
+|-------------------------|-----------------------|-------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| ROOT_URL                | http://localhost:8080 | No                                                    | The base URL used in links sent to users, by email or printed in the logs for password resets     |
 | SMTP_HOST               | (none)                | **Yes**                                               |                                                       |
 | SMTP_PORT               | 0                     | **Yes**                                               |                                                       |
 | SMTP_USERNAME           | (none)                | No                                                    |                                                       |

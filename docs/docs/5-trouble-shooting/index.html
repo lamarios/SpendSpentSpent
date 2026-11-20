@@ -62,6 +62,10 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Troubleshooting</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#resetting-a-password-without-email">Resetting a password without email</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#a-user-cant-log-in-anymore-after-upgrading">A user can't log in anymore after upgrading</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#database-sss-has-a-collation-version-mismatch">database "sss" has a collation version mismatch</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#connecting-to-the-database">Connecting to the database</a>
@@ -95,6 +99,23 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="troubleshooting">Troubleshooting</h1>
+<h2 id="resetting-a-password-without-email">Resetting a password without email</h2>
+<p>If SMTP is not configured, using <strong>Forgot password ?</strong> on the login screen prints the reset link in the application
+logs instead of sending an email:</p>
+<pre><code class="language-s">WARN ... ResetPasswordService : Password reset requested for user@example.org, link valid for 24h: https://sss.example.org/reset-password?reset-id=...
+</code></pre>
+<p>As the administrator, find that line (for example with <code>docker logs sss</code>) and send the link to the user. The link is
+valid for 24 hours and can be used once. Make sure <code>ROOT_URL</code> is set to the address of your instance, otherwise the
+link will point to <code>http://localhost:8080</code>.</p>
+<h2 id="a-user-cant-log-in-anymore-after-upgrading">A user can't log in anymore after upgrading</h2>
+<p>Passwords used to be stored as MD5 hashes. They were moved to bcrypt the next time each user logged in, and the MD5
+hashes have now been removed. Users who never logged in since then no longer have a password.</p>
+<p>At every startup, SSS prints a reset link for each of those users in the logs:</p>
+<pre><code class="language-s">WARN ... ResetPasswordService : 1 user(s) have no password set (their legacy MD5 password hash was removed). ...
+WARN ... ResetPasswordService : Password reset for user@example.org: https://sss.example.org/reset-password?reset-id=...
+</code></pre>
+<p>Send the link to the user so they can choose a new password. If the link has expired (after 24 hours), restart SSS to
+get a new one. Users who log in with SSO (OIDC) are not affected.</p>
 <h2 id="database-sss-has-a-collation-version-mismatch">database "sss" has a collation version mismatch</h2>
 <p>There can be an issue where this error keeps showing up in the logs of the application</p>
 <pre><code class="language-s">o.h.engine.jdbc.spi.SqlExceptionHelper   : database &quot;sss&quot; has a collation version mismatch

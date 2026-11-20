@@ -97,6 +97,7 @@ class Login extends StatelessWidget {
                               ? ResetPassword(
                                   onBack: () => cubit.resetPassword(false),
                                   server: cubit.urlController.text.trim(),
+                                  viaLogs: state.config?.resetPasswordViaLogs ?? false,
                                   key: ValueKey(state.page),
                                 )
                               : LoginForm(
