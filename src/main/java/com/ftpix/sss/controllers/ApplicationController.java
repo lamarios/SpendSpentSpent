@@ -144,6 +144,10 @@ public class ApplicationController {
     // it takes it into account
     results.put("canChooseRecurringFirstOccurrence", true);
 
+    // clients only offer to change the schedule of a recurring expense if the server moves its
+    // next occurrence along
+    results.put("canEditRecurringSchedule", true);
+
     if (oidcService.getOidcDiscoveryUrl() != null) {
       results.put("oidc", oidcService.getOidcConfig());
     }

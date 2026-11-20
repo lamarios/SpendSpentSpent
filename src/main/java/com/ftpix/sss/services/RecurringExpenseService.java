@@ -137,6 +137,25 @@ public class RecurringExpenseService {
     }
   }
 
+  /** Each following occurrence is counted from it, and each one becomes an expense. */
+  private void checkNextOccurrence(RecurringExpense expense, LocalDate date) {
+    if (!isOnSchedule(expense, date)) {
+      throw new IllegalArgumentException("The occurrence doesn't match the schedule");
+    }
+    // a mistyped year mustn't create hundreds of expenses
+    if (date.isBefore(LocalDate.now().minusYears(1))) {
+      throw new IllegalArgumentException("The occurrence can't be more than a year ago");
+    }
+  }
+
+  /** The next occurrence of the schedule from today on, whatever was booked before. */
+  private LocalDate nextOccurrenceFromToday(RecurringExpense expense) {
+    RecurringExpense schedule = new RecurringExpense();
+    schedule.setType(expense.getType());
+    schedule.setTypeParam(expense.getTypeParam());
+    return calculateNextDate(schedule);
+  }
+
   /**
    * Whether the date falls on the schedule of the recurring expense: the chosen weekday, day of the
    * month or month. The following occurrences are counted from the first one, so it must be on the
@@ -169,13 +188,7 @@ public class RecurringExpenseService {
   public RecurringExpense create(RecurringExpense expense, User user) throws Exception {
     LocalDate firstOccurrence = expense.getNextOccurrence();
     if (firstOccurrence != null) {
-      if (!isOnSchedule(expense, firstOccurrence)) {
-        throw new IllegalArgumentException("The first occurrence doesn't match the schedule");
-      }
-      // each occurrence becomes an expense, a mistyped year mustn't create hundreds of them
-      if (firstOccurrence.isBefore(LocalDate.now().minusYears(1))) {
-        throw new IllegalArgumentException("The first occurrence can't be more than a year ago");
-      }
+      checkNextOccurrence(expense, firstOccurrence);
     }
 
     // the category might belong to a member leaving the household right now
@@ -243,6 +256,12 @@ public class RecurringExpenseService {
     // RECURRING_EXPENSE.NEXT_OCCURRENCE.le(Constants.dateFormatter.format(LocalDate.now())));
   }
 
+  /**
+   * The next occurrence a client sends is taken like the first one of a new recurring expense, but
+   * after the last one, which is already booked. Older clients send it back as they got it, along
+   * with the same schedule, so it stays as it is. Without one, it stays too, unless the schedule
+   * changes: it then moves to the next occurrence from today on, as for a new recurring expense.
+   */
   @Transactional
   public boolean update(RecurringExpense expense, User user) throws Exception {
     // the category might belong to a member leaving the household right now
@@ -251,8 +270,27 @@ public class RecurringExpenseService {
     Category category = categoryService.resolve(expense.getCategory(), user);
 
     if (existing != null && category != null) {
-      // dates should only be updated by the cron job !
-      expense.setNextOccurrence(existing.getNextOccurrence());
+      boolean scheduleChanged =
+          expense.getType() != existing.getType()
+              || (expense.getType() != RecurringExpense.TYPE_DAILY
+                  && expense.getTypeParam() != existing.getTypeParam());
+      LocalDate requested = expense.getNextOccurrence();
+      LocalDate next;
+      if (requested == null) {
+        next = scheduleChanged ? nextOccurrenceFromToday(expense) : existing.getNextOccurrence();
+      } else if (!scheduleChanged && requested.equals(existing.getNextOccurrence())) {
+        next = requested;
+      } else {
+        checkNextOccurrence(expense, requested);
+        if (existing.getLastOccurrence() != null
+            && !requested.isAfter(existing.getLastOccurrence())) {
+          throw new IllegalArgumentException(
+              "The next occurrence must be after the last one, it's already booked");
+        }
+        next = requested;
+      }
+      expense.setNextOccurrence(next);
+      // only the background job books occurrences
       expense.setLastOccurrence(existing.getLastOccurrence());
       // the creator never changes and the category must be one of the household's
       expense.setUser(existing.getUser());
