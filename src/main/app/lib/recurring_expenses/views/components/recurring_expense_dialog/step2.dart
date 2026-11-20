@@ -1,5 +1,7 @@
+import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:spend_spent_spent/globals.dart';
+import 'package:spend_spent_spent/recurring_expenses/state/add_recurring_expense.dart';
 
 const Map<int, String> TYPES = {0: 'Daily', 1: 'Weekly', 2: 'Monthly', 3: 'Yearly'};
 const Map<int, String> WEEKLY_PARAMS = {
@@ -58,9 +60,34 @@ const Map<int, String> YEARLY_PARAMS = {
 
 class Step2 extends StatelessWidget {
   final int? type, typeParam;
+  final DateTime? firstOccurrence;
   final Function setType, setTypeParam;
+  final void Function(DateTime) setFirstOccurrence;
 
-  const Step2({super.key, required this.setType, required this.setTypeParam, this.type, this.typeParam});
+  const Step2({
+    super.key,
+    required this.setType,
+    required this.setTypeParam,
+    required this.setFirstOccurrence,
+    this.type,
+    this.typeParam,
+    this.firstOccurrence,
+  });
+
+  Future<void> selectFirstOccurrence(BuildContext context) async {
+    final range = firstOccurrenceRange(firstOccurrence, DateTime.now());
+    final date = await showDatePicker(
+      context: context,
+      // the next yearly occurrence can be today, the 29th or later, which can't be chosen
+      initialDate: isOnSchedule(type!, typeParam ?? 0, firstOccurrence!) ? firstOccurrence : null,
+      firstDate: range.first,
+      lastDate: range.last,
+      selectableDayPredicate: (date) => isOnSchedule(type!, typeParam ?? 0, date),
+    );
+    if (date != null) {
+      setFirstOccurrence(date);
+    }
+  }
 
   Map<int, String> get typeParams => switch (type) {
     1 => WEEKLY_PARAMS,
@@ -149,6 +176,25 @@ class Step2 extends StatelessWidget {
               ),
             ),
           ),
+          if (firstOccurrence != null) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('First payment', style: TextStyle(color: colors.secondary)),
+                TextButton(
+                  onPressed: () => selectFirstOccurrence(context),
+                  child: Text(DateFormat('yyyy-MM-dd').format(firstOccurrence!)),
+                ),
+              ],
+            ),
+            if (firstOccurrence!.isBefore(DateUtils.dateOnly(DateTime.now())))
+              Text(
+                // the background job runs every 100 minutes
+                'Already past, the payments up to today are added within two hours',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: colors.secondary, fontSize: 12),
+              ),
+          ],
         ],
       ),
     );

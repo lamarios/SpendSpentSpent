@@ -137,8 +137,47 @@ public class RecurringExpenseService {
     }
   }
 
+  /**
+   * Whether the date falls on the schedule of the recurring expense: the chosen weekday, day of the
+   * month or month. The following occurrences are counted from the first one, so it must be on the
+   * schedule.
+   *
+   * <p>Like the clients offer it, monthly and yearly ones are on the 28th at the latest:
+   * calculateNextDate fails for a later day of the month in shorter months, and a yearly one on
+   * February 29th would move to the 28th.
+   */
+  public boolean isOnSchedule(RecurringExpense expense, LocalDate date) {
+    return switch (expense.getType()) {
+      case RecurringExpense.TYPE_DAILY -> true;
+      // same conversion from the gregorian calendar as in calculateNextDate
+      case RecurringExpense.TYPE_WEEKLY ->
+          date.getDayOfWeek() == DayOfWeek.of(((expense.getTypeParam() + 5) % 7) + 1);
+      case RecurringExpense.TYPE_MONTHLY ->
+          date.getDayOfMonth() == expense.getTypeParam() && date.getDayOfMonth() <= 28;
+      case RecurringExpense.TYPE_YEARLY ->
+          date.getMonthValue() == expense.getTypeParam() + 1 && date.getDayOfMonth() <= 28;
+      default -> false;
+    };
+  }
+
+  /**
+   * Without a first occurrence, the recurring expense starts at its next occurrence from today on.
+   * A first occurrence in the past is booked by the next run of the background job, along with the
+   * following ones until today.
+   */
   @Transactional
   public RecurringExpense create(RecurringExpense expense, User user) throws Exception {
+    LocalDate firstOccurrence = expense.getNextOccurrence();
+    if (firstOccurrence != null) {
+      if (!isOnSchedule(expense, firstOccurrence)) {
+        throw new IllegalArgumentException("The first occurrence doesn't match the schedule");
+      }
+      // each occurrence becomes an expense, a mistyped year mustn't create hundreds of them
+      if (firstOccurrence.isBefore(LocalDate.now().minusYears(1))) {
+        throw new IllegalArgumentException("The first occurrence can't be more than a year ago");
+      }
+    }
+
     // the category might belong to a member leaving the household right now
     householdLocks.shared();
     Category category = categoryService.resolve(expense.getCategory(), user);
@@ -147,7 +186,9 @@ public class RecurringExpenseService {
       expense.setId(null);
       expense.setCategory(category);
       expense.setUser(user);
-      expense.setNextOccurrence(calculateNextDate(expense));
+      expense.setLastOccurrence(null);
+      expense.setNextOccurrence(
+          firstOccurrence != null ? firstOccurrence : calculateNextDate(expense));
       RecurringExpense saved = recurringExpenseRepository.save(expense);
       // the recurring expenses are shared within the household
       householdService.notifyOtherMembersAfterCommit(user);

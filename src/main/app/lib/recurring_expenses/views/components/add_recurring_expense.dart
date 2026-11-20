@@ -43,8 +43,10 @@ class AddRecurringExpenseDialog extends StatelessWidget {
         return Step2(
           type: state.type,
           typeParam: state.typeParam,
+          firstOccurrence: state.firstOccurrence,
           setType: cubit.setType,
           setTypeParam: cubit.setTypeParam,
+          setFirstOccurrence: cubit.setFirstOccurrence,
         );
       case 2:
         return Step3(amount: state.amount, setAmount: cubit.setAmount);
